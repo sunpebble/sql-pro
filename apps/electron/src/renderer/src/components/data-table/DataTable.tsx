@@ -7,9 +7,16 @@ import type {
   SortState,
 } from '@/types/database';
 import { Button } from '@sqlpro/ui/button';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@sqlpro/ui/empty';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Filter, SearchX } from 'lucide-react';
+import { Filter, Inbox, SearchX } from 'lucide-react';
 import {
   useCallback,
   useEffect,
@@ -395,42 +402,56 @@ function EmptyState({
     totalRowsBeforeClientSearch > 0
   ) {
     return (
-      <div className="text-muted-foreground flex h-32 flex-col items-center justify-center gap-3">
-        <div className="flex items-center gap-2">
-          <SearchX className="h-5 w-5" />
-          <span>No matching results for your search</span>
-        </div>
+      <Empty className="absolute inset-0 border-none">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <SearchX className="h-5 w-5" />
+          </EmptyMedia>
+          <EmptyTitle>No matching results</EmptyTitle>
+          <EmptyDescription>
+            No rows match your search criteria
+          </EmptyDescription>
+        </EmptyHeader>
         {onClearSearch && (
           <Button variant="outline" size="sm" onClick={onClearSearch}>
             Clear search
           </Button>
         )}
-      </div>
+      </Empty>
     );
   }
 
   // Case 2: Server-side filters produced no results
   if (hasActiveFilters) {
     return (
-      <div className="text-muted-foreground flex h-32 flex-col items-center justify-center gap-3">
-        <div className="flex items-center gap-2">
-          <Filter className="h-5 w-5" />
-          <span>No matching results for the current filters</span>
-        </div>
+      <Empty className="absolute inset-0 border-none">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Filter className="h-5 w-5" />
+          </EmptyMedia>
+          <EmptyTitle>No matching results</EmptyTitle>
+          <EmptyDescription>No rows match the current filters</EmptyDescription>
+        </EmptyHeader>
         {onClearFilters && (
           <Button variant="outline" size="sm" onClick={onClearFilters}>
             Clear all filters
           </Button>
         )}
-      </div>
+      </Empty>
     );
   }
 
   // Case 1: Table is truly empty (no data)
   return (
-    <div className="text-muted-foreground flex h-32 items-center justify-center">
-      No data
-    </div>
+    <Empty className="absolute inset-0 border-none">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <Inbox className="h-5 w-5" />
+        </EmptyMedia>
+        <EmptyTitle>No data</EmptyTitle>
+        <EmptyDescription>This table is empty</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
   );
 }
 

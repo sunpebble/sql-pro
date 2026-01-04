@@ -52,7 +52,6 @@ import {
 } from '@/stores';
 import { BulkEditDialog } from './BulkEditDialog';
 import {
-  AnimatedLoader,
   ColumnStats,
   DataQualityIndicator,
   DataTable,
@@ -677,12 +676,7 @@ export function TableView({
         {/* Data Grid */}
         <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
           {isLoading ? (
-            <div className="flex h-full flex-col">
-              <SkeletonTable columns={columns.length || 5} rows={10} />
-              <div className="flex flex-1 items-center justify-center">
-                <AnimatedLoader text="Loading table data..." size="md" />
-              </div>
-            </div>
+            <SkeletonTable columns={columns.length || 5} rows={15} />
           ) : error ? (
             <div className="text-destructive flex h-full items-center justify-center">
               <p>{error.message}</p>
