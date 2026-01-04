@@ -6,6 +6,7 @@ import type {
   GetSchemaRequest,
   GetTableDataRequest,
   OpenDatabaseRequest,
+  TestConnectionRequest,
   ValidateChangesRequest,
 } from '@shared/types';
 import { IPC_CHANNELS } from '@shared/types';
@@ -15,6 +16,14 @@ import { fileWatcherService } from '../file-watcher';
 import { addRecentConnection } from '../store';
 
 export function setupDatabaseHandlers(): void {
+  // Database: Test Connection
+  ipcMain.handle(
+    IPC_CHANNELS.DB_TEST_CONNECTION,
+    async (_event, request: TestConnectionRequest) => {
+      return databaseManager.testConnection(request.config);
+    }
+  );
+
   // Database: Open
   ipcMain.handle(
     IPC_CHANNELS.DB_OPEN,

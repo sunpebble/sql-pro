@@ -159,6 +159,31 @@ export interface CloseDatabaseResponse {
   error?: string;
 }
 
+/**
+ * Test connection request - tests connectivity without establishing a persistent connection
+ */
+export interface TestConnectionRequest {
+  /** Full connection configuration to test */
+  config: DatabaseConnectionConfig;
+}
+
+/**
+ * Test connection response
+ */
+export interface TestConnectionResponse {
+  success: boolean;
+  /** Connection latency in milliseconds */
+  latencyMs?: number;
+  /** Server version information */
+  serverVersion?: string;
+  /** Error message if connection failed */
+  error?: string;
+  /** Categorized error code for programmatic handling */
+  errorCode?: ErrorCode;
+  /** Step-by-step troubleshooting instructions */
+  troubleshootingSteps?: string[];
+}
+
 // ============ Schema Types ============
 
 export interface GetSchemaRequest {
@@ -2241,6 +2266,7 @@ export const IPC_CHANNELS = {
   // Database
   DB_OPEN: 'db:open',
   DB_CLOSE: 'db:close',
+  DB_TEST_CONNECTION: 'db:test-connection',
   DB_GET_SCHEMA: 'db:get-schema',
   DB_GET_TABLE_DATA: 'db:get-table-data',
   DB_EXECUTE_QUERY: 'db:execute-query',

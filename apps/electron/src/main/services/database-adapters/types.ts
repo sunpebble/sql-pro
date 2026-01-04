@@ -83,6 +83,23 @@ export interface DatabaseAdapter {
   readonly type: DatabaseType;
 
   /**
+   * Test database connection without establishing a persistent connection
+   */
+  testConnection: (config: DatabaseConnectionConfig) => Promise<
+    | {
+        success: true;
+        latencyMs: number;
+        serverVersion?: string;
+      }
+    | {
+        success: false;
+        error: string;
+        errorCode?: ErrorCode;
+        troubleshootingSteps?: string[];
+      }
+  >;
+
+  /**
    * Open a database connection
    */
   open: (config: DatabaseConnectionConfig) => Promise<OpenResult>;
@@ -102,7 +119,8 @@ export interface DatabaseAdapter {
   /**
    * Get database schema
    */
-  getSchema: (connectionId: string) => | {
+  getSchema: (connectionId: string) =>
+    | {
         success: true;
         schemas: SchemaInfo[];
         tables: TableInfo[];
@@ -117,7 +135,8 @@ export interface DatabaseAdapter {
     connectionId: string,
     sql: string,
     params?: unknown[]
-  ) => | { success: true; changes: number; lastInsertRowid: number }
+  ) =>
+    | { success: true; changes: number; lastInsertRowid: number }
     | {
         success: false;
         error: string;
@@ -134,7 +153,8 @@ export interface DatabaseAdapter {
     connectionId: string,
     sql: string,
     params?: unknown[]
-  ) => | { success: true; columns: string[]; rows: unknown[][] }
+  ) =>
+    | { success: true; columns: string[]; rows: unknown[][] }
     | {
         success: false;
         error: string;
@@ -168,7 +188,8 @@ export interface DatabaseAdapter {
   executeQuery: (
     connectionId: string,
     query: string
-  ) => | {
+  ) =>
+    | {
         success: true;
         columns?: string[];
         rows?: Record<string, unknown>[];
@@ -201,7 +222,8 @@ export interface DatabaseAdapter {
   explainQuery: (
     connectionId: string,
     sql: string
-  ) => | { success: true; plan: QueryPlanNode; stats: QueryPlanStats }
+  ) =>
+    | { success: true; plan: QueryPlanNode; stats: QueryPlanStats }
     | { success: false; error: string };
 
   /**
@@ -210,7 +232,8 @@ export interface DatabaseAdapter {
   validateChanges: (
     connectionId: string,
     changes: PendingChangeInfo[]
-  ) => | { success: true; results: ValidationResult[] }
+  ) =>
+    | { success: true; results: ValidationResult[] }
     | { success: false; error: string };
 
   /**
@@ -219,7 +242,8 @@ export interface DatabaseAdapter {
   applyChanges: (
     connectionId: string,
     changes: PendingChangeInfo[]
-  ) => | { success: true; appliedCount: number }
+  ) =>
+    | { success: true; appliedCount: number }
     | { success: false; error: string };
 
   /**
@@ -234,7 +258,8 @@ export interface DatabaseAdapter {
     connectionId: string,
     tableName: string,
     schema?: string
-  ) => | { success: true; structure: TableInfo }
+  ) =>
+    | { success: true; structure: TableInfo }
     | { success: false; error: string };
 
   /**
@@ -242,7 +267,8 @@ export interface DatabaseAdapter {
    */
   getPendingChanges: (
     connectionId: string
-  ) => | { success: true; changes: PendingChangeInfo[] }
+  ) =>
+    | { success: true; changes: PendingChangeInfo[] }
     | { success: false; error: string };
 }
 

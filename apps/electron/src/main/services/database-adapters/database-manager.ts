@@ -106,6 +106,27 @@ class DatabaseManager {
   }
 
   /**
+   * Test a database connection without establishing a persistent connection
+   */
+  async testConnection(config: DatabaseConnectionConfig): Promise<
+    | {
+        success: true;
+        latencyMs: number;
+        serverVersion?: string;
+      }
+    | {
+        success: false;
+        error: string;
+        errorCode?: import('@shared/types').ErrorCode;
+        troubleshootingSteps?: string[];
+      }
+  > {
+    const type = config.type || 'sqlite';
+    const adapter = this.getAdapter(type);
+    return adapter.testConnection(config);
+  }
+
+  /**
    * Close a database connection
    */
   close(

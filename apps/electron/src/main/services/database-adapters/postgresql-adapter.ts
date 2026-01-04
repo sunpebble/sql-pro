@@ -268,6 +268,155 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
     }
   }
 
+  /**
+   * Test PostgreSQL/Supabase database connection without establishing a persistent connection
+   */
+  async testConnection(config: DatabaseConnectionConfig): Promise<
+    | {
+        success: true;
+        latencyMs: number;
+        serverVersion?: string;
+      }
+    | {
+        success: false;
+        error: string;
+        errorCode?: ErrorCode;
+        troubleshootingSteps?: string[];
+      }
+  > {
+    const startTime = performance.now();
+    let client: PGClient | null = null;
+
+    try {
+      const pg = await this.getPG();
+
+      // Parse host and port from config
+      let host = config.host;
+      let port = config.port || 5432;
+      const database = config.database || 'postgres';
+
+      // Handle Supabase URL parsing
+      if (config.type === 'supabase' && config.supabaseUrl) {
+        const url = new URL(config.supabaseUrl);
+        if (!host) {
+          host = `db.${url.hostname}`;
+          console.warn(
+            'Supabase test: No host provided, falling back to legacy format:',
+            host
+          );
+        }
+        port = config.port || 5432;
+      }
+
+      if (!host) {
+        return {
+          success: false,
+          error:
+            config.type === 'supabase'
+              ? 'Supabase project URL is required'
+              : 'PostgreSQL host is required',
+          errorCode: 'CONNECTION_ERROR',
+        };
+      }
+
+      const connectionConfig: {
+        host: string;
+        port: number;
+        database: string;
+        user?: string;
+        password?: string;
+        ssl?: {
+          rejectUnauthorized: boolean;
+          ca?: string;
+          cert?: string;
+          key?: string;
+        };
+        connectionTimeoutMillis?: number;
+      } = {
+        host,
+        port,
+        database,
+        user: config.username || 'postgres',
+        password: config.password || config.supabaseKey,
+        connectionTimeoutMillis: 10000, // 10 second timeout for test
+      };
+
+      // SSL configuration
+      if (config.ssl || config.type === 'supabase') {
+        if (typeof config.ssl === 'boolean' || config.type === 'supabase') {
+          connectionConfig.ssl = { rejectUnauthorized: false };
+        } else if (config.ssl) {
+          connectionConfig.ssl = {
+            rejectUnauthorized: config.ssl.rejectUnauthorized ?? false,
+            ca: config.ssl.ca,
+            cert: config.ssl.cert,
+            key: config.ssl.key,
+          };
+        }
+      }
+
+      client = new pg.Client(connectionConfig) as unknown as PGClient;
+      await client.connect();
+
+      // Get server version
+      const result = await client.query('SELECT version()');
+      const versionRow = result.rows[0] as { version?: string } | undefined;
+      let serverVersion: string | undefined;
+      if (versionRow?.version) {
+        // Parse version string like "PostgreSQL 15.1 on x86_64-pc-linux-gnu..."
+        const match = versionRow.version.match(/PostgreSQL\s+[\d.]+/);
+        serverVersion = match ? match[0] : versionRow.version.split(' on ')[0];
+      }
+
+      const latencyMs = Math.round(performance.now() - startTime);
+
+      // Close the test connection
+      await client.end();
+
+      return {
+        success: true,
+        latencyMs,
+        serverVersion,
+      };
+    } catch (error) {
+      if (client) {
+        try {
+          await client.end();
+        } catch {
+          // Ignore close errors
+        }
+      }
+
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to connect to PostgreSQL';
+
+      const troubleshootingSteps =
+        config.type === 'supabase'
+          ? [
+              'Verify the Supabase project URL is correct',
+              'Check that the database password is correct (found in Project Settings > Database)',
+              'Ensure the Supabase project is running',
+              'Check if you need to add your IP to the allowed list',
+            ]
+          : [
+              'Verify the PostgreSQL server is running and accessible',
+              'Check that the host and port are correct',
+              'Verify the username and password are correct',
+              'Ensure the database exists and the user has access',
+              'Check pg_hba.conf if you have authentication issues',
+            ];
+
+      return {
+        success: false,
+        error: errorMessage,
+        errorCode: 'CONNECTION_ERROR',
+        troubleshootingSteps,
+      };
+    }
+  }
+
   close(
     connectionId: string
   ): { success: true } | { success: false; error: string } {

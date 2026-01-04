@@ -167,6 +167,110 @@ export class MySQLAdapter implements DatabaseAdapter {
     }
   }
 
+  /**
+   * Test MySQL database connection without establishing a persistent connection
+   */
+  async testConnection(config: DatabaseConnectionConfig): Promise<
+    | {
+        success: true;
+        latencyMs: number;
+        serverVersion?: string;
+      }
+    | {
+        success: false;
+        error: string;
+        errorCode?: ErrorCode;
+        troubleshootingSteps?: string[];
+      }
+  > {
+    if (!config.host) {
+      return {
+        success: false,
+        error: 'MySQL host is required',
+        errorCode: 'CONNECTION_ERROR',
+      };
+    }
+
+    const startTime = performance.now();
+    let connection: MySQLConnection | null = null;
+
+    try {
+      const mysql2 = await this.getMySQL2();
+
+      const connectionConfig: import('mysql2/promise').ConnectionOptions = {
+        host: config.host,
+        port: config.port || 3306,
+        user: config.username,
+        password: config.password,
+        database: config.database,
+        connectTimeout: 10000, // 10 second timeout for test
+      };
+
+      // SSL configuration
+      if (config.ssl) {
+        if (typeof config.ssl === 'boolean') {
+          connectionConfig.ssl = config.ssl ? {} : undefined;
+        } else {
+          connectionConfig.ssl = {
+            rejectUnauthorized: config.ssl.rejectUnauthorized,
+            ca: config.ssl.ca,
+            cert: config.ssl.cert,
+            key: config.ssl.key,
+          };
+        }
+      }
+
+      connection = (await mysql2.createConnection(
+        connectionConfig
+      )) as unknown as MySQLConnection;
+
+      // Test connection with ping
+      await connection.ping();
+
+      // Get server version
+      const [rows] = await connection.query('SELECT VERSION() as version');
+      const versionRow = (rows as Array<{ version: string }>)[0];
+      const serverVersion = versionRow?.version
+        ? `MySQL ${versionRow.version}`
+        : undefined;
+
+      const latencyMs = Math.round(performance.now() - startTime);
+
+      // Close the test connection
+      await connection.end();
+
+      return {
+        success: true,
+        latencyMs,
+        serverVersion,
+      };
+    } catch (error) {
+      if (connection) {
+        try {
+          await connection.end();
+        } catch {
+          // Ignore close errors
+        }
+      }
+
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to connect to MySQL';
+
+      return {
+        success: false,
+        error: errorMessage,
+        errorCode: 'CONNECTION_ERROR',
+        troubleshootingSteps: [
+          'Verify the MySQL server is running and accessible',
+          'Check that the host and port are correct',
+          'Verify the username and password are correct',
+          'Ensure the database exists and the user has access',
+          'Check firewall settings if connecting remotely',
+        ],
+      };
+    }
+  }
+
   close(
     connectionId: string
   ): { success: true } | { success: false; error: string } {

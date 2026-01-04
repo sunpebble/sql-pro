@@ -145,6 +145,8 @@ import type {
   SetPreferencesResponse,
   ShortcutsUpdatePayload,
   SqlLogEntry,
+  TestConnectionRequest,
+  TestConnectionResponse,
   ToggleFavoriteRequest,
   ToggleFavoriteResponse,
   UpdateCollectionRequest,
@@ -225,6 +227,10 @@ const sqlProAPI = {
       request: AnalyzeQueryPlanRequest
     ): Promise<AnalyzeQueryPlanResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_ANALYZE_PLAN, request),
+    testConnection: (
+      request: TestConnectionRequest
+    ): Promise<TestConnectionResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_TEST_CONNECTION, request),
     onFileChanged: (
       callback: (event: FileChangeEvent) => void
     ): (() => void) => {

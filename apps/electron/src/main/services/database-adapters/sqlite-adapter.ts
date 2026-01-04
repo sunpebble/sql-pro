@@ -328,6 +328,195 @@ export class SQLiteAdapter implements DatabaseAdapter {
     }
   }
 
+  /**
+   * Test SQLite database connection without establishing a persistent connection
+   */
+  async testConnection(config: DatabaseConnectionConfig): Promise<
+    | {
+        success: true;
+        latencyMs: number;
+        serverVersion?: string;
+      }
+    | {
+        success: false;
+        error: string;
+        errorCode?: ErrorCode;
+        troubleshootingSteps?: string[];
+      }
+  > {
+    const path = config.path;
+    const password = config.password;
+
+    if (!path) {
+      return {
+        success: false,
+        error: 'SQLite database path is required',
+        errorCode: 'CONNECTION_ERROR',
+      };
+    }
+
+    const startTime = performance.now();
+    let db: Database.Database | null = null;
+
+    try {
+      // Check if file appears encrypted before trying to open
+      const fileIsEncrypted = isFileEncrypted(path);
+
+      // If no password provided and file appears encrypted, ask for password
+      if (!password && fileIsEncrypted) {
+        return {
+          success: false,
+          error: 'Database appears to be encrypted. Please provide a password.',
+          errorCode: 'ENCRYPTION_ERROR',
+          troubleshootingSteps: [
+            'The database file is encrypted',
+            'Please provide the encryption password to test the connection',
+          ],
+        };
+      }
+
+      // If password provided, try different cipher configurations
+      if (password) {
+        for (const cipherConfig of CIPHER_CONFIGS) {
+          try {
+            db = new Database(path, { readonly: true });
+
+            // Set cipher configuration
+            db.pragma(`cipher = '${cipherConfig.cipher}'`);
+            if (cipherConfig.legacy !== undefined) {
+              db.pragma(`legacy = ${cipherConfig.legacy}`);
+            }
+            if (cipherConfig.kdfIter !== undefined) {
+              db.pragma(`kdf_iter = ${cipherConfig.kdfIter}`);
+            }
+            if (cipherConfig.pageSize !== undefined) {
+              db.pragma(`cipher_page_size = ${cipherConfig.pageSize}`);
+            }
+            if (cipherConfig.plaintextHeader !== undefined) {
+              db.pragma(
+                `cipher_plaintext_header_size = ${cipherConfig.plaintextHeader}`
+              );
+            }
+
+            // Set the key
+            if (cipherConfig.rawKey) {
+              db.pragma(`key = "x'${password}'"`);
+            } else if (cipherConfig.hexKey) {
+              const hexKey = Buffer.from(password, 'utf8').toString('hex');
+              db.pragma(`key = "x'${hexKey}'"`);
+            } else {
+              db.pragma(`key = '${password}'`);
+            }
+
+            // Test if we can read from the database
+            db.prepare('SELECT count(*) FROM sqlite_master').get();
+
+            // Get SQLite version
+            const versionResult = db
+              .prepare('SELECT sqlite_version()')
+              .get() as { 'sqlite_version()': string } | undefined;
+            const serverVersion = versionResult?.['sqlite_version()'];
+
+            const latencyMs = Math.round(performance.now() - startTime);
+
+            // Close the test connection
+            db.close();
+
+            return {
+              success: true,
+              latencyMs,
+              serverVersion: serverVersion
+                ? `SQLite ${serverVersion}`
+                : undefined,
+            };
+          } catch {
+            if (db) {
+              try {
+                db.close();
+              } catch {
+                // Ignore close errors
+              }
+              db = null;
+            }
+            continue;
+          }
+        }
+
+        // All cipher configs failed
+        return {
+          success: false,
+          error:
+            'Invalid password or unsupported encryption format. Supported formats: SQLCipher 1-4, ChaCha20, AES-256-CBC, RC4.',
+          errorCode: 'ENCRYPTION_ERROR',
+          troubleshootingSteps: [
+            'Verify the encryption password is correct',
+            'Try different cipher configurations (SQLCipher 3 vs 4)',
+            'Check if the database was created with a different encryption tool',
+            'Verify the file is actually an encrypted SQLite database',
+          ],
+        };
+      }
+
+      // No password, try opening normally
+      db = new Database(path, { readonly: true });
+
+      // Test connection
+      db.prepare('SELECT 1').get();
+
+      // Get SQLite version
+      const versionResult = db.prepare('SELECT sqlite_version()').get() as
+        | { 'sqlite_version()': string }
+        | undefined;
+      const serverVersion = versionResult?.['sqlite_version()'];
+
+      const latencyMs = Math.round(performance.now() - startTime);
+
+      // Close the test connection
+      db.close();
+
+      return {
+        success: true,
+        latencyMs,
+        serverVersion: serverVersion ? `SQLite ${serverVersion}` : undefined,
+      };
+    } catch (error) {
+      if (db) {
+        try {
+          db.close();
+        } catch {
+          // Ignore close errors
+        }
+      }
+
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to test connection';
+
+      // Check if error suggests encryption
+      if (
+        errorMessage.includes('file is not a database') ||
+        errorMessage.includes('encrypted')
+      ) {
+        return {
+          success: false,
+          error: 'Database appears to be encrypted. Please provide a password.',
+          errorCode: 'ENCRYPTION_ERROR',
+          troubleshootingSteps: [
+            'The database file is encrypted',
+            'Please provide the encryption password to test the connection',
+          ],
+        };
+      }
+
+      const enhanced = enhanceConnectionError(errorMessage);
+      return {
+        success: false,
+        error: enhanced.error,
+        errorCode: enhanced.errorCode,
+        troubleshootingSteps: enhanced.troubleshootingSteps,
+      };
+    }
+  }
+
   close(
     connectionId: string
   ): { success: true } | { success: false; error: string } {

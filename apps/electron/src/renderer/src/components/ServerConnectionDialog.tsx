@@ -3,11 +3,16 @@
  * Dialog for configuring MySQL, PostgreSQL, and Supabase connections
  */
 
-import type { DatabaseConnectionConfig, DatabaseType } from '@shared/types';
+import type {
+  DatabaseConnectionConfig,
+  DatabaseType,
+  TestConnectionResponse,
+} from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
 import { Checkbox } from '@sqlpro/ui/checkbox';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
+import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
   Dialog,
@@ -65,6 +70,12 @@ export function ServerConnectionDialog({
   const [supabaseUrl, setSupabaseUrl] = useState('');
   const [supabaseKey, setSupabaseKey] = useState('');
 
+  // Test connection state
+  const [isTesting, setIsTesting] = useState(false);
+  const [testResult, setTestResult] = useState<TestConnectionResponse | null>(
+    null
+  );
+
   // Reset form when dialog opens or database type changes
   useEffect(() => {
     if (open) {
@@ -78,6 +89,7 @@ export function ServerConnectionDialog({
       setReadOnly(false);
       setSupabaseUrl('');
       setSupabaseKey('');
+      setTestResult(null);
     }
   }, [open, databaseType]);
 
@@ -351,17 +363,127 @@ export function ServerConnectionDialog({
           </div>
 
           <DialogFooter className="flex-shrink-0 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isConnecting}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={!isFormValid || isConnecting}>
-              {isConnecting ? 'Connecting...' : 'Connect'}
-            </Button>
+            <div className="flex w-full items-center justify-between gap-2">
+              {/* Test Connection Button and Result */}
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={async () => {
+                    setIsTesting(true);
+                    setTestResult(null);
+
+                    const config: DatabaseConnectionConfig = {
+                      type: databaseType,
+                      name:
+                        displayName ||
+                        (isSupabase
+                          ? supabaseUrl
+                          : `${host}:${port}/${database}`),
+                      readOnly,
+                    };
+
+                    if (isSupabase) {
+                      config.supabaseUrl = supabaseUrl;
+                      config.supabaseKey = supabaseKey;
+                      config.ssl = true;
+                      if (host) config.host = host;
+                      if (
+                        port &&
+                        port !== DEFAULT_PORTS[databaseType].toString()
+                      ) {
+                        config.port = Number.parseInt(port, 10);
+                      }
+                      if (username) config.username = username;
+                    } else {
+                      config.host = host;
+                      config.port = Number.parseInt(port, 10);
+                      config.database = database;
+                      config.username = username;
+                      config.password = password;
+                      config.ssl = useSSL;
+                    }
+
+                    try {
+                      const result = await window.sqlPro.db.testConnection({
+                        config,
+                      });
+                      setTestResult(result);
+                    } catch (err) {
+                      setTestResult({
+                        success: false,
+                        error:
+                          err instanceof Error
+                            ? err.message
+                            : 'Test connection failed',
+                      });
+                    } finally {
+                      setIsTesting(false);
+                    }
+                  }}
+                  disabled={!isFormValid || isTesting || isConnecting}
+                >
+                  {isTesting ? (
+                    <>
+                      <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                      Testing...
+                    </>
+                  ) : (
+                    'Test Connection'
+                  )}
+                </Button>
+
+                {/* Test Result Indicator */}
+                {testResult && (
+                  <div className="flex items-center gap-1 text-xs">
+                    {testResult.success ? (
+                      <>
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        <span className="text-green-600">
+                          Connected
+                          {testResult.latencyMs !== undefined && (
+                            <span className="text-muted-foreground ml-1">
+                              ({testResult.latencyMs}ms)
+                            </span>
+                          )}
+                          {testResult.serverVersion && (
+                            <span className="text-muted-foreground ml-1">
+                              - {testResult.serverVersion}
+                            </span>
+                          )}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-4 w-4 text-red-500" />
+                        <span
+                          className="max-w-[150px] truncate text-red-600"
+                          title={testResult.error}
+                        >
+                          {testResult.error}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onOpenChange(false)}
+                  disabled={isConnecting}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={!isFormValid || isConnecting}>
+                  {isConnecting ? 'Connecting...' : 'Connect'}
+                </Button>
+              </div>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
