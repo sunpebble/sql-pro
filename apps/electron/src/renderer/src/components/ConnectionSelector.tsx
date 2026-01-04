@@ -18,11 +18,7 @@ import { useChangesStore, useConnectionStore, useTableFont } from '@/stores';
 
 interface ConnectionSelectorProps {
   onOpenDatabase?: () => void;
-  onOpenRecentConnection?: (
-    path: string,
-    isEncrypted: boolean,
-    readOnly?: boolean
-  ) => void;
+  onOpenRecentConnection?: (conn: RecentConnection) => void;
   className?: string;
 }
 
@@ -244,7 +240,7 @@ export function ConnectionSelector({
   const handleRecentClick = useCallback(
     (conn: RecentConnection) => {
       setIsOpen(false);
-      onOpenRecentConnection?.(conn.path, conn.isEncrypted, conn.readOnly);
+      onOpenRecentConnection?.(conn);
     },
     [onOpenRecentConnection]
   );

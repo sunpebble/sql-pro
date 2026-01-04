@@ -7,9 +7,11 @@ import { ipcMain } from 'electron';
 import {
   deleteProfile,
   getProfiles,
+  getRecentConnections,
   removeRecentConnection,
   saveProfile,
   updateProfile,
+  updateRecentConnection,
 } from '../store';
 import { createHandler } from './utils';
 
@@ -86,21 +88,41 @@ export function setupProfilesHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.CONNECTION_UPDATE,
     createHandler(async (request: UpdateConnectionRequest) => {
+      // First, try to find in profiles
       const profiles = getProfiles();
       const profile = profiles.find(
         (p) => p.path === request.path || p.id === request.connectionId
       );
 
-      if (!profile) {
-        return { success: false, error: 'Connection profile not found' };
+      if (profile) {
+        // Update profile
+        const result = updateProfile(profile.id, {
+          displayName: request.updates?.displayName || request.displayName,
+          readOnly: request.updates?.readOnly ?? request.readOnly,
+          connectionConfig: request.connectionConfig,
+        });
+        return result;
       }
 
-      const result = updateProfile(profile.id, {
-        displayName: request.updates?.displayName || request.displayName,
-        readOnly: request.updates?.readOnly ?? request.readOnly,
-      });
+      // If not found in profiles, try recent connections
+      if (request.path) {
+        const recentConnections = getRecentConnections();
+        const recentConnection = recentConnections.find(
+          (c) => c.path === request.path
+        );
 
-      return result;
+        if (recentConnection) {
+          // Update recent connection
+          const result = updateRecentConnection(request.path, {
+            displayName: request.updates?.displayName || request.displayName,
+            readOnly: request.updates?.readOnly ?? request.readOnly,
+            connectionConfig: request.connectionConfig,
+          });
+          return result;
+        }
+      }
+
+      return { success: false, error: 'Connection not found' };
     })
   );
 

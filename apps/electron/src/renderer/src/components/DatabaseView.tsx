@@ -1,4 +1,4 @@
-import type { SavedQuery } from '@shared/types';
+import type { RecentConnection, SavedQuery } from '@shared/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -29,11 +29,7 @@ type TabValue = 'data' | 'query' | 'diagram' | 'compare' | 'dataDiff';
 
 interface DatabaseViewProps {
   onOpenDatabase?: () => void;
-  onOpenRecentConnection?: (
-    path: string,
-    isEncrypted: boolean,
-    readOnly?: boolean
-  ) => void;
+  onOpenRecentConnection?: (conn: RecentConnection) => void;
 }
 
 export function DatabaseView({

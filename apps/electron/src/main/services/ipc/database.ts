@@ -37,7 +37,10 @@ export function setupDatabaseHandlers(): void {
             result.connection.path,
             result.connection.filename,
             result.connection.isEncrypted,
-            result.connection.databaseType
+            result.connection.databaseType,
+            request.config.name, // displayName
+            request.config.readOnly, // readOnly
+            request.config // connectionConfig - save full config for edit mode
           );
         }
 

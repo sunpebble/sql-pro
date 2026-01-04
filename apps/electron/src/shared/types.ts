@@ -585,6 +585,8 @@ export interface UpdateConnectionRequest {
   displayName?: string;
   /** New read-only setting (optional, keeps existing if not provided) */
   readOnly?: boolean;
+  /** Connection configuration for server databases (optional, keeps existing if not provided) */
+  connectionConfig?: DatabaseConnectionConfig;
   /** Updates object for partial updates */
   updates?: Partial<{
     displayName: string;

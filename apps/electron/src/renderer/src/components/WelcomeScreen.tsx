@@ -128,6 +128,8 @@ export function WelcomeScreen() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingConnection, setEditingConnection] =
     useState<RecentConnection | null>(null);
+  // For server connections edit mode
+  const [editServerDialogOpen, setEditServerDialogOpen] = useState(false);
 
   // Drag and drop state
   const [isDragging, setIsDragging] = useState(false);
@@ -442,7 +444,70 @@ export function WelcomeScreen() {
   };
 
   const handleRecentClick = useCallback(
-    async (path: string, isEncrypted: boolean, readOnly?: boolean) => {
+    async (conn: RecentConnection) => {
+      // For server databases (MySQL, PostgreSQL, Supabase), use connectionConfig
+      if (
+        conn.databaseType &&
+        conn.databaseType !== 'sqlite' &&
+        conn.connectionConfig
+      ) {
+        setIsConnecting(true);
+        setError(null);
+
+        try {
+          const result = await sqlPro.db.open({
+            config: conn.connectionConfig,
+          });
+
+          if (!result.success) {
+            setError(result.error || 'Failed to connect to database');
+            setIsConnecting(false);
+            return;
+          }
+
+          if (result.connection) {
+            addConnection({
+              id: result.connection.id,
+              path: result.connection.path,
+              filename: result.connection.filename,
+              isEncrypted: result.connection.isEncrypted,
+              isReadOnly: result.connection.isReadOnly,
+              status: 'connected',
+              databaseType:
+                result.connection.databaseType || conn.connectionConfig.type,
+            });
+
+            // Load schema
+            setIsLoadingSchema(true);
+            const schemaResult = await sqlPro.db.getSchema({
+              connectionId: result.connection.id,
+            });
+
+            if (schemaResult.success) {
+              setSchema(result.connection.id, {
+                schemas: schemaResult.schemas || [],
+                tables: schemaResult.tables || [],
+                views: schemaResult.views || [],
+              });
+            }
+            setIsLoadingSchema(false);
+
+            // Refresh recent connections
+            const connectionsResult = await sqlPro.app.getRecentConnections();
+            if (connectionsResult.success && connectionsResult.connections) {
+              setRecentConnections(connectionsResult.connections);
+            }
+          }
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+          setIsConnecting(false);
+        }
+        return;
+      }
+
+      // For SQLite databases, use the original logic
+      const { path, isEncrypted, readOnly } = conn;
       if (isEncrypted) {
         // Check if we have a saved password
         const savedPasswordResult = await sqlPro.password.get({
@@ -466,13 +531,32 @@ export function WelcomeScreen() {
         await connectToDatabase(path, undefined, readOnly);
       }
     },
-    [connectToDatabase]
+    [
+      connectToDatabase,
+      setIsConnecting,
+      setError,
+      addConnection,
+      setSchema,
+      setIsLoadingSchema,
+      setRecentConnections,
+    ]
   );
 
   // Edit connection settings (T031, T033)
   const handleEditConnection = (conn: RecentConnection) => {
     setEditingConnection(conn);
-    setEditDialogOpen(true);
+    // For server databases, open the server connection dialog in edit mode
+    if (
+      conn.databaseType &&
+      conn.databaseType !== 'sqlite' &&
+      conn.connectionConfig
+    ) {
+      setSelectedDbType(conn.databaseType);
+      setEditServerDialogOpen(true);
+    } else {
+      // For SQLite, use the simple settings dialog
+      setEditDialogOpen(true);
+    }
   };
 
   const handleEditSubmit = async (settings: ConnectionSettings) => {
@@ -496,6 +580,91 @@ export function WelcomeScreen() {
     setEditingConnection(null);
   };
 
+  // Handle server connection edit and reconnect
+  const handleEditServerConnect = useCallback(
+    async (config: DatabaseConnectionConfig) => {
+      if (!editingConnection) return;
+
+      setIsConnecting(true);
+      setError(null);
+
+      try {
+        // First, update the connection config in storage
+        const updateResult = await sqlPro.connection.update({
+          path: editingConnection.path,
+          displayName: config.name,
+          readOnly: config.readOnly,
+          connectionConfig: config,
+        });
+
+        if (!updateResult.success) {
+          setError(updateResult.error || 'Failed to update connection');
+          setIsConnecting(false);
+          return;
+        }
+
+        // Then connect with the new config
+        const result = await sqlPro.db.open({ config });
+
+        if (!result.success) {
+          setError(result.error || 'Failed to connect to database');
+          setIsConnecting(false);
+          return;
+        }
+
+        if (result.connection) {
+          addConnection({
+            id: result.connection.id,
+            path: result.connection.path,
+            filename: result.connection.filename,
+            isEncrypted: result.connection.isEncrypted,
+            isReadOnly: result.connection.isReadOnly,
+            status: 'connected',
+            databaseType: result.connection.databaseType || config.type,
+          });
+
+          // Load schema
+          setIsLoadingSchema(true);
+          const schemaResult = await sqlPro.db.getSchema({
+            connectionId: result.connection.id,
+          });
+
+          if (schemaResult.success) {
+            setSchema(result.connection.id, {
+              schemas: schemaResult.schemas || [],
+              tables: schemaResult.tables || [],
+              views: schemaResult.views || [],
+            });
+          }
+          setIsLoadingSchema(false);
+
+          // Refresh recent connections
+          const connectionsResult = await sqlPro.app.getRecentConnections();
+          if (connectionsResult.success && connectionsResult.connections) {
+            setRecentConnections(connectionsResult.connections);
+          }
+
+          // Close the dialog
+          setEditServerDialogOpen(false);
+          setEditingConnection(null);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setIsConnecting(false);
+      }
+    },
+    [
+      editingConnection,
+      setIsConnecting,
+      setError,
+      addConnection,
+      setSchema,
+      setIsLoadingSchema,
+      setRecentConnections,
+    ]
+  );
+
   // Remove connection from list (T045-T049 - implementing here for context menu)
   const handleRemoveConnection = async (conn: RecentConnection) => {
     const result = await sqlPro.connection.remove({
@@ -515,11 +684,8 @@ export function WelcomeScreen() {
   // Handle connecting from a profile
   const handleConnectFromProfile = useCallback(
     async (profile: ConnectionProfile) => {
-      await handleRecentClick(
-        profile.path,
-        profile.isEncrypted,
-        profile.readOnly
-      );
+      // Profile has the same structure as RecentConnection for connection purposes
+      await handleRecentClick(profile);
     },
     [handleRecentClick]
   );
@@ -815,13 +981,7 @@ export function WelcomeScreen() {
                         <Button
                           variant="ghost"
                           className="h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
-                          onClick={() =>
-                            handleRecentClick(
-                              conn.path,
-                              conn.isEncrypted,
-                              conn.readOnly
-                            )
-                          }
+                          onClick={() => handleRecentClick(conn)}
                           disabled={isConnecting}
                         >
                           {(() => {
@@ -992,6 +1152,24 @@ export function WelcomeScreen() {
         onConnect={handleServerConnect}
         isConnecting={isConnecting}
         error={error}
+      />
+
+      {/* Server Connection Edit Dialog */}
+      <ServerConnectionDialog
+        open={editServerDialogOpen}
+        onOpenChange={(open) => {
+          setEditServerDialogOpen(open);
+          if (!open) {
+            setError(null);
+            setEditingConnection(null);
+          }
+        }}
+        databaseType={selectedDbType}
+        onConnect={handleEditServerConnect}
+        isConnecting={isConnecting}
+        error={error}
+        mode="edit"
+        initialConfig={editingConnection?.connectionConfig}
       />
     </div>
   );

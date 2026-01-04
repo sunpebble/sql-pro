@@ -1,3 +1,4 @@
+import type { RecentConnection } from '@shared/types';
 import type { ConnectionSettings } from '@/components/ConnectionSettingsDialog';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -262,7 +263,70 @@ export function DatabasePage() {
 
   // Open a recent connection directly (skip file picker and settings dialog)
   const handleOpenRecentConnection = useCallback(
-    async (path: string, isEncrypted: boolean, readOnly?: boolean) => {
+    async (conn: RecentConnection) => {
+      // For server databases (MySQL, PostgreSQL, Supabase), use connectionConfig
+      if (
+        conn.databaseType &&
+        conn.databaseType !== 'sqlite' &&
+        conn.connectionConfig
+      ) {
+        setIsConnecting(true);
+        setError(null);
+
+        try {
+          const result = await sqlPro.db.open({
+            config: conn.connectionConfig,
+          });
+
+          if (!result.success) {
+            setError(result.error || 'Failed to connect to database');
+            setIsConnecting(false);
+            return;
+          }
+
+          if (result.connection) {
+            addConnection({
+              id: result.connection.id,
+              path: result.connection.path,
+              filename: result.connection.filename,
+              isEncrypted: result.connection.isEncrypted,
+              isReadOnly: result.connection.isReadOnly,
+              status: 'connected',
+              databaseType:
+                result.connection.databaseType || conn.connectionConfig.type,
+            });
+
+            // Load schema
+            setIsLoadingSchema(true);
+            const schemaResult = await sqlPro.db.getSchema({
+              connectionId: result.connection.id,
+            });
+
+            if (schemaResult.success) {
+              setSchema(result.connection.id, {
+                schemas: schemaResult.schemas || [],
+                tables: schemaResult.tables || [],
+                views: schemaResult.views || [],
+              });
+            }
+            setIsLoadingSchema(false);
+
+            // Refresh recent connections
+            const connectionsResult = await sqlPro.app.getRecentConnections();
+            if (connectionsResult.success && connectionsResult.connections) {
+              setRecentConnections(connectionsResult.connections);
+            }
+          }
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+          setIsConnecting(false);
+        }
+        return;
+      }
+
+      // For SQLite databases, use the original logic
+      const { path, isEncrypted, readOnly } = conn;
       const filename = path.split('/').pop() || path;
       setPendingPath(path);
       setPendingFilename(filename);
@@ -285,7 +349,15 @@ export function DatabasePage() {
         await connectToDatabase(path, undefined, readOnly);
       }
     },
-    [connectToDatabase]
+    [
+      connectToDatabase,
+      setIsConnecting,
+      setError,
+      addConnection,
+      setSchema,
+      setIsLoadingSchema,
+      setRecentConnections,
+    ]
   );
 
   // Handle settings dialog submit

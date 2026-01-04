@@ -19,11 +19,7 @@ import {
 } from '@/stores';
 
 interface ConnectionSwitcherProps {
-  onOpenRecentConnection?: (
-    path: string,
-    isEncrypted: boolean,
-    readOnly?: boolean
-  ) => void;
+  onOpenRecentConnection?: (conn: RecentConnection) => void;
 }
 
 interface ConnectionItem {
@@ -35,6 +31,8 @@ interface ConnectionItem {
   isEncrypted?: boolean;
   readOnly?: boolean;
   lastOpened?: string;
+  /** Original RecentConnection object for non-open connections */
+  recentConnection?: RecentConnection;
 }
 
 export function ConnectionSwitcher({
@@ -93,6 +91,7 @@ export function ConnectionSwitcher({
           isEncrypted: rc.isEncrypted,
           readOnly: rc.readOnly,
           lastOpened: rc.lastOpened,
+          recentConnection: rc,
         });
       });
 
@@ -127,13 +126,9 @@ export function ConnectionSwitcher({
       if (item.isOpen) {
         // Switch to already open connection
         setActiveConnection(item.id);
-      } else {
-        // Open recent connection
-        onOpenRecentConnection?.(
-          item.path,
-          item.isEncrypted ?? false,
-          item.readOnly
-        );
+      } else if (item.recentConnection) {
+        // Open recent connection with full connection info
+        onOpenRecentConnection?.(item.recentConnection);
       }
     },
     [close, setActiveConnection, onOpenRecentConnection]

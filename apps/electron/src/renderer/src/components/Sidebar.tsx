@@ -1,3 +1,4 @@
+import type { RecentConnection } from '@shared/types';
 import type { SchemaInfo, TableSchema, TriggerSchema } from '@/types/database';
 import {
   AlertDialog,
@@ -38,6 +39,8 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
+  ChevronsDownUp,
+  ChevronsUpDown,
   Code,
   Copy,
   Database,
@@ -76,11 +79,7 @@ import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
 interface SidebarProps {
   onOpenDatabase?: () => void;
-  onOpenRecentConnection?: (
-    path: string,
-    isEncrypted: boolean,
-    readOnly?: boolean
-  ) => void;
+  onOpenRecentConnection?: (conn: RecentConnection) => void;
   onSwitchToQuery?: () => void;
 }
 
@@ -122,15 +121,11 @@ export function Sidebar({
   // Expansion state for schemas (key is schema name)
   const [expandedSchemas, setExpandedSchemas] = useState<
     Record<string, boolean>
-  >({ main: true });
+  >({});
   // Expansion state for tables/views within schemas (key is "schemaName:tables" or "schemaName:views" or "schemaName:triggers")
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
-  >({
-    'main:tables': true,
-    'main:views': true,
-    'main:triggers': true,
-  });
+  >({});
   const [searchQuery, setSearchQuery] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -193,7 +188,7 @@ export function Sidebar({
     }));
   }, []);
 
-  // Initialize expansion state for new schemas
+  // Initialize expansion state for new schemas (default collapsed)
   useEffect(() => {
     if (schema?.schemas) {
       // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentionally sync state with props
@@ -201,7 +196,7 @@ export function Sidebar({
         const next = { ...prev };
         for (const s of schema.schemas) {
           if (next[s.name] === undefined) {
-            next[s.name] = true; // Expand by default
+            next[s.name] = false; // Collapse by default
           }
         }
         return next;
@@ -214,18 +209,48 @@ export function Sidebar({
           const viewsKey = `${s.name}:views`;
           const triggersKey = `${s.name}:triggers`;
           if (next[tablesKey] === undefined) {
-            next[tablesKey] = true;
+            next[tablesKey] = false;
           }
           if (next[viewsKey] === undefined) {
-            next[viewsKey] = true;
+            next[viewsKey] = false;
           }
           if (next[triggersKey] === undefined) {
-            next[triggersKey] = true;
+            next[triggersKey] = false;
           }
         }
         return next;
       });
     }
+  }, [schema?.schemas]);
+
+  // Expand all schemas and sections
+  const expandAll = useCallback(() => {
+    if (!schema?.schemas) return;
+    const newSchemas: Record<string, boolean> = {};
+    const newSections: Record<string, boolean> = {};
+    for (const s of schema.schemas) {
+      newSchemas[s.name] = true;
+      newSections[`${s.name}:tables`] = true;
+      newSections[`${s.name}:views`] = true;
+      newSections[`${s.name}:triggers`] = true;
+    }
+    setExpandedSchemas(newSchemas);
+    setExpandedSections(newSections);
+  }, [schema?.schemas]);
+
+  // Collapse all schemas and sections
+  const collapseAll = useCallback(() => {
+    if (!schema?.schemas) return;
+    const newSchemas: Record<string, boolean> = {};
+    const newSections: Record<string, boolean> = {};
+    for (const s of schema.schemas) {
+      newSchemas[s.name] = false;
+      newSections[`${s.name}:tables`] = false;
+      newSections[`${s.name}:views`] = false;
+      newSections[`${s.name}:triggers`] = false;
+    }
+    setExpandedSchemas(newSchemas);
+    setExpandedSections(newSections);
   }, [schema?.schemas]);
 
   const handleSelectTable = useCallback(
@@ -837,6 +862,36 @@ export function Sidebar({
           onAddTag={addTag}
           onRemoveTag={removeTag}
         />
+
+        {/* Expand/Collapse All */}
+        <div className="ml-auto flex shrink-0 items-center gap-0.5">
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={expandAll}
+              >
+                <ChevronsUpDown className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Expand All</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={collapseAll}
+              >
+                <ChevronsDownUp className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Collapse All</TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
       {/* Schema Tree */}

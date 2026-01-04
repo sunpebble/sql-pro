@@ -44,6 +44,10 @@ interface ServerConnectionDialogProps {
   onConnect: (config: DatabaseConnectionConfig) => void;
   isConnecting?: boolean;
   error?: string | null;
+  /** Edit mode: pre-fill form with existing config */
+  mode?: 'new' | 'edit';
+  /** Initial config for edit mode */
+  initialConfig?: DatabaseConnectionConfig;
 }
 
 export function ServerConnectionDialog({
@@ -53,8 +57,11 @@ export function ServerConnectionDialog({
   onConnect,
   isConnecting = false,
   error,
+  mode = 'new',
+  initialConfig,
 }: ServerConnectionDialogProps) {
   const isSupabase = databaseType === 'supabase';
+  const isEditMode = mode === 'edit';
 
   // Form state
   const [host, setHost] = useState('');
@@ -79,19 +86,40 @@ export function ServerConnectionDialog({
   // Reset form when dialog opens or database type changes
   useEffect(() => {
     if (open) {
-      setHost('');
-      setPort(DEFAULT_PORTS[databaseType].toString());
-      setDatabase(databaseType === 'supabase' ? 'postgres' : '');
-      setUsername(databaseType === 'supabase' ? 'postgres' : '');
-      setPassword('');
-      setDisplayName('');
-      setUseSSL(databaseType === 'supabase');
-      setReadOnly(false);
-      setSupabaseUrl('');
-      setSupabaseKey('');
+      if (isEditMode && initialConfig) {
+        // Pre-fill with existing config for edit mode
+        setHost(initialConfig.host || '');
+        setPort(
+          initialConfig.port?.toString() ||
+            DEFAULT_PORTS[databaseType].toString()
+        );
+        setDatabase(initialConfig.database || '');
+        setUsername(initialConfig.username || '');
+        setPassword(initialConfig.password || '');
+        setDisplayName(initialConfig.name || '');
+        setUseSSL(
+          initialConfig.ssl === true ||
+            (typeof initialConfig.ssl === 'object' && !!initialConfig.ssl)
+        );
+        setReadOnly(initialConfig.readOnly || false);
+        setSupabaseUrl(initialConfig.supabaseUrl || '');
+        setSupabaseKey(initialConfig.supabaseKey || '');
+      } else {
+        // Reset for new connection
+        setHost('');
+        setPort(DEFAULT_PORTS[databaseType].toString());
+        setDatabase(databaseType === 'supabase' ? 'postgres' : '');
+        setUsername(databaseType === 'supabase' ? 'postgres' : '');
+        setPassword('');
+        setDisplayName('');
+        setUseSSL(databaseType === 'supabase');
+        setReadOnly(false);
+        setSupabaseUrl('');
+        setSupabaseKey('');
+      }
       setTestResult(null);
     }
-  }, [open, databaseType]);
+  }, [open, databaseType, isEditMode, initialConfig]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,12 +173,17 @@ export function ServerConnectionDialog({
         >
           <DialogHeader className="pb-4">
             <DialogTitle>
-              Connect to {DATABASE_LABELS[databaseType]}
+              {isEditMode ? 'Edit' : 'Connect to'}{' '}
+              {DATABASE_LABELS[databaseType]}
             </DialogTitle>
             <DialogDescription>
               {isSupabase
-                ? 'Enter your Supabase project details to connect'
-                : `Configure your ${DATABASE_LABELS[databaseType]} connection`}
+                ? isEditMode
+                  ? 'Update your Supabase project details'
+                  : 'Enter your Supabase project details to connect'
+                : isEditMode
+                  ? `Update your ${DATABASE_LABELS[databaseType]} connection settings`
+                  : `Configure your ${DATABASE_LABELS[databaseType]} connection`}
             </DialogDescription>
           </DialogHeader>
 
@@ -480,7 +513,11 @@ export function ServerConnectionDialog({
                   Cancel
                 </Button>
                 <Button type="submit" disabled={!isFormValid || isConnecting}>
-                  {isConnecting ? 'Connecting...' : 'Connect'}
+                  {isConnecting
+                    ? 'Connecting...'
+                    : isEditMode
+                      ? 'Save & Connect'
+                      : 'Connect'}
                 </Button>
               </div>
             </div>

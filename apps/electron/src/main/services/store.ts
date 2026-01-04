@@ -209,7 +209,11 @@ export function addRecentConnection(
 
 export function updateRecentConnection(
   filePath: string,
-  updates: { displayName?: string; readOnly?: boolean }
+  updates: {
+    displayName?: string;
+    readOnly?: boolean;
+    connectionConfig?: DatabaseConnectionConfig;
+  }
 ): { success: boolean; error?: string } {
   const connections = getRecentConnections();
   const index = connections.findIndex((c) => c.path === filePath);
@@ -231,6 +235,9 @@ export function updateRecentConnection(
   }
   if (updates.readOnly !== undefined) {
     connections[index].readOnly = updates.readOnly;
+  }
+  if (updates.connectionConfig !== undefined) {
+    connections[index].connectionConfig = updates.connectionConfig;
   }
 
   getStore().set('recentConnections', connections);
