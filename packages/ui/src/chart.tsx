@@ -35,6 +35,8 @@ function useChart() {
 }
 
 // ChartStyle must be defined before ChartContainer since it's used there
+// Uses React's native children syntax for <style> tags instead of dangerouslySetInnerHTML
+// This is the recommended approach per shadcn/ui community feedback
 function ChartStyle({ id, config }: { id: string; config: ChartConfig }) {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color
@@ -44,13 +46,9 @@ function ChartStyle({ id, config }: { id: string; config: ChartConfig }) {
     return null;
   }
 
-  return (
-    <style
-      // eslint-disable-next-line react-dom/no-dangerously-set-innerhtml -- Required for dynamic CSS injection
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
+  const cssContent = Object.entries(THEMES)
+    .map(
+      ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
@@ -62,11 +60,10 @@ ${colorConfig
   .join('\n')}
 }
 `
-          )
-          .join('\n'),
-      }}
-    />
-  );
+    )
+    .join('\n');
+
+  return <style>{cssContent}</style>;
 }
 
 function ChartContainer({
