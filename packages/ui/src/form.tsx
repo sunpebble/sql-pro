@@ -154,7 +154,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
   );
 }
 
-/* eslint-disable react-refresh/only-export-components -- Intentional: library exports */
+/* eslint-disable react-refresh/only-export-components -- Intentional: exports useFormField hook for form field state access */
 export {
   Form,
   FormControl,
