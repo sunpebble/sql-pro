@@ -757,17 +757,6 @@ function DiffTable({ change }: { change: PendingChange }) {
     }
   };
 
-  // Schema panel collapsed state
-  const [showSchema, setShowSchema] = useState(false);
-
-  // Get schema info for changed fields
-  const fieldSchemas = useMemo(() => {
-    return changedFields.map(({ field }) => ({
-      field,
-      schema: getColumnSchema(field),
-    }));
-  }, [changedFields, getColumnSchema]);
-
   if (changedFields.length === 0) {
     return (
       <p className="text-muted-foreground text-xs italic">
@@ -780,149 +769,91 @@ function DiffTable({ change }: { change: PendingChange }) {
   const isEditable = change.type !== 'delete';
 
   return (
-    <div className="space-y-2">
-      {/* Schema Panel - Collapsible */}
-      {tableSchema && (
-        <div className="overflow-hidden rounded border text-xs">
-          <button
-            type="button"
-            className="bg-muted/30 hover:bg-muted/50 flex w-full items-center gap-1.5 px-2 py-1.5 transition-colors"
-            onClick={() => setShowSchema(!showSchema)}
-          >
-            {showSchema ? (
-              <ChevronDown className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
+    <div className="overflow-hidden rounded border text-xs">
+      <table className="w-full">
+        <thead>
+          <tr className="bg-muted/50 text-muted-foreground">
+            <th className="px-2 py-1.5 text-left font-medium">Field</th>
+            {change.type !== 'insert' && (
+              <th className="px-2 py-1.5 text-left font-medium">Old</th>
             )}
-            <span className="text-muted-foreground font-medium">Schema</span>
-            <span className="text-muted-foreground/60">
-              ({fieldSchemas.length} fields)
-            </span>
-          </button>
-          {showSchema && (
-            <div className="border-t">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-muted/20 text-muted-foreground text-[10px]">
-                    <th className="px-2 py-1 text-left font-medium">Name</th>
-                    <th className="px-2 py-1 text-left font-medium">Type</th>
-                    <th className="px-2 py-1 text-left font-medium">
-                      Nullable
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {fieldSchemas.map(({ field, schema: colSchema }) => (
-                    <tr key={field} className="border-t">
-                      <td className="px-2 py-1 font-medium">{field}</td>
-                      <td className="text-muted-foreground px-2 py-1 font-mono">
-                        {colSchema?.type || 'unknown'}
-                      </td>
-                      <td className="px-2 py-1">
-                        {colSchema?.nullable ? (
-                          <span className="text-muted-foreground">Yes</span>
-                        ) : (
-                          <span className="font-medium text-amber-600 dark:text-amber-400">
-                            No
+            {change.type !== 'delete' && (
+              <th className="px-2 py-1.5 text-left font-medium">New</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {changedFields.map(({ field, oldValue, newValue }) => {
+            const columnSchema = getColumnSchema(field);
+
+            return (
+              <tr key={field} className="border-t">
+                <td className="text-muted-foreground px-2 py-1.5">
+                  <span className="font-medium">{field}</span>
+                </td>
+                {change.type !== 'insert' && (
+                  <td className="px-2 py-1.5">
+                    <span
+                      className={cn(
+                        'font-mono',
+                        change.type === 'delete'
+                          ? 'text-red-600 dark:text-red-400'
+                          : 'text-muted-foreground line-through'
+                      )}
+                    >
+                      {formatValue(oldValue)}
+                    </span>
+                  </td>
+                )}
+                {change.type !== 'delete' && (
+                  <td className="px-2 py-1.5">
+                    {editingField === field ? (
+                      <div className="flex flex-col gap-1">
+                        <Input
+                          ref={inputRef}
+                          value={editValue}
+                          onChange={handleInputChange}
+                          onBlur={saveEdit}
+                          onKeyDown={handleKeyDown}
+                          className={cn(
+                            'h-6 px-1 py-0 font-mono text-xs',
+                            validationError && 'border-destructive'
+                          )}
+                        />
+                        {validationError && (
+                          <span className="text-destructive text-[10px]">
+                            {validationError}
                           </span>
                         )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Diff Table */}
-      <div className="overflow-hidden rounded border text-xs">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-muted/50 text-muted-foreground">
-              <th className="px-2 py-1.5 text-left font-medium">Field</th>
-              {change.type !== 'insert' && (
-                <th className="px-2 py-1.5 text-left font-medium">Old</th>
-              )}
-              {change.type !== 'delete' && (
-                <th className="px-2 py-1.5 text-left font-medium">New</th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {changedFields.map(({ field, oldValue, newValue }) => {
-              const columnSchema = getColumnSchema(field);
-
-              return (
-                <tr key={field} className="border-t">
-                  <td className="text-muted-foreground px-2 py-1.5">
-                    <span className="font-medium">{field}</span>
-                  </td>
-                  {change.type !== 'insert' && (
-                    <td className="px-2 py-1.5">
+                        {columnSchema && (
+                          <span className="text-muted-foreground/60 text-[10px]">
+                            {columnSchema.type}
+                            {!columnSchema.nullable && ' • NOT NULL'}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
                       <span
                         className={cn(
-                          'font-mono',
-                          change.type === 'delete'
-                            ? 'text-red-600 dark:text-red-400'
-                            : 'text-muted-foreground line-through'
+                          'font-mono text-green-600 dark:text-green-400',
+                          isEditable &&
+                            'hover:bg-muted -mx-1 cursor-pointer rounded px-1'
                         )}
+                        onClick={() =>
+                          isEditable && startEditing(field, newValue)
+                        }
+                        title={isEditable ? 'Click to edit' : undefined}
                       >
-                        {formatValue(oldValue)}
+                        {formatValue(newValue)}
                       </span>
-                    </td>
-                  )}
-                  {change.type !== 'delete' && (
-                    <td className="px-2 py-1.5">
-                      {editingField === field ? (
-                        <div className="flex flex-col gap-1">
-                          <Input
-                            ref={inputRef}
-                            value={editValue}
-                            onChange={handleInputChange}
-                            onBlur={saveEdit}
-                            onKeyDown={handleKeyDown}
-                            className={cn(
-                              'h-6 px-1 py-0 font-mono text-xs',
-                              validationError && 'border-destructive'
-                            )}
-                          />
-                          {validationError && (
-                            <span className="text-destructive text-[10px]">
-                              {validationError}
-                            </span>
-                          )}
-                          {columnSchema && (
-                            <span className="text-muted-foreground/60 text-[10px]">
-                              {columnSchema.type}
-                              {!columnSchema.nullable && ' • NOT NULL'}
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span
-                          className={cn(
-                            'font-mono text-green-600 dark:text-green-400',
-                            isEditable &&
-                              'hover:bg-muted -mx-1 cursor-pointer rounded px-1'
-                          )}
-                          onClick={() =>
-                            isEditable && startEditing(field, newValue)
-                          }
-                          title={isEditable ? 'Click to edit' : undefined}
-                        >
-                          {formatValue(newValue)}
-                        </span>
-                      )}
-                    </td>
-                  )}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                    )}
+                  </td>
+                )}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
