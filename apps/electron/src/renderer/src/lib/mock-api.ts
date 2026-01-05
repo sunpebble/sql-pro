@@ -847,33 +847,28 @@ export const mockSqlProAPI: any = {
     },
   },
   history: {
-    getQueryHistory: async (_request: GetQueryHistoryRequest): Promise<any> => {
+    get: async (_request: GetQueryHistoryRequest): Promise<any> => {
       await delay(200);
       return {
-        entries: [],
+        success: true,
+        history: [],
         total: 0,
       };
     },
-    saveQueryHistory: async (
-      _request: SaveQueryHistoryRequest
-    ): Promise<any> => {
+    save: async (_request: SaveQueryHistoryRequest): Promise<any> => {
       await delay(200);
       return {
         success: true,
         id: 'mock-history-1',
       };
     },
-    deleteQueryHistory: async (
-      _request: DeleteQueryHistoryRequest
-    ): Promise<any> => {
+    delete: async (_request: DeleteQueryHistoryRequest): Promise<any> => {
       await delay(200);
       return {
         success: true,
       };
     },
-    clearQueryHistory: async (
-      _request: ClearQueryHistoryRequest
-    ): Promise<any> => {
+    clear: async (_request: ClearQueryHistoryRequest): Promise<any> => {
       await delay(200);
       return {
         success: true,
