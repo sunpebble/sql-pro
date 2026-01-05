@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   Dialog,
   DialogContent,
@@ -84,6 +85,18 @@ export function ProfileManager({
     filename: string;
     isEncrypted: boolean;
   } | null>(null);
+
+  // Confirmation dialog states
+  const [deleteProfileConfirmOpen, setDeleteProfileConfirmOpen] =
+    useState(false);
+  const [pendingDeleteProfileId, setPendingDeleteProfileId] = useState<
+    string | null
+  >(null);
+  const [deleteFolderConfirmOpen, setDeleteFolderConfirmOpen] = useState(false);
+  const [pendingDeleteFolderId, setPendingDeleteFolderId] = useState<
+    string | null
+  >(null);
+  const [deleteFolderMessage, setDeleteFolderMessage] = useState('');
 
   // Check if keychain is available
   const checkKeychainAvailability = useCallback(async () => {
@@ -234,39 +247,42 @@ export function ProfileManager({
     [addProfile, missingDbPaths, keychainAvailable]
   );
 
-  // Handle profile delete
+  // Handle profile delete - show confirmation dialog
   const handleDeleteProfile = useCallback(
-    async (profileId: string) => {
+    (profileId: string) => {
       const profile = profiles.get(profileId);
       if (!profile) return;
 
-      if (
-        // eslint-disable-next-line no-alert -- Simple confirmation for delete action
-        !confirm(`Delete profile "${profile.displayName || profile.filename}"?`)
-      ) {
-        return;
-      }
-
-      try {
-        const result = await sqlPro.profile.delete({
-          id: profileId,
-          removePassword: true, // Also remove password from keychain
-        });
-
-        if (result.success) {
-          deleteProfile(profileId);
-          if (selectedProfileId === profileId) {
-            selectProfile(null);
-          }
-        } else {
-          setError(result.error || 'Failed to delete profile');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      }
+      setPendingDeleteProfileId(profileId);
+      setDeleteProfileConfirmOpen(true);
     },
-    [profiles, selectedProfileId, deleteProfile, selectProfile]
+    [profiles]
   );
+
+  // Confirm profile deletion
+  const confirmDeleteProfile = useCallback(async () => {
+    if (!pendingDeleteProfileId) return;
+
+    try {
+      const result = await sqlPro.profile.delete({
+        id: pendingDeleteProfileId,
+        removePassword: true, // Also remove password from keychain
+      });
+
+      if (result.success) {
+        deleteProfile(pendingDeleteProfileId);
+        if (selectedProfileId === pendingDeleteProfileId) {
+          selectProfile(null);
+        }
+      } else {
+        setError(result.error || 'Failed to delete profile');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setPendingDeleteProfileId(null);
+    }
+  }, [pendingDeleteProfileId, selectedProfileId, deleteProfile, selectProfile]);
 
   // Handle profile form submit
   const handleProfileFormSubmit = useCallback(
@@ -326,9 +342,9 @@ export function ProfileManager({
     [folders]
   );
 
-  // Handle folder delete
+  // Handle folder delete - show confirmation dialog
   const handleDeleteFolder = useCallback(
-    async (folderId: string) => {
+    (folderId: string) => {
       const folder = folders.get(folderId);
       if (!folder) return;
 
@@ -340,48 +356,69 @@ export function ProfileManager({
         (p) => p.folderId === folderId
       );
 
+      let message: string;
       if (hasSubfolders || hasProfiles) {
-        if (
-          // eslint-disable-next-line no-alert -- Simple confirmation for delete action
-          !confirm(
-            `Folder "${folder.name}" contains ${hasSubfolders ? 'subfolders' : ''}${hasSubfolders && hasProfiles ? ' and ' : ''}${hasProfiles ? 'profiles' : ''}. Delete anyway? Contents will be moved to root level.`
-          )
-        ) {
-          return;
-        }
+        const contents = [
+          hasSubfolders && 'subfolders',
+          hasProfiles && 'profiles',
+        ]
+          .filter(Boolean)
+          .join(' and ');
+        message = `Folder "${folder.name}" contains ${contents}. Delete anyway? Contents will be moved to root level.`;
       } else {
-        // eslint-disable-next-line no-alert -- Simple confirmation for delete action
-        if (!confirm(`Delete folder "${folder.name}"?`)) {
-          return;
-        }
+        message = `Delete folder "${folder.name}"?`;
       }
 
-      try {
-        const result = await sqlPro.folder.delete({ id: folderId });
-
-        if (result.success) {
-          deleteFolder(folderId);
-          // Move child folders to parent
-          Array.from(folders.values())
-            .filter((f) => f.parentId === folderId)
-            .forEach((f) => {
-              updateFolder(f.id, { parentId: folder.parentId });
-            });
-          // Move profiles to root
-          Array.from(profiles.values())
-            .filter((p) => p.folderId === folderId)
-            .forEach((p) => {
-              updateProfile(p.id, { folderId: undefined });
-            });
-        } else {
-          setError(result.error || 'Failed to delete folder');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      }
+      setPendingDeleteFolderId(folderId);
+      setDeleteFolderMessage(message);
+      setDeleteFolderConfirmOpen(true);
     },
-    [folders, profiles, deleteFolder, updateFolder, updateProfile]
+    [folders, profiles]
   );
+
+  // Confirm folder deletion
+  const confirmDeleteFolder = useCallback(async () => {
+    if (!pendingDeleteFolderId) return;
+
+    const folder = folders.get(pendingDeleteFolderId);
+    if (!folder) {
+      setPendingDeleteFolderId(null);
+      return;
+    }
+
+    try {
+      const result = await sqlPro.folder.delete({ id: pendingDeleteFolderId });
+
+      if (result.success) {
+        deleteFolder(pendingDeleteFolderId);
+        // Move child folders to parent
+        Array.from(folders.values())
+          .filter((f) => f.parentId === pendingDeleteFolderId)
+          .forEach((f) => {
+            updateFolder(f.id, { parentId: folder.parentId });
+          });
+        // Move profiles to root
+        Array.from(profiles.values())
+          .filter((p) => p.folderId === pendingDeleteFolderId)
+          .forEach((p) => {
+            updateProfile(p.id, { folderId: undefined });
+          });
+      } else {
+        setError(result.error || 'Failed to delete folder');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setPendingDeleteFolderId(null);
+    }
+  }, [
+    pendingDeleteFolderId,
+    folders,
+    profiles,
+    deleteFolder,
+    updateFolder,
+    updateProfile,
+  ]);
 
   // Handle folder dialog submit
   const handleFolderDialogSubmit = useCallback(
@@ -929,6 +966,34 @@ export function ProfileManager({
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Profile Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteProfileConfirmOpen}
+        onOpenChange={setDeleteProfileConfirmOpen}
+        title="Delete Profile"
+        description={
+          pendingDeleteProfileId
+            ? `Delete profile "${profiles.get(pendingDeleteProfileId)?.displayName || profiles.get(pendingDeleteProfileId)?.filename}"?`
+            : ''
+        }
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={confirmDeleteProfile}
+        onCancel={() => setPendingDeleteProfileId(null)}
+      />
+
+      {/* Delete Folder Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteFolderConfirmOpen}
+        onOpenChange={setDeleteFolderConfirmOpen}
+        title="Delete Folder"
+        description={deleteFolderMessage}
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={confirmDeleteFolder}
+        onCancel={() => setPendingDeleteFolderId(null)}
+      />
     </div>
   );
 }

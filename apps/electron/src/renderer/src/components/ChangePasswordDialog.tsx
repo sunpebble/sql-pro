@@ -4,6 +4,7 @@ import { Button } from '@sqlpro/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, Info, KeyRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -33,6 +34,8 @@ export function ChangePasswordDialog({
   const [hasSavedPassword, setHasSavedPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showRemoveEncryptionConfirm, setShowRemoveEncryptionConfirm] =
+    useState(false);
 
   // Check if password storage is available and if there's a saved password
   useEffect(() => {
@@ -57,29 +60,12 @@ export function ChangePasswordDialog({
       setConfirmPassword('');
       setError(null);
       setIsLoading(false);
+      setShowRemoveEncryptionConfirm(false);
     }
     onOpenChange(newOpen);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    // Validate passwords match
-    if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    // Warn if removing encryption - use a state for confirmation dialog instead
-    if (newPassword === '' && isCurrentlyEncrypted) {
-      // eslint-disable-next-line no-alert
-      const confirmed = globalThis.confirm(
-        'Are you sure you want to remove encryption from this database? The database will no longer be protected.'
-      );
-      if (!confirmed) return;
-    }
-
+  const performPasswordChange = async () => {
     setIsLoading(true);
 
     try {
@@ -114,6 +100,25 @@ export function ChangePasswordDialog({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    // Validate passwords match
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // Warn if removing encryption - show confirmation dialog
+    if (newPassword === '' && isCurrentlyEncrypted) {
+      setShowRemoveEncryptionConfirm(true);
+      return;
+    }
+
+    await performPasswordChange();
   };
 
   const passwordsMatch = newPassword === confirmPassword;
@@ -284,6 +289,17 @@ export function ChangePasswordDialog({
           </form>
         </Dialog.Content>
       </Dialog.Portal>
+
+      {/* Remove Encryption Confirmation Dialog */}
+      <ConfirmDialog
+        open={showRemoveEncryptionConfirm}
+        onOpenChange={setShowRemoveEncryptionConfirm}
+        title="Remove Encryption"
+        description="Are you sure you want to remove encryption from this database? The database will no longer be protected."
+        confirmLabel="Remove Encryption"
+        variant="destructive"
+        onConfirm={performPasswordChange}
+      />
     </Dialog.Root>
   );
 }

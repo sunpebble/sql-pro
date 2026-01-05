@@ -5,6 +5,7 @@ import { Separator } from '@sqlpro/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, Info, KeyRound, Settings, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -70,6 +71,8 @@ function DialogFormContent({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+  const [showRemovePasswordConfirm, setShowRemovePasswordConfirm] =
+    useState(false);
 
   // Check if password storage is available and if there's a saved password
   useEffect(() => {
@@ -162,12 +165,10 @@ function DialogFormContent({
   };
 
   const handleRemovePassword = async () => {
-    // eslint-disable-next-line no-alert
-    const confirmed = globalThis.confirm(
-      'Are you sure you want to remove the saved password? You will need to enter the password manually next time you connect.'
-    );
-    if (!confirmed) return;
+    setShowRemovePasswordConfirm(true);
+  };
 
+  const confirmRemovePassword = async () => {
     setIsPasswordLoading(true);
     try {
       const result = await sqlPro.password.remove({ dbPath });
@@ -446,6 +447,17 @@ function DialogFormContent({
           </Button>
         </div>
       </form>
+
+      {/* Remove Password Confirmation Dialog */}
+      <ConfirmDialog
+        open={showRemovePasswordConfirm}
+        onOpenChange={setShowRemovePasswordConfirm}
+        title="Remove Saved Password"
+        description="Are you sure you want to remove the saved password? You will need to enter the password manually next time you connect."
+        confirmLabel="Remove Password"
+        variant="destructive"
+        onConfirm={confirmRemovePassword}
+      />
     </>
   );
 }
