@@ -109,8 +109,7 @@ export function ProActivationDialog({
     setLocalLicenseKey(licenseKey ?? '');
     // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
     setError(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storeKey]);
+  }, [storeKey, licenseKey]);
 
   const handleActivate = async () => {
     setError(null);

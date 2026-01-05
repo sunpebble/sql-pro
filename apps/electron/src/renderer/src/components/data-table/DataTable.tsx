@@ -157,6 +157,10 @@ export const DataTable = function DataTable({
   // This recalculates when columnSizing or columnSizingInfo changes
   const columnSizing = table.getState().columnSizing;
   const columnSizingInfo = table.getState().columnSizingInfo;
+  // columnSizing and columnSizingInfo are intentionally included as dependencies even though
+  // they're derived from table.getState(). The table object is stable between renders, but we
+  // need to recalculate columnSizeVars when the sizing state changes. The linter incorrectly
+  // flags these as unnecessary because it doesn't understand TanStack Table's stable reference pattern.
   const columnSizeVars = useMemo(() => {
     const headers = table.getFlatHeaders();
     const colSizes: Record<string, number> = {};
@@ -164,7 +168,7 @@ export const DataTable = function DataTable({
       colSizes[`--col-${header.id}-size`] = header.getSize();
     }
     return colSizes;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- columnSizing/columnSizingInfo trigger recalc, table is stable
   }, [columnSizing, columnSizingInfo, table]);
 
   // Get rows from table

@@ -174,10 +174,12 @@ export function SqlLogPanel() {
     return () => clearTimeout(timer);
   }, [searchText, setFilter]);
 
+  // getFilteredLogs reads from store state internally, but we include logs and filter as deps
+  // to ensure the memo recalculates when these values change (React's reactivity model requires this)
   const filteredLogs = useMemo(
     () => getFilteredLogs(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logs, filter]
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- logs/filter trigger recalc, getFilteredLogs is stable
+    [logs, filter, getFilteredLogs]
   );
 
   const handleClearLogs = async () => {

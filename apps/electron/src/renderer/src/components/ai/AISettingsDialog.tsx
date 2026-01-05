@@ -90,8 +90,7 @@ export function AISettingsDialog({
     setLocalModel(model);
     // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
     setLocalBaseUrl(baseUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storeKey]);
+  }, [storeKey, apiKey, provider, model, baseUrl]);
 
   const handleProviderChange = (newProvider: AIProvider) => {
     setLocalProvider(newProvider);
