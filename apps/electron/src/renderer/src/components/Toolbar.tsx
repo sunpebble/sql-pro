@@ -7,12 +7,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@sqlpro/ui/dropdown-menu';
-import { Separator } from '@sqlpro/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
   ChevronDown,
   Database,
   FileText,
+  FolderOpen,
   KeyRound,
   Lock,
   RefreshCw,
@@ -28,6 +28,7 @@ import { sqlPro } from '@/lib/api';
 import {
   useChangesStore,
   useConnectionStore,
+  useConnectionSwitcherStore,
   useDialogStore,
   useTableDataStore,
 } from '@/stores';
@@ -58,11 +59,12 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
   const { resetConnection } = useTableDataStore();
   const { toggleVisible: toggleSqlLog } = useSqlLogStore();
 
-  // Global dialog store for connection settings - must be before any conditional returns
+  // Global stores for dialogs
   const openConnectionSettings = useDialogStore(
     (s) => s.openConnectionSettings
   );
   const openChangePassword = useDialogStore((s) => s.openChangePassword);
+  const openConnectionSwitcher = useConnectionSwitcherStore((s) => s.open);
 
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
 
@@ -153,15 +155,25 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
     setIsLoadingSchema(false);
   };
 
-  if (!connection) return null;
+  // Open file dialog for new database
+  const handleOpenDatabase = async () => {
+    const result = await sqlPro.dialog.openFile();
+    if (result.success && !result.canceled && result.filePath) {
+      window.dispatchEvent(
+        new CustomEvent('open-database-file', {
+          detail: {
+            filePath: result.filePath,
+            filename: result.filePath.split('/').pop() || result.filePath,
+            isEncrypted: false,
+          },
+        })
+      );
+    }
+  };
 
-  const currentConnectionChanges = activeConnectionId
-    ? getChangesForConnection(activeConnectionId)
-    : [];
-
-  // Helper functions for connection menu actions
+  // Handle edit connection settings
   const handleEditConnection = () => {
-    // Get current connection as RecentConnection format
+    if (!connection) return;
     openConnectionSettings({
       path: connection.path,
       filename: connection.filename,
@@ -172,8 +184,9 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
     });
   };
 
+  // Handle change/set password
   const handleChangePassword = () => {
-    if (!activeConnectionId) return;
+    if (!connection || !activeConnectionId) return;
     openChangePassword({
       connectionId: activeConnectionId,
       filename: connection.filename,
@@ -182,10 +195,16 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
     });
   };
 
+  if (!connection) return null;
+
+  const currentConnectionChanges = activeConnectionId
+    ? getChangesForConnection(activeConnectionId)
+    : [];
+
   return (
     <>
       <div className="flex h-12 min-w-0 items-center gap-2 overflow-hidden border-b px-3">
-        {/* Database Info with Quick Menu */}
+        {/* Database Menu with Info and Actions */}
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button
@@ -214,9 +233,18 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
               </p>
             </div>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleOpenDatabase}>
+              <FolderOpen className="mr-2 h-4 w-4" />
+              Open Database...
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openConnectionSwitcher}>
+              <Database className="mr-2 h-4 w-4" />
+              Switch Connection
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleEditConnection}>
               <Settings className="mr-2 h-4 w-4" />
-              <span>Connection Settings</span>
+              Connection Settings
             </DropdownMenuItem>
             {connection.isEncrypted ? (
               <DropdownMenuItem
@@ -224,7 +252,7 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
                 disabled={connection.isReadOnly}
               >
                 <Lock className="mr-2 h-4 w-4" />
-                <span>Change Password</span>
+                Change Password
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem
@@ -232,38 +260,21 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
                 disabled={connection.isReadOnly}
               >
                 <KeyRound className="mr-2 h-4 w-4" />
-                <span>Encrypt Database</span>
+                Encrypt Database
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleRefreshSchema}>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              <span>Refresh Schema</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <Separator orientation="vertical" className="h-auto! self-stretch" />
-
-        {/* Actions */}
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              variant="ghost"
-              size="icon"
+            <DropdownMenuItem
               onClick={handleRefreshSchema}
               disabled={isLoadingSchema}
             >
               <RefreshCw
-                className={`h-4 w-4 ${isLoadingSchema ? 'animate-spin' : ''}`}
+                className={`mr-2 h-4 w-4 ${isLoadingSchema ? 'animate-spin' : ''}`}
               />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <span>Refresh Schema</span>
-            <ShortcutKbd action="action.refresh-schema" className="ml-2" />
-          </TooltipContent>
-        </Tooltip>
+              Refresh Schema
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <div className="min-w-0 flex-1" />
 

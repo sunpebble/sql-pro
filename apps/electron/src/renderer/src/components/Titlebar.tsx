@@ -11,7 +11,7 @@ import { Monitor, Moon, Settings, Sun } from 'lucide-react';
 import { useDialogStore, useThemeStore } from '@/stores';
 
 /**
- * Custom titlebar component with app controls.
+ * Custom titlebar component with global app controls.
  * Includes theme switching and settings access.
  * This is draggable on macOS for window management.
  */
