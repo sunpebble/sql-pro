@@ -244,20 +244,20 @@ export { DEFAULT_SHORTCUTS };
  * VS Code-style shortcuts
  */
 export const VSCODE_SHORTCUTS: ShortcutPreset = {
-  'nav.data-browser': { key: '1', modifiers: { cmd: true, alt: true } },
-  'nav.query-editor': { key: '2', modifiers: { cmd: true, alt: true } },
+  'nav.data-browser': { key: '1', modifiers: { cmd: true, ctrl: true } },
+  'nav.query-editor': { key: '2', modifiers: { cmd: true, ctrl: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true } },
-  'nav.schema-compare': { key: '5', modifiers: { cmd: true, alt: true } },
-  'nav.er-diagram': { key: '3', modifiers: { cmd: true, alt: true } },
-  'nav.data-diff': { key: '6', modifiers: { cmd: true, alt: true } },
+  'nav.schema-compare': { key: '4', modifiers: { cmd: true, ctrl: true } },
+  'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },
+  'nav.data-diff': { key: '5', modifiers: { cmd: true, ctrl: true } },
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
   'conn.recent-connections': { key: 'r', modifiers: { ctrl: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, shift: true } },
   'view.toggle-schema-details': {
-    key: '4',
-    modifiers: { cmd: true, alt: true },
+    key: '0',
+    modifiers: { cmd: true },
   },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
@@ -281,20 +281,20 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
  * Sublime Text-style shortcuts
  */
 export const SUBLIME_SHORTCUTS: ShortcutPreset = {
-  'nav.data-browser': { key: '1', modifiers: { cmd: true, alt: true } },
-  'nav.query-editor': { key: '2', modifiers: { cmd: true, alt: true } },
+  'nav.data-browser': { key: '1', modifiers: { cmd: true, ctrl: true } },
+  'nav.query-editor': { key: '2', modifiers: { cmd: true, ctrl: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true } },
-  'nav.schema-compare': { key: '5', modifiers: { cmd: true, alt: true } },
-  'nav.er-diagram': { key: '3', modifiers: { cmd: true, alt: true } },
-  'nav.data-diff': { key: '6', modifiers: { cmd: true, alt: true } },
+  'nav.schema-compare': { key: '4', modifiers: { cmd: true, ctrl: true } },
+  'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },
+  'nav.data-diff': { key: '5', modifiers: { cmd: true, ctrl: true } },
   'nav.toggle-sidebar': { key: 'k', modifiers: { cmd: true } },
   'conn.recent-connections': { key: 'r', modifiers: { ctrl: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, alt: true } },
   'view.toggle-schema-details': {
-    key: '4',
-    modifiers: { cmd: true, alt: true },
+    key: '0',
+    modifiers: { cmd: true },
   },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
@@ -369,8 +369,13 @@ export function formatShortcutBinding(binding: ShortcutBinding | null): string {
   if (binding.modifiers.cmd) {
     parts.push(mac ? '⌘' : 'Ctrl');
   }
-  if (binding.modifiers.ctrl && !binding.modifiers.cmd) {
-    parts.push('Ctrl');
+  if (binding.modifiers.ctrl) {
+    // On Mac, show ⌃ for ctrl; on other platforms, show Ctrl only if cmd is not set
+    if (mac) {
+      parts.push('⌃');
+    } else if (!binding.modifiers.cmd) {
+      parts.push('Ctrl');
+    }
   }
   if (binding.modifiers.alt) {
     parts.push(mac ? '⌥' : 'Alt');
@@ -422,22 +427,23 @@ export function matchesBinding(
 ): boolean {
   if (!binding) return false;
 
-  // Handle cmd modifier (maps to Meta on macOS, Ctrl on Windows/Linux)
-  const cmdOrCtrl = e.metaKey || e.ctrlKey;
-
-  // Handle explicit ctrl modifier (only checks ctrlKey)
-  const hasCtrlModifier = binding.modifiers.ctrl && !binding.modifiers.cmd;
+  // Check modifier combinations
+  const wantsCmd = !!binding.modifiers.cmd;
+  const wantsCtrl = !!binding.modifiers.ctrl;
 
   let matchesModifiers: boolean;
-  if (hasCtrlModifier) {
-    // When ctrl is explicitly set (without cmd), only match ctrlKey
+  if (wantsCmd && wantsCtrl) {
+    // Both cmd and ctrl required - on macOS this means Meta+Control
+    matchesModifiers = e.metaKey && e.ctrlKey;
+  } else if (wantsCmd) {
+    // Only cmd required - maps to Meta on macOS, Ctrl on Windows/Linux
+    matchesModifiers = (e.metaKey || e.ctrlKey) && !(wantsCtrl && !e.ctrlKey);
+  } else if (wantsCtrl) {
+    // Only ctrl required (explicit Ctrl key, not Cmd)
     matchesModifiers = e.ctrlKey && !e.metaKey;
-  } else if (binding.modifiers.cmd) {
-    // When cmd is set, match either metaKey or ctrlKey
-    matchesModifiers = cmdOrCtrl;
   } else {
     // No cmd or ctrl modifier - make sure neither is pressed
-    matchesModifiers = !cmdOrCtrl;
+    matchesModifiers = !e.metaKey && !e.ctrlKey;
   }
 
   const matchesShift = binding.modifiers.shift ? e.shiftKey : !e.shiftKey;

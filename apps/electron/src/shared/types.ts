@@ -2633,12 +2633,17 @@ export function bindingToAccelerator(
 
   const parts: string[] = [];
 
-  if (binding.modifiers.cmd) {
+  // Handle cmd + ctrl combination (requires both Command and Control on Mac)
+  if (binding.modifiers.cmd && binding.modifiers.ctrl) {
+    // On Mac: Cmd+Ctrl, on Windows/Linux: Ctrl+Ctrl (just Ctrl)
     parts.push('CmdOrCtrl');
-  }
-  if (binding.modifiers.ctrl && !binding.modifiers.cmd) {
+    parts.push('Ctrl');
+  } else if (binding.modifiers.cmd) {
+    parts.push('CmdOrCtrl');
+  } else if (binding.modifiers.ctrl) {
     parts.push('Ctrl');
   }
+
   if (binding.modifiers.alt) {
     parts.push('Alt');
   }
@@ -2662,17 +2667,17 @@ export function bindingToAccelerator(
  * Default shortcuts (SQL Pro native)
  */
 export const DEFAULT_SHORTCUTS: ShortcutPreset = {
-  'nav.data-browser': { key: '1', modifiers: { cmd: true, alt: true } },
-  'nav.query-editor': { key: '2', modifiers: { cmd: true, alt: true } },
+  'nav.data-browser': { key: '1', modifiers: { cmd: true, ctrl: true } },
+  'nav.query-editor': { key: '2', modifiers: { cmd: true, ctrl: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true, shift: true } },
-  'nav.schema-compare': { key: '5', modifiers: { cmd: true, alt: true } },
-  'nav.er-diagram': { key: '3', modifiers: { cmd: true, alt: true } },
-  'nav.data-diff': { key: '6', modifiers: { cmd: true, alt: true } },
+  'nav.schema-compare': { key: '4', modifiers: { cmd: true, ctrl: true } },
+  'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },
+  'nav.data-diff': { key: '5', modifiers: { cmd: true, ctrl: true } },
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true } },
   'view.toggle-schema-details': {
-    key: '4',
-    modifiers: { cmd: true, alt: true },
+    key: '0',
+    modifiers: { cmd: true },
   },
   'action.command-palette': { key: 'k', modifiers: { cmd: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },

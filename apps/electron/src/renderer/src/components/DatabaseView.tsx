@@ -333,8 +333,8 @@ export function DatabaseView({
           </ResizablePanel>
         )}
 
-        {/* Schema Details Panel - Resizable */}
-        {showSchemaDetails && (
+        {/* Schema Details Panel - Resizable (only in Data Browser view) */}
+        {showSchemaDetails && activeTab === 'data' && (
           <ResizablePanel
             side="right"
             defaultWidth={360}

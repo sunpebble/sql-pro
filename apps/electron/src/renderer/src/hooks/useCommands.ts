@@ -172,13 +172,19 @@ export function useCommands() {
         return;
       }
 
-      // Toggle schema details panel shortcut
+      // Toggle schema details panel shortcut (only works in Data Browser view)
       const toggleSchemaDetailsBinding = getShortcut(
         'view.toggle-schema-details'
       );
       if (matchesBinding(e, toggleSchemaDetailsBinding)) {
-        e.preventDefault();
-        settingsStoreRef.current.toggleSchemaDetails();
+        // Check if we're in the Data Browser tab
+        const dataTab = document.querySelector<HTMLButtonElement>(
+          '[data-tab="data"][data-state="active"]'
+        );
+        if (dataTab) {
+          e.preventDefault();
+          settingsStoreRef.current.toggleSchemaDetails();
+        }
         return;
       }
 

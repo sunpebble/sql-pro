@@ -80,8 +80,18 @@ function useTabKeyboardNavigation(
         return;
       }
 
-      // Cmd/Ctrl + 1-9: Switch to tab by index
-      if (isMod && !e.altKey && !e.shiftKey && e.key >= '1' && e.key <= '9') {
+      // Cmd/Ctrl + 1-9: Switch to tab by index (but not when Ctrl is also pressed on Mac)
+      // On Mac, Cmd+Ctrl+1-5 is used for view switching, so we need to exclude that
+      const isMac = navigator.platform.toUpperCase().includes('MAC');
+      const isViewSwitchShortcut = isMac && e.metaKey && e.ctrlKey;
+      if (
+        isMod &&
+        !e.altKey &&
+        !e.shiftKey &&
+        !isViewSwitchShortcut &&
+        e.key >= '1' &&
+        e.key <= '9'
+      ) {
         const index = Number.parseInt(e.key, 10) - 1;
         if (index < tabs.length) {
           e.preventDefault();
