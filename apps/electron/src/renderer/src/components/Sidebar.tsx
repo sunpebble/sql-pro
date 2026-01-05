@@ -188,7 +188,7 @@ export function Sidebar({
     }));
   }, []);
 
-  // Initialize expansion state for new schemas (default collapsed)
+  // Initialize expansion state for new schemas (default expanded)
   useEffect(() => {
     if (schema?.schemas) {
       // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentionally sync state with props
@@ -196,7 +196,7 @@ export function Sidebar({
         const next = { ...prev };
         for (const s of schema.schemas) {
           if (next[s.name] === undefined) {
-            next[s.name] = false; // Collapse by default
+            next[s.name] = true; // Expand by default
           }
         }
         return next;
@@ -209,13 +209,13 @@ export function Sidebar({
           const viewsKey = `${s.name}:views`;
           const triggersKey = `${s.name}:triggers`;
           if (next[tablesKey] === undefined) {
-            next[tablesKey] = false;
+            next[tablesKey] = true; // Expand tables by default
           }
           if (next[viewsKey] === undefined) {
-            next[viewsKey] = false;
+            next[viewsKey] = true; // Expand views by default
           }
           if (next[triggersKey] === undefined) {
-            next[triggersKey] = false;
+            next[triggersKey] = false; // Collapse triggers by default
           }
         }
         return next;
@@ -914,7 +914,11 @@ export function Sidebar({
                   key={schemaInfo.name}
                   schemaInfo={schemaInfo}
                   showSchemaHeader={hasMultipleSchemas}
-                  isSchemaExpanded={expandedSchemas[schemaInfo.name] !== false}
+                  isSchemaExpanded={
+                    hasMultipleSchemas
+                      ? expandedSchemas[schemaInfo.name] !== false
+                      : true
+                  }
                   onToggleSchema={() => toggleSchema(schemaInfo.name)}
                   expandedSections={expandedSections}
                   onToggleSection={toggleSection}
