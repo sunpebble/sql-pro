@@ -1,4 +1,5 @@
 import type { RecentConnection, SavedQuery } from '@shared/types';
+import { ScrollArea, ScrollBar } from '@sqlpro/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -169,98 +170,101 @@ export function DatabaseView({
           className="flex min-w-0 flex-1 flex-col overflow-hidden"
         >
           {/* Tab List */}
-          <TabsList variant="line" className="flex border-b px-2">
-            <TabsTrigger
-              value="data"
-              data-tab="data"
-              className={cn(
-                'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
-                activeTab === 'data'
-                  ? 'border-primary text-foreground'
-                  : 'text-muted-foreground hover:text-foreground border-transparent'
-              )}
-            >
-              <Table className="h-4 w-4" />
-              Data Browser
-              {dataTabs.length > 0 && (
-                <span className="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-[10px] font-normal">
-                  {dataTabs.length}
-                </span>
-              )}
-              <ShortcutKbd
-                action="nav.data-browser"
-                className="ml-1 hidden sm:inline-flex"
-              />
-            </TabsTrigger>
-            <TabsTrigger
-              value="query"
-              data-tab="query"
-              className={cn(
-                'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
-                activeTab === 'query'
-                  ? 'border-primary text-foreground'
-                  : 'text-muted-foreground hover:text-foreground border-transparent'
-              )}
-            >
-              <Code className="h-4 w-4" />
-              SQL Query
-              <ShortcutKbd
-                action="nav.query-editor"
-                className="ml-1 hidden sm:inline-flex"
-              />
-            </TabsTrigger>
-            <TabsTrigger
-              value="diagram"
-              data-tab="diagram"
-              className={cn(
-                'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
-                activeTab === 'diagram'
-                  ? 'border-primary text-foreground'
-                  : 'text-muted-foreground hover:text-foreground border-transparent'
-              )}
-            >
-              <GitFork className="h-4 w-4" />
-              ER Diagram
-              <ShortcutKbd
-                action="nav.er-diagram"
-                className="ml-1 hidden sm:inline-flex"
-              />
-            </TabsTrigger>
-            <TabsTrigger
-              value="compare"
-              data-tab="compare"
-              className={cn(
-                'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
-                activeTab === 'compare'
-                  ? 'border-primary text-foreground'
-                  : 'text-muted-foreground hover:text-foreground border-transparent'
-              )}
-            >
-              <GitCompare className="h-4 w-4" />
-              Schema Compare
-              <ShortcutKbd
-                action="nav.schema-compare"
-                className="ml-1 hidden sm:inline-flex"
-              />
-            </TabsTrigger>
-            <TabsTrigger
-              value="dataDiff"
-              data-tab="dataDiff"
-              className={cn(
-                'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
-                activeTab === 'dataDiff'
-                  ? 'border-primary text-foreground'
-                  : 'text-muted-foreground hover:text-foreground border-transparent'
-              )}
-            >
-              <ArrowLeftRight className="h-4 w-4" />
-              Data Diff
-              <ShortcutKbd
-                action="nav.data-diff"
-                className="ml-1 hidden sm:inline-flex"
-              />
-            </TabsTrigger>
-          </TabsList>
+          <ScrollArea className="w-full">
+            <TabsList variant="line" className="flex border-b px-2">
+              <TabsTrigger
+                value="data"
+                data-tab="data"
+                className={cn(
+                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  activeTab === 'data'
+                    ? 'border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                )}
+              >
+                <Table className="h-4 w-4" />
+                Data Browser
+                {dataTabs.length > 0 && (
+                  <span className="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-[10px] font-normal">
+                    {dataTabs.length}
+                  </span>
+                )}
+                <ShortcutKbd
+                  action="nav.data-browser"
+                  className="ml-1 hidden sm:inline-flex"
+                />
+              </TabsTrigger>
+              <TabsTrigger
+                value="query"
+                data-tab="query"
+                className={cn(
+                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  activeTab === 'query'
+                    ? 'border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                )}
+              >
+                <Code className="h-4 w-4" />
+                SQL Query
+                <ShortcutKbd
+                  action="nav.query-editor"
+                  className="ml-1 hidden sm:inline-flex"
+                />
+              </TabsTrigger>
+              <TabsTrigger
+                value="diagram"
+                data-tab="diagram"
+                className={cn(
+                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  activeTab === 'diagram'
+                    ? 'border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                )}
+              >
+                <GitFork className="h-4 w-4" />
+                ER Diagram
+                <ShortcutKbd
+                  action="nav.er-diagram"
+                  className="ml-1 hidden sm:inline-flex"
+                />
+              </TabsTrigger>
+              <TabsTrigger
+                value="compare"
+                data-tab="compare"
+                className={cn(
+                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  activeTab === 'compare'
+                    ? 'border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                )}
+              >
+                <GitCompare className="h-4 w-4" />
+                Schema Compare
+                <ShortcutKbd
+                  action="nav.schema-compare"
+                  className="ml-1 hidden sm:inline-flex"
+                />
+              </TabsTrigger>
+              <TabsTrigger
+                value="dataDiff"
+                data-tab="dataDiff"
+                className={cn(
+                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  activeTab === 'dataDiff'
+                    ? 'border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                )}
+              >
+                <ArrowLeftRight className="h-4 w-4" />
+                Data Diff
+                <ShortcutKbd
+                  action="nav.data-diff"
+                  className="ml-1 hidden sm:inline-flex"
+                />
+              </TabsTrigger>
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
 
           {/* Tab Content */}
           <TabsContent
