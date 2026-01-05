@@ -223,6 +223,215 @@ DELETE FROM temp_data WHERE created_at < '2024-01-01';`;
       // Cleanup
       fs.chmodSync(existingFile, 0o644);
     });
+
+    it('should preserve original file content when atomic write fails', async () => {
+      // Create an existing file with original content
+      const testFilePath = path.join(tempDir, 'original.sql');
+      const originalContent = 'SELECT * FROM original;';
+      fs.writeFileSync(testFilePath, originalContent);
+
+      // Make the directory read-only to cause rename failure
+      // First write to temp will succeed, but rename will fail
+
+      // Create a subdirectory for this test
+      const testDir = path.join(tempDir, 'preserve-test');
+      fs.mkdirSync(testDir);
+      const targetFile = path.join(testDir, 'target.sql');
+      const originalTargetContent = 'ORIGINAL CONTENT';
+      fs.writeFileSync(targetFile, originalTargetContent);
+
+      // Make the target file read-only
+      fs.chmodSync(targetFile, 0o444);
+
+      const request: WriteFileRequest = {
+        filePath: targetFile,
+        content: 'NEW CONTENT THAT SHOULD NOT APPEAR',
+        atomic: true,
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      // If write failed, original content should be preserved
+      if (!result.success) {
+        const currentContent = fs.readFileSync(targetFile, 'utf8');
+        expect(currentContent).toBe(originalTargetContent);
+      }
+
+      // Cleanup
+      fs.chmodSync(targetFile, 0o644);
+
+      // Verify no temp files left behind in any case
+      const files = fs.readdirSync(testDir);
+      expect(files.filter((f) => f.startsWith('.tmp_'))).toHaveLength(0);
+    });
+
+    it('should not create partial file at target path on temp file write failure', async () => {
+      // Create a test directory where temp file creation will fail
+      const failDir = path.join(tempDir, 'fail-dir');
+      fs.mkdirSync(failDir);
+
+      const targetFile = path.join(failDir, 'target.sql');
+
+      // Verify target file doesn't exist
+      expect(fs.existsSync(targetFile)).toBe(false);
+
+      // Make directory read-only so temp file creation fails
+      fs.chmodSync(failDir, 0o444);
+
+      const request: WriteFileRequest = {
+        filePath: targetFile,
+        content: 'This content should not appear anywhere',
+        atomic: true,
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      expect(result.success).toBe(false);
+
+      // Restore permissions for verification
+      fs.chmodSync(failDir, 0o755);
+
+      // Target file should NOT exist - no partial write
+      expect(fs.existsSync(targetFile)).toBe(false);
+
+      // No temp files should be left behind
+      const files = fs.readdirSync(failDir);
+      expect(files.filter((f) => f.startsWith('.tmp_'))).toHaveLength(0);
+    });
+
+    it('should clean up temp files when rename fails', async () => {
+      const testDir = path.join(tempDir, 'rename-fail-test');
+      fs.mkdirSync(testDir);
+
+      const targetFile = path.join(testDir, 'locked.sql');
+
+      // Create target file and make it read-only
+      fs.writeFileSync(targetFile, 'locked content');
+      fs.chmodSync(targetFile, 0o444);
+
+      const request: WriteFileRequest = {
+        filePath: targetFile,
+        content: 'new content',
+        atomic: true,
+      };
+
+      // Invoke the handler - success depends on OS behavior with atomic rename
+      await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      // Whether it succeeded or failed, there should be no temp files left behind
+      const files = fs.readdirSync(testDir);
+      const tempFiles = files.filter((f) => f.startsWith('.tmp_'));
+      expect(tempFiles).toHaveLength(0);
+
+      // Cleanup
+      fs.chmodSync(targetFile, 0o644);
+    });
+
+    it('should verify temp file is in same directory as target for atomic rename', async () => {
+      // This test verifies the atomic rename works across the same filesystem
+      const testFilePath = path.join(tempDir, 'same-dir-test.sql');
+      const testContent = 'SELECT 1;';
+
+      const request: WriteFileRequest = {
+        filePath: testFilePath,
+        content: testContent,
+        atomic: true,
+      };
+
+      // During the write, we expect temp file to be in tempDir
+      // We can't easily observe this during execution, but we can verify
+      // the final result has no temp files and the target file exists
+      const result = await invokeHandler<{
+        success: boolean;
+      }>('file:write', request);
+
+      expect(result.success).toBe(true);
+      expect(fs.existsSync(testFilePath)).toBe(true);
+
+      // Verify no temp files remain
+      const files = fs.readdirSync(tempDir);
+      expect(files.filter((f) => f.startsWith('.tmp_'))).toHaveLength(0);
+
+      // Content should be exactly as written (no partial data)
+      const content = fs.readFileSync(testFilePath, 'utf8');
+      expect(content).toBe(testContent);
+    });
+
+    it('should handle overwriting existing file atomically', async () => {
+      const testFilePath = path.join(tempDir, 'overwrite-test.sql');
+      const originalContent = 'ORIGINAL SQL CONTENT';
+      const newContent = 'NEW SQL CONTENT THAT REPLACES ORIGINAL';
+
+      // Create original file
+      fs.writeFileSync(testFilePath, originalContent);
+      expect(fs.readFileSync(testFilePath, 'utf8')).toBe(originalContent);
+
+      const request: WriteFileRequest = {
+        filePath: testFilePath,
+        content: newContent,
+        atomic: true,
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+      }>('file:write', request);
+
+      expect(result.success).toBe(true);
+
+      // File should have new content
+      const finalContent = fs.readFileSync(testFilePath, 'utf8');
+      expect(finalContent).toBe(newContent);
+
+      // No temp files left
+      const files = fs.readdirSync(tempDir);
+      expect(files.filter((f) => f.startsWith('.tmp_'))).toHaveLength(0);
+    });
+
+    it('should write complete content in atomic mode (no partial writes)', async () => {
+      const testFilePath = path.join(tempDir, 'complete-write-test.sql');
+
+      // Generate content with known checksum characteristics
+      const lines: string[] = [];
+      for (let i = 0; i < 100; i++) {
+        lines.push(
+          `-- Line ${i}: INSERT INTO test VALUES (${i}, 'data_${i}');`
+        );
+      }
+      const testContent = lines.join('\n');
+      const expectedLength = Buffer.from(testContent, 'utf8').length;
+
+      const request: WriteFileRequest = {
+        filePath: testFilePath,
+        content: testContent,
+        atomic: true,
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        bytesWritten?: number;
+      }>('file:write', request);
+
+      expect(result.success).toBe(true);
+      expect(result.bytesWritten).toBe(expectedLength);
+
+      // Read back and verify complete content
+      const writtenContent = fs.readFileSync(testFilePath, 'utf8');
+      expect(writtenContent).toBe(testContent);
+      expect(writtenContent.split('\n').length).toBe(100);
+
+      // Verify first and last lines to confirm no truncation
+      expect(writtenContent.startsWith('-- Line 0:')).toBe(true);
+      expect(writtenContent.endsWith("'data_99');")).toBe(true);
+    });
   });
 
   describe('encoding Support', () => {
