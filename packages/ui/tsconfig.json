@@ -2,9 +2,7 @@
   "extends": "@sqlpro/tsconfig/web.json",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
     "rootDir": "./src",
-    "paths": {},
     "declaration": true,
     "declarationMap": true,
     "outDir": "./dist"
