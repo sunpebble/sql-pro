@@ -1,6 +1,6 @@
 import type { DragEvent } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { sqlPro } from '@/lib/api';
 import { useConnectionStore } from '@/stores';
 
@@ -19,6 +19,7 @@ function isDatabaseFile(filename: string): boolean {
 export function useDragAndDrop() {
   const navigate = useNavigate();
   const [isDragging, setIsDragging] = useState(false);
+  const dragCounterRef = useRef(0);
   const {
     addConnection,
     setSchema,
@@ -107,9 +108,17 @@ export function useDragAndDrop() {
   );
 
   // Drag and drop handlers
+  // Use a counter to track nested dragenter/dragleave events
   const handleDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+  }, []);
+
+  const handleDragEnter = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    dragCounterRef.current++;
 
     // Check if dragging files
     if (e.dataTransfer.types.includes('Files')) {
@@ -121,18 +130,17 @@ export function useDragAndDrop() {
     e.preventDefault();
     e.stopPropagation();
 
-    // Only set dragging to false if leaving the drop zone entirely
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
+    dragCounterRef.current--;
 
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+    // Only hide overlay when all drag events have left
+    if (dragCounterRef.current === 0) {
       setIsDragging(false);
     }
   }, []);
 
   const handleDragEnd = useCallback(() => {
     // Handle drag cancellation (e.g., pressing Escape or dropping outside)
+    dragCounterRef.current = 0;
     setIsDragging(false);
   }, []);
 
@@ -140,6 +148,7 @@ export function useDragAndDrop() {
     async (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       e.stopPropagation();
+      dragCounterRef.current = 0;
       setIsDragging(false);
 
       const files = Array.from(e.dataTransfer.files);
@@ -162,28 +171,30 @@ export function useDragAndDrop() {
   // Listen for global dragend events to handle drag cancellation
   useEffect(() => {
     const handleGlobalDragEnd = () => {
+      dragCounterRef.current = 0;
       setIsDragging(false);
     };
 
-    const handleGlobalDragLeave = (e: DragEvent) => {
-      // If dragging leaves the entire document
-      if (e.target === document.documentElement) {
-        setIsDragging(false);
-      }
+    // Handle case when file is dropped outside the window
+    const handleGlobalDrop = (e: Event) => {
+      e.preventDefault();
+      dragCounterRef.current = 0;
+      setIsDragging(false);
     };
 
     document.addEventListener('dragend', handleGlobalDragEnd);
-    document.addEventListener('dragleave', handleGlobalDragLeave);
+    document.addEventListener('drop', handleGlobalDrop);
 
     return () => {
       document.removeEventListener('dragend', handleGlobalDragEnd);
-      document.removeEventListener('dragleave', handleGlobalDragLeave);
+      document.removeEventListener('drop', handleGlobalDrop);
     };
   }, []);
 
   return {
     isDragging,
     handleDragOver,
+    handleDragEnter,
     handleDragLeave,
     handleDragEnd,
     handleDrop,

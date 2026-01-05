@@ -27,6 +27,7 @@ export function RootLayout() {
   const {
     isDragging,
     handleDragOver,
+    handleDragEnter,
     handleDragLeave,
     handleDrop,
     DB_EXTENSIONS,
@@ -40,19 +41,22 @@ export function RootLayout() {
         fontSize: `${uiFont.size}px`,
       }}
       onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
       {/* Global drag overlay for database files */}
       {isDragging && (
-        <div className="bg-primary/5 border-primary pointer-events-none absolute inset-4 z-50 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed">
-          <Upload className="text-primary mb-4 h-12 w-12" />
-          <p className="text-primary text-lg font-medium">
-            Drop database file here
-          </p>
-          <p className="text-muted-foreground mt-1 text-sm">
-            {DB_EXTENSIONS.join(', ')}
-          </p>
+        <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+          <div className="bg-background/80 border-primary flex flex-col items-center justify-center rounded-2xl border-2 border-dashed px-16 py-12">
+            <Upload className="text-primary mb-4 h-12 w-12" />
+            <p className="text-primary text-lg font-medium">
+              Drop database file here
+            </p>
+            <p className="text-muted-foreground mt-1 text-sm">
+              {DB_EXTENSIONS.join(', ')}
+            </p>
+          </div>
         </div>
       )}
 
