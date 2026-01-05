@@ -1,6 +1,8 @@
 import type { PendingChange } from '@/lib/collections';
+import type { ColumnSchema } from '@/types/database';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
+import { Input } from '@sqlpro/ui/input';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
@@ -18,9 +20,10 @@ import {
   Undo2,
   X,
 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { usePendingChanges } from '@/hooks/usePendingChanges';
+import { pendingChangesCollection } from '@/lib/collections';
 import { generateSQLScript } from '@/lib/sql-generator';
 import { cn } from '@/lib/utils';
 import { useConnectionStore } from '@/stores';
@@ -562,6 +565,41 @@ function ChangeItem({
 
 // Table-based diff view for clearer visualization
 function DiffTable({ change }: { change: PendingChange }) {
+  // Get schema information for the table
+  const schema = useConnectionStore((state) => state.getSchema());
+  const tableSchema = useMemo(() => {
+    if (!schema) return null;
+    // Find the table in the schema
+    const allTables = [...schema.tables, ...schema.views];
+    return allTables.find(
+      (t) =>
+        t.name === change.table &&
+        (t.schema === change.schema || (!change.schema && t.schema === 'main'))
+    );
+  }, [schema, change.table, change.schema]);
+
+  // Get column schema for a field
+  const getColumnSchema = useCallback(
+    (fieldName: string): ColumnSchema | undefined => {
+      return tableSchema?.columns.find((c) => c.name === fieldName);
+    },
+    [tableSchema]
+  );
+
+  // Track which field is being edited
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState('');
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input when editing starts
+  useEffect(() => {
+    if (editingField && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editingField]);
+
   const changedFields = useMemo(() => {
     if (change.type === 'delete') {
       return Object.entries(change.oldValues || {})
@@ -601,6 +639,124 @@ function DiffTable({ change }: { change: PendingChange }) {
       .filter((f) => f.isChanged);
   }, [change]);
 
+  // Validate value based on column schema
+  const validateValue = useCallback(
+    (val: string, columnSchema: ColumnSchema | undefined): string | null => {
+      // Check NOT NULL constraint
+      if (columnSchema && !columnSchema.nullable) {
+        if (val === '' || val.toLowerCase() === 'null') {
+          return 'This field cannot be NULL';
+        }
+      }
+
+      // Skip type validation if null
+      if (val === '' || val.toLowerCase() === 'null') {
+        return null;
+      }
+
+      // Type validation based on column type
+      const type = (columnSchema?.type || 'text').toLowerCase();
+
+      if (type.includes('int')) {
+        const parsed = Number.parseInt(val, 10);
+        if (Number.isNaN(parsed)) {
+          return 'Must be a valid integer';
+        }
+      } else if (
+        type.includes('real') ||
+        type.includes('float') ||
+        type.includes('double') ||
+        type.includes('numeric') ||
+        type.includes('decimal')
+      ) {
+        const parsed = Number.parseFloat(val);
+        if (Number.isNaN(parsed)) {
+          return 'Must be a valid number';
+        }
+      } else if (type.includes('bool')) {
+        if (!['true', 'false', '1', '0'].includes(val.toLowerCase())) {
+          return 'Must be true or false';
+        }
+      }
+
+      return null;
+    },
+    []
+  );
+
+  // Start editing a field
+  const startEditing = (field: string, currentValue: unknown) => {
+    // Don't allow editing delete changes
+    if (change.type === 'delete') return;
+
+    setEditingField(field);
+    setEditValue(formatValueForEdit(currentValue));
+    setValidationError(null);
+  };
+
+  // Save the edited value
+  const saveEdit = () => {
+    if (!editingField) return;
+
+    // Validate before saving
+    const columnSchema = getColumnSchema(editingField);
+    const error = validateValue(editValue, columnSchema);
+
+    if (error) {
+      setValidationError(error);
+      return;
+    }
+
+    const parsedValue = parseEditValue(editValue, columnSchema?.type);
+
+    // Update the pending change in the collection
+    pendingChangesCollection.update(change.id, (draft) => {
+      if (!draft.newValues) {
+        draft.newValues = {};
+      }
+      draft.newValues[editingField] = parsedValue;
+      draft.timestamp = new Date();
+      // Reset validation state since value changed
+      draft.isValid = true;
+      draft.validationError = undefined;
+    });
+
+    setEditingField(null);
+    setEditValue('');
+    setValidationError(null);
+  };
+
+  // Cancel editing
+  const cancelEdit = () => {
+    setEditingField(null);
+    setEditValue('');
+    setValidationError(null);
+  };
+
+  // Handle key events
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelEdit();
+    }
+  };
+
+  // Handle input change with live validation
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setEditValue(newValue);
+
+    // Live validation
+    if (editingField) {
+      const columnSchema = getColumnSchema(editingField);
+      const error = validateValue(newValue, columnSchema);
+      setValidationError(error);
+    }
+  };
+
   if (changedFields.length === 0) {
     return (
       <p className="text-muted-foreground text-xs italic">
@@ -608,6 +764,9 @@ function DiffTable({ change }: { change: PendingChange }) {
       </p>
     );
   }
+
+  // Check if this change type is editable
+  const isEditable = change.type !== 'delete';
 
   return (
     <div className="overflow-hidden rounded border text-xs">
@@ -624,40 +783,83 @@ function DiffTable({ change }: { change: PendingChange }) {
           </tr>
         </thead>
         <tbody>
-          {changedFields.map(({ field, oldValue, newValue }) => (
-            <tr key={field} className="border-t">
-              <td className="text-muted-foreground px-2 py-1.5 font-medium">
-                {field}
-              </td>
-              {change.type !== 'insert' && (
-                <td className="px-2 py-1.5">
-                  <span
-                    className={cn(
-                      'font-mono',
-                      change.type === 'delete'
-                        ? 'text-red-600 dark:text-red-400'
-                        : 'text-muted-foreground line-through'
+          {changedFields.map(({ field, oldValue, newValue }) => {
+            const columnSchema = getColumnSchema(field);
+            const typeLabel = columnSchema?.type || 'unknown';
+
+            return (
+              <tr key={field} className="border-t">
+                <td className="text-muted-foreground px-2 py-1.5">
+                  <div className="flex flex-col">
+                    <span className="font-medium">{field}</span>
+                    <span className="text-muted-foreground/60 text-[10px]">
+                      {typeLabel}
+                      {columnSchema && !columnSchema.nullable && ' • NOT NULL'}
+                    </span>
+                  </div>
+                </td>
+                {change.type !== 'insert' && (
+                  <td className="px-2 py-1.5">
+                    <span
+                      className={cn(
+                        'font-mono',
+                        change.type === 'delete'
+                          ? 'text-red-600 dark:text-red-400'
+                          : 'text-muted-foreground line-through'
+                      )}
+                    >
+                      {formatValue(oldValue)}
+                    </span>
+                  </td>
+                )}
+                {change.type !== 'delete' && (
+                  <td className="px-2 py-1.5">
+                    {editingField === field ? (
+                      <div className="flex flex-col gap-1">
+                        <Input
+                          ref={inputRef}
+                          value={editValue}
+                          onChange={handleInputChange}
+                          onBlur={saveEdit}
+                          onKeyDown={handleKeyDown}
+                          className={cn(
+                            'h-6 px-1 py-0 font-mono text-xs',
+                            validationError && 'border-destructive'
+                          )}
+                        />
+                        {validationError && (
+                          <span className="text-destructive text-[10px]">
+                            {validationError}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <span
+                        className={cn(
+                          'font-mono text-green-600 dark:text-green-400',
+                          isEditable &&
+                            'hover:bg-muted -mx-1 cursor-pointer rounded px-1'
+                        )}
+                        onClick={() =>
+                          isEditable && startEditing(field, newValue)
+                        }
+                        title={isEditable ? 'Click to edit' : undefined}
+                      >
+                        {formatValue(newValue)}
+                      </span>
                     )}
-                  >
-                    {formatValue(oldValue)}
-                  </span>
-                </td>
-              )}
-              {change.type !== 'delete' && (
-                <td className="px-2 py-1.5">
-                  <span className="font-mono text-green-600 dark:text-green-400">
-                    {formatValue(newValue)}
-                  </span>
-                </td>
-              )}
-            </tr>
-          ))}
+                  </td>
+                )}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
   );
 }
 
+// Format value for display
 function formatValue(value: unknown): string {
   if (value === null) return 'NULL';
   if (value === undefined) return '';
@@ -671,4 +873,52 @@ function formatValue(value: unknown): string {
   if (typeof value === 'boolean') return value ? 'true' : 'false';
   if (value instanceof Date) return value.toISOString();
   return String(value);
+}
+
+// Format value for editing (raw value without quotes)
+function formatValueForEdit(value: unknown): string {
+  if (value === null) return 'NULL';
+  if (value === undefined) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'boolean') return value ? 'true' : 'false';
+  if (value instanceof Date) return value.toISOString();
+  return String(value);
+}
+
+// Parse edited value back to appropriate type based on column schema
+function parseEditValue(value: string, columnType?: string): unknown {
+  // Handle NULL
+  if (value === 'NULL' || value === 'null' || value === '') return null;
+
+  const type = (columnType || 'text').toLowerCase();
+
+  // Handle boolean
+  if (type.includes('bool')) {
+    return value === 'true' || value === '1';
+  }
+
+  // Handle integers
+  if (type.includes('int')) {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isNaN(parsed) ? value : parsed;
+  }
+
+  // Handle floats/decimals
+  if (
+    type.includes('real') ||
+    type.includes('float') ||
+    type.includes('double') ||
+    type.includes('numeric') ||
+    type.includes('decimal')
+  ) {
+    const parsed = Number.parseFloat(value);
+    return Number.isNaN(parsed) ? value : parsed;
+  }
+
+  // Handle generic numbers (without specific type)
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+
+  // Default to string
+  return value;
 }

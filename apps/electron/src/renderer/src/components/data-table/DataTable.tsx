@@ -26,6 +26,7 @@ import {
 } from 'react';
 import { cn } from '@/lib/utils';
 import { useTableFont } from '@/stores';
+import { useDragSelection } from './hooks/useDragSelection';
 import { useTableCore } from './hooks/useTableCore';
 import { useTableEditing } from './hooks/useTableEditing';
 import { TableBody } from './TableBody';
@@ -197,6 +198,13 @@ export const DataTable = function DataTable({
     onRowInsert,
   });
 
+  // Initialize drag selection for row multi-select
+  const { handleMouseDown: handleDragStart, isInDragRange } = useDragSelection({
+    table,
+    containerRef,
+    enabled: enableSelection,
+  });
+
   // Auto-focus and start editing the first editable cell of new row
   useEffect(() => {
     if (newRowId === null || newRowId === undefined) return undefined;
@@ -359,6 +367,8 @@ export const DataTable = function DataTable({
             table.getColumn(columnId)?.getSize() ?? 150
           }
           enableSelection={enableSelection}
+          onDragStart={handleDragStart}
+          isInDragRange={isInDragRange}
         />
       </table>
 

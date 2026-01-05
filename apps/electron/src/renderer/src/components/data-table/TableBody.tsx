@@ -27,6 +27,10 @@ interface DataRowProps {
   pinnedOffsets?: Record<string, number>;
   /** Enable row selection */
   enableSelection?: boolean;
+  /** Handler for drag selection start */
+  onDragStart?: (e: React.MouseEvent, rowIndex: number) => void;
+  /** Whether this row is in the current drag selection range */
+  isInDragRange?: boolean;
 }
 
 const DataRow = memo(
@@ -46,6 +50,8 @@ const DataRow = memo(
     pinnedColumns = [],
     pinnedOffsets = {},
     enableSelection = false,
+    onDragStart,
+    isInDragRange = false,
   }: DataRowProps) => {
     const isEven = rowIndex % 2 === 0;
     const isSelected = row.getIsSelected();
@@ -57,7 +63,8 @@ const DataRow = memo(
           isEven ? 'bg-background' : 'bg-muted/20',
           isDeleted && 'bg-destructive/10 line-through opacity-50',
           isNewRow && 'bg-green-500/10',
-          isSelected && 'bg-primary/10'
+          isSelected && 'bg-primary/10',
+          isInDragRange && !isSelected && 'bg-primary/5'
         )}
         data-row-id={row.id}
         data-row-index={rowIndex}
@@ -65,8 +72,9 @@ const DataRow = memo(
         {/* Selection cell */}
         {enableSelection && (
           <td
-            className="bg-background sticky left-0 z-10 border-r px-3"
+            className="bg-background sticky left-0 z-10 cursor-default border-r px-3 select-none"
             onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => onDragStart?.(e, rowIndex)}
           >
             <Checkbox
               checked={isSelected}
@@ -149,6 +157,10 @@ interface TableBodyProps {
   getColumnSize?: (columnId: string) => number;
   /** Enable row selection */
   enableSelection?: boolean;
+  /** Handler for drag selection start */
+  onDragStart?: (e: React.MouseEvent, rowIndex: number) => void;
+  /** Check if row is in drag selection range */
+  isInDragRange?: (rowIndex: number) => boolean;
 }
 
 export const TableBody = memo(
@@ -167,6 +179,8 @@ export const TableBody = memo(
     pinnedColumns = [],
     getColumnSize,
     enableSelection = false,
+    onDragStart,
+    isInDragRange,
   }: TableBodyProps) => {
     // Calculate pinned offsets
     // Selection column width: checkbox (16px) + padding (12px * 2) + border (1px) ≈ 41px
@@ -230,6 +244,8 @@ export const TableBody = memo(
               pinnedColumns={pinnedColumns}
               pinnedOffsets={pinnedOffsets}
               enableSelection={enableSelection}
+              onDragStart={onDragStart}
+              isInDragRange={isInDragRange?.(virtualItem.index)}
             />
           );
         })}

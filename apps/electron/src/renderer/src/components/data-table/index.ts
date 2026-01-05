@@ -27,6 +27,7 @@ export {
 
 export { GroupRow } from './GroupRow';
 // Hooks
+export { useDragSelection } from './hooks/useDragSelection';
 export { useTableCore } from './hooks/useTableCore';
 export { useTableEditing } from './hooks/useTableEditing';
 
