@@ -2,6 +2,7 @@ import type { SqlLogEntry, SqlLogLevel } from '@/types/sql-log';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -279,7 +280,7 @@ export function SqlLogPanel() {
           </div>
 
           {/* Log list */}
-          <div className="min-h-0 flex-1 overflow-y-auto">
+          <ScrollArea className="min-h-0 flex-1">
             {isLoading ? (
               <div className="text-muted-foreground flex h-full items-center justify-center">
                 Loading...
@@ -295,7 +296,7 @@ export function SqlLogPanel() {
                 ))}
               </div>
             )}
-          </div>
+          </ScrollArea>
         </div>
       </SheetContent>
     </Sheet>

@@ -1,6 +1,7 @@
 import type { ConnectionProfile, ProfileFolder } from '@shared/types.ts';
 import { Button } from '@sqlpro/ui/button';
 import { Checkbox } from '@sqlpro/ui/checkbox';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Download, Upload } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import {
@@ -257,64 +258,68 @@ export function ImportExportDialog({
                     </div>
 
                     {/* Profiles list */}
-                    <div className="max-h-96 space-y-2 overflow-y-auto">
-                      {folders.length > 0 && (
-                        <div className="space-y-2">
-                          <h4 className="text-muted-foreground text-xs font-semibold uppercase">
-                            Folders
-                          </h4>
-                          {folders.map((folder) => (
-                            <label
-                              key={folder.id}
-                              className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-sm px-2 py-1.5"
-                            >
-                              <Checkbox
-                                checked={selectedFolderIds.has(folder.id)}
-                                onCheckedChange={() => toggleFolder(folder.id)}
-                              />
-                              <span className="flex-1 text-sm">
-                                {folder.name}
-                              </span>
-                            </label>
-                          ))}
-                        </div>
-                      )}
+                    <ScrollArea className="h-96">
+                      <div className="space-y-2">
+                        {folders.length > 0 && (
+                          <div className="space-y-2">
+                            <h4 className="text-muted-foreground text-xs font-semibold uppercase">
+                              Folders
+                            </h4>
+                            {folders.map((folder) => (
+                              <label
+                                key={folder.id}
+                                className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-sm px-2 py-1.5"
+                              >
+                                <Checkbox
+                                  checked={selectedFolderIds.has(folder.id)}
+                                  onCheckedChange={() =>
+                                    toggleFolder(folder.id)
+                                  }
+                                />
+                                <span className="flex-1 text-sm">
+                                  {folder.name}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
 
-                      {profiles.length > 0 && (
-                        <div className="space-y-2">
-                          <h4 className="text-muted-foreground text-xs font-semibold uppercase">
-                            Profiles
-                          </h4>
-                          {profiles.map((profile) => (
-                            <label
-                              key={profile.id}
-                              className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-sm px-2 py-1.5"
-                            >
-                              <Checkbox
-                                checked={selectedProfileIds.has(profile.id)}
-                                onCheckedChange={() =>
-                                  toggleProfile(profile.id)
-                                }
-                              />
-                              <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm">
-                                  {profile.displayName || profile.filename}
-                                </p>
-                                <p className="text-muted-foreground truncate text-xs">
-                                  {profile.path}
-                                </p>
-                              </div>
-                            </label>
-                          ))}
-                        </div>
-                      )}
+                        {profiles.length > 0 && (
+                          <div className="space-y-2">
+                            <h4 className="text-muted-foreground text-xs font-semibold uppercase">
+                              Profiles
+                            </h4>
+                            {profiles.map((profile) => (
+                              <label
+                                key={profile.id}
+                                className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-sm px-2 py-1.5"
+                              >
+                                <Checkbox
+                                  checked={selectedProfileIds.has(profile.id)}
+                                  onCheckedChange={() =>
+                                    toggleProfile(profile.id)
+                                  }
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-sm">
+                                    {profile.displayName || profile.filename}
+                                  </p>
+                                  <p className="text-muted-foreground truncate text-xs">
+                                    {profile.path}
+                                  </p>
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+                        )}
 
-                      {profiles.length === 0 && folders.length === 0 && (
-                        <p className="text-muted-foreground py-8 text-center text-sm">
-                          No profiles or folders available to export
-                        </p>
-                      )}
-                    </div>
+                        {profiles.length === 0 && folders.length === 0 && (
+                          <p className="text-muted-foreground py-8 text-center text-sm">
+                            No profiles or folders available to export
+                          </p>
+                        )}
+                      </div>
+                    </ScrollArea>
                   </div>
                 </>
               )}

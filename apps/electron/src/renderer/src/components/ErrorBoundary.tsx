@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import type { ErrorInfo, ReactNode } from 'react';
 import { Button } from '@sqlpro/ui/button';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   AlertTriangle,
   ChevronDown,
@@ -164,39 +165,41 @@ function StackTraceViewer({ stack }: { stack: string }) {
           {copied ? 'Copied!' : 'Copy'}
         </Button>
       </div>
-      <div className="bg-muted/30 max-h-64 space-y-px overflow-auto rounded-md">
-        {frames.map((frame, index) => (
-          <div
-            key={`${frame.raw}`}
-            className={cn(
-              'group flex items-start gap-2 px-2 py-1.5 font-mono text-xs',
-              index === 0 && 'bg-destructive/10'
-            )}
-          >
-            <span className="text-muted-foreground w-5 shrink-0 text-right">
-              {index}
-            </span>
-            <div className="min-w-0 flex-1">
-              <span
-                className={cn(
-                  'font-medium',
-                  index === 0 ? 'text-destructive' : 'text-foreground'
-                )}
-              >
-                {frame.functionName}
-              </span>
-              {frame.fileName && (
-                <div className="text-muted-foreground truncate">
-                  {formatFilePath(frame.fileName)}
-                  <span className="text-muted-foreground/70">
-                    :{frame.lineNumber}:{frame.columnNumber}
-                  </span>
-                </div>
+      <ScrollArea className="h-64">
+        <div className="bg-muted/30 space-y-px rounded-md">
+          {frames.map((frame, index) => (
+            <div
+              key={`${frame.raw}`}
+              className={cn(
+                'group flex items-start gap-2 px-2 py-1.5 font-mono text-xs',
+                index === 0 && 'bg-destructive/10'
               )}
+            >
+              <span className="text-muted-foreground w-5 shrink-0 text-right">
+                {index}
+              </span>
+              <div className="min-w-0 flex-1">
+                <span
+                  className={cn(
+                    'font-medium',
+                    index === 0 ? 'text-destructive' : 'text-foreground'
+                  )}
+                >
+                  {frame.functionName}
+                </span>
+                {frame.fileName && (
+                  <div className="text-muted-foreground truncate">
+                    {formatFilePath(frame.fileName)}
+                    <span className="text-muted-foreground/70">
+                      :{frame.lineNumber}:{frame.columnNumber}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
@@ -232,30 +235,32 @@ function ComponentStackViewer({ componentStack }: { componentStack: string }) {
           {copied ? 'Copied!' : 'Copy'}
         </Button>
       </div>
-      <div className="bg-muted/30 max-h-48 space-y-px overflow-auto rounded-md p-2">
-        {lines.map((line, index) => {
-          const match = line.match(/at\s+(\w+)/);
-          const componentName = match ? match[1] : line;
-          return (
-            <div
-              key={line}
-              className="flex items-center gap-1 font-mono text-xs"
-              style={{ paddingLeft: `${index * 12}px` }}
-            >
-              <span className="text-muted-foreground">{'>'}</span>
-              <span
-                className={cn(
-                  index === 0
-                    ? 'text-destructive font-medium'
-                    : 'text-foreground'
-                )}
+      <ScrollArea className="h-48">
+        <div className="bg-muted/30 space-y-px rounded-md p-2">
+          {lines.map((line, index) => {
+            const match = line.match(/at\s+(\w+)/);
+            const componentName = match ? match[1] : line;
+            return (
+              <div
+                key={line}
+                className="flex items-center gap-1 font-mono text-xs"
+                style={{ paddingLeft: `${index * 12}px` }}
               >
-                {componentName}
-              </span>
-            </div>
-          );
-        })}
-      </div>
+                <span className="text-muted-foreground">{'>'}</span>
+                <span
+                  className={cn(
+                    index === 0
+                      ? 'text-destructive font-medium'
+                      : 'text-foreground'
+                  )}
+                >
+                  {componentName}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </ScrollArea>
     </div>
   );
 }

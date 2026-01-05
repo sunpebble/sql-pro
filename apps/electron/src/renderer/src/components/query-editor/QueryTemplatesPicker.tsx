@@ -3,6 +3,7 @@ import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -365,29 +366,31 @@ export const QueryTemplatesPicker = memo(
             </div>
 
             {/* Template Grid */}
-            <div className="max-h-[60vh] overflow-y-auto p-6">
-              {filteredTemplates.length === 0 ? (
-                <div className="text-muted-foreground flex flex-col items-center justify-center py-16">
-                  <FileText className="mb-3 h-12 w-12 opacity-40" />
-                  <p className="font-medium">No templates found</p>
-                  <p className="text-sm opacity-70">
-                    Try adjusting your search or category
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-4">
-                  {filteredTemplates.map((template) => (
-                    <TemplateCard
-                      key={template.id}
-                      template={template}
-                      onSelect={handleSelect}
-                      onDuplicate={handleDuplicate}
-                      onDelete={handleDelete}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <ScrollArea className="h-[60vh]">
+              <div className="p-6">
+                {filteredTemplates.length === 0 ? (
+                  <div className="text-muted-foreground flex flex-col items-center justify-center py-16">
+                    <FileText className="mb-3 h-12 w-12 opacity-40" />
+                    <p className="font-medium">No templates found</p>
+                    <p className="text-sm opacity-70">
+                      Try adjusting your search or category
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4">
+                    {filteredTemplates.map((template) => (
+                      <TemplateCard
+                        key={template.id}
+                        template={template}
+                        onSelect={handleSelect}
+                        onDuplicate={handleDuplicate}
+                        onDelete={handleDelete}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
           </DialogContent>
         </Dialog>
 

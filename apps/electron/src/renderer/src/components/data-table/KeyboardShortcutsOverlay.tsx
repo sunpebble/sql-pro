@@ -1,6 +1,7 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Button } from '@sqlpro/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   ArrowUp,
   Command,
@@ -240,7 +241,7 @@ export const KeyboardShortcutsOverlay = memo(
           </div>
 
           {/* Content */}
-          <div className="max-h-100 overflow-y-auto">
+          <ScrollArea className="h-100">
             {Object.entries(groupedShortcuts).map(([category, items]) => (
               <div key={category} className="border-b last:border-b-0">
                 {/* Category header */}
@@ -279,7 +280,7 @@ export const KeyboardShortcutsOverlay = memo(
                 </div>
               </div>
             ))}
-          </div>
+          </ScrollArea>
 
           {/* Footer */}
           <div className="bg-muted/30 border-t px-3 py-2">

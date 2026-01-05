@@ -1,5 +1,6 @@
 import type { ErrorComponentProps } from '@tanstack/react-router';
 import { Button } from '@sqlpro/ui/button';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   AlertTriangle,
   ChevronDown,
@@ -148,41 +149,43 @@ function StackTraceViewer({ stack }: { stack: string }) {
           {copied ? 'Copied!' : 'Copy'}
         </Button>
       </div>
-      <div className="max-h-64 space-y-px overflow-auto rounded-md bg-zinc-100 dark:bg-zinc-900">
-        {frames.map((frame, index) => (
-          <div
-            key={frame.raw}
-            className={cn(
-              'group flex items-start gap-2 px-2 py-1.5 font-mono text-xs',
-              index === 0 && 'bg-red-100 dark:bg-red-900/30'
-            )}
-          >
-            <span className="w-5 shrink-0 text-right text-zinc-400">
-              {index}
-            </span>
-            <div className="min-w-0 flex-1">
-              <span
-                className={cn(
-                  'font-medium',
-                  index === 0
-                    ? 'text-red-600 dark:text-red-400'
-                    : 'text-zinc-900 dark:text-zinc-100'
-                )}
-              >
-                {frame.functionName}
-              </span>
-              {frame.fileName && (
-                <div className="truncate text-zinc-500">
-                  {formatFilePath(frame.fileName)}
-                  <span className="text-zinc-400">
-                    :{frame.lineNumber}:{frame.columnNumber}
-                  </span>
-                </div>
+      <ScrollArea className="h-64">
+        <div className="space-y-px rounded-md bg-zinc-100 dark:bg-zinc-900">
+          {frames.map((frame, index) => (
+            <div
+              key={frame.raw}
+              className={cn(
+                'group flex items-start gap-2 px-2 py-1.5 font-mono text-xs',
+                index === 0 && 'bg-red-100 dark:bg-red-900/30'
               )}
+            >
+              <span className="w-5 shrink-0 text-right text-zinc-400">
+                {index}
+              </span>
+              <div className="min-w-0 flex-1">
+                <span
+                  className={cn(
+                    'font-medium',
+                    index === 0
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-zinc-900 dark:text-zinc-100'
+                  )}
+                >
+                  {frame.functionName}
+                </span>
+                {frame.fileName && (
+                  <div className="truncate text-zinc-500">
+                    {formatFilePath(frame.fileName)}
+                    <span className="text-zinc-400">
+                      :{frame.lineNumber}:{frame.columnNumber}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 }

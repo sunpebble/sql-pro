@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from '@sqlpro/ui/alert-dialog';
 import { Button } from '@sqlpro/ui/button';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { AlertTriangle, Edit3, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -106,47 +107,49 @@ export function AppQuitDialog({
         </AlertDialogHeader>
 
         {/* Change Summary by Connection */}
-        <div className="max-h-75 space-y-3 overflow-y-auto">
-          {connectionsWithChanges.map((connection) => (
-            <div
-              key={connection.connectionId}
-              className="bg-muted/50 rounded-md px-3 py-2"
-            >
-              <div className="truncate text-sm font-medium">
-                {connection.dbPath}
+        <ScrollArea className="h-75">
+          <div className="space-y-3">
+            {connectionsWithChanges.map((connection) => (
+              <div
+                key={connection.connectionId}
+                className="bg-muted/50 rounded-md px-3 py-2"
+              >
+                <div className="truncate text-sm font-medium">
+                  {connection.dbPath}
+                </div>
+                <div className="mt-1 flex flex-wrap gap-3 text-xs">
+                  {connection.inserts > 0 && (
+                    <div className="flex items-center gap-1 text-green-600">
+                      <Plus className="h-3 w-3" />
+                      <span>
+                        {connection.inserts} insert
+                        {connection.inserts !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  )}
+                  {connection.updates > 0 && (
+                    <div className="flex items-center gap-1 text-amber-600">
+                      <Edit3 className="h-3 w-3" />
+                      <span>
+                        {connection.updates} update
+                        {connection.updates !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  )}
+                  {connection.deletes > 0 && (
+                    <div className="flex items-center gap-1 text-red-600">
+                      <Trash2 className="h-3 w-3" />
+                      <span>
+                        {connection.deletes} delete
+                        {connection.deletes !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="mt-1 flex flex-wrap gap-3 text-xs">
-                {connection.inserts > 0 && (
-                  <div className="flex items-center gap-1 text-green-600">
-                    <Plus className="h-3 w-3" />
-                    <span>
-                      {connection.inserts} insert
-                      {connection.inserts !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                )}
-                {connection.updates > 0 && (
-                  <div className="flex items-center gap-1 text-amber-600">
-                    <Edit3 className="h-3 w-3" />
-                    <span>
-                      {connection.updates} update
-                      {connection.updates !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                )}
-                {connection.deletes > 0 && (
-                  <div className="flex items-center gap-1 text-red-600">
-                    <Trash2 className="h-3 w-3" />
-                    <span>
-                      {connection.deletes} delete
-                      {connection.deletes !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </ScrollArea>
 
         {/* Error Message */}
         {error && (

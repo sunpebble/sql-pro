@@ -5,6 +5,7 @@ import { Checkbox } from '@sqlpro/ui/checkbox';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
 import { Progress } from '@sqlpro/ui/progress';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -342,25 +343,27 @@ export function ExportDialog({
                 </Button>
               </div>
             </div>
-            <div className="border-input max-h-40 space-y-1 overflow-y-auto rounded-md border p-2">
-              {columns.map((column) => (
-                <label
-                  key={column.name}
-                  className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded px-2 py-1"
-                >
-                  <Checkbox
-                    checked={selectedColumns.has(column.name)}
-                    onCheckedChange={(checked) =>
-                      handleColumnToggle(column.name, checked === true)
-                    }
-                  />
-                  <span className="text-sm">{column.name}</span>
-                  <span className="text-muted-foreground text-xs">
-                    {column.type}
-                  </span>
-                </label>
-              ))}
-            </div>
+            <ScrollArea className="h-40">
+              <div className="space-y-1 rounded-md border p-2">
+                {columns.map((column) => (
+                  <label
+                    key={column.name}
+                    className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded px-2 py-1"
+                  >
+                    <Checkbox
+                      checked={selectedColumns.has(column.name)}
+                      onCheckedChange={(checked) =>
+                        handleColumnToggle(column.name, checked === true)
+                      }
+                    />
+                    <span className="text-sm">{column.name}</span>
+                    <span className="text-muted-foreground text-xs">
+                      {column.type}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </ScrollArea>
           </div>
 
           {/* Format-Specific Options */}

@@ -1,5 +1,6 @@
 import type { SchemaInfo } from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Textarea } from '@sqlpro/ui/textarea';
 import {
   AlertCircle,
@@ -160,9 +161,11 @@ export function NLToSQLDialog({
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="bg-muted max-h-50 overflow-auto rounded-lg p-4">
-                    <SqlHighlight code={generatedSQL} className="text-sm" />
-                  </div>
+                  <ScrollArea className="h-50">
+                    <div className="bg-muted rounded-lg p-4">
+                      <SqlHighlight code={generatedSQL} className="text-sm" />
+                    </div>
+                  </ScrollArea>
                 </div>
               )}
 

@@ -6,6 +6,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@sqlpro/ui/hover-card';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Copy, Maximize2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -161,7 +162,7 @@ export const RowHoverCard = memo(
           </div>
 
           {/* Content */}
-          <div className="max-h-64 overflow-y-auto">
+          <ScrollArea className="h-64">
             <div className="divide-border/50 divide-y">
               {columns.slice(0, 10).map((col) => {
                 const value = row[col.name];
@@ -187,7 +188,7 @@ export const RowHoverCard = memo(
                 );
               })}
             </div>
-          </div>
+          </ScrollArea>
 
           {/* Footer (if more columns exist) */}
           {columns.length > 10 && (

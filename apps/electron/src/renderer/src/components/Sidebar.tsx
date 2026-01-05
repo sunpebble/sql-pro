@@ -1590,27 +1590,29 @@ function TagManager({ availableTags, onAddTag, onRemoveTag }: TagManagerProps) {
               <div className="text-muted-foreground text-xs">
                 Existing tags:
               </div>
-              <div className="max-h-32 space-y-0.5 overflow-y-auto">
-                {availableTags.map((tag) => (
-                  <div
-                    key={tag}
-                    className="hover:bg-destructive/10 group flex items-center justify-between rounded px-2 py-1"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Tag className="text-muted-foreground h-3 w-3" />
-                      <span className="text-sm">{tag}</span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground hover:text-destructive h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
-                      onClick={() => onRemoveTag(tag)}
+              <ScrollArea className="h-32">
+                <div className="space-y-0.5">
+                  {availableTags.map((tag) => (
+                    <div
+                      key={tag}
+                      className="hover:bg-destructive/10 group flex items-center justify-between rounded px-2 py-1"
                     >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+                      <div className="flex items-center gap-2">
+                        <Tag className="text-muted-foreground h-3 w-3" />
+                        <span className="text-sm">{tag}</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground hover:text-destructive h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
+                        onClick={() => onRemoveTag(tag)}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
           ) : (
             <div className="text-muted-foreground text-xs">

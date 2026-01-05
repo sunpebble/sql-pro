@@ -7,6 +7,7 @@ import type {
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -319,98 +320,102 @@ export const KeyboardShortcutsSettings = memo(
             </DialogDescription>
           </DialogHeader>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-6">
-            {/* Preset Selection */}
-            <div className="mb-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Preset</Label>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleImport}
-                    className="h-7 gap-1.5 text-xs"
-                  >
-                    <Upload className="h-3 w-3" />
-                    Import
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleExport}
-                    className="h-7 gap-1.5 text-xs"
-                  >
-                    <Download className="h-3 w-3" />
-                    Export
-                  </Button>
+          <ScrollArea className="h-[60vh]">
+            <div className="px-6">
+              {/* Preset Selection */}
+              <div className="mb-6 space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium">Preset</Label>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleImport}
+                      className="h-7 gap-1.5 text-xs"
+                    >
+                      <Upload className="h-3 w-3" />
+                      Import
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleExport}
+                      className="h-7 gap-1.5 text-xs"
+                    >
+                      <Download className="h-3 w-3" />
+                      Export
+                    </Button>
+                  </div>
                 </div>
+
+                <Select
+                  value={activePreset}
+                  onValueChange={(v) =>
+                    v && handlePresetChange(v as PresetName)
+                  }
+                >
+                  <SelectTrigger className="h-9">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="w-[--radix-select-trigger-width] min-w-50">
+                    {Object.entries(PRESET_INFO).map(([key, info]) => (
+                      <SelectItem key={key} value={key}>
+                        <div className="flex flex-col">
+                          <span>{info.label}</span>
+                          <span className="text-muted-foreground text-xs">
+                            {info.description}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {activePreset === 'custom' && (
+                  <p className="text-muted-foreground text-xs">
+                    Click on any shortcut to change it. Press Escape to clear.
+                  </p>
+                )}
               </div>
 
-              <Select
-                value={activePreset}
-                onValueChange={(v) => v && handlePresetChange(v as PresetName)}
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="w-[--radix-select-trigger-width] min-w-50">
-                  {Object.entries(PRESET_INFO).map(([key, info]) => (
-                    <SelectItem key={key} value={key}>
-                      <div className="flex flex-col">
-                        <span>{info.label}</span>
-                        <span className="text-muted-foreground text-xs">
-                          {info.description}
-                        </span>
+              {/* Shortcuts by Category */}
+              <div className="space-y-6 pb-6">
+                {categoryOrder.map((category) => {
+                  const actions = groupedActions[category];
+                  if (!actions?.length) return null;
+
+                  return (
+                    <div key={category} className="space-y-3">
+                      <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+                        {categoryLabels[category]}
+                      </h3>
+                      <div className="space-y-2">
+                        {actions.map((action) => {
+                          const binding = shortcuts[action.id];
+                          const conflicts = binding
+                            ? findConflicts(action.id, binding)
+                            : [];
+
+                          return (
+                            <ShortcutEditor
+                              key={action.id}
+                              label={action.label}
+                              description={action.description}
+                              binding={binding}
+                              onBindingChange={(newBinding) =>
+                                setShortcut(action.id, newBinding)
+                              }
+                              conflicts={conflicts}
+                            />
+                          );
+                        })}
                       </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {activePreset === 'custom' && (
-                <p className="text-muted-foreground text-xs">
-                  Click on any shortcut to change it. Press Escape to clear.
-                </p>
-              )}
-            </div>
-
-            {/* Shortcuts by Category */}
-            <div className="space-y-6 pb-6">
-              {categoryOrder.map((category) => {
-                const actions = groupedActions[category];
-                if (!actions?.length) return null;
-
-                return (
-                  <div key={category} className="space-y-3">
-                    <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-                      {categoryLabels[category]}
-                    </h3>
-                    <div className="space-y-2">
-                      {actions.map((action) => {
-                        const binding = shortcuts[action.id];
-                        const conflicts = binding
-                          ? findConflicts(action.id, binding)
-                          : [];
-
-                        return (
-                          <ShortcutEditor
-                            key={action.id}
-                            label={action.label}
-                            description={action.description}
-                            binding={binding}
-                            onBindingChange={(newBinding) =>
-                              setShortcut(action.id, newBinding)
-                            }
-                            conflicts={conflicts}
-                          />
-                        );
-                      })}
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          </ScrollArea>
 
           <DialogFooter className="shrink-0 border-t px-6 py-4">
             <Button

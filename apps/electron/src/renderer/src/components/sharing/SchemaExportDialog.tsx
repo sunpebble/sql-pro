@@ -3,6 +3,7 @@ import { Button } from '@sqlpro/ui/button';
 import { Checkbox } from '@sqlpro/ui/checkbox';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -249,306 +250,326 @@ export function SchemaExportDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Database className="h-5 w-5" />
-            Export Schema
-          </DialogTitle>
-          <DialogDescription>
-            Export database schema definitions with table structures, indexes,
-            and relationships
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-2xl">
+        <ScrollArea className="h-[70vh]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5" />
+              Export Schema
+            </DialogTitle>
+            <DialogDescription>
+              Export database schema definitions with table structures, indexes,
+              and relationships
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          {exportResult ? (
-            <div className="space-y-3">
-              {exportResult.success ? (
-                <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
-                  <p className="font-medium text-green-900 dark:text-green-100">
-                    Export Successful
-                  </p>
-                  <p className="text-sm text-green-700 dark:text-green-300">
-                    Schema exported successfully
-                  </p>
-                  {exportResult.filePath && (
-                    <p className="text-xs break-all text-green-600 dark:text-green-400">
-                      {exportResult.filePath}
+          <div className="space-y-4 py-4">
+            {exportResult ? (
+              <div className="space-y-3">
+                {exportResult.success ? (
+                  <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
+                    <p className="font-medium text-green-900 dark:text-green-100">
+                      Export Successful
                     </p>
-                  )}
-                </div>
-              ) : (
-                <div className="bg-destructive/10 rounded-lg p-4">
-                  <p className="text-destructive font-medium">Export Failed</p>
-                  <p className="text-destructive/80 mt-1 text-sm">
-                    {exportResult.error || 'Unknown error occurred'}
-                  </p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              {/* Schema Name (Required) */}
-              <div className="space-y-2">
-                <Label htmlFor="schema-name" className="text-sm font-medium">
-                  Schema Name <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="schema-name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g., Production Database Schema"
-                  maxLength={200}
-                  disabled={isExporting || isLoadingSchema}
-                />
-                <p className="text-muted-foreground text-xs">
-                  A descriptive name for this schema export
-                </p>
-              </div>
-
-              {/* Description (Optional) */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="schema-description"
-                  className="text-sm font-medium"
-                >
-                  Description
-                </Label>
-                <Textarea
-                  id="schema-description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Brief description of this database schema"
-                  maxLength={1000}
-                  rows={2}
-                  disabled={isExporting || isLoadingSchema}
-                />
-                <p className="text-muted-foreground text-xs">
-                  Optional description to help others understand the schema
-                  purpose
-                </p>
-              </div>
-
-              {/* Export Format */}
-              <div className="space-y-2">
-                <Label htmlFor="format" className="text-sm font-medium">
-                  Export Format <span className="text-destructive">*</span>
-                </Label>
-                <Select
-                  value={format}
-                  onValueChange={(value) => {
-                    if (value === 'json' || value === 'sql') {
-                      setFormat(value);
-                    }
-                  }}
-                  disabled={isExporting || isLoadingSchema}
-                >
-                  <SelectTrigger id="format">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="json">JSON (Schema Metadata)</SelectItem>
-                    <SelectItem value="sql">SQL (CREATE Statements)</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-muted-foreground text-xs">
-                  {format === 'json'
-                    ? 'Export as structured JSON with table metadata'
-                    : 'Export as SQL CREATE TABLE statements'}
-                </p>
-              </div>
-
-              {/* Table Selection */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">
-                  Tables to Export <span className="text-destructive">*</span>
-                </Label>
-                {isLoadingSchema ? (
-                  <div className="flex items-center justify-center rounded-md border p-8">
-                    <div className="text-muted-foreground flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">Loading schema...</span>
-                    </div>
-                  </div>
-                ) : schemas.length === 0 ? (
-                  <div className="text-muted-foreground rounded-md border p-4 text-center text-sm">
-                    No tables found in this database
+                    <p className="text-sm text-green-700 dark:text-green-300">
+                      Schema exported successfully
+                    </p>
+                    {exportResult.filePath && (
+                      <p className="text-xs break-all text-green-600 dark:text-green-400">
+                        {exportResult.filePath}
+                      </p>
+                    )}
                   </div>
                 ) : (
-                  <div className="max-h-64 space-y-2 overflow-y-auto rounded-md border p-3">
-                    {schemas.map((schema) => (
-                      <div key={schema.name} className="space-y-2">
-                        {/* Schema header with select all */}
-                        <div className="flex items-center gap-2 border-b pb-2">
-                          <Checkbox
-                            checked={schema.tables.every((table) =>
-                              selectedTables.has(`${schema.name}.${table.name}`)
-                            )}
-                            onCheckedChange={() => toggleSchema(schema.name)}
-                            disabled={isExporting}
-                          />
-                          <span className="text-sm font-medium">
-                            {schema.name}
-                          </span>
-                          <span className="text-muted-foreground text-xs">
-                            ({schema.tables.length} table
-                            {schema.tables.length !== 1 ? 's' : ''})
-                          </span>
-                        </div>
-                        {/* Tables */}
-                        <div className="ml-6 space-y-1">
-                          {schema.tables.map((table) => {
-                            const tableKey = `${schema.name}.${table.name}`;
-                            return (
-                              <label
-                                key={tableKey}
-                                className="hover:bg-muted/50 flex cursor-pointer items-center gap-2 rounded p-1"
-                              >
-                                <Checkbox
-                                  checked={selectedTables.has(tableKey)}
-                                  onCheckedChange={() => toggleTable(tableKey)}
-                                  disabled={isExporting}
-                                />
-                                <span className="text-sm">{table.name}</span>
-                                <span className="text-muted-foreground text-xs">
-                                  ({table.columns.length} column
-                                  {table.columns.length !== 1 ? 's' : ''})
-                                </span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
+                  <div className="bg-destructive/10 rounded-lg p-4">
+                    <p className="text-destructive font-medium">
+                      Export Failed
+                    </p>
+                    <p className="text-destructive/80 mt-1 text-sm">
+                      {exportResult.error || 'Unknown error occurred'}
+                    </p>
                   </div>
                 )}
-                <p className="text-muted-foreground text-xs">
-                  Selected {selectedTables.size} of {totalTables} table
-                  {totalTables !== 1 ? 's' : ''}
-                </p>
               </div>
-
-              {/* Export Options */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Include in Export</Label>
-                <div className="space-y-3 rounded-md border p-3">
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox
-                      checked={includeIndexes}
-                      onCheckedChange={(checked) =>
-                        setIncludeIndexes(checked === true)
-                      }
-                      disabled={isExporting || isLoadingSchema}
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Indexes</p>
-                      <p className="text-muted-foreground text-xs">
-                        Include table indexes and unique constraints
-                      </p>
-                    </div>
-                  </label>
-
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox
-                      checked={includeTriggers}
-                      onCheckedChange={(checked) =>
-                        setIncludeTriggers(checked === true)
-                      }
-                      disabled={isExporting || isLoadingSchema}
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Triggers</p>
-                      <p className="text-muted-foreground text-xs">
-                        Include database triggers
-                      </p>
-                    </div>
-                  </label>
-
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox
-                      checked={includeForeignKeys}
-                      onCheckedChange={(checked) =>
-                        setIncludeForeignKeys(checked === true)
-                      }
-                      disabled={isExporting || isLoadingSchema}
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Foreign Keys</p>
-                      <p className="text-muted-foreground text-xs">
-                        Include foreign key relationships
-                      </p>
-                    </div>
-                  </label>
-
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox
-                      checked={compress}
-                      onCheckedChange={(checked) =>
-                        setCompress(checked === true)
-                      }
-                      disabled={isExporting || isLoadingSchema}
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Compress export file</p>
-                      <p className="text-muted-foreground text-xs">
-                        Automatically enabled for schemas larger than 100KB
-                      </p>
-                    </div>
-                  </label>
+            ) : (
+              <>
+                {/* Schema Name (Required) */}
+                <div className="space-y-2">
+                  <Label htmlFor="schema-name" className="text-sm font-medium">
+                    Schema Name <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="schema-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="e.g., Production Database Schema"
+                    maxLength={200}
+                    disabled={isExporting || isLoadingSchema}
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    A descriptive name for this schema export
+                  </p>
                 </div>
-              </div>
 
-              {/* Documentation (Optional) */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="schema-documentation"
-                  className="text-sm font-medium"
-                >
-                  Documentation
-                </Label>
-                <Textarea
-                  id="schema-documentation"
-                  value={documentation}
-                  onChange={(e) => setDocumentation(e.target.value)}
-                  placeholder="Additional notes, migration instructions, or important considerations..."
-                  maxLength={10000}
-                  rows={3}
-                  disabled={isExporting || isLoadingSchema}
-                />
-                <p className="text-muted-foreground text-xs">
-                  Optional detailed documentation or usage notes (
-                  {documentation.length}/10000)
-                </p>
-              </div>
-            </>
-          )}
-        </div>
+                {/* Description (Optional) */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="schema-description"
+                    className="text-sm font-medium"
+                  >
+                    Description
+                  </Label>
+                  <Textarea
+                    id="schema-description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Brief description of this database schema"
+                    maxLength={1000}
+                    rows={2}
+                    disabled={isExporting || isLoadingSchema}
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    Optional description to help others understand the schema
+                    purpose
+                  </p>
+                </div>
 
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => handleOpenChange(false)}
-            disabled={isExporting}
-          >
-            {exportResult ? 'Close' : 'Cancel'}
-          </Button>
-          {!exportResult && (
-            <Button onClick={handleExport} disabled={!isValid || isExporting}>
-              {isExporting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Exporting...
-                </>
-              ) : (
-                <>
-                  <FileDown className="mr-2 h-4 w-4" />
-                  Export
-                </>
-              )}
+                {/* Export Format */}
+                <div className="space-y-2">
+                  <Label htmlFor="format" className="text-sm font-medium">
+                    Export Format <span className="text-destructive">*</span>
+                  </Label>
+                  <Select
+                    value={format}
+                    onValueChange={(value) => {
+                      if (value === 'json' || value === 'sql') {
+                        setFormat(value);
+                      }
+                    }}
+                    disabled={isExporting || isLoadingSchema}
+                  >
+                    <SelectTrigger id="format">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="json">
+                        JSON (Schema Metadata)
+                      </SelectItem>
+                      <SelectItem value="sql">
+                        SQL (CREATE Statements)
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-muted-foreground text-xs">
+                    {format === 'json'
+                      ? 'Export as structured JSON with table metadata'
+                      : 'Export as SQL CREATE TABLE statements'}
+                  </p>
+                </div>
+
+                {/* Table Selection */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Tables to Export <span className="text-destructive">*</span>
+                  </Label>
+                  {isLoadingSchema ? (
+                    <div className="flex items-center justify-center rounded-md border p-8">
+                      <div className="text-muted-foreground flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-sm">Loading schema...</span>
+                      </div>
+                    </div>
+                  ) : schemas.length === 0 ? (
+                    <div className="text-muted-foreground rounded-md border p-4 text-center text-sm">
+                      No tables found in this database
+                    </div>
+                  ) : (
+                    <ScrollArea className="h-64">
+                      <div className="space-y-2 rounded-md border p-3">
+                        {schemas.map((schema) => (
+                          <div key={schema.name} className="space-y-2">
+                            {/* Schema header with select all */}
+                            <div className="flex items-center gap-2 border-b pb-2">
+                              <Checkbox
+                                checked={schema.tables.every((table) =>
+                                  selectedTables.has(
+                                    `${schema.name}.${table.name}`
+                                  )
+                                )}
+                                onCheckedChange={() =>
+                                  toggleSchema(schema.name)
+                                }
+                                disabled={isExporting}
+                              />
+                              <span className="text-sm font-medium">
+                                {schema.name}
+                              </span>
+                              <span className="text-muted-foreground text-xs">
+                                ({schema.tables.length} table
+                                {schema.tables.length !== 1 ? 's' : ''})
+                              </span>
+                            </div>
+                            {/* Tables */}
+                            <div className="ml-6 space-y-1">
+                              {schema.tables.map((table) => {
+                                const tableKey = `${schema.name}.${table.name}`;
+                                return (
+                                  <label
+                                    key={tableKey}
+                                    className="hover:bg-muted/50 flex cursor-pointer items-center gap-2 rounded p-1"
+                                  >
+                                    <Checkbox
+                                      checked={selectedTables.has(tableKey)}
+                                      onCheckedChange={() =>
+                                        toggleTable(tableKey)
+                                      }
+                                      disabled={isExporting}
+                                    />
+                                    <span className="text-sm">
+                                      {table.name}
+                                    </span>
+                                    <span className="text-muted-foreground text-xs">
+                                      ({table.columns.length} column
+                                      {table.columns.length !== 1 ? 's' : ''})
+                                    </span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                  <p className="text-muted-foreground text-xs">
+                    Selected {selectedTables.size} of {totalTables} table
+                    {totalTables !== 1 ? 's' : ''}
+                  </p>
+                </div>
+
+                {/* Export Options */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">
+                    Include in Export
+                  </Label>
+                  <div className="space-y-3 rounded-md border p-3">
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <Checkbox
+                        checked={includeIndexes}
+                        onCheckedChange={(checked) =>
+                          setIncludeIndexes(checked === true)
+                        }
+                        disabled={isExporting || isLoadingSchema}
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm">Indexes</p>
+                        <p className="text-muted-foreground text-xs">
+                          Include table indexes and unique constraints
+                        </p>
+                      </div>
+                    </label>
+
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <Checkbox
+                        checked={includeTriggers}
+                        onCheckedChange={(checked) =>
+                          setIncludeTriggers(checked === true)
+                        }
+                        disabled={isExporting || isLoadingSchema}
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm">Triggers</p>
+                        <p className="text-muted-foreground text-xs">
+                          Include database triggers
+                        </p>
+                      </div>
+                    </label>
+
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <Checkbox
+                        checked={includeForeignKeys}
+                        onCheckedChange={(checked) =>
+                          setIncludeForeignKeys(checked === true)
+                        }
+                        disabled={isExporting || isLoadingSchema}
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm">Foreign Keys</p>
+                        <p className="text-muted-foreground text-xs">
+                          Include foreign key relationships
+                        </p>
+                      </div>
+                    </label>
+
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <Checkbox
+                        checked={compress}
+                        onCheckedChange={(checked) =>
+                          setCompress(checked === true)
+                        }
+                        disabled={isExporting || isLoadingSchema}
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm">Compress export file</p>
+                        <p className="text-muted-foreground text-xs">
+                          Automatically enabled for schemas larger than 100KB
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Documentation (Optional) */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="schema-documentation"
+                    className="text-sm font-medium"
+                  >
+                    Documentation
+                  </Label>
+                  <Textarea
+                    id="schema-documentation"
+                    value={documentation}
+                    onChange={(e) => setDocumentation(e.target.value)}
+                    placeholder="Additional notes, migration instructions, or important considerations..."
+                    maxLength={10000}
+                    rows={3}
+                    disabled={isExporting || isLoadingSchema}
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    Optional detailed documentation or usage notes (
+                    {documentation.length}/10000)
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => handleOpenChange(false)}
+              disabled={isExporting}
+            >
+              {exportResult ? 'Close' : 'Cancel'}
             </Button>
-          )}
-        </DialogFooter>
+            {!exportResult && (
+              <Button onClick={handleExport} disabled={!isValid || isExporting}>
+                {isExporting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Exporting...
+                  </>
+                ) : (
+                  <>
+                    <FileDown className="mr-2 h-4 w-4" />
+                    Export
+                  </>
+                )}
+              </Button>
+            )}
+          </DialogFooter>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

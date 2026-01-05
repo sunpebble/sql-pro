@@ -918,14 +918,14 @@ export function WelcomeScreen() {
             </div>
           ) : (
             recentConnections.length > 0 && (
-              <div className="flex max-h-64 flex-col space-y-2 overflow-hidden">
+              <div className="flex flex-col space-y-2">
                 <div className="flex shrink-0 items-center justify-between px-1">
                   <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                     Recent Connections
                   </span>
                   <Clock className="text-muted-foreground h-3.5 w-3.5" />
                 </div>
-                <ScrollArea className="max-h-56">
+                <ScrollArea className="h-56">
                   <div className="space-y-0.5 pr-2">
                     {recentConnections.map((conn) => (
                       <div

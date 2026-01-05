@@ -14,6 +14,7 @@ import {
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -206,8 +207,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           <DialogTitle>Settings</DialogTitle>
         </DialogHeader>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-6">
-          <div className="space-y-6">
+        <ScrollArea className="h-[60vh]">
+          <div className="space-y-6 px-6 pb-6">
             {/* Theme Section */}
             <div className="space-y-3">
               <Label className="text-sm font-medium">Theme</Label>
@@ -459,7 +460,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             {/* AI Settings Section */}
             <AISettingsSection />
           </div>
-        </div>
+        </ScrollArea>
       </DialogContent>
 
       {/* Pro Activation Dialog */}

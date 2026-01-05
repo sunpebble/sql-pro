@@ -1,4 +1,5 @@
 import type { ColumnSchema } from '@/types/database';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, CheckCircle, Info, XCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -237,7 +238,7 @@ export const DataQualityIndicator = memo(
           </div>
 
           {quality.issues.length > 0 ? (
-            <div className="max-h-48 overflow-y-auto">
+            <ScrollArea className="h-48">
               <div className="divide-y">
                 {quality.issues.slice(0, 5).map((issue) => (
                   <div
@@ -282,7 +283,7 @@ export const DataQualityIndicator = memo(
                   +{quality.issues.length - 5} more issues
                 </div>
               )}
-            </div>
+            </ScrollArea>
           ) : (
             <div className="text-muted-foreground p-3 text-center text-xs">
               <CheckCircle className="mx-auto mb-1 h-5 w-5 text-green-500" />
