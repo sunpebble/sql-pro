@@ -161,6 +161,8 @@ import type {
   UpdateSavedQueryResponse,
   ValidateChangesRequest,
   ValidateChangesResponse,
+  WriteFileRequest,
+  WriteFileResponse,
 } from '@shared/types';
 import type {
   CheckUpdatesRequest,
@@ -253,6 +255,8 @@ const sqlProAPI = {
       request?: SaveFileDialogRequest
     ): Promise<SaveFileDialogResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DIALOG_SAVE_FILE, request || {}),
+    writeFile: (request: WriteFileRequest): Promise<WriteFileResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.FILE_WRITE, request),
   },
 
   // Export operations
