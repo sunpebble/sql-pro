@@ -4,7 +4,6 @@ import type {
   DatabaseType,
   RecentConnection,
 } from '@shared/types';
-import type { DragEvent } from 'react';
 import type { ProfileFormData } from './connection-profiles/ProfileForm';
 import type { ConnectionSettings } from './ConnectionSettingsDialog';
 import { Button } from '@sqlpro/ui/button';
@@ -33,7 +32,6 @@ import {
   Settings,
   Sun,
   Trash2,
-  Upload,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -51,14 +49,6 @@ import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
 import { DatabaseTypeSelector } from './DatabaseTypeSelector';
 import { PasswordDialog } from './PasswordDialog';
 import { ServerConnectionDialog } from './ServerConnectionDialog';
-
-// Supported database file extensions
-const DB_EXTENSIONS = ['.db', '.sqlite', '.sqlite3', '.db3', '.s3db', '.sl3'];
-
-function isDatabaseFile(filename: string): boolean {
-  const lowerName = filename.toLowerCase();
-  return DB_EXTENSIONS.some((ext) => lowerName.endsWith(ext));
-}
 
 // Check if a database has a saved password - moved to top level
 function HasSavedPasswordIndicator({ path }: { path: string }) {
@@ -131,9 +121,6 @@ export function WelcomeScreen() {
   // For server connections edit mode
   const [editServerDialogOpen, setEditServerDialogOpen] = useState(false);
 
-  // Drag and drop state
-  const [isDragging, setIsDragging] = useState(false);
-
   // Profile view state
   const [showProfiles, setShowProfiles] = useState(false);
   const [saveProfileDialogOpen, setSaveProfileDialogOpen] = useState(false);
@@ -164,6 +151,34 @@ export function WelcomeScreen() {
     };
     loadFolders();
   }, [setFolders]);
+
+  // Listen for global drag-and-drop events for encrypted databases
+  useEffect(() => {
+    const handleOpenDatabaseFile = (
+      event: Event & {
+        detail?: { filePath: string; filename: string; isEncrypted: boolean };
+      }
+    ) => {
+      const { filePath, filename, isEncrypted } = event.detail || {};
+      if (filePath && filename !== undefined) {
+        setPendingPath(filePath);
+        setPendingFilename(filename);
+        setPendingIsEncrypted(isEncrypted || false);
+        setSettingsDialogOpen(true);
+      }
+    };
+
+    window.addEventListener(
+      'open-database-file',
+      handleOpenDatabaseFile as EventListener
+    );
+    return () => {
+      window.removeEventListener(
+        'open-database-file',
+        handleOpenDatabaseFile as EventListener
+      );
+    };
+  }, []);
 
   const connectToDatabase = useCallback(
     async (
@@ -328,58 +343,6 @@ export function WelcomeScreen() {
       await openDatabaseFile(result.filePath);
     }
   };
-
-  // Drag and drop handlers
-  const handleDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Check if dragging files
-    if (e.dataTransfer.types.includes('Files')) {
-      setIsDragging(true);
-    }
-  }, []);
-
-  const handleDragLeave = useCallback((e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Only set dragging to false if leaving the drop zone entirely
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
-
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-      setIsDragging(false);
-    }
-  }, []);
-
-  const handleDrop = useCallback(
-    async (e: DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(false);
-
-      const files = Array.from(e.dataTransfer.files);
-      if (files.length === 0) return;
-
-      // Find the first database file
-      const dbFile = files.find((file) => isDatabaseFile(file.name));
-
-      if (dbFile) {
-        // Use Electron's webUtils to get the file path
-        const filePath = sqlPro.file.getPathForFile(dbFile);
-        if (filePath) {
-          await openDatabaseFile(filePath);
-        } else {
-          setError('Unable to access file path');
-        }
-      } else {
-        setError(`Please drop a database file (${DB_EXTENSIONS.join(', ')})`);
-      }
-    },
-    [openDatabaseFile, setError]
-  );
 
   const handleSettingsSubmit = async (settings: ConnectionSettings) => {
     setSettingsDialogOpen(false);
@@ -861,25 +824,7 @@ export function WelcomeScreen() {
   };
 
   return (
-    <div
-      className="bg-grid-dot relative flex h-full flex-col overflow-hidden"
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
-      {/* Drag overlay */}
-      {isDragging && (
-        <div className="bg-primary/5 border-primary pointer-events-none absolute inset-4 z-50 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed">
-          <Upload className="text-primary mb-4 h-12 w-12" />
-          <p className="text-primary text-lg font-medium">
-            Drop database file here
-          </p>
-          <p className="text-muted-foreground mt-1 text-sm">
-            {DB_EXTENSIONS.join(', ')}
-          </p>
-        </div>
-      )}
-
+    <div className="bg-grid-dot relative flex h-full flex-col overflow-hidden">
       {/* Top Right Controls */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
         <Tooltip>
@@ -908,12 +853,7 @@ export function WelcomeScreen() {
 
       {/* Main Content - Centered */}
       <div className="flex flex-1 items-center justify-center py-8">
-        <div
-          className={cn(
-            'mx-auto flex w-full max-w-lg flex-col space-y-6 px-4',
-            isDragging && 'opacity-30'
-          )}
-        >
+        <div className="mx-auto flex w-full max-w-lg flex-col space-y-6 px-4">
           {/* Logo & Title */}
           <div className="shrink-0 text-center">
             <div className="bg-primary/10 mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl">

@@ -1,17 +1,8 @@
 import type { RecentConnection, SavedQuery } from '@shared/types';
-import type { DragEvent } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
-import {
-  ArrowLeftRight,
-  Code,
-  GitCompare,
-  GitFork,
-  Table,
-  Upload,
-} from 'lucide-react';
+import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ShortcutKbd } from '@/components/ui/kbd';
-import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import {
   useChangesStore,
@@ -36,24 +27,14 @@ import { Toolbar } from './Toolbar';
 
 type TabValue = 'data' | 'query' | 'diagram' | 'compare' | 'dataDiff';
 
-// Supported database file extensions
-const DB_EXTENSIONS = ['.db', '.sqlite', '.sqlite3', '.db3', '.s3db', '.sl3'];
-
-function isDatabaseFile(filename: string): boolean {
-  const lowerName = filename.toLowerCase();
-  return DB_EXTENSIONS.some((ext) => lowerName.endsWith(ext));
-}
-
 interface DatabaseViewProps {
   onOpenDatabase?: () => void;
   onOpenRecentConnection?: (conn: RecentConnection) => void;
-  onOpenDatabaseFile?: (filePath: string) => void;
 }
 
 export function DatabaseView({
   onOpenDatabase,
   onOpenRecentConnection,
-  onOpenDatabaseFile,
 }: DatabaseViewProps) {
   const { selectedTable, activeConnectionId, setSelectedTable } =
     useConnectionStore();
@@ -71,7 +52,6 @@ export function DatabaseView({
   const [activeTab, setActiveTab] = useState<TabValue>('data');
   const [showChangesPanel, setShowChangesPanel] = useState(false);
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
 
   // Get the active data tab for current connection
   const activeDataTab = activeConnectionId
@@ -187,75 +167,8 @@ export function DatabaseView({
     [activeConnectionId, getActiveQueryTab, setCurrentQuery, updateTabQuery]
   );
 
-  // Drag and drop handlers
-  const handleDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Check if dragging files
-    if (e.dataTransfer.types.includes('Files')) {
-      setIsDragging(true);
-    }
-  }, []);
-
-  const handleDragLeave = useCallback((e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Only set dragging to false if leaving the drop zone entirely
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
-
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-      setIsDragging(false);
-    }
-  }, []);
-
-  const handleDrop = useCallback(
-    async (e: DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(false);
-
-      const files = Array.from(e.dataTransfer.files);
-      if (files.length === 0) return;
-
-      // Find the first database file
-      const dbFile = files.find((file) => isDatabaseFile(file.name));
-
-      if (dbFile) {
-        // Use Electron's webUtils to get the file path
-        const filePath = sqlPro.file.getPathForFile(dbFile);
-        if (filePath && onOpenDatabaseFile) {
-          // Call the callback to handle opening the database file
-          onOpenDatabaseFile(filePath);
-        }
-      }
-    },
-    [onOpenDatabaseFile]
-  );
-
   return (
-    <div
-      className="flex h-full flex-col"
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
-      {/* Drag overlay */}
-      {isDragging && (
-        <div className="bg-primary/5 border-primary pointer-events-none absolute inset-4 z-50 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed">
-          <Upload className="text-primary mb-4 h-12 w-12" />
-          <p className="text-primary text-lg font-medium">
-            Drop database file here
-          </p>
-          <p className="text-muted-foreground mt-1 text-sm">
-            {DB_EXTENSIONS.join(', ')}
-          </p>
-        </div>
-      )}
-
+    <div className="flex h-full flex-col">
       {/* Hidden button for keyboard shortcut to toggle sidebar */}
       <button
         data-action="toggle-sidebar"

@@ -239,9 +239,11 @@ export function DatabasePage() {
     ]
   );
 
-  // Open database file by path (used for drag-and-drop and file dialog)
-  const handleOpenDatabaseFile = useCallback(
-    async (filePath: string) => {
+  // Open database file dialog
+  const handleOpenDatabase = useCallback(async () => {
+    const result = await sqlPro.dialog.openFile();
+    if (result.success && result.filePath && !result.canceled) {
+      const filePath = result.filePath;
       const filename = filePath.split('/').pop() || filePath;
 
       // Check if encrypted
@@ -256,17 +258,8 @@ export function DatabasePage() {
       setPendingFilename(filename);
       setPendingIsEncrypted(isEncrypted);
       setSettingsDialogOpen(true);
-    },
-    [setIsConnecting]
-  );
-
-  // Open database file dialog
-  const handleOpenDatabase = useCallback(async () => {
-    const result = await sqlPro.dialog.openFile();
-    if (result.success && result.filePath && !result.canceled) {
-      await handleOpenDatabaseFile(result.filePath);
     }
-  }, [handleOpenDatabaseFile]);
+  }, [setIsConnecting]);
 
   // Open a recent connection directly (skip file picker and settings dialog)
   const handleOpenRecentConnection = useCallback(
@@ -435,7 +428,6 @@ export function DatabasePage() {
       <DatabaseView
         onOpenDatabase={handleOpenDatabase}
         onOpenRecentConnection={handleOpenRecentConnection}
-        onOpenDatabaseFile={handleOpenDatabaseFile}
       />
 
       {/* Connection Settings Dialog */}

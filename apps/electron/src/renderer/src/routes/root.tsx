@@ -1,7 +1,9 @@
 import { Outlet } from '@tanstack/react-router';
+import { Upload } from 'lucide-react';
 import { CommandPalette } from '@/components/CommandPalette';
 import { getFontFamilyCSS, useApplyFont } from '@/hooks/useApplyFont';
 import { useCommands } from '@/hooks/useCommands';
+import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import { useMenuActions } from '@/hooks/useMenuActions';
 import { useUIFont } from '@/stores';
 
@@ -21,6 +23,15 @@ export function RootLayout() {
   // Apply UI font to document root
   useApplyFont(uiFont, 'ui');
 
+  // Global drag-and-drop for database files
+  const {
+    isDragging,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    DB_EXTENSIONS,
+  } = useDragAndDrop();
+
   return (
     <div
       className="bg-background text-foreground flex h-screen flex-col overflow-hidden"
@@ -28,7 +39,23 @@ export function RootLayout() {
         fontFamily: getFontFamilyCSS(uiFont.family),
         fontSize: `${uiFont.size}px`,
       }}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
     >
+      {/* Global drag overlay for database files */}
+      {isDragging && (
+        <div className="bg-primary/5 border-primary pointer-events-none absolute inset-4 z-50 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed">
+          <Upload className="text-primary mb-4 h-12 w-12" />
+          <p className="text-primary text-lg font-medium">
+            Drop database file here
+          </p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            {DB_EXTENSIONS.join(', ')}
+          </p>
+        </div>
+      )}
+
       {/* Titlebar - draggable area for macOS traffic lights */}
       <div className="titlebar border-border/50 h-10 shrink-0 border-b" />
 
