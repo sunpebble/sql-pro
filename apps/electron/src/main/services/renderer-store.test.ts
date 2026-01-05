@@ -161,6 +161,7 @@ describe('renderer-store Service', () => {
         pageSize: 200,
         restoreSession: false,
         sidebarCollapsed: true,
+        showSchemaDetails: false,
       });
 
       // Reset

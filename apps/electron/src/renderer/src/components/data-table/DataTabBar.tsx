@@ -81,7 +81,7 @@ function useTabKeyboardNavigation(
       }
 
       // Cmd/Ctrl + 1-9: Switch to tab by index
-      if (isMod && !e.altKey && e.key >= '1' && e.key <= '9') {
+      if (isMod && !e.altKey && !e.shiftKey && e.key >= '1' && e.key <= '9') {
         const index = Number.parseInt(e.key, 10) - 1;
         if (index < tabs.length) {
           e.preventDefault();
@@ -102,6 +102,7 @@ interface DataTabBarProps {
 
 interface TabItemProps {
   tab: DataTab;
+  index: number;
   isActive: boolean;
   connectionId: string;
   onSelect: () => void;
@@ -113,6 +114,7 @@ interface TabItemProps {
 const TabItem = memo(
   ({
     tab,
+    index,
     isActive,
     connectionId: _connectionId,
     onSelect,
@@ -129,37 +131,39 @@ const TabItem = memo(
     );
 
     const isView = tab.table.type === 'view';
+    // Show shortcut hint for first 9 tabs
+    const shortcutKey = index < 9 ? index + 1 : null;
 
     return (
       <ContextMenu>
         <ContextMenuTrigger>
-          <div
-            role="tab"
-            aria-selected={isActive}
-            className={cn(
-              'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-2.5 text-sm transition-colors',
-              isActive
-                ? 'bg-background text-foreground'
-                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
-            )}
-            onClick={onSelect}
-          >
-            {isView ? (
-              <Eye className="h-3.5 w-3.5 shrink-0 opacity-60" />
-            ) : (
-              <Table className="h-3.5 w-3.5 shrink-0 opacity-60" />
-            )}
-            <span className="flex-1 truncate" title={tab.table.name}>
-              {tab.title}
-            </span>
-            {tab.table.schema && tab.table.schema !== 'main' && (
-              <span className="text-muted-foreground shrink-0 text-[10px]">
-                {tab.table.schema}
-              </span>
-            )}
-            <TooltipProvider delay={300}>
-              <Tooltip>
-                <TooltipTrigger>
+          <TooltipProvider delay={300}>
+            <Tooltip>
+              <TooltipTrigger>
+                <div
+                  role="tab"
+                  aria-selected={isActive}
+                  className={cn(
+                    'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-2.5 text-sm transition-colors',
+                    isActive
+                      ? 'bg-background text-foreground'
+                      : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
+                  )}
+                  onClick={onSelect}
+                >
+                  {isView ? (
+                    <Eye className="h-3.5 w-3.5 shrink-0 opacity-60" />
+                  ) : (
+                    <Table className="h-3.5 w-3.5 shrink-0 opacity-60" />
+                  )}
+                  <span className="flex-1 truncate" title={tab.table.name}>
+                    {tab.title}
+                  </span>
+                  {tab.table.schema && tab.table.schema !== 'main' && (
+                    <span className="text-muted-foreground shrink-0 text-[10px]">
+                      {tab.table.schema}
+                    </span>
+                  )}
                   <button
                     onClick={handleCloseClick}
                     className={cn(
@@ -169,13 +173,18 @@ const TabItem = memo(
                   >
                     <X className="h-3 w-3" />
                   </button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
-                  Close tab
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                {tab.table.name}
+                {shortcutKey && (
+                  <span className="text-muted-foreground ml-2">
+                    ⌘{shortcutKey}
+                  </span>
+                )}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </ContextMenuTrigger>
         <ContextMenuContent>
           <ContextMenuItem onClick={onClose}>Close</ContextMenuItem>
@@ -232,10 +241,11 @@ export const DataTabBar = memo(
         role="tablist"
       >
         <div className="flex flex-1 items-center overflow-x-auto">
-          {tabs.map((tab) => (
+          {tabs.map((tab, index) => (
             <TabItem
               key={tab.id}
               tab={tab}
+              index={index}
               isActive={tab.id === activeTabId}
               connectionId={activeConnectionId}
               onSelect={() => setActiveTab(activeConnectionId, tab.id)}

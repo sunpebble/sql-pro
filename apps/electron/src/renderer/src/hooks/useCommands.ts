@@ -237,12 +237,49 @@ export function useCommands() {
         return;
       }
 
+      // Navigation shortcuts for tab switching
+      const dataBrowserBinding = getShortcut('nav.data-browser');
+      if (matchesBinding(e, dataBrowserBinding)) {
+        e.preventDefault();
+        document.querySelector<HTMLButtonElement>('[data-tab="data"]')?.click();
+        return;
+      }
+
+      const queryEditorBinding = getShortcut('nav.query-editor');
+      if (matchesBinding(e, queryEditorBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="query"]')
+          ?.click();
+        return;
+      }
+
       // ER Diagram shortcut
       const erDiagramBinding = getShortcut('nav.er-diagram');
       if (matchesBinding(e, erDiagramBinding)) {
         e.preventDefault();
         document
           .querySelector<HTMLButtonElement>('[data-tab="diagram"]')
+          ?.click();
+        return;
+      }
+
+      // Schema Compare shortcut
+      const schemaCompareBinding = getShortcut('nav.schema-compare');
+      if (matchesBinding(e, schemaCompareBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="compare"]')
+          ?.click();
+        return;
+      }
+
+      // Data Diff shortcut
+      const dataDiffBinding = getShortcut('nav.data-diff');
+      if (matchesBinding(e, dataDiffBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="dataDiff"]')
           ?.click();
         return;
       }

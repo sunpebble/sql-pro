@@ -222,7 +222,7 @@ export function DatabaseView({
               <GitFork className="h-4 w-4" />
               ER Diagram
               <ShortcutKbd
-                binding={{ key: '3', modifiers: { cmd: true } }}
+                action="nav.er-diagram"
                 className="ml-1 hidden sm:inline-flex"
               />
             </TabsTrigger>
@@ -256,7 +256,7 @@ export function DatabaseView({
               <ArrowLeftRight className="h-4 w-4" />
               Data Diff
               <ShortcutKbd
-                binding={{ key: '6', modifiers: { cmd: true } }}
+                action="nav.data-diff"
                 className="ml-1 hidden sm:inline-flex"
               />
             </TabsTrigger>

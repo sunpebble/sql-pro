@@ -70,6 +70,13 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
     scope: 'global',
   },
   {
+    id: 'nav.data-diff',
+    label: 'Open Data Diff',
+    description: 'Switch to the data diff tab',
+    category: 'navigation',
+    scope: 'global',
+  },
+  {
     id: 'nav.toggle-sidebar',
     label: 'Toggle Sidebar',
     description: 'Show or hide the sidebar',
@@ -237,17 +244,21 @@ export { DEFAULT_SHORTCUTS };
  * VS Code-style shortcuts
  */
 export const VSCODE_SHORTCUTS: ShortcutPreset = {
-  'nav.data-browser': { key: '1', modifiers: { cmd: true } },
-  'nav.query-editor': { key: '2', modifiers: { cmd: true } },
+  'nav.data-browser': { key: '1', modifiers: { cmd: true, alt: true } },
+  'nav.query-editor': { key: '2', modifiers: { cmd: true, alt: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true } },
-  'nav.schema-compare': { key: '5', modifiers: { cmd: true } },
-  'nav.er-diagram': { key: '3', modifiers: { cmd: true } },
+  'nav.schema-compare': { key: '5', modifiers: { cmd: true, alt: true } },
+  'nav.er-diagram': { key: '3', modifiers: { cmd: true, alt: true } },
+  'nav.data-diff': { key: '6', modifiers: { cmd: true, alt: true } },
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
   'conn.recent-connections': { key: 'r', modifiers: { ctrl: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, shift: true } },
-  'view.toggle-schema-details': { key: '4', modifiers: { cmd: true } },
+  'view.toggle-schema-details': {
+    key: '4',
+    modifiers: { cmd: true, alt: true },
+  },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
@@ -270,17 +281,21 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
  * Sublime Text-style shortcuts
  */
 export const SUBLIME_SHORTCUTS: ShortcutPreset = {
-  'nav.data-browser': { key: '1', modifiers: { cmd: true } },
-  'nav.query-editor': { key: '2', modifiers: { cmd: true } },
+  'nav.data-browser': { key: '1', modifiers: { cmd: true, alt: true } },
+  'nav.query-editor': { key: '2', modifiers: { cmd: true, alt: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true } },
-  'nav.schema-compare': { key: '5', modifiers: { cmd: true } },
-  'nav.er-diagram': { key: '3', modifiers: { cmd: true } },
+  'nav.schema-compare': { key: '5', modifiers: { cmd: true, alt: true } },
+  'nav.er-diagram': { key: '3', modifiers: { cmd: true, alt: true } },
+  'nav.data-diff': { key: '6', modifiers: { cmd: true, alt: true } },
   'nav.toggle-sidebar': { key: 'k', modifiers: { cmd: true } },
   'conn.recent-connections': { key: 'r', modifiers: { ctrl: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, alt: true } },
-  'view.toggle-schema-details': { key: '4', modifiers: { cmd: true } },
+  'view.toggle-schema-details': {
+    key: '4',
+    modifiers: { cmd: true, alt: true },
+  },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
@@ -429,7 +444,22 @@ export function matchesBinding(
   const matchesAlt = binding.modifiers.alt ? e.altKey : !e.altKey;
 
   // Normalize key comparison
-  const eventKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  // On macOS, Alt+number produces special characters (e.g., Alt+3 = £)
+  // Use e.code for number and letter keys when Alt is pressed
+  let eventKey: string;
+  if (e.altKey && e.code) {
+    // Extract key from code (e.g., "Digit3" -> "3", "KeyA" -> "a")
+    if (e.code.startsWith('Digit')) {
+      eventKey = e.code.replace('Digit', '');
+    } else if (e.code.startsWith('Key')) {
+      eventKey = e.code.replace('Key', '').toLowerCase();
+    } else {
+      eventKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    }
+  } else {
+    eventKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  }
+
   const bindingKey =
     binding.key.length === 1 ? binding.key.toLowerCase() : binding.key;
 

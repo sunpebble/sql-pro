@@ -2577,6 +2577,7 @@ export type ShortcutAction =
   | 'nav.search-tables'
   | 'nav.schema-compare'
   | 'nav.er-diagram'
+  | 'nav.data-diff'
   | 'nav.toggle-sidebar'
   // View
   | 'view.toggle-history'
@@ -2661,14 +2662,18 @@ export function bindingToAccelerator(
  * Default shortcuts (SQL Pro native)
  */
 export const DEFAULT_SHORTCUTS: ShortcutPreset = {
-  'nav.data-browser': { key: '1', modifiers: { cmd: true } },
-  'nav.query-editor': { key: '2', modifiers: { cmd: true } },
+  'nav.data-browser': { key: '1', modifiers: { cmd: true, alt: true } },
+  'nav.query-editor': { key: '2', modifiers: { cmd: true, alt: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true, shift: true } },
-  'nav.schema-compare': { key: '5', modifiers: { cmd: true } },
-  'nav.er-diagram': { key: '3', modifiers: { cmd: true } },
+  'nav.schema-compare': { key: '5', modifiers: { cmd: true, alt: true } },
+  'nav.er-diagram': { key: '3', modifiers: { cmd: true, alt: true } },
+  'nav.data-diff': { key: '6', modifiers: { cmd: true, alt: true } },
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true } },
-  'view.toggle-schema-details': { key: '4', modifiers: { cmd: true } },
+  'view.toggle-schema-details': {
+    key: '4',
+    modifiers: { cmd: true, alt: true },
+  },
   'action.command-palette': { key: 'k', modifiers: { cmd: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
