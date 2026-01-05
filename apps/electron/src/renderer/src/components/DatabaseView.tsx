@@ -150,9 +150,9 @@ export function DatabaseView({
         {!sidebarCollapsed && (
           <ResizablePanel
             side="left"
-            defaultWidth={256}
-            minWidth={180}
-            maxWidth={400}
+            defaultWidth={320}
+            minWidth={240}
+            maxWidth={480}
             storageKey="sidebar"
           >
             <Sidebar
