@@ -141,6 +141,8 @@ export function WelcomeScreen() {
     path: string;
     filename: string;
     isEncrypted: boolean;
+    databaseType?: DatabaseType;
+    connectionConfig?: DatabaseConnectionConfig;
   } | null>(null);
 
   // Database type selector state
@@ -696,6 +698,8 @@ export function WelcomeScreen() {
       path: conn.path,
       filename: conn.filename,
       isEncrypted: conn.isEncrypted,
+      databaseType: conn.databaseType,
+      connectionConfig: conn.connectionConfig,
     });
     setSaveProfileDialogOpen(true);
   }, []);
@@ -719,6 +723,8 @@ export function WelcomeScreen() {
           isSaved: true,
           lastOpened: new Date().toISOString(),
           createdAt: new Date().toISOString(),
+          databaseType: profileToSave.databaseType,
+          connectionConfig: profileToSave.connectionConfig,
         };
 
         const result = await sqlPro.profile.save({ profile: newProfile });
