@@ -1,6 +1,8 @@
 import { Outlet } from '@tanstack/react-router';
 import { Upload } from 'lucide-react';
 import { CommandPalette } from '@/components/CommandPalette';
+import { GlobalDialogs } from '@/components/GlobalDialogs';
+import { Titlebar } from '@/components/Titlebar';
 import { getFontFamilyCSS, useApplyFont } from '@/hooks/useApplyFont';
 import { useCommands } from '@/hooks/useCommands';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
@@ -60,8 +62,8 @@ export function RootLayout() {
         </div>
       )}
 
-      {/* Titlebar - draggable area for macOS traffic lights */}
-      <div className="titlebar border-border/50 h-10 shrink-0 border-b" />
+      {/* Titlebar with theme and settings controls */}
+      <Titlebar />
 
       {/* Main content - rendered by child routes */}
       <div className="min-h-0 flex-1">
@@ -70,6 +72,9 @@ export function RootLayout() {
 
       {/* Command Palette - global keyboard shortcut ⌘K */}
       <CommandPalette />
+
+      {/* Global dialogs - settings, connection management, etc. */}
+      <GlobalDialogs />
     </div>
   );
 }

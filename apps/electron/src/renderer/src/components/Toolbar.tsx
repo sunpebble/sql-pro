@@ -1,17 +1,23 @@
 import type { PendingChangeInfo, SavedQuery } from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@sqlpro/ui/dropdown-menu';
 import { Separator } from '@sqlpro/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
+  ChevronDown,
   Database,
   FileText,
   KeyRound,
   Lock,
-  Monitor,
-  Moon,
   RefreshCw,
   ScrollText,
-  Sun,
+  Settings,
   X,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -22,8 +28,8 @@ import { sqlPro } from '@/lib/api';
 import {
   useChangesStore,
   useConnectionStore,
+  useDialogStore,
   useTableDataStore,
-  useThemeStore,
 } from '@/stores';
 import { useSqlLogStore } from '@/stores/sql-log-store';
 
@@ -50,8 +56,13 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
     changes,
   } = useChangesStore();
   const { resetConnection } = useTableDataStore();
-  const { theme, setTheme } = useThemeStore();
   const { toggleVisible: toggleSqlLog } = useSqlLogStore();
+
+  // Global dialog store for connection settings - must be before any conditional returns
+  const openConnectionSettings = useDialogStore(
+    (s) => s.openConnectionSettings
+  );
+  const openChangePassword = useDialogStore((s) => s.openChangePassword);
 
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
 
@@ -142,110 +153,95 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
     setIsLoadingSchema(false);
   };
 
-  const cycleTheme = () => {
-    const themes: Array<'light' | 'dark' | 'system'> = [
-      'light',
-      'dark',
-      'system',
-    ];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
-  };
-
-  const getThemeIcon = () => {
-    switch (theme) {
-      case 'light':
-        return <Sun className="h-4 w-4" />;
-      case 'dark':
-        return <Moon className="h-4 w-4" />;
-      default:
-        return <Monitor className="h-4 w-4" />;
-    }
-  };
-
-  const getThemeLabel = () => {
-    switch (theme) {
-      case 'light':
-        return 'Light mode';
-      case 'dark':
-        return 'Dark mode';
-      default:
-        return 'System theme';
-    }
-  };
-
   if (!connection) return null;
 
   const currentConnectionChanges = activeConnectionId
     ? getChangesForConnection(activeConnectionId)
     : [];
 
+  // Helper functions for connection menu actions
+  const handleEditConnection = () => {
+    // Get current connection as RecentConnection format
+    openConnectionSettings({
+      path: connection.path,
+      filename: connection.filename,
+      displayName: connection.filename,
+      lastOpened: new Date().toISOString(),
+      isEncrypted: connection.isEncrypted,
+      readOnly: connection.isReadOnly,
+    });
+  };
+
+  const handleChangePassword = () => {
+    if (!activeConnectionId) return;
+    openChangePassword({
+      connectionId: activeConnectionId,
+      filename: connection.filename,
+      dbPath: connection.path,
+      isEncrypted: connection.isEncrypted,
+    });
+  };
+
   return (
     <>
       <div className="flex h-12 min-w-0 items-center gap-2 overflow-hidden border-b px-3">
-        {/* Database Info */}
-        <div className="flex min-w-0 items-center gap-2">
-          <Database className="text-muted-foreground h-4 w-4 shrink-0" />
-          <span className="min-w-0 truncate font-medium">
-            {connection.filename}
-          </span>
-          {connection.isEncrypted && (
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => {
-                    const btn = document.querySelector(
-                      '[data-action="change-password"]'
-                    ) as HTMLButtonElement;
-                    btn?.click();
-                  }}
-                  disabled={connection.isReadOnly}
-                >
-                  <Lock className="h-3 w-3" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {connection.isReadOnly
-                  ? 'Cannot change password (read-only)'
-                  : 'Change database password'}
-              </TooltipContent>
-            </Tooltip>
-          )}
-          {!connection.isEncrypted && (
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => {
-                    const btn = document.querySelector(
-                      '[data-action="change-password"]'
-                    ) as HTMLButtonElement;
-                    btn?.click();
-                  }}
-                  disabled={connection.isReadOnly}
-                >
-                  <KeyRound className="text-muted-foreground h-3 w-3" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {connection.isReadOnly
-                  ? 'Cannot encrypt (read-only)'
-                  : 'Encrypt database'}
-              </TooltipContent>
-            </Tooltip>
-          )}
-          {connection.isReadOnly && (
-            <span className="bg-secondary text-muted-foreground rounded px-1.5 py-0.5 text-xs">
-              Read-only
-            </span>
-          )}
-        </div>
+        {/* Database Info with Quick Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button
+              variant="ghost"
+              className="flex min-w-0 items-center gap-2 px-2"
+            >
+              <Database className="text-muted-foreground h-4 w-4 shrink-0" />
+              <span className="min-w-0 truncate font-medium">
+                {connection.filename}
+              </span>
+              {connection.isEncrypted && (
+                <Lock className="text-muted-foreground h-3 w-3 shrink-0" />
+              )}
+              {connection.isReadOnly && (
+                <span className="bg-secondary text-muted-foreground shrink-0 rounded px-1.5 py-0.5 text-xs">
+                  RO
+                </span>
+              )}
+              <ChevronDown className="text-muted-foreground h-3 w-3 shrink-0" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <div className="px-2 py-1.5">
+              <p className="text-muted-foreground truncate text-xs">
+                {connection.path}
+              </p>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleEditConnection}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Connection Settings</span>
+            </DropdownMenuItem>
+            {connection.isEncrypted ? (
+              <DropdownMenuItem
+                onClick={handleChangePassword}
+                disabled={connection.isReadOnly}
+              >
+                <Lock className="mr-2 h-4 w-4" />
+                <span>Change Password</span>
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                onClick={handleChangePassword}
+                disabled={connection.isReadOnly}
+              >
+                <KeyRound className="mr-2 h-4 w-4" />
+                <span>Encrypt Database</span>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleRefreshSchema}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              <span>Refresh Schema</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <Separator orientation="vertical" className="h-auto! self-stretch" />
 
@@ -288,16 +284,6 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
               </span>
             </button>
           )}
-
-          {/* Theme Toggle */}
-          <Tooltip>
-            <TooltipTrigger>
-              <Button variant="ghost" size="icon" onClick={cycleTheme}>
-                {getThemeIcon()}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{getThemeLabel()}</TooltipContent>
-          </Tooltip>
 
           {/* SQL Log Toggle */}
           <Tooltip>

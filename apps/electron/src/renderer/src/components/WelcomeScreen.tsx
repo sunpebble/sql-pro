@@ -25,12 +25,9 @@ import {
   Eye,
   FolderOpen,
   KeyRound,
-  Monitor,
-  Moon,
   MoreVertical,
+  Pencil,
   Server,
-  Settings,
-  Sun,
   Trash2,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -42,7 +39,7 @@ import {
 } from '@/components/ui/dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { useConnectionStore, useThemeStore } from '@/stores';
+import { useConnectionStore, useDialogStore } from '@/stores';
 import { ProfileForm } from './connection-profiles/ProfileForm';
 import { ProfileManager } from './connection-profiles/ProfileManager';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
@@ -104,9 +101,12 @@ export function WelcomeScreen() {
     setRecentConnections,
     setFolders,
   } = useConnectionStore();
-  const { theme, setTheme } = useThemeStore();
+  const openConnectionSettings = useDialogStore(
+    (s) => s.openConnectionSettings
+  );
 
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  // For new connection settings only (not edit mode)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [pendingFilename, setPendingFilename] = useState<string>('');
@@ -114,8 +114,7 @@ export function WelcomeScreen() {
   const [pendingSettings, setPendingSettings] =
     useState<ConnectionSettings | null>(null);
 
-  // Edit mode state
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  // Edit mode state for server connections only
   const [editingConnection, setEditingConnection] =
     useState<RecentConnection | null>(null);
   // For server connections edit mode
@@ -517,40 +516,19 @@ export function WelcomeScreen() {
 
   // Edit connection settings (T031, T033)
   const handleEditConnection = (conn: RecentConnection) => {
-    setEditingConnection(conn);
     // For server databases, open the server connection dialog in edit mode
     if (
       conn.databaseType &&
       conn.databaseType !== 'sqlite' &&
       conn.connectionConfig
     ) {
+      setEditingConnection(conn);
       setSelectedDbType(conn.databaseType);
       setEditServerDialogOpen(true);
     } else {
-      // For SQLite, use the simple settings dialog
-      setEditDialogOpen(true);
+      // For SQLite, use the global connection settings dialog
+      openConnectionSettings(conn);
     }
-  };
-
-  const handleEditSubmit = async (settings: ConnectionSettings) => {
-    if (!editingConnection) return;
-
-    const result = await sqlPro.connection.update({
-      path: editingConnection.path,
-      displayName: settings.displayName,
-      readOnly: settings.readOnly,
-    });
-
-    if (result.success) {
-      // Refresh recent connections to show updated settings (T034)
-      const connectionsResult = await sqlPro.app.getRecentConnections();
-      if (connectionsResult.success && connectionsResult.connections) {
-        setRecentConnections(connectionsResult.connections);
-      }
-    }
-
-    setEditDialogOpen(false);
-    setEditingConnection(null);
   };
 
   // Handle server connection edit and reconnect
@@ -798,39 +776,6 @@ export function WelcomeScreen() {
     ]
   );
 
-  const cycleTheme = () => {
-    const themes: Array<'light' | 'dark' | 'system'> = [
-      'light',
-      'dark',
-      'system',
-    ];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
-  };
-
-  const getThemeIcon = () => {
-    switch (theme) {
-      case 'light':
-        return <Sun className="h-4 w-4" />;
-      case 'dark':
-        return <Moon className="h-4 w-4" />;
-      default:
-        return <Monitor className="h-4 w-4" />;
-    }
-  };
-
-  const getThemeLabel = () => {
-    switch (theme) {
-      case 'light':
-        return 'Light mode';
-      case 'dark':
-        return 'Dark mode';
-      default:
-        return 'System theme';
-    }
-  };
-
   return (
     <div className="bg-grid-dot relative flex h-full flex-col overflow-hidden">
       {/* Top Right Controls */}
@@ -848,14 +793,6 @@ export function WelcomeScreen() {
           <TooltipContent>
             {showProfiles ? 'Hide' : 'Show'} Profiles
           </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button variant="ghost" size="icon" onClick={cycleTheme}>
-              {getThemeIcon()}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>{getThemeLabel()}</TooltipContent>
         </Tooltip>
       </div>
 
@@ -997,7 +934,7 @@ export function WelcomeScreen() {
                               onClick={() => handleEditConnection(conn)}
                               className="whitespace-nowrap"
                             >
-                              <Settings className="mr-2 h-4 w-4" />
+                              <Pencil className="mr-2 h-4 w-4" />
                               <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem
@@ -1036,20 +973,6 @@ export function WelcomeScreen() {
         dbPath={pendingPath || ''}
         isEncrypted={pendingIsEncrypted}
         mode="new"
-      />
-
-      <ConnectionSettingsDialog
-        open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
-        onSubmit={handleEditSubmit}
-        filename={editingConnection?.filename || ''}
-        dbPath={editingConnection?.path || ''}
-        isEncrypted={editingConnection?.isEncrypted || false}
-        mode="edit"
-        initialValues={{
-          displayName: editingConnection?.displayName,
-          readOnly: editingConnection?.readOnly,
-        }}
       />
 
       <PasswordDialog

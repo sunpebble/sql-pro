@@ -2,7 +2,6 @@ import type { RecentConnection } from '@shared/types';
 import type { ConnectionSettings } from '@/components/ConnectionSettingsDialog';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
 import { ConnectionSettingsDialog } from '@/components/ConnectionSettingsDialog';
 import { ConnectionSwitcher } from '@/components/ConnectionSwitcher';
 import { DatabaseView } from '@/components/DatabaseView';
@@ -66,8 +65,6 @@ export function DatabasePage() {
   const [queryImportDialogOpen, setQueryImportDialogOpen] = useState(false);
   const [schemaExportDialogOpen, setSchemaExportDialogOpen] = useState(false);
   const [schemaImportDialogOpen, setSchemaImportDialogOpen] = useState(false);
-  const [changePasswordDialogOpen, setChangePasswordDialogOpen] =
-    useState(false);
 
   // Navigate back to welcome when no connections
   useEffect(() => {
@@ -533,12 +530,6 @@ export function DatabasePage() {
         onClick={() => setSchemaImportDialogOpen(true)}
         aria-hidden="true"
       />
-      <button
-        data-action="change-password"
-        className="hidden"
-        onClick={() => setChangePasswordDialogOpen(true)}
-        aria-hidden="true"
-      />
 
       {/* Sharing Dialogs */}
       {activeConnectionId && (
@@ -569,18 +560,6 @@ export function DatabasePage() {
             onImportComplete={() => {
               // Schema import from menu - no specific action needed
               setSchemaImportDialogOpen(false);
-            }}
-          />
-          <ChangePasswordDialog
-            open={changePasswordDialogOpen}
-            onOpenChange={setChangePasswordDialogOpen}
-            connectionId={activeConnectionId}
-            filename={connection?.filename || ''}
-            dbPath={connection?.path || ''}
-            isCurrentlyEncrypted={connection?.isEncrypted || false}
-            onSuccess={() => {
-              // Update connection store to reflect new encryption status
-              // The connection info will be updated when schema is refreshed
             }}
           />
         </>

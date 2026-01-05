@@ -20,6 +20,7 @@ export type {
 export { useDataTabsStore } from './data-tabs-store';
 export type { DataTab } from './data-tabs-store';
 export { useDiagramStore } from './diagram-store';
+export { useDialogStore } from './dialog-store';
 export {
   DEFAULT_SHORTCUTS,
   formatShortcutBinding,

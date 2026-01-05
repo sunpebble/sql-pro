@@ -51,7 +51,6 @@ import {
   Pin,
   PinOff,
   Search,
-  Settings,
   SortAsc,
   Table,
   Tag,
@@ -60,7 +59,6 @@ import {
   Zap,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ShortcutKbd } from '@/components/ui/kbd';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -74,7 +72,6 @@ import {
   useTableOrganizationStore,
 } from '@/stores';
 import { ConnectionSelector } from './ConnectionSelector';
-import { SettingsDialog } from './SettingsDialog';
 import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
 interface SidebarProps {
@@ -129,7 +126,6 @@ export function Sidebar({
   // Track if all items are expanded
   const [isAllExpanded, setIsAllExpanded] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Confirmation dialogs state
   const [tableToTruncate, setTableToTruncate] = useState<TableSchema | null>(
@@ -150,19 +146,6 @@ export function Sidebar({
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-
-  // Global keyboard shortcut for settings
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
-        e.preventDefault();
-        setSettingsOpen(true);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   // Determine if we have multiple schemas (to show/hide schema-level grouping)
   const hasMultipleSchemas = useMemo(() => {
@@ -966,31 +949,6 @@ export function Sidebar({
           )}
         </div>
       </ScrollArea>
-
-      {/* Footer with Settings */}
-      <div className="border-t p-2">
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSettingsOpen(true)}
-              className="flex w-full justify-start"
-              data-action="open-settings"
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-              <ShortcutKbd action="settings.open" className="ml-auto" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right">
-            Open settings (<ShortcutKbd action="settings.open" />)
-          </TooltipContent>
-        </Tooltip>
-      </div>
-
-      {/* Settings Dialog */}
-      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
 
       {/* Truncate Table Confirmation Dialog */}
       <AlertDialog
