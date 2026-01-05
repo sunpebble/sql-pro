@@ -52,18 +52,26 @@ export const TableCell = memo(
     const columnSchema = columnMeta?.schema;
     const columnType = columnSchema?.type ?? columnMeta?.type ?? 'text';
 
-    // Initialize edit value when entering edit mode
+    // Track whether we were previously editing to detect edit mode transitions
+    const prevIsEditingRef = useRef(isEditing);
+
+    // Initialize edit state when entering edit mode - this avoids useEffect setState
+    // by checking state changes during render (React's recommended pattern)
+    if (isEditing && !prevIsEditingRef.current) {
+      // Entering edit mode - set initial values synchronously during render
+      setEditValue(value === null ? '' : String(value));
+      setValidationError(null);
+    }
+    prevIsEditingRef.current = isEditing;
+
+    // Focus the input when entering edit mode
     useEffect(() => {
       if (isEditing) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
-        setEditValue(value === null ? '' : String(value));
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
-        setValidationError(null);
         const timeoutId = setTimeout(() => inputRef.current?.focus(), 0);
         return () => clearTimeout(timeoutId);
       }
       return undefined;
-    }, [isEditing, value]);
+    }, [isEditing]);
 
     const validateValue = (val: string): string | null => {
       // Check NOT NULL constraint

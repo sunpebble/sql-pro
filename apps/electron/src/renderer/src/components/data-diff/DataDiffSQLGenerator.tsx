@@ -17,7 +17,7 @@ import {
   Loader2,
   Sparkles,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -51,11 +51,19 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showWarnings, setShowWarnings] = useState(true);
 
+  // Track previous selection state to detect when selection is cleared
+  const hadSelectionRef = useRef(comparisonResult && selectedRowKeys.size > 0);
+  const hasSelection = comparisonResult && selectedRowKeys.size > 0;
+
+  // Clear syncSQL when selection is cleared (render-time pattern avoids useEffect setState)
+  if (hadSelectionRef.current && !hasSelection && syncSQL !== null) {
+    setSyncSQL(null);
+  }
+  hadSelectionRef.current = hasSelection;
+
   // Generate sync SQL when comparison result or options change
   useEffect(() => {
     if (!comparisonResult || selectedRowKeys.size === 0) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Clearing state when no selection
-      setSyncSQL(null);
       return;
     }
 
@@ -173,7 +181,8 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
     return null;
   }
 
-  const hasSelection = selectedRowKeys.size > 0;
+  // hasSelection is already defined above (line 56)
+  // No need to redefine it here
 
   // Calculate statement counts from selected rows
   const getStatementCounts = () => {

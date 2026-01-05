@@ -1,5 +1,5 @@
 import type { ColumnSchema } from '@/types/database';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 interface UseResizableColumnsOptions {
   columns: ColumnSchema[];
@@ -73,11 +73,15 @@ export function useResizableColumns({
   const dragStartWidth = useRef(0);
   const currentColumnIndex = useRef<number | null>(null);
 
+  // Track the last initialWidths reference to detect changes
+  const prevInitialWidthsRef = useRef(initialWidths);
+
   // Sync widths when data changes (e.g., different table selected)
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+  // Using render-time comparison instead of useEffect to avoid eslint warning
+  if (prevInitialWidthsRef.current !== initialWidths) {
+    prevInitialWidthsRef.current = initialWidths;
     setColumnWidths(initialWidths);
-  }, [initialWidths]);
+  }
 
   // Handle mouse move during resize
   const handleMouseMove = useCallback(

@@ -17,7 +17,7 @@ import {
   Loader2,
   RotateCcw,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -51,12 +51,19 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showWarnings, setShowWarnings] = useState(true);
 
+  // Track previous comparison result to detect when it's cleared
+  const hadComparisonRef = useRef(!!comparisonResult);
+
+  // Clear migrationSQL when comparison result is cleared (render-time pattern avoids useEffect setState)
+  if (hadComparisonRef.current && !comparisonResult && migrationSQL !== null) {
+    setMigrationSQL(null);
+  }
+  hadComparisonRef.current = !!comparisonResult;
+
   // Generate migration SQL when comparison result or options change
 
   useEffect(() => {
     if (!comparisonResult) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Clearing state when no comparison result
-      setMigrationSQL(null);
       return;
     }
 

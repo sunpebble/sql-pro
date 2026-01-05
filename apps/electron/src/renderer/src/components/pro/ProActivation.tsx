@@ -11,7 +11,7 @@ import {
   Loader2,
   Sparkles,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -94,7 +94,13 @@ export function ProActivationDialog({
     [licenseKey, isPro, activatedAt]
   );
 
-  const [localLicenseKey, setLocalLicenseKey] = useState(licenseKey ?? '');
+  // Use a ref to track the last sync key, avoiding unnecessary state updates
+  const lastSyncKeyRef = useRef(storeKey);
+
+  // Initialize with current store value, reset when storeKey changes
+  const [localLicenseKey, setLocalLicenseKey] = useState(
+    () => licenseKey ?? ''
+  );
 
   // Load status when dialog opens
   useEffect(() => {
@@ -103,13 +109,12 @@ export function ProActivationDialog({
     }
   }, [open, loadStatus]);
 
-  // Reset local state when store values change
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+  // Reset local state when store values change (only on actual changes)
+  if (storeKey !== lastSyncKeyRef.current) {
+    lastSyncKeyRef.current = storeKey;
     setLocalLicenseKey(licenseKey ?? '');
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
     setError(null);
-  }, [storeKey, licenseKey]);
+  }
 
   const handleActivate = async () => {
     setError(null);

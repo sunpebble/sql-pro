@@ -26,7 +26,7 @@ import {
   Loader2,
   Sparkles,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ProBadge } from '@/components/pro/ProBadge';
 import {
   Dialog,
@@ -68,10 +68,16 @@ export function AISettingsDialog({
     [apiKey, provider, model, baseUrl]
   );
 
-  const [localApiKey, setLocalApiKey] = useState(apiKey);
-  const [localProvider, setLocalProvider] = useState<AIProvider>(provider);
-  const [localModel, setLocalModel] = useState(model);
-  const [localBaseUrl, setLocalBaseUrl] = useState(baseUrl);
+  // Use a ref to track the last sync key, avoiding unnecessary state updates
+  const lastSyncKeyRef = useRef(storeKey);
+
+  // Initialize with current store values
+  const [localApiKey, setLocalApiKey] = useState(() => apiKey);
+  const [localProvider, setLocalProvider] = useState<AIProvider>(
+    () => provider
+  );
+  const [localModel, setLocalModel] = useState(() => model);
+  const [localBaseUrl, setLocalBaseUrl] = useState(() => baseUrl);
 
   // Load settings when dialog opens
   useEffect(() => {
@@ -80,17 +86,14 @@ export function AISettingsDialog({
     }
   }, [open, loadSettings]);
 
-  // Reset local state when store values change (using key pattern)
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+  // Reset local state when store values change (only on actual changes)
+  if (storeKey !== lastSyncKeyRef.current) {
+    lastSyncKeyRef.current = storeKey;
     setLocalApiKey(apiKey);
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
     setLocalProvider(provider);
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
     setLocalModel(model);
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
     setLocalBaseUrl(baseUrl);
-  }, [storeKey, apiKey, provider, model, baseUrl]);
+  }
 
   const handleProviderChange = (newProvider: AIProvider) => {
     setLocalProvider(newProvider);

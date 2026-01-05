@@ -65,7 +65,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -180,40 +180,63 @@ export function Sidebar({
     }));
   }, []);
 
+  // Track previously seen schema names to detect new schemas
+  const prevSchemaKeysRef = useRef<Set<string>>(new Set());
+
   // Initialize expansion state for new schemas (default expanded)
-  useEffect(() => {
-    if (schema?.schemas) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentionally sync state with props
-      setExpandedSchemas((prev) => {
-        const next = { ...prev };
+  // Using render-time detection to avoid useEffect setState
+  if (schema?.schemas) {
+    const currentSchemaKeys = new Set(schema.schemas.map((s) => s.name));
+    const hasNewSchemas = schema.schemas.some(
+      (s) => !prevSchemaKeysRef.current.has(s.name)
+    );
+
+    if (hasNewSchemas) {
+      // Check if we need to update expandedSchemas
+      const needsSchemaUpdate = schema.schemas.some(
+        (s) => expandedSchemas[s.name] === undefined
+      );
+      if (needsSchemaUpdate) {
+        const newExpandedSchemas: Record<string, boolean> = {
+          ...expandedSchemas,
+        };
         for (const s of schema.schemas) {
-          if (next[s.name] === undefined) {
-            next[s.name] = true; // Expand by default
+          if (newExpandedSchemas[s.name] === undefined) {
+            newExpandedSchemas[s.name] = true; // Expand by default
           }
         }
-        return next;
+        setExpandedSchemas(newExpandedSchemas);
+      }
+
+      // Check if we need to update expandedSections
+      const needsSectionsUpdate = schema.schemas.some((s) => {
+        const tablesKey = `${s.name}:tables`;
+        return expandedSections[tablesKey] === undefined;
       });
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentionally sync state with props
-      setExpandedSections((prev) => {
-        const next = { ...prev };
+      if (needsSectionsUpdate) {
+        const newExpandedSections: Record<string, boolean> = {
+          ...expandedSections,
+        };
         for (const s of schema.schemas) {
           const tablesKey = `${s.name}:tables`;
           const viewsKey = `${s.name}:views`;
           const triggersKey = `${s.name}:triggers`;
-          if (next[tablesKey] === undefined) {
-            next[tablesKey] = true; // Expand tables by default
+          if (newExpandedSections[tablesKey] === undefined) {
+            newExpandedSections[tablesKey] = true; // Expand tables by default
           }
-          if (next[viewsKey] === undefined) {
-            next[viewsKey] = true; // Expand views by default
+          if (newExpandedSections[viewsKey] === undefined) {
+            newExpandedSections[viewsKey] = true; // Expand views by default
           }
-          if (next[triggersKey] === undefined) {
-            next[triggersKey] = false; // Collapse triggers by default
+          if (newExpandedSections[triggersKey] === undefined) {
+            newExpandedSections[triggersKey] = false; // Collapse triggers by default
           }
         }
-        return next;
-      });
+        setExpandedSections(newExpandedSections);
+      }
+
+      prevSchemaKeysRef.current = currentSchemaKeys;
     }
-  }, [schema?.schemas]);
+  }
 
   // Expand all schemas and sections
   const expandAll = useCallback(() => {
@@ -658,20 +681,28 @@ export function Sidebar({
     ]
   );
 
+  // Track previous selected table to sync focused index when selection changes externally
+  const prevSelectedTableRef = useRef(selectedTable);
+  const prevNavigableItemsRef = useRef(navigableItems);
+
   // Sync focused index with selected table when selection changes externally
-  useEffect(() => {
-    if (selectedTable) {
-      const idx = navigableItems.findIndex(
-        (n) =>
-          n.item.name === selectedTable.name &&
-          n.item.schema === selectedTable.schema
-      );
-      if (idx !== -1) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentionally sync state with props
-        setFocusedIndex(idx);
-      }
+  // Using render-time comparison to avoid useEffect setState
+  if (
+    selectedTable &&
+    (prevSelectedTableRef.current !== selectedTable ||
+      prevNavigableItemsRef.current !== navigableItems)
+  ) {
+    const idx = navigableItems.findIndex(
+      (n) =>
+        n.item.name === selectedTable.name &&
+        n.item.schema === selectedTable.schema
+    );
+    if (idx !== -1 && idx !== focusedIndex) {
+      setFocusedIndex(idx);
     }
-  }, [selectedTable, navigableItems]);
+  }
+  prevSelectedTableRef.current = selectedTable;
+  prevNavigableItemsRef.current = navigableItems;
 
   // Helper to get the index for vim focus within navigable items
   const getItemIndex = useCallback(
