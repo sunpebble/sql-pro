@@ -152,8 +152,11 @@ class PluginRuntime extends EventEmitter {
    */
   async initialize(): Promise<PluginRuntimeResult> {
     try {
-      // Dynamically require isolated-vm to handle cases where it's not available
-      // Using require() since isolated-vm is a native module that may not be installed
+      // Dynamically require isolated-vm to handle cases where it's not available.
+      // Using require() instead of import because:
+      // 1. isolated-vm is an optional native module that may not be installed
+      // 2. A static import would fail at module load time if the module is missing
+      // 3. require() inside try-catch allows graceful fallback to non-sandboxed mode
       // eslint-disable-next-line ts/no-require-imports
       this.isolatedVmModule = require('isolated-vm');
       this.runtimeAvailable = true;
@@ -501,8 +504,10 @@ class PluginRuntime extends EventEmitter {
       pluginPath: plugin.pluginPath,
     };
 
-    // Use Function constructor to create a sandboxed scope
-    // This is NOT as secure as isolated-vm but works without native modules
+    // Use Function constructor to create a sandboxed scope for plugin execution.
+    // This is NOT as secure as isolated-vm but works without native modules.
+    // Security context: Plugin code comes from user-installed plugins (not arbitrary
+    // user input), and this fallback is only used when isolated-vm is unavailable.
     try {
       const wrappedCode = `
         return (function(context, exports) {
@@ -514,6 +519,7 @@ class PluginRuntime extends EventEmitter {
         });
       `;
 
+      // Function constructor is required for dynamic plugin code execution.
       // eslint-disable-next-line no-new-func
       const fn = new Function(wrappedCode)();
       const exports = {};
