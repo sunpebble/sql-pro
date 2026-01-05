@@ -210,6 +210,8 @@ export function DatabasePage() {
               tables: schemaResult.tables || [],
               views: schemaResult.views || [],
             });
+          } else {
+            console.error('Failed to load schema:', schemaResult.error);
           }
           setIsLoadingSchema(false);
 
@@ -246,12 +248,18 @@ export function DatabasePage() {
       const filePath = result.filePath;
       const filename = filePath.split('/').pop() || filePath;
 
-      // Check if encrypted
+      // Check if encrypted by trying to open without password
       setIsConnecting(true);
       const probeResult = await sqlPro.db.open({ path: filePath });
       setIsConnecting(false);
 
       const isEncrypted = probeResult.needsPassword === true;
+
+      // Close the probe connection if it was opened successfully
+      // (we'll open it again properly after user confirms settings)
+      if (probeResult.success && probeResult.connection) {
+        await sqlPro.db.close({ connectionId: probeResult.connection.id });
+      }
 
       // Show settings dialog for new connections
       setPendingPath(filePath);
