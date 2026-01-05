@@ -1091,7 +1091,7 @@ function SchemaSection({
   const triggersExpanded = expandedSections[triggersKey] !== false;
 
   return (
-    <div className="mb-2 min-w-0 overflow-hidden">
+    <div className="mb-2 min-w-0">
       {/* Schema Header (only shown when multiple schemas) */}
       {showSchemaHeader && (
         <button
@@ -1126,7 +1126,7 @@ function SchemaSection({
                 Tables ({schemaInfo.tables.length})
               </button>
               {tablesExpanded && (
-                <div className="mt-1 min-w-0 space-y-0.5 overflow-hidden">
+                <div className="mt-1 min-w-0 space-y-0.5 px-0.5">
                   {schemaInfo.tables.map((table, idx) => {
                     const itemIdx = getItemIndex(schemaInfo.name, 'table', idx);
                     const tableKey = getTableKey(
@@ -1318,18 +1318,28 @@ function TableItem({
         <button
           onClick={onClick}
           className={cn(
-            'flex w-full items-center gap-2 overflow-hidden rounded px-2 py-1.5 transition-colors',
+            'flex w-full items-center gap-2 overflow-hidden rounded-md px-2 py-1.5 text-sm transition-all duration-150',
             isSelected
-              ? 'bg-accent text-accent-foreground'
+              ? 'bg-primary/10 text-primary font-medium'
               : 'hover:bg-accent/50 text-foreground',
             isFocused && !isSelected && 'ring-primary/50 ring-2 ring-inset'
           )}
         >
           {isPinned && <Pin className="text-primary h-3 w-3 shrink-0" />}
           {isView ? (
-            <Eye className="text-muted-foreground h-4 w-4 shrink-0" />
+            <Eye
+              className={cn(
+                'h-4 w-4 shrink-0',
+                isSelected ? 'text-primary/70' : 'text-muted-foreground'
+              )}
+            />
           ) : (
-            <Table className="text-muted-foreground h-4 w-4 shrink-0" />
+            <Table
+              className={cn(
+                'h-4 w-4 shrink-0',
+                isSelected ? 'text-primary/70' : 'text-muted-foreground'
+              )}
+            />
           )}
           <span className="min-w-0 flex-1 truncate text-left">
             {table.name}
@@ -1353,7 +1363,12 @@ function TableItem({
             </div>
           )}
           {table.rowCount !== undefined && (
-            <span className="text-muted-foreground shrink-0 tabular-nums">
+            <span
+              className={cn(
+                'shrink-0 text-xs tabular-nums',
+                isSelected ? 'text-primary/70' : 'text-muted-foreground'
+              )}
+            >
               {table.rowCount.toLocaleString()}
             </span>
           )}
