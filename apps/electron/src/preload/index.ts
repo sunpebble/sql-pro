@@ -15,6 +15,8 @@ import type {
   AnalyzeQueryPlanResponse,
   ApplyChangesRequest,
   ApplyChangesResponse,
+  ChangePasswordRequest,
+  ChangePasswordResponse,
   CheckUnsavedChangesRequest,
   CheckUnsavedChangesResponse,
   ClearQueryHistoryRequest,
@@ -231,6 +233,10 @@ const sqlProAPI = {
       request: TestConnectionRequest
     ): Promise<TestConnectionResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_TEST_CONNECTION, request),
+    changePassword: (
+      request: ChangePasswordRequest
+    ): Promise<ChangePasswordResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_CHANGE_PASSWORD, request),
     onFileChanged: (
       callback: (event: FileChangeEvent) => void
     ): (() => void) => {

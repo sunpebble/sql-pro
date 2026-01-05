@@ -1,6 +1,7 @@
 import type {
   AnalyzeQueryPlanRequest,
   ApplyChangesRequest,
+  ChangePasswordRequest,
   CloseDatabaseRequest,
   ExecuteQueryRequest,
   GetSchemaRequest,
@@ -331,6 +332,29 @@ export function setupDatabaseHandlers(): void {
         request.connectionId,
         request.query
       );
+    }
+  );
+
+  // Database: Change Password
+  ipcMain.handle(
+    IPC_CHANNELS.DB_CHANGE_PASSWORD,
+    async (_event, request: ChangePasswordRequest) => {
+      // Only SQLite databases support password change via PRAGMA rekey
+      // Check if this is a legacy SQLite connection
+      const conn = databaseService.getConnection(request.connectionId);
+      if (conn) {
+        return databaseService.changePassword(
+          request.connectionId,
+          request.newPassword
+        );
+      }
+
+      // For other database types, return an error
+      return {
+        success: false,
+        error: 'Password change is only supported for SQLite databases',
+        errorCode: 'ENCRYPTION_ERROR',
+      };
     }
   );
 }

@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
   Database,
   FileText,
+  KeyRound,
   Lock,
   Monitor,
   Moon,
@@ -190,7 +191,54 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
             {connection.filename}
           </span>
           {connection.isEncrypted && (
-            <Lock className="text-muted-foreground h-3 w-3" />
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => {
+                    const btn = document.querySelector(
+                      '[data-action="change-password"]'
+                    ) as HTMLButtonElement;
+                    btn?.click();
+                  }}
+                  disabled={connection.isReadOnly}
+                >
+                  <Lock className="h-3 w-3" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {connection.isReadOnly
+                  ? 'Cannot change password (read-only)'
+                  : 'Change database password'}
+              </TooltipContent>
+            </Tooltip>
+          )}
+          {!connection.isEncrypted && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => {
+                    const btn = document.querySelector(
+                      '[data-action="change-password"]'
+                    ) as HTMLButtonElement;
+                    btn?.click();
+                  }}
+                  disabled={connection.isReadOnly}
+                >
+                  <KeyRound className="text-muted-foreground h-3 w-3" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {connection.isReadOnly
+                  ? 'Cannot encrypt (read-only)'
+                  : 'Encrypt database'}
+              </TooltipContent>
+            </Tooltip>
           )}
           {connection.isReadOnly && (
             <span className="bg-secondary text-muted-foreground rounded px-1.5 py-0.5 text-xs">

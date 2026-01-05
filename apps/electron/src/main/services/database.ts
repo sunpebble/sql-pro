@@ -358,6 +358,84 @@ class DatabaseService {
   }
 
   /**
+   * Change the encryption password of a database.
+   * Uses PRAGMA rekey to change the password.
+   * @param connectionId - The ID of the connection
+   * @param newPassword - The new password (empty string to remove encryption)
+   * @returns Success status or error information
+   */
+  changePassword(
+    connectionId: string,
+    newPassword: string
+  ):
+    | { success: true }
+    | { success: false; error: string; errorCode?: ErrorCode } {
+    const conn = this.connections.get(connectionId);
+    if (!conn) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    if (conn.isReadOnly) {
+      return {
+        success: false,
+        error: 'Cannot change password on a read-only connection',
+        errorCode: 'PERMISSION_ERROR',
+      };
+    }
+
+    try {
+      // Use PRAGMA rekey to change the password
+      // Empty string removes encryption
+      if (newPassword === '') {
+        // Remove encryption by setting key to empty
+        conn.db.pragma(`rekey = ''`);
+      } else {
+        // Set new password
+        conn.db.pragma(`rekey = '${newPassword}'`);
+      }
+
+      // Verify the change by testing a simple query
+      conn.db.prepare('SELECT count(*) FROM sqlite_master').get();
+
+      // Update connection info
+      conn.isEncrypted = newPassword !== '';
+
+      // Log the password change operation
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.path,
+        sql: 'PRAGMA rekey = [REDACTED]',
+        durationMs: 0,
+        success: true,
+        rowCount: 0,
+      });
+
+      return { success: true };
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to change database password';
+
+      // Log the failure
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.path,
+        sql: 'PRAGMA rekey = [REDACTED]',
+        durationMs: 0,
+        success: false,
+        error: errorMessage,
+      });
+
+      return {
+        success: false,
+        error: errorMessage,
+        errorCode: 'ENCRYPTION_ERROR',
+      };
+    }
+  }
+
+  /**
    * Get connection information by connection ID.
    * Used for retrieving connection metadata without database operations.
    */

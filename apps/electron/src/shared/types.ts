@@ -160,6 +160,23 @@ export interface CloseDatabaseResponse {
 }
 
 /**
+ * Request to change the encryption password of a database
+ */
+export interface ChangePasswordRequest {
+  connectionId: string;
+  /** Current password (required for encrypted databases) */
+  currentPassword?: string;
+  /** New password (empty string to remove encryption) */
+  newPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  error?: string;
+  errorCode?: ErrorCode;
+}
+
+/**
  * Test connection request - tests connectivity without establishing a persistent connection
  */
 export interface TestConnectionRequest {
@@ -2275,6 +2292,7 @@ export const IPC_CHANNELS = {
   DB_VALIDATE_CHANGES: 'db:validate-changes',
   DB_APPLY_CHANGES: 'db:apply-changes',
   DB_ANALYZE_PLAN: 'db:analyze-plan',
+  DB_CHANGE_PASSWORD: 'db:change-password',
   DB_FILE_CHANGED: 'db:file-changed',
 
   // Dialog

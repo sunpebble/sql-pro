@@ -1,7 +1,9 @@
 import * as Dialog from '@radix-ui/react-dialog';
+import { Alert, AlertDescription } from '@sqlpro/ui/alert';
 import { Button } from '@sqlpro/ui/button';
+import { Separator } from '@sqlpro/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Info, Settings } from 'lucide-react';
+import { AlertCircle, Info, KeyRound, Settings, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -34,6 +36,7 @@ interface DialogFormContentProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (settings: ConnectionSettings) => void;
   filename: string;
+  dbPath: string;
   isEncrypted: boolean;
   mode: 'new' | 'edit';
   initialValues?: Partial<ConnectionSettings>;
@@ -44,6 +47,7 @@ function DialogFormContent({
   onOpenChange,
   onSubmit,
   filename,
+  dbPath,
   isEncrypted,
   mode,
   initialValues,
@@ -57,24 +61,36 @@ function DialogFormContent({
     initialValues?.rememberPassword ?? false
   );
   const [isStorageAvailable, setIsStorageAvailable] = useState(false);
+  const [hasSavedPassword, setHasSavedPassword] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // Check if password storage is available (async operation is fine in useEffect)
+  // Password edit state (for edit mode)
+  const [showPasswordEdit, setShowPasswordEdit] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+
+  // Check if password storage is available and if there's a saved password
   useEffect(() => {
-    if (isEncrypted) {
-      sqlPro.password.isAvailable().then((result: { available: boolean }) => {
-        setIsStorageAvailable(result.available);
+    if (isEncrypted && dbPath) {
+      Promise.all([
+        sqlPro.password.isAvailable(),
+        sqlPro.password.has({ dbPath }),
+      ]).then(([availableResult, hasResult]) => {
+        setIsStorageAvailable(availableResult.available);
+        setHasSavedPassword(hasResult.hasPassword);
         // Default to remember if storage is available and this is a new connection
         if (
           mode === 'new' &&
-          result.available &&
+          availableResult.available &&
           !initialValues?.rememberPassword
         ) {
           setRememberPassword(true);
         }
       });
     }
-  }, [isEncrypted, mode, initialValues?.rememberPassword]);
+  }, [isEncrypted, dbPath, mode, initialValues?.rememberPassword]);
 
   const validateDisplayName = (value: string): string | null => {
     const trimmed = value.trim();
@@ -107,6 +123,70 @@ function DialogFormContent({
       rememberPassword: isEncrypted && rememberPassword && isStorageAvailable,
     });
   };
+
+  // Password management handlers
+  const handleSavePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+    if (!newPassword.trim()) {
+      setPasswordError('Password cannot be empty');
+      return;
+    }
+
+    setIsPasswordLoading(true);
+    setPasswordError(null);
+
+    try {
+      const result = await sqlPro.password.save({
+        dbPath,
+        password: newPassword,
+      });
+
+      if (result.success) {
+        setHasSavedPassword(true);
+        setShowPasswordEdit(false);
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        setPasswordError(result.error || 'Failed to save password');
+      }
+    } catch (err) {
+      setPasswordError(
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      );
+    } finally {
+      setIsPasswordLoading(false);
+    }
+  };
+
+  const handleRemovePassword = async () => {
+    // eslint-disable-next-line no-alert
+    const confirmed = globalThis.confirm(
+      'Are you sure you want to remove the saved password? You will need to enter the password manually next time you connect.'
+    );
+    if (!confirmed) return;
+
+    setIsPasswordLoading(true);
+    try {
+      const result = await sqlPro.password.remove({ dbPath });
+      if (result.success) {
+        setHasSavedPassword(false);
+        setShowPasswordEdit(false);
+      } else {
+        setPasswordError(result.error || 'Failed to remove password');
+      }
+    } catch (err) {
+      setPasswordError(
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      );
+    } finally {
+      setIsPasswordLoading(false);
+    }
+  };
+
+  const passwordsMatch = newPassword === confirmPassword;
 
   const isValid = !validateDisplayName(displayName);
   const dialogTitle =
@@ -171,8 +251,8 @@ function DialogFormContent({
           </div>
         </label>
 
-        {/* Remember Password Checkbox - Only for encrypted databases */}
-        {isEncrypted && (
+        {/* Remember Password Checkbox - Only for encrypted databases in new mode */}
+        {isEncrypted && mode === 'new' && (
           <label
             className={cn(
               'border-input flex items-center gap-3 rounded-md border p-3',
@@ -209,6 +289,148 @@ function DialogFormContent({
           </label>
         )}
 
+        {/* Password Management - Only for encrypted databases in edit mode */}
+        {isEncrypted && mode === 'edit' && isStorageAvailable && (
+          <>
+            <Separator className="my-4" />
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <KeyRound className="text-muted-foreground h-4 w-4" />
+                  <span className="text-sm font-medium">Saved Password</span>
+                </div>
+                {hasSavedPassword && (
+                  <span className="text-xs text-green-600 dark:text-green-400">
+                    Password saved
+                  </span>
+                )}
+              </div>
+
+              {!showPasswordEdit ? (
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setShowPasswordEdit(true)}
+                  >
+                    {hasSavedPassword ? 'Change Password' : 'Save Password'}
+                  </Button>
+                  {hasSavedPassword && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive hover:text-destructive"
+                      onClick={handleRemovePassword}
+                      disabled={isPasswordLoading}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3 rounded-md border p-3">
+                  {passwordError && (
+                    <Alert variant="destructive" className="py-2">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-xs">
+                        {passwordError}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="newPassword"
+                      className="text-xs font-medium"
+                    >
+                      {hasSavedPassword ? 'New Password' : 'Password'}
+                    </label>
+                    <input
+                      id="newPassword"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Enter password"
+                      className={cn(
+                        'border-input bg-background w-full rounded-md border px-3 py-1.5 text-sm',
+                        'placeholder:text-muted-foreground',
+                        'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
+                      )}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="text-xs font-medium"
+                    >
+                      Confirm Password
+                    </label>
+                    <input
+                      id="confirmPassword"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm password"
+                      className={cn(
+                        'border-input bg-background w-full rounded-md border px-3 py-1.5 text-sm',
+                        'placeholder:text-muted-foreground',
+                        'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                        confirmPassword &&
+                          !passwordsMatch &&
+                          'border-destructive'
+                      )}
+                    />
+                    {confirmPassword && !passwordsMatch && (
+                      <p className="text-destructive text-xs">
+                        Passwords do not match
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => {
+                        setShowPasswordEdit(false);
+                        setNewPassword('');
+                        setConfirmPassword('');
+                        setPasswordError(null);
+                      }}
+                      disabled={isPasswordLoading}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="flex-1"
+                      onClick={handleSavePassword}
+                      disabled={
+                        isPasswordLoading ||
+                        !newPassword.trim() ||
+                        !passwordsMatch
+                      }
+                    >
+                      {isPasswordLoading ? 'Saving...' : 'Save'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              <p className="text-muted-foreground text-xs">
+                Password is securely stored in your system keychain
+              </p>
+            </div>
+          </>
+        )}
+
         {/* Action Buttons */}
         <div className="flex gap-3 pt-2">
           <Button
@@ -233,7 +455,7 @@ export function ConnectionSettingsDialog({
   onOpenChange,
   onSubmit,
   filename,
-  dbPath: _dbPath, // Reserved for future edit mode (check existing password)
+  dbPath,
   isEncrypted,
   mode = 'new',
   initialValues,
@@ -248,6 +470,7 @@ export function ConnectionSettingsDialog({
               onOpenChange={onOpenChange}
               onSubmit={onSubmit}
               filename={filename}
+              dbPath={dbPath}
               isEncrypted={isEncrypted}
               mode={mode}
               initialValues={initialValues}
