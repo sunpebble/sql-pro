@@ -35,8 +35,7 @@ coverage
 
 packages/docs/.vitepress/cache
 .worktrees
-.auto-claude/
-.auto-claude-status
+.auto-claude*
 .claude_settings.json
 .nx/cache
 .nx/workspace-data
