@@ -1,3 +1,4 @@
+import type { Buffer } from 'node:buffer';
 // Shared types for IPC communication between main and renderer
 // These types define the contract for all database operations
 
@@ -2719,7 +2720,7 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true } },
   'view.toggle-schema-details': {
-    key: '0',
+    key: '\\',
     modifiers: { cmd: true },
   },
   'action.command-palette': { key: 'k', modifiers: { cmd: true } },

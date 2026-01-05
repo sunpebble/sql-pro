@@ -177,9 +177,9 @@ export function useCommands() {
         'view.toggle-schema-details'
       );
       if (matchesBinding(e, toggleSchemaDetailsBinding)) {
-        // Check if we're in the Data Browser tab
+        // Check if we're in the Data Browser tab (base-ui uses data-active attribute)
         const dataTab = document.querySelector<HTMLButtonElement>(
-          '[data-tab="data"][data-state="active"]'
+          '[data-tab="data"][data-active]'
         );
         if (dataTab) {
           e.preventDefault();
