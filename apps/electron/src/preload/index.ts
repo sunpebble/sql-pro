@@ -80,6 +80,8 @@ import type {
   GetCurrentWindowResponse,
   GetFoldersRequest,
   GetFoldersResponse,
+  GetMemoryStatsRequest,
+  GetMemoryStatsResponse,
   GetPasswordRequest,
   GetPasswordResponse,
   GetPreferencesResponse,
@@ -112,6 +114,14 @@ import type {
   ImportSchemaRequest,
   ImportSchemaResponse,
   IsPasswordStorageAvailableResponse,
+  MemoryPressureChangeEvent,
+  MemoryStatsUpdateEvent,
+  MemorySubscribeRequest,
+  MemorySubscribeResponse,
+  MemoryTriggerGCRequest,
+  MemoryTriggerGCResponse,
+  MemoryUnsubscribeRequest,
+  MemoryUnsubscribeResponse,
   MenuAction,
   OpenDatabaseRequest,
   OpenDatabaseResponse,
@@ -482,6 +492,47 @@ const sqlProAPI = {
       fonts: string[];
       error?: string;
     }> => ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_GET_FONTS),
+  },
+
+  // Memory monitoring operations
+  memory: {
+    getStats: (
+      request?: GetMemoryStatsRequest
+    ): Promise<GetMemoryStatsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_GET_STATS, request),
+    subscribe: (
+      request?: MemorySubscribeRequest
+    ): Promise<MemorySubscribeResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_SUBSCRIBE, request),
+    unsubscribe: (
+      request: MemoryUnsubscribeRequest
+    ): Promise<MemoryUnsubscribeResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_UNSUBSCRIBE, request),
+    triggerGC: (
+      request?: MemoryTriggerGCRequest
+    ): Promise<MemoryTriggerGCResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_TRIGGER_GC, request),
+    onStatsUpdate: (
+      callback: (event: MemoryStatsUpdateEvent) => void
+    ): (() => void) => {
+      const handler = (
+        _event: Electron.IpcRendererEvent,
+        statsEvent: MemoryStatsUpdateEvent
+      ) => callback(statsEvent);
+      ipcRenderer.on(IPC_CHANNELS.MEMORY_STATS_UPDATE, handler);
+      return () => ipcRenderer.off(IPC_CHANNELS.MEMORY_STATS_UPDATE, handler);
+    },
+    onPressureChange: (
+      callback: (event: MemoryPressureChangeEvent) => void
+    ): (() => void) => {
+      const handler = (
+        _event: Electron.IpcRendererEvent,
+        pressureEvent: MemoryPressureChangeEvent
+      ) => callback(pressureEvent);
+      ipcRenderer.on(IPC_CHANNELS.MEMORY_PRESSURE_CHANGE, handler);
+      return () =>
+        ipcRenderer.off(IPC_CHANNELS.MEMORY_PRESSURE_CHANGE, handler);
+    },
   },
 
   // Window operations
