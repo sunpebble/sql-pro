@@ -1,0 +1,352 @@
+import { EventEmitter } from 'node:events';
+import nodeProcess from 'node:process';
+import v8 from 'node:v8';
+
+/**
+ * Memory thresholds configuration
+ */
+export interface MemoryThresholds {
+  /** Warning threshold in bytes (default: 150MB) */
+  warning: number;
+  /** Critical threshold in bytes (default: 200MB) */
+  critical: number;
+  /** Heap usage percentage for warning (default: 0.7 = 70%) */
+  heapWarningPercent: number;
+  /** Heap usage percentage for critical (default: 0.85 = 85%) */
+  heapCriticalPercent: number;
+}
+
+/**
+ * Detailed memory statistics from process.memoryUsage() and v8.getHeapStatistics()
+ */
+export interface MemoryStats {
+  /** Process memory usage */
+  process: {
+    /** Resident Set Size - total memory allocated for the process */
+    rss: number;
+    /** Heap total - V8's memory usage for heap */
+    heapTotal: number;
+    /** Heap used - V8's actual heap memory used */
+    heapUsed: number;
+    /** Memory used by C++ objects bound to JavaScript objects */
+    external: number;
+    /** Memory allocated for ArrayBuffers and SharedArrayBuffers */
+    arrayBuffers: number;
+  };
+  /** V8 heap statistics */
+  heap: {
+    /** Total size of the heap */
+    totalHeapSize: number;
+    /** Size of executable heap */
+    totalHeapSizeExecutable: number;
+    /** Total physical size of the heap */
+    totalPhysicalSize: number;
+    /** Total available heap size */
+    totalAvailableSize: number;
+    /** Used heap size */
+    usedHeapSize: number;
+    /** Heap size limit */
+    heapSizeLimit: number;
+    /** Amount of memory for which malloc'd memory could be released back to OS */
+    mallocedMemory: number;
+    /** Peak amount of malloc'd memory */
+    peakMallocedMemory: number;
+    /** Number of native contexts */
+    numberOfNativeContexts: number;
+    /** Number of detached contexts */
+    numberOfDetachedContexts: number;
+    /** Does the heap have weak callbacks */
+    doesZapGarbage: number;
+    /** External memory size */
+    externalMemory: number;
+  };
+  /** Calculated metrics */
+  metrics: {
+    /** Heap usage percentage (usedHeapSize / heapSizeLimit) */
+    heapUsagePercent: number;
+    /** Total process memory in MB */
+    totalMemoryMB: number;
+    /** Used heap in MB */
+    usedHeapMB: number;
+    /** Available heap in MB */
+    availableHeapMB: number;
+  };
+  /** Current timestamp */
+  timestamp: number;
+}
+
+/**
+ * Memory pressure level
+ */
+export type MemoryPressureLevel = 'normal' | 'warning' | 'critical';
+
+/**
+ * Memory event types emitted by MemoryMonitor
+ */
+export interface MemoryMonitorEvents {
+  'memory-warning': [MemoryStats];
+  'memory-critical': [MemoryStats];
+  'memory-normal': [MemoryStats];
+  'memory-stats': [MemoryStats];
+}
+
+/**
+ * Default memory thresholds
+ */
+const DEFAULT_THRESHOLDS: MemoryThresholds = {
+  warning: 150 * 1024 * 1024, // 150MB
+  critical: 200 * 1024 * 1024, // 200MB
+  heapWarningPercent: 0.7, // 70%
+  heapCriticalPercent: 0.85, // 85%
+};
+
+/**
+ * Default monitoring interval in milliseconds
+ */
+const DEFAULT_INTERVAL = 30_000; // 30 seconds
+
+/**
+ * MemoryMonitor service for the main process.
+ * Periodically checks memory usage and emits events when thresholds are crossed.
+ *
+ * @example
+ * ```typescript
+ * import { memoryMonitor } from './memory-monitor';
+ *
+ * // Start monitoring with default settings
+ * memoryMonitor.start();
+ *
+ * // Listen for memory warnings
+ * memoryMonitor.on('memory-warning', (stats) => {
+ *   console.log('Memory warning:', stats.metrics.totalMemoryMB, 'MB');
+ * });
+ *
+ * // Get current usage
+ * const stats = memoryMonitor.getCurrentUsage();
+ * console.log('Current memory:', stats.metrics.totalMemoryMB, 'MB');
+ * ```
+ */
+class MemoryMonitor extends EventEmitter {
+  private thresholds: MemoryThresholds;
+  private intervalMs: number;
+  private intervalId: ReturnType<typeof setInterval> | null = null;
+  private lastPressureLevel: MemoryPressureLevel = 'normal';
+  private isMonitoring = false;
+
+  constructor(
+    thresholds: Partial<MemoryThresholds> = {},
+    intervalMs: number = DEFAULT_INTERVAL
+  ) {
+    super();
+    this.thresholds = { ...DEFAULT_THRESHOLDS, ...thresholds };
+    this.intervalMs = intervalMs;
+  }
+
+  /**
+   * Start monitoring memory usage at the configured interval.
+   * If already monitoring, this method does nothing.
+   */
+  start(): void {
+    if (this.isMonitoring) {
+      return;
+    }
+
+    this.isMonitoring = true;
+    // Perform initial check
+    this.checkMemory();
+
+    // Set up periodic checks
+    this.intervalId = setInterval(() => {
+      this.checkMemory();
+    }, this.intervalMs);
+  }
+
+  /**
+   * Stop monitoring memory usage.
+   */
+  stop(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    this.isMonitoring = false;
+    this.lastPressureLevel = 'normal';
+  }
+
+  /**
+   * Check if the monitor is currently running.
+   */
+  isRunning(): boolean {
+    return this.isMonitoring;
+  }
+
+  /**
+   * Get current memory usage statistics.
+   * This method can be called at any time, regardless of whether monitoring is active.
+   */
+  getCurrentUsage(): MemoryStats {
+    const processMemory = nodeProcess.memoryUsage();
+    const heapStats = v8.getHeapStatistics();
+
+    const stats: MemoryStats = {
+      process: {
+        rss: processMemory.rss,
+        heapTotal: processMemory.heapTotal,
+        heapUsed: processMemory.heapUsed,
+        external: processMemory.external,
+        arrayBuffers: processMemory.arrayBuffers,
+      },
+      heap: {
+        totalHeapSize: heapStats.total_heap_size,
+        totalHeapSizeExecutable: heapStats.total_heap_size_executable,
+        totalPhysicalSize: heapStats.total_physical_size,
+        totalAvailableSize: heapStats.total_available_size,
+        usedHeapSize: heapStats.used_heap_size,
+        heapSizeLimit: heapStats.heap_size_limit,
+        mallocedMemory: heapStats.malloced_memory,
+        peakMallocedMemory: heapStats.peak_malloced_memory,
+        numberOfNativeContexts: heapStats.number_of_native_contexts,
+        numberOfDetachedContexts: heapStats.number_of_detached_contexts,
+        doesZapGarbage: heapStats.does_zap_garbage,
+        externalMemory: heapStats.external_memory,
+      },
+      metrics: {
+        heapUsagePercent: heapStats.used_heap_size / heapStats.heap_size_limit,
+        totalMemoryMB: processMemory.rss / (1024 * 1024),
+        usedHeapMB: heapStats.used_heap_size / (1024 * 1024),
+        availableHeapMB: heapStats.total_available_size / (1024 * 1024),
+      },
+      timestamp: Date.now(),
+    };
+
+    return stats;
+  }
+
+  /**
+   * Get the current memory pressure level based on thresholds.
+   */
+  getPressureLevel(stats?: MemoryStats): MemoryPressureLevel {
+    const currentStats = stats || this.getCurrentUsage();
+
+    // Check RSS against thresholds
+    if (currentStats.process.rss >= this.thresholds.critical) {
+      return 'critical';
+    }
+    if (currentStats.process.rss >= this.thresholds.warning) {
+      return 'warning';
+    }
+
+    // Check heap usage percentage
+    if (currentStats.metrics.heapUsagePercent >= this.thresholds.heapCriticalPercent) {
+      return 'critical';
+    }
+    if (currentStats.metrics.heapUsagePercent >= this.thresholds.heapWarningPercent) {
+      return 'warning';
+    }
+
+    return 'normal';
+  }
+
+  /**
+   * Update the memory thresholds.
+   */
+  setThresholds(thresholds: Partial<MemoryThresholds>): void {
+    this.thresholds = { ...this.thresholds, ...thresholds };
+  }
+
+  /**
+   * Get the current thresholds.
+   */
+  getThresholds(): MemoryThresholds {
+    return { ...this.thresholds };
+  }
+
+  /**
+   * Set the monitoring interval.
+   * If monitoring is active, it will be restarted with the new interval.
+   */
+  setInterval(intervalMs: number): void {
+    this.intervalMs = intervalMs;
+    if (this.isMonitoring) {
+      this.stop();
+      this.start();
+    }
+  }
+
+  /**
+   * Get the current monitoring interval in milliseconds.
+   */
+  getInterval(): number {
+    return this.intervalMs;
+  }
+
+  /**
+   * Force a garbage collection if available.
+   * Note: This only works if the app is started with --expose-gc flag.
+   * Returns true if GC was triggered, false otherwise.
+   */
+  triggerGC(): boolean {
+    const gc = (globalThis as unknown as { gc?: () => void }).gc;
+    if (typeof gc === 'function') {
+      gc();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Notify all browser windows about memory status.
+   * This is useful for keeping the renderer process informed about memory pressure.
+   */
+  notifyWindows(channel: string, stats: MemoryStats): void {
+    // Dynamically import electron to avoid issues in test environments
+    import('electron')
+      .then(({ BrowserWindow: BW }) => {
+        const allWindows = BW.getAllWindows();
+        for (const window of allWindows) {
+          if (!window.isDestroyed()) {
+            window.webContents.send(channel, stats);
+          }
+        }
+      })
+      .catch(() => {
+        // Electron not available (e.g., in tests)
+      });
+  }
+
+  /**
+   * Perform a memory check and emit appropriate events.
+   */
+  private checkMemory(): void {
+    const stats = this.getCurrentUsage();
+    const currentLevel = this.getPressureLevel(stats);
+
+    // Always emit stats event
+    this.emit('memory-stats', stats);
+
+    // Emit level-specific events when level changes
+    if (currentLevel !== this.lastPressureLevel) {
+      switch (currentLevel) {
+        case 'critical':
+          this.emit('memory-critical', stats);
+          break;
+        case 'warning':
+          this.emit('memory-warning', stats);
+          break;
+        case 'normal':
+          // Only emit normal if we're coming down from a higher level
+          if (this.lastPressureLevel !== 'normal') {
+            this.emit('memory-normal', stats);
+          }
+          break;
+      }
+      this.lastPressureLevel = currentLevel;
+    }
+  }
+}
+
+// Export singleton instance for global access
+export const memoryMonitor = new MemoryMonitor();
+
+// Export class for testing or custom instances
+export { MemoryMonitor };
