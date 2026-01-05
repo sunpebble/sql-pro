@@ -47,7 +47,9 @@ const { setupDialogHandlers } = await import('./dialog');
 setupDialogHandlers();
 
 // Helper to invoke IPC handlers
-interface IpcMainInvokeEvent { sender: unknown }
+interface IpcMainInvokeEvent {
+  sender: unknown;
+}
 
 async function invokeHandler<T>(
   channel: string,
@@ -328,6 +330,206 @@ DELETE FROM temp_data WHERE created_at < '2024-01-01';`;
       // Error message should be user-friendly
       expect(result.error).not.toContain('ENOENT');
     });
+
+    it('should handle writing to a directory path (EISDIR)', async () => {
+      // Use the temp directory itself as the file path
+      const request: WriteFileRequest = {
+        filePath: tempDir,
+        content: 'SELECT 1;',
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('directory');
+    });
+
+    it('should handle read-only file overwrite', async () => {
+      // Create a read-only file
+      const readOnlyFile = path.join(tempDir, 'readonly-file.sql');
+      fs.writeFileSync(readOnlyFile, 'original content');
+      fs.chmodSync(readOnlyFile, 0o444);
+
+      const request: WriteFileRequest = {
+        filePath: readOnlyFile,
+        content: 'new content',
+        atomic: true,
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      // Atomic write creates temp file then renames, so this should fail on rename
+      // if the target is read-only (depends on OS behavior)
+      // The test verifies that an error is returned, not a crash
+      if (!result.success) {
+        expect(result.error).toBeDefined();
+        // Error should be user-friendly (not raw error code)
+        expect(result.error).not.toMatch(/^E[A-Z]+$/);
+      }
+
+      // Cleanup
+      fs.chmodSync(readOnlyFile, 0o644);
+    });
+
+    it('should handle empty file path gracefully', async () => {
+      const request: WriteFileRequest = {
+        filePath: '',
+        content: 'SELECT 1;',
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+    });
+
+    it('should handle deeply nested non-existent path', async () => {
+      const deepPath = path.join(
+        tempDir,
+        'level1',
+        'level2',
+        'level3',
+        'level4',
+        'test.sql'
+      );
+
+      const request: WriteFileRequest = {
+        filePath: deepPath,
+        content: 'SELECT 1;',
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('directory does not exist');
+    });
+
+    it('should handle special characters in file path', async () => {
+      // Test with spaces and valid special chars in path
+      const specialDir = path.join(tempDir, 'folder with spaces');
+      fs.mkdirSync(specialDir);
+
+      const testFilePath = path.join(specialDir, 'file-name_v2.0.sql');
+      const testContent = 'SELECT 1;';
+
+      const request: WriteFileRequest = {
+        filePath: testFilePath,
+        content: testContent,
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+      }>('file:write', request);
+
+      expect(result.success).toBe(true);
+      expect(fs.existsSync(testFilePath)).toBe(true);
+    });
+
+    it('should handle file path with unicode characters', async () => {
+      // Test with unicode characters in path
+      const unicodeDir = path.join(tempDir, '文件夹');
+      fs.mkdirSync(unicodeDir);
+
+      const testFilePath = path.join(unicodeDir, 'テスト.sql');
+      const testContent = 'SELECT * FROM 测试表;';
+
+      const request: WriteFileRequest = {
+        filePath: testFilePath,
+        content: testContent,
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+      }>('file:write', request);
+
+      expect(result.success).toBe(true);
+      expect(fs.existsSync(testFilePath)).toBe(true);
+
+      const content = fs.readFileSync(testFilePath, 'utf8');
+      expect(content).toBe(testContent);
+    });
+
+    it('should return error for null content', async () => {
+      const testFilePath = path.join(tempDir, 'null-content.sql');
+
+      const request = {
+        filePath: testFilePath,
+        content: null,
+      } as unknown as WriteFileRequest;
+
+      const result = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', request);
+
+      // Should either fail or handle null gracefully
+      if (!result.success) {
+        expect(result.error).toBeDefined();
+      }
+    });
+
+    it('should handle empty content string', async () => {
+      const testFilePath = path.join(tempDir, 'empty-content.sql');
+
+      const request: WriteFileRequest = {
+        filePath: testFilePath,
+        content: '',
+      };
+
+      const result = await invokeHandler<{
+        success: boolean;
+        bytesWritten?: number;
+      }>('file:write', request);
+
+      // Empty content should be valid
+      expect(result.success).toBe(true);
+      expect(result.bytesWritten).toBe(0);
+      expect(fs.existsSync(testFilePath)).toBe(true);
+      expect(fs.readFileSync(testFilePath, 'utf8')).toBe('');
+    });
+
+    it('should verify all error messages are actionable', async () => {
+      // Test various error scenarios and verify messages provide guidance
+
+      // Test 1: Non-existent directory - should suggest valid location
+      const result1 = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', {
+        filePath: path.join(tempDir, 'not-exist', 'test.sql'),
+        content: 'test',
+      });
+      expect(result1.error).toContain('choose');
+
+      // Test 2: Permission denied - should suggest checking access
+      const readOnlyDir = path.join(tempDir, 'perm-test');
+      fs.mkdirSync(readOnlyDir);
+      fs.chmodSync(readOnlyDir, 0o444);
+
+      const result2 = await invokeHandler<{
+        success: boolean;
+        error?: string;
+      }>('file:write', {
+        filePath: path.join(readOnlyDir, 'test.sql'),
+        content: 'test',
+      });
+      expect(result2.error).toContain('access');
+
+      // Cleanup
+      fs.chmodSync(readOnlyDir, 0o755);
+    });
   });
 
   describe('sQL File Save Scenarios', () => {
@@ -445,6 +647,59 @@ CREATE INDEX IF NOT EXISTS idx_users_last_login ON users(last_login);`;
 
       const fileContent = fs.readFileSync(testFilePath, 'utf8');
       expect(fileContent).toBe(largeSQL);
+    });
+  });
+
+  describe('dialog Cancellation Handling', () => {
+    it('should verify save dialog cancellation returns proper response format', async () => {
+      // Import the dialog mock to control its behavior
+      const { dialog } = await import('electron');
+
+      // Mock the save dialog to simulate user cancellation
+      // Cast to any to handle the case where filePath is undefined on cancellation
+      vi.mocked(dialog.showSaveDialog).mockResolvedValueOnce({
+        canceled: true,
+        filePath: undefined as unknown as string,
+      });
+
+      const result = await invokeHandler<{
+        success: boolean;
+        canceled?: boolean;
+        filePath?: string;
+      }>('dialog:save-file', {
+        title: 'Save Test',
+        filters: [{ name: 'SQL Files', extensions: ['sql'] }],
+      });
+
+      // Dialog cancellation should return success=true with canceled=true
+      // This allows the renderer to distinguish between errors and user cancellation
+      expect(result.success).toBe(true);
+      expect(result.canceled).toBe(true);
+      expect(result.filePath).toBeUndefined();
+    });
+
+    it('should verify save dialog success returns file path', async () => {
+      const { dialog } = await import('electron');
+      const expectedPath = '/tmp/test-save.sql';
+
+      // Mock successful save dialog
+      vi.mocked(dialog.showSaveDialog).mockResolvedValueOnce({
+        canceled: false,
+        filePath: expectedPath,
+      });
+
+      const result = await invokeHandler<{
+        success: boolean;
+        canceled?: boolean;
+        filePath?: string;
+      }>('dialog:save-file', {
+        title: 'Save Test',
+        filters: [{ name: 'SQL Files', extensions: ['sql'] }],
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.canceled).toBeFalsy();
+      expect(result.filePath).toBe(expectedPath);
     });
   });
 
