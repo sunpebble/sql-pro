@@ -26,6 +26,7 @@ export interface RendererSettingsState {
   pageSize: number | 'all';
   restoreSession: boolean;
   sidebarCollapsed: boolean;
+  showSchemaDetails: boolean;
 }
 
 // ============ Diagram Store ============

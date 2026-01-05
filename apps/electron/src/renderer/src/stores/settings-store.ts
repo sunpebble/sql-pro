@@ -51,6 +51,9 @@ interface SettingsState {
   // Sidebar settings
   sidebarCollapsed: boolean;
 
+  // Schema details panel
+  showSchemaDetails: boolean;
+
   // Actions
   setEditorVimMode: (enabled: boolean) => void;
   setAppVimMode: (enabled: boolean) => void;
@@ -61,6 +64,8 @@ interface SettingsState {
   setRestoreSession: (enabled: boolean) => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
   toggleSidebar: () => void;
+  setShowSchemaDetails: (show: boolean) => void;
+  toggleSchemaDetails: () => void;
 }
 
 const DEFAULT_FONT_CONFIG: FontConfig = {
@@ -89,6 +94,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   restoreSession: true,
 
   sidebarCollapsed: false,
+
+  showSchemaDetails: false,
 
   setEditorVimMode: (enabled) => set({ editorVimMode: enabled }),
 
@@ -152,6 +159,11 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
 
   toggleSidebar: () =>
     set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+
+  setShowSchemaDetails: (show) => set({ showSchemaDetails: show }),
+
+  toggleSchemaDetails: () =>
+    set((state) => ({ showSchemaDetails: !state.showSchemaDetails })),
 }));
 
 // Register hydrator for loading persisted settings
@@ -164,6 +176,7 @@ registerSettingsHydrator((data: RendererSettingsState) => {
     pageSize: data.pageSize as PageSizeOption,
     restoreSession: data.restoreSession,
     sidebarCollapsed: data.sidebarCollapsed,
+    showSchemaDetails: data.showSchemaDetails ?? false,
   });
 });
 
@@ -177,6 +190,7 @@ useSettingsStore.subscribe((state) => {
     pageSize: state.pageSize,
     restoreSession: state.restoreSession,
     sidebarCollapsed: state.sidebarCollapsed,
+    showSchemaDetails: state.showSchemaDetails,
   };
   persistSettings(persistedState);
 });

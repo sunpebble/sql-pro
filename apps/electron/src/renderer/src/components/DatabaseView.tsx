@@ -44,14 +44,18 @@ export function DatabaseView({
     tabsByConnection,
     setActiveConnectionId: setDataTabsActiveConnection,
   } = useDataTabsStore();
-  const { sidebarCollapsed, toggleSidebar } = useSettingsStore();
+  const {
+    sidebarCollapsed,
+    toggleSidebar,
+    showSchemaDetails,
+    setShowSchemaDetails,
+  } = useSettingsStore();
   const { setCurrentQuery } = useQueryStore();
   const { getActiveTab: getActiveQueryTab, updateTabQuery } =
     useQueryTabsStore();
 
   const [activeTab, setActiveTab] = useState<TabValue>('data');
   const [showChangesPanel, setShowChangesPanel] = useState(false);
-  const [showDetailsPanel, setShowDetailsPanel] = useState(false);
 
   // Get the active data tab for current connection
   const activeDataTab = activeConnectionId
@@ -87,53 +91,6 @@ export function DatabaseView({
 
   // The table to display - from active data tab or selected table
   const displayTable = activeDataTab?.table || selectedTable;
-
-  // Keyboard shortcuts for tab switching
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Skip if user is typing in an input
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-      ) {
-        return;
-      }
-
-      if (e.metaKey || e.ctrlKey) {
-        switch (e.key) {
-          case '1':
-            e.preventDefault();
-            setActiveTab('data');
-            break;
-          case '2':
-            e.preventDefault();
-            setActiveTab('query');
-            break;
-          case '3':
-            e.preventDefault();
-            setActiveTab('diagram');
-            break;
-          case '4':
-            e.preventDefault();
-            setShowDetailsPanel((prev) => !prev);
-            break;
-          case '5':
-            e.preventDefault();
-            setActiveTab('compare');
-            break;
-          case '6':
-            e.preventDefault();
-            setActiveTab('dataDiff');
-            break;
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   // Handler to scroll sidebar into view (used by DataTabBar's + button)
   const handleOpenSidebar = useCallback(() => {
@@ -320,14 +277,9 @@ export function DatabaseView({
               <TableView
                 key={activeDataTab.id}
                 tableOverride={activeDataTab.table}
-                showDetailsPanel={showDetailsPanel}
-                onDetailsToggle={setShowDetailsPanel}
               />
             ) : displayTable ? (
-              <TableView
-                showDetailsPanel={showDetailsPanel}
-                onDetailsToggle={setShowDetailsPanel}
-              />
+              <TableView />
             ) : (
               <div className="bg-grid-dot text-muted-foreground flex h-full items-center justify-center">
                 <p>Select a table from the sidebar to view its data</p>
@@ -378,7 +330,7 @@ export function DatabaseView({
         )}
 
         {/* Schema Details Panel - Resizable */}
-        {showDetailsPanel && (
+        {showSchemaDetails && (
           <ResizablePanel
             side="right"
             defaultWidth={360}
@@ -388,7 +340,7 @@ export function DatabaseView({
           >
             <SchemaDetailsPanel
               table={displayTable}
-              onClose={() => setShowDetailsPanel(false)}
+              onClose={() => setShowSchemaDetails(false)}
             />
           </ResizablePanel>
         )}

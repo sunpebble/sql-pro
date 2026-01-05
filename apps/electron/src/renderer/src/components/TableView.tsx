@@ -66,17 +66,9 @@ import { ExportDialog } from './ExportDialog';
 interface TableViewProps {
   /** Optional table override - when provided, uses this table instead of selectedTable from store */
   tableOverride?: TableSchema;
-  /** Whether the schema details panel is open */
-  showDetailsPanel?: boolean;
-  /** Callback to toggle the schema details panel */
-  onDetailsToggle?: (open: boolean) => void;
 }
 
-export function TableView({
-  tableOverride,
-  showDetailsPanel = false,
-  onDetailsToggle,
-}: TableViewProps) {
+export function TableView({ tableOverride }: TableViewProps) {
   const {
     connection,
     selectedTable: storeSelectedTable,
@@ -90,6 +82,7 @@ export function TableView({
     updateTabGrouping,
     updateTabFilters,
   } = useDataTabsStore();
+  const { showSchemaDetails, toggleSchemaDetails } = useSettingsStore();
 
   // Use tableOverride if provided, otherwise fall back to store's selectedTable
   const selectedTable = tableOverride || storeSelectedTable;
@@ -632,9 +625,9 @@ export function TableView({
             <Tooltip>
               <TooltipTrigger>
                 <Button
-                  variant={showDetailsPanel ? 'secondary' : 'ghost'}
+                  variant={showSchemaDetails ? 'secondary' : 'ghost'}
                   size="sm"
-                  onClick={() => onDetailsToggle?.(!showDetailsPanel)}
+                  onClick={() => toggleSchemaDetails()}
                   className="gap-1.5"
                   data-action="toggle-schema-details"
                 >
@@ -647,7 +640,7 @@ export function TableView({
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {showDetailsPanel
+                {showSchemaDetails
                   ? 'Hide schema details'
                   : 'View schema details'}
               </TooltipContent>

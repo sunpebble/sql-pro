@@ -30,6 +30,7 @@ const DEFAULT_SETTINGS: RendererSettingsState = {
   pageSize: 100,
   restoreSession: true,
   sidebarCollapsed: false,
+  showSchemaDetails: false,
 };
 
 const DEFAULT_DIAGRAM: RendererDiagramState = {

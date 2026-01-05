@@ -178,10 +178,7 @@ export function useCommands() {
       );
       if (matchesBinding(e, toggleSchemaDetailsBinding)) {
         e.preventDefault();
-        const schemaToggle = document.querySelector<HTMLButtonElement>(
-          'button[data-action="toggle-schema-details"]'
-        );
-        schemaToggle?.click();
+        settingsStoreRef.current.toggleSchemaDetails();
         return;
       }
 
@@ -486,10 +483,7 @@ export function useCommands() {
         category: 'view',
         keywords: ['schema', 'details', 'info', 'columns', 'indexes'],
         action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
-            'button[data-action="toggle-schema-details"]'
-          );
-          button?.click();
+          settingsStoreRef.current.toggleSchemaDetails();
         },
       },
       {
