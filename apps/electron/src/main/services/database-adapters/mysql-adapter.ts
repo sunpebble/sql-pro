@@ -784,8 +784,10 @@ export class MySQLAdapter implements DatabaseAdapter {
         sql += ` ORDER BY \`${sortColumn}\` ${sortDirection === 'desc' ? 'DESC' : 'ASC'}`;
       }
 
-      // Get count
-      const countSql = sql.replace(/SELECT \*/, 'SELECT COUNT(*) as count');
+      // Get count (without ORDER BY clause since it's not needed for counting)
+      const countSql = sql
+        .replace(/SELECT \*/, 'SELECT COUNT(*) as count')
+        .replace(/ ORDER BY `[^`]+` (ASC|DESC)/, '');
       const [countResult] = (await conn.connection.query(countSql, params)) as [
         Array<{ count: number }>,
         unknown,

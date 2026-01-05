@@ -966,8 +966,10 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         sql += ` ORDER BY "${sortColumn}" ${sortDirection === 'desc' ? 'DESC' : 'ASC'}`;
       }
 
-      // Get count
-      const countSql = sql.replace(/SELECT \*/, 'SELECT COUNT(*)');
+      // Get count (without ORDER BY clause since it's not needed for counting)
+      const countSql = sql
+        .replace(/SELECT \*/, 'SELECT COUNT(*)')
+        .replace(/ ORDER BY "[^"]+" (ASC|DESC)/, '');
       const countResult = await conn.client.query(countSql, params);
       const totalRows = Number(
         (countResult.rows[0] as { count: string }).count
