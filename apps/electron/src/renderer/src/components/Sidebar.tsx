@@ -113,6 +113,7 @@ export function Sidebar({
     setTablePinned,
     getTableKey,
     getTableMetadata,
+    tableMetadata,
   } = useTableOrganizationStore();
 
   // Expansion state for schemas (key is schema name)
@@ -519,6 +520,7 @@ export function Sidebar({
     connection?.path,
     getTableKey,
     getTableMetadata,
+    tableMetadata,
   ]);
 
   // Combined list of navigable items for vim navigation
