@@ -424,6 +424,25 @@ export interface SaveFileDialogResponse {
   canceled?: boolean;
 }
 
+export interface WriteFileRequest {
+  /** Path to the file to write */
+  filePath: string;
+  /** File content - string for text files, Buffer for binary files */
+  content: string | Buffer;
+  /** Text encoding (e.g., 'utf8', 'utf16le'). Only used when content is string. Defaults to 'utf8' */
+  encoding?: BufferEncoding;
+  /** Whether to use atomic write pattern (write to temp file, then rename). Defaults to true */
+  atomic?: boolean;
+}
+
+export interface WriteFileResponse {
+  success: boolean;
+  /** Error message if write failed */
+  error?: string;
+  /** Number of bytes written to the file */
+  bytesWritten?: number;
+}
+
 // ============ Export Types ============
 
 /** Supported export formats */
@@ -2176,6 +2195,9 @@ export interface IPCChannels {
   'dialog:open-file': [OpenFileDialogRequest, OpenFileDialogResponse];
   'dialog:save-file': [SaveFileDialogRequest, SaveFileDialogResponse];
 
+  // File Operations
+  'file:write': [WriteFileRequest, WriteFileResponse];
+
   // Export
   'export:data': [ExportRequest, ExportResponse];
 
@@ -2298,6 +2320,9 @@ export const IPC_CHANNELS = {
   // Dialog
   DIALOG_OPEN_FILE: 'dialog:open-file',
   DIALOG_SAVE_FILE: 'dialog:save-file',
+
+  // File Operations
+  FILE_WRITE: 'file:write',
 
   // Export
   EXPORT_DATA: 'export:data',

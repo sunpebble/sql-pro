@@ -47,6 +47,8 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
   const [includeUpdates, setIncludeUpdates] = useState(true);
   const [includeDeletes, setIncludeDeletes] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [showWarnings, setShowWarnings] = useState(true);
 
   // Generate sync SQL when comparison result or options change
@@ -123,6 +125,9 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
   const handleSaveToFile = useCallback(async () => {
     if (!syncSQL?.sql) return;
 
+    // Reset previous state
+    setSaveError(null);
+
     try {
       const result = await sqlPro.dialog.saveFile({
         title: 'Save Sync SQL',
@@ -134,19 +139,26 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
       });
 
       if (result.success && result.filePath && !result.canceled) {
-        // Write the file using Node.js fs API through electron
-        // TODO: Add proper file write API
+        // Write the file using the file write API
+        const writeResult = await sqlPro.dialog.writeFile({
+          filePath: result.filePath,
+          content: syncSQL.sql,
+          atomic: true,
+        });
 
-        // Since there's no direct file write API, we'll use the clipboard as a fallback
-        // and inform the user to manually save
-        await navigator.clipboard.writeText(syncSQL.sql);
-        // eslint-disable-next-line no-alert
-        alert(
-          `SQL copied to clipboard. Please paste it into a file at:\n${result.filePath}`
-        );
+        if (writeResult.success) {
+          setSaved(true);
+          setTimeout(() => setSaved(false), 2000);
+        } else {
+          setSaveError(writeResult.error || 'Failed to save file');
+          setTimeout(() => setSaveError(null), 5000);
+        }
       }
-    } catch {
-      // Handle error silently
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to save file';
+      setSaveError(errorMessage);
+      setTimeout(() => setSaveError(null), 5000);
     }
   }, [syncSQL?.sql]);
 
@@ -418,13 +430,27 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     </Button>
 
                     <Button
-                      variant="outline"
+                      variant={saveError ? 'destructive' : 'outline'}
                       size="sm"
                       onClick={handleSaveToFile}
                       disabled={!syncSQL.sql}
                     >
-                      <FileDown className="mr-2 h-4 w-4" />
-                      Save to File
+                      {saved ? (
+                        <>
+                          <Check className="mr-2 h-4 w-4" />
+                          Saved!
+                        </>
+                      ) : saveError ? (
+                        <>
+                          <AlertCircle className="mr-2 h-4 w-4" />
+                          Save Failed
+                        </>
+                      ) : (
+                        <>
+                          <FileDown className="mr-2 h-4 w-4" />
+                          Save to File
+                        </>
+                      )}
                     </Button>
 
                     {activeConnectionId && (
@@ -439,6 +465,16 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                       </Button>
                     )}
                   </div>
+
+                  {/* Save Error Display */}
+                  {saveError && (
+                    <Alert variant="destructive" className="py-2">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-sm">
+                        {saveError}
+                      </AlertDescription>
+                    </Alert>
+                  )}
 
                   {/* SQL Display */}
                   {syncSQL.sql && (
