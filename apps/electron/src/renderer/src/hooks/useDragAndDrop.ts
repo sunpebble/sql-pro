@@ -1,6 +1,6 @@
 import type { DragEvent } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { sqlPro } from '@/lib/api';
 import { useConnectionStore } from '@/stores';
 
@@ -19,8 +19,14 @@ function isDatabaseFile(filename: string): boolean {
 export function useDragAndDrop() {
   const navigate = useNavigate();
   const [isDragging, setIsDragging] = useState(false);
-  const { addConnection, setSchema, setIsConnecting, setIsLoadingSchema } =
-    useConnectionStore();
+  const {
+    addConnection,
+    setSchema,
+    setIsConnecting,
+    setIsLoadingSchema,
+    getAllConnections,
+    setActiveConnection,
+  } = useConnectionStore();
 
   // Handler for file opening logic
   const openDatabaseFile = useCallback(
@@ -28,6 +34,19 @@ export function useDragAndDrop() {
       const filename = filePath.split('/').pop() || filePath;
 
       try {
+        // Check if this database is already open
+        const existingConnections = getAllConnections();
+        const existingConnection = existingConnections.find(
+          (conn) => conn.path === filePath
+        );
+
+        if (existingConnection) {
+          // Reuse existing connection - just switch to it
+          setActiveConnection(existingConnection.id);
+          navigate({ to: '/database' });
+          return;
+        }
+
         setIsConnecting(true);
         const probeResult = await sqlPro.db.open({ path: filePath });
         setIsConnecting(false);
@@ -76,7 +95,15 @@ export function useDragAndDrop() {
         setIsConnecting(false);
       }
     },
-    [navigate, addConnection, setSchema, setIsConnecting, setIsLoadingSchema]
+    [
+      navigate,
+      addConnection,
+      setSchema,
+      setIsConnecting,
+      setIsLoadingSchema,
+      getAllConnections,
+      setActiveConnection,
+    ]
   );
 
   // Drag and drop handlers
@@ -104,6 +131,11 @@ export function useDragAndDrop() {
     }
   }, []);
 
+  const handleDragEnd = useCallback(() => {
+    // Handle drag cancellation (e.g., pressing Escape or dropping outside)
+    setIsDragging(false);
+  }, []);
+
   const handleDrop = useCallback(
     async (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
@@ -127,10 +159,33 @@ export function useDragAndDrop() {
     [openDatabaseFile]
   );
 
+  // Listen for global dragend events to handle drag cancellation
+  useEffect(() => {
+    const handleGlobalDragEnd = () => {
+      setIsDragging(false);
+    };
+
+    const handleGlobalDragLeave = (e: DragEvent) => {
+      // If dragging leaves the entire document
+      if (e.target === document.documentElement) {
+        setIsDragging(false);
+      }
+    };
+
+    document.addEventListener('dragend', handleGlobalDragEnd);
+    document.addEventListener('dragleave', handleGlobalDragLeave);
+
+    return () => {
+      document.removeEventListener('dragend', handleGlobalDragEnd);
+      document.removeEventListener('dragleave', handleGlobalDragLeave);
+    };
+  }, []);
+
   return {
     isDragging,
     handleDragOver,
     handleDragLeave,
+    handleDragEnd,
     handleDrop,
     DB_EXTENSIONS,
   };
