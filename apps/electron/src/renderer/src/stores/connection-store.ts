@@ -2,6 +2,8 @@ import type {
   ConnectionProfile,
   ProfileFolder,
   RecentConnection,
+  SchemaListInfo,
+  TableInfo,
 } from '@shared/types';
 import type { RendererConnectionState } from '@shared/types/renderer-store';
 import type {
@@ -14,6 +16,7 @@ import {
   persistConnectionUi,
   registerConnectionUiHydrator,
 } from '@/lib/electron-storage';
+import { schemaCache } from '@/lib/schema-cache';
 import { useChangesStore } from './changes-store';
 
 interface ConnectionState {
@@ -60,6 +63,23 @@ interface ConnectionState {
 
   // Schema Actions
   setSchema: (connectionId: string, schema: DatabaseSchema | null) => void;
+  /**
+   * Set a lazy (lightweight) schema list for a connection.
+   * Only contains table/view names, not full column/index details.
+   */
+  setLazySchema: (connectionId: string, schemas: SchemaListInfo[]) => void;
+  /**
+   * Update table details in the cached schema after on-demand loading.
+   */
+  updateTableDetails: (
+    connectionId: string,
+    schemaName: string,
+    table: TableInfo
+  ) => void;
+  /**
+   * Invalidate schema cache for a connection (forces reload on next access).
+   */
+  invalidateSchemaCache: (connectionId: string) => void;
 
   // Selection Actions
   setSelectedTable: (table: TableSchema | null) => void;
@@ -173,6 +193,9 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
 
       const newSchemas = new Map(state.schemas);
       newSchemas.delete(id);
+
+      // Invalidate schema cache for this connection
+      schemaCache.invalidateConnection(id);
 
       // Remove from tab order
       const newTabOrder = state.connectionTabOrder.filter(
@@ -309,6 +332,174 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
           state.activeConnectionId === connectionId ? schema : state.schema,
       };
     }),
+
+  setLazySchema: (connectionId, schemas) =>
+    set((state) => {
+      // Convert SchemaListInfo[] to lightweight DatabaseSchema format
+      // Tables/views only have basic info (name, type) without column details
+      const allTables: TableSchema[] = [];
+      const allViews: TableSchema[] = [];
+
+      for (const schemaInfo of schemas) {
+        for (const table of schemaInfo.tables) {
+          allTables.push({
+            name: table.name,
+            schema: table.schema,
+            type: 'table',
+            // Empty arrays for lazy loading - details fetched on-demand
+            columns: [],
+            primaryKey: [],
+            foreignKeys: [],
+            indexes: [],
+            triggers: [],
+            rowCount: table.rowCount,
+            sql: table.sql,
+          });
+        }
+        for (const view of schemaInfo.views) {
+          allViews.push({
+            name: view.name,
+            schema: view.schema,
+            type: 'view',
+            columns: [],
+            primaryKey: [],
+            foreignKeys: [],
+            indexes: [],
+            triggers: [],
+            sql: view.sql,
+          });
+        }
+      }
+
+      const lazySchema: DatabaseSchema = {
+        schemas: schemas.map((s) => ({
+          name: s.name,
+          tables: allTables.filter((t) => t.schema === s.name),
+          views: allViews.filter((v) => v.schema === s.name),
+        })),
+        tables: allTables,
+        views: allViews,
+      };
+
+      const newSchemas = new Map(state.schemas);
+      newSchemas.set(connectionId, lazySchema);
+
+      // Also update the schema cache
+      schemaCache.setSchemaList(connectionId, schemas);
+
+      return {
+        schemas: newSchemas,
+        schema:
+          state.activeConnectionId === connectionId ? lazySchema : state.schema,
+      };
+    }),
+
+  updateTableDetails: (connectionId, schemaName, tableDetails) =>
+    set((state) => {
+      const existingSchema = state.schemas.get(connectionId);
+      if (!existingSchema) return state;
+
+      // Convert TableInfo to TableSchema
+      const updatedTable: TableSchema = {
+        name: tableDetails.name,
+        schema: tableDetails.schema,
+        type: tableDetails.type,
+        columns: tableDetails.columns.map((col) => ({
+          name: col.name,
+          type: col.type,
+          nullable: col.nullable,
+          defaultValue: col.defaultValue,
+          isPrimaryKey: col.isPrimaryKey,
+        })),
+        primaryKey: tableDetails.primaryKey,
+        foreignKeys: tableDetails.foreignKeys.map((fk) => ({
+          column: fk.column,
+          referencedTable: fk.referencedTable,
+          referencedColumn: fk.referencedColumn,
+          onDelete: fk.onDelete,
+          onUpdate: fk.onUpdate,
+        })),
+        indexes: tableDetails.indexes.map((idx) => ({
+          name: idx.name,
+          columns: idx.columns,
+          isUnique: idx.isUnique,
+          sql: idx.sql || '',
+        })),
+        triggers: tableDetails.triggers.map((tr) => ({
+          name: tr.name,
+          tableName: tr.tableName,
+          timing: tr.timing as 'BEFORE' | 'AFTER' | 'INSTEAD OF',
+          event: tr.event as 'INSERT' | 'UPDATE' | 'DELETE',
+          sql: tr.sql,
+        })),
+        rowCount: tableDetails.rowCount,
+        sql: tableDetails.sql,
+      };
+
+      // Update the table in all relevant places
+      const updatedSchemas = existingSchema.schemas.map((s) => {
+        if (s.name !== schemaName) return s;
+
+        const tableIndex = s.tables.findIndex(
+          (t) => t.name === tableDetails.name
+        );
+        const viewIndex = s.views.findIndex(
+          (v) => v.name === tableDetails.name
+        );
+
+        if (tableIndex !== -1) {
+          const newTables = [...s.tables];
+          newTables[tableIndex] = updatedTable;
+          return { ...s, tables: newTables };
+        } else if (viewIndex !== -1) {
+          const newViews = [...s.views];
+          newViews[viewIndex] = updatedTable;
+          return { ...s, views: newViews };
+        }
+        return s;
+      });
+
+      // Update the flat tables/views arrays
+      const allTables = existingSchema.tables.map((t) =>
+        t.name === tableDetails.name && t.schema === schemaName
+          ? updatedTable
+          : t
+      );
+      const allViews = existingSchema.views.map((v) =>
+        v.name === tableDetails.name && v.schema === schemaName
+          ? updatedTable
+          : v
+      );
+
+      const updatedSchema: DatabaseSchema = {
+        schemas: updatedSchemas,
+        tables: allTables,
+        views: allViews,
+      };
+
+      const newSchemas = new Map(state.schemas);
+      newSchemas.set(connectionId, updatedSchema);
+
+      // Also update the schema cache
+      schemaCache.setTableDetails(
+        connectionId,
+        schemaName,
+        tableDetails.name,
+        tableDetails
+      );
+
+      return {
+        schemas: newSchemas,
+        schema:
+          state.activeConnectionId === connectionId
+            ? updatedSchema
+            : state.schema,
+      };
+    }),
+
+  invalidateSchemaCache: (connectionId) => {
+    schemaCache.invalidateConnection(connectionId);
+  },
 
   // Selection Actions
   setSelectedTable: (selectedTable) => set({ selectedTable }),

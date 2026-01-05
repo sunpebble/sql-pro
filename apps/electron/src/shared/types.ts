@@ -208,6 +208,63 @@ export interface GetSchemaRequest {
   connectionId: string;
 }
 
+// ============ Lazy Schema Loading Types ============
+
+/**
+ * Lightweight table/view information for initial schema list
+ * (without columns, indexes, triggers, foreign keys)
+ */
+export interface TableListItem {
+  name: string;
+  schema: string;
+  type: 'table' | 'view';
+  rowCount?: number;
+  sql: string;
+}
+
+/**
+ * Lightweight schema information containing only table/view names
+ */
+export interface SchemaListInfo {
+  name: string;
+  tables: TableListItem[];
+  views: TableListItem[];
+}
+
+/**
+ * Request for lightweight schema list (only table/view names)
+ */
+export interface GetSchemaListRequest {
+  connectionId: string;
+}
+
+/**
+ * Response for lightweight schema list
+ */
+export interface GetSchemaListResponse {
+  success: boolean;
+  schemas?: SchemaListInfo[];
+  error?: string;
+}
+
+/**
+ * Request for table details (columns, indexes, triggers, foreign keys)
+ */
+export interface GetTableDetailsRequest {
+  connectionId: string;
+  tableName: string;
+  schema?: string;
+}
+
+/**
+ * Response for table details
+ */
+export interface GetTableDetailsResponse {
+  success: boolean;
+  table?: TableInfo;
+  error?: string;
+}
+
 export interface ColumnInfo {
   name: string;
   type: string;
@@ -2495,6 +2552,8 @@ export const IPC_CHANNELS = {
   DB_CLOSE: 'db:close',
   DB_TEST_CONNECTION: 'db:test-connection',
   DB_GET_SCHEMA: 'db:get-schema',
+  DB_GET_SCHEMA_LIST: 'db:get-schema-list',
+  DB_GET_TABLE_DETAILS: 'db:get-table-details',
   DB_GET_TABLE_DATA: 'db:get-table-data',
   DB_EXECUTE_QUERY: 'db:execute-query',
   DB_VALIDATE_CHANGES: 'db:validate-changes',

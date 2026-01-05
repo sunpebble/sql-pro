@@ -4,8 +4,10 @@ import type {
   ChangePasswordRequest,
   CloseDatabaseRequest,
   ExecuteQueryRequest,
+  GetSchemaListRequest,
   GetSchemaRequest,
   GetTableDataRequest,
+  GetTableDetailsRequest,
   OpenDatabaseRequest,
   TestConnectionRequest,
   ValidateChangesRequest,
@@ -117,6 +119,91 @@ export function setupDatabaseHandlers(): void {
 
       // Fall back to legacy database service
       return databaseService.getSchema(request.connectionId);
+    }
+  );
+
+  // Database: Get Schema List (lightweight, only table/view names)
+  ipcMain.handle(
+    IPC_CHANNELS.DB_GET_SCHEMA_LIST,
+    async (_event, request: GetSchemaListRequest) => {
+      // Check if connection is async (MySQL/PostgreSQL)
+      if (databaseManager.isAsyncConnection(request.connectionId)) {
+        // For async connections, use full schema (async adapters don't have lazy loading yet)
+        return databaseManager.getSchemaAsync(request.connectionId);
+      }
+
+      // Try database manager for new connections
+      const conn = databaseManager.getConnection(request.connectionId);
+      if (conn) {
+        // For now, use full schema since manager doesn't have getSchemaList yet
+        return databaseManager.getSchema(request.connectionId);
+      }
+
+      // Fall back to legacy database service with lightweight schema list
+      return databaseService.getSchemaList(request.connectionId);
+    }
+  );
+
+  // Database: Get Table Details (on-demand loading)
+  ipcMain.handle(
+    IPC_CHANNELS.DB_GET_TABLE_DETAILS,
+    async (_event, request: GetTableDetailsRequest) => {
+      // Check if connection is async (MySQL/PostgreSQL)
+      if (databaseManager.isAsyncConnection(request.connectionId)) {
+        // For async connections, get table structure
+        const schemaResult = await databaseManager.getSchemaAsync(
+          request.connectionId
+        );
+        if (!schemaResult.success) {
+          return {
+            success: false,
+            error: schemaResult.error || 'Failed to get schema',
+          };
+        }
+
+        if (!schemaResult.schemas) {
+          return {
+            success: false,
+            error: 'No schemas found',
+          };
+        }
+
+        // Find the requested table
+        const schema = request.schema || 'main';
+        for (const schemaInfo of schemaResult.schemas) {
+          if (schemaInfo.name === schema) {
+            const table = [...schemaInfo.tables, ...schemaInfo.views].find(
+              (t) => t.name === request.tableName
+            );
+            if (table) {
+              return { success: true, table };
+            }
+          }
+        }
+
+        return {
+          success: false,
+          error: `Table "${request.tableName}" not found`,
+        };
+      }
+
+      // Try database manager for new connections
+      const conn = databaseManager.getConnection(request.connectionId);
+      if (conn) {
+        // Use the manager's getTableStructure for now
+        return databaseManager.getTableStructure(
+          request.connectionId,
+          request.tableName,
+          request.schema
+        );
+      }
+
+      // Fall back to legacy database service
+      return databaseService.getTableDetails(
+        request.connectionId,
+        request.tableName,
+        request.schema
+      );
     }
   );
 

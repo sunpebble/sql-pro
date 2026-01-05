@@ -92,6 +92,8 @@ import type {
   GetRecentConnectionsResponse,
   GetSavedQueriesRequest,
   GetSavedQueriesResponse,
+  GetSchemaListRequest,
+  GetSchemaListResponse,
   GetSchemaRequest,
   GetSchemaResponse,
   GetSchemaSnapshotRequest,
@@ -101,6 +103,8 @@ import type {
   GetSqlLogsResponse,
   GetTableDataRequest,
   GetTableDataResponse,
+  GetTableDetailsRequest,
+  GetTableDetailsResponse,
   HasPasswordRequest,
   HasPasswordResponse,
   ImportBundleRequest,
@@ -221,6 +225,14 @@ const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.DB_CLOSE, request),
     getSchema: (request: GetSchemaRequest): Promise<GetSchemaResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_GET_SCHEMA, request),
+    getSchemaList: (
+      request: GetSchemaListRequest
+    ): Promise<GetSchemaListResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_GET_SCHEMA_LIST, request),
+    getTableDetails: (
+      request: GetTableDetailsRequest
+    ): Promise<GetTableDetailsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_GET_TABLE_DETAILS, request),
     getTableData: (
       request: GetTableDataRequest
     ): Promise<GetTableDataResponse> =>
