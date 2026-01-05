@@ -276,19 +276,39 @@ export function DatabaseView({
               <DataTabBar onOpenSidebar={handleOpenSidebar} />
             )}
 
-            {/* Table View */}
-            {activeDataTab ? (
-              <TableView
-                key={activeDataTab.id}
-                tableOverride={activeDataTab.table}
-              />
-            ) : displayTable ? (
-              <TableView />
-            ) : (
-              <div className="bg-grid-dot text-muted-foreground flex h-full items-center justify-center">
-                <p>Select a table from the sidebar to view its data</p>
+            {/* Table View with optional Schema Details Panel */}
+            <div className="flex min-h-0 flex-1 overflow-hidden">
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+                {activeDataTab ? (
+                  <TableView
+                    key={activeDataTab.id}
+                    tableOverride={activeDataTab.table}
+                  />
+                ) : displayTable ? (
+                  <TableView />
+                ) : (
+                  <div className="bg-grid-dot text-muted-foreground flex h-full flex-1 items-center justify-center">
+                    <p>Select a table from the sidebar to view its data</p>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Schema Details Panel - inside Data tab */}
+              {showSchemaDetails && (
+                <ResizablePanel
+                  side="right"
+                  defaultWidth={360}
+                  minWidth={280}
+                  maxWidth={500}
+                  storageKey="schema-details-panel"
+                >
+                  <SchemaDetailsPanel
+                    table={displayTable}
+                    onClose={() => setShowSchemaDetails(false)}
+                  />
+                </ResizablePanel>
+              )}
+            </div>
           </TabsContent>
 
           <TabsContent
@@ -330,22 +350,6 @@ export function DatabaseView({
             storageKey="changes-panel"
           >
             <DiffPreview onClose={() => setShowChangesPanel(false)} />
-          </ResizablePanel>
-        )}
-
-        {/* Schema Details Panel - Resizable (only in Data Browser view) */}
-        {showSchemaDetails && activeTab === 'data' && (
-          <ResizablePanel
-            side="right"
-            defaultWidth={360}
-            minWidth={280}
-            maxWidth={500}
-            storageKey="schema-details-panel"
-          >
-            <SchemaDetailsPanel
-              table={displayTable}
-              onClose={() => setShowSchemaDetails(false)}
-            />
           </ResizablePanel>
         )}
       </div>
