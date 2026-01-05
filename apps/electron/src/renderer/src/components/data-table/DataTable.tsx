@@ -1,4 +1,8 @@
 import type { TableRowData } from './hooks/useTableCore';
+import type {
+  VirtualDataConfig,
+  VirtualDataStats,
+} from '@/hooks/useVirtualData';
 import type { UIFilterState } from '@/lib/filter-utils';
 import type {
   AggregationType,
@@ -24,6 +28,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
+import { useVirtualData } from '@/hooks/useVirtualData';
 import { cn } from '@/lib/utils';
 import { useTableFont } from '@/stores';
 import { useTableCore } from './hooks/useTableCore';
@@ -83,12 +88,35 @@ export interface DataTableProps {
   hasActiveSearch?: boolean;
   onClearFilters?: () => void;
   onClearSearch?: () => void;
+
+  // Virtual data management for memory optimization
+  /**
+   * Enable memory-efficient virtual data management.
+   * When enabled, only visible rows + buffer are kept in memory.
+   * @default false
+   */
+  enableVirtualDataManagement?: boolean;
+
+  /**
+   * Configuration for virtual data management
+   */
+  virtualDataConfig?: VirtualDataConfig;
+
+  /**
+   * Callback when virtual data stats change
+   * Useful for monitoring memory usage
+   */
+  onVirtualDataStatsChange?: (stats: VirtualDataStats) => void;
 }
 
 export interface DataTableRef {
   scrollToRow: (rowIndex: number) => void;
   focus: () => void;
   resetAllColumnSizes: () => void;
+  /** Release rows outside the current viewport buffer from memory */
+  releaseOutOfBufferRows?: () => void;
+  /** Get current virtual data statistics */
+  getVirtualDataStats?: () => VirtualDataStats | null;
 }
 
 export const DataTable = function DataTable({
@@ -120,6 +148,9 @@ export const DataTable = function DataTable({
   hasActiveSearch,
   onClearFilters,
   onClearSearch,
+  enableVirtualDataManagement = false,
+  virtualDataConfig,
+  onVirtualDataStatsChange,
 }: DataTableProps & { ref?: React.RefObject<DataTableRef | null> }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tableFont = useTableFont();
@@ -250,20 +281,6 @@ export const DataTable = function DataTable({
     onNewRowFocused,
   ]);
 
-  // Expose imperative methods
-  useImperativeHandle(ref, () => ({
-    scrollToRow: (rowIndex: number) => {
-      const row = containerRef.current?.querySelector(
-        `[data-row-index="${rowIndex}"]`
-      );
-      row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    },
-    focus: () => {
-      containerRef.current?.focus();
-    },
-    resetAllColumnSizes,
-  }));
-
   // Handle container focus
   const handleContainerFocus = useCallback(() => {
     // If no cell is focused, focus the first cell
@@ -286,6 +303,59 @@ export const DataTable = function DataTable({
     estimateSize: () => ROW_HEIGHT,
     overscan: 10,
   });
+
+  // Get the virtual items for visible range calculation
+  const virtualItems = rowVirtualizer.getVirtualItems();
+
+  // Calculate visible range from virtual items
+  const visibleRange = useMemo(() => {
+    if (virtualItems.length === 0) {
+      return { startIndex: 0, endIndex: 0 };
+    }
+    return {
+      startIndex: virtualItems[0].index,
+      endIndex: virtualItems[virtualItems.length - 1].index,
+    };
+  }, [virtualItems]);
+
+  // Use virtual data management for memory-efficient row handling
+  const virtualData = useVirtualData({
+    allRows: data,
+    visibleRange,
+    config: virtualDataConfig,
+    enabled: enableVirtualDataManagement,
+  });
+
+  // Notify parent of virtual data stats changes
+  useEffect(() => {
+    if (enableVirtualDataManagement && onVirtualDataStatsChange) {
+      onVirtualDataStatsChange(virtualData.stats);
+    }
+  }, [
+    enableVirtualDataManagement,
+    virtualData.stats,
+    onVirtualDataStatsChange,
+  ]);
+
+  // Expose imperative methods
+  useImperativeHandle(ref, () => ({
+    scrollToRow: (rowIndex: number) => {
+      const row = containerRef.current?.querySelector(
+        `[data-row-index="${rowIndex}"]`
+      );
+      row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
+    focus: () => {
+      containerRef.current?.focus();
+    },
+    resetAllColumnSizes,
+    releaseOutOfBufferRows: enableVirtualDataManagement
+      ? virtualData.releaseOutOfBufferRows
+      : undefined,
+    getVirtualDataStats: enableVirtualDataManagement
+      ? () => virtualData.stats
+      : undefined,
+  }));
 
   return (
     <ScrollArea
@@ -344,7 +414,7 @@ export const DataTable = function DataTable({
         {/* Virtualized table body */}
         <TableBody
           rows={rows}
-          virtualItems={rowVirtualizer.getVirtualItems()}
+          virtualItems={virtualItems}
           totalSize={rowVirtualizer.getTotalSize()}
           editable={editable}
           onCellClick={handleCellClick}
