@@ -205,7 +205,7 @@ export const TableBody = memo(
           if (isGroupRow) {
             return (
               <GroupRow
-                key={row.id}
+                key={`group-${virtualItem.index}`}
                 row={row}
                 isExpanded={row.getIsExpanded()}
               />
@@ -214,7 +214,7 @@ export const TableBody = memo(
 
           return (
             <DataRow
-              key={row.id}
+              key={`row-${virtualItem.index}-${rowId}`}
               row={row}
               rowIndex={virtualItem.index}
               isDeleted={isDeleted}

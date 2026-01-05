@@ -117,16 +117,28 @@ export function useTableData(options: UseTableDataOptions): UseTableDataResult {
 
       // Transform rows to include __rowId for identification
       const columns = response.columns || [];
-      const pkColumn = columns.find((c: ColumnInfo) => c.isPrimaryKey)?.name;
+      // Support composite primary keys - find all PK columns
+      const pkColumns = columns
+        .filter((c: ColumnInfo) => c.isPrimaryKey)
+        .map((c: ColumnInfo) => c.name);
+
       const rows = (response.rows || []).map(
         (row: Record<string, unknown>, index: number) => {
-          const rowId = pkColumn
-            ? row[pkColumn]
-            : (row.rowid ?? `__index_${index}`);
+          let rowId: string | number;
+          if (pkColumns.length > 1) {
+            // Composite primary key: combine all PK values
+            rowId = pkColumns.map((col) => String(row[col] ?? '')).join('_');
+          } else if (pkColumns.length === 1) {
+            // Single primary key
+            rowId = row[pkColumns[0]] as string | number;
+          } else {
+            // No primary key: fallback to rowid or index
+            rowId = (row.rowid as string | number) ?? `__index_${index}`;
+          }
 
           return {
             ...row,
-            __rowId: rowId as string | number,
+            __rowId: rowId,
           } as TableRow;
         }
       );
