@@ -2,7 +2,6 @@ import type {
   ColumnInfo,
   ExportBundleRequest,
   ExportComparisonReportRequest,
-  ExportQueryRequest,
   ExportRequest,
   ExportSchemaRequest,
   SchemaComparisonResult,
@@ -22,12 +21,8 @@ import {
   generateSQL,
 } from '@/lib/export-generators';
 import { databaseService } from '../database';
-import {
-  exportBundle,
-  exportQuery,
-  exportSchema,
-} from '../query-schema-sharing';
-import { getSavedQueries, getSchemaSnapshot } from '../store';
+import { exportBundle, exportSchema } from '../query-schema-sharing';
+import { getSchemaSnapshot } from '../store';
 import { createHandler } from './utils';
 
 export function setupExportHandlers(): void {
@@ -88,26 +83,6 @@ export function setupExportHandlers(): void {
         name: 'bundle',
         queries: [],
         schemas: [],
-      });
-      return { success: true, data };
-    })
-  );
-
-  // Export: Query
-  ipcMain.handle(
-    IPC_CHANNELS.EXPORT_QUERY,
-    createHandler(async (request: ExportQueryRequest) => {
-      const savedQueries = getSavedQueries();
-      const queryData = savedQueries.find((q) => q.id === request.queryId);
-      if (!queryData) {
-        throw new Error(`Query with ID ${request.queryId} not found`);
-      }
-      const { data } = await exportQuery({
-        name: queryData.name,
-        sql: queryData.queryText || queryData.query || '',
-        databaseContext: queryData.connectionPath,
-        tags: queryData.tags,
-        description: queryData.description,
       });
       return { success: true, data };
     })

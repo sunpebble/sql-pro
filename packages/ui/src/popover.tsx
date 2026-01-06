@@ -10,23 +10,55 @@ function Popover({ ...props }: PopoverPrimitive.Root.Props) {
 function PopoverTrigger({
   render,
   children,
+  nativeButton = true,
   ...props
 }: PopoverPrimitive.Trigger.Props) {
-  // If render is provided, use it; otherwise use children as render
-  // This allows: <PopoverTrigger><Button>...</Button></PopoverTrigger>
-  // to work without nesting buttons
-  const renderElement = render ?? (children as React.ReactElement);
-  // Check if renderElement is a native button
-  const isNativeButton =
-    React.isValidElement(renderElement) && renderElement.type === 'button';
+  // If render is explicitly provided, use it as the render prop
+  // Otherwise, check if children should replace the default trigger button
+  //
+  // Two usage patterns:
+  // 1. <PopoverTrigger><Button>Click</Button></PopoverTrigger> - Button replaces default trigger
+  // 2. <PopoverTrigger className="..."><Icon /></PopoverTrigger> - Uses default button with custom content
 
+  // Check if children is a button-like element that should replace the trigger
+  const isButtonLikeChild =
+    React.isValidElement(children) &&
+    (() => {
+      const childType = children.type;
+      // Native <button> element
+      if (childType === 'button') return true;
+      // Function component - check name or displayName
+      if (typeof childType === 'function') {
+        const name =
+          (childType as { displayName?: string; name?: string }).displayName ||
+          (childType as { name?: string }).name;
+        // Match Button component or any component ending with Button
+        if (name && (name === 'Button' || name.endsWith('Button'))) return true;
+      }
+      return false;
+    })();
+
+  if (render || isButtonLikeChild) {
+    const renderElement = render ?? (children as React.ReactElement);
+    return (
+      <PopoverPrimitive.Trigger
+        data-slot="popover-trigger"
+        render={renderElement}
+        nativeButton={nativeButton}
+        {...props}
+      />
+    );
+  }
+
+  // Default case: use children as content inside the default button trigger
   return (
     <PopoverPrimitive.Trigger
       data-slot="popover-trigger"
-      render={renderElement}
-      nativeButton={isNativeButton}
+      nativeButton={nativeButton}
       {...props}
-    />
+    >
+      {children}
+    </PopoverPrimitive.Trigger>
   );
 }
 

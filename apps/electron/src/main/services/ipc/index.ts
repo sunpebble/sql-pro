@@ -1,7 +1,6 @@
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
 import { setupAIHandlers } from './ai';
-import { setupCollectionsHandlers } from './collections';
 import { setupDatabaseHandlers } from './database';
 import { setupDialogHandlers } from './dialog';
 import { setupExportHandlers } from './export';
@@ -16,7 +15,6 @@ import {
   cleanupRendererStoreHandlers,
   setupRendererStoreHandlers,
 } from './renderer-store';
-import { setupSavedQueriesHandlers } from './saved-queries';
 import { setupSchemaHandlers } from './schema';
 import { setupSqlLogHandlers } from './sql-log';
 import { setupSystemHandlers } from './system';
@@ -31,8 +29,6 @@ export function setupIpcHandlers(): void {
   setupImportHandlers();
   setupSchemaHandlers();
   setupHistoryHandlers();
-  setupSavedQueriesHandlers();
-  setupCollectionsHandlers();
   setupProfilesHandlers();
   setupFoldersHandlers();
   setupPasswordHandlers();

@@ -1,6 +1,4 @@
 import type {
-  AddQueryToCollectionRequest,
-  AddQueryToCollectionResponse,
   AIAgentMessage,
   AIAgentQueryRequest,
   AICancelStreamRequest,
@@ -38,30 +36,22 @@ import type {
   CreateFolderRequest,
   CreateFolderResponse,
   CreateWindowResponse,
-  DeleteCollectionRequest,
-  DeleteCollectionResponse,
   DeleteFolderRequest,
   DeleteFolderResponse,
   DeleteProfileRequest,
   DeleteProfileResponse,
   DeleteQueryHistoryRequest,
   DeleteQueryHistoryResponse,
-  DeleteSavedQueryRequest,
-  DeleteSavedQueryResponse,
   DeleteSchemaSnapshotRequest,
   DeleteSchemaSnapshotResponse,
   ExecuteQueryRequest,
   ExecuteQueryResponse,
   ExportBundleRequest,
   ExportBundleResponse,
-  ExportCollectionsRequest,
-  ExportCollectionsResponse,
   ExportComparisonReportRequest,
   ExportComparisonReportResponse,
   ExportProfilesRequest,
   ExportProfilesResponse,
-  ExportQueryRequest,
-  ExportQueryResponse,
   ExportRequest,
   ExportResponse,
   ExportSchemaRequest,
@@ -76,7 +66,6 @@ import type {
   GetAISettingsResponse,
   GetAllWindowsResponse,
   GetClaudeCodePathsResponse,
-  GetCollectionsResponse,
   GetCurrentWindowResponse,
   GetFoldersRequest,
   GetFoldersResponse,
@@ -88,8 +77,6 @@ import type {
   GetQueryHistoryRequest,
   GetQueryHistoryResponse,
   GetRecentConnectionsResponse,
-  GetSavedQueriesRequest,
-  GetSavedQueriesResponse,
   GetSchemaRequest,
   GetSchemaResponse,
   GetSchemaSnapshotRequest,
@@ -103,12 +90,8 @@ import type {
   HasPasswordResponse,
   ImportBundleRequest,
   ImportBundleResponse,
-  ImportCollectionsRequest,
-  ImportCollectionsResponse,
   ImportProfilesRequest,
   ImportProfilesResponse,
-  ImportQueryRequest,
-  ImportQueryResponse,
   ImportSchemaRequest,
   ImportSchemaResponse,
   IsPasswordStorageAvailableResponse,
@@ -125,12 +108,8 @@ import type {
   RemoveConnectionResponse,
   RemovePasswordRequest,
   RemovePasswordResponse,
-  RemoveQueryFromCollectionRequest,
-  RemoveQueryFromCollectionResponse,
   SaveAISettingsRequest,
   SaveAISettingsResponse,
-  SaveCollectionRequest,
-  SaveCollectionResponse,
   SaveFileDialogRequest,
   SaveFileDialogResponse,
   SavePasswordRequest,
@@ -139,8 +118,6 @@ import type {
   SaveProfileResponse,
   SaveQueryHistoryRequest,
   SaveQueryHistoryResponse,
-  SaveSavedQueryRequest,
-  SaveSavedQueryResponse,
   SaveSchemaSnapshotRequest,
   SaveSchemaSnapshotResponse,
   SetPreferencesRequest,
@@ -149,18 +126,12 @@ import type {
   SqlLogEntry,
   TestConnectionRequest,
   TestConnectionResponse,
-  ToggleFavoriteRequest,
-  ToggleFavoriteResponse,
-  UpdateCollectionRequest,
-  UpdateCollectionResponse,
   UpdateConnectionRequest,
   UpdateConnectionResponse,
   UpdateFolderRequest,
   UpdateFolderResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
-  UpdateSavedQueryRequest,
-  UpdateSavedQueryResponse,
   ValidateChangesRequest,
   ValidateChangesResponse,
   WriteFileRequest,
@@ -552,66 +523,6 @@ const sqlProAPI = {
       request: GenerateSyncSQLRequest
     ): Promise<GenerateSyncSQLResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.MIGRATION_GENERATE_SYNC_SQL, request),
-  },
-
-  // Query operations
-  query: {
-    getSavedQueries: (
-      request: GetSavedQueriesRequest
-    ): Promise<GetSavedQueriesResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.QUERY_GET_SAVED_QUERIES, request),
-    saveSavedQuery: (
-      request: SaveSavedQueryRequest
-    ): Promise<SaveSavedQueryResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.QUERY_SAVE_SAVED_QUERY, request),
-    updateSavedQuery: (
-      request: UpdateSavedQueryRequest
-    ): Promise<UpdateSavedQueryResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.QUERY_UPDATE_SAVED_QUERY, request),
-    deleteSavedQuery: (
-      request: DeleteSavedQueryRequest
-    ): Promise<DeleteSavedQueryResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.QUERY_DELETE_SAVED_QUERY, request),
-    toggleFavorite: (
-      request: ToggleFavoriteRequest
-    ): Promise<ToggleFavoriteResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.QUERY_TOGGLE_FAVORITE, request),
-    exportQuery: (request: ExportQueryRequest): Promise<ExportQueryResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.QUERY_EXPORT_QUERY, request),
-    importQuery: (request: ImportQueryRequest): Promise<ImportQueryResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.QUERY_IMPORT_QUERY, request),
-  },
-
-  // Collection operations
-  collection: {
-    getAll: (): Promise<GetCollectionsResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_GET_ALL),
-    save: (request: SaveCollectionRequest): Promise<SaveCollectionResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_SAVE, request),
-    update: (
-      request: UpdateCollectionRequest
-    ): Promise<UpdateCollectionResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_UPDATE, request),
-    delete: (
-      request: DeleteCollectionRequest
-    ): Promise<DeleteCollectionResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_DELETE, request),
-    addQuery: (
-      request: AddQueryToCollectionRequest
-    ): Promise<AddQueryToCollectionResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_ADD_QUERY, request),
-    removeQuery: (
-      request: RemoveQueryFromCollectionRequest
-    ): Promise<RemoveQueryFromCollectionResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_REMOVE_QUERY, request),
-    export: (
-      request: ExportCollectionsRequest
-    ): Promise<ExportCollectionsResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_EXPORT, request),
-    import: (
-      request: ImportCollectionsRequest
-    ): Promise<ImportCollectionsResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.COLLECTION_IMPORT, request),
   },
 
   // Import/export bundle operations

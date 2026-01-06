@@ -1,7 +1,14 @@
 'use client';
 
-import type React from 'react';
+import type {HTMLAttributes, ReactElement} from 'react';
+import { mergeProps } from '@base-ui/react/merge-props';
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
+import {
+  cloneElement,
+  
+  isValidElement
+  
+} from 'react';
 
 import { cn } from './lib/utils';
 
@@ -31,15 +38,40 @@ function TooltipTrigger({
   children,
   ...props
 }: TooltipPrimitive.Trigger.Props) {
-  // If render is provided, use it; otherwise use children as render
-  // This allows: <TooltipTrigger><Button>...</Button></TooltipTrigger>
-  // to work without nesting buttons
+  // If render is provided, use it directly
+  if (render) {
+    return (
+      <TooltipPrimitive.Trigger
+        data-slot="tooltip-trigger"
+        render={render}
+        {...props}
+      />
+    );
+  }
+
+  // If children is a valid React element, use render function to properly merge props
+  // This ensures onClick and other event handlers on the child are preserved
+  if (isValidElement(children)) {
+    const childElement = children as ReactElement<HTMLAttributes<HTMLElement>>;
+    return (
+      <TooltipPrimitive.Trigger
+        data-slot="tooltip-trigger"
+        render={(triggerProps) =>
+          cloneElement(
+            childElement,
+            mergeProps(triggerProps, childElement.props)
+          )
+        }
+        {...props}
+      />
+    );
+  }
+
+  // Fallback: pass children directly (may cause nested button issues)
   return (
-    <TooltipPrimitive.Trigger
-      data-slot="tooltip-trigger"
-      render={render ?? (children as React.ReactElement)}
-      {...props}
-    />
+    <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props}>
+      {children}
+    </TooltipPrimitive.Trigger>
   );
 }
 

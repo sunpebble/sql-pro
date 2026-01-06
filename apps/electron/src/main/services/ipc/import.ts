@@ -1,15 +1,7 @@
-import type {
-  ImportBundleRequest,
-  ImportQueryRequest,
-  ImportSchemaRequest,
-} from '@shared/types';
+import type { ImportBundleRequest, ImportSchemaRequest } from '@shared/types';
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
-import {
-  importBundle,
-  importQuery,
-  importSchema,
-} from '../query-schema-sharing';
+import { importBundle, importSchema } from '../query-schema-sharing';
 import { createHandler } from './utils';
 
 export function setupImportHandlers(): void {
@@ -21,18 +13,6 @@ export function setupImportHandlers(): void {
         throw new Error('Import data is required');
       }
       const result = await importBundle(request.data);
-      return result;
-    })
-  );
-
-  // Import: Query
-  ipcMain.handle(
-    IPC_CHANNELS.IMPORT_QUERY,
-    createHandler(async (request: ImportQueryRequest) => {
-      if (!request.data) {
-        throw new Error('Import data is required');
-      }
-      const result = await importQuery(request.data);
       return result;
     })
   );

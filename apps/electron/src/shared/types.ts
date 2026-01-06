@@ -239,16 +239,27 @@ export interface TriggerInfo {
   sql: string;
 }
 
-export interface TableInfo {
+/**
+ * Minimal table information for lazy loading
+ */
+export interface TableBasicInfo {
   name: string;
   schema: string; // Database schema (e.g., 'main', 'temp' for SQLite)
   type: 'table' | 'view';
+  rowCount?: number;
+}
+
+/**
+ * Loading state for table details in lazy loading mode
+ */
+export type TableDetailsState = 'initial' | 'loading' | 'loaded' | 'error';
+
+export interface TableInfo extends TableBasicInfo {
   columns: ColumnInfo[];
   primaryKey: string[];
   foreignKeys: ForeignKeyInfo[];
   indexes: IndexInfo[];
   triggers: TriggerInfo[];
-  rowCount?: number;
   sql: string;
 }
 
@@ -256,6 +267,8 @@ export interface SchemaInfo {
   name: string;
   tables: TableInfo[];
   views: TableInfo[];
+  /** Whether this schema is lazy-loaded (tables only contain basic info initially) */
+  isLazy?: boolean;
 }
 
 export interface GetSchemaResponse {
@@ -2000,174 +2013,6 @@ export interface CompressionInfo {
   compressedSize?: number;
 }
 
-// ============ Saved Query Types ============
-
-export interface SavedQuery {
-  id: string;
-  name: string;
-  /** Query text */
-  queryText?: string;
-  /** Alternative property for query text */
-  query?: string;
-  dbPath?: string;
-  /** Alternative property for database path */
-  connectionPath?: string;
-  description?: string;
-  tags?: string[];
-  isFavorite?: boolean;
-  collectionIds?: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface SaveSavedQueryRequest {
-  query: Omit<SavedQuery, 'id' | 'createdAt' | 'updatedAt'>;
-}
-
-export interface SaveSavedQueryResponse {
-  success: boolean;
-  query?: SavedQuery;
-  error?: string;
-}
-
-export interface UpdateSavedQueryRequest {
-  id: string;
-  updates: Partial<Omit<SavedQuery, 'id' | 'createdAt'>>;
-}
-
-export interface UpdateSavedQueryResponse {
-  success: boolean;
-  query?: SavedQuery;
-  error?: string;
-}
-
-export interface DeleteSavedQueryRequest {
-  id: string;
-}
-
-export interface DeleteSavedQueryResponse {
-  success: boolean;
-  error?: string;
-}
-
-export interface GetSavedQueriesRequest {
-  dbPath?: string;
-  favoritesOnly?: boolean;
-  collectionId?: string;
-}
-
-export interface GetSavedQueriesResponse {
-  success: boolean;
-  queries?: SavedQuery[];
-  error?: string;
-}
-
-export interface ToggleFavoriteRequest {
-  id: string;
-  isFavorite?: boolean;
-}
-
-export interface ToggleFavoriteResponse {
-  success: boolean;
-  isFavorite?: boolean;
-  error?: string;
-}
-
-// ============ Collection Types ============
-
-export interface QueryCollection {
-  id: string;
-  name: string;
-  description?: string;
-  queryIds?: string[];
-  /** Optional color for collection UI */
-  color?: string;
-  /** Optional icon for collection UI */
-  icon?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface SaveCollectionRequest {
-  collection: Omit<QueryCollection, 'id' | 'createdAt' | 'updatedAt'>;
-}
-
-export interface SaveCollectionResponse {
-  success: boolean;
-  collection?: QueryCollection;
-  error?: string;
-}
-
-export interface UpdateCollectionRequest {
-  id: string;
-  updates: Partial<Omit<QueryCollection, 'id' | 'createdAt'>>;
-}
-
-export interface UpdateCollectionResponse {
-  success: boolean;
-  collection?: QueryCollection;
-  error?: string;
-}
-
-export interface DeleteCollectionRequest {
-  id: string;
-}
-
-export interface DeleteCollectionResponse {
-  success: boolean;
-  error?: string;
-}
-
-export interface GetCollectionsResponse {
-  success: boolean;
-  collections?: QueryCollection[];
-  error?: string;
-}
-
-export interface AddQueryToCollectionRequest {
-  queryId: string;
-  collectionId: string;
-}
-
-export interface AddQueryToCollectionResponse {
-  success: boolean;
-  error?: string;
-}
-
-export interface RemoveQueryFromCollectionRequest {
-  queryId: string;
-  collectionId: string;
-}
-
-export interface RemoveQueryFromCollectionResponse {
-  success: boolean;
-  error?: string;
-}
-
-export interface ExportCollectionsRequest {
-  collectionIds: string[];
-  includeQueries?: boolean;
-  filePath?: string;
-}
-
-export interface ExportCollectionsResponse {
-  success: boolean;
-  data?: string;
-  error?: string;
-}
-
-export interface ImportCollectionsRequest {
-  data: string;
-  overwrite?: boolean;
-}
-
-export interface ImportCollectionsResponse {
-  success: boolean;
-  imported?: number;
-  skipped?: number;
-  error?: string;
-}
-
 // ============ IPC Channel Definitions ============
 
 export interface IPCChannels {
@@ -2476,33 +2321,6 @@ export const IPC_CHANNELS = {
   QUERY_HISTORY_DELETE: 'history:delete',
   QUERY_HISTORY_CLEAR: 'history:clear',
 
-  // Saved Queries
-  SAVED_QUERIES_GET: 'saved-queries:get',
-  SAVED_QUERIES_SAVE: 'saved-queries:save',
-  SAVED_QUERIES_UPDATE: 'saved-queries:update',
-  SAVED_QUERIES_DELETE: 'saved-queries:delete',
-  SAVED_QUERY_GET_ALL: 'saved-queries:get',
-  SAVED_QUERY_SAVE: 'saved-queries:save',
-  SAVED_QUERY_UPDATE: 'saved-queries:update',
-  SAVED_QUERY_DELETE: 'saved-queries:delete',
-  SAVED_QUERY_TOGGLE_FAVORITE: 'saved-queries:toggle-favorite',
-
-  // Collections
-  COLLECTIONS_GET: 'collections:get',
-  COLLECTIONS_SAVE: 'collections:save',
-  COLLECTIONS_UPDATE: 'collections:update',
-  COLLECTIONS_DELETE: 'collections:delete',
-  COLLECTIONS_ADD_QUERY: 'collections:add-query',
-  COLLECTIONS_REMOVE_QUERY: 'collections:remove-query',
-  COLLECTION_GET_ALL: 'collections:get',
-  COLLECTION_SAVE: 'collections:save',
-  COLLECTION_UPDATE: 'collections:update',
-  COLLECTION_DELETE: 'collections:delete',
-  COLLECTION_ADD_QUERY: 'collections:add-query',
-  COLLECTION_REMOVE_QUERY: 'collections:remove-query',
-  COLLECTION_EXPORT: 'collections:export',
-  COLLECTION_IMPORT: 'collections:import',
-
   // Profiles
   PROFILES_GET: 'profile:get-all',
   PROFILES_SAVE: 'profile:save',
@@ -2521,10 +2339,8 @@ export const IPC_CHANNELS = {
 
   // Export/Import
   EXPORT_BUNDLE: 'export:bundle',
-  EXPORT_QUERY: 'export:query',
   EXPORT_SCHEMA: 'export:schema',
   IMPORT_BUNDLE: 'import:bundle',
-  IMPORT_QUERY: 'import:query',
   IMPORT_SCHEMA: 'import:schema',
 
   // Schema (aliases)
@@ -2561,15 +2377,6 @@ export const IPC_CHANNELS = {
 
   // PRO
   PRO_CLEAR_STATUS: 'pro:clear-status',
-
-  // Additional aliases for preload compatibility
-  QUERY_GET_SAVED_QUERIES: 'saved-queries:get',
-  QUERY_SAVE_SAVED_QUERY: 'saved-queries:save',
-  QUERY_UPDATE_SAVED_QUERY: 'saved-queries:update',
-  QUERY_DELETE_SAVED_QUERY: 'saved-queries:delete',
-  QUERY_TOGGLE_FAVORITE: 'saved-queries:toggle-favorite',
-  QUERY_EXPORT_QUERY: 'export:query',
-  QUERY_IMPORT_QUERY: 'import:query',
 
   // Comparison aliases
   COMPARISON_COMPARE_CONNECTIONS: 'schema-comparison:compare-connections',

@@ -1,11 +1,4 @@
-import type { SavedQuery } from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from '@sqlpro/ui/context-menu';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,21 +12,17 @@ import {
   ResizablePanel as ResizablePanelUI,
 } from '@sqlpro/ui/resizable';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import {
   AlertCircle,
   BarChart3,
-  Bookmark,
   CheckSquare,
   Clock,
   Code,
   FileDown,
   FileUp,
-  Folder,
   History,
   Loader2,
   Play,
-  Save,
   Search,
   Share2,
   Sparkles,
@@ -51,9 +40,6 @@ import React, {
   useState,
 } from 'react';
 import { DataAnalysisPanel, NLToSQLDialog } from '@/components/ai';
-import { CollectionsList } from '@/components/query/CollectionsList';
-import { SavedQueriesPanel } from '@/components/query/SavedQueriesPanel';
-import { SaveQueryDialog } from '@/components/query/SaveQueryDialog';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import {
   QueryBundleExportDialog,
@@ -145,12 +131,6 @@ export function QueryEditor() {
   const activePaneId = connectionTabState?.activePaneId || 'pane-main';
 
   const [showSidePanel, setShowSidePanel] = useState(false);
-  const [sidePanelTab, setSidePanelTab] = useState<'queries' | 'collections'>(
-    'queries'
-  );
-  const [queriesSubTab, setQueriesSubTab] = useState<'history' | 'saved'>(
-    'history'
-  );
   const [historySearch, setHistorySearch] = useState('');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -165,8 +145,6 @@ export function QueryEditor() {
   const [selectedHistoryIds, setSelectedHistoryIds] = useState<Set<string>>(
     () => new Set()
   );
-  const [showSaveQuery, setShowSaveQuery] = useState(false);
-  const [queryToSave, setQueryToSave] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // AI store
@@ -208,54 +186,23 @@ export function QueryEditor() {
     }
   }, [connection?.path, loadHistory]);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts for history toggle
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // History toggle: Cmd/Ctrl+H
       if ((e.metaKey || e.ctrlKey) && e.key === 'h' && !e.shiftKey) {
         e.preventDefault();
-        if (
-          showSidePanel &&
-          sidePanelTab === 'queries' &&
-          queriesSubTab === 'history'
-        ) {
+        if (showSidePanel) {
           setShowSidePanel(false);
         } else {
-          setSidePanelTab('queries');
-          setQueriesSubTab('history');
           setShowSidePanel(true);
-        }
-      }
-
-      // Saved Queries toggle: Cmd/Ctrl+Shift+F
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'F') {
-        e.preventDefault();
-        if (
-          showSidePanel &&
-          sidePanelTab === 'queries' &&
-          queriesSubTab === 'saved'
-        ) {
-          setShowSidePanel(false);
-        } else {
-          setSidePanelTab('queries');
-          setQueriesSubTab('saved');
-          setShowSidePanel(true);
-        }
-      }
-
-      // Save Query: Cmd/Ctrl+S (when editor has content)
-      if ((e.metaKey || e.ctrlKey) && e.key === 's' && !e.shiftKey) {
-        e.preventDefault();
-        if (tabQuery.trim()) {
-          setShowSaveQuery(true);
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- queriesSubTab is intentionally excluded to prevent re-registering listener
-  }, [tabQuery, showSidePanel, sidePanelTab]);
+  }, [showSidePanel]);
 
   const handleExecute = useCallback(async () => {
     if (!connection || !activeConnectionId || !tabQuery.trim() || !activeTabId)
@@ -351,11 +298,6 @@ export function QueryEditor() {
     setShowSidePanel(false);
   };
 
-  const handleSavedQueryLoad = (query: SavedQuery) => {
-    handleQueryChange(query.queryText ?? '');
-    setShowSidePanel(false);
-  };
-
   const handleHistoryDelete = (e: React.MouseEvent, entryId: string) => {
     e.stopPropagation();
     if (connection?.path) {
@@ -403,11 +345,6 @@ export function QueryEditor() {
   const handleExportSelected = () => {
     if (selectedHistoryIds.size === 0) return;
     setShowQueryBundleExport(true);
-  };
-
-  const handleSaveFromHistory = (queryText: string) => {
-    setQueryToSave(queryText);
-    setShowSaveQuery(true);
   };
 
   const handleAnalyze = useCallback(
@@ -509,34 +446,12 @@ export function QueryEditor() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setShowSaveQuery(true)}
-            disabled={!tabQuery.trim()}
+            onClick={() => setShowSidePanel(!showSidePanel)}
             className="gap-1"
-            title="Save current query"
-            data-action="save-query"
-          >
-            <Bookmark className="h-4 w-4" />
-            Save Query
-            <kbd className="bg-muted text-muted-foreground ml-1 rounded px-1 py-0.5 font-mono text-[10px]">
-              ⌘S
-            </kbd>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              if (showSidePanel && sidePanelTab === 'queries') {
-                setShowSidePanel(false);
-              } else {
-                setSidePanelTab('queries');
-                setShowSidePanel(true);
-              }
-            }}
-            className="gap-1"
-            data-action="toggle-queries"
+            data-action="toggle-history"
           >
             <History className="h-4 w-4" />
-            Queries
+            History
             <ShortcutKbd action="view.toggle-history" className="ml-1" />
           </Button>
           <Button
@@ -688,7 +603,7 @@ export function QueryEditor() {
           </>
         )}
 
-        {/* Side Panel (History & Saved Queries) - Resizable */}
+        {/* Side Panel (History) - Resizable */}
         {showSidePanel && (
           <ResizablePanel
             side="right"
@@ -698,309 +613,206 @@ export function QueryEditor() {
             storageKey="query-side-panel-v2"
           >
             <div className="bg-background flex h-full flex-col border-l">
-              <Tabs
-                value={sidePanelTab}
-                onValueChange={(v) =>
-                  setSidePanelTab(v as 'queries' | 'collections')
-                }
-                className="flex h-full flex-col"
-              >
-                {/* Tab Header */}
-                <div className="flex shrink-0 items-center justify-between border-b">
-                  <TabsList className="h-auto border-0 bg-transparent p-0">
-                    <TabsTrigger
-                      value="queries"
-                      className="data-[state=active]:border-primary flex items-center gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 data-[state=active]:bg-transparent"
-                    >
-                      <Bookmark className="h-4 w-4" />
-                      Queries
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="collections"
-                      className="data-[state=active]:border-primary flex items-center gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 data-[state=active]:bg-transparent"
-                    >
-                      <Folder className="h-4 w-4" />
-                      Collections
-                    </TabsTrigger>
-                  </TabsList>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="mr-2 h-8 w-8"
-                    onClick={() => setShowSidePanel(false)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+              {/* Header */}
+              <div className="flex shrink-0 items-center justify-between border-b px-4 py-2">
+                <div className="flex items-center gap-2">
+                  <History className="h-4 w-4" />
+                  <h3 className="font-medium">
+                    {historySelectionMode
+                      ? `Selected (${selectedHistoryIds.size})`
+                      : 'Query History'}
+                  </h3>
                 </div>
+                <div className="flex items-center gap-1">
+                  {historySelectionMode ? (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs"
+                        onClick={
+                          selectedHistoryIds.size === filteredHistory.length
+                            ? handleDeselectAllHistory
+                            : handleSelectAllHistory
+                        }
+                        disabled={filteredHistory.length === 0}
+                      >
+                        {selectedHistoryIds.size === filteredHistory.length
+                          ? 'Deselect All'
+                          : 'Select All'}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 gap-1 text-xs"
+                        onClick={handleExportSelected}
+                        disabled={selectedHistoryIds.size === 0}
+                      >
+                        <FileDown className="h-3.5 w-3.5" />
+                        Export
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs"
+                        onClick={handleExitSelectionMode}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={handleEnterSelectionMode}
+                        disabled={history.length === 0}
+                        title="Select multiple queries"
+                      >
+                        <CheckSquare className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setShowClearConfirm(true)}
+                        disabled={history.length === 0}
+                        title="Clear all history"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setShowSidePanel(false)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
 
-                {/* Queries Tab Content (History + Saved) */}
-                <TabsContent
-                  value="queries"
-                  className="mt-0 flex h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden"
-                >
-                  {/* Sub-tabs for History and Saved */}
-                  <div className="flex shrink-0 items-center gap-1 border-b px-2 py-1">
-                    <Button
-                      variant={
-                        queriesSubTab === 'history' ? 'secondary' : 'ghost'
-                      }
-                      size="sm"
-                      className="h-7 gap-1.5 text-xs"
-                      onClick={() => setQueriesSubTab('history')}
-                    >
-                      <History className="h-3.5 w-3.5" />
-                      History
-                    </Button>
-                    <Button
-                      variant={
-                        queriesSubTab === 'saved' ? 'secondary' : 'ghost'
-                      }
-                      size="sm"
-                      className="h-7 gap-1.5 text-xs"
-                      onClick={() => setQueriesSubTab('saved')}
-                    >
-                      <Bookmark className="h-3.5 w-3.5" />
-                      Saved
-                    </Button>
-                  </div>
+              {/* Search Input */}
+              <div className="shrink-0 border-b px-3 py-2">
+                <div className="relative">
+                  <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
+                  <Input
+                    type="text"
+                    placeholder="Search history..."
+                    value={historySearch}
+                    onChange={(e) => setHistorySearch(e.target.value)}
+                    className="h-8 pl-8 text-sm"
+                  />
+                </div>
+              </div>
 
-                  {/* History Content */}
-                  {queriesSubTab === 'history' && (
-                    <div className="flex min-h-0 flex-1 flex-col">
-                      <div className="flex shrink-0 items-center justify-between border-b px-4 py-2">
-                        <h3 className="font-medium">
-                          {historySelectionMode
-                            ? `Selected (${selectedHistoryIds.size})`
-                            : 'Query History'}
-                        </h3>
-                        <div className="flex items-center gap-1">
+              {/* History List */}
+              <ScrollArea className="min-h-0 flex-1">
+                <div className="space-y-1 p-2">
+                  {filteredHistory.length === 0 ? (
+                    <p className="text-muted-foreground py-8 text-center text-sm">
+                      {historySearch.trim()
+                        ? 'No matching queries'
+                        : 'No queries yet'}
+                    </p>
+                  ) : (
+                    filteredHistory.map((item) => {
+                      const isSelected = selectedHistoryIds.has(item.id);
+                      return (
+                        <div
+                          key={item.id}
+                          className={cn(
+                            'hover:bg-accent group relative w-full rounded-md text-left text-sm transition-colors',
+                            !item.success && 'border-destructive border-l-2',
+                            historySelectionMode && 'px-2 py-2',
+                            !historySelectionMode && 'px-3 py-2'
+                          )}
+                        >
                           {historySelectionMode ? (
+                            <div
+                              className="flex cursor-pointer items-start gap-2"
+                              onClick={() => handleToggleHistoryItem(item.id)}
+                            >
+                              <div className="pt-0.5">
+                                {isSelected ? (
+                                  <CheckSquare className="text-primary h-4 w-4" />
+                                ) : (
+                                  <Square className="text-muted-foreground h-4 w-4" />
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  {item.success ? (
+                                    <span className="text-xs text-green-600">
+                                      {formatDuration(item.durationMs ?? 0)}
+                                    </span>
+                                  ) : (
+                                    <span className="text-destructive text-xs">
+                                      Failed
+                                    </span>
+                                  )}
+                                  <span className="text-muted-foreground text-xs">
+                                    {new Date(
+                                      item.executedAt ?? ''
+                                    ).toLocaleTimeString()}
+                                  </span>
+                                </div>
+                                <SqlHighlight
+                                  code={item.queryText ?? ''}
+                                  maxLines={3}
+                                  className="mt-1"
+                                />
+                              </div>
+                            </div>
+                          ) : (
                             <>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 text-xs"
-                                onClick={
-                                  selectedHistoryIds.size ===
-                                  filteredHistory.length
-                                    ? handleDeselectAllHistory
-                                    : handleSelectAllHistory
+                              <button
+                                onClick={() =>
+                                  handleHistorySelect(item.queryText ?? '')
                                 }
-                                disabled={filteredHistory.length === 0}
+                                className="w-full text-left"
                               >
-                                {selectedHistoryIds.size ===
-                                filteredHistory.length
-                                  ? 'Deselect All'
-                                  : 'Select All'}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 gap-1 text-xs"
-                                onClick={handleExportSelected}
-                                disabled={selectedHistoryIds.size === 0}
-                              >
-                                <FileDown className="h-3.5 w-3.5" />
-                                Export
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 text-xs"
-                                onClick={handleExitSelectionMode}
-                              >
-                                Cancel
-                              </Button>
-                            </>
-                          ) : (
-                            <>
+                                <div className="flex items-center gap-2 pr-6">
+                                  {item.success ? (
+                                    <span className="text-xs text-green-600">
+                                      {formatDuration(item.durationMs ?? 0)}
+                                    </span>
+                                  ) : (
+                                    <span className="text-destructive text-xs">
+                                      Failed
+                                    </span>
+                                  )}
+                                  <span className="text-muted-foreground text-xs">
+                                    {new Date(
+                                      item.executedAt ?? ''
+                                    ).toLocaleTimeString()}
+                                  </span>
+                                </div>
+                                <SqlHighlight
+                                  code={item.queryText ?? ''}
+                                  maxLines={3}
+                                  className="mt-1 pr-6"
+                                />
+                              </button>
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8"
-                                onClick={handleEnterSelectionMode}
-                                disabled={history.length === 0}
-                                title="Select multiple queries"
+                                className="absolute top-1/2 right-1 h-6 w-6 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
+                                onClick={(e) => handleHistoryDelete(e, item.id)}
                               >
-                                <CheckSquare className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={() => setShowClearConfirm(true)}
-                                disabled={history.length === 0}
-                                title="Clear all history"
-                              >
-                                <Trash2 className="h-4 w-4" />
+                                <X className="h-3 w-3" />
                               </Button>
                             </>
                           )}
                         </div>
-                      </div>
-                      {/* Search Input */}
-                      <div className="shrink-0 border-b px-3 py-2">
-                        <div className="relative">
-                          <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
-                          <Input
-                            type="text"
-                            placeholder="Search history..."
-                            value={historySearch}
-                            onChange={(e) => setHistorySearch(e.target.value)}
-                            className="h-8 pl-8 text-sm"
-                          />
-                        </div>
-                      </div>
-                      <ScrollArea className="min-h-0 flex-1">
-                        <div className="space-y-1 p-2">
-                          {filteredHistory.length === 0 ? (
-                            <p className="text-muted-foreground py-8 text-center text-sm">
-                              {historySearch.trim()
-                                ? 'No matching queries'
-                                : 'No queries yet'}
-                            </p>
-                          ) : (
-                            filteredHistory.map((item) => {
-                              const isSelected = selectedHistoryIds.has(
-                                item.id
-                              );
-                              return (
-                                <ContextMenu key={item.id}>
-                                  <ContextMenuTrigger>
-                                    <div
-                                      className={cn(
-                                        'hover:bg-accent group relative w-full rounded-md text-left text-sm transition-colors',
-                                        !item.success &&
-                                          'border-destructive border-l-2',
-                                        historySelectionMode && 'px-2 py-2',
-                                        !historySelectionMode && 'px-3 py-2'
-                                      )}
-                                    >
-                                      {historySelectionMode ? (
-                                        <div
-                                          className="flex cursor-pointer items-start gap-2"
-                                          onClick={() =>
-                                            handleToggleHistoryItem(item.id)
-                                          }
-                                        >
-                                          <div className="pt-0.5">
-                                            {isSelected ? (
-                                              <CheckSquare className="text-primary h-4 w-4" />
-                                            ) : (
-                                              <Square className="text-muted-foreground h-4 w-4" />
-                                            )}
-                                          </div>
-                                          <div className="min-w-0 flex-1">
-                                            <div className="flex items-center gap-2">
-                                              {item.success ? (
-                                                <span className="text-xs text-green-600">
-                                                  {formatDuration(
-                                                    item.durationMs ?? 0
-                                                  )}
-                                                </span>
-                                              ) : (
-                                                <span className="text-destructive text-xs">
-                                                  Failed
-                                                </span>
-                                              )}
-                                              <span className="text-muted-foreground text-xs">
-                                                {new Date(
-                                                  item.executedAt ?? ''
-                                                ).toLocaleTimeString()}
-                                              </span>
-                                            </div>
-                                            <SqlHighlight
-                                              code={item.queryText ?? ''}
-                                              maxLines={3}
-                                              className="mt-1"
-                                            />
-                                          </div>
-                                        </div>
-                                      ) : (
-                                        <>
-                                          <button
-                                            onClick={() =>
-                                              handleHistorySelect(
-                                                item.queryText ?? ''
-                                              )
-                                            }
-                                            className="w-full text-left"
-                                          >
-                                            <div className="flex items-center gap-2 pr-6">
-                                              {item.success ? (
-                                                <span className="text-xs text-green-600">
-                                                  {formatDuration(
-                                                    item.durationMs ?? 0
-                                                  )}
-                                                </span>
-                                              ) : (
-                                                <span className="text-destructive text-xs">
-                                                  Failed
-                                                </span>
-                                              )}
-                                              <span className="text-muted-foreground text-xs">
-                                                {new Date(
-                                                  item.executedAt ?? ''
-                                                ).toLocaleTimeString()}
-                                              </span>
-                                            </div>
-                                            <SqlHighlight
-                                              code={item.queryText ?? ''}
-                                              maxLines={3}
-                                              className="mt-1 pr-6"
-                                            />
-                                          </button>
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="absolute top-1/2 right-1 h-6 w-6 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
-                                            onClick={(e) =>
-                                              handleHistoryDelete(e, item.id)
-                                            }
-                                          >
-                                            <X className="h-3 w-3" />
-                                          </Button>
-                                        </>
-                                      )}
-                                    </div>
-                                  </ContextMenuTrigger>
-                                  <ContextMenuContent>
-                                    <ContextMenuItem
-                                      onClick={() =>
-                                        handleSaveFromHistory(
-                                          item.queryText ?? ''
-                                        )
-                                      }
-                                    >
-                                      <Save className="mr-2 h-4 w-4" />
-                                      Save to Collection
-                                    </ContextMenuItem>
-                                  </ContextMenuContent>
-                                </ContextMenu>
-                              );
-                            })
-                          )}
-                        </div>
-                      </ScrollArea>
-                    </div>
+                      );
+                    })
                   )}
-
-                  {/* Saved Content */}
-                  {queriesSubTab === 'saved' && (
-                    <div className="min-h-0 flex-1 overflow-hidden">
-                      <SavedQueriesPanel onLoadQuery={handleSavedQueryLoad} />
-                    </div>
-                  )}
-                </TabsContent>
-
-                {/* Collections Tab Content */}
-                <TabsContent
-                  value="collections"
-                  className="mt-0 h-0 flex-1 overflow-hidden data-[state=inactive]:hidden"
-                >
-                  <CollectionsList />
-                </TabsContent>
-              </Tabs>
+                </div>
+              </ScrollArea>
             </div>
           </ResizablePanel>
         )}
@@ -1106,19 +918,6 @@ export function QueryEditor() {
           setHistorySelectionMode(false);
           setSelectedHistoryIds(new Set());
         }}
-      />
-
-      {/* Save Query Dialog */}
-      <SaveQueryDialog
-        open={showSaveQuery}
-        onOpenChange={(open) => {
-          setShowSaveQuery(open);
-          if (!open) {
-            setQueryToSave(null);
-          }
-        }}
-        queryText={queryToSave || tabQuery}
-        dbPath={connection?.path}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import type { PendingChangeInfo, SavedQuery } from '@shared/types';
+import type { PendingChangeInfo } from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
 import {
   DropdownMenu,
@@ -20,13 +20,12 @@ import {
   Monitor,
   Moon,
   RefreshCw,
-  ScrollText,
   Settings,
   Sun,
   X,
 } from 'lucide-react';
 import { useState } from 'react';
-import { FavoritesQuickPanel } from '@/components/query/FavoritesQuickPanel';
+import { LayoutButtons } from '@/components/LayoutButtons';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { sqlPro } from '@/lib/api';
@@ -39,14 +38,12 @@ import {
   useTableDataStore,
   useThemeStore,
 } from '@/stores';
-import { useSqlLogStore } from '@/stores/sql-log-store';
 
 interface ToolbarProps {
   onOpenChanges?: () => void;
-  onLoadFavoriteQuery?: (query: SavedQuery) => void;
 }
 
-export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
+export function Toolbar({ onOpenChanges }: ToolbarProps) {
   const {
     connection,
     activeConnectionId,
@@ -65,7 +62,6 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
   } = useChangesStore();
   const { resetConnection } = useTableDataStore();
   const { theme, setTheme } = useThemeStore();
-  const { toggleVisible: toggleSqlLog } = useSqlLogStore();
 
   // Global stores for dialogs
   const openConnectionSettings = useDialogStore(
@@ -325,9 +321,6 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
 
         {/* Right side actions - won't shrink */}
         <div className="flex shrink-0 items-center gap-2">
-          {/* Favorites Quick Access */}
-          <FavoritesQuickPanel onLoadQuery={onLoadFavoriteQuery} />
-
           {/* Pending Changes Indicator - Clickable */}
           {hasChanges() && (
             <button
@@ -351,15 +344,8 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
             <TooltipContent>{getThemeLabel()}</TooltipContent>
           </Tooltip>
 
-          {/* SQL Log Toggle */}
-          <Tooltip>
-            <TooltipTrigger>
-              <Button variant="ghost" size="icon" onClick={toggleSqlLog}>
-                <ScrollText className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>SQL Log</TooltipContent>
-          </Tooltip>
+          {/* Layout Buttons - VSCode style panel toggles */}
+          <LayoutButtons />
 
           {/* Command Palette Hint */}
           <Tooltip>
