@@ -14,9 +14,9 @@ export { ColumnFilterPopover } from './ColumnFilterPopover';
 
 export { ColumnStats } from './ColumnStats';
 export { DataQualityIndicator } from './DataQualityIndicator';
-
 // Tab bar for multi-tab support
 export { DataTabBar } from './DataTabBar';
+
 // Main component
 export {
   DataTable,
@@ -24,17 +24,17 @@ export {
   type DataTableRef,
   type TableRowData,
 } from './DataTable';
-
 export { GroupRow } from './GroupRow';
+
 // Hooks
 export { useDragSelection } from './hooks/useDragSelection';
 export { useTableCore } from './hooks/useTableCore';
 export { useTableEditing } from './hooks/useTableEditing';
-
 export {
   InlineShortcutHint,
   KeyboardShortcutsOverlay,
 } from './KeyboardShortcutsOverlay';
+
 export {
   CellValueIndicator,
   DataDistribution,
@@ -44,6 +44,7 @@ export {
 export { QuickFilterTags } from './QuickFilterTags';
 // New creative enhancements
 export { RowHoverCard } from './RowHoverCard';
+export { SelectionStats } from './SelectionStats';
 export { TableBody } from './TableBody';
 export { TableCell } from './TableCell';
 // Sub-components

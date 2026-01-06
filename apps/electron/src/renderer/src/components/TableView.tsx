@@ -56,6 +56,7 @@ import {
   DataQualityIndicator,
   DataTable,
   QuickFilterTags,
+  SelectionStats,
   SkeletonTable,
 } from './data-table';
 import { ActiveFilters } from './data-table/ActiveFilters';
@@ -247,6 +248,13 @@ export function TableView({ tableOverride }: TableViewProps) {
       } as TableRowData;
     });
   }, [rows, pendingChanges]);
+
+  // Get selected rows data for quick statistics (Excel-like)
+  const selectedRowsData = useMemo(() => {
+    if (selectedRowIds.length === 0) return [];
+    const selectedSet = new Set(selectedRowIds);
+    return displayRows.filter((row) => selectedSet.has(String(row.__rowId)));
+  }, [displayRows, selectedRowIds]);
 
   // Client-side search on displayed rows
   const { filteredRows: searchFilteredRows, stats: searchStats } =
@@ -720,6 +728,9 @@ export function TableView({ tableOverride }: TableViewProps) {
         {!isLoading && rows.length > 0 && (
           <ColumnStats columns={columns} data={rows} />
         )}
+
+        {/* Selection Quick Stats - Excel-like status bar */}
+        <SelectionStats selectedRows={selectedRowsData} columns={columns} />
 
         {/* Pagination */}
         <div className="bg-background flex shrink-0 flex-wrap items-center justify-between gap-2 border-t px-4 py-2">
