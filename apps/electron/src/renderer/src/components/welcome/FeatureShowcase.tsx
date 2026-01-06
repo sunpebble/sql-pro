@@ -76,7 +76,7 @@ export function FeatureShowcase() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col justify-center">
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold">Features</h2>
