@@ -16,6 +16,7 @@ import {
   persistConnectionUi,
   registerConnectionUiHydrator,
 } from '@/lib/electron-storage';
+import { memoryCleanup } from '@/lib/memory-cleanup';
 import { schemaCache } from '@/lib/schema-cache';
 import { useChangesStore } from './changes-store';
 
@@ -196,6 +197,13 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
 
       // Invalidate schema cache for this connection
       schemaCache.invalidateConnection(id);
+
+      // Clean up all memory associated with this connection:
+      // - Table data from table-data-store
+      // - Query results from query-store
+      // - Schema cache (redundant but ensures complete cleanup)
+      // This ensures memory returns to baseline after closing connections
+      memoryCleanup.cleanupConnection(id);
 
       // Remove from tab order
       const newTabOrder = state.connectionTabOrder.filter(
@@ -613,9 +621,12 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
   // Error Actions
   setError: (error) => set({ error }),
 
-  // Reset - clears all state
-  reset: () =>
-    set({
+  // Reset - clears all state and performs memory cleanup
+  reset: () => {
+    // Clean up all memory caches
+    memoryCleanup.performCleanup('manual');
+
+    return set({
       connections: new Map(),
       activeConnectionId: null,
       connectionTabOrder: [],
@@ -634,7 +645,8 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
       // Legacy compatibility
       connection: null,
       schema: null,
-    }),
+    });
+  },
 
   // Computed getters
   getConnection: () => {
