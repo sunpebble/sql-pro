@@ -576,40 +576,60 @@ export function TableView({ tableOverride }: TableViewProps) {
             </Tooltip>
 
             {/* Export button */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowExportDialog(true)}
-              disabled={rows.length === 0}
-              data-action="export-data"
-            >
-              <Download className="h-4 w-4" />
-              <span className="ml-1.5 hidden xl:inline">Export</span>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowExportDialog(true)}
+                  disabled={rows.length === 0}
+                  data-action="export-data"
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Export data (<ShortcutKbd action="action.export-data" />)
+              </TooltipContent>
+            </Tooltip>
 
             {/* Add Row button */}
             {selectedTable.type !== 'view' && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleAddRow}
-                data-action="add-row"
-              >
-                <Plus className="h-4 w-4" />
-                <span className="ml-1.5 hidden xl:inline">Add Row</span>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddRow}
+                    data-action="add-row"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Add row (<ShortcutKbd action="action.add-row" />)
+                </TooltipContent>
+              </Tooltip>
             )}
 
             {/* Changes indicator & preview button */}
             {changeCount > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowDiffPreview(true)}
-              >
-                <FileText className="h-4 w-4" />
-                <span className="ml-1.5">{changeCount}</span>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowDiffPreview(true)}
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span className="ml-1.5">{changeCount}</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  View pending changes (
+                  <ShortcutKbd action="action.view-changes" />)
+                </TooltipContent>
+              </Tooltip>
             )}
 
             {/* Schema Details Toggle */}

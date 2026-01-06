@@ -2803,7 +2803,7 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
   'action.execute-query': { key: 'Enter', modifiers: { cmd: true } },
-  'action.view-changes': { key: 's', modifiers: { cmd: true, shift: true } },
+  'action.view-changes': { key: 'l', modifiers: { cmd: true } },
   'action.open-database': { key: 'o', modifiers: { cmd: true } },
   'action.new-window': { key: 'n', modifiers: { cmd: true, shift: true } },
   'action.close-database': { key: 'w', modifiers: { cmd: true } },

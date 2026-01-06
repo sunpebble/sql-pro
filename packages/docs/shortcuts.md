@@ -120,7 +120,7 @@ Global action shortcuts available throughout the application.
 | ----------------------- | ------------------------------------------------ | ------------------------------------------------- |
 | Refresh Schema          | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> |
 | Refresh Table           | <kbd>Cmd</kbd> + <kbd>R</kbd>                    | <kbd>Ctrl</kbd> + <kbd>R</kbd>                    |
-| View Unsaved Changes    | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> |
+| View Unsaved Changes    | <kbd>Cmd</kbd> + <kbd>L</kbd>                    | <kbd>Ctrl</kbd> + <kbd>L</kbd>                    |
 | Save Changes            | <kbd>Cmd</kbd> + <kbd>S</kbd>                    | <kbd>Ctrl</kbd> + <kbd>S</kbd>                    |
 | Discard Changes         | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> |
 | Add Row                 | <kbd>Cmd</kbd> + <kbd>N</kbd>                    | <kbd>Ctrl</kbd> + <kbd>N</kbd>                    |
@@ -220,7 +220,7 @@ The following table lists all commands available in the Command Palette, organiz
 | Execute Query        | <kbd>Cmd/Ctrl</kbd> + <kbd>Enter</kbd>                | Run the current SQL query             |
 | Refresh Schema       | <kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> | Reload the database schema            |
 | Refresh Table        | <kbd>Cmd/Ctrl</kbd> + <kbd>R</kbd>                    | Reload the current table data         |
-| View Unsaved Changes | <kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | Open the pending changes diff preview |
+| View Unsaved Changes | <kbd>Cmd/Ctrl</kbd> + <kbd>L</kbd>                    | Open the pending changes diff preview |
 | Open Database        | <kbd>Cmd/Ctrl</kbd> + <kbd>O</kbd>                    | Open a database file                  |
 | Close Database       | —                                                     | Disconnect from the current database  |
 
