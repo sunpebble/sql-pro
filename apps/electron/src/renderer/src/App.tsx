@@ -30,6 +30,7 @@ function App(): React.JSX.Element {
     setSchema,
     activeConnectionId,
     getAllConnections,
+    connection,
   } = useConnectionStore();
   const { setActiveConnectionId: setTabsActiveConnection } =
     useQueryTabsStore();
@@ -225,7 +226,7 @@ function App(): React.JSX.Element {
             onCancel={handleCancelQuit}
           />
           <WelcomeDialog
-            open={!hasSeenWelcome && activeConnectionId !== null}
+            open={!hasSeenWelcome && connection !== null}
             onOpenChange={() => {
               // Dialog will close via store actions (startTour/skipTour)
             }}

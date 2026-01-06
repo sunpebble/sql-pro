@@ -13,13 +13,23 @@ import { useOnboardingStore } from '@/stores';
 export interface WelcomeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Optional callback to start the tour. If not provided, uses the default onboarding store action */
+  onStartTour?: () => void;
 }
 
-export function WelcomeDialog({ open, onOpenChange }: WelcomeDialogProps) {
+export function WelcomeDialog({
+  open,
+  onOpenChange,
+  onStartTour,
+}: WelcomeDialogProps) {
   const { startTour, skipTour } = useOnboardingStore();
 
   const handleTakeTour = () => {
-    startTour();
+    if (onStartTour) {
+      onStartTour();
+    } else {
+      startTour();
+    }
     onOpenChange(false);
   };
 

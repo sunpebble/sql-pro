@@ -2,37 +2,48 @@
 
 ## Project Overview
 
-SQL Pro is a professional SQLite database manager built with Electron, React, and TypeScript. It provides a rich desktop application for managing both regular SQLite and encrypted SQLCipher databases with features including an SQL editor, schema browser, inline editing, diff preview, and ER diagrams.
+SQL Pro is a professional multi-database manager built with Electron, React, and TypeScript. It provides a rich desktop application for managing SQLite (including encrypted SQLCipher), MySQL, and PostgreSQL databases with features including an SQL editor, schema browser, inline editing, diff preview, ER diagrams, and AI-powered assistance.
 
 ### Key Technologies
 
-- **Frontend**: React 19, TanStack Router, TanStack Table, Monaco Editor
-- **Backend**: Electron 39, better-sqlite3-multiple-ciphers
+- **Frontend**: React 19.2, TanStack Router, TanStack Table, TanStack AI, Monaco Editor
+- **Backend**: Electron 39, better-sqlite3-multiple-ciphers, mysql2, pg
 - **Styling**: Tailwind CSS 4, shadcn/ui components
-- **State Management**: Zustand
-- **Testing**: Vitest with happy-dom
-- **Build**: Electron Vite, electron-builder
+- **State Management**: Zustand 5
+- **AI Integration**: Claude Agent SDK, OpenAI, TanStack AI
+- **Testing**: Vitest 4 with happy-dom
+- **Build**: Nx monorepo, Electron Vite 5, electron-builder
 
 ## Architecture
 
+This is an Nx monorepo with the following structure:
+
 ```
-src/
-├── main/           # Electron main process (Node.js)
-│   └── services/   # Database operations, IPC handlers, plugin system
-├── preload/        # Preload scripts (bridge between main and renderer)
-├── renderer/       # React frontend application
-│   ├── components/ # UI components (shadcn/ui based)
-│   ├── stores/     # Zustand state stores
-│   └── routes/     # TanStack Router routes
-└── shared/         # Shared types and utilities
+apps/
+└── electron/           # Main Electron application
+    └── src/
+        ├── main/           # Electron main process (Node.js)
+        │   └── services/   # Database operations, IPC handlers, plugin system
+        ├── preload/        # Preload scripts (bridge between main and renderer)
+        ├── renderer/       # React frontend application
+        │   ├── components/ # UI components (feature components)
+        │   ├── stores/     # Zustand state stores
+        │   └── routes/     # TanStack Router routes
+        └── shared/         # Shared types and utilities
+packages/
+├── docs/               # VitePress documentation
+├── plugin-sdk/         # Plugin SDK and templates
+├── tsconfig/           # Shared TypeScript configurations
+└── ui/                 # Shared UI components (shadcn/ui based)
 ```
 
 ### Design Principles
 
 - **Electron Architecture**: Maintain strict separation between main process (Node.js), preload (IPC bridge), and renderer (React). Never import Node.js modules directly in renderer code.
 - **Type Safety**: Use TypeScript strictly. Ensure all IPC handlers have proper type definitions in shared types.
-- **Component Structure**: Follow shadcn/ui patterns. Components should be in `components/ui/` for base components and `components/` for feature components.
-- **State Management**: Use Zustand stores for global state. Each store should be focused on a specific domain (theme, connection, query, settings).
+- **Component Structure**: Follow shadcn/ui patterns. Base UI components are in `packages/ui/`, feature components are in `apps/electron/src/renderer/src/components/`.
+- **State Management**: Use Zustand stores for global state. Each store should be focused on a specific domain (theme, connection, query, settings, ai, etc.).
+- **Nx Workspace**: Use Nx for task orchestration. Run tasks through `nx run` or `pnpm` scripts. Prefer `nx affected` for CI.
 
 ## Code Style and Formatting
 
@@ -52,7 +63,7 @@ src/
 
 ### Conventions
 
-- **Imports**: Use `@/` for renderer imports, `@shared/` for shared code
+- **Imports**: Use `@/` for renderer imports, `@shared/` for shared code, `@sqlpro/ui` for shared UI components
 - **File Naming**:
   - Components: PascalCase (e.g., `TableView.tsx`)
   - Utilities: kebab-case (e.g., `filter-utils.ts`)

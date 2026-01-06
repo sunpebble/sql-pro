@@ -31,6 +31,8 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { WelcomeDialog } from '@/components/onboarding/WelcomeDialog';
+import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
 import {
   Dialog,
   DialogContent,
@@ -39,7 +41,11 @@ import {
 } from '@/components/ui/dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { useConnectionStore, useDialogStore } from '@/stores';
+import {
+  useConnectionStore,
+  useDialogStore,
+  useOnboardingStore,
+} from '@/stores';
 import { ProfileForm } from './connection-profiles/ProfileForm';
 import { ProfileManager } from './connection-profiles/ProfileManager';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
@@ -105,6 +111,13 @@ export function WelcomeScreen() {
   const openConnectionSettings = useDialogStore(
     (s) => s.openConnectionSettings
   );
+  const { hasSeenWelcome, setHasSeenWelcome, completeTour } =
+    useOnboardingStore();
+
+  // Welcome tour state
+  const [welcomeTourVisible, setWelcomeTourVisible] = useState(false);
+  // Welcome dialog state - show on first visit
+  const [welcomeDialogOpen, setWelcomeDialogOpen] = useState(!hasSeenWelcome);
 
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   // For new connection settings only (not edit mode)
@@ -136,6 +149,22 @@ export function WelcomeScreen() {
   const [dbTypeSelectorOpen, setDbTypeSelectorOpen] = useState(false);
   const [serverConnectionOpen, setServerConnectionOpen] = useState(false);
   const [selectedDbType, setSelectedDbType] = useState<DatabaseType>('sqlite');
+
+  // Welcome tour handlers
+  const handleStartWelcomeTour = useCallback(() => {
+    setWelcomeTourVisible(true);
+  }, []);
+
+  const handleCompleteWelcomeTour = useCallback(() => {
+    setWelcomeTourVisible(false);
+    setHasSeenWelcome(true);
+    completeTour();
+  }, [setHasSeenWelcome, completeTour]);
+
+  const handleSkipWelcomeTour = useCallback(() => {
+    setWelcomeTourVisible(false);
+    setHasSeenWelcome(true);
+  }, [setHasSeenWelcome]);
 
   // Load folders on mount
   useEffect(() => {
@@ -787,6 +816,7 @@ export function WelcomeScreen() {
               variant={showProfiles ? 'default' : 'ghost'}
               size="icon"
               onClick={() => setShowProfiles(!showProfiles)}
+              data-tour-target="profiles-button"
             >
               <Database className="h-4 w-4" />
             </Button>
@@ -802,7 +832,7 @@ export function WelcomeScreen() {
         {/* Left Column - Feature Showcase */}
         <div className="flex w-1/2 items-center justify-center border-r p-8">
           <div className="h-full w-full max-w-md">
-            <FeatureShowcase />
+            <FeatureShowcase onStartTour={handleStartWelcomeTour} />
           </div>
         </div>
 
@@ -846,6 +876,7 @@ export function WelcomeScreen() {
                 variant="outline"
                 onClick={() => setDbTypeSelectorOpen(true)}
                 disabled={isConnecting}
+                data-action="connect-server"
               >
                 <Server className="mr-2 h-4 w-4" />
                 Connect to Server
@@ -865,7 +896,10 @@ export function WelcomeScreen() {
               </div>
             ) : (
               recentConnections.length > 0 && (
-                <div className="flex flex-col space-y-2">
+                <div
+                  className="flex flex-col space-y-2"
+                  data-tour-target="recent-connections"
+                >
                   <div className="flex shrink-0 items-center justify-between px-1">
                     <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                       Recent Connections
@@ -1058,6 +1092,20 @@ export function WelcomeScreen() {
         error={error}
         mode="edit"
         initialConfig={editingConnection?.connectionConfig}
+      />
+
+      {/* Welcome Tour */}
+      <WelcomeTour
+        isVisible={welcomeTourVisible}
+        onComplete={handleCompleteWelcomeTour}
+        onSkip={handleSkipWelcomeTour}
+      />
+
+      {/* Welcome Dialog - shown on first visit */}
+      <WelcomeDialog
+        open={welcomeDialogOpen}
+        onOpenChange={setWelcomeDialogOpen}
+        onStartTour={handleStartWelcomeTour}
       />
     </div>
   );

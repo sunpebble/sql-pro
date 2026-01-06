@@ -14,6 +14,11 @@ import {
 } from 'lucide-react';
 import { useOnboardingStore } from '@/stores';
 
+interface FeatureShowcaseProps {
+  /** Callback to start the welcome tour */
+  onStartTour?: () => void;
+}
+
 interface Feature {
   icon: React.ReactNode;
   title: string;
@@ -68,7 +73,7 @@ const features: Feature[] = [
   },
 ];
 
-export function FeatureShowcase() {
+export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
   const { hasCompletedTour } = useOnboardingStore();
 
   const handleOpenDocs = () => {
@@ -76,7 +81,10 @@ export function FeatureShowcase() {
   };
 
   return (
-    <div className="flex h-full flex-col justify-center">
+    <div
+      className="flex h-full flex-col justify-center"
+      data-tour-target="feature-showcase"
+    >
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold">Features</h2>
@@ -113,9 +121,12 @@ export function FeatureShowcase() {
       {!hasCompletedTour && (
         <div className="mt-4 flex items-center justify-center gap-2 rounded-lg border border-dashed p-3">
           <PlayCircle className="text-primary h-4 w-4" />
-          <span className="text-muted-foreground text-xs">
-            Connect to a database to take the interactive tour
-          </span>
+          <button
+            onClick={onStartTour}
+            className="text-primary cursor-pointer border-none bg-transparent text-xs hover:underline"
+          >
+            Take the quick tour
+          </button>
         </div>
       )}
     </div>
