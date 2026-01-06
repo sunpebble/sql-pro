@@ -10,7 +10,15 @@ import {
   DropdownMenuTrigger,
 } from '@sqlpro/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Check, ChevronDown, Clock, Database, Plus, X } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  Clock,
+  Database,
+  KeyRound,
+  Plus,
+  X,
+} from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { cn } from '@/lib/utils';
@@ -359,13 +367,16 @@ export function ConnectionSelector({
                       R/O
                     </span>
                   )}
-                  {conn.isEncrypted && (
-                    <span className="bg-muted text-muted-foreground shrink-0 rounded px-1 py-0.5 text-[10px]">
-                      🔒
-                    </span>
-                  )}
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
+                  {conn.isEncrypted && (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <KeyRound className="h-3 w-3 text-green-500" />
+                      </TooltipTrigger>
+                      <TooltipContent>Encrypted database</TooltipContent>
+                    </Tooltip>
+                  )}
                   {conn.id === activeConnectionId && (
                     <Check className="text-primary h-4 w-4" />
                   )}
@@ -393,22 +404,27 @@ export function ConnectionSelector({
               {filteredRecentConnections.slice(0, 5).map((conn) => (
                 <DropdownMenuItem
                   key={conn.path}
-                  className="cursor-pointer gap-2"
+                  className="flex cursor-pointer items-center justify-between gap-2"
                   onClick={() => handleRecentClick(conn)}
                 >
-                  <Database className="text-muted-foreground h-4 w-4 shrink-0" />
-                  <span className="truncate">
-                    {conn.displayName || conn.filename}
-                  </span>
-                  {conn.readOnly && (
-                    <span className="bg-muted text-muted-foreground shrink-0 rounded px-1 py-0.5 text-[10px]">
-                      R/O
+                  <div className="flex min-w-0 items-center gap-2">
+                    <Database className="text-muted-foreground h-4 w-4 shrink-0" />
+                    <span className="truncate">
+                      {conn.displayName || conn.filename}
                     </span>
-                  )}
+                    {conn.readOnly && (
+                      <span className="bg-muted text-muted-foreground shrink-0 rounded px-1 py-0.5 text-[10px]">
+                        R/O
+                      </span>
+                    )}
+                  </div>
                   {conn.isEncrypted && (
-                    <span className="bg-muted text-muted-foreground shrink-0 rounded px-1 py-0.5 text-[10px]">
-                      🔒
-                    </span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <KeyRound className="h-3 w-3 shrink-0 text-green-500" />
+                      </TooltipTrigger>
+                      <TooltipContent>Encrypted database</TooltipContent>
+                    </Tooltip>
                   )}
                 </DropdownMenuItem>
               ))}
