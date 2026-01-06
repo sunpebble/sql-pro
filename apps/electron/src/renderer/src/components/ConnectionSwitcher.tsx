@@ -8,7 +8,7 @@ import {
   CommandItem,
   CommandList,
 } from '@sqlpro/ui/command';
-import { Check, Clock, Database } from 'lucide-react';
+import { Check, Clock, Database, Lock } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
@@ -238,9 +238,14 @@ export function ConnectionSwitcher({
                         {item.path}
                       </span>
                     </div>
-                    {item.isActive && (
-                      <Check className="text-primary h-4 w-4 shrink-0" />
-                    )}
+                    <div className="flex shrink-0 items-center gap-1">
+                      {item.isEncrypted && (
+                        <Lock className="h-4 w-4 text-amber-500" />
+                      )}
+                      {item.isActive && (
+                        <Check className="text-primary h-4 w-4" />
+                      )}
+                    </div>
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -268,11 +273,16 @@ export function ConnectionSwitcher({
                           {item.path}
                         </span>
                       </div>
-                      {item.lastOpened && (
-                        <span className="text-muted-foreground shrink-0 text-xs">
-                          {formatLastOpened(item.lastOpened)}
-                        </span>
-                      )}
+                      <div className="flex shrink-0 items-center gap-1">
+                        {item.isEncrypted && (
+                          <Lock className="h-4 w-4 text-amber-500" />
+                        )}
+                        {item.lastOpened && (
+                          <span className="text-muted-foreground text-xs">
+                            {formatLastOpened(item.lastOpened)}
+                          </span>
+                        )}
+                      </div>
                     </CommandItem>
                   );
                 })}
