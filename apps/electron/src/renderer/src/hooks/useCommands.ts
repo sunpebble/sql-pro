@@ -50,16 +50,42 @@ export function useCommands() {
 
   // Use refs to store latest values for use in command actions
   // This prevents re-registering commands when these values change
-  const themeStoreRef = useRef(useThemeStore.getState());
-  const connectionStoreRef = useRef(useConnectionStore.getState());
-  const changesStoreRef = useRef(useChangesStore.getState());
-  const tableDataStoreRef = useRef(useTableDataStore.getState());
-  const settingsStoreRef = useRef(useSettingsStore.getState());
-  const shortcutsStoreRef = useRef(useKeyboardShortcutsStore.getState());
-  const onboardingStoreRef = useRef(useOnboardingStore.getState());
+  // Initialize refs as null and populate them in useEffect to avoid calling
+  // getState() during render, which can trigger React's "getSnapshot should be cached" warning
+  const themeStoreRef = useRef<ReturnType<
+    typeof useThemeStore.getState
+  > | null>(null);
+  const connectionStoreRef = useRef<ReturnType<
+    typeof useConnectionStore.getState
+  > | null>(null);
+  const changesStoreRef = useRef<ReturnType<
+    typeof useChangesStore.getState
+  > | null>(null);
+  const tableDataStoreRef = useRef<ReturnType<
+    typeof useTableDataStore.getState
+  > | null>(null);
+  const settingsStoreRef = useRef<ReturnType<
+    typeof useSettingsStore.getState
+  > | null>(null);
+  const shortcutsStoreRef = useRef<ReturnType<
+    typeof useKeyboardShortcutsStore.getState
+  > | null>(null);
+  const onboardingStoreRef = useRef<ReturnType<
+    typeof useOnboardingStore.getState
+  > | null>(null);
 
-  // Keep refs up to date
+  // Keep refs up to date - initialize on mount and subscribe to updates
   useEffect(() => {
+    // Initialize refs with current state (called outside of render, in useEffect)
+    themeStoreRef.current = useThemeStore.getState();
+    connectionStoreRef.current = useConnectionStore.getState();
+    changesStoreRef.current = useChangesStore.getState();
+    tableDataStoreRef.current = useTableDataStore.getState();
+    settingsStoreRef.current = useSettingsStore.getState();
+    shortcutsStoreRef.current = useKeyboardShortcutsStore.getState();
+    onboardingStoreRef.current = useOnboardingStore.getState();
+
+    // Subscribe to future updates
     const unsubTheme = useThemeStore.subscribe((s) => {
       themeStoreRef.current = s;
     });
@@ -96,6 +122,14 @@ export function useCommands() {
   // Global keyboard shortcuts - now using customizable shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Safety check: ensure refs are initialized
+      if (
+        !shortcutsStoreRef.current ||
+        !connectionStoreRef.current ||
+        !settingsStoreRef.current
+      ) {
+        return;
+      }
       const { getShortcut } = shortcutsStoreRef.current;
       const { activeConnectionId } = connectionStoreRef.current;
 
@@ -319,10 +353,10 @@ export function useCommands() {
       const onboardingSkipBinding = getShortcut('onboarding.skip');
       if (
         matchesBinding(e, onboardingSkipBinding) &&
-        onboardingStoreRef.current.currentStep !== null
+        onboardingStoreRef.current?.currentStep !== null
       ) {
         e.preventDefault();
-        onboardingStoreRef.current.skip();
+        onboardingStoreRef.current!.skip();
         return;
       }
 
@@ -330,10 +364,10 @@ export function useCommands() {
       const onboardingNextBinding = getShortcut('onboarding.next');
       if (
         matchesBinding(e, onboardingNextBinding) &&
-        onboardingStoreRef.current.currentStep !== null
+        onboardingStoreRef.current?.currentStep !== null
       ) {
         e.preventDefault();
-        onboardingStoreRef.current.next();
+        onboardingStoreRef.current!.next();
       }
     };
 
@@ -344,9 +378,12 @@ export function useCommands() {
   // Register commands only once on mount
   useEffect(() => {
     // Helper to get formatted shortcut from store
+    // Note: shortcutsStoreRef.current is guaranteed to be initialized by the previous useEffect
     const getShortcutDisplay = (actionId: string): string | undefined => {
-      const binding = shortcutsStoreRef.current.getShortcut(
-        actionId as Parameters<typeof shortcutsStoreRef.current.getShortcut>[0]
+      const binding = shortcutsStoreRef.current!.getShortcut(
+        actionId as Parameters<
+          NonNullable<typeof shortcutsStoreRef.current>['getShortcut']
+        >[0]
       );
       return binding ? formatShortcutBinding(binding) : undefined;
     };
@@ -458,7 +495,7 @@ export function useCommands() {
             connectionTabOrder,
             activeConnectionId,
             setActiveConnection,
-          } = connectionStoreRef.current;
+          } = connectionStoreRef.current!;
           if (connectionTabOrder.length > 1 && activeConnectionId) {
             const currentIndex = connectionTabOrder.indexOf(activeConnectionId);
             const nextIndex = (currentIndex + 1) % connectionTabOrder.length;
@@ -466,7 +503,7 @@ export function useCommands() {
           }
         },
         disabled: () =>
-          connectionStoreRef.current.connectionTabOrder.length <= 1,
+          connectionStoreRef.current!.connectionTabOrder.length <= 1,
       },
       {
         id: 'conn.prev-connection',
@@ -480,7 +517,7 @@ export function useCommands() {
             connectionTabOrder,
             activeConnectionId,
             setActiveConnection,
-          } = connectionStoreRef.current;
+          } = connectionStoreRef.current!;
           if (connectionTabOrder.length > 1 && activeConnectionId) {
             const currentIndex = connectionTabOrder.indexOf(activeConnectionId);
             const prevIndex =
@@ -490,7 +527,7 @@ export function useCommands() {
           }
         },
         disabled: () =>
-          connectionStoreRef.current.connectionTabOrder.length <= 1,
+          connectionStoreRef.current!.connectionTabOrder.length <= 1,
       },
 
       // Table commands
@@ -502,7 +539,7 @@ export function useCommands() {
         category: 'table',
         keywords: ['refresh', 'table', 'data', 'reload', 'invalidate'],
         action: () => {
-          const { activeConnectionId } = connectionStoreRef.current;
+          const { activeConnectionId } = connectionStoreRef.current!;
           if (activeConnectionId) {
             queryClient.invalidateQueries({
               queryKey: ['tableData', activeConnectionId],
@@ -592,7 +629,7 @@ export function useCommands() {
         category: 'view',
         keywords: ['toggle', 'schema', 'details', 'columns', 'info'],
         action: () => {
-          settingsStoreRef.current.toggleSchemaDetails();
+          settingsStoreRef.current!.toggleSchemaDetails();
         },
       },
       {
@@ -619,7 +656,7 @@ export function useCommands() {
         category: 'theme',
         keywords: ['toggle', 'theme', 'dark', 'light', 'mode', 'sun', 'moon'],
         action: () => {
-          themeStoreRef.current.toggleTheme();
+          themeStoreRef.current!.toggleTheme();
         },
       },
 
@@ -690,10 +727,10 @@ export function useCommands() {
         category: 'onboarding',
         keywords: ['skip', 'tour', 'onboarding', 'exit'],
         action: () => {
-          onboardingStoreRef.current.skip();
+          onboardingStoreRef.current!.skip();
         },
         // Only show if onboarding is active
-        disabled: () => onboardingStoreRef.current.currentStep === null,
+        disabled: () => onboardingStoreRef.current?.currentStep === null,
       },
       {
         id: 'onboarding.next',
@@ -703,10 +740,10 @@ export function useCommands() {
         category: 'onboarding',
         keywords: ['next', 'step', 'tour', 'onboarding'],
         action: () => {
-          onboardingStoreRef.current.next();
+          onboardingStoreRef.current!.next();
         },
         // Only show if onboarding is active
-        disabled: () => onboardingStoreRef.current.currentStep === null,
+        disabled: () => onboardingStoreRef.current?.currentStep === null,
       },
     ];
 

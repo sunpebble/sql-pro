@@ -208,6 +208,63 @@ export interface GetSchemaRequest {
   connectionId: string;
 }
 
+// ============ Lazy Schema Loading Types ============
+
+/**
+ * Lightweight table/view information for initial schema list
+ * (without columns, indexes, triggers, foreign keys)
+ */
+export interface TableListItem {
+  name: string;
+  schema: string;
+  type: 'table' | 'view';
+  rowCount?: number;
+  sql: string;
+}
+
+/**
+ * Lightweight schema information containing only table/view names
+ */
+export interface SchemaListInfo {
+  name: string;
+  tables: TableListItem[];
+  views: TableListItem[];
+}
+
+/**
+ * Request for lightweight schema list (only table/view names)
+ */
+export interface GetSchemaListRequest {
+  connectionId: string;
+}
+
+/**
+ * Response for lightweight schema list
+ */
+export interface GetSchemaListResponse {
+  success: boolean;
+  schemas?: SchemaListInfo[];
+  error?: string;
+}
+
+/**
+ * Request for table details (columns, indexes, triggers, foreign keys)
+ */
+export interface GetTableDetailsRequest {
+  connectionId: string;
+  tableName: string;
+  schema?: string;
+}
+
+/**
+ * Response for table details
+ */
+export interface GetTableDetailsResponse {
+  success: boolean;
+  table?: TableInfo;
+  error?: string;
+}
+
 export interface ColumnInfo {
   name: string;
   type: string;
@@ -1181,7 +1238,8 @@ export type MenuAction =
   | 'export-query'
   | 'import-query'
   | 'export-schema'
-  | 'import-schema';
+  | 'import-schema'
+  | 'toggle-memory-monitor';
 
 // ============ Pro Features Types ============
 
@@ -2133,6 +2191,209 @@ export interface IPCChannels {
   ];
 }
 
+// ============ Memory Monitoring Types ============
+
+/**
+ * Memory thresholds configuration for monitoring
+ */
+export interface MemoryThresholds {
+  /** Warning threshold in bytes (default: 150MB) */
+  warning: number;
+  /** Critical threshold in bytes (default: 200MB) */
+  critical: number;
+  /** Heap usage percentage for warning (default: 0.7 = 70%) */
+  heapWarningPercent: number;
+  /** Heap usage percentage for critical (default: 0.85 = 85%) */
+  heapCriticalPercent: number;
+}
+
+/**
+ * Detailed memory statistics from process.memoryUsage() and v8.getHeapStatistics()
+ */
+export interface MemoryStats {
+  /** Process memory usage */
+  process: {
+    /** Resident Set Size - total memory allocated for the process */
+    rss: number;
+    /** Heap total - V8's memory usage for heap */
+    heapTotal: number;
+    /** Heap used - V8's actual heap memory used */
+    heapUsed: number;
+    /** Memory used by C++ objects bound to JavaScript objects */
+    external: number;
+    /** Memory allocated for ArrayBuffers and SharedArrayBuffers */
+    arrayBuffers: number;
+  };
+  /** V8 heap statistics */
+  heap: {
+    /** Total size of the heap */
+    totalHeapSize: number;
+    /** Size of executable heap */
+    totalHeapSizeExecutable: number;
+    /** Total physical size of the heap */
+    totalPhysicalSize: number;
+    /** Total available heap size */
+    totalAvailableSize: number;
+    /** Used heap size */
+    usedHeapSize: number;
+    /** Heap size limit */
+    heapSizeLimit: number;
+    /** Amount of memory for which malloc'd memory could be released back to OS */
+    mallocedMemory: number;
+    /** Peak amount of malloc'd memory */
+    peakMallocedMemory: number;
+    /** Number of native contexts */
+    numberOfNativeContexts: number;
+    /** Number of detached contexts */
+    numberOfDetachedContexts: number;
+    /** Does the heap have weak callbacks */
+    doesZapGarbage: number;
+    /** External memory size */
+    externalMemory: number;
+  };
+  /** Calculated metrics */
+  metrics: {
+    /** Heap usage percentage (usedHeapSize / heapSizeLimit) */
+    heapUsagePercent: number;
+    /** Total process memory in MB */
+    totalMemoryMB: number;
+    /** Used heap in MB */
+    usedHeapMB: number;
+    /** Available heap in MB */
+    availableHeapMB: number;
+  };
+  /** Current timestamp */
+  timestamp: number;
+}
+
+/**
+ * Memory pressure level indicating current memory state
+ */
+export type MemoryPressureLevel = 'normal' | 'warning' | 'critical';
+
+/**
+ * Request to get current memory statistics
+ */
+export interface GetMemoryStatsRequest {
+  /** Optional: include detailed V8 heap stats */
+  includeHeapDetails?: boolean;
+}
+
+/**
+ * Response containing current memory statistics
+ */
+export interface GetMemoryStatsResponse {
+  success: boolean;
+  stats?: MemoryStats;
+  pressureLevel?: MemoryPressureLevel;
+  error?: string;
+}
+
+/**
+ * Request to subscribe to memory updates
+ */
+export interface MemorySubscribeRequest {
+  /** Interval in milliseconds for updates (optional, uses default if not specified) */
+  intervalMs?: number;
+}
+
+/**
+ * Response for memory subscription
+ */
+export interface MemorySubscribeResponse {
+  success: boolean;
+  /** Subscription ID for unsubscribing */
+  subscriptionId?: string;
+  error?: string;
+}
+
+/**
+ * Request to unsubscribe from memory updates
+ */
+export interface MemoryUnsubscribeRequest {
+  /** Subscription ID to unsubscribe */
+  subscriptionId: string;
+}
+
+/**
+ * Response for memory unsubscription
+ */
+export interface MemoryUnsubscribeResponse {
+  success: boolean;
+  error?: string;
+}
+
+/**
+ * Request to trigger garbage collection
+ */
+export interface MemoryTriggerGCRequest {
+  /** Force GC even if not in high-pressure state */
+  force?: boolean;
+}
+
+/**
+ * Response for garbage collection trigger
+ */
+export interface MemoryTriggerGCResponse {
+  success: boolean;
+  /** Whether GC was actually triggered (may fail if --expose-gc not enabled) */
+  gcTriggered: boolean;
+  /** Memory stats after GC (if triggered) */
+  statsAfterGC?: MemoryStats;
+  error?: string;
+}
+
+/**
+ * Memory stats update event sent from main to renderer
+ */
+export interface MemoryStatsUpdateEvent {
+  stats: MemoryStats;
+  pressureLevel: MemoryPressureLevel;
+}
+
+/**
+ * Memory pressure change event sent from main to renderer
+ */
+export interface MemoryPressureChangeEvent {
+  previousLevel: MemoryPressureLevel;
+  currentLevel: MemoryPressureLevel;
+  stats: MemoryStats;
+}
+
+/**
+ * Renderer memory usage report (sent from renderer to main)
+ */
+export interface RendererMemoryReport {
+  /** Window/renderer ID */
+  windowId: number;
+  /** DOM node count estimate */
+  domNodeCount?: number;
+  /** React component count estimate (if available) */
+  componentCount?: number;
+  /** Custom memory metrics from renderer */
+  customMetrics?: Record<string, number>;
+  /** Timestamp of the report */
+  timestamp: number;
+}
+
+/**
+ * GC event with before/after stats
+ */
+export interface GCEvent {
+  /** Whether GC was successfully triggered */
+  triggered: boolean;
+  /** Reason for GC trigger */
+  reason: 'auto' | 'manual' | 'pressure';
+  /** Memory stats before GC */
+  statsBefore: MemoryStats;
+  /** Memory stats after GC (if triggered) */
+  statsAfter?: MemoryStats;
+  /** Memory freed in bytes (if triggered) */
+  freedBytes?: number;
+  /** Timestamp */
+  timestamp: number;
+}
+
 // ============ File Watcher Types ============
 
 /**
@@ -2155,6 +2416,8 @@ export const IPC_CHANNELS = {
   DB_CLOSE: 'db:close',
   DB_TEST_CONNECTION: 'db:test-connection',
   DB_GET_SCHEMA: 'db:get-schema',
+  DB_GET_SCHEMA_LIST: 'db:get-schema-list',
+  DB_GET_TABLE_DETAILS: 'db:get-table-details',
   DB_GET_TABLE_DATA: 'db:get-table-data',
   DB_EXECUTE_QUERY: 'db:execute-query',
   DB_VALIDATE_CHANGES: 'db:validate-changes',
@@ -2393,6 +2656,14 @@ export const IPC_CHANNELS = {
   // Schema export/import aliases
   SCHEMA_EXPORT: 'export:schema',
   SCHEMA_IMPORT: 'import:schema',
+
+  // Memory monitoring
+  MEMORY_GET_STATS: 'memory:get-stats',
+  MEMORY_SUBSCRIBE: 'memory:subscribe',
+  MEMORY_UNSUBSCRIBE: 'memory:unsubscribe',
+  MEMORY_TRIGGER_GC: 'memory:trigger-gc',
+  MEMORY_STATS_UPDATE: 'memory:stats-update',
+  MEMORY_PRESSURE_CHANGE: 'memory:pressure-change',
 } as const;
 
 // ============ Keyboard Shortcuts Types ============

@@ -254,6 +254,11 @@ export function useMenuActions() {
           importSchemaButton?.click();
           break;
         }
+
+        case 'toggle-memory-monitor': {
+          useDialogStore.getState().toggleMemoryMonitor();
+          break;
+        }
       }
     });
 

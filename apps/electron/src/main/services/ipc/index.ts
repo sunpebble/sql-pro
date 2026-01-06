@@ -7,6 +7,7 @@ import { setupExportHandlers } from './export';
 import { setupFoldersHandlers } from './folders';
 import { setupHistoryHandlers } from './history';
 import { setupImportHandlers } from './import';
+import { cleanupMemoryHandlers, setupMemoryHandlers } from './memory';
 import { setupPasswordHandlers } from './password';
 import { setupPreferencesHandlers } from './preferences';
 import { setupProHandlers } from './pro';
@@ -39,6 +40,7 @@ export function setupIpcHandlers(): void {
   setupUpdatesHandlers();
   setupRendererStoreHandlers();
   setupSqlLogHandlers();
+  setupMemoryHandlers();
 }
 
 export function cleanupIpcHandlers(): void {
@@ -47,4 +49,6 @@ export function cleanupIpcHandlers(): void {
   });
   // Also clean up renderer store channels
   cleanupRendererStoreHandlers();
+  // Clean up memory handler subscriptions
+  cleanupMemoryHandlers();
 }

@@ -9,7 +9,9 @@ import type {
   QueryPlanNode,
   QueryPlanStats,
   SchemaInfo,
+  SchemaListInfo,
   TableInfo,
+  TableListItem,
   TriggerInfo,
   ValidationResult,
 } from '@shared/types';
@@ -527,6 +529,199 @@ class DatabaseService {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to get schema',
+      };
+    }
+  }
+
+  /**
+   * Get a lightweight schema list containing only table/view names.
+   * This is more memory-efficient than getSchema() for initial loading.
+   * Column and index details should be fetched on-demand using getTableDetails().
+   */
+  getSchemaList(connectionId: string):
+    | {
+        success: true;
+        schemas: SchemaListInfo[];
+      }
+    | { success: false; error: string } {
+    const conn = this.connections.get(connectionId);
+    if (!conn) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      const startTime = performance.now();
+      const databaseList = conn.db
+        .prepare('PRAGMA database_list')
+        .all() as Array<{ seq: number; name: string; file: string }>;
+      const durationMs = performance.now() - startTime;
+
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.path,
+        sql: 'PRAGMA database_list',
+        durationMs,
+        success: true,
+        rowCount: databaseList.length,
+      });
+
+      const schemas: SchemaListInfo[] = [];
+
+      for (const dbInfo of databaseList) {
+        const schemaName = dbInfo.name;
+
+        const tables = this.getTableList(
+          conn.db,
+          'table',
+          schemaName,
+          connectionId,
+          conn.path
+        );
+        const views = this.getTableList(
+          conn.db,
+          'view',
+          schemaName,
+          connectionId,
+          conn.path
+        );
+
+        if (tables.length > 0 || views.length > 0 || schemaName === 'main') {
+          schemas.push({
+            name: schemaName,
+            tables,
+            views,
+          });
+        }
+      }
+
+      return { success: true, schemas };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : 'Failed to get schema list',
+      };
+    }
+  }
+
+  /**
+   * Get lightweight table/view list for a schema (without column/index details).
+   */
+  private getTableList(
+    db: Database.Database,
+    type: 'table' | 'view',
+    schema: string = 'main',
+    connectionId?: string,
+    dbPath?: string
+  ): TableListItem[] {
+    const sqliteType = type === 'table' ? 'table' : 'view';
+    const sql = `SELECT name, sql FROM "${schema}".sqlite_master WHERE type = ? AND name NOT LIKE 'sqlite_%' ORDER BY name`;
+    const startTime = performance.now();
+    const items = db.prepare(sql).all(sqliteType) as Array<{
+      name: string;
+      sql: string;
+    }>;
+    const durationMs = performance.now() - startTime;
+
+    if (connectionId) {
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath,
+        sql: sql.replace('?', `'${sqliteType}'`),
+        durationMs,
+        success: true,
+        rowCount: items.length,
+      });
+    }
+
+    return items.map((item) => {
+      // Only get row count for tables (not views), and skip expensive count for very large tables
+      let rowCount: number | undefined;
+      if (type === 'table') {
+        rowCount = this.getRowCount(db, item.name, schema);
+      }
+
+      return {
+        name: item.name,
+        schema,
+        type,
+        rowCount,
+        sql: item.sql || '',
+      };
+    });
+  }
+
+  /**
+   * Get detailed information for a specific table (columns, indexes, triggers, foreign keys).
+   * Use this for on-demand loading when a table is selected.
+   */
+  getTableDetails(
+    connectionId: string,
+    tableName: string,
+    schema: string = 'main'
+  ): { success: true; table: TableInfo } | { success: false; error: string } {
+    const conn = this.connections.get(connectionId);
+    if (!conn) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      // Check if table/view exists
+      const typeResult = conn.db
+        .prepare(
+          `SELECT type, sql FROM "${schema}".sqlite_master WHERE name = ? AND type IN ('table', 'view')`
+        )
+        .get(tableName) as { type: string; sql: string } | undefined;
+
+      if (!typeResult) {
+        return {
+          success: false,
+          error: `Table or view "${tableName}" not found in schema "${schema}"`,
+        };
+      }
+
+      const tableType = typeResult.type as 'table' | 'view';
+      const tableSql = typeResult.sql || '';
+
+      const columns = this.getColumns(conn.db, tableName, schema);
+      const primaryKey = columns
+        .filter((c) => c.isPrimaryKey)
+        .map((c) => c.name);
+      const foreignKeys = this.getForeignKeys(conn.db, tableName, schema);
+      const indexes =
+        tableType === 'table'
+          ? this.getIndexes(conn.db, tableName, schema)
+          : [];
+      const triggers =
+        tableType === 'table'
+          ? this.getTriggers(conn.db, tableName, schema)
+          : [];
+      const rowCount =
+        tableType === 'table'
+          ? this.getRowCount(conn.db, tableName, schema)
+          : undefined;
+
+      const table: TableInfo = {
+        name: tableName,
+        schema,
+        type: tableType,
+        columns,
+        primaryKey,
+        foreignKeys,
+        indexes,
+        triggers,
+        rowCount,
+        sql: tableSql,
+      };
+
+      return { success: true, table };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to get table details',
       };
     }
   }

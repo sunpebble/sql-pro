@@ -69,6 +69,8 @@ import type {
   GetCurrentWindowResponse,
   GetFoldersRequest,
   GetFoldersResponse,
+  GetMemoryStatsRequest,
+  GetMemoryStatsResponse,
   GetPasswordRequest,
   GetPasswordResponse,
   GetPreferencesResponse,
@@ -77,6 +79,8 @@ import type {
   GetQueryHistoryRequest,
   GetQueryHistoryResponse,
   GetRecentConnectionsResponse,
+  GetSchemaListRequest,
+  GetSchemaListResponse,
   GetSchemaRequest,
   GetSchemaResponse,
   GetSchemaSnapshotRequest,
@@ -86,6 +90,8 @@ import type {
   GetSqlLogsResponse,
   GetTableDataRequest,
   GetTableDataResponse,
+  GetTableDetailsRequest,
+  GetTableDetailsResponse,
   HasPasswordRequest,
   HasPasswordResponse,
   ImportBundleRequest,
@@ -95,6 +101,14 @@ import type {
   ImportSchemaRequest,
   ImportSchemaResponse,
   IsPasswordStorageAvailableResponse,
+  MemoryPressureChangeEvent,
+  MemoryStatsUpdateEvent,
+  MemorySubscribeRequest,
+  MemorySubscribeResponse,
+  MemoryTriggerGCRequest,
+  MemoryTriggerGCResponse,
+  MemoryUnsubscribeRequest,
+  MemoryUnsubscribeResponse,
   MenuAction,
   OpenDatabaseRequest,
   OpenDatabaseResponse,
@@ -182,6 +196,14 @@ const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.DB_CLOSE, request),
     getSchema: (request: GetSchemaRequest): Promise<GetSchemaResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_GET_SCHEMA, request),
+    getSchemaList: (
+      request: GetSchemaListRequest
+    ): Promise<GetSchemaListResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_GET_SCHEMA_LIST, request),
+    getTableDetails: (
+      request: GetTableDetailsRequest
+    ): Promise<GetTableDetailsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_GET_TABLE_DETAILS, request),
     getTableData: (
       request: GetTableDataRequest
     ): Promise<GetTableDataResponse> =>
@@ -444,6 +466,47 @@ const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.PRO_ACTIVATE, request),
     deactivate: (): Promise<ProDeactivateResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.PRO_DEACTIVATE),
+  },
+
+  // Memory monitoring operations
+  memory: {
+    getStats: (
+      request?: GetMemoryStatsRequest
+    ): Promise<GetMemoryStatsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_GET_STATS, request),
+    subscribe: (
+      request?: MemorySubscribeRequest
+    ): Promise<MemorySubscribeResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_SUBSCRIBE, request),
+    unsubscribe: (
+      request: MemoryUnsubscribeRequest
+    ): Promise<MemoryUnsubscribeResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_UNSUBSCRIBE, request),
+    triggerGC: (
+      request?: MemoryTriggerGCRequest
+    ): Promise<MemoryTriggerGCResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.MEMORY_TRIGGER_GC, request),
+    onStatsUpdate: (
+      callback: (event: MemoryStatsUpdateEvent) => void
+    ): (() => void) => {
+      const handler = (
+        _event: Electron.IpcRendererEvent,
+        statsEvent: MemoryStatsUpdateEvent
+      ) => callback(statsEvent);
+      ipcRenderer.on(IPC_CHANNELS.MEMORY_STATS_UPDATE, handler);
+      return () => ipcRenderer.off(IPC_CHANNELS.MEMORY_STATS_UPDATE, handler);
+    },
+    onPressureChange: (
+      callback: (event: MemoryPressureChangeEvent) => void
+    ): (() => void) => {
+      const handler = (
+        _event: Electron.IpcRendererEvent,
+        pressureEvent: MemoryPressureChangeEvent
+      ) => callback(pressureEvent);
+      ipcRenderer.on(IPC_CHANNELS.MEMORY_PRESSURE_CHANGE, handler);
+      return () =>
+        ipcRenderer.off(IPC_CHANNELS.MEMORY_PRESSURE_CHANGE, handler);
+    },
   },
 
   // Window operations

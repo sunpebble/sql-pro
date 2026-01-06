@@ -37,6 +37,12 @@ interface DialogState {
     isEncrypted: boolean;
   }) => void;
   closeChangePassword: () => void;
+
+  // Memory monitor panel (developer tools)
+  memoryMonitorOpen: boolean;
+  openMemoryMonitor: () => void;
+  closeMemoryMonitor: () => void;
+  toggleMemoryMonitor: () => void;
 }
 
 export const useDialogStore = create<DialogState>((set) => ({
@@ -77,4 +83,11 @@ export const useDialogStore = create<DialogState>((set) => ({
       changePasswordOpen: false,
       changePasswordTarget: null,
     }),
+
+  // Memory monitor panel (developer tools)
+  memoryMonitorOpen: false,
+  openMemoryMonitor: () => set({ memoryMonitorOpen: true }),
+  closeMemoryMonitor: () => set({ memoryMonitorOpen: false }),
+  toggleMemoryMonitor: () =>
+    set((state) => ({ memoryMonitorOpen: !state.memoryMonitorOpen })),
 }));

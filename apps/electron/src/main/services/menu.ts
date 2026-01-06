@@ -183,7 +183,18 @@ export function createApplicationMenu(): void {
           click: () => sendMenuAction('toggle-history'),
         },
         { type: 'separator' },
-        { role: 'toggleDevTools' },
+        {
+          label: 'Developer',
+          submenu: [
+            { role: 'toggleDevTools' },
+            { type: 'separator' },
+            {
+              label: 'Memory Monitor',
+              accelerator: 'CmdOrCtrl+Shift+M',
+              click: () => sendMenuAction('toggle-memory-monitor'),
+            },
+          ],
+        },
         { type: 'separator' },
         { role: 'resetZoom' },
         { role: 'zoomIn' },

@@ -1,5 +1,6 @@
 import type { ConnectionSettings } from './ConnectionSettingsDialog';
 import { useCallback, useEffect, useState } from 'react';
+import { MemoryMonitorPanel } from '@/components/dev-tools';
 import { sqlPro } from '@/lib/api';
 import { useConnectionStore, useDialogStore } from '@/stores';
 import { ChangePasswordDialog } from './ChangePasswordDialog';
@@ -39,6 +40,10 @@ export function GlobalDialogs() {
   const changePasswordOpen = useDialogStore((s) => s.changePasswordOpen);
   const changePasswordTarget = useDialogStore((s) => s.changePasswordTarget);
   const closeChangePassword = useDialogStore((s) => s.closeChangePassword);
+
+  // Memory monitor panel state from store
+  const memoryMonitorOpen = useDialogStore((s) => s.memoryMonitorOpen);
+  const closeMemoryMonitor = useDialogStore((s) => s.closeMemoryMonitor);
 
   // Computed properties for connection settings dialog
   const [editFilename, setEditFilename] = useState('');
@@ -142,6 +147,15 @@ export function GlobalDialogs() {
         onClick={() => useDialogStore.getState().openSettings()}
         aria-hidden="true"
       />
+
+      {/* Memory Monitor Panel - renders as a fixed sidebar when open */}
+      {memoryMonitorOpen && (
+        <div className="bg-background/80 fixed inset-0 z-50 backdrop-blur-sm">
+          <div className="fixed top-0 right-0 bottom-0 z-50 shadow-lg">
+            <MemoryMonitorPanel isOpen onClose={closeMemoryMonitor} />
+          </div>
+        </div>
+      )}
     </>
   );
 }
