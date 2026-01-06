@@ -1225,7 +1225,8 @@ export type MenuAction =
   | 'export-query'
   | 'import-query'
   | 'export-schema'
-  | 'import-schema';
+  | 'import-schema'
+  | 'toggle-memory-monitor';
 
 // ============ Pro Features Types ============
 

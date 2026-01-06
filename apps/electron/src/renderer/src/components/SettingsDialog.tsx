@@ -40,6 +40,7 @@ import {
   Sparkles,
   Sun,
   Unlink,
+  Zap,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -53,6 +54,7 @@ import {
   DEFAULT_MODELS,
   PRESET_INFO,
   useAIStore,
+  useDialogStore,
   useKeyboardShortcutsStore,
   useProStore,
   useSettingsStore,
@@ -459,6 +461,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
             {/* AI Settings Section */}
             <AISettingsSection />
+
+            <Separator />
+
+            {/* Developer Section */}
+            <DeveloperSection onOpenChange={onOpenChange} />
           </div>
         </ScrollArea>
       </DialogContent>
@@ -937,6 +944,51 @@ function AISettingsSection() {
           </PopoverContent>
         </Popover>
       </div>
+    </div>
+  );
+}
+
+interface DeveloperSectionProps {
+  onOpenChange: (open: boolean) => void;
+}
+
+function DeveloperSection({ onOpenChange }: DeveloperSectionProps) {
+  const openMemoryMonitor = useDialogStore((s) => s.openMemoryMonitor);
+
+  const handleOpenMemoryMonitor = () => {
+    // Close settings dialog and open memory monitor
+    onOpenChange(false);
+    openMemoryMonitor();
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <Zap className="h-4 w-4" />
+        <Label className="text-sm font-medium">Developer</Label>
+      </div>
+
+      <button
+        onClick={handleOpenMemoryMonitor}
+        className="hover:border-primary hover:bg-muted flex w-full items-center justify-between rounded-lg border p-3 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-full">
+            <Zap className="text-muted-foreground h-5 w-5" />
+          </div>
+          <div className="text-left">
+            <span className="text-sm font-medium">Memory Monitor</span>
+            <p className="text-muted-foreground text-xs">
+              View real-time memory usage and cache statistics
+            </p>
+          </div>
+        </div>
+        <ChevronRight className="text-muted-foreground h-5 w-5" />
+      </button>
+
+      <p className="text-muted-foreground text-xs">
+        Access via menu: View → Developer → Memory Monitor (⌘⇧M)
+      </p>
     </div>
   );
 }

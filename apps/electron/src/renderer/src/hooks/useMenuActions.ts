@@ -7,6 +7,7 @@ import {
   useChangesStore,
   useCommandPaletteStore,
   useConnectionStore,
+  useDialogStore,
   useTableDataStore,
 } from '@/stores';
 
@@ -258,6 +259,11 @@ export function useMenuActions() {
             'button[data-action="import-schema"]'
           );
           importSchemaButton?.click();
+          break;
+        }
+
+        case 'toggle-memory-monitor': {
+          useDialogStore.getState().toggleMemoryMonitor();
           break;
         }
       }
