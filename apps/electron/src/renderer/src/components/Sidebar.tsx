@@ -29,6 +29,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@sqlpro/ui/dropdown-menu';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@sqlpro/ui/empty';
 import { Input } from '@sqlpro/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
 import { ScrollArea, ScrollBar } from '@sqlpro/ui/scroll-area';
@@ -521,6 +528,23 @@ export function Sidebar({
     getTableMetadata,
   ]);
 
+  // Check if the database has any tables/views at all (before filtering)
+  const isDatabaseEmpty = useMemo(() => {
+    if (!schema?.schemas) return true;
+    return schema.schemas.every(
+      (s) => s.tables.length === 0 && s.views.length === 0
+    );
+  }, [schema?.schemas]);
+
+  // Check if current filters result in no items
+  const hasNoFilteredResults = useMemo(() => {
+    if (isDatabaseEmpty) return false; // Let isDatabaseEmpty handle this case
+    return filteredSchemas.every(
+      (s) =>
+        s.tables.length === 0 && s.views.length === 0 && s.triggers.length === 0
+    );
+  }, [filteredSchemas, isDatabaseEmpty]);
+
   // Combined list of navigable items for vim navigation
   const navigableItems = useMemo(() => {
     const items: Array<{ type: 'table' | 'view'; item: TableSchema }> = [];
@@ -938,13 +962,39 @@ export function Sidebar({
                 />
               ))}
 
-              {/* Empty State */}
-              {filteredSchemas.length === 0 && (
-                <div className="text-muted-foreground py-8 text-center">
-                  {searchQuery
-                    ? 'No tables match your search'
-                    : 'No tables found'}
-                </div>
+              {/* Empty State - Database has no tables */}
+              {isDatabaseEmpty && (
+                <Empty className="border-0 px-4 py-8">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <Database className="size-5" />
+                    </EmptyMedia>
+                    <EmptyTitle>No tables yet</EmptyTitle>
+                    <EmptyDescription>
+                      This database is empty. Use the SQL Query tab to create
+                      tables.
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
+              )}
+
+              {/* Empty State - Filters result in no matches */}
+              {!isDatabaseEmpty && hasNoFilteredResults && (
+                <Empty className="border-0 px-4 py-8">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <Search className="size-5" />
+                    </EmptyMedia>
+                    <EmptyTitle>No results</EmptyTitle>
+                    <EmptyDescription>
+                      {searchQuery
+                        ? 'No tables match your search'
+                        : activeTagFilter
+                          ? 'No tables with this tag'
+                          : 'No tables found'}
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
               )}
             </>
           )}
