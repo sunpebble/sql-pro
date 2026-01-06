@@ -242,7 +242,6 @@ export function createApplicationMenu(): void {
       submenu: [
         {
           label: 'Keyboard Shortcuts',
-          accelerator: getAccelerator('help.shortcuts'),
           click: () => sendMenuAction('show-shortcuts'),
         },
         { type: 'separator' },

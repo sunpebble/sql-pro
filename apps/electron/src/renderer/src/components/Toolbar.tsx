@@ -17,11 +17,8 @@ import {
   HelpCircle,
   KeyRound,
   Lock,
-  Monitor,
-  Moon,
   RefreshCw,
   Settings,
-  Sun,
   X,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -36,7 +33,6 @@ import {
   useDialogStore,
   useOnboardingStore,
   useTableDataStore,
-  useThemeStore,
 } from '@/stores';
 
 interface ToolbarProps {
@@ -61,7 +57,6 @@ export function Toolbar({ onOpenChanges }: ToolbarProps) {
     changes,
   } = useChangesStore();
   const { resetConnection } = useTableDataStore();
-  const { theme, setTheme } = useThemeStore();
 
   // Global stores for dialogs
   const openConnectionSettings = useDialogStore(
@@ -200,39 +195,6 @@ export function Toolbar({ onOpenChanges }: ToolbarProps) {
     });
   };
 
-  const cycleTheme = () => {
-    const themes: Array<'light' | 'dark' | 'system'> = [
-      'light',
-      'dark',
-      'system',
-    ];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
-  };
-
-  const getThemeIcon = () => {
-    switch (theme) {
-      case 'light':
-        return <Sun className="h-4 w-4" />;
-      case 'dark':
-        return <Moon className="h-4 w-4" />;
-      default:
-        return <Monitor className="h-4 w-4" />;
-    }
-  };
-
-  const getThemeLabel = () => {
-    switch (theme) {
-      case 'light':
-        return 'Light mode';
-      case 'dark':
-        return 'Dark mode';
-      default:
-        return 'System theme';
-    }
-  };
-
   if (!connection) return null;
 
   const currentConnectionChanges = activeConnectionId
@@ -333,16 +295,6 @@ export function Toolbar({ onOpenChanges }: ToolbarProps) {
               </span>
             </button>
           )}
-
-          {/* Theme Toggle */}
-          <Tooltip>
-            <TooltipTrigger>
-              <Button variant="ghost" size="icon" onClick={cycleTheme}>
-                {getThemeIcon()}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{getThemeLabel()}</TooltipContent>
-          </Tooltip>
 
           {/* Layout Buttons - VSCode style panel toggles */}
           <LayoutButtons />

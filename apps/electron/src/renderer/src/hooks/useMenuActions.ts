@@ -7,6 +7,7 @@ import {
   useChangesStore,
   useCommandPaletteStore,
   useConnectionStore,
+  useDialogStore,
   useTableDataStore,
 } from '@/stores';
 
@@ -216,16 +217,9 @@ export function useMenuActions() {
         }
 
         case 'show-shortcuts': {
-          // Try to open keyboard shortcuts settings
-          const settingsButton =
-            document.querySelector<HTMLButtonElement>(
-              'button[data-action="open-settings"]'
-            ) ||
-            document.querySelector<HTMLButtonElement>(
-              'button[aria-label="Settings"]'
-            );
-          settingsButton?.click();
-          // Note: This opens settings, user can then navigate to shortcuts tab
+          // Open keyboard shortcuts dialog directly
+          const dialogStore = useDialogStore.getState();
+          dialogStore.openShortcuts();
           break;
         }
 

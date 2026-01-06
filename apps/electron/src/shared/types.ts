@@ -2451,8 +2451,6 @@ export type ShortcutAction =
   | 'conn.prev-connection'
   // Settings
   | 'settings.open'
-  // Help
-  | 'help.shortcuts'
   // Onboarding
   | 'onboarding.skip'
   | 'onboarding.next';
@@ -2548,7 +2546,6 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
-  'help.shortcuts': { key: '/', modifiers: { cmd: true } },
   'onboarding.skip': { key: 'Escape', modifiers: {} },
   'onboarding.next': { key: 'Enter', modifiers: {} },
 };

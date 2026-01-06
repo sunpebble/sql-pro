@@ -808,83 +808,11 @@ export function Sidebar({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Tag Filter */}
-          <Popover>
-            <PopoverTrigger
-              nativeButton
-              render={
-                <Button
-                  variant={activeTagFilter ? 'secondary' : 'ghost'}
-                  size="sm"
-                  className="h-7 shrink-0 gap-1 px-2"
-                >
-                  <Filter className="h-3.5 w-3.5 shrink-0" />
-                  {activeTagFilter ? (
-                    <Badge
-                      variant="secondary"
-                      className="h-5 max-w-15 truncate px-1 text-xs"
-                    >
-                      {activeTagFilter}
-                    </Badge>
-                  ) : (
-                    <span className="text-xs">Filter</span>
-                  )}
-                </Button>
-              }
-            />
-
-            <PopoverContent align="start" className="w-48 p-2">
-              <div className="space-y-2">
-                <div className="text-sm font-medium">Filter by Tag</div>
-                {availableTags.length === 0 ? (
-                  <div className="text-muted-foreground text-xs">
-                    No tags created yet.
-                    <br />
-                    Right-click a table to add tags.
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    {activeTagFilter && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 w-full justify-start gap-2 px-2 text-xs"
-                        onClick={() => setActiveTagFilter(null)}
-                      >
-                        <X className="h-3 w-3" />
-                        Clear filter
-                      </Button>
-                    )}
-                    {availableTags.map((tag) => (
-                      <Button
-                        key={tag}
-                        variant={
-                          activeTagFilter === tag ? 'secondary' : 'ghost'
-                        }
-                        size="sm"
-                        className="h-7 w-full justify-start gap-2 px-2 text-xs"
-                        onClick={() =>
-                          setActiveTagFilter(
-                            activeTagFilter === tag ? null : tag
-                          )
-                        }
-                      >
-                        <Tag className="h-3 w-3" />
-                        {tag}
-                        {activeTagFilter === tag && (
-                          <Check className="ml-auto h-3 w-3" />
-                        )}
-                      </Button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          {/* Tag Manager */}
-          <TagManager
+          {/* Filter & Tags Combined */}
+          <FilterTagsPopover
             availableTags={availableTags}
+            activeTagFilter={activeTagFilter}
+            onSetActiveTagFilter={setActiveTagFilter}
             onAddTag={addTag}
             onRemoveTag={removeTag}
           />
@@ -1555,16 +1483,24 @@ function TriggerItem({ trigger }: TriggerItemProps) {
   );
 }
 
-// Tag Manager Component
-interface TagManagerProps {
+// Combined Filter & Tags Popover Component
+interface FilterTagsPopoverProps {
   availableTags: string[];
+  activeTagFilter: string | null;
+  onSetActiveTagFilter: (tag: string | null) => void;
   onAddTag: (tag: string) => void;
   onRemoveTag: (tag: string) => void;
 }
 
-function TagManager({ availableTags, onAddTag, onRemoveTag }: TagManagerProps) {
+function FilterTagsPopover({
+  availableTags,
+  activeTagFilter,
+  onSetActiveTagFilter,
+  onAddTag,
+  onRemoveTag,
+}: FilterTagsPopoverProps) {
   const [newTagInput, setNewTagInput] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'filter' | 'manage'>('filter');
 
   const handleAddTag = () => {
     if (newTagInput.trim()) {
@@ -1574,84 +1510,165 @@ function TagManager({ availableTags, onAddTag, onRemoveTag }: TagManagerProps) {
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover>
       <PopoverTrigger
         nativeButton
         render={
-          <Button variant="ghost" size="sm" className="h-7 shrink-0 gap-1 px-2">
-            <Tag className="h-3.5 w-3.5 shrink-0" />
-            <span className="text-xs">Tags</span>
-            {availableTags.length > 0 && (
-              <Badge variant="secondary" className="h-4 px-1 text-[10px]">
+          <Button
+            variant={activeTagFilter ? 'secondary' : 'ghost'}
+            size="sm"
+            className="h-7 shrink-0 gap-1 px-2"
+          >
+            <Filter className="h-3.5 w-3.5 shrink-0" />
+            {activeTagFilter ? (
+              <Badge
+                variant="secondary"
+                className="h-5 max-w-15 truncate px-1 text-xs"
+              >
+                {activeTagFilter}
+              </Badge>
+            ) : (
+              <span className="text-xs">Filter</span>
+            )}
+            {!activeTagFilter && availableTags.length > 0 && (
+              <Badge variant="outline" className="h-4 px-1 text-[10px]">
                 {availableTags.length}
               </Badge>
             )}
           </Button>
         }
       />
-      <PopoverContent align="start" className="w-56 p-2">
-        <div className="space-y-2">
-          <div className="text-sm font-medium">Manage Tags</div>
+      <PopoverContent align="start" className="w-56 p-0">
+        {/* Tab Header */}
+        <div className="flex border-b">
+          <button
+            className={cn(
+              'flex-1 px-3 py-2 text-xs font-medium transition-colors',
+              activeTab === 'filter'
+                ? 'border-primary text-foreground border-b-2'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+            onClick={() => setActiveTab('filter')}
+          >
+            Filter
+          </button>
+          <button
+            className={cn(
+              'flex-1 px-3 py-2 text-xs font-medium transition-colors',
+              activeTab === 'manage'
+                ? 'border-primary text-foreground border-b-2'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+            onClick={() => setActiveTab('manage')}
+          >
+            Manage Tags
+          </button>
+        </div>
 
-          {/* Add new tag */}
-          <div className="flex gap-1">
-            <Input
-              placeholder="New tag name..."
-              value={newTagInput}
-              onChange={(e) => setNewTagInput(e.target.value)}
-              onKeyDown={(e) => {
-                e.stopPropagation();
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleAddTag();
-                }
-              }}
-              className="h-7 text-xs"
-            />
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-7 px-2"
-              onClick={handleAddTag}
-              disabled={!newTagInput.trim()}
-            >
-              <Check className="h-3 w-3" />
-            </Button>
-          </div>
-
-          {/* Existing tags */}
-          {availableTags.length > 0 ? (
+        {/* Tab Content */}
+        <div className="p-2">
+          {activeTab === 'filter' ? (
             <div className="space-y-1">
-              <div className="text-muted-foreground text-xs">
-                Existing tags:
-              </div>
-              <ScrollArea className="h-32">
-                <div className="space-y-0.5">
-                  {availableTags.map((tag) => (
-                    <div
-                      key={tag}
-                      className="hover:bg-destructive/10 group flex items-center justify-between rounded px-2 py-1"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Tag className="text-muted-foreground h-3 w-3" />
-                        <span className="text-sm">{tag}</span>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-muted-foreground hover:text-destructive h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
-                        onClick={() => onRemoveTag(tag)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
+              {availableTags.length === 0 ? (
+                <div className="text-muted-foreground py-2 text-center text-xs">
+                  No tags created yet.
+                  <br />
+                  Go to "Manage Tags" to create one.
                 </div>
-              </ScrollArea>
+              ) : (
+                <>
+                  {activeTagFilter && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 w-full justify-start gap-2 px-2 text-xs"
+                      onClick={() => onSetActiveTagFilter(null)}
+                    >
+                      <X className="h-3 w-3" />
+                      Clear filter
+                    </Button>
+                  )}
+                  {availableTags.map((tag) => (
+                    <Button
+                      key={tag}
+                      variant={activeTagFilter === tag ? 'secondary' : 'ghost'}
+                      size="sm"
+                      className="h-7 w-full justify-start gap-2 px-2 text-xs"
+                      onClick={() =>
+                        onSetActiveTagFilter(
+                          activeTagFilter === tag ? null : tag
+                        )
+                      }
+                    >
+                      <Tag className="h-3 w-3" />
+                      {tag}
+                      {activeTagFilter === tag && (
+                        <Check className="ml-auto h-3 w-3" />
+                      )}
+                    </Button>
+                  ))}
+                </>
+              )}
             </div>
           ) : (
-            <div className="text-muted-foreground text-xs">
-              No tags yet. Create one above or right-click a table to add tags.
+            <div className="space-y-2">
+              {/* Add new tag */}
+              <div className="flex gap-1">
+                <Input
+                  placeholder="New tag name..."
+                  value={newTagInput}
+                  onChange={(e) => setNewTagInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddTag();
+                    }
+                  }}
+                  className="h-7 text-xs"
+                />
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="h-7 px-2"
+                  onClick={handleAddTag}
+                  disabled={!newTagInput.trim()}
+                >
+                  <Check className="h-3 w-3" />
+                </Button>
+              </div>
+
+              {/* Existing tags */}
+              {availableTags.length > 0 ? (
+                <ScrollArea className="h-32">
+                  <div className="space-y-0.5">
+                    {availableTags.map((tag) => (
+                      <div
+                        key={tag}
+                        className="hover:bg-destructive/10 group flex items-center justify-between rounded px-2 py-1"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Tag className="text-muted-foreground h-3 w-3" />
+                          <span className="text-sm">{tag}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-muted-foreground hover:text-destructive h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
+                          onClick={() => onRemoveTag(tag)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              ) : (
+                <div className="text-muted-foreground text-xs">
+                  No tags yet. Create one above or right-click a table to add
+                  tags.
+                </div>
+              )}
             </div>
           )}
         </div>

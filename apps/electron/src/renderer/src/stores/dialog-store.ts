@@ -11,6 +11,11 @@ interface DialogState {
   openSettings: () => void;
   closeSettings: () => void;
 
+  // Keyboard shortcuts dialog
+  shortcutsOpen: boolean;
+  openShortcuts: () => void;
+  closeShortcuts: () => void;
+
   // Connection settings dialog for editing existing connections
   connectionSettingsOpen: boolean;
   connectionSettingsTarget: RecentConnection | null;
@@ -39,6 +44,11 @@ export const useDialogStore = create<DialogState>((set) => ({
   settingsOpen: false,
   openSettings: () => set({ settingsOpen: true }),
   closeSettings: () => set({ settingsOpen: false }),
+
+  // Keyboard shortcuts dialog
+  shortcutsOpen: false,
+  openShortcuts: () => set({ shortcutsOpen: true }),
+  closeShortcuts: () => set({ shortcutsOpen: false }),
 
   // Connection settings dialog
   connectionSettingsOpen: false,

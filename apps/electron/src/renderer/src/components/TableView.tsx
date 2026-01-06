@@ -55,7 +55,6 @@ import {
   ColumnStats,
   DataQualityIndicator,
   DataTable,
-  KeyboardShortcutsOverlay,
   QuickFilterTags,
   SkeletonTable,
 } from './data-table';
@@ -884,9 +883,6 @@ export function TableView({ tableOverride }: TableViewProps) {
         selectedRowCount={selectedRowIds.length}
         onApply={handleBulkEdit}
       />
-
-      {/* Keyboard Shortcuts Overlay - Floating button */}
-      <KeyboardShortcutsOverlay />
     </div>
   );
 }

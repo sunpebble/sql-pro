@@ -227,14 +227,6 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
     category: 'settings',
     scope: 'global',
   },
-  // Help
-  {
-    id: 'help.shortcuts',
-    label: 'Show Keyboard Shortcuts',
-    description: 'Open the keyboard shortcuts help',
-    category: 'help',
-    scope: 'global',
-  },
 ];
 
 // Re-export DEFAULT_SHORTCUTS from shared
@@ -274,7 +266,6 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
-  'help.shortcuts': { key: 'k', modifiers: { cmd: true } },
   'onboarding.skip': { key: 'Escape', modifiers: {} },
   'onboarding.next': { key: 'Enter', modifiers: {} },
 };
@@ -313,7 +304,6 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
-  'help.shortcuts': { key: '/', modifiers: { cmd: true } },
   'onboarding.skip': { key: 'Escape', modifiers: {} },
   'onboarding.next': { key: 'Enter', modifiers: {} },
 };

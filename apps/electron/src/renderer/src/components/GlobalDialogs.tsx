@@ -4,6 +4,7 @@ import { sqlPro } from '@/lib/api';
 import { useConnectionStore, useDialogStore } from '@/stores';
 import { ChangePasswordDialog } from './ChangePasswordDialog';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
+import { KeyboardShortcutsSettings } from './KeyboardShortcutsSettings';
 import { SettingsDialog } from './SettingsDialog';
 
 /**
@@ -18,6 +19,10 @@ export function GlobalDialogs() {
   // Settings dialog state from store
   const settingsOpen = useDialogStore((s) => s.settingsOpen);
   const closeSettings = useDialogStore((s) => s.closeSettings);
+
+  // Keyboard shortcuts dialog state from store
+  const shortcutsOpen = useDialogStore((s) => s.shortcutsOpen);
+  const closeShortcuts = useDialogStore((s) => s.closeShortcuts);
 
   // Connection settings dialog state from store
   const connectionSettingsOpen = useDialogStore(
@@ -90,6 +95,12 @@ export function GlobalDialogs() {
     <>
       {/* Global Settings Dialog */}
       <SettingsDialog open={settingsOpen} onOpenChange={closeSettings} />
+
+      {/* Global Keyboard Shortcuts Dialog */}
+      <KeyboardShortcutsSettings
+        open={shortcutsOpen}
+        onOpenChange={closeShortcuts}
+      />
 
       {/* Global Connection Settings Dialog for editing connections */}
       {connectionSettingsTarget && (
