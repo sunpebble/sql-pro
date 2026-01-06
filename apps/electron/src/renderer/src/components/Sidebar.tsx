@@ -1099,42 +1099,49 @@ function SchemaSection({
   const triggersExpanded = expandedSections[triggersKey] !== false;
 
   return (
-    <div className="mb-2 min-w-0">
+    <div className="min-w-0">
       {/* Schema Header (only shown when multiple schemas) */}
       {showSchemaHeader && (
         <button
           onClick={onToggleSchema}
-          className="text-muted-foreground hover:bg-accent flex w-full items-center gap-1 rounded px-2 py-1 font-medium"
+          className="text-muted-foreground hover:bg-accent/50 flex w-full items-center gap-1.5 rounded-sm px-1.5 py-1 text-xs font-medium tracking-wide uppercase"
         >
           {isSchemaExpanded ? (
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-3 w-3" />
           ) : (
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3 w-3" />
           )}
-          <Database className="h-3.5 w-3.5" />
-          <span className="ml-1">{schemaInfo.name}</span>
+          <Database className="h-3 w-3" />
+          <span>{schemaInfo.name}</span>
         </button>
       )}
 
       {/* Schema Content */}
       {isSchemaExpanded && (
-        <div className={showSchemaHeader ? 'ml-4' : ''}>
+        <div
+          className={
+            showSchemaHeader ? 'border-border/40 ml-3 border-l pl-2' : ''
+          }
+        >
           {/* Tables Section */}
           {schemaInfo.tables.length > 0 && (
-            <div className="mb-1">
+            <div>
               <button
                 onClick={() => onToggleSection(tablesKey)}
-                className="text-muted-foreground hover:bg-accent flex w-full items-center gap-1 rounded px-2 py-1 font-medium"
+                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[11px] font-medium tracking-wider uppercase"
               >
                 {tablesExpanded ? (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-3 w-3" />
                 ) : (
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3 w-3" />
                 )}
-                Tables ({schemaInfo.tables.length})
+                Tables
+                <span className="text-muted-foreground/60 font-normal">
+                  ({schemaInfo.tables.length})
+                </span>
               </button>
               {tablesExpanded && (
-                <div className="mt-1 min-w-0 space-y-0.5 px-0.5">
+                <div className="border-border/40 ml-1.5 min-w-0 border-l pl-2">
                   {schemaInfo.tables.map((table, idx) => {
                     const itemIdx = getItemIndex(schemaInfo.name, 'table', idx);
                     const tableKey = getTableKey(
@@ -1180,20 +1187,23 @@ function SchemaSection({
 
           {/* Views Section */}
           {schemaInfo.views.length > 0 && (
-            <div className="mb-1">
+            <div>
               <button
                 onClick={() => onToggleSection(viewsKey)}
-                className="text-muted-foreground hover:bg-accent flex w-full items-center gap-1 rounded px-2 py-1 font-medium"
+                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[11px] font-medium tracking-wider uppercase"
               >
                 {viewsExpanded ? (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-3 w-3" />
                 ) : (
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3 w-3" />
                 )}
-                Views ({schemaInfo.views.length})
+                Views
+                <span className="text-muted-foreground/60 font-normal">
+                  ({schemaInfo.views.length})
+                </span>
               </button>
               {viewsExpanded && (
-                <div className="mt-1 space-y-0.5">
+                <div className="border-border/40 ml-1.5 border-l pl-2">
                   {schemaInfo.views.map((view, idx) => {
                     const itemIdx = getItemIndex(schemaInfo.name, 'view', idx);
                     const tableKey = getTableKey(
@@ -1243,17 +1253,20 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(triggersKey)}
-                className="text-muted-foreground hover:bg-accent flex w-full items-center gap-1 rounded px-2 py-1 font-medium"
+                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[11px] font-medium tracking-wider uppercase"
               >
                 {triggersExpanded ? (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-3 w-3" />
                 ) : (
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3 w-3" />
                 )}
-                Triggers ({schemaInfo.triggers.length})
+                Triggers
+                <span className="text-muted-foreground/60 font-normal">
+                  ({schemaInfo.triggers.length})
+                </span>
               </button>
               {triggersExpanded && (
-                <div className="mt-1 space-y-0.5">
+                <div className="border-border/40 ml-1.5 border-l pl-2">
                   {schemaInfo.triggers.map((trigger) => (
                     <TriggerItem
                       key={`${schemaInfo.name}:${trigger.name}`}
@@ -1326,26 +1339,26 @@ function TableItem({
         <button
           onClick={onClick}
           className={cn(
-            'flex w-full items-center gap-2 overflow-hidden rounded-md px-2 py-1.5 text-sm transition-all duration-150',
+            'flex w-full items-center gap-1.5 overflow-hidden rounded px-1.5 py-1 text-[13px] transition-colors',
             isSelected
-              ? 'bg-primary/10 text-primary font-medium'
-              : 'hover:bg-accent/50 text-foreground',
-            isFocused && !isSelected && 'ring-primary/50 ring-2 ring-inset'
+              ? 'bg-primary/15 text-primary font-medium'
+              : 'hover:bg-accent/50 text-foreground/90',
+            isFocused && !isSelected && 'ring-primary/50 ring-1 ring-inset'
           )}
         >
           {isPinned && <Pin className="text-primary h-3 w-3 shrink-0" />}
           {isView ? (
             <Eye
               className={cn(
-                'h-4 w-4 shrink-0',
-                isSelected ? 'text-primary/70' : 'text-muted-foreground'
+                'h-3.5 w-3.5 shrink-0',
+                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
               )}
             />
           ) : (
             <Table
               className={cn(
-                'h-4 w-4 shrink-0',
-                isSelected ? 'text-primary/70' : 'text-muted-foreground'
+                'h-3.5 w-3.5 shrink-0',
+                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
               )}
             />
           )}
@@ -1373,8 +1386,8 @@ function TableItem({
           {table.rowCount !== undefined && (
             <span
               className={cn(
-                'shrink-0 text-xs tabular-nums',
-                isSelected ? 'text-primary/70' : 'text-muted-foreground'
+                'shrink-0 text-[11px] tabular-nums',
+                isSelected ? 'text-primary/60' : 'text-muted-foreground/60'
               )}
             >
               {table.rowCount.toLocaleString()}
@@ -1504,10 +1517,10 @@ interface TriggerItemProps {
 
 function TriggerItem({ trigger }: TriggerItemProps) {
   return (
-    <div className="text-foreground hover:bg-accent/50 flex w-full items-center gap-2 rounded px-2 py-1.5 transition-colors">
-      <Zap className="text-muted-foreground h-4 w-4 shrink-0" />
+    <div className="text-foreground/90 hover:bg-accent/50 flex w-full items-center gap-1.5 rounded px-1.5 py-1 text-[13px] transition-colors">
+      <Zap className="text-muted-foreground/70 h-3.5 w-3.5 shrink-0" />
       <span className="truncate">{trigger.name}</span>
-      <span className="text-muted-foreground ml-auto">
+      <span className="text-muted-foreground/60 ml-auto text-[11px]">
         {trigger.timing} {trigger.event}
       </span>
     </div>
