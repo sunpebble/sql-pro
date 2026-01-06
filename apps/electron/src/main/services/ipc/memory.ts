@@ -243,16 +243,16 @@ export function setupMemoryHandlers(): void {
           };
         }
 
-        const gcTriggered = memoryMonitor.triggerGC();
+        const gcEvent = memoryMonitor.triggerGC(
+          pressureLevel !== 'normal' ? 'pressure' : 'manual'
+        );
 
-        if (gcTriggered) {
-          // Small delay to let GC complete
-          await new Promise((resolve) => setTimeout(resolve, 100));
-          const statsAfterGC = memoryMonitor.getCurrentUsage();
+        if (gcEvent.triggered) {
           return {
             success: true,
             gcTriggered: true,
-            statsAfterGC,
+            statsAfterGC: gcEvent.statsAfter,
+            freedBytes: gcEvent.freedBytes,
           };
         }
 
@@ -290,4 +290,5 @@ export function cleanupMemoryHandlers(): void {
   memoryMonitor.removeAllListeners('memory-warning');
   memoryMonitor.removeAllListeners('memory-critical');
   memoryMonitor.removeAllListeners('memory-normal');
+  memoryMonitor.removeAllListeners('gc-triggered');
 }

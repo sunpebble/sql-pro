@@ -14,6 +14,8 @@ export interface MemoryThresholds {
   heapWarningPercent: number;
   /** Heap usage percentage for critical (default: 0.85 = 85%) */
   heapCriticalPercent: number;
+  /** Heap usage percentage for automatic GC trigger (default: 0.8 = 80%) */
+  gcTriggerPercent: number;
 }
 
 /**
@@ -81,6 +83,24 @@ export interface MemoryStats {
 export type MemoryPressureLevel = 'normal' | 'warning' | 'critical';
 
 /**
+ * GC event with before/after stats
+ */
+export interface GCEvent {
+  /** Whether GC was successfully triggered */
+  triggered: boolean;
+  /** Reason for GC trigger */
+  reason: 'auto' | 'manual' | 'pressure';
+  /** Memory stats before GC */
+  statsBefore: MemoryStats;
+  /** Memory stats after GC (if triggered) */
+  statsAfter?: MemoryStats;
+  /** Memory freed in bytes (if triggered) */
+  freedBytes?: number;
+  /** Timestamp */
+  timestamp: number;
+}
+
+/**
  * Memory event types emitted by MemoryMonitor
  */
 export interface MemoryMonitorEvents {
@@ -88,6 +108,7 @@ export interface MemoryMonitorEvents {
   'memory-critical': [MemoryStats];
   'memory-normal': [MemoryStats];
   'memory-stats': [MemoryStats];
+  'gc-triggered': [GCEvent];
 }
 
 /**
@@ -98,6 +119,7 @@ const DEFAULT_THRESHOLDS: MemoryThresholds = {
   critical: 200 * 1024 * 1024, // 200MB
   heapWarningPercent: 0.7, // 70%
   heapCriticalPercent: 0.85, // 85%
+  gcTriggerPercent: 0.8, // 80% - trigger GC at this heap usage
 };
 
 /**
@@ -132,6 +154,16 @@ class MemoryMonitor extends EventEmitter {
   private intervalId: ReturnType<typeof setInterval> | null = null;
   private lastPressureLevel: MemoryPressureLevel = 'normal';
   private isMonitoring = false;
+  private autoGCEnabled = true;
+  private lastAutoGCTime = 0;
+  private autoGCCooldownMs = 5000; // Minimum 5 seconds between auto GC triggers
+  private gcStats = {
+    totalGCCount: 0,
+    autoGCCount: 0,
+    manualGCCount: 0,
+    lastGCTime: 0,
+    totalFreedBytes: 0,
+  };
 
   constructor(
     thresholds: Partial<MemoryThresholds> = {},
@@ -171,6 +203,7 @@ class MemoryMonitor extends EventEmitter {
     }
     this.isMonitoring = false;
     this.lastPressureLevel = 'normal';
+    this.lastAutoGCTime = 0;
   }
 
   /**
@@ -237,10 +270,16 @@ class MemoryMonitor extends EventEmitter {
     }
 
     // Check heap usage percentage
-    if (currentStats.metrics.heapUsagePercent >= this.thresholds.heapCriticalPercent) {
+    if (
+      currentStats.metrics.heapUsagePercent >=
+      this.thresholds.heapCriticalPercent
+    ) {
       return 'critical';
     }
-    if (currentStats.metrics.heapUsagePercent >= this.thresholds.heapWarningPercent) {
+    if (
+      currentStats.metrics.heapUsagePercent >=
+      this.thresholds.heapWarningPercent
+    ) {
       return 'warning';
     }
 
@@ -283,15 +322,135 @@ class MemoryMonitor extends EventEmitter {
   /**
    * Force a garbage collection if available.
    * Note: This only works if the app is started with --expose-gc flag.
-   * Returns true if GC was triggered, false otherwise.
+   * Returns a GCEvent with details about the operation.
    */
-  triggerGC(): boolean {
+  triggerGC(reason: 'manual' | 'pressure' = 'manual'): GCEvent {
+    const statsBefore = this.getCurrentUsage();
+    const timestamp = Date.now();
+
     const gc = (globalThis as unknown as { gc?: () => void }).gc;
     if (typeof gc === 'function') {
       gc();
-      return true;
+
+      const statsAfter = this.getCurrentUsage();
+      const freedBytes =
+        statsBefore.heap.usedHeapSize - statsAfter.heap.usedHeapSize;
+
+      // Update stats
+      this.gcStats.totalGCCount++;
+      if (reason === 'manual') {
+        this.gcStats.manualGCCount++;
+      }
+      this.gcStats.lastGCTime = timestamp;
+      if (freedBytes > 0) {
+        this.gcStats.totalFreedBytes += freedBytes;
+      }
+
+      const event: GCEvent = {
+        triggered: true,
+        reason,
+        statsBefore,
+        statsAfter,
+        freedBytes: freedBytes > 0 ? freedBytes : 0,
+        timestamp,
+      };
+
+      this.emit('gc-triggered', event);
+      return event;
     }
-    return false;
+
+    const event: GCEvent = {
+      triggered: false,
+      reason,
+      statsBefore,
+      timestamp,
+    };
+
+    return event;
+  }
+
+  /**
+   * Automatically trigger GC if heap usage exceeds threshold.
+   * Returns the GCEvent if triggered, undefined otherwise.
+   */
+  private autoTriggerGC(stats: MemoryStats): GCEvent | undefined {
+    if (!this.autoGCEnabled) {
+      return undefined;
+    }
+
+    // Check cooldown
+    const now = Date.now();
+    if (now - this.lastAutoGCTime < this.autoGCCooldownMs) {
+      return undefined;
+    }
+
+    // Check if heap usage exceeds GC trigger threshold
+    if (stats.metrics.heapUsagePercent >= this.thresholds.gcTriggerPercent) {
+      this.lastAutoGCTime = now;
+      this.gcStats.autoGCCount++;
+
+      const event = this.triggerGC('auto');
+      return event;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Enable or disable automatic GC triggering.
+   */
+  setAutoGC(enabled: boolean): void {
+    this.autoGCEnabled = enabled;
+  }
+
+  /**
+   * Check if automatic GC is enabled.
+   */
+  isAutoGCEnabled(): boolean {
+    return this.autoGCEnabled;
+  }
+
+  /**
+   * Set the cooldown between automatic GC triggers.
+   */
+  setAutoGCCooldown(cooldownMs: number): void {
+    this.autoGCCooldownMs = Math.max(1000, cooldownMs); // Minimum 1 second
+  }
+
+  /**
+   * Get the auto GC cooldown in milliseconds.
+   */
+  getAutoGCCooldown(): number {
+    return this.autoGCCooldownMs;
+  }
+
+  /**
+   * Get GC statistics.
+   */
+  getGCStats(): typeof this.gcStats {
+    return { ...this.gcStats };
+  }
+
+  /**
+   * Reset GC statistics.
+   */
+  resetGCStats(): void {
+    this.gcStats = {
+      totalGCCount: 0,
+      autoGCCount: 0,
+      manualGCCount: 0,
+      lastGCTime: 0,
+      totalFreedBytes: 0,
+    };
+  }
+
+  /**
+   * Check if GC is available (app started with --expose-gc).
+   */
+  isGCAvailable(): boolean {
+    return (
+      typeof (globalThis as unknown as { gc?: () => void }).gc === 'function'
+    );
   }
 
   /**
@@ -316,6 +475,7 @@ class MemoryMonitor extends EventEmitter {
 
   /**
    * Perform a memory check and emit appropriate events.
+   * Also triggers automatic GC if heap usage exceeds threshold.
    */
   private checkMemory(): void {
     const stats = this.getCurrentUsage();
@@ -342,6 +502,9 @@ class MemoryMonitor extends EventEmitter {
       }
       this.lastPressureLevel = currentLevel;
     }
+
+    // Try to trigger automatic GC if heap usage is high
+    this.autoTriggerGC(stats);
   }
 }
 

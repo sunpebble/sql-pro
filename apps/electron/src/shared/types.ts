@@ -2530,6 +2530,24 @@ export interface RendererMemoryReport {
   timestamp: number;
 }
 
+/**
+ * GC event with before/after stats
+ */
+export interface GCEvent {
+  /** Whether GC was successfully triggered */
+  triggered: boolean;
+  /** Reason for GC trigger */
+  reason: 'auto' | 'manual' | 'pressure';
+  /** Memory stats before GC */
+  statsBefore: MemoryStats;
+  /** Memory stats after GC (if triggered) */
+  statsAfter?: MemoryStats;
+  /** Memory freed in bytes (if triggered) */
+  freedBytes?: number;
+  /** Timestamp */
+  timestamp: number;
+}
+
 // ============ File Watcher Types ============
 
 /**
