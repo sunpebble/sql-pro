@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.12.0](https://github.com/kunish-homelab/sql-pro/compare/v1.11.0...v1.12.0) (2026-01-06)
+
+
+### Features
+
+* implement keyboard shortcuts dialog and remove related settings ([ef92464](https://github.com/kunish-homelab/sql-pro/commit/ef92464fc26fd673e6cb804310b026a7021fd0a6))
+* **onboarding:** implement welcome tour and dialog for user guidance ([9c0ddb5](https://github.com/kunish-homelab/sql-pro/commit/9c0ddb599b9826c2d559077cc0540f9deb13f751))
+* **sidebar:** add empty state handling for database and filter results ([decec5c](https://github.com/kunish-homelab/sql-pro/commit/decec5ce79c619dfbd7fc09c92447fd1f0a7310c))
+
 ## [1.11.0](https://github.com/kunish-homelab/sql-pro/compare/v1.10.0...v1.11.0) (2026-01-06)
 
 
