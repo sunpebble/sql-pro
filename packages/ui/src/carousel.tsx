@@ -58,11 +58,15 @@ function Carousel({
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
+  // Callback to sync React state with embla-carousel's internal state.
+  // This is the standard shadcn/ui pattern for external carousel state synchronization.
+  // The setState calls are intentional - we cannot derive this state at render time
+  // because the carousel API is only available after mount and changes via events.
   const onSelect = React.useCallback((api: CarouselApi) => {
     if (!api) return;
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional: sync state with embla-carousel events
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Required: external library state sync
     setCanScrollPrev(api.canScrollPrev());
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional: sync state with embla-carousel events
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Required: external library state sync
     setCanScrollNext(api.canScrollNext());
   }, []);
 
