@@ -5,12 +5,15 @@ import { cn } from './lib/utils';
 
 interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
   viewportRef?: React.RefObject<HTMLDivElement | null>;
+  /** Scroll orientation: 'vertical', 'horizontal', or 'both' (default) */
+  orientation?: 'vertical' | 'horizontal' | 'both';
 }
 
 function ScrollArea({
   className,
   children,
   viewportRef,
+  orientation = 'both',
   ...props
 }: ScrollAreaProps) {
   return (
@@ -22,7 +25,12 @@ function ScrollArea({
       <ScrollAreaPrimitive.Viewport
         ref={viewportRef}
         data-slot="scroll-area-viewport"
-        className="focus-visible:ring-ring/50 size-full overflow-auto rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+        className={cn(
+          'focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1',
+          orientation === 'horizontal' && 'overflow-x-auto overflow-y-hidden',
+          orientation === 'vertical' && 'overflow-x-hidden overflow-y-auto',
+          orientation === 'both' && 'overflow-auto'
+        )}
       >
         {children}
       </ScrollAreaPrimitive.Viewport>

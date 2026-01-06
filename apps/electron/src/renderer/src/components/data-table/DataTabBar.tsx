@@ -254,8 +254,8 @@ export const DataTabBar = memo(
         )}
         role="tablist"
       >
-        <ScrollArea className="flex-1">
-          <div className="flex items-center">
+        <ScrollArea orientation="horizontal" className="h-8 flex-1">
+          <div className="flex h-8 items-center">
             {tabs.map((tab, index) => (
               <TabItem
                 key={tab.id}
