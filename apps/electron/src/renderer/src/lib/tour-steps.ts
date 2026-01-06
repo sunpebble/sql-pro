@@ -1,23 +1,14 @@
 import type { TourConfig, TourStep } from '@/types/onboarding';
 
 /**
- * Complete tour configuration for SQL Pro onboarding.
- * Covers all major features: schema browser, query editor, data grid,
- * command palette, ER diagram, Vim mode, and diff preview.
+ * Simplified tour configuration for SQL Pro onboarding.
+ * Covers the essential features: schema browser, data browser, query editor,
+ * ER diagram, schema compare, data diff, and command palette.
+ *
+ * The tour starts after user connects to a database.
  */
 export const TOUR_STEPS: TourStep[] = [
-  // Step 1: Welcome
-  {
-    id: 'welcome',
-    target: 'body',
-    title: 'Welcome to SQL Pro',
-    description:
-      "SQL Pro is a modern database client designed for developers. Let's take a quick tour of the key features to help you get started.",
-    placement: 'center',
-    spotlightMode: false,
-  },
-
-  // Step 2: Schema Browser (Sidebar)
+  // Step 1: Schema Browser (Sidebar)
   {
     id: 'schema-browser',
     target: '[data-tour-target="sidebar"]',
@@ -29,7 +20,7 @@ export const TOUR_STEPS: TourStep[] = [
     waitForTarget: true,
   },
 
-  // Step 3: Data Browser
+  // Step 2: Data Browser
   {
     id: 'data-browser',
     target: '[data-tour-target="data-browser-tab"]',
@@ -45,13 +36,13 @@ export const TOUR_STEPS: TourStep[] = [
     },
   },
 
-  // Step 4: Query Editor
+  // Step 3: Query Editor
   {
     id: 'query-editor',
     target: '[data-tour-target="query-editor-tab"]',
     title: 'Query Editor',
     description:
-      'Write and execute SQL queries with syntax highlighting and autocomplete. View query results and execution time. Support for multiple queries and result sets.',
+      'Write and execute SQL queries with syntax highlighting and autocomplete. Supports Vim mode for keyboard-driven editing.',
     placement: 'bottom',
     spotlightMode: true,
     waitForTarget: true,
@@ -61,25 +52,13 @@ export const TOUR_STEPS: TourStep[] = [
     },
   },
 
-  // Step 5: Command Palette
-  {
-    id: 'command-palette',
-    target: '[data-tour-target="toolbar"]',
-    title: 'Command Palette',
-    description:
-      'Press Cmd+K (or Ctrl+K) to open the command palette for quick access to all actions. Search for commands, switch between tables, and navigate your database without using the mouse.',
-    placement: 'bottom',
-    spotlightMode: true,
-    waitForTarget: true,
-  },
-
-  // Step 6: ER Diagram
+  // Step 4: ER Diagram
   {
     id: 'er-diagram',
     target: '[data-tour-target="diagram-tab"]',
     title: 'ER Diagram',
     description:
-      'Visualize your database schema with interactive entity-relationship diagrams. See table relationships, foreign keys, and navigate your database structure visually.',
+      'Visualize your database schema with interactive entity-relationship diagrams. See table relationships and foreign keys at a glance.',
     placement: 'bottom',
     spotlightMode: true,
     waitForTarget: true,
@@ -89,25 +68,45 @@ export const TOUR_STEPS: TourStep[] = [
     },
   },
 
-  // Step 7: Vim Mode
+  // Step 5: Schema Compare
   {
-    id: 'vim-mode',
-    target: '[data-tour-target="settings-button"]',
-    title: 'Vim Mode',
+    id: 'schema-compare',
+    target: '[data-tour-target="schema-compare-tab"]',
+    title: 'Schema Compare',
     description:
-      'Enable Vim mode for keyboard-driven editing in both the query editor and application navigation. Access settings from the toolbar to customize your experience.',
-    placement: 'left',
+      'Compare database schemas between two connections. Identify differences in tables, columns, indexes, and generate migration scripts automatically.',
+    placement: 'bottom',
     spotlightMode: true,
     waitForTarget: true,
+    action: {
+      type: 'switch-tab',
+      tab: 'compare',
+    },
   },
 
-  // Step 8: Diff Preview
+  // Step 6: Data Diff
   {
-    id: 'diff-preview',
-    target: '[data-tour-target="data-browser-tab"]',
-    title: 'Diff Preview',
+    id: 'data-diff',
+    target: '[data-tour-target="data-diff-tab"]',
+    title: 'Data Diff',
     description:
-      'Review all your changes before committing them to the database. See a visual diff of modified, inserted, and deleted rows. Safely review and apply changes with confidence.',
+      'Compare table data between two databases. Visualize row-level differences and identify data changes across environments.',
+    placement: 'bottom',
+    spotlightMode: true,
+    waitForTarget: true,
+    action: {
+      type: 'switch-tab',
+      tab: 'dataDiff',
+    },
+  },
+
+  // Step 7: Command Palette & Settings (Final step)
+  {
+    id: 'command-palette',
+    target: '[data-tour-target="toolbar"]',
+    title: 'Command Palette & Settings',
+    description:
+      'Press ⌘K (or Ctrl+K) to open the command palette for quick access to all actions. Access settings to customize themes, fonts, Vim mode, keyboard shortcuts, and more!',
     placement: 'bottom',
     spotlightMode: true,
     waitForTarget: true,

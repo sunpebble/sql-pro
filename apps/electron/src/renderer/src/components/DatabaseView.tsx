@@ -3,6 +3,7 @@ import { ScrollArea, ScrollBar } from '@sqlpro/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Tour } from '@/components/onboarding';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { cn } from '@/lib/utils';
 import {
@@ -175,6 +176,7 @@ export function DatabaseView({
               <TabsTrigger
                 value="data"
                 data-tab="data"
+                data-tour-target="data-browser-tab"
                 className={cn(
                   'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
                   activeTab === 'data'
@@ -197,6 +199,7 @@ export function DatabaseView({
               <TabsTrigger
                 value="query"
                 data-tab="query"
+                data-tour-target="query-editor-tab"
                 className={cn(
                   'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
                   activeTab === 'query'
@@ -214,6 +217,7 @@ export function DatabaseView({
               <TabsTrigger
                 value="diagram"
                 data-tab="diagram"
+                data-tour-target="diagram-tab"
                 className={cn(
                   'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
                   activeTab === 'diagram'
@@ -231,6 +235,7 @@ export function DatabaseView({
               <TabsTrigger
                 value="compare"
                 data-tab="compare"
+                data-tour-target="schema-compare-tab"
                 className={cn(
                   'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
                   activeTab === 'compare'
@@ -248,6 +253,7 @@ export function DatabaseView({
               <TabsTrigger
                 value="dataDiff"
                 data-tab="dataDiff"
+                data-tour-target="data-diff-tab"
                 className={cn(
                   'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
                   activeTab === 'dataDiff'
@@ -353,6 +359,21 @@ export function DatabaseView({
           </ResizablePanel>
         )}
       </div>
+
+      {/* Onboarding Tour */}
+      <Tour
+        onSwitchTab={(tab) => {
+          // Map tour tab names to DatabaseView tab values
+          const tabMap: Record<string, TabValue> = {
+            browser: 'data',
+            query: 'query',
+            diagram: 'diagram',
+            compare: 'compare',
+            dataDiff: 'dataDiff',
+          };
+          setActiveTab(tabMap[tab] || 'data');
+        }}
+      />
     </div>
   );
 }

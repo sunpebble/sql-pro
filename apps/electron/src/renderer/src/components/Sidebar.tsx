@@ -691,6 +691,7 @@ export function Sidebar({
       className="bg-muted/30 bg-grid-dot flex h-full w-full flex-col overflow-hidden border-r outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      data-tour-target="sidebar"
     >
       {/* Connection Selector */}
       <div className="border-b p-2">

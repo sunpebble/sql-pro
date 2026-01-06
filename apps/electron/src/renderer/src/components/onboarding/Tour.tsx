@@ -14,7 +14,9 @@ import { TourTooltip } from './TourTooltip';
  * Callback type for tab switching action.
  * The Tour component will call this when a step requires switching to a different tab.
  */
-export type TabSwitchCallback = (tab: 'browser' | 'query' | 'diagram') => void;
+export type TabSwitchCallback = (
+  tab: 'browser' | 'query' | 'diagram' | 'compare' | 'dataDiff'
+) => void;
 
 interface TourProps {
   /**
@@ -29,7 +31,7 @@ interface TourProps {
  * Coordinates TourSpotlight and TourTooltip, handles step transitions,
  * executes step actions, and manages keyboard navigation.
  *
- * Should be rendered at the App level to overlay the entire application.
+ * This component is rendered inside DatabaseView after user connects to a database.
  */
 export function Tour({ onSwitchTab }: TourProps) {
   const {
@@ -43,6 +45,9 @@ export function Tour({ onSwitchTab }: TourProps) {
 
   // Track if we're waiting for a target element to appear
   const [isWaitingForTarget, setIsWaitingForTarget] = useState(false);
+
+  // Track if target element was found
+  const [targetFound, setTargetFound] = useState(true);
 
   // Track if step action has been executed
   const lastExecutedStepRef = useRef<number>(-1);
@@ -90,7 +95,7 @@ export function Tour({ onSwitchTab }: TourProps) {
    * Wait for target element to become visible
    */
   const waitForTargetElement = useCallback(
-    (selector: string, timeout = 3000): Promise<boolean> => {
+    (selector: string, timeout = 1000): Promise<boolean> => {
       return new Promise((resolve) => {
         // Check immediately
         const element = document.querySelector(selector);
@@ -137,6 +142,9 @@ export function Tour({ onSwitchTab }: TourProps) {
       // Mark as executed to prevent re-runs
       lastExecutedStepRef.current = currentStep;
 
+      // Reset target found state
+      setTargetFound(true);
+
       // Execute step action first (e.g., switch tab)
       if (step.action) {
         await executeStepAction(step.action);
@@ -145,8 +153,13 @@ export function Tour({ onSwitchTab }: TourProps) {
       // Wait for target if required
       if (step.waitForTarget && step.target !== 'body') {
         setIsWaitingForTarget(true);
-        await waitForTargetElement(step.target);
+        const found = await waitForTargetElement(step.target);
+        setTargetFound(found);
         setIsWaitingForTarget(false);
+      } else if (step.target !== 'body') {
+        // Check if target exists immediately for non-waiting steps
+        const targetExists = !!document.querySelector(step.target);
+        setTargetFound(targetExists);
       }
     };
 
@@ -256,18 +269,20 @@ export function Tour({ onSwitchTab }: TourProps) {
     return null;
   }
 
-  // Don't render spotlight/tooltip while waiting for target
-  // This provides a brief delay while the view transitions
+  // Show loading overlay while waiting for target element
   if (isWaitingForTarget) {
     return (
       <div className="fixed inset-0 z-[9999] bg-black/40 transition-opacity duration-300" />
     );
   }
 
+  // Disable spotlight when target is not found - tooltip will be centered
+  const spotlightActive = step.spotlightMode && targetFound;
+
   return (
     <TourSpotlight
       targetSelector={step.target}
-      isActive={step.spotlightMode}
+      isActive={spotlightActive}
       onOverlayClick={handleSkip}
     >
       <TourTooltip

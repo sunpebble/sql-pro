@@ -9,7 +9,7 @@ export type TourStepPlacement = 'top' | 'bottom' | 'left' | 'right' | 'center';
 export type TourStepAction =
   | {
       type: 'switch-tab';
-      tab: 'browser' | 'query' | 'diagram';
+      tab: 'browser' | 'query' | 'diagram' | 'compare' | 'dataDiff';
     }
   | {
       type: 'open-command-palette';

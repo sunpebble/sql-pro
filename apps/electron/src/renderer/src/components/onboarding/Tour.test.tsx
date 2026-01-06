@@ -55,30 +55,15 @@ describe('tour Component', () => {
       <div data-tour-target="query-editor-tab">Query Editor</div>
       <div data-tour-target="toolbar">Toolbar</div>
       <div data-tour-target="diagram-tab">ER Diagram</div>
-      <div data-tour-target="settings-button">Settings</div>
+      <div data-tour-target="schema-compare-tab">Schema Compare</div>
+      <div data-tour-target="data-diff-tab">Data Diff</div>
     `;
   });
 
-  it('renders welcome step correctly', async () => {
+  it('renders schema browser step correctly (first step)', async () => {
     (useOnboardingStore as any).mockReturnValue({
       ...defaultStoreState,
-      currentStep: 0, // Welcome step (target: body)
-    });
-
-    render(<Tour />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Welcome to SQL Pro')).toBeInTheDocument();
-      expect(
-        screen.getByText(/SQL Pro is a modern database client/)
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('renders schema browser step correctly', async () => {
-    (useOnboardingStore as any).mockReturnValue({
-      ...defaultStoreState,
-      currentStep: 1, // Schema Browser step
+      currentStep: 0, // Schema Browser is now the first step
     });
 
     render(<Tour />);
@@ -88,18 +73,36 @@ describe('tour Component', () => {
     });
   });
 
+  it('renders data browser step correctly', async () => {
+    (useOnboardingStore as any).mockReturnValue({
+      ...defaultStoreState,
+      currentStep: 1, // Data Browser step
+    });
+
+    render(<Tour />);
+
+    await waitFor(() => {
+      // Use getAllByText because the title appears both in DOM and in tooltip
+      const elements = screen.getAllByText('Data Browser');
+      expect(elements.length).toBeGreaterThan(0);
+    });
+  });
+
   it('navigates to next step', async () => {
     const user = userEvent.setup();
 
     render(<Tour />);
 
-    // Wait for tour to render
+    // Wait for tour to render (Schema Browser is now step 0)
     await waitFor(() => {
-      expect(screen.getByText('Welcome to SQL Pro')).toBeInTheDocument();
+      expect(screen.getByText('Schema Browser')).toBeInTheDocument();
     });
 
-    // Find next button (usually "Next" or an arrow)
-    const nextButton = screen.getByRole('button', { name: /next/i });
+    // Find next button with hidden option since parent has aria-hidden
+    const nextButton = screen.getByRole('button', {
+      name: /next/i,
+      hidden: true,
+    });
 
     await act(async () => {
       await user.click(nextButton);
@@ -115,14 +118,21 @@ describe('tour Component', () => {
 
     // Wait for tour to render
     await waitFor(() => {
-      expect(screen.getByText('Welcome to SQL Pro')).toBeInTheDocument();
+      expect(screen.getByText('Schema Browser')).toBeInTheDocument();
     });
 
-    // Find skip button
-    const skipButton = screen.getByRole('button', { name: /skip/i });
+    // Find skip button with hidden option since parent has aria-hidden
+    const skipButtons = screen.getAllByRole('button', {
+      name: /skip/i,
+      hidden: true,
+    });
+    // The text "Skip tour" button is the one without aria-label
+    const skipButton = skipButtons.find(
+      (btn) => !btn.hasAttribute('aria-label')
+    );
 
     await act(async () => {
-      await user.click(skipButton);
+      await user.click(skipButton!);
     });
 
     expect(mockSkipTour).toHaveBeenCalled();
@@ -130,10 +140,10 @@ describe('tour Component', () => {
 
   it('calls onSwitchTab when step action requires it', async () => {
     // Mock a step that requires tab switching (e.g., Data Browser step)
-    // In real config, Data Browser is step 2 (index 2)
+    // Data Browser is step 1 (index 1)
     (useOnboardingStore as any).mockReturnValue({
       ...defaultStoreState,
-      currentStep: 2,
+      currentStep: 1,
     });
 
     render(<Tour onSwitchTab={mockOnSwitchTab} />);
@@ -146,20 +156,26 @@ describe('tour Component', () => {
   it('handles tour completion', async () => {
     const user = userEvent.setup();
 
-    // Mock last step
+    // Mock last step (Command Palette & Settings is now the last step, index 6)
     (useOnboardingStore as any).mockReturnValue({
       ...defaultStoreState,
-      currentStep: 7, // Diff Preview (last step)
+      currentStep: 6,
     });
 
     render(<Tour />);
 
     // Wait for tour to render
     await waitFor(() => {
-      expect(screen.getByText('Diff Preview')).toBeInTheDocument();
+      expect(
+        screen.getByText('Command Palette & Settings')
+      ).toBeInTheDocument();
     });
 
-    const finishButton = screen.getByRole('button', { name: /finish/i });
+    // Use hidden option to find button inside aria-hidden container (animation state in test)
+    const finishButton = screen.getByRole('button', {
+      name: /finish/i,
+      hidden: true,
+    });
 
     await act(async () => {
       await user.click(finishButton);
