@@ -72,6 +72,13 @@ export function DatabaseView({
   // When active data tab changes (user clicks a tab), sync the selected table for schema details panel
   const prevActiveDataTabIdRef = useRef<string | null>(null);
   useEffect(() => {
+    // When the last tab is closed, clear selectedTable
+    if (!activeDataTab && prevActiveDataTabIdRef.current !== null) {
+      prevActiveDataTabIdRef.current = null;
+      setSelectedTable(null);
+      return;
+    }
+
     if (activeDataTab && activeDataTab.id !== prevActiveDataTabIdRef.current) {
       prevActiveDataTabIdRef.current = activeDataTab.id;
       // Update selectedTable to match the active tab (for schema panel)

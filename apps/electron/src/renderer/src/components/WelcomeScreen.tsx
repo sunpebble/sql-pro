@@ -100,7 +100,9 @@ export function WelcomeScreen() {
     isConnecting,
     error,
     folders,
+    connections,
     addConnection,
+    removeConnection,
     setSchema,
     setIsConnecting,
     setIsLoadingSchema,
@@ -584,6 +586,17 @@ export function WelcomeScreen() {
           return;
         }
 
+        // Check if there's an existing connection with the same path and close it
+        const existingConnectionId = Array.from(connections.entries()).find(
+          ([, conn]) => conn.path === editingConnection.path
+        )?.[0];
+
+        if (existingConnectionId) {
+          // Close the existing connection before opening with new config
+          await sqlPro.db.close({ connectionId: existingConnectionId });
+          removeConnection(existingConnectionId);
+        }
+
         // Then connect with the new config
         const result = await sqlPro.db.open({ config });
 
@@ -637,8 +650,10 @@ export function WelcomeScreen() {
     },
     [
       editingConnection,
+      connections,
       setIsConnecting,
       setError,
+      removeConnection,
       addConnection,
       setSchema,
       setIsLoadingSchema,
