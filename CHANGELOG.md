@@ -1,5 +1,52 @@
 # Changelog
 
+## [1.11.0](https://github.com/kunish-homelab/sql-pro/compare/v1.10.0...v1.11.0) (2026-01-06)
+
+
+### Features
+
+* add collapsible schema panel to DiffTable for better field visibility ([36e4076](https://github.com/kunish-homelab/sql-pro/commit/36e4076a1990c120104e0a1b89b9e4db2ead4d3c))
+* add database type and connection config to connection profile in WelcomeScreen ([575f31c](https://github.com/kunish-homelab/sql-pro/commit/575f31c531bf13ea6e0959823901677411616e2d))
+* add drag-and-drop support for database files in DatabaseView ([#40](https://github.com/kunish-homelab/sql-pro/issues/40)) ([70fba9b](https://github.com/kunish-homelab/sql-pro/commit/70fba9b36cc4b4eedc4d18d2f40ce9f129f2efd8))
+* add error handling for schema loading and close probe connection ([8b1bb3d](https://github.com/kunish-homelab/sql-pro/commit/8b1bb3d11dc3cef7bb396e0956d81cfe383f3e94))
+* add expand/collapse all functionality to Sidebar component ([124dbba](https://github.com/kunish-homelab/sql-pro/commit/124dbba2ab37bc7da0202d5ef002a79f142b23c2))
+* add lock icon to indicate encrypted connections in ConnectionSwitcher ([57cab85](https://github.com/kunish-homelab/sql-pro/commit/57cab85b76aef3e14cfa30c3441be2afbf9a0a7b))
+* add navigation shortcuts for data diff and update keyboard shortcut bindings ([957967f](https://github.com/kunish-homelab/sql-pro/commit/957967fb5d395fe078645619cb84f32b86e9d4f9))
+* add showSchemaDetails state and toggle functionality for schema details panel ([d8b7ee1](https://github.com/kunish-homelab/sql-pro/commit/d8b7ee17c1ed5249686a868088352f26eb1fb054))
+* add test connection functionality for various database adapters ([2c80dae](https://github.com/kunish-homelab/sql-pro/commit/2c80dae4b20421c73b1fbf2e0f705af3ba209427))
+* add tooltip for encrypted connections in ConnectionSelector ([f297c67](https://github.com/kunish-homelab/sql-pro/commit/f297c678d61d8ad68ccfc8d2495f2e6689742273))
+* change default expansion state for new schemas to expanded in Sidebar component ([f92dbe7](https://github.com/kunish-homelab/sql-pro/commit/f92dbe72bd4dd9ca209ae5042118e63021dded37))
+* enhance drag-and-drop functionality with nested event handling ([ec1ac8d](https://github.com/kunish-homelab/sql-pro/commit/ec1ac8de9669961ce697e05d7b8dada306803bd0))
+* enhance recent connection handling and edit functionality for server databases ([e156b3a](https://github.com/kunish-homelab/sql-pro/commit/e156b3ae895371e58707ed090d7a0926568db978))
+* enhance SchemaImportDialog and error route with ScrollArea for improved UI experience ([3a7aaaf](https://github.com/kunish-homelab/sql-pro/commit/3a7aaaf3e6196c841b35d505f6379623127da8d4))
+* implement change password functionality for database connections ([4ac4dc0](https://github.com/kunish-homelab/sql-pro/commit/4ac4dc06e0d0515772a007608319d7c12fd03065))
+* implement drag selection for multi-row selection in DataTable ([ba30cc7](https://github.com/kunish-homelab/sql-pro/commit/ba30cc7afed290196b93c6bb2815cf52669c30bc))
+* implement global dialog management and settings functionality ([f34f310](https://github.com/kunish-homelab/sql-pro/commit/f34f310c15e6dc00aade4ca5c30ed5cea1169968))
+* improve empty state presentation in DataTable component ([0d86ea9](https://github.com/kunish-homelab/sql-pro/commit/0d86ea941ce02a59720cc15461cb28ac7a0766e8))
+* integrate ScrollArea and ScrollBar for improved tab navigation ([ca1565a](https://github.com/kunish-homelab/sql-pro/commit/ca1565a6100bfa4c03e5ee55025a2410081900d4))
+* **ipc:** add file write handler with atomic writes ([c44a724](https://github.com/kunish-homelab/sql-pro/commit/c44a724c20b93e224538ef37d88f157bff61a8d5))
+* **onboarding:** enhance onboarding tour with new features and steps ([020a302](https://github.com/kunish-homelab/sql-pro/commit/020a302c3e149d87129b2cfe2962adfda9f52423))
+* **onboarding:** implement onboarding tour with state management and persistence ([c1c8532](https://github.com/kunish-homelab/sql-pro/commit/c1c8532502c8971ffa346bf399680502770e444c))
+* optimize count query by removing unnecessary ORDER BY clause in MySQL and PostgreSQL adapters ([fdc60c7](https://github.com/kunish-homelab/sql-pro/commit/fdc60c7849488cf0857affadeebb557aff952617))
+* **preload:** add writeFile method to dialog namespace ([b7867c2](https://github.com/kunish-homelab/sql-pro/commit/b7867c2ade3c827a88516ddac2f55919af8e1ef6))
+* refine keyboard shortcuts and toggle functionality for schema details in Data Browser view ([143bcef](https://github.com/kunish-homelab/sql-pro/commit/143bcef31c31aad6eebd79673837def66df73a03))
+* remove baseUrl and paths from tsconfig for cleaner configuration ([a8ed377](https://github.com/kunish-homelab/sql-pro/commit/a8ed377e24d59e52e86967faa21a9024fad7c1af))
+* **renderer:** replace clipboard fallback with file write API in DataDiffSQLGenerator ([7ef78e5](https://github.com/kunish-homelab/sql-pro/commit/7ef78e51f3cface24b25a3a2ddd924ff697d016b))
+* replace Lock icon with KeyRound icon for encrypted connections in ConnectionSwitcher ([00267c6](https://github.com/kunish-homelab/sql-pro/commit/00267c69b46301b72348cb84216b73a862998ba1))
+* **schema-comparison:** replace clipboard fallback with file write API ([69ab92a](https://github.com/kunish-homelab/sql-pro/commit/69ab92ade135d0410c9d8bba1e09f19c86572010))
+* support composite primary keys in table row identification ([d33f4a0](https://github.com/kunish-homelab/sql-pro/commit/d33f4a0f5bb7a4aca104465a50b89da42c636370))
+
+
+### Bug Fixes
+
+* correct gzip magic number case sensitivity in compression checks ([2756a63](https://github.com/kunish-homelab/sql-pro/commit/2756a63317ece62be4c43fdde3d5dee645a72689))
+* format JSON structure and add tableMetadata to Sidebar component ([3414253](https://github.com/kunish-homelab/sql-pro/commit/34142535c589030111430b10f3238f6dda78d384))
+* format script_commands and package_managers for consistency ([d0d3a49](https://github.com/kunish-homelab/sql-pro/commit/d0d3a49e1016da41f64422355f9defbe8677f431))
+* improve styling and layout in SchemaSection and TableItem components ([26624f5](https://github.com/kunish-homelab/sql-pro/commit/26624f5abbede00f2d3599172763d0dccaaa7ab4))
+* remove specific auto-claude files from .gitignore ([604b0e5](https://github.com/kunish-homelab/sql-pro/commit/604b0e5b7a93dce3c4711b5388a01a2e5894a510))
+* update titlebar component documentation for clarity ([04f60ca](https://github.com/kunish-homelab/sql-pro/commit/04f60ca323ac7cd9020cbc61687d985dd1a78a89))
+* update toggle schema details shortcut key from '0' to '\' ([6acf5e1](https://github.com/kunish-homelab/sql-pro/commit/6acf5e122370300a8dda3938640184799565b4f9))
+
 ## [1.10.0](https://github.com/kunish-homelab/sql-pro/compare/v1.9.0...v1.10.0) (2026-01-04)
 
 ### Features
