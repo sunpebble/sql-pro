@@ -275,6 +275,8 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
   'help.shortcuts': { key: 'k', modifiers: { cmd: true } },
+  'onboarding.skip': { key: 'Escape', modifiers: {} },
+  'onboarding.next': { key: 'Enter', modifiers: {} },
 };
 
 /**
@@ -312,6 +314,8 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
   'help.shortcuts': { key: '/', modifiers: { cmd: true } },
+  'onboarding.skip': { key: 'Escape', modifiers: {} },
+  'onboarding.next': { key: 'Enter', modifiers: {} },
 };
 
 /**

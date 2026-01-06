@@ -93,8 +93,10 @@ export function CollectionExportImportDialog({
   }, [open, loadCollections]);
 
   // Reset state when dialog opens/closes
+
   useEffect(() => {
     if (open) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset when dialog opens */
       setSelectedCollectionIds(new Set());
       setExportSuccess(null);
       setExportError(null);
@@ -104,6 +106,7 @@ export function CollectionExportImportDialog({
       setImportError(null);
       setDuplicateStrategy('rename');
       setActiveTab('export');
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
     }
   }, [open]);
 

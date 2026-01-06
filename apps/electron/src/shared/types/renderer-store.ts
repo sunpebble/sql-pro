@@ -53,6 +53,19 @@ export interface RendererConnectionState {
   connectionColors: Record<string, string>;
 }
 
+// ============ Onboarding Store ============
+
+export interface RendererOnboardingState {
+  /** Whether the user has seen the welcome dialog */
+  hasSeenWelcome: boolean;
+  /** Whether the user has completed the tour */
+  hasCompletedTour: boolean;
+  /** Current step index in the tour (0-based) */
+  currentStep: number;
+  /** Whether the tour is currently visible/active */
+  isTourVisible: boolean;
+}
+
 // ============ Combined Renderer Store Schema ============
 
 export interface RendererStoreSchema {
@@ -60,6 +73,7 @@ export interface RendererStoreSchema {
   diagram: RendererDiagramState;
   panelWidths: RendererPanelWidths;
   connectionUi: RendererConnectionState;
+  onboarding: RendererOnboardingState;
 }
 
 // ============ IPC Request/Response Types ============

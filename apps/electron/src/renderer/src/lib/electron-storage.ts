@@ -8,6 +8,7 @@
 import type {
   RendererConnectionState,
   RendererDiagramState,
+  RendererOnboardingState,
   RendererPanelWidths,
   RendererSettingsState,
   RendererStoreSchema,
@@ -18,6 +19,7 @@ import { sqlPro } from './api';
 export type {
   RendererConnectionState,
   RendererDiagramState,
+  RendererOnboardingState,
   RendererPanelWidths,
   RendererSettingsState,
   RendererStoreSchema,
@@ -30,6 +32,7 @@ interface ElectronStorageCache {
   diagram: RendererDiagramState | null;
   panelWidths: RendererPanelWidths | null;
   connectionUi: RendererConnectionState | null;
+  onboarding: RendererOnboardingState | null;
 }
 
 const cache: ElectronStorageCache = {
@@ -37,6 +40,7 @@ const cache: ElectronStorageCache = {
   diagram: null,
   panelWidths: null,
   connectionUi: null,
+  onboarding: null,
 };
 
 let initialized = false;
@@ -55,6 +59,7 @@ export async function initializeElectronStorage(): Promise<void> {
     'diagram',
     'panelWidths',
     'connectionUi',
+    'onboarding',
   ];
 
   await Promise.all(
@@ -75,6 +80,9 @@ export async function initializeElectronStorage(): Promise<void> {
               break;
             case 'connectionUi':
               cache.connectionUi = response.data as RendererConnectionState;
+              break;
+            case 'onboarding':
+              cache.onboarding = response.data as RendererOnboardingState;
               break;
           }
         }
@@ -131,6 +139,13 @@ export function getCachedConnectionUi(): RendererConnectionState | null {
   return cache.connectionUi;
 }
 
+/**
+ * Get cached onboarding state
+ */
+export function getCachedOnboarding(): RendererOnboardingState | null {
+  return cache.onboarding;
+}
+
 // ============ Persistence Functions ============
 
 /**
@@ -183,6 +198,18 @@ export function persistConnectionUi(
     });
 }
 
+/**
+ * Persist onboarding state to electron-store
+ */
+export function persistOnboarding(onboarding: RendererOnboardingState): void {
+  cache.onboarding = onboarding;
+  sqlPro.rendererStore
+    .set({ key: 'onboarding', value: onboarding })
+    .catch((error) => {
+      console.error('Failed to persist onboarding to electron-store:', error);
+    });
+}
+
 // ============ Store Hydration ============
 
 // Store setters - will be registered by each store
@@ -192,6 +219,7 @@ const storeHydrators = {
   settings: null as StoreHydrator<RendererSettingsState> | null,
   diagram: null as StoreHydrator<RendererDiagramState> | null,
   connectionUi: null as StoreHydrator<RendererConnectionState> | null,
+  onboarding: null as StoreHydrator<RendererOnboardingState> | null,
 };
 
 /**
@@ -222,6 +250,15 @@ export function registerConnectionUiHydrator(
 }
 
 /**
+ * Register a store hydrator function for onboarding
+ */
+export function registerOnboardingHydrator(
+  hydrator: StoreHydrator<RendererOnboardingState>
+): void {
+  storeHydrators.onboarding = hydrator;
+}
+
+/**
  * Hydrate all registered stores with cached data.
  * Call this after initializeElectronStorage and after stores are created.
  */
@@ -234,5 +271,8 @@ export function hydrateStores(): void {
   }
   if (cache.connectionUi && storeHydrators.connectionUi) {
     storeHydrators.connectionUi(cache.connectionUi);
+  }
+  if (cache.onboarding && storeHydrators.onboarding) {
+    storeHydrators.onboarding(cache.onboarding);
   }
 }

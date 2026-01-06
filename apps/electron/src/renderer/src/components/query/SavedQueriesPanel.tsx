@@ -103,8 +103,10 @@ export function SavedQueriesPanel({ onLoadQuery }: SavedQueriesPanelProps) {
   }, [loadSavedQueries]);
 
   // Reset edit form when dialog closes
+
   useEffect(() => {
     if (!editDialogOpen) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional form reset when dialog closes */
       setEditFormData({
         name: '',
         description: '',
@@ -112,17 +114,21 @@ export function SavedQueriesPanel({ onLoadQuery }: SavedQueriesPanelProps) {
       });
       setNameError('');
       setSelectedQuery(null);
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
     }
   }, [editDialogOpen]);
 
   // Populate form when editing
+
   useEffect(() => {
     if (editDialogOpen && selectedQuery) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional form population */
       setEditFormData({
         name: selectedQuery.name,
         description: selectedQuery.description || '',
         isFavorite: selectedQuery.isFavorite ?? false,
       });
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
     }
   }, [editDialogOpen, selectedQuery]);
 
@@ -327,7 +333,8 @@ export function SavedQueriesPanel({ onLoadQuery }: SavedQueriesPanelProps) {
               // Skeleton loading state
               <>
                 {Array.from({ length: 3 }).map((_, index) => (
-                  <Card key={index} size="sm">
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Card key={`skeleton-${index}`} size="sm">
                     <CardHeader>
                       <div className="flex items-start gap-3">
                         {/* Icon skeleton */}

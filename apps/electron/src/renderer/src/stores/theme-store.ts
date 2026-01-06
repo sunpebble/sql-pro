@@ -8,6 +8,7 @@ interface ThemeState {
   isLoading: boolean;
   setTheme: (theme: Theme) => Promise<void>;
   loadTheme: () => Promise<void>;
+  toggleTheme: () => void;
 }
 
 // Apply theme to document
@@ -62,6 +63,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     } catch (error) {
       console.error('Failed to save theme:', error);
     }
+  },
+
+  toggleTheme: () => {
+    const { theme, setTheme } = get();
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
   },
 }));
 

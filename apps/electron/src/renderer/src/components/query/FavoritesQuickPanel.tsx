@@ -61,7 +61,8 @@ export function FavoritesQuickPanel({
         // Skeleton loading state
         <div className="space-y-1 p-1">
           {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="rounded-md px-3 py-2.5">
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={`skeleton-${index}`} className="rounded-md px-3 py-2.5">
               <div className="flex items-start gap-2">
                 {/* Icon skeleton */}
                 <Skeleton className="h-8 w-8 shrink-0 rounded" />

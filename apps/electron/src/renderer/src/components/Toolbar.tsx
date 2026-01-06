@@ -10,14 +10,19 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
   ChevronDown,
+  Compass,
   Database,
   FileText,
   FolderOpen,
+  HelpCircle,
   KeyRound,
   Lock,
+  Monitor,
+  Moon,
   RefreshCw,
   ScrollText,
   Settings,
+  Sun,
   X,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -30,7 +35,9 @@ import {
   useConnectionStore,
   useConnectionSwitcherStore,
   useDialogStore,
+  useOnboardingStore,
   useTableDataStore,
+  useThemeStore,
 } from '@/stores';
 import { useSqlLogStore } from '@/stores/sql-log-store';
 
@@ -57,6 +64,7 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
     changes,
   } = useChangesStore();
   const { resetConnection } = useTableDataStore();
+  const { theme, setTheme } = useThemeStore();
   const { toggleVisible: toggleSqlLog } = useSqlLogStore();
 
   // Global stores for dialogs
@@ -65,6 +73,7 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
   );
   const openChangePassword = useDialogStore((s) => s.openChangePassword);
   const openConnectionSwitcher = useConnectionSwitcherStore((s) => s.open);
+  const { startTour } = useOnboardingStore();
 
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
 
@@ -195,6 +204,39 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
     });
   };
 
+  const cycleTheme = () => {
+    const themes: Array<'light' | 'dark' | 'system'> = [
+      'light',
+      'dark',
+      'system',
+    ];
+    const currentIndex = themes.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  };
+
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="h-4 w-4" />;
+      case 'dark':
+        return <Moon className="h-4 w-4" />;
+      default:
+        return <Monitor className="h-4 w-4" />;
+    }
+  };
+
+  const getThemeLabel = () => {
+    switch (theme) {
+      case 'light':
+        return 'Light mode';
+      case 'dark':
+        return 'Dark mode';
+      default:
+        return 'System theme';
+    }
+  };
+
   if (!connection) return null;
 
   const currentConnectionChanges = activeConnectionId
@@ -203,7 +245,10 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
 
   return (
     <>
-      <div className="flex h-12 min-w-0 items-center gap-2 overflow-hidden border-b px-3">
+      <div
+        className="flex h-12 min-w-0 items-center gap-2 overflow-hidden border-b px-3"
+        data-tour-target="toolbar"
+      >
         {/* Database Menu with Info and Actions */}
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -296,6 +341,16 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
             </button>
           )}
 
+          {/* Theme Toggle */}
+          <Tooltip>
+            <TooltipTrigger>
+              <Button variant="ghost" size="icon" onClick={cycleTheme}>
+                {getThemeIcon()}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{getThemeLabel()}</TooltipContent>
+          </Tooltip>
+
           {/* SQL Log Toggle */}
           <Tooltip>
             <TooltipTrigger>
@@ -330,6 +385,26 @@ export function Toolbar({ onOpenChanges, onLoadFavoriteQuery }: ToolbarProps) {
             </TooltipTrigger>
             <TooltipContent>Open command palette</TooltipContent>
           </Tooltip>
+
+          {/* Help Menu */}
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger>
+                <DropdownMenuTrigger>
+                  <Button variant="ghost" size="icon">
+                    <HelpCircle className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Help</TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={startTour}>
+                <Compass className="h-4 w-4" />
+                Take a Tour
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Disconnect */}
           <Tooltip>

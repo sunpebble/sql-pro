@@ -1,19 +1,12 @@
 import type { Command } from '@/stores';
-import { useNavigate } from '@tanstack/react-router';
 import {
-  Bookmark,
   Code,
-  Database,
   FileDown,
-  FileText,
   GitCompare,
   GitFork,
-  HelpCircle,
-  History,
   Keyboard,
   Link,
   Monitor,
-  Moon,
   PanelLeft,
   PanelLeftClose,
   Plus,
@@ -30,10 +23,8 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { sqlPro } from '@/lib/api';
 import { queryClient } from '@/lib/query-client';
 import {
-  formatShortcut,
   formatShortcutBinding,
   matchesBinding,
   useChangesStore,
@@ -41,6 +32,7 @@ import {
   useConnectionStore,
   useConnectionSwitcherStore,
   useKeyboardShortcutsStore,
+  useOnboardingStore,
   useSettingsStore,
   useTableDataStore,
   useThemeStore,
@@ -51,16 +43,10 @@ import {
  * Should be called once at the app root level.
  */
 export function useCommands() {
-  const navigate = useNavigate();
   const toggle = useCommandPaletteStore((s) => s.toggle);
   const registerCommands = useCommandPaletteStore((s) => s.registerCommands);
   const unregisterCommand = useCommandPaletteStore((s) => s.unregisterCommand);
   const openConnectionSwitcher = useConnectionSwitcherStore((s) => s.open);
-
-  // Subscribe to connections for dynamic command registration
-  const connections = useConnectionStore((s) => s.connections);
-  const activeConnectionId = useConnectionStore((s) => s.activeConnectionId);
-  const setActiveConnection = useConnectionStore((s) => s.setActiveConnection);
 
   // Use refs to store latest values for use in command actions
   // This prevents re-registering commands when these values change
@@ -70,6 +56,7 @@ export function useCommands() {
   const tableDataStoreRef = useRef(useTableDataStore.getState());
   const settingsStoreRef = useRef(useSettingsStore.getState());
   const shortcutsStoreRef = useRef(useKeyboardShortcutsStore.getState());
+  const onboardingStoreRef = useRef(useOnboardingStore.getState());
 
   // Keep refs up to date
   useEffect(() => {
@@ -91,6 +78,9 @@ export function useCommands() {
     const unsubShortcuts = useKeyboardShortcutsStore.subscribe((s) => {
       shortcutsStoreRef.current = s;
     });
+    const unsubOnboarding = useOnboardingStore.subscribe((s) => {
+      onboardingStoreRef.current = s;
+    });
 
     return () => {
       unsubTheme();
@@ -99,6 +89,7 @@ export function useCommands() {
       unsubTableData();
       unsubSettings();
       unsubShortcuts();
+      unsubOnboarding();
     };
   }, []);
 
@@ -176,15 +167,20 @@ export function useCommands() {
       const toggleSchemaDetailsBinding = getShortcut(
         'view.toggle-schema-details'
       );
-      if (matchesBinding(e, toggleSchemaDetailsBinding)) {
-        // Check if we're in the Data Browser tab (base-ui uses data-active attribute)
-        const dataTab = document.querySelector<HTMLButtonElement>(
-          '[data-tab="data"][data-active]'
-        );
-        if (dataTab) {
-          e.preventDefault();
-          settingsStoreRef.current.toggleSchemaDetails();
-        }
+      // Check if we're in the Data Browser tab (base-ui uses data-active attribute)
+      // or data-state="active" attribute
+      const dataTab = document.querySelector<HTMLButtonElement>(
+        '[data-tab="data"][data-active]'
+      );
+      const dataTabStateActive = document.querySelector<HTMLButtonElement>(
+        '[data-tab="data"][data-state="active"]'
+      );
+      if (
+        matchesBinding(e, toggleSchemaDetailsBinding) &&
+        (dataTab || dataTabStateActive)
+      ) {
+        e.preventDefault();
+        settingsStoreRef.current.toggleSchemaDetails();
         return;
       }
 
@@ -317,6 +313,27 @@ export function useCommands() {
             connectionTabOrder.length;
           setActiveConnection(connectionTabOrder[prevIndex]);
         }
+      }
+
+      // Onboarding shortcut - skip if not in onboarding tour
+      const onboardingSkipBinding = getShortcut('onboarding.skip');
+      if (
+        matchesBinding(e, onboardingSkipBinding) &&
+        onboardingStoreRef.current.currentStep !== null
+      ) {
+        e.preventDefault();
+        onboardingStoreRef.current.skip();
+        return;
+      }
+
+      // Onboarding shortcut - skip if not in onboarding tour
+      const onboardingNextBinding = getShortcut('onboarding.next');
+      if (
+        matchesBinding(e, onboardingNextBinding) &&
+        onboardingStoreRef.current.currentStep !== null
+      ) {
+        e.preventDefault();
+        onboardingStoreRef.current.next();
       }
     };
 
@@ -476,112 +493,14 @@ export function useCommands() {
           connectionStoreRef.current.connectionTabOrder.length <= 1,
       },
 
-      // View commands
-      {
-        id: 'view.theme-light',
-        label: 'Switch to Light Theme',
-        icon: Sun,
-        category: 'view',
-        keywords: ['theme', 'light', 'appearance'],
-        action: () => themeStoreRef.current.setTheme('light'),
-        disabled: () => themeStoreRef.current.theme === 'light',
-      },
-      {
-        id: 'view.theme-dark',
-        label: 'Switch to Dark Theme',
-        icon: Moon,
-        category: 'view',
-        keywords: ['theme', 'dark', 'appearance'],
-        action: () => themeStoreRef.current.setTheme('dark'),
-        disabled: () => themeStoreRef.current.theme === 'dark',
-      },
-      {
-        id: 'view.theme-system',
-        label: 'Use System Theme',
-        icon: Monitor,
-        category: 'view',
-        keywords: ['theme', 'system', 'auto', 'appearance'],
-        action: () => themeStoreRef.current.setTheme('system'),
-        disabled: () => themeStoreRef.current.theme === 'system',
-      },
-      {
-        id: 'view.toggle-history',
-        label: 'Toggle Query History',
-        shortcut: getShortcutDisplay('view.toggle-history'),
-        icon: History,
-        category: 'view',
-        keywords: ['history', 'query', 'recent'],
-        action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
-            'button[data-action="toggle-history"]'
-          );
-          button?.click();
-        },
-      },
-      {
-        id: 'view.toggle-schema-details',
-        label: 'Toggle Schema Details',
-        shortcut: getShortcutDisplay('view.toggle-schema-details'),
-        icon: Table,
-        category: 'view',
-        keywords: ['schema', 'details', 'info', 'columns', 'indexes'],
-        action: () => {
-          settingsStoreRef.current.toggleSchemaDetails();
-        },
-      },
-      {
-        id: 'view.toggle-saved-queries',
-        label: 'Toggle Saved Queries',
-        shortcut: formatShortcut('F', { cmd: true, shift: true }),
-        icon: Search,
-        category: 'view',
-        keywords: ['saved', 'queries', 'favorites', 'collections'],
-        action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
-            'button[data-action="toggle-saved-queries"]'
-          );
-          button?.click();
-        },
-      },
-
-      // Action commands
-      {
-        id: 'action.refresh-schema',
-        label: 'Refresh Schema',
-        shortcut: getShortcutDisplay('action.refresh-schema'),
-        icon: RefreshCw,
-        category: 'actions',
-        keywords: ['refresh', 'schema', 'reload', 'update'],
-        action: async () => {
-          const {
-            connection,
-            activeConnectionId,
-            setIsLoadingSchema,
-            setSchema,
-          } = connectionStoreRef.current;
-          if (!connection || !activeConnectionId) return;
-          setIsLoadingSchema(true);
-          const result = await sqlPro.db.getSchema({
-            connectionId: connection.id,
-          });
-          if (result.success) {
-            setSchema(activeConnectionId, {
-              schemas: result.schemas || [],
-              tables: result.tables || [],
-              views: result.views || [],
-            });
-          }
-          setIsLoadingSchema(false);
-        },
-        disabled: () => !connectionStoreRef.current.connection,
-      },
+      // Table commands
       {
         id: 'action.refresh-table',
         label: 'Refresh Table',
         shortcut: getShortcutDisplay('action.refresh-table'),
         icon: RefreshCw,
-        category: 'actions',
-        keywords: ['refresh', 'table', 'reload', 'data'],
+        category: 'table',
+        keywords: ['refresh', 'table', 'data', 'reload', 'invalidate'],
         action: () => {
           const { activeConnectionId } = connectionStoreRef.current;
           if (activeConnectionId) {
@@ -590,258 +509,134 @@ export function useCommands() {
             });
           }
         },
-        disabled: () => !connectionStoreRef.current.activeConnectionId,
-      },
-      {
-        id: 'action.execute-query',
-        label: 'Execute Query',
-        shortcut: getShortcutDisplay('action.execute-query'),
-        icon: Code,
-        category: 'actions',
-        keywords: ['execute', 'run', 'query', 'sql'],
-        action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
-            'button[data-action="execute-query"]'
-          );
-          button?.click();
-        },
-        disabled: () => !connectionStoreRef.current.connection,
-      },
-      {
-        id: 'action.save-query',
-        label: 'Save Query',
-        shortcut: formatShortcut('S', { cmd: true }),
-        icon: Bookmark,
-        category: 'actions',
-        keywords: ['save', 'query', 'bookmark', 'collection'],
-        action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
-            'button[data-action="save-query"]'
-          );
-          button?.click();
-        },
-        disabled: () => !connectionStoreRef.current.connection,
-      },
-      {
-        id: 'action.view-changes',
-        label: 'View Unsaved Changes',
-        shortcut: getShortcutDisplay('action.view-changes'),
-        icon: FileText,
-        category: 'actions',
-        keywords: ['changes', 'unsaved', 'diff', 'pending'],
-        action: () => {
-          document
-            .querySelector<HTMLButtonElement>(
-              '.text-amber-600, .text-amber-400'
-            )
-            ?.click();
-        },
-      },
-      {
-        id: 'action.disconnect',
-        label: 'Close Database',
-        shortcut: getShortcutDisplay('action.close-database'),
-        icon: X,
-        category: 'actions',
-        keywords: ['disconnect', 'close', 'database'],
-        action: async () => {
-          const {
-            connection,
-            activeConnectionId,
-            removeConnection,
-            setSelectedTable,
-          } = connectionStoreRef.current;
-          if (connection && activeConnectionId) {
-            await sqlPro.db.close({ connectionId: connection.id });
-            removeConnection(activeConnectionId);
-            setSelectedTable(null);
-            changesStoreRef.current.clearChangesForConnection(
-              activeConnectionId
-            );
-            tableDataStoreRef.current.resetConnection(activeConnectionId);
-            navigate({ to: '/' });
-          }
-        },
-        disabled: () => !connectionStoreRef.current.connection,
       },
       {
         id: 'action.save-changes',
         label: 'Save Changes',
         shortcut: getShortcutDisplay('action.save-changes'),
         icon: Save,
-        category: 'actions',
-        keywords: ['save', 'apply', 'commit', 'changes'],
+        category: 'table',
+        keywords: ['save', 'changes', 'commit', 'apply', 'database'],
         action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
+          const saveButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="save-changes"]'
           );
-          button?.click();
+          saveButton?.click();
         },
-        disabled: () => !changesStoreRef.current.hasChanges(),
+        disabled: () => !useChangesStore.getState().hasChanges,
       },
       {
         id: 'action.discard-changes',
         label: 'Discard Changes',
         shortcut: getShortcutDisplay('action.discard-changes'),
         icon: Undo2,
-        category: 'actions',
-        keywords: ['discard', 'revert', 'undo', 'cancel', 'changes'],
+        category: 'table',
+        keywords: ['discard', 'changes', 'cancel', 'revert', 'database'],
         action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
+          const discardButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="discard-changes"]'
           );
-          button?.click();
+          discardButton?.click();
         },
-        disabled: () => !changesStoreRef.current.hasChanges(),
+        disabled: () => !useChangesStore.getState().hasChanges,
       },
       {
         id: 'action.add-row',
         label: 'Add Row',
         shortcut: getShortcutDisplay('action.add-row'),
         icon: Plus,
-        category: 'actions',
-        keywords: ['add', 'new', 'insert', 'row', 'record'],
+        category: 'table',
+        keywords: ['add', 'row', 'insert', 'new', 'table'],
         action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
+          const addRowButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="add-row"]'
           );
-          button?.click();
+          addRowButton?.click();
         },
-        disabled: () => !connectionStoreRef.current.selectedTable,
       },
       {
         id: 'action.delete-row',
         label: 'Delete Row',
         shortcut: getShortcutDisplay('action.delete-row'),
         icon: Trash2,
-        category: 'actions',
-        keywords: ['delete', 'remove', 'row', 'record'],
+        category: 'table',
+        keywords: ['delete', 'row', 'remove', 'table'],
         action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
+          const deleteRowButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="delete-row"]'
           );
-          button?.click();
+          deleteRowButton?.click();
         },
-        disabled: () => !connectionStoreRef.current.selectedTable,
       },
       {
         id: 'action.export-data',
         label: 'Export Data',
         shortcut: getShortcutDisplay('action.export-data'),
         icon: FileDown,
-        category: 'actions',
-        keywords: ['export', 'download', 'csv', 'json', 'excel'],
-        action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
-            'button[data-action="export-data"]'
-          );
-          button?.click();
-        },
-        disabled: () => !connectionStoreRef.current.selectedTable,
-      },
-      {
-        id: 'action.focus-search',
-        label: 'Focus Search',
-        shortcut: getShortcutDisplay('action.focus-search'),
-        icon: Search,
-        category: 'actions',
-        keywords: ['search', 'find', 'filter', 'focus'],
-        action: () => {
-          const searchInput = document.querySelector<HTMLInputElement>(
-            'input[placeholder*="Search"]'
-          );
-          if (searchInput) {
-            searchInput.focus();
-            searchInput.select();
-          }
-        },
-      },
-      {
-        id: 'action.compare-schemas',
-        label: 'Compare Schemas',
-        icon: GitCompare,
-        category: 'actions',
-        keywords: ['compare', 'schema', 'diff', 'comparison'],
-        action: () => {
-          document
-            .querySelector<HTMLButtonElement>('[data-tab="compare"]')
-            ?.click();
-          const timeoutId = setTimeout(() => {
-            const compareButton = document.querySelector<HTMLButtonElement>(
-              'button:has(svg.lucide-git-compare)'
-            );
-            compareButton?.click();
-          }, 100);
-          return () => clearTimeout(timeoutId);
-        },
-        disabled: () => !connectionStoreRef.current.connection,
-      },
-      {
-        id: 'action.export-schema-report',
-        label: 'Export Schema Comparison Report',
-        icon: FileDown,
-        category: 'actions',
-        keywords: ['export', 'schema', 'report', 'comparison', 'download'],
+        category: 'table',
+        keywords: ['export', 'data', 'download', 'csv', 'table'],
         action: () => {
           const exportButton = document.querySelector<HTMLButtonElement>(
-            'button:has(svg.lucide-file-down)'
+            'button[data-action="export-data"]'
           );
-          if (exportButton) {
-            exportButton.click();
-            return undefined;
-          } else {
-            document
-              .querySelector<HTMLButtonElement>('[data-tab="compare"]')
-              ?.click();
-            const timeoutId = setTimeout(() => {
-              const btn = document.querySelector<HTMLButtonElement>(
-                'button:has(svg.lucide-file-down)'
-              );
-              btn?.click();
-            }, 100);
-            return () => clearTimeout(timeoutId);
-          }
-        },
-        disabled: () => !connectionStoreRef.current.connection,
-      },
-      {
-        id: 'action.new-window',
-        label: 'New Window',
-        shortcut: getShortcutDisplay('action.new-window'),
-        icon: PanelLeft,
-        category: 'actions',
-        keywords: ['new', 'window', 'open'],
-        action: async () => {
-          if (window.sqlPro?.window) {
-            await sqlPro.window.create();
-          }
+          exportButton?.click();
         },
       },
+
+      // View commands
       {
-        id: 'action.open-database',
-        label: 'Open Database...',
-        shortcut: getShortcutDisplay('action.open-database'),
-        icon: Database,
-        category: 'actions',
-        keywords: ['open', 'database', 'file', 'connect'],
+        id: 'view.toggle-schema-details',
+        label: 'Toggle Schema Details',
+        shortcut: getShortcutDisplay('view.toggle-schema-details'),
+        icon: Monitor,
+        category: 'view',
+        keywords: ['toggle', 'schema', 'details', 'columns', 'info'],
         action: () => {
-          const openButton = document.querySelector<HTMLButtonElement>(
-            'button[data-action="open-database"]'
-          );
-          if (openButton) {
-            openButton.click();
-          } else {
-            navigate({ to: '/' });
-            const timer = setTimeout(() => {
-              const btn = document.querySelector<HTMLButtonElement>(
-                'button[data-action="open-database"]'
-              );
-              btn?.click();
-              clearTimeout(timer);
-            }, 100);
-          }
+          settingsStoreRef.current.toggleSchemaDetails();
         },
-        disabled: () => !!connectionStoreRef.current.connection,
+      },
+      {
+        id: 'view.full-screen',
+        label: 'Toggle Full Screen',
+        shortcut: getShortcutDisplay('view.full-screen'),
+        icon: PanelLeft,
+        category: 'view',
+        keywords: ['toggle', 'full', 'screen', 'maximize', 'editor'],
+        action: () => {
+          const fullScreenButton = document.querySelector<HTMLButtonElement>(
+            'button[data-action="toggle-fullscreen"]'
+          );
+          fullScreenButton?.click();
+        },
+      },
+
+      // Theme commands
+      {
+        id: 'theme.toggle',
+        label: 'Toggle Theme',
+        shortcut: getShortcutDisplay('theme.toggle'),
+        icon: Sun,
+        category: 'theme',
+        keywords: ['toggle', 'theme', 'dark', 'light', 'mode', 'sun', 'moon'],
+        action: () => {
+          themeStoreRef.current.toggleTheme();
+        },
+      },
+
+      // History commands
+      {
+        id: 'history.clear',
+        label: 'Clear History',
+        shortcut: getShortcutDisplay('history.clear'),
+        icon: Trash2,
+        category: 'history',
+        keywords: ['clear', 'history', 'delete', 'remove', 'sql', 'query'],
+        action: () => {
+          const clearHistoryButton = document.querySelector<HTMLButtonElement>(
+            'button[data-action="clear-history"]'
+          );
+          clearHistoryButton?.click();
+        },
       },
 
       // Settings commands
@@ -851,89 +646,75 @@ export function useCommands() {
         shortcut: getShortcutDisplay('settings.open'),
         icon: Settings,
         category: 'settings',
-        keywords: ['settings', 'preferences', 'options', 'config'],
+        keywords: ['open', 'settings', 'preferences', 'config'],
         action: () => {
-          const button = document.querySelector<HTMLButtonElement>(
+          const settingsButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="open-settings"]'
           );
-          button?.click();
-        },
-      },
-      {
-        id: 'settings.toggle-editor-vim',
-        label: 'Toggle Editor Vim Mode',
-        icon: Keyboard,
-        category: 'settings',
-        keywords: ['vim', 'editor', 'mode', 'keybindings'],
-        action: () => {
-          const { editorVimMode, setEditorVimMode } = settingsStoreRef.current;
-          setEditorVimMode(!editorVimMode);
-        },
-      },
-      {
-        id: 'settings.toggle-app-vim',
-        label: 'Toggle App Vim Navigation',
-        icon: Keyboard,
-        category: 'settings',
-        keywords: ['vim', 'navigation', 'app', 'keybindings'],
-        action: () => {
-          const { appVimMode, setAppVimMode } = settingsStoreRef.current;
-          setAppVimMode(!appVimMode);
+          settingsButton?.click();
         },
       },
 
-      // Help commands
+      // Command Palette
       {
-        id: 'help.shortcuts',
-        label: 'Show Keyboard Shortcuts',
-        shortcut: getShortcutDisplay('help.shortcuts'),
-        icon: HelpCircle,
-        category: 'help',
-        keywords: ['help', 'shortcuts', 'keyboard', 'keys'],
+        id: 'action.command-palette',
+        label: 'Command Palette',
+        shortcut: getShortcutDisplay('action.command-palette'),
+        icon: Keyboard,
+        category: 'command-palette',
+        keywords: ['command', 'palette', 'search', 'go', 'shortcuts'],
+        action: toggle,
+      },
+      {
+        id: 'action.focus-search',
+        label: 'Focus Search',
+        shortcut: getShortcutDisplay('action.focus-search'),
+        icon: Search,
+        category: 'command-palette',
+        keywords: ['focus', 'search', 'input', 'tables'],
         action: () => {
-          toggle();
+          const searchInput = document.querySelector<HTMLInputElement>(
+            'input[placeholder*="Search"]'
+          );
+          searchInput?.focus();
+          searchInput?.select();
         },
+      },
+
+      // Onboarding commands
+      {
+        id: 'onboarding.skip',
+        label: 'Skip Tour',
+        shortcut: getShortcutDisplay('onboarding.skip'),
+        icon: X,
+        category: 'onboarding',
+        keywords: ['skip', 'tour', 'onboarding', 'exit'],
+        action: () => {
+          onboardingStoreRef.current.skip();
+        },
+        // Only show if onboarding is active
+        disabled: () => onboardingStoreRef.current.currentStep === null,
+      },
+      {
+        id: 'onboarding.next',
+        label: 'Next Step',
+        shortcut: getShortcutDisplay('onboarding.next'),
+        icon: SkipForward,
+        category: 'onboarding',
+        keywords: ['next', 'step', 'tour', 'onboarding'],
+        action: () => {
+          onboardingStoreRef.current.next();
+        },
+        // Only show if onboarding is active
+        disabled: () => onboardingStoreRef.current.currentStep === null,
       },
     ];
 
     registerCommands(commands);
-    // Only run once on mount - registerCommands is stable from zustand
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  // Register dynamic connection switch commands
-  useEffect(() => {
-    // Create commands for each open connection
-    const connectionCommands: Command[] = Array.from(connections.values()).map(
-      (conn) => ({
-        id: `conn.switch-to-${conn.id}`,
-        label: `Switch to: ${conn.filename}`,
-        icon: Database,
-        category: 'navigation',
-        keywords: ['switch', 'connection', 'database', conn.filename || ''],
-        action: () => {
-          setActiveConnection(conn.id);
-        },
-        disabled: () => activeConnectionId === conn.id,
-      })
-    );
-
-    // Register the connection commands
-    if (connectionCommands.length > 0) {
-      registerCommands(connectionCommands);
-    }
-
-    // Cleanup: unregister old connection commands when connections change
+    // Unregister commands on unmount
     return () => {
-      Array.from(connections.values()).forEach((conn) => {
-        unregisterCommand(`conn.switch-to-${conn.id}`);
-      });
+      commands.forEach(({ id }) => unregisterCommand(id));
     };
-  }, [
-    connections,
-    activeConnectionId,
-    setActiveConnection,
-    registerCommands,
-    unregisterCommand,
-  ]);
+  }, [registerCommands, unregisterCommand, toggle]);
 }

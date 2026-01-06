@@ -6,6 +6,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { AppQuitDialog } from '@/components/AppQuitDialog';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { WelcomeDialog } from '@/components/onboarding';
 import { SqlLogPanel } from '@/components/SqlLogPanel';
 import { sqlPro } from '@/lib/api';
 import { initMockMode, isMockMode } from '@/lib/mock-api';
@@ -14,6 +15,7 @@ import { router } from '@/routes';
 import {
   useAIStore,
   useConnectionStore,
+  useOnboardingStore,
   useProStore,
   useQueryTabsStore,
   useTableDataStore,
@@ -41,6 +43,7 @@ function App(): React.JSX.Element {
     hasChangesForConnection,
     clearChangesForConnection,
   } = useChangesStore();
+  const { hasSeenWelcome } = useOnboardingStore();
 
   // App quit dialog state
   const [showQuitDialog, setShowQuitDialog] = useState(false);
@@ -220,6 +223,12 @@ function App(): React.JSX.Element {
             onSave={handleSaveAndQuit}
             onDiscard={handleDiscardAndQuit}
             onCancel={handleCancelQuit}
+          />
+          <WelcomeDialog
+            open={!hasSeenWelcome && activeConnectionId !== null}
+            onOpenChange={() => {
+              // Dialog will close via store actions (startTour/skipTour)
+            }}
           />
         </TooltipProvider>
       </QueryClientProvider>

@@ -85,8 +85,10 @@ export function ServerConnectionDialog({
   );
 
   // Reset form when dialog opens or database type changes
+
   useEffect(() => {
     if (open) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional form reset on dialog open or mode change */
       if (isEditMode && initialConfig) {
         // Pre-fill with existing config for edit mode
         setHost(initialConfig.host || '');
@@ -119,6 +121,7 @@ export function ServerConnectionDialog({
         setSupabaseKey('');
       }
       setTestResult(null);
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
     }
   }, [open, databaseType, isEditMode, initialConfig]);
 

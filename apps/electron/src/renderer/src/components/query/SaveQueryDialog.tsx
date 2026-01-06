@@ -109,8 +109,10 @@ export function SaveQueryDialog({
   }, [open, loadCollections]);
 
   // Reset form when dialog opens/closes
+
   useEffect(() => {
     if (open) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional form reset when dialog opens */
       setName(initialData?.name || '');
       setDescription(initialData?.description || '');
       setIsFavorite(initialData?.isFavorite || false);
@@ -123,6 +125,7 @@ export function SaveQueryDialog({
         color: DEFAULT_COLORS[0],
         icon: DEFAULT_ICONS[0],
       });
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
     }
   }, [open, initialData]);
 

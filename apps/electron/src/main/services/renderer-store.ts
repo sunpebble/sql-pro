@@ -9,6 +9,7 @@
 import type {
   RendererConnectionState,
   RendererDiagramState,
+  RendererOnboardingState,
   RendererPanelWidths,
   RendererSettingsState,
   RendererStoreSchema,
@@ -49,6 +50,13 @@ const DEFAULT_CONNECTION_UI: RendererConnectionState = {
   connectionColors: {},
 };
 
+const DEFAULT_ONBOARDING: RendererOnboardingState = {
+  hasSeenWelcome: false,
+  hasCompletedTour: false,
+  currentStep: 0,
+  isTourVisible: false,
+};
+
 // ============ Store Instance ============
 
 let _rendererStore: Store<RendererStoreSchema> | null = null;
@@ -62,6 +70,7 @@ function getRendererStore(): Store<RendererStoreSchema> {
         diagram: DEFAULT_DIAGRAM,
         panelWidths: DEFAULT_PANEL_WIDTHS,
         connectionUi: DEFAULT_CONNECTION_UI,
+        onboarding: DEFAULT_ONBOARDING,
       },
       // Enable schema migration for future updates
       migrations: {
@@ -89,6 +98,7 @@ export function getRendererState<K extends keyof RendererStoreSchema>(
     diagram: DEFAULT_DIAGRAM,
     panelWidths: DEFAULT_PANEL_WIDTHS,
     connectionUi: DEFAULT_CONNECTION_UI,
+    onboarding: DEFAULT_ONBOARDING,
   };
   const result = getRendererStore().get(key, defaults[key]);
   return result;
@@ -126,6 +136,7 @@ export function resetRendererState<K extends keyof RendererStoreSchema>(
     diagram: DEFAULT_DIAGRAM,
     panelWidths: DEFAULT_PANEL_WIDTHS,
     connectionUi: DEFAULT_CONNECTION_UI,
+    onboarding: DEFAULT_ONBOARDING,
   };
   getRendererStore().set(key, defaults[key]);
 }
@@ -210,4 +221,5 @@ export const RENDERER_STORE_DEFAULTS = {
   diagram: DEFAULT_DIAGRAM,
   panelWidths: DEFAULT_PANEL_WIDTHS,
   connectionUi: DEFAULT_CONNECTION_UI,
+  onboarding: DEFAULT_ONBOARDING,
 } as const;

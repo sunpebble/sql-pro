@@ -47,9 +47,13 @@ export function GlobalDialogs() {
   // Update edit state when target changes
   useEffect(() => {
     if (connectionSettingsTarget) {
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on target change
       setEditFilename(connectionSettingsTarget.filename);
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on target change
       setEditDbPath(connectionSettingsTarget.path);
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on target change
       setEditIsEncrypted(connectionSettingsTarget.isEncrypted);
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on target change
       setEditInitialValues({
         displayName: connectionSettingsTarget.displayName,
         readOnly: connectionSettingsTarget.readOnly,

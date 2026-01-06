@@ -105,8 +105,10 @@ export function CollectionsList() {
   }, [loadCollections]);
 
   // Reset form when dialogs close
+
   useEffect(() => {
     if (!createDialogOpen && !editDialogOpen) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset when dialog closes */
       setFormData({
         name: '',
         description: '',
@@ -115,18 +117,22 @@ export function CollectionsList() {
       });
       setNameError('');
       setSelectedCollectionForEdit(null);
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
     }
   }, [createDialogOpen, editDialogOpen]);
 
   // Populate form when editing
+
   useEffect(() => {
     if (editDialogOpen && selectedCollection) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional form population */
       setFormData({
         name: selectedCollection.name,
         description: selectedCollection.description || '',
         color: selectedCollection.color || DEFAULT_COLORS[0],
         icon: selectedCollection.icon || DEFAULT_ICON,
       });
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
     }
   }, [editDialogOpen, selectedCollection]);
 
@@ -256,7 +262,8 @@ export function CollectionsList() {
         <div className="overflow-auto">
           <div className="space-y-3 p-4">
             {Array.from({ length: 3 }).map((_, index) => (
-              <Card key={index} size="sm">
+              // eslint-disable-next-line react/no-array-index-key
+              <Card key={`skeleton-${index}`} size="sm">
                 <CardHeader>
                   <div className="flex items-start gap-3">
                     <Skeleton className="h-10 w-10 shrink-0 rounded-lg" />

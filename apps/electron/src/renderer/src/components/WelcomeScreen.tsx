@@ -344,12 +344,12 @@ export function WelcomeScreen() {
     [setIsConnecting]
   );
 
-  const handleOpenDatabase = async () => {
+  const handleOpenDatabase = useCallback(async () => {
     const result = await sqlPro.dialog.openFile();
     if (result.success && !result.canceled && result.filePath) {
       await openDatabaseFile(result.filePath);
     }
-  };
+  }, [openDatabaseFile]);
 
   const handleSettingsSubmit = async (settings: ConnectionSettings) => {
     setSettingsDialogOpen(false);
@@ -707,7 +707,7 @@ export function WelcomeScreen() {
         setServerConnectionOpen(true);
       }
     },
-    [setError]
+    [setError, handleOpenDatabase]
   );
 
   // Handle server database connection

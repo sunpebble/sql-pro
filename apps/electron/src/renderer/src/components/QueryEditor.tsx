@@ -254,6 +254,7 @@ export function QueryEditor() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- queriesSubTab is intentionally excluded to prevent re-registering listener
   }, [tabQuery, showSidePanel, sidePanelTab]);
 
   const handleExecute = useCallback(async () => {

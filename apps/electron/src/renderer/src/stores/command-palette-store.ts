@@ -6,7 +6,17 @@ export interface Command {
   label: string;
   shortcut?: string; // Display format like "⌘K" or "Ctrl+K"
   icon?: LucideIcon;
-  category: 'navigation' | 'view' | 'actions' | 'settings' | 'help';
+  category:
+    | 'navigation'
+    | 'view'
+    | 'actions'
+    | 'settings'
+    | 'help'
+    | 'table'
+    | 'theme'
+    | 'history'
+    | 'command-palette'
+    | 'onboarding';
   keywords?: string[]; // Additional search terms
   action: () => void;
   disabled?: () => boolean;

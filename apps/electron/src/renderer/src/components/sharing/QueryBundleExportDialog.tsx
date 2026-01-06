@@ -155,9 +155,6 @@ export function QueryBundleExportDialog({
   }, [
     bundleName,
     bundleDescription,
-    databaseContext,
-    parseBundleTags,
-    documentation,
     compress,
     queries,
     isValid,

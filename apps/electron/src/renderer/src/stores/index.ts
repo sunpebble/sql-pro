@@ -44,6 +44,7 @@ export type {
   ShortcutPreset,
   ShortcutsExport,
 } from './keyboard-shortcuts-store';
+export { useOnboardingStore } from './onboarding-store';
 export { ALL_PRO_FEATURES, useProStore } from './pro-store';
 export { useQueryStore } from './query-store';
 export { useQueryTabsStore } from './query-tabs-store';
