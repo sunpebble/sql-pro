@@ -2796,7 +2796,7 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true } },
   'view.toggle-schema-details': {
-    key: '\\',
+    key: 'i',
     modifiers: { cmd: true },
   },
   'action.command-palette': { key: 'k', modifiers: { cmd: true } },

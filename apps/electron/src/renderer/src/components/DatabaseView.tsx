@@ -273,9 +273,9 @@ export function DatabaseView({
               {showSchemaDetails && (
                 <ResizablePanel
                   side="right"
-                  defaultWidth={360}
-                  minWidth={280}
-                  maxWidth={500}
+                  defaultWidth={400}
+                  minWidth={320}
+                  maxWidth={600}
                   storageKey="schema-details-panel"
                 >
                   <SchemaDetailsPanel

@@ -216,7 +216,7 @@ When using Vim navigation:
 
 | Action                   | macOS                         | Windows/Linux                  |
 | ------------------------ | ----------------------------- | ------------------------------ |
-| Toggle Schema Panel      | <kbd>Cmd</kbd> + <kbd>4</kbd> | <kbd>Ctrl</kbd> + <kbd>4</kbd> |
+| Toggle Schema Panel      | <kbd>Cmd</kbd> + <kbd>I</kbd> | <kbd>Ctrl</kbd> + <kbd>I</kbd> |
 | Open Settings            | <kbd>Cmd</kbd> + <kbd>,</kbd> | <kbd>Ctrl</kbd> + <kbd>,</kbd> |
 | Focus Search (Vim mode)  | <kbd>/</kbd>                  | <kbd>/</kbd>                   |
 | Navigate Down (Vim mode) | <kbd>j</kbd>                  | <kbd>j</kbd>                   |
@@ -236,7 +236,7 @@ When using Vim navigation:
 1. **Use search** for large databases with many tables
 2. **Collapse sections** you don't need to reduce visual clutter
 3. **Enable Vim mode** for keyboard-first navigation
-4. **Use Cmd+4** to quickly toggle the details panel
+4. **Use Cmd+I** to quickly toggle the details panel
 
 ### Working with Schemas
 

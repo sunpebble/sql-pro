@@ -23,7 +23,7 @@ Navigate between different areas of the application.
 | Open Data Browser     | <kbd>Cmd</kbd> + <kbd>1</kbd>                    | <kbd>Ctrl</kbd> + <kbd>1</kbd>                    |
 | Open SQL Query Editor | <kbd>Cmd</kbd> + <kbd>2</kbd>                    | <kbd>Ctrl</kbd> + <kbd>2</kbd>                    |
 | Open ER Diagram       | <kbd>Cmd</kbd> + <kbd>3</kbd>                    | <kbd>Ctrl</kbd> + <kbd>3</kbd>                    |
-| Toggle Schema Details | <kbd>Cmd</kbd> + <kbd>4</kbd>                    | <kbd>Ctrl</kbd> + <kbd>4</kbd>                    |
+| Toggle Schema Details | <kbd>Cmd</kbd> + <kbd>I</kbd>                    | <kbd>Ctrl</kbd> + <kbd>I</kbd>                    |
 | Open Schema Compare   | <kbd>Cmd</kbd> + <kbd>5</kbd>                    | <kbd>Ctrl</kbd> + <kbd>5</kbd>                    |
 | Search Tables         | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> |
 | Toggle Query History  | <kbd>Cmd</kbd> + <kbd>H</kbd>                    | <kbd>Ctrl</kbd> + <kbd>H</kbd>                    |

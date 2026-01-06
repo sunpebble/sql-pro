@@ -508,8 +508,8 @@ export function TableView({ tableOverride }: TableViewProps) {
         )}
 
         {/* Table Header */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2">
-          <div className="flex min-w-0 items-center gap-2">
+        <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
+          <div className="flex min-w-0 items-center gap-2 overflow-hidden">
             <h2 className="truncate font-medium">{selectedTable.name}</h2>
             <span className="text-muted-foreground shrink-0 text-sm">
               {searchStats.isSearching ? (
@@ -538,9 +538,9 @@ export function TableView({ tableOverride }: TableViewProps) {
             )}
           </div>
 
-          <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             {/* Search Input */}
-            <div className="relative">
+            <div className="relative hidden lg:block">
               <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
               <Input
                 ref={searchInputRef}
@@ -548,7 +548,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 placeholder="Search in results..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-8 w-56 pr-8 pl-8 text-sm"
+                className="h-8 w-48 pr-8 pl-8 text-sm"
               />
               {searchTerm && (
                 <button
@@ -565,12 +565,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             {/* Refresh button */}
             <Tooltip>
               <TooltipTrigger>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => refetch()}
-                  className="gap-2"
-                >
+                <Button variant="outline" size="sm" onClick={() => refetch()}>
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -585,12 +580,11 @@ export function TableView({ tableOverride }: TableViewProps) {
               variant="outline"
               size="sm"
               onClick={() => setShowExportDialog(true)}
-              className="gap-2"
               disabled={rows.length === 0}
               data-action="export-data"
             >
               <Download className="h-4 w-4" />
-              Export
+              <span className="ml-1.5 hidden xl:inline">Export</span>
             </Button>
 
             {/* Add Row button */}
@@ -599,11 +593,10 @@ export function TableView({ tableOverride }: TableViewProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleAddRow}
-                className="gap-2"
                 data-action="add-row"
               >
                 <Plus className="h-4 w-4" />
-                Add Row
+                <span className="ml-1.5 hidden xl:inline">Add Row</span>
               </Button>
             )}
 
@@ -613,10 +606,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowDiffPreview(true)}
-                className="gap-2"
               >
                 <FileText className="h-4 w-4" />
-                {changeCount} pending {changeCount === 1 ? 'change' : 'changes'}
+                <span className="ml-1.5">{changeCount}</span>
               </Button>
             )}
 
@@ -627,21 +619,18 @@ export function TableView({ tableOverride }: TableViewProps) {
                   variant={showSchemaDetails ? 'secondary' : 'ghost'}
                   size="sm"
                   onClick={() => toggleSchemaDetails()}
-                  className="gap-1.5"
                   data-action="toggle-schema-details"
                 >
                   <Info className="h-4 w-4" />
-                  <span className="hidden sm:inline">Schema</span>
-                  <ShortcutKbd
-                    action="view.toggle-schema-details"
-                    className="hidden sm:inline-flex"
-                  />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
                 {showSchemaDetails
                   ? 'Hide schema details'
                   : 'View schema details'}
+                {' ('}
+                <ShortcutKbd action="view.toggle-schema-details" />
+                {')'}
               </TooltipContent>
             </Tooltip>
           </div>

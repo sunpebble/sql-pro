@@ -248,7 +248,7 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, shift: true } },
   'view.toggle-schema-details': {
-    key: '\\',
+    key: 'i',
     modifiers: { cmd: true },
   },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
@@ -286,7 +286,7 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, alt: true } },
   'view.toggle-schema-details': {
-    key: '\\',
+    key: 'i',
     modifiers: { cmd: true },
   },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },

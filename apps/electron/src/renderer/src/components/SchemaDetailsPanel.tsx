@@ -224,11 +224,10 @@ function ColumnsTable({ columns, primaryKey }: ColumnsTableProps) {
       <table className="w-full text-sm">
         <thead>
           <tr className="text-muted-foreground border-b text-left">
-            <th className="pr-4 pb-2 font-medium">Name</th>
-            <th className="pr-4 pb-2 font-medium">Type</th>
-            <th className="pr-4 pb-2 font-medium">Nullable</th>
-            <th className="pr-4 pb-2 font-medium">Default</th>
-            <th className="pb-2 font-medium">Key</th>
+            <th className="pr-3 pb-2 font-medium whitespace-nowrap">Name</th>
+            <th className="pr-3 pb-2 font-medium whitespace-nowrap">Type</th>
+            <th className="pr-3 pb-2 font-medium whitespace-nowrap">Null</th>
+            <th className="pb-2 font-medium whitespace-nowrap">Key</th>
           </tr>
         </thead>
         <tbody>
@@ -237,13 +236,15 @@ function ColumnsTable({ columns, primaryKey }: ColumnsTableProps) {
               primaryKey.includes(column.name) || column.isPrimaryKey;
             return (
               <tr key={column.name} className="border-b last:border-0">
-                <td className="py-2 pr-4 font-mono text-xs">{column.name}</td>
-                <td className="py-2 pr-4">
+                <td className="py-1.5 pr-3 font-mono text-xs whitespace-nowrap">
+                  {column.name}
+                </td>
+                <td className="py-1.5 pr-3 whitespace-nowrap">
                   <span className="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">
                     {column.type}
                   </span>
                 </td>
-                <td className="py-2 pr-4">
+                <td className="py-1.5 pr-3 whitespace-nowrap">
                   <span
                     className={cn(
                       'text-xs',
@@ -255,16 +256,7 @@ function ColumnsTable({ columns, primaryKey }: ColumnsTableProps) {
                     {column.nullable ? 'Yes' : 'No'}
                   </span>
                 </td>
-                <td className="py-2 pr-4">
-                  {column.defaultValue !== null ? (
-                    <span className="font-mono text-xs">
-                      {column.defaultValue}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground text-xs">-</span>
-                  )}
-                </td>
-                <td className="py-2">
+                <td className="py-1.5 whitespace-nowrap">
                   {isPK && (
                     <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-xs font-medium">
                       PK
