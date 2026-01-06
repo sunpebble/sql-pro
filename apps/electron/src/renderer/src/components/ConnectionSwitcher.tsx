@@ -8,7 +8,7 @@ import {
   CommandItem,
   CommandList,
 } from '@sqlpro/ui/command';
-import { Check, Clock, Database, Lock } from 'lucide-react';
+import { Check, Clock, Database, KeyRound } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
@@ -240,7 +240,7 @@ export function ConnectionSwitcher({
                     </div>
                     <div className="flex shrink-0 items-center gap-1">
                       {item.isEncrypted && (
-                        <Lock className="h-4 w-4 text-amber-500" />
+                        <KeyRound className="h-3 w-3 text-green-500" />
                       )}
                       {item.isActive && (
                         <Check className="text-primary h-4 w-4" />
@@ -275,7 +275,7 @@ export function ConnectionSwitcher({
                       </div>
                       <div className="flex shrink-0 items-center gap-1">
                         {item.isEncrypted && (
-                          <Lock className="h-4 w-4 text-amber-500" />
+                          <KeyRound className="h-3 w-3 text-green-500" />
                         )}
                         {item.lastOpened && (
                           <span className="text-muted-foreground text-xs">
