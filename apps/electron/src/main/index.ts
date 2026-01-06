@@ -112,6 +112,21 @@ function watchWindowShortcuts(window: BrowserWindow): void {
     if (!is.dev && input.control && input.key === 'r') {
       event.preventDefault();
     }
+    // Prevent DevTools shortcuts in production
+    // F12, Cmd+Option+I (macOS), Ctrl+Shift+I (Windows/Linux)
+    if (!is.dev) {
+      if (input.key === 'F12') {
+        event.preventDefault();
+      }
+      // Cmd+Option+I on macOS
+      if (input.meta && input.alt && input.key.toLowerCase() === 'i') {
+        event.preventDefault();
+      }
+      // Ctrl+Shift+I on Windows/Linux
+      if (input.control && input.shift && input.key.toLowerCase() === 'i') {
+        event.preventDefault();
+      }
+    }
   });
 }
 

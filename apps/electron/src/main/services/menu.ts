@@ -1,5 +1,6 @@
 import type { MenuAction, ShortcutPreset } from '@shared/types';
 import process from 'node:process';
+import { is } from '@electron-toolkit/utils';
 import {
   bindingToAccelerator,
   DEFAULT_SHORTCUTS,
@@ -182,19 +183,24 @@ export function createApplicationMenu(): void {
           accelerator: getAccelerator('view.toggle-history'),
           click: () => sendMenuAction('toggle-history'),
         },
-        { type: 'separator' },
-        {
-          label: 'Developer',
-          submenu: [
-            { role: 'toggleDevTools' },
-            { type: 'separator' },
-            {
-              label: 'Memory Monitor',
-              accelerator: 'CmdOrCtrl+Shift+M',
-              click: () => sendMenuAction('toggle-memory-monitor'),
-            },
-          ],
-        },
+        // Developer submenu only in development mode
+        ...(is.dev
+          ? [
+              { type: 'separator' as const },
+              {
+                label: 'Developer',
+                submenu: [
+                  { role: 'toggleDevTools' as const },
+                  { type: 'separator' as const },
+                  {
+                    label: 'Memory Monitor',
+                    accelerator: 'CmdOrCtrl+Shift+M',
+                    click: () => sendMenuAction('toggle-memory-monitor'),
+                  },
+                ],
+              },
+            ]
+          : []),
         { type: 'separator' },
         { role: 'resetZoom' },
         { role: 'zoomIn' },
