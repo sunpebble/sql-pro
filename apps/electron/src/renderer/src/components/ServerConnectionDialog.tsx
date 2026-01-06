@@ -405,9 +405,41 @@ export function ServerConnectionDialog({
           </ScrollArea>
 
           <DialogFooter className="flex-shrink-0 pt-4">
-            <div className="flex w-full items-center justify-between gap-2">
-              {/* Test Connection Button and Result */}
-              <div className="flex items-center gap-2">
+            <div className="flex w-full flex-col gap-3">
+              {/* Test Result Indicator - shown above buttons when present */}
+              {testResult && (
+                <div className="flex items-center gap-1.5 text-xs">
+                  {testResult.success ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" />
+                      <span className="text-green-600">
+                        Connected
+                        {testResult.latencyMs !== undefined && (
+                          <span className="text-muted-foreground ml-1">
+                            ({testResult.latencyMs}ms)
+                          </span>
+                        )}
+                        {testResult.serverVersion && (
+                          <span className="text-muted-foreground ml-1">
+                            - {testResult.serverVersion}
+                          </span>
+                        )}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="h-4 w-4 shrink-0 text-red-500" />
+                      <span className="text-red-600" title={testResult.error}>
+                        {testResult.error}
+                      </span>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Button Row */}
+              <div className="flex items-center justify-between gap-2">
+                {/* Test Connection Button */}
                 <Button
                   type="button"
                   variant="outline"
@@ -476,58 +508,24 @@ export function ServerConnectionDialog({
                   )}
                 </Button>
 
-                {/* Test Result Indicator */}
-                {testResult && (
-                  <div className="flex items-center gap-1 text-xs">
-                    {testResult.success ? (
-                      <>
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span className="text-green-600">
-                          Connected
-                          {testResult.latencyMs !== undefined && (
-                            <span className="text-muted-foreground ml-1">
-                              ({testResult.latencyMs}ms)
-                            </span>
-                          )}
-                          {testResult.serverVersion && (
-                            <span className="text-muted-foreground ml-1">
-                              - {testResult.serverVersion}
-                            </span>
-                          )}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="h-4 w-4 text-red-500" />
-                        <span
-                          className="max-w-[150px] truncate text-red-600"
-                          title={testResult.error}
-                        >
-                          {testResult.error}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onOpenChange(false)}
-                  disabled={isConnecting}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={!isFormValid || isConnecting}>
-                  {isConnecting
-                    ? 'Connecting...'
-                    : isEditMode
-                      ? 'Save & Connect'
-                      : 'Connect'}
-                </Button>
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => onOpenChange(false)}
+                    disabled={isConnecting}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={!isFormValid || isConnecting}>
+                    {isConnecting
+                      ? 'Connecting...'
+                      : isEditMode
+                        ? 'Save & Connect'
+                        : 'Connect'}
+                  </Button>
+                </div>
               </div>
             </div>
           </DialogFooter>

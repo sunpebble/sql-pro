@@ -177,6 +177,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         user: username,
         password,
         database: database || 'postgres',
+        connectionTimeoutMillis: 15000, // 15 second connection timeout
       };
 
       // SSL configuration
@@ -231,10 +232,19 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         },
       };
     } catch (error) {
-      const errorMessage =
+      let errorMessage =
         error instanceof Error
           ? error.message
           : 'Failed to connect to PostgreSQL';
+
+      // Provide more user-friendly message for timeout errors
+      if (
+        errorMessage.includes('timeout') ||
+        errorMessage.includes('ETIMEDOUT') ||
+        errorMessage.includes('ECONNREFUSED')
+      ) {
+        errorMessage = `Connection timeout: Unable to reach ${host}:${port}. Please verify the host address is correct and the server is accessible.`;
+      }
 
       sqlLogger.logOpen({
         connectionId: 'unknown',
@@ -387,10 +397,19 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         }
       }
 
-      const errorMessage =
+      let errorMessage =
         error instanceof Error
           ? error.message
           : 'Failed to connect to PostgreSQL';
+
+      // Provide more user-friendly message for timeout errors
+      if (
+        errorMessage.includes('timeout') ||
+        errorMessage.includes('ETIMEDOUT') ||
+        errorMessage.includes('ECONNREFUSED')
+      ) {
+        errorMessage = `Connection timeout: Unable to reach the server. Please verify the host address is correct and the server is accessible.`;
+      }
 
       const troubleshootingSteps =
         config.type === 'supabase'

@@ -87,6 +87,7 @@ export class MySQLAdapter implements DatabaseAdapter {
         user: config.username,
         password: config.password,
         database: config.database,
+        connectTimeout: 15000, // 15 second connection timeout
       };
 
       // SSL configuration
@@ -142,8 +143,17 @@ export class MySQLAdapter implements DatabaseAdapter {
         },
       };
     } catch (error) {
-      const errorMessage =
+      let errorMessage =
         error instanceof Error ? error.message : 'Failed to connect to MySQL';
+
+      // Provide more user-friendly message for timeout errors
+      if (
+        errorMessage.includes('timeout') ||
+        errorMessage.includes('ETIMEDOUT') ||
+        errorMessage.includes('ECONNREFUSED')
+      ) {
+        errorMessage = `Connection timeout: Unable to reach ${config.host}:${config.port || 3306}. Please verify the host address is correct and the server is accessible.`;
+      }
 
       sqlLogger.logOpen({
         connectionId: 'unknown',
@@ -253,8 +263,17 @@ export class MySQLAdapter implements DatabaseAdapter {
         }
       }
 
-      const errorMessage =
+      let errorMessage =
         error instanceof Error ? error.message : 'Failed to connect to MySQL';
+
+      // Provide more user-friendly message for timeout errors
+      if (
+        errorMessage.includes('timeout') ||
+        errorMessage.includes('ETIMEDOUT') ||
+        errorMessage.includes('ECONNREFUSED')
+      ) {
+        errorMessage = `Connection timeout: Unable to reach the server. Please verify the host address is correct and the server is accessible.`;
+      }
 
       return {
         success: false,

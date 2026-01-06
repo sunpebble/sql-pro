@@ -103,6 +103,7 @@ export function WelcomeScreen() {
     connections,
     addConnection,
     removeConnection,
+    setActiveConnection,
     setSchema,
     setIsConnecting,
     setIsLoadingSchema,
@@ -455,6 +456,30 @@ export function WelcomeScreen() {
         conn.databaseType !== 'sqlite' &&
         conn.connectionConfig
       ) {
+        // Check if this connection is already open
+        // Build the canonical server identifier from connectionConfig
+        const cfg = conn.connectionConfig;
+        const serverIdentifier = `${cfg.host || ''}:${cfg.port || 5432}/${cfg.database || 'postgres'}`;
+
+        const existingConnectionEntry = Array.from(connections.entries()).find(
+          ([, existingConn]) => {
+            // Match by path (could be displayName or host:port/database format)
+            if (existingConn.path === conn.path) return true;
+            if (existingConn.filename === conn.filename) return true;
+            // For server connections, also match by server identifier
+            if (existingConn.path === serverIdentifier) return true;
+            if (existingConn.path.includes(serverIdentifier)) return true;
+            return false;
+          }
+        );
+
+        if (existingConnectionEntry) {
+          // Connection already exists, just switch to it instead of creating duplicate
+          const [existingId] = existingConnectionEntry;
+          setActiveConnection(existingId);
+          return;
+        }
+
         setIsConnecting(true);
         setError(null);
 
@@ -537,6 +562,8 @@ export function WelcomeScreen() {
     },
     [
       connectToDatabase,
+      connections,
+      setActiveConnection,
       setIsConnecting,
       setError,
       addConnection,
@@ -587,14 +614,42 @@ export function WelcomeScreen() {
         }
 
         // Check if there's an existing connection with the same path and close it
-        const existingConnectionId = Array.from(connections.entries()).find(
-          ([, conn]) => conn.path === editingConnection.path
-        )?.[0];
+        // For server connections, path is typically: displayName or host:port/database
+        const editingPath = editingConnection.path;
+        const editingFilename = editingConnection.filename;
 
-        if (existingConnectionId) {
+        // Build the canonical server identifier from connectionConfig if available
+        // This is more reliable than path/filename which can change with displayName
+        let serverIdentifier: string | undefined;
+        if (editingConnection.connectionConfig) {
+          const cfg = editingConnection.connectionConfig;
+          const host = cfg.host || '';
+          const port = cfg.port || 5432;
+          const database = cfg.database || 'postgres';
+          serverIdentifier = `${host}:${port}/${database}`;
+        }
+
+        const existingConnectionEntry = Array.from(connections.entries()).find(
+          ([, conn]) => {
+            // Match by path (could be displayName or host:port/database format)
+            if (conn.path === editingPath) return true;
+            // Also check filename in case path format differs
+            if (conn.filename === editingFilename) return true;
+            // For server connections, also match by server identifier pattern in path
+            if (serverIdentifier && conn.path.includes(serverIdentifier)) {
+              return true;
+            }
+            // Check if conn.path matches the server identifier (host:port/database format)
+            if (serverIdentifier && conn.path === serverIdentifier) return true;
+            return false;
+          }
+        );
+
+        if (existingConnectionEntry) {
+          const [existingId] = existingConnectionEntry;
           // Close the existing connection before opening with new config
-          await sqlPro.db.close({ connectionId: existingConnectionId });
-          removeConnection(existingConnectionId);
+          await sqlPro.db.close({ connectionId: existingId });
+          removeConnection(existingId);
         }
 
         // Then connect with the new config
