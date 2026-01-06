@@ -1,5 +1,5 @@
 import type { RecentConnection } from '@shared/types';
-import { ScrollArea, ScrollBar } from '@sqlpro/ui/scroll-area';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -148,17 +148,20 @@ export function DatabaseView({
           className="flex min-w-0 flex-1 flex-col overflow-hidden"
         >
           {/* Tab List */}
-          <ScrollArea orientation="horizontal" className="h-10 w-full shrink-0">
-            <TabsList variant="line" className="flex h-10 border-b px-2">
+          <ScrollArea
+            orientation="horizontal"
+            className="w-full shrink-0 border-b"
+          >
+            <TabsList variant="line" className="flex h-10 px-2">
               <TabsTrigger
                 value="data"
                 data-tab="data"
                 data-tour-target="data-browser-tab"
                 className={cn(
-                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
                   activeTab === 'data'
-                    ? 'border-primary text-foreground'
-                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Table className="h-4 w-4" />
@@ -178,10 +181,10 @@ export function DatabaseView({
                 data-tab="query"
                 data-tour-target="query-editor-tab"
                 className={cn(
-                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
                   activeTab === 'query'
-                    ? 'border-primary text-foreground'
-                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Code className="h-4 w-4" />
@@ -196,10 +199,10 @@ export function DatabaseView({
                 data-tab="diagram"
                 data-tour-target="diagram-tab"
                 className={cn(
-                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
                   activeTab === 'diagram'
-                    ? 'border-primary text-foreground'
-                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <GitFork className="h-4 w-4" />
@@ -214,10 +217,10 @@ export function DatabaseView({
                 data-tab="compare"
                 data-tour-target="schema-compare-tab"
                 className={cn(
-                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
                   activeTab === 'compare'
-                    ? 'border-primary text-foreground'
-                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <GitCompare className="h-4 w-4" />
@@ -232,10 +235,10 @@ export function DatabaseView({
                 data-tab="dataDiff"
                 data-tour-target="data-diff-tab"
                 className={cn(
-                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
                   activeTab === 'dataDiff'
-                    ? 'border-primary text-foreground'
-                    : 'text-muted-foreground hover:text-foreground border-transparent'
+                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <ArrowLeftRight className="h-4 w-4" />
@@ -246,7 +249,6 @@ export function DatabaseView({
                 />
               </TabsTrigger>
             </TabsList>
-            <ScrollBar orientation="horizontal" />
           </ScrollArea>
 
           {/* Tab Content */}

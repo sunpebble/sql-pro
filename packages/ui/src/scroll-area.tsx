@@ -16,6 +16,19 @@ function ScrollArea({
   orientation = 'both',
   ...props
 }: ScrollAreaProps) {
+  // Compute overflow style based on orientation
+  // We need to use inline style because base-ui ScrollArea sets overflow: scroll by default
+  const overflowStyle = React.useMemo(() => {
+    switch (orientation) {
+      case 'horizontal':
+        return { overflowX: 'auto' as const, overflowY: 'hidden' as const };
+      case 'vertical':
+        return { overflowX: 'hidden' as const, overflowY: 'auto' as const };
+      default:
+        return { overflow: 'auto' as const };
+    }
+  }, [orientation]);
+
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
@@ -25,16 +38,18 @@ function ScrollArea({
       <ScrollAreaPrimitive.Viewport
         ref={viewportRef}
         data-slot="scroll-area-viewport"
-        className={cn(
-          'focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1',
-          orientation === 'horizontal' && 'overflow-x-auto overflow-y-hidden',
-          orientation === 'vertical' && 'overflow-x-hidden overflow-y-auto',
-          orientation === 'both' && 'overflow-auto'
-        )}
+        className="focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+        style={overflowStyle}
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
-      <ScrollBar />
+      {/* Only render scrollbars for the specified orientation */}
+      {(orientation === 'vertical' || orientation === 'both') && (
+        <ScrollBar orientation="vertical" />
+      )}
+      {(orientation === 'horizontal' || orientation === 'both') && (
+        <ScrollBar orientation="horizontal" />
+      )}
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
   );
