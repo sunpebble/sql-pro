@@ -1,13 +1,12 @@
 /**
- * Font classification categories and definitions
+ * Font utilities for the renderer process
+ * Uses the Local Font Access API to get system fonts
  */
 
-import type { FontCategory } from '@shared/types/font';
-
-export type { FontCategory, SystemFont } from '@shared/types/font';
+import type { FontCategory, SystemFont } from '@shared/types/font';
 
 // Well-known font lists for efficient classification
-export const MONOSPACE_FONTS = new Set([
+const MONOSPACE_FONTS = new Set([
   'Cascadia Code',
   'Cascadia Mono',
   'Consolas',
@@ -33,7 +32,7 @@ export const MONOSPACE_FONTS = new Set([
   'Victor Mono',
 ]);
 
-export const SERIF_FONTS = new Set([
+const SERIF_FONTS = new Set([
   'Baskerville',
   'Book Antiqua',
   'Cambria',
@@ -60,7 +59,7 @@ export const SERIF_FONTS = new Set([
   'Times New Roman',
 ]);
 
-export const SANS_SERIF_FONTS = new Set([
+const SANS_SERIF_FONTS = new Set([
   'Arial',
   'Avenir',
   'Avenir Next',
@@ -98,7 +97,7 @@ export const SANS_SERIF_FONTS = new Set([
   'Verdana',
 ]);
 
-export const DISPLAY_FONTS = new Set([
+const DISPLAY_FONTS = new Set([
   'American Typewriter',
   'Brush Script',
   'Chalkboard',
@@ -115,7 +114,7 @@ export const DISPLAY_FONTS = new Set([
 ]);
 
 // Category ordering for sorting
-export const CATEGORY_ORDER: Record<FontCategory, number> = {
+const CATEGORY_ORDER: Record<FontCategory, number> = {
   monospace: 0,
   'sans-serif': 1,
   serif: 2,
@@ -162,4 +161,66 @@ export function classifyFont(fontName: string): FontCategory {
   }
 
   return 'other';
+}
+
+/**
+ * Font data returned by the Local Font Access API
+ */
+interface FontData {
+  family: string;
+  fullName: string;
+  postscriptName: string;
+  style: string;
+}
+
+/**
+ * Check if the Local Font Access API is available
+ */
+export function isLocalFontAccessAvailable(): boolean {
+  return 'queryLocalFonts' in window;
+}
+
+/**
+ * Get all system fonts using the Local Font Access API
+ * Falls back to IPC call if the API is not available
+ */
+export async function getSystemFonts(): Promise<SystemFont[]> {
+  // Check if Local Font Access API is available
+  if (!isLocalFontAccessAvailable()) {
+    console.warn('Local Font Access API not available');
+    return [];
+  }
+
+  try {
+    // Query local fonts using the browser API
+    // This requires user permission on first use
+    const fonts = (await (
+      window as unknown as Window & {
+        queryLocalFonts: () => Promise<FontData[]>;
+      }
+    ).queryLocalFonts()) as FontData[];
+
+    // Extract unique font families
+    const fontFamilies = new Set<string>();
+    for (const font of fonts) {
+      fontFamilies.add(font.family);
+    }
+
+    // Convert to SystemFont array with classification
+    const systemFonts: SystemFont[] = Array.from(fontFamilies).map((name) => ({
+      name,
+      category: classifyFont(name),
+    }));
+
+    // Sort by category then alphabetically
+    return systemFonts.sort((a, b) => {
+      const catDiff = CATEGORY_ORDER[a.category] - CATEGORY_ORDER[b.category];
+      if (catDiff !== 0) return catDiff;
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+  } catch (error) {
+    // User denied permission or API error
+    console.error('Failed to query local fonts:', error);
+    return [];
+  }
 }

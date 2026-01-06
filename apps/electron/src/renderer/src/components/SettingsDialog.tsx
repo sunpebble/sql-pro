@@ -48,6 +48,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { getSystemFonts, isLocalFontAccessAvailable } from '@/lib/font-utils';
 import { cn } from '@/lib/utils';
 import {
   DEFAULT_MODELS,
@@ -101,7 +102,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [systemFonts, setSystemFonts] = useState<SystemFont[]>([]);
   const [fontsLoading, setFontsLoading] = useState(true);
 
-  // Fetch system fonts using Electron IPC
+  // Fetch system fonts using the Local Font Access API
   useEffect(() => {
     let cancelled = false;
 
@@ -126,18 +127,24 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       ];
 
       try {
-        // Use Electron IPC to get system fonts from main process
-        const result = await window.sqlPro.system.getFonts();
+        // Check if Local Font Access API is available
+        if (!isLocalFontAccessAvailable()) {
+          console.warn(
+            'Local Font Access API not available, using fallback fonts'
+          );
+          if (!cancelled) {
+            setSystemFonts(fallbackFonts);
+            setFontsLoading(false);
+          }
+          return;
+        }
+
+        // Use the Local Font Access API directly in the renderer
+        const fonts = await getSystemFonts();
 
         if (cancelled) return;
 
-        if (result.success && result.fonts.length > 0) {
-          // Handle both old format (string[]) and new format (SystemFont[])
-          const fonts = result.fonts.map((f: string | SystemFont) =>
-            typeof f === 'string'
-              ? { name: f, category: 'other' as FontCategory }
-              : f
-          );
+        if (fonts.length > 0) {
           setSystemFonts(fonts);
         } else {
           // Fallback to common fonts if no fonts returned

@@ -475,15 +475,6 @@ const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.PRO_DEACTIVATE),
   },
 
-  // System operations
-  system: {
-    getFonts: (): Promise<{
-      success: boolean;
-      fonts: string[];
-      error?: string;
-    }> => ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_GET_FONTS),
-  },
-
   // Window operations
   window: {
     create: (): Promise<CreateWindowResponse> =>

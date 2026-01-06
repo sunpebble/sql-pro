@@ -2401,9 +2401,6 @@ export const IPC_CHANNELS = {
   AI_AGENT_CANCEL: 'ai:agent-cancel',
   AI_AGENT_MESSAGE: 'ai:agent-message',
 
-  // System
-  SYSTEM_GET_FONTS: 'system:get-fonts',
-
   // Window additional channels
   WINDOW_CREATE: 'window:create',
   WINDOW_GET_ALL: 'window:get-all',
