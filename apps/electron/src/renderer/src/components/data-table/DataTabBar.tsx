@@ -7,6 +7,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@sqlpro/ui/context-menu';
+import { ScrollArea, ScrollBar } from '@sqlpro/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
@@ -247,26 +248,32 @@ export const DataTabBar = memo(
 
     return (
       <div
-        className={cn('bg-muted/30 flex h-8 items-center border-b', className)}
+        className={cn(
+          'bg-muted/30 flex h-8 shrink-0 items-center border-b',
+          className
+        )}
         role="tablist"
       >
-        <div className="flex flex-1 items-center overflow-x-auto">
-          {tabs.map((tab, index) => (
-            <TabItem
-              key={tab.id}
-              tab={tab}
-              index={index}
-              isActive={tab.id === activeTabId}
-              connectionId={activeConnectionId}
-              onSelect={() => setActiveTab(activeConnectionId, tab.id)}
-              onClose={() => closeTab(activeConnectionId, tab.id)}
-              onCloseOthers={() => closeOtherTabs(activeConnectionId, tab.id)}
-              tabsCount={tabs.length}
-            />
-          ))}
-        </div>
+        <ScrollArea className="flex-1">
+          <div className="flex items-center">
+            {tabs.map((tab, index) => (
+              <TabItem
+                key={tab.id}
+                tab={tab}
+                index={index}
+                isActive={tab.id === activeTabId}
+                connectionId={activeConnectionId}
+                onSelect={() => setActiveTab(activeConnectionId, tab.id)}
+                onClose={() => closeTab(activeConnectionId, tab.id)}
+                onCloseOthers={() => closeOtherTabs(activeConnectionId, tab.id)}
+                tabsCount={tabs.length}
+              />
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" className="h-1.5" />
+        </ScrollArea>
         {onOpenSidebar && (
-          <div className="flex items-center border-l">
+          <div className="flex shrink-0 items-center border-l">
             <TooltipProvider delay={300}>
               <Tooltip>
                 <TooltipTrigger>
