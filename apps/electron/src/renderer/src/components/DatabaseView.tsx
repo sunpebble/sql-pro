@@ -148,14 +148,14 @@ export function DatabaseView({
           className="flex min-w-0 flex-1 flex-col overflow-hidden"
         >
           {/* Tab List */}
-          <ScrollArea className="w-full">
-            <TabsList variant="line" className="flex border-b px-2">
+          <ScrollArea className="w-full shrink-0">
+            <TabsList variant="line" className="flex h-10 border-b px-2">
               <TabsTrigger
                 value="data"
                 data-tab="data"
                 data-tour-target="data-browser-tab"
                 className={cn(
-                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
                   activeTab === 'data'
                     ? 'border-primary text-foreground'
                     : 'text-muted-foreground hover:text-foreground border-transparent'
@@ -178,7 +178,7 @@ export function DatabaseView({
                 data-tab="query"
                 data-tour-target="query-editor-tab"
                 className={cn(
-                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
                   activeTab === 'query'
                     ? 'border-primary text-foreground'
                     : 'text-muted-foreground hover:text-foreground border-transparent'
@@ -196,7 +196,7 @@ export function DatabaseView({
                 data-tab="diagram"
                 data-tour-target="diagram-tab"
                 className={cn(
-                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
                   activeTab === 'diagram'
                     ? 'border-primary text-foreground'
                     : 'text-muted-foreground hover:text-foreground border-transparent'
@@ -214,7 +214,7 @@ export function DatabaseView({
                 data-tab="compare"
                 data-tour-target="schema-compare-tab"
                 className={cn(
-                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
                   activeTab === 'compare'
                     ? 'border-primary text-foreground'
                     : 'text-muted-foreground hover:text-foreground border-transparent'
@@ -232,7 +232,7 @@ export function DatabaseView({
                 data-tab="dataDiff"
                 data-tour-target="data-diff-tab"
                 className={cn(
-                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'flex h-10 items-center gap-2 border-b-2 px-4 text-sm font-medium transition-colors',
                   activeTab === 'dataDiff'
                     ? 'border-primary text-foreground'
                     : 'text-muted-foreground hover:text-foreground border-transparent'
