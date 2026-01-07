@@ -142,6 +142,15 @@ interface DataTabsState {
   ) => void;
 
   /**
+   * Update tab selected row
+   */
+  updateTabSelectedRow: (
+    connectionId: string,
+    tabId: string,
+    selectedRowId: string | number | undefined
+  ) => void;
+
+  /**
    * Check if a table is already open in a tab
    */
   findTabByTable: (
@@ -528,6 +537,24 @@ export const useDataTabsStore = create<DataTabsState>()((set, get) => ({
           ...connState,
           tabs: connState.tabs.map((tab) =>
             tab.id === tabId ? { ...tab, filters } : tab
+          ),
+        },
+      },
+    });
+  },
+
+  updateTabSelectedRow: (connectionId, tabId, selectedRowId) => {
+    const state = get();
+    const connState = state.tabsByConnection[connectionId];
+    if (!connState) return;
+
+    set({
+      tabsByConnection: {
+        ...state.tabsByConnection,
+        [connectionId]: {
+          ...connState,
+          tabs: connState.tabs.map((tab) =>
+            tab.id === tabId ? { ...tab, selectedRowId } : tab
           ),
         },
       },
