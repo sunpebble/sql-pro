@@ -79,7 +79,11 @@ export function Toolbar() {
         <Tooltip>
           <TooltipTrigger>
             <DropdownMenuTrigger>
-              <Button variant="ghost" size="icon" className="h-7 w-7">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 duration-150 hover:scale-[1.02] active:scale-[0.98]"
+              >
                 <HelpCircle className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
