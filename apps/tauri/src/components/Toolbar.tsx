@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Compass, FileText, HelpCircle } from 'lucide-react';
 import { LayoutButtons } from '@/components/LayoutButtons';
 import { ShortcutKbd } from '@/components/ui/kbd';
+import { TOOLBAR_BUTTON_INTERACTIVE } from '@/lib/utils';
 import {
   useChangesStore,
   useConnectionStore,
@@ -37,7 +38,7 @@ export function Toolbar() {
       {hasChanges() && (
         <button
           onClick={openChangesPanel}
-          className="flex shrink-0 items-center gap-2 rounded-md bg-amber-500/10 px-3 py-1 text-sm text-amber-600 transition-all duration-150 hover:scale-[1.02] hover:bg-amber-500/20 active:scale-[0.98] dark:text-amber-400"
+          className={`flex shrink-0 items-center gap-2 rounded-md bg-amber-500/10 px-3 py-1 text-sm text-amber-600 transition-all hover:bg-amber-500/20 dark:text-amber-400 ${TOOLBAR_BUTTON_INTERACTIVE}`}
         >
           <FileText className="h-4 w-4" />
           <span>
@@ -65,7 +66,7 @@ export function Toolbar() {
                 })
               );
             }}
-            className="text-muted-foreground h-7 gap-1.5 text-xs duration-150 hover:scale-[1.02] active:scale-[0.98]"
+            className={`text-muted-foreground h-7 gap-1.5 text-xs ${TOOLBAR_BUTTON_INTERACTIVE}`}
           >
             <span>Commands</span>
             <ShortcutKbd action="action.command-palette" />
@@ -82,7 +83,7 @@ export function Toolbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 duration-150 hover:scale-[1.02] active:scale-[0.98]"
+                className={`h-7 w-7 ${TOOLBAR_BUTTON_INTERACTIVE}`}
               >
                 <HelpCircle className="h-4 w-4" />
               </Button>

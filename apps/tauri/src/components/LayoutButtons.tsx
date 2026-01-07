@@ -10,6 +10,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { LayoutGrid } from 'lucide-react';
 import { ShortcutKbd } from '@/components/ui/kbd';
+import { TOOLBAR_BUTTON_INTERACTIVE } from '@/lib/utils';
 import { useSettingsStore } from '@/stores';
 import { useSqlLogStore } from '@/stores/sql-log-store';
 
@@ -36,7 +37,7 @@ export function LayoutButtons() {
             <Button
               variant="ghost"
               size="icon"
-              className="duration-150 hover:scale-[1.02] active:scale-[0.98]"
+              className={TOOLBAR_BUTTON_INTERACTIVE}
             >
               <LayoutGrid className="h-4 w-4" />
             </Button>
