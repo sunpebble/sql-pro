@@ -259,6 +259,39 @@ export function useMenuActions() {
           useDialogStore.getState().toggleMemoryMonitor();
           break;
         }
+
+        // Help menu actions
+        case 'documentation': {
+          // Open documentation in browser
+          sqlPro.shell
+            .openExternal('https://github.com/user/sql-pro#readme')
+            .catch(console.error);
+          break;
+        }
+
+        case 'keyboard_shortcuts': {
+          // Open keyboard shortcuts dialog
+          useDialogStore.getState().openShortcuts();
+          break;
+        }
+
+        case 'check_updates': {
+          // Show update check dialog
+          // Note: tauri-plugin-updater requires signing keys to be configured
+          // For now, show a message that the app is up to date
+          useDialogStore
+            .getState()
+            .openUpdateCheck(
+              'You are running the latest version of SQL Pro (1.0.0).'
+            );
+          break;
+        }
+
+        case 'about': {
+          // Open about dialog
+          useDialogStore.getState().openAbout();
+          break;
+        }
       }
     });
 

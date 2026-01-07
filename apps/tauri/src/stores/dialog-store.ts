@@ -43,6 +43,17 @@ interface DialogState {
   openMemoryMonitor: () => void;
   closeMemoryMonitor: () => void;
   toggleMemoryMonitor: () => void;
+
+  // About dialog
+  aboutOpen: boolean;
+  openAbout: () => void;
+  closeAbout: () => void;
+
+  // Update check dialog
+  updateCheckOpen: boolean;
+  updateCheckMessage: string;
+  openUpdateCheck: (message: string) => void;
+  closeUpdateCheck: () => void;
 }
 
 export const useDialogStore = create<DialogState>((set) => ({
@@ -90,4 +101,17 @@ export const useDialogStore = create<DialogState>((set) => ({
   closeMemoryMonitor: () => set({ memoryMonitorOpen: false }),
   toggleMemoryMonitor: () =>
     set((state) => ({ memoryMonitorOpen: !state.memoryMonitorOpen })),
+
+  // About dialog
+  aboutOpen: false,
+  openAbout: () => set({ aboutOpen: true }),
+  closeAbout: () => set({ aboutOpen: false }),
+
+  // Update check dialog
+  updateCheckOpen: false,
+  updateCheckMessage: '',
+  openUpdateCheck: (message: string) =>
+    set({ updateCheckOpen: true, updateCheckMessage: message }),
+  closeUpdateCheck: () =>
+    set({ updateCheckOpen: false, updateCheckMessage: '' }),
 }));

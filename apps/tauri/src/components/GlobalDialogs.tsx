@@ -4,10 +4,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { MemoryMonitorPanel } from '@/components/dev-tools';
 import { sqlPro } from '@/lib/api';
 import { useConnectionStore, useDialogStore } from '@/stores';
+import { AboutDialog } from './AboutDialog';
 import { ChangePasswordDialog } from './ChangePasswordDialog';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
 import { KeyboardShortcutsSettings } from './KeyboardShortcutsSettings';
 import { SettingsDialog } from './SettingsDialog';
+import { UpdateCheckDialog } from './UpdateCheckDialog';
 
 /**
  * Global dialog provider component that renders application-wide dialogs.
@@ -159,6 +161,12 @@ export function GlobalDialogs() {
           </div>
         </div>
       )}
+
+      {/* About Dialog */}
+      <AboutDialog />
+
+      {/* Update Check Dialog */}
+      <UpdateCheckDialog />
     </>
   );
 }
