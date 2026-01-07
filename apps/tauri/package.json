@@ -24,7 +24,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@sqlpro/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.16",
-    "@tanstack/react-router": "^1.144.0",
+    "@tanstack/react-router": "^1.145.7",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.16",
     "@tauri-apps/api": "^2.5.0",
