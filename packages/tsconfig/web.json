@@ -1,11 +1,20 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Web (Renderer)",
-  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "display": "Web (Frontend)",
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "composite": true,
     "jsx": "react-jsx",
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
-    "noEmit": true
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "types": ["vitest/globals"]
   }
 }
