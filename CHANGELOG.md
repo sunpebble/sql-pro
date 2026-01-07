@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0](https://github.com/kunish-homelab/sql-pro/compare/v1.13.0...v1.14.0) (2026-01-07)
+
+
+### Features
+
+* **activity-bar:** add VSCode-style Activity Bar for view navigation ([8026773](https://github.com/kunish-homelab/sql-pro/commit/8026773fc27d99d7e5f346d0d701275e3be83c04))
+
 ## [1.13.0](https://github.com/kunish-homelab/sql-pro/compare/v1.12.0...v1.13.0) (2026-01-07)
 
 
