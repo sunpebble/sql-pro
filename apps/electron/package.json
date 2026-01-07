@@ -45,7 +45,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/ai": "^0.2.0",
     "@tanstack/ai-anthropic": "^0.2.0",
-    "@tanstack/ai-react": "^0.2.0",
+    "@tanstack/ai-react": "^0.2.1",
     "@tanstack/db": "^0.5.16",
     "@tanstack/query-core": "^5.90.16",
     "@tanstack/query-db-collection": "^1.0.12",
