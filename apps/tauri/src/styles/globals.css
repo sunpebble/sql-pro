@@ -289,3 +289,13 @@ textarea,
 [data-radix-scroll-area-viewport] > div {
   display: block !important;
 }
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}

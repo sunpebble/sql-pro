@@ -137,7 +137,7 @@ export function PluginManager({
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const response = await window.sqlPro.plugin.list({});
+      const response = await window.sqlPro.plugin.list();
 
       if (response.success && response.plugins) {
         setState({

@@ -198,6 +198,7 @@ export function TableView({ tableOverride }: TableViewProps) {
     totalRows,
     totalPages,
     isLoading,
+    isFetching,
     error,
     updateRow,
     insertRow,
@@ -471,7 +472,7 @@ export function TableView({ tableOverride }: TableViewProps) {
   return (
     <div className="flex h-full min-h-0 min-w-0 overflow-hidden">
       {/* Main Content */}
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         {/* Selection Toolbar */}
         {selectedRowIds.length > 0 && (
           <div className="bg-primary/5 border-primary/20 flex items-center justify-between gap-4 border-b px-4 py-2">
@@ -512,6 +513,13 @@ export function TableView({ tableOverride }: TableViewProps) {
                 {selectedRowIds.length > 1 ? `(${selectedRowIds.length})` : ''}
               </Button>
             </div>
+          </div>
+        )}
+
+        {/* Subtle refresh progress bar - skeleton animation */}
+        {isFetching && !isLoading && (
+          <div className="bg-muted/30 absolute top-0 right-0 left-0 h-0.5 overflow-hidden">
+            <div className="bg-primary/40 h-full w-1/3 animate-[shimmer_1.5s_ease-in-out_infinite]" />
           </div>
         )}
 

@@ -4,5 +4,5 @@
 
 pub mod database;
 pub mod database_adapters;
+pub mod file_watcher;
 pub mod password;
-

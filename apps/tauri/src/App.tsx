@@ -8,6 +8,7 @@ import { AppQuitDialog } from '@/components/AppQuitDialog';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { WelcomeDialog } from '@/components/onboarding';
 import { SqlLogPanel } from '@/components/SqlLogPanel';
+import { useFileWatcher } from '@/hooks/useFileWatcher';
 import { sqlPro } from '@/lib/api';
 import { initMockMode, isMockMode } from '@/lib/mock-api';
 import { queryClient } from '@/lib/query-client';
@@ -58,6 +59,9 @@ function App(): React.JSX.Element {
       deletes: number;
     }>
   >([]);
+
+  // Set up file watcher for database file changes
+  useFileWatcher();
 
   // Load theme and AI settings from store on mount
   useEffect(() => {

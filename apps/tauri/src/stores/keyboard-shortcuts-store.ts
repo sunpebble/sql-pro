@@ -7,6 +7,7 @@ import type {
 } from '@shared/types';
 import { DEFAULT_SHORTCUTS } from '@shared/types';
 import { create } from 'zustand';
+import { sqlPro } from '@/lib/api';
 
 // Re-export types from shared for convenience
 export type {
@@ -626,13 +627,46 @@ export const useKeyboardShortcutsStore = create<KeyboardShortcutsState>()(
 );
 
 /**
+ * Convert a ShortcutBinding to a Tauri accelerator string
+ */
+function bindingToAccelerator(binding: ShortcutBinding | null): string {
+  if (!binding) return '';
+
+  const parts: string[] = [];
+
+  if (binding.modifiers.cmd) parts.push('CmdOrCtrl');
+  if (binding.modifiers.ctrl && !binding.modifiers.cmd) parts.push('Ctrl');
+  if (binding.modifiers.alt) parts.push('Alt');
+  if (binding.modifiers.shift) parts.push('Shift');
+
+  // Normalize key name
+  let key = binding.key;
+  if (key.length === 1) {
+    key = key.toUpperCase();
+  }
+
+  parts.push(key);
+
+  return parts.join('+');
+}
+
+/**
  * Sync shortcuts to the main process to update native menu accelerators
  */
 export async function syncShortcutsToMain(
   shortcuts: ShortcutPreset
 ): Promise<void> {
   try {
-    if (window.sqlPro?.shortcuts?.update) {
+    // Convert ShortcutBinding objects to accelerator strings for Tauri
+    const acceleratorMap: Record<string, string> = {};
+    for (const [action, binding] of Object.entries(shortcuts)) {
+      acceleratorMap[action] = bindingToAccelerator(binding);
+    }
+
+    // Try Tauri API first, then fall back to Electron API
+    if (sqlPro.menu?.updateShortcuts) {
+      await sqlPro.menu.updateShortcuts(acceleratorMap);
+    } else if (window.sqlPro?.shortcuts?.update) {
       await window.sqlPro.shortcuts.update({ shortcuts });
     }
   } catch (error) {

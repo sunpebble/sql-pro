@@ -1,10 +1,15 @@
 /**
  * Plugin System for SQL Pro (Tauri Edition)
  *
- * This is a simplified, frontend-only plugin system that allows extending
- * SQL Pro functionality through JavaScript plugins. Unlike the Electron
- * version, plugins run entirely in the frontend context.
+ * This plugin system allows extending SQL Pro functionality through
+ * JavaScript plugins. It integrates with the Tauri backend for
+ * persistence and management while running plugins in the frontend context.
+ *
+ * For full sandbox isolation, consider using WASM or separate WebViews
+ * in a future implementation.
  */
+
+import { sqlPro } from './api';
 
 export interface PluginManifest {
   id: string;
@@ -67,11 +72,45 @@ export interface LoadedPlugin {
 
 /**
  * Plugin Manager
+ *
+ * Manages plugins with persistence through the Tauri backend.
  */
 class PluginManager {
   private plugins: Map<string, LoadedPlugin> = new Map();
   private commands: Map<string, PluginCommand> = new Map();
   private queryHooks: Map<string, QueryHook> = new Map();
+  private initialized = false;
+
+  /**
+   * Initialize the plugin manager by loading persisted plugins
+   */
+  async initialize(): Promise<void> {
+    if (this.initialized) return;
+
+    try {
+      // Load persisted plugins from backend
+      const result = await sqlPro.plugins.list();
+      if (result.success && result.plugins) {
+        for (const pluginInfo of result.plugins) {
+          // Store plugin info without activating (will be activated on enable)
+          const loadedPlugin: LoadedPlugin = {
+            manifest: pluginInfo.manifest,
+            instance: {
+              manifest: pluginInfo.manifest,
+              activate: () => {},
+            },
+            enabled: pluginInfo.enabled,
+            commands: [],
+            queryHooks: [],
+          };
+          this.plugins.set(pluginInfo.manifest.id, loadedPlugin);
+        }
+      }
+      this.initialized = true;
+    } catch (error) {
+      console.error('Failed to initialize plugin manager:', error);
+    }
+  }
 
   /**
    * Load a plugin from a manifest and module
@@ -93,6 +132,9 @@ class PluginManager {
     };
 
     this.plugins.set(manifest.id, loadedPlugin);
+
+    // Persist to backend
+    await sqlPro.plugins.install(manifest, manifest.main);
   }
 
   /**
@@ -127,6 +169,9 @@ class PluginManager {
 
     await plugin.instance.activate(pluginContext);
     plugin.enabled = true;
+
+    // Persist to backend
+    await sqlPro.plugins.enable(pluginId);
   }
 
   /**
@@ -154,6 +199,9 @@ class PluginManager {
     }
 
     plugin.enabled = false;
+
+    // Persist to backend
+    await sqlPro.plugins.disable(pluginId);
   }
 
   /**
@@ -162,6 +210,9 @@ class PluginManager {
   async unloadPlugin(pluginId: string): Promise<void> {
     await this.disablePlugin(pluginId);
     this.plugins.delete(pluginId);
+
+    // Persist to backend
+    await sqlPro.plugins.uninstall(pluginId);
   }
 
   /**

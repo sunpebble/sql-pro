@@ -481,29 +481,6 @@ const tauriAPI = {
     getCurrent: () => invoke('window_get_current'),
   },
 
-  // Menu operations (handled via events in Tauri)
-  menu: {
-    onAction: (callback: (action: string) => void): (() => void) => {
-      let unlisten: UnlistenFn | undefined;
-      let isCleanedUp = false;
-
-      listen<string>('menu-action', (event) => {
-        callback(event.payload);
-      }).then((fn) => {
-        if (isCleanedUp) {
-          fn();
-        } else {
-          unlisten = fn;
-        }
-      });
-
-      return () => {
-        isCleanedUp = true;
-        unlisten?.();
-      };
-    },
-  },
-
   // Shortcuts (placeholder - can be extended)
   shortcuts: {
     getAll: async () => ({ success: true, shortcuts: {} }),
@@ -775,39 +752,120 @@ const tauriAPI = {
       ),
   },
 
-  // Pro features (placeholder)
+  // Pro features
   pro: {
-    getStatus: async () => ({
-      success: true,
-      isProUser: false,
-      isPro: false,
-      features: [] as string[],
-      status: {
+    getStatus: async () => {
+      const result = await invoke<{
+        success: boolean;
+        status?: {
+          isActive: boolean;
+          activationDate?: string;
+          licenseKey?: string;
+          expiresAt?: string;
+        };
+        error?: string;
+      }>('pro_get_status');
+
+      if (result.success && result.status) {
+        const features = result.status.isActive
+          ? [
+              'ai-nl-to-sql',
+              'ai-data-analysis',
+              'advanced-export',
+              'plugin-system',
+              'query-optimizer',
+            ]
+          : [];
+        return {
+          success: true,
+          isProUser: result.status.isActive,
+          isPro: result.status.isActive,
+          features,
+          status: {
+            isPro: result.status.isActive,
+            licenseKey: result.status.licenseKey,
+            activatedAt: result.status.activationDate,
+            expiresAt: result.status.expiresAt,
+            features,
+          },
+          licenseKey: result.status.licenseKey,
+          activatedAt: result.status.activationDate,
+          expiresAt: result.status.expiresAt,
+        };
+      }
+      return {
+        success: result.success,
+        isProUser: false,
         isPro: false,
+        features: [] as string[],
+        status: {
+          isPro: false,
+          licenseKey: undefined as string | undefined,
+          activatedAt: undefined as string | undefined,
+          expiresAt: undefined as string | undefined,
+          features: [] as string[],
+        },
         licenseKey: undefined as string | undefined,
         activatedAt: undefined as string | undefined,
         expiresAt: undefined as string | undefined,
-        features: [] as string[],
-      },
-      licenseKey: undefined as string | undefined,
-      activatedAt: undefined as string | undefined,
-      expiresAt: undefined as string | undefined,
-    }),
-    activate: async (_request: string | { licenseKey: string }) => ({
-      success: true,
-      status: {
-        isPro: false,
-        licenseKey: undefined as string | undefined,
-        activatedAt: undefined as string | undefined,
-        expiresAt: undefined as string | undefined,
-        features: [] as string[],
-      },
-      error: undefined as string | undefined,
-    }),
-    deactivate: async () => ({
-      success: true,
-      error: undefined as string | undefined,
-    }),
+      };
+    },
+    activate: async (request: string | { licenseKey: string }) => {
+      const licenseKey =
+        typeof request === 'string' ? request : request.licenseKey;
+      const result = await invoke<{ success: boolean; error?: string }>(
+        'pro_activate',
+        { request: { licenseKey } }
+      );
+
+      if (result.success) {
+        // Fetch the updated status
+        const statusResult = await invoke<{
+          success: boolean;
+          status?: {
+            isActive: boolean;
+            activationDate?: string;
+            licenseKey?: string;
+            expiresAt?: string;
+          };
+        }>('pro_get_status');
+
+        if (statusResult.success && statusResult.status) {
+          const features = [
+            'ai-nl-to-sql',
+            'ai-data-analysis',
+            'advanced-export',
+            'plugin-system',
+            'query-optimizer',
+          ];
+          return {
+            success: true,
+            status: {
+              isPro: statusResult.status.isActive,
+              licenseKey: statusResult.status.licenseKey,
+              activatedAt: statusResult.status.activationDate,
+              expiresAt: statusResult.status.expiresAt,
+              features,
+            },
+            error: undefined as string | undefined,
+          };
+        }
+      }
+      return {
+        success: false,
+        status: {
+          isPro: false,
+          licenseKey: undefined as string | undefined,
+          activatedAt: undefined as string | undefined,
+          expiresAt: undefined as string | undefined,
+          features: [] as string[],
+        },
+        error: result.error,
+      };
+    },
+    deactivate: async () => {
+      return invoke<{ success: boolean; error?: string }>('pro_clear_status');
+    },
   },
 
   // Memory monitoring
@@ -1004,8 +1062,32 @@ const tauriAPI = {
 
   // File operations
   file: {
-    read: async () => ({ success: true }),
-    write: async () => ({ success: true }),
+    read: (filePath: string, options?: { encoding?: string }) =>
+      invoke<{ success: boolean; content?: string; error?: string }>(
+        'file_read',
+        {
+          request: {
+            filePath,
+            encoding: options?.encoding || 'utf8',
+          },
+        }
+      ),
+    write: (
+      filePath: string,
+      content: string,
+      options?: { encoding?: string; atomic?: boolean }
+    ) =>
+      invoke<{ success: boolean; bytesWritten?: number; error?: string }>(
+        'file_write',
+        {
+          request: {
+            filePath,
+            content,
+            encoding: options?.encoding || 'utf8',
+            atomic: options?.atomic !== false,
+          },
+        }
+      ),
     watch: async () => ({ success: true }),
     unwatch: async () => ({ success: true }),
     exists: async (request: string | { path: string }) => {
@@ -1016,37 +1098,221 @@ const tauriAPI = {
     },
   },
 
+  // File watcher operations
+  fileWatcher: {
+    watch: (connectionId: string, dbPath: string) =>
+      invoke<{ success: boolean; error?: string }>('file_watcher_watch', {
+        request: { connectionId, dbPath },
+      }),
+    unwatch: (connectionId: string) =>
+      invoke<{ success: boolean; error?: string }>('file_watcher_unwatch', {
+        request: { connectionId },
+      }),
+    ignore: (dbPath: string, durationMs = 1000) =>
+      invoke<{ success: boolean; error?: string }>('file_watcher_ignore', {
+        request: { dbPath, durationMs },
+      }),
+  },
+
   // Plugin operations
   plugin: {
-    list: async (_request?: unknown) => ({
-      success: true,
-      plugins: [] as unknown[],
-      registry: [] as unknown[],
-      error: undefined as string | undefined,
-    }),
-    install: async (_request?: unknown) => ({
-      success: true,
-      error: undefined as string | undefined,
-    }),
-    uninstall: async (_request?: unknown) => ({
-      success: true,
-      error: undefined as string | undefined,
-    }),
-    enable: async (_request?: unknown) => ({
-      success: true,
-      error: undefined as string | undefined,
-    }),
-    disable: async (_request?: unknown) => ({
-      success: true,
-      error: undefined as string | undefined,
-    }),
-    fetchMarketplace: async (_request?: unknown) => ({
+    list: async () => {
+      const result = await invoke<{
+        success: boolean;
+        plugins: Array<{
+          manifest: {
+            id: string;
+            name: string;
+            version: string;
+            description?: string;
+            author?: string;
+            main: string;
+            permissions: string[];
+          };
+          path: string;
+          enabled: boolean;
+          installedAt: string;
+          state: string;
+          error?: string;
+        }>;
+      }>('plugins_list');
+      return {
+        success: result.success,
+        plugins: result.plugins || [],
+        registry: result.plugins || [],
+        error: undefined as string | undefined,
+      };
+    },
+    install: async (request?: unknown) => {
+      const req = request as {
+        manifest?: { id: string; name: string; version: string; main: string };
+        path?: string;
+      };
+      if (!req?.manifest || !req?.path) {
+        return { success: false, error: 'Missing manifest or path' };
+      }
+      return invoke<{ success: boolean; error?: string }>('plugins_install', {
+        request: { manifest: req.manifest, path: req.path },
+      });
+    },
+    uninstall: async (request?: unknown) => {
+      const pluginId =
+        typeof request === 'string'
+          ? request
+          : (request as { pluginId?: string })?.pluginId;
+      if (!pluginId) {
+        return { success: false, error: 'Missing plugin ID' };
+      }
+      return invoke<{ success: boolean; error?: string }>('plugins_uninstall', {
+        request: { pluginId },
+      });
+    },
+    enable: async (request?: unknown) => {
+      const pluginId =
+        typeof request === 'string'
+          ? request
+          : (request as { pluginId?: string })?.pluginId;
+      if (!pluginId) {
+        return { success: false, error: 'Missing plugin ID' };
+      }
+      return invoke<{ success: boolean; error?: string }>('plugins_enable', {
+        request: { pluginId },
+      });
+    },
+    disable: async (request?: unknown) => {
+      const pluginId =
+        typeof request === 'string'
+          ? request
+          : (request as { pluginId?: string })?.pluginId;
+      if (!pluginId) {
+        return { success: false, error: 'Missing plugin ID' };
+      }
+      return invoke<{ success: boolean; error?: string }>('plugins_disable', {
+        request: { pluginId },
+      });
+    },
+    fetchMarketplace: async () => ({
       success: true,
       plugins: [] as unknown[],
       registry: { plugins: [] as unknown[] },
       error: undefined as string | undefined,
     }),
     onEvent: (_callback: (event: unknown) => void) => () => {},
+  },
+
+  // Plugin API (direct access to plugin commands)
+  plugins: {
+    list: () =>
+      invoke<{
+        success: boolean;
+        plugins: Array<{
+          manifest: {
+            id: string;
+            name: string;
+            version: string;
+            description?: string;
+            author?: string;
+            main: string;
+            permissions: string[];
+          };
+          path: string;
+          enabled: boolean;
+          installedAt: string;
+          state: string;
+          error?: string;
+        }>;
+      }>('plugins_list'),
+    get: (pluginId: string) =>
+      invoke<{
+        success: boolean;
+        plugin?: {
+          manifest: {
+            id: string;
+            name: string;
+            version: string;
+            description?: string;
+            author?: string;
+            main: string;
+            permissions: string[];
+          };
+          path: string;
+          enabled: boolean;
+          installedAt: string;
+          state: string;
+          error?: string;
+        };
+        error?: string;
+      }>('plugins_get', { pluginId }),
+    install: (
+      manifest: {
+        id: string;
+        name: string;
+        version: string;
+        description?: string;
+        author?: string;
+        main: string;
+        permissions?: string[];
+      },
+      path: string
+    ) =>
+      invoke<{ success: boolean; error?: string }>('plugins_install', {
+        request: {
+          manifest: { ...manifest, permissions: manifest.permissions || [] },
+          path,
+        },
+      }),
+    uninstall: (pluginId: string, removeData = true) =>
+      invoke<{ success: boolean; error?: string }>('plugins_uninstall', {
+        request: { pluginId, removeData },
+      }),
+    enable: (pluginId: string) =>
+      invoke<{ success: boolean; error?: string }>('plugins_enable', {
+        request: { pluginId },
+      }),
+    disable: (pluginId: string) =>
+      invoke<{ success: boolean; error?: string }>('plugins_disable', {
+        request: { pluginId },
+      }),
+    getData: (pluginId: string, key: string) =>
+      invoke<{ success: boolean; value?: unknown; error?: string }>(
+        'plugins_get_data',
+        { request: { pluginId, key } }
+      ),
+    setData: (pluginId: string, key: string, value: unknown) =>
+      invoke<{ success: boolean; error?: string }>('plugins_set_data', {
+        request: { pluginId, key, value },
+      }),
+    clearData: (pluginId: string) =>
+      invoke<{ success: boolean; error?: string }>('plugins_clear_data', {
+        pluginId,
+      }),
+  },
+
+  // Menu operations
+  menu: {
+    onAction: (callback: (action: string) => void): (() => void) => {
+      let unlisten: UnlistenFn | undefined;
+      let isCleanedUp = false;
+
+      listen<string>('menu-action', (event) => {
+        callback(event.payload);
+      }).then((fn) => {
+        if (isCleanedUp) {
+          fn();
+        } else {
+          unlisten = fn;
+        }
+      });
+
+      return () => {
+        isCleanedUp = true;
+        unlisten?.();
+      };
+    },
+    updateShortcuts: (shortcuts: Record<string, string>) =>
+      invoke<{ success: boolean; error?: string }>('menu_update_shortcuts', {
+        request: { shortcuts },
+      }),
   },
 
   // Renderer store (for persistence)
@@ -1074,11 +1340,68 @@ const tauriAPI = {
       invoke('db_get_schema_list', { request: { connectionId } }),
   },
 
-  // Update operations (placeholder - updater disabled)
+  // Update operations
   update: {
-    check: async () => ({ success: true, updateAvailable: false }),
-    download: async () => ({ success: true }),
-    install: async () => ({ success: true }),
+    check: () =>
+      invoke<{
+        success: boolean;
+        updateAvailable?: boolean;
+        info?: {
+          version: string;
+          releaseDate?: string;
+          releaseNotes?: string;
+        };
+        error?: string;
+      }>('updates_check'),
+    download: () =>
+      invoke<{ success: boolean; error?: string }>('updates_download'),
+    install: () =>
+      invoke<{ success: boolean; error?: string }>('updates_install'),
+    getStatus: () =>
+      invoke<{
+        success: boolean;
+        status: {
+          status: string;
+          info?: {
+            version: string;
+            releaseDate?: string;
+            releaseNotes?: string;
+          };
+          error?: string;
+        };
+      }>('updates_get_status'),
+  },
+
+  // Update operations (alias for compatibility)
+  updates: {
+    check: () =>
+      invoke<{
+        success: boolean;
+        updateAvailable?: boolean;
+        info?: {
+          version: string;
+          releaseDate?: string;
+          releaseNotes?: string;
+        };
+        error?: string;
+      }>('updates_check'),
+    download: () =>
+      invoke<{ success: boolean; error?: string }>('updates_download'),
+    install: () =>
+      invoke<{ success: boolean; error?: string }>('updates_install'),
+    getStatus: () =>
+      invoke<{
+        success: boolean;
+        status: {
+          status: string;
+          info?: {
+            version: string;
+            releaseDate?: string;
+            releaseNotes?: string;
+          };
+          error?: string;
+        };
+      }>('updates_get_status'),
   },
 
   // Font operations

@@ -254,6 +254,102 @@ export const sqlProAPI = {
       invoke('password_remove', { request: { identifier } }),
   },
 
+  // Plugin operations
+  plugins: {
+    list: () =>
+      invoke<{
+        success: boolean;
+        plugins: Array<{
+          manifest: {
+            id: string;
+            name: string;
+            version: string;
+            description?: string;
+            author?: string;
+            main: string;
+            permissions: string[];
+          };
+          path: string;
+          enabled: boolean;
+          installedAt: string;
+          state: string;
+          error?: string;
+        }>;
+      }>('plugins_list'),
+
+    get: (pluginId: string) =>
+      invoke<{
+        success: boolean;
+        plugin?: {
+          manifest: {
+            id: string;
+            name: string;
+            version: string;
+            description?: string;
+            author?: string;
+            main: string;
+            permissions: string[];
+          };
+          path: string;
+          enabled: boolean;
+          installedAt: string;
+          state: string;
+          error?: string;
+        };
+        error?: string;
+      }>('plugins_get', { pluginId }),
+
+    install: (
+      manifest: {
+        id: string;
+        name: string;
+        version: string;
+        description?: string;
+        author?: string;
+        main: string;
+        permissions?: string[];
+      },
+      path: string
+    ) =>
+      invoke<{ success: boolean; error?: string }>('plugins_install', {
+        request: {
+          manifest: { ...manifest, permissions: manifest.permissions || [] },
+          path,
+        },
+      }),
+
+    uninstall: (pluginId: string, removeData = true) =>
+      invoke<{ success: boolean; error?: string }>('plugins_uninstall', {
+        request: { pluginId, removeData },
+      }),
+
+    enable: (pluginId: string) =>
+      invoke<{ success: boolean; error?: string }>('plugins_enable', {
+        request: { pluginId },
+      }),
+
+    disable: (pluginId: string) =>
+      invoke<{ success: boolean; error?: string }>('plugins_disable', {
+        request: { pluginId },
+      }),
+
+    getData: (pluginId: string, key: string) =>
+      invoke<{ success: boolean; value?: unknown; error?: string }>(
+        'plugins_get_data',
+        { request: { pluginId, key } }
+      ),
+
+    setData: (pluginId: string, key: string, value: unknown) =>
+      invoke<{ success: boolean; error?: string }>('plugins_set_data', {
+        request: { pluginId, key, value },
+      }),
+
+    clearData: (pluginId: string) =>
+      invoke<{ success: boolean; error?: string }>('plugins_clear_data', {
+        pluginId,
+      }),
+  },
+
   // Query history operations
   history: {
     get: (dbPath: string) =>
@@ -267,6 +363,186 @@ export const sqlProAPI = {
       invoke('history_delete', { request: { dbPath, entryId } }),
 
     clear: (dbPath: string) => invoke('history_clear', { request: { dbPath } }),
+  },
+
+  // Menu operations
+  menu: {
+    updateShortcuts: (shortcuts: Record<string, string>) =>
+      invoke<{ success: boolean; error?: string }>('menu_update_shortcuts', {
+        request: { shortcuts },
+      }),
+  },
+
+  // Pro license operations
+  pro: {
+    activate: async (request: { licenseKey: string }) => {
+      const result = await invoke<{ success: boolean; error?: string }>(
+        'pro_activate',
+        { request }
+      );
+      if (result.success) {
+        // Fetch the updated status after activation
+        const statusResult = await invoke<{
+          success: boolean;
+          status?: {
+            isActive: boolean;
+            activationDate?: string;
+            licenseKey?: string;
+            expiresAt?: string;
+          };
+        }>('pro_get_status');
+        if (statusResult.success && statusResult.status) {
+          return {
+            success: true,
+            status: {
+              isPro: statusResult.status.isActive,
+              licenseKey: statusResult.status.licenseKey,
+              activatedAt: statusResult.status.activationDate,
+              expiresAt: statusResult.status.expiresAt,
+              features: [
+                'ai-nl-to-sql',
+                'ai-data-analysis',
+                'advanced-export',
+                'plugin-system',
+                'query-optimizer',
+              ],
+            },
+          };
+        }
+      }
+      return { success: false, error: result.error };
+    },
+
+    getStatus: async () => {
+      const result = await invoke<{
+        success: boolean;
+        status?: {
+          isActive: boolean;
+          activationDate?: string;
+          licenseKey?: string;
+          expiresAt?: string;
+        };
+        error?: string;
+      }>('pro_get_status');
+      if (result.success && result.status) {
+        return {
+          success: true,
+          status: {
+            isPro: result.status.isActive,
+            licenseKey: result.status.licenseKey,
+            activatedAt: result.status.activationDate,
+            expiresAt: result.status.expiresAt,
+            features: result.status.isActive
+              ? [
+                  'ai-nl-to-sql',
+                  'ai-data-analysis',
+                  'advanced-export',
+                  'plugin-system',
+                  'query-optimizer',
+                ]
+              : [],
+          },
+        };
+      }
+      return { success: false, error: result.error };
+    },
+
+    deactivate: async () => {
+      return invoke<{ success: boolean; error?: string }>('pro_clear_status');
+    },
+
+    clearStatus: () =>
+      invoke<{ success: boolean; error?: string }>('pro_clear_status'),
+  },
+
+  // File operations
+  file: {
+    write: (
+      filePath: string,
+      content: string,
+      options?: { encoding?: string; atomic?: boolean }
+    ) =>
+      invoke<{ success: boolean; bytesWritten?: number; error?: string }>(
+        'file_write',
+        {
+          request: {
+            filePath,
+            content,
+            encoding: options?.encoding || 'utf8',
+            atomic: options?.atomic !== false, // Default to atomic
+          },
+        }
+      ),
+
+    read: (filePath: string, options?: { encoding?: string }) =>
+      invoke<{ success: boolean; content?: string; error?: string }>(
+        'file_read',
+        {
+          request: {
+            filePath,
+            encoding: options?.encoding || 'utf8',
+          },
+        }
+      ),
+  },
+
+  // File watcher operations
+  fileWatcher: {
+    watch: (connectionId: string, dbPath: string) =>
+      invoke<{ success: boolean; error?: string }>('file_watcher_watch', {
+        request: { connectionId, dbPath },
+      }),
+
+    unwatch: (connectionId: string) =>
+      invoke<{ success: boolean; error?: string }>('file_watcher_unwatch', {
+        request: { connectionId },
+      }),
+
+    ignore: (dbPath: string, durationMs = 1000) =>
+      invoke<{ success: boolean; error?: string }>('file_watcher_ignore', {
+        request: { dbPath, durationMs },
+      }),
+  },
+
+  // Updates operations
+  updates: {
+    check: () =>
+      invoke<{
+        success: boolean;
+        updateAvailable?: boolean;
+        info?: {
+          version: string;
+          releaseDate?: string;
+          releaseNotes?: string;
+        };
+        error?: string;
+      }>('updates_check'),
+
+    download: () =>
+      invoke<{ success: boolean; error?: string }>('updates_download'),
+
+    install: () =>
+      invoke<{ success: boolean; error?: string }>('updates_install'),
+
+    getStatus: () =>
+      invoke<{
+        success: boolean;
+        status: {
+          status: string;
+          info?: {
+            version: string;
+            releaseDate?: string;
+            releaseNotes?: string;
+          };
+          progress?: {
+            percent: number;
+            bytesPerSecond: number;
+            total: number;
+            transferred: number;
+          };
+          error?: string;
+        };
+      }>('updates_get_status'),
   },
 };
 

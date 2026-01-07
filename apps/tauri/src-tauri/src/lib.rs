@@ -19,6 +19,8 @@ use tauri::{
     Emitter, Manager,
 };
 
+// Note: tauri_plugin_updater::UpdaterExt is used via the updater commands
+
 /// Create the application menu
 fn create_menu(app: &tauri::AppHandle) -> Result<Menu<tauri::Wry>, tauri::Error> {
     let menu = Menu::new(app)?;
@@ -223,8 +225,8 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build())
-        // Note: Updater plugin disabled until proper signing keys are configured
-        // .plugin(tauri_plugin_updater::Builder::new().build())
+        // Updater plugin - requires proper signing for production builds
+        .plugin(tauri_plugin_updater::Builder::new().build())
         // Initialize application state
         .setup(|app| {
             // Initialize the database manager
@@ -239,6 +241,9 @@ pub fn run() {
 
             // Initialize password service from stored data
             commands::password::init_password_service(app.handle());
+
+            // Initialize file watcher service
+            services::file_watcher::init_file_watcher(app.handle());
 
             // Create and set the application menu
             let menu = create_menu(app.handle())?;
@@ -347,6 +352,34 @@ pub fn run() {
             commands::system::memory_trigger_gc,
             // Font commands
             commands::fonts::get_system_fonts,
+            // Updater commands
+            commands::updater::updates_check,
+            commands::updater::updates_download,
+            commands::updater::updates_install,
+            commands::updater::updates_get_status,
+            // File watcher commands
+            commands::file_watcher::file_watcher_watch,
+            commands::file_watcher::file_watcher_unwatch,
+            commands::file_watcher::file_watcher_ignore,
+            // Menu commands
+            commands::menu::menu_update_shortcuts,
+            // Pro license commands
+            commands::pro::pro_activate,
+            commands::pro::pro_get_status,
+            commands::pro::pro_clear_status,
+            // File commands
+            commands::file::file_write,
+            commands::file::file_read,
+            // Plugin commands
+            commands::plugins::plugins_list,
+            commands::plugins::plugins_get,
+            commands::plugins::plugins_install,
+            commands::plugins::plugins_uninstall,
+            commands::plugins::plugins_enable,
+            commands::plugins::plugins_disable,
+            commands::plugins::plugins_get_data,
+            commands::plugins::plugins_set_data,
+            commands::plugins::plugins_clear_data,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

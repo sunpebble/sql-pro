@@ -279,7 +279,8 @@ export function useTableData(options: UseTableDataOptions): UseTableDataResult {
   }, [table, schema]);
 
   const refetch = useCallback(() => {
-    dataQuery.refetch();
+    // Force a fresh fetch by invalidating the cache first
+    dataQuery.refetch({ cancelRefetch: true });
   }, [dataQuery]);
 
   return {

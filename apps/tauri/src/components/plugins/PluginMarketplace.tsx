@@ -159,7 +159,7 @@ export function PluginMarketplace({
     }));
 
     try {
-      const response = await window.sqlPro.plugin.fetchMarketplace({});
+      const response = await window.sqlPro.plugin.fetchMarketplace();
 
       if (response.success && response.registry?.plugins) {
         const pluginList = response.registry.plugins as PluginListing[];

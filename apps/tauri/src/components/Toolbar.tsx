@@ -22,10 +22,12 @@ import {
   X,
 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { LayoutButtons } from '@/components/LayoutButtons';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { sqlPro } from '@/lib/api';
+import { queryClient } from '@/lib/query-client';
 import {
   useChangesStore,
   useConnectionStore,
@@ -46,8 +48,6 @@ export function Toolbar({ onOpenChanges }: ToolbarProps) {
     removeConnection,
     setSchema,
     setSelectedTable,
-    isLoadingSchema,
-    setIsLoadingSchema,
   } = useConnectionStore();
   const {
     hasChanges,
@@ -57,6 +57,7 @@ export function Toolbar({ onOpenChanges }: ToolbarProps) {
     changes,
   } = useChangesStore();
   const { resetConnection } = useTableDataStore();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Global stores for dialogs
   const openConnectionSettings = useDialogStore(
@@ -138,21 +139,43 @@ export function Toolbar({ onOpenChanges }: ToolbarProps) {
   };
 
   const handleRefreshSchema = async () => {
-    if (!connection) return;
+    if (!connection || !activeConnectionId || isRefreshing) return;
 
-    setIsLoadingSchema(true);
-    const result = await sqlPro.db.getSchema({
-      connectionId: connection.id,
-    });
+    setIsRefreshing(true);
+    const toastId = toast.loading('Refreshing...');
 
-    if (result.success && activeConnectionId) {
-      setSchema(activeConnectionId, {
-        schemas: result.schemas || [],
-        tables: result.tables || [],
-        views: result.views || [],
+    try {
+      // Fetch schema silently (no isLoadingSchema to avoid sidebar flicker)
+      const result = await sqlPro.db.getSchema({
+        connectionId: connection.id,
       });
+
+      if (result.success) {
+        setSchema(activeConnectionId, {
+          schemas: result.schemas || [],
+          tables: result.tables || [],
+          views: result.views || [],
+        });
+      }
+
+      // Invalidate and refetch table data queries for this connection
+      await queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey[0] === 'tableData' &&
+            queryKey[1] === activeConnectionId
+          );
+        },
+      });
+
+      toast.success('Refreshed', { id: toastId });
+    } catch {
+      toast.error('Failed to refresh', { id: toastId });
+    } finally {
+      setIsRefreshing(false);
     }
-    setIsLoadingSchema(false);
   };
 
   // Open file dialog for new database
@@ -269,10 +292,10 @@ export function Toolbar({ onOpenChanges }: ToolbarProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleRefreshSchema}
-              disabled={isLoadingSchema}
+              disabled={isRefreshing}
             >
               <RefreshCw
-                className={`mr-2 h-4 w-4 ${isLoadingSchema ? 'animate-spin' : ''}`}
+                className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
               />
               Refresh Schema
             </DropdownMenuItem>

@@ -13,7 +13,6 @@ import {
   SchemaImportDialog,
 } from '@/components/sharing';
 import { sqlPro } from '@/lib/api';
-import { queryClient } from '@/lib/query-client';
 import {
   useChangesStore,
   useConnectionStore,
@@ -85,61 +84,8 @@ export function DatabasePage() {
     setTableDataActiveConnection,
   ]);
 
-  // Listen for external file changes and reload schema + table data
-  useEffect(() => {
-    const unsubscribe = sqlPro.db.onFileChanged(async (event) => {
-      // Check if this connection is currently active
-      const connectionStore = useConnectionStore.getState();
-      const conn = connectionStore.getConnectionById(event.connectionId);
-
-      if (conn) {
-        // Reload schema for the changed connection
-        connectionStore.setIsLoadingSchema(true);
-        try {
-          const schemaResult = await sqlPro.db.getSchema({
-            connectionId: event.connectionId,
-          });
-
-          if (schemaResult.success) {
-            connectionStore.setSchema(event.connectionId, {
-              schemas: schemaResult.schemas || [],
-              tables: schemaResult.tables || [],
-              views: schemaResult.views || [],
-            });
-          } else {
-            // Log error but don't show to user since this is background refresh
-            console.warn(
-              'Failed to reload schema after file change:',
-              schemaResult.error
-            );
-          }
-        } catch (err) {
-          // Log error but don't show to user since this is background refresh
-          console.warn('Failed to reload schema after file change:', err);
-        } finally {
-          connectionStore.setIsLoadingSchema(false);
-        }
-
-        // Invalidate all table data queries for this connection
-        // This will cause any open tables to refresh their data automatically
-        await queryClient.invalidateQueries({
-          predicate: (query) => {
-            // Match queries that start with 'tableData' and have this connectionId
-            const key = query.queryKey;
-            return (
-              Array.isArray(key) &&
-              key[0] === 'tableData' &&
-              key[1] === event.connectionId
-            );
-          },
-        });
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  // Note: File change handling is done by useFileWatcher hook in App.tsx
+  // It handles schema refresh and query invalidation without causing sidebar flicker
 
   // Connect to a database
   const connectToDatabase = useCallback(

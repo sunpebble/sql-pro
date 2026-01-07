@@ -7,6 +7,7 @@ import {
   getAllPendingChanges,
   pendingChangesCollection,
 } from '@/lib/collections';
+import { queryClient } from '@/lib/query-client';
 
 export interface UsePendingChangesOptions {
   connectionId: string | null;
@@ -181,6 +182,35 @@ export function usePendingChanges(
 
       // Clear all applied changes
       clearPendingChanges(table, schema);
+
+      // Invalidate and refetch table data queries to show the updated data
+      await queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          // Match queries for this connection and table
+          return (
+            Array.isArray(queryKey) &&
+            queryKey[0] === 'tableData' &&
+            queryKey[1] === connectionId &&
+            (!table || queryKey[3] === table)
+          );
+        },
+      });
+
+      // Force refetch active queries
+      await queryClient.refetchQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey;
+          return (
+            Array.isArray(queryKey) &&
+            queryKey[0] === 'tableData' &&
+            queryKey[1] === connectionId &&
+            (!table || queryKey[3] === table) &&
+            query.isActive()
+          );
+        },
+        type: 'active',
+      });
 
       return true;
     } catch (error) {

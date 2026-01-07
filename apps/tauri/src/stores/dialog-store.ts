@@ -52,7 +52,21 @@ interface DialogState {
   // Update check dialog
   updateCheckOpen: boolean;
   updateCheckMessage: string;
-  openUpdateCheck: (message: string) => void;
+  updateAvailable: boolean;
+  updateInfo: {
+    version: string;
+    releaseDate?: string;
+    releaseNotes?: string;
+  } | null;
+  openUpdateCheck: (
+    message: string,
+    updateAvailable?: boolean,
+    updateInfo?: {
+      version: string;
+      releaseDate?: string;
+      releaseNotes?: string;
+    }
+  ) => void;
   closeUpdateCheck: () => void;
 }
 
@@ -110,8 +124,20 @@ export const useDialogStore = create<DialogState>((set) => ({
   // Update check dialog
   updateCheckOpen: false,
   updateCheckMessage: '',
-  openUpdateCheck: (message: string) =>
-    set({ updateCheckOpen: true, updateCheckMessage: message }),
+  updateAvailable: false,
+  updateInfo: null,
+  openUpdateCheck: (message, updateAvailable = false, updateInfo = undefined) =>
+    set({
+      updateCheckOpen: true,
+      updateCheckMessage: message,
+      updateAvailable,
+      updateInfo: updateInfo || null,
+    }),
   closeUpdateCheck: () =>
-    set({ updateCheckOpen: false, updateCheckMessage: '' }),
+    set({
+      updateCheckOpen: false,
+      updateCheckMessage: '',
+      updateAvailable: false,
+      updateInfo: null,
+    }),
 }));

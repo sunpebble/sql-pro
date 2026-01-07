@@ -1,6 +1,7 @@
 import type { GetSchemaResponse } from '@shared/types';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
+import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
 import { queryClient } from '@/lib/query-client';
 import {
@@ -90,14 +91,9 @@ export function useMenuActions() {
         }
 
         case 'refresh-schema': {
-          const {
-            connection,
-            activeConnectionId,
-            setIsLoadingSchema,
-            setSchema,
-          } = connectionStore;
+          const { connection, activeConnectionId, setSchema } = connectionStore;
           if (connection && activeConnectionId) {
-            setIsLoadingSchema(true);
+            const toastId = toast.loading('Refreshing...');
             sqlPro.db
               .getSchema({ connectionId: connection.id })
               .then((result: GetSchemaResponse) => {
@@ -107,10 +103,13 @@ export function useMenuActions() {
                     tables: result.tables || [],
                     views: result.views || [],
                   });
+                  toast.success('Refreshed', { id: toastId });
+                } else {
+                  toast.error('Failed to refresh', { id: toastId });
                 }
               })
-              .finally(() => {
-                setIsLoadingSchema(false);
+              .catch(() => {
+                toast.error('Failed to refresh', { id: toastId });
               });
           }
           break;
@@ -276,14 +275,39 @@ export function useMenuActions() {
         }
 
         case 'check_updates': {
-          // Show update check dialog
-          // Note: tauri-plugin-updater requires signing keys to be configured
-          // For now, show a message that the app is up to date
-          useDialogStore
-            .getState()
-            .openUpdateCheck(
-              'You are running the latest version of SQL Pro (1.0.0).'
-            );
+          // Check for updates using tauri-plugin-updater
+          sqlPro.updates
+            .check()
+            .then((result) => {
+              if (result.success) {
+                if (result.updateAvailable && result.info) {
+                  useDialogStore
+                    .getState()
+                    .openUpdateCheck(
+                      `A new version (${result.info.version}) is available. Would you like to download and install it?`,
+                      true,
+                      result.info
+                    );
+                } else {
+                  useDialogStore
+                    .getState()
+                    .openUpdateCheck(
+                      'You are running the latest version of SQL Pro.'
+                    );
+                }
+              } else {
+                useDialogStore
+                  .getState()
+                  .openUpdateCheck(
+                    result.error || 'Failed to check for updates.'
+                  );
+              }
+            })
+            .catch((error) => {
+              useDialogStore
+                .getState()
+                .openUpdateCheck(`Error checking for updates: ${error}`);
+            });
           break;
         }
 

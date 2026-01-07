@@ -12,6 +12,7 @@ import type {
   TableSchema,
 } from '@/types/database';
 import { create } from 'zustand';
+import { sqlPro } from '@/lib/api';
 import {
   persistConnectionUi,
   registerConnectionUiHydrator,
@@ -163,7 +164,14 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
   ...initialState,
 
   // Connection Actions
-  addConnection: (connection) =>
+  addConnection: (connection) => {
+    // Start watching the database file for external changes
+    if (connection.path && sqlPro.fileWatcher?.watch) {
+      sqlPro.fileWatcher.watch(connection.id, connection.path).catch((err) => {
+        console.warn('Failed to start file watcher:', err);
+      });
+    }
+
     set((state) => {
       const newConnections = new Map(state.connections);
       newConnections.set(connection.id, connection);
@@ -185,9 +193,17 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
         schema: null,
         error: null,
       };
-    }),
+    });
+  },
 
-  removeConnection: (id) =>
+  removeConnection: (id) => {
+    // Stop watching the database file
+    if (sqlPro.fileWatcher?.unwatch) {
+      sqlPro.fileWatcher.unwatch(id).catch((err) => {
+        console.warn('Failed to stop file watcher:', err);
+      });
+    }
+
     set((state) => {
       const newConnections = new Map(state.connections);
       newConnections.delete(id);
@@ -248,7 +264,8 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
         connection: newConnection,
         schema: newSchema,
       };
-    }),
+    });
+  },
 
   setActiveConnection: (id) =>
     set((state) => {

@@ -837,8 +837,20 @@ export function Sidebar({
           }}
         >
           {isLoadingSchema ? (
-            <div className="text-muted-foreground flex items-center justify-center py-8">
-              Loading schema...
+            <div className="space-y-1 py-1">
+              {/* Skeleton items that mimic table entries */}
+              {[80, 120, 95, 140, 75, 110, 130, 85].map((width, i) => (
+                <div
+                  key={`skeleton-${String(i)}`}
+                  className="flex items-center gap-2 rounded px-2 py-1.5"
+                >
+                  <div className="bg-muted h-4 w-4 animate-pulse rounded" />
+                  <div
+                    className="bg-muted h-3.5 animate-pulse rounded"
+                    style={{ width: `${width}px` }}
+                  />
+                </div>
+              ))}
             </div>
           ) : (
             <>
