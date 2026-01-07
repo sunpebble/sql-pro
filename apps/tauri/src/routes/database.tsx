@@ -434,10 +434,7 @@ export function DatabasePage() {
 
   return (
     <>
-      <DatabaseView
-        onOpenDatabase={handleOpenDatabase}
-        onOpenRecentConnection={handleOpenRecentConnection}
-      />
+      <DatabaseView />
 
       {/* Connection Settings Dialog */}
       <ConnectionSettingsDialog
@@ -462,6 +459,12 @@ export function DatabasePage() {
       <ConnectionSwitcher onOpenRecentConnection={handleOpenRecentConnection} />
 
       {/* Hidden trigger buttons for menu actions */}
+      <button
+        data-action="open-database"
+        className="hidden"
+        onClick={handleOpenDatabase}
+        aria-hidden="true"
+      />
       <button
         data-action="export-query"
         className="hidden"

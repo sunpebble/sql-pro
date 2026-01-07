@@ -1,4 +1,3 @@
-import type { RecentConnection } from '@shared/types';
 import type { SchemaInfo, TableSchema, TriggerSchema } from '@/types/database';
 import {
   AlertDialog,
@@ -77,20 +76,13 @@ import {
   useTableFont,
   useTableOrganizationStore,
 } from '@/stores';
-import { ConnectionSelector } from './ConnectionSelector';
 import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
 interface SidebarProps {
-  onOpenDatabase?: () => void;
-  onOpenRecentConnection?: (conn: RecentConnection) => void;
   onSwitchToQuery?: () => void;
 }
 
-export function Sidebar({
-  onOpenDatabase,
-  onOpenRecentConnection,
-  onSwitchToQuery,
-}: SidebarProps) {
+export function Sidebar({ onSwitchToQuery }: SidebarProps) {
   const {
     schema,
     selectedTable,
@@ -703,14 +695,6 @@ export function Sidebar({
       onKeyDown={handleKeyDown}
       data-tour-target="sidebar"
     >
-      {/* Connection Selector */}
-      <div className="border-b p-2">
-        <ConnectionSelector
-          onOpenDatabase={onOpenDatabase}
-          onOpenRecentConnection={onOpenRecentConnection}
-        />
-      </div>
-
       {/* Search */}
       <div className="p-2">
         <div className="relative">

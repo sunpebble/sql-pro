@@ -68,6 +68,12 @@ interface DialogState {
     }
   ) => void;
   closeUpdateCheck: () => void;
+
+  // Changes panel (pending changes diff preview)
+  changesPanelOpen: boolean;
+  openChangesPanel: () => void;
+  closeChangesPanel: () => void;
+  toggleChangesPanel: () => void;
 }
 
 export const useDialogStore = create<DialogState>((set) => ({
@@ -140,4 +146,11 @@ export const useDialogStore = create<DialogState>((set) => ({
       updateAvailable: false,
       updateInfo: null,
     }),
+
+  // Changes panel (pending changes diff preview)
+  changesPanelOpen: false,
+  openChangesPanel: () => set({ changesPanelOpen: true }),
+  closeChangesPanel: () => set({ changesPanelOpen: false }),
+  toggleChangesPanel: () =>
+    set((state) => ({ changesPanelOpen: !state.changesPanelOpen })),
 }));

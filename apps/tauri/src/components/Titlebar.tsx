@@ -8,16 +8,19 @@ import {
 } from '@sqlpro/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Monitor, Moon, Settings, Sun } from 'lucide-react';
-import { useDialogStore, useThemeStore } from '@/stores';
+import { useConnectionStore, useDialogStore, useThemeStore } from '@/stores';
+import { ConnectionTabBar } from './ConnectionTabBar';
+import { Toolbar } from './Toolbar';
 
 /**
- * Custom titlebar component with global app controls.
- * Includes theme switching and settings access.
+ * Unified custom titlebar component (VSCode-style).
+ * Combines connection tabs, toolbar controls, theme switching, and settings.
  * This is draggable on macOS for window management.
  */
 export function Titlebar() {
   const { theme, setTheme } = useThemeStore();
   const openSettings = useDialogStore((s) => s.openSettings);
+  const { connection } = useConnectionStore();
 
   const getThemeIcon = () => {
     switch (theme) {
@@ -43,11 +46,30 @@ export function Titlebar() {
 
   return (
     <div
-      className="titlebar border-border/50 flex h-10 shrink-0 items-center justify-end border-b px-2"
+      className="titlebar border-border/50 flex h-10 shrink-0 items-center border-b"
       data-tauri-drag-region
     >
+      {/* macOS traffic light padding - approximately 70px on macOS */}
+      <div className="w-[70px] shrink-0" data-tauri-drag-region />
+
+      {/* Connection Tabs - flexible width, also draggable in empty space */}
+      {connection ? (
+        <ConnectionTabBar className="h-full min-w-0 flex-1 border-b-0" />
+      ) : (
+        // Empty draggable space with centered app name when no connection
+        <div
+          className="text-muted-foreground/60 flex min-w-0 flex-1 items-center justify-center text-sm font-medium"
+          data-tauri-drag-region
+        >
+          SQL Pro
+        </div>
+      )}
+
       {/* Right side controls - non-draggable */}
-      <div className="titlebar-no-drag flex items-center gap-1">
+      <div className="titlebar-no-drag flex shrink-0 items-center gap-1 px-2">
+        {/* Toolbar controls (changes indicator, layout, commands, help) */}
+        {connection && <Toolbar />}
+
         {/* Theme Switcher */}
         <DropdownMenu>
           <Tooltip>

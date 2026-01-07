@@ -27,7 +27,7 @@ export const TOUR_STEPS: TourStep[] = [
     title: 'Data Browser',
     description:
       'View and edit table data with a powerful spreadsheet-like interface. Sort, filter, and modify data inline. Changes are tracked and can be previewed before saving.',
-    placement: 'bottom',
+    placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
     action: {
@@ -43,7 +43,7 @@ export const TOUR_STEPS: TourStep[] = [
     title: 'Query Editor',
     description:
       'Write and execute SQL queries with syntax highlighting and autocomplete. Supports Vim mode for keyboard-driven editing.',
-    placement: 'bottom',
+    placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
     action: {
@@ -59,7 +59,7 @@ export const TOUR_STEPS: TourStep[] = [
     title: 'ER Diagram',
     description:
       'Visualize your database schema with interactive entity-relationship diagrams. See table relationships and foreign keys at a glance.',
-    placement: 'bottom',
+    placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
     action: {
@@ -75,7 +75,7 @@ export const TOUR_STEPS: TourStep[] = [
     title: 'Schema Compare',
     description:
       'Compare database schemas between two connections. Identify differences in tables, columns, indexes, and generate migration scripts automatically.',
-    placement: 'bottom',
+    placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
     action: {
@@ -91,7 +91,7 @@ export const TOUR_STEPS: TourStep[] = [
     title: 'Data Diff',
     description:
       'Compare table data between two databases. Visualize row-level differences and identify data changes across environments.',
-    placement: 'bottom',
+    placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
     action: {

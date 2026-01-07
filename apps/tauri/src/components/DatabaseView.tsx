@@ -1,18 +1,14 @@
-import type { RecentConnection } from '@shared/types';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
-import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
+import type { ViewType } from './ActivityBar';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Tour } from '@/components/onboarding';
-import { ShortcutKbd } from '@/components/ui/kbd';
-import { cn } from '@/lib/utils';
 import {
   useChangesStore,
   useConnectionStore,
   useDataTabsStore,
+  useDialogStore,
   useSettingsStore,
 } from '@/stores';
-import { ConnectionTabBar } from './ConnectionTabBar';
+import { ActivityBar } from './ActivityBar';
 import { DataDiffPanel } from './data-diff/DataDiffPanel';
 import { DataTabBar } from './data-table';
 import { DiffPreview } from './DiffPreview';
@@ -23,19 +19,8 @@ import { SchemaComparisonPanel } from './schema-comparison';
 import { SchemaDetailsPanel } from './SchemaDetailsPanel';
 import { Sidebar } from './Sidebar';
 import { TableView } from './TableView';
-import { Toolbar } from './Toolbar';
 
-type TabValue = 'data' | 'query' | 'diagram' | 'compare' | 'dataDiff';
-
-interface DatabaseViewProps {
-  onOpenDatabase?: () => void;
-  onOpenRecentConnection?: (conn: RecentConnection) => void;
-}
-
-export function DatabaseView({
-  onOpenDatabase,
-  onOpenRecentConnection,
-}: DatabaseViewProps) {
+export function DatabaseView() {
   const { selectedTable, activeConnectionId, setSelectedTable } =
     useConnectionStore();
   const { hasChanges } = useChangesStore();
@@ -50,9 +35,10 @@ export function DatabaseView({
     showSchemaDetails,
     setShowSchemaDetails,
   } = useSettingsStore();
+  const { changesPanelOpen: showChangesPanel, closeChangesPanel } =
+    useDialogStore();
 
-  const [activeTab, setActiveTab] = useState<TabValue>('data');
-  const [showChangesPanel, setShowChangesPanel] = useState(false);
+  const [activeView, setActiveView] = useState<ViewType>('data');
 
   // Get the active data tab for current connection
   const activeDataTab = activeConnectionId
@@ -98,13 +84,19 @@ export function DatabaseView({
 
   // Handler to scroll sidebar into view (used by DataTabBar's + button)
   const handleOpenSidebar = useCallback(() => {
-    // Focus the sidebar search or just ensure data tab is active
-    setActiveTab('data');
+    // Focus the sidebar search or just ensure data view is active
+    setActiveView('data');
     // Also ensure sidebar is visible
     if (sidebarCollapsed) {
       toggleSidebar();
     }
   }, [sidebarCollapsed, toggleSidebar]);
+
+  // Badge counts for activity bar
+  const badges: Partial<Record<ViewType, number>> = {};
+  if (dataTabs.length > 0) {
+    badges.data = dataTabs.length;
+  }
 
   return (
     <div className="flex h-full flex-col">
@@ -116,14 +108,15 @@ export function DatabaseView({
         aria-label="Toggle Sidebar"
       />
 
-      {/* Connection Tab Bar */}
-      <ConnectionTabBar />
-
-      {/* Toolbar */}
-      <Toolbar onOpenChanges={() => setShowChangesPanel(true)} />
-
-      {/* Main Content */}
+      {/* Main Content with Activity Bar */}
       <div className="flex min-h-0 flex-1 overflow-hidden">
+        {/* Activity Bar - VSCode style */}
+        <ActivityBar
+          activeView={activeView}
+          onViewChange={setActiveView}
+          badges={badges}
+        />
+
         {/* Sidebar - Resizable */}
         {!sidebarCollapsed && (
           <ResizablePanel
@@ -133,197 +126,68 @@ export function DatabaseView({
             maxWidth={480}
             storageKey="sidebar"
           >
-            <Sidebar
-              onOpenDatabase={onOpenDatabase}
-              onOpenRecentConnection={onOpenRecentConnection}
-              onSwitchToQuery={() => setActiveTab('query')}
-            />
+            <Sidebar onSwitchToQuery={() => setActiveView('query')} />
           </ResizablePanel>
         )}
 
-        {/* Content Area with Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => v && setActiveTab(v as TabValue)}
-          className="flex min-w-0 flex-1 flex-col overflow-hidden"
-        >
-          {/* Tab List */}
-          <ScrollArea
-            orientation="horizontal"
-            className="w-full shrink-0 border-b"
-          >
-            <TabsList variant="line" className="flex h-10 px-2">
-              <TabsTrigger
-                value="data"
-                data-tab="data"
-                data-tour-target="data-browser-tab"
-                className={cn(
-                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
-                  activeTab === 'data'
-                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <Table className="h-4 w-4" />
-                Data Browser
-                {dataTabs.length > 0 && (
-                  <span className="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-[10px] font-normal">
-                    {dataTabs.length}
-                  </span>
-                )}
-                <ShortcutKbd
-                  action="nav.data-browser"
-                  className="ml-1 hidden sm:inline-flex"
-                />
-              </TabsTrigger>
-              <TabsTrigger
-                value="query"
-                data-tab="query"
-                data-tour-target="query-editor-tab"
-                className={cn(
-                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
-                  activeTab === 'query'
-                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <Code className="h-4 w-4" />
-                SQL Query
-                <ShortcutKbd
-                  action="nav.query-editor"
-                  className="ml-1 hidden sm:inline-flex"
-                />
-              </TabsTrigger>
-              <TabsTrigger
-                value="diagram"
-                data-tab="diagram"
-                data-tour-target="diagram-tab"
-                className={cn(
-                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
-                  activeTab === 'diagram'
-                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <GitFork className="h-4 w-4" />
-                ER Diagram
-                <ShortcutKbd
-                  action="nav.er-diagram"
-                  className="ml-1 hidden sm:inline-flex"
-                />
-              </TabsTrigger>
-              <TabsTrigger
-                value="compare"
-                data-tab="compare"
-                data-tour-target="schema-compare-tab"
-                className={cn(
-                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
-                  activeTab === 'compare'
-                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <GitCompare className="h-4 w-4" />
-                Schema Compare
-                <ShortcutKbd
-                  action="nav.schema-compare"
-                  className="ml-1 hidden sm:inline-flex"
-                />
-              </TabsTrigger>
-              <TabsTrigger
-                value="dataDiff"
-                data-tab="dataDiff"
-                data-tour-target="data-diff-tab"
-                className={cn(
-                  'flex h-10 items-center gap-2 px-4 text-sm font-medium transition-colors after:hidden',
-                  activeTab === 'dataDiff'
-                    ? 'text-foreground shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <ArrowLeftRight className="h-4 w-4" />
-                Data Diff
-                <ShortcutKbd
-                  action="nav.data-diff"
-                  className="ml-1 hidden sm:inline-flex"
-                />
-              </TabsTrigger>
-            </TabsList>
-          </ScrollArea>
+        {/* Content Area - Flat conditional rendering */}
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          {/* Data Browser View */}
+          {activeView === 'data' && (
+            <div className="flex h-full min-h-0 flex-1 flex-col">
+              {/* Data Browser Tab Bar - shows opened table tabs */}
+              {dataTabs.length > 0 && (
+                <DataTabBar onOpenSidebar={handleOpenSidebar} />
+              )}
 
-          {/* Tab Content */}
-          <TabsContent
-            value="data"
-            className="flex h-full min-h-0 flex-1 flex-col data-[state=inactive]:hidden"
-          >
-            {/* Data Browser Tab Bar - shows opened table tabs */}
-            {dataTabs.length > 0 && (
-              <DataTabBar onOpenSidebar={handleOpenSidebar} />
-            )}
+              {/* Table View with optional Schema Details Panel */}
+              <div className="flex min-h-0 flex-1 overflow-hidden">
+                <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+                  {activeDataTab ? (
+                    <TableView
+                      key={activeDataTab.id}
+                      tableOverride={activeDataTab.table}
+                    />
+                  ) : displayTable ? (
+                    <TableView />
+                  ) : (
+                    <div className="bg-grid-dot text-muted-foreground flex h-full flex-1 items-center justify-center">
+                      <p>Select a table from the sidebar to view its data</p>
+                    </div>
+                  )}
+                </div>
 
-            {/* Table View with optional Schema Details Panel */}
-            <div className="flex min-h-0 flex-1 overflow-hidden">
-              <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-                {activeDataTab ? (
-                  <TableView
-                    key={activeDataTab.id}
-                    tableOverride={activeDataTab.table}
-                  />
-                ) : displayTable ? (
-                  <TableView />
-                ) : (
-                  <div className="bg-grid-dot text-muted-foreground flex h-full flex-1 items-center justify-center">
-                    <p>Select a table from the sidebar to view its data</p>
-                  </div>
+                {/* Schema Details Panel - inside Data view */}
+                {showSchemaDetails && (
+                  <ResizablePanel
+                    side="right"
+                    defaultWidth={400}
+                    minWidth={320}
+                    maxWidth={600}
+                    storageKey="schema-details-panel"
+                  >
+                    <SchemaDetailsPanel
+                      table={displayTable}
+                      onClose={() => setShowSchemaDetails(false)}
+                    />
+                  </ResizablePanel>
                 )}
               </div>
-
-              {/* Schema Details Panel - inside Data tab */}
-              {showSchemaDetails && (
-                <ResizablePanel
-                  side="right"
-                  defaultWidth={400}
-                  minWidth={320}
-                  maxWidth={600}
-                  storageKey="schema-details-panel"
-                >
-                  <SchemaDetailsPanel
-                    table={displayTable}
-                    onClose={() => setShowSchemaDetails(false)}
-                  />
-                </ResizablePanel>
-              )}
             </div>
-          </TabsContent>
+          )}
 
-          <TabsContent
-            value="query"
-            className="h-full min-h-0 flex-1 data-[state=inactive]:hidden"
-          >
-            <QueryEditor />
-          </TabsContent>
+          {/* SQL Query View */}
+          {activeView === 'query' && <QueryEditor />}
 
-          <TabsContent
-            value="diagram"
-            className="h-full min-h-0 flex-1 data-[state=inactive]:hidden"
-          >
-            <ERDiagram />
-          </TabsContent>
+          {/* ER Diagram View */}
+          {activeView === 'diagram' && <ERDiagram />}
 
-          <TabsContent
-            value="compare"
-            className="h-full min-h-0 flex-1 data-[state=inactive]:hidden"
-          >
-            <SchemaComparisonPanel />
-          </TabsContent>
+          {/* Schema Compare View */}
+          {activeView === 'compare' && <SchemaComparisonPanel />}
 
-          <TabsContent
-            value="dataDiff"
-            className="h-full min-h-0 flex-1 data-[state=inactive]:hidden"
-          >
-            <DataDiffPanel />
-          </TabsContent>
-        </Tabs>
+          {/* Data Diff View */}
+          {activeView === 'dataDiff' && <DataDiffPanel />}
+        </div>
 
         {/* Changes Panel - Resizable */}
         {showChangesPanel && hasChanges() && (
@@ -334,7 +198,7 @@ export function DatabaseView({
             maxWidth={600}
             storageKey="changes-panel"
           >
-            <DiffPreview onClose={() => setShowChangesPanel(false)} />
+            <DiffPreview onClose={closeChangesPanel} />
           </ResizablePanel>
         )}
       </div>
@@ -342,15 +206,15 @@ export function DatabaseView({
       {/* Onboarding Tour */}
       <Tour
         onSwitchTab={(tab) => {
-          // Map tour tab names to DatabaseView tab values
-          const tabMap: Record<string, TabValue> = {
+          // Map tour tab names to DatabaseView view values
+          const viewMap: Record<string, ViewType> = {
             browser: 'data',
             query: 'query',
             diagram: 'diagram',
             compare: 'compare',
             dataDiff: 'dataDiff',
           };
-          setActiveTab(tabMap[tab] || 'data');
+          setActiveView(viewMap[tab] || 'data');
         }}
       />
     </div>

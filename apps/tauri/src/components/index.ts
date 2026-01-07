@@ -1,3 +1,4 @@
+export { ActivityBar, type ViewType } from './ActivityBar';
 export { ConnectionSelector } from './ConnectionSelector';
 export { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
 export type { ConnectionSettings } from './ConnectionSettingsDialog';
