@@ -1,0 +1,53 @@
+{
+  "name": "@sqlpro/tauri",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/tauri/src",
+  "projectType": "application",
+  "tags": ["app", "tauri"],
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm tauri dev",
+        "cwd": "apps/tauri"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "options": {
+        "command": "pnpm tauri build",
+        "cwd": "apps/tauri"
+      }
+    },
+    "build:debug": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "options": {
+        "command": "pnpm tauri build --debug",
+        "cwd": "apps/tauri"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm typecheck",
+        "cwd": "apps/tauri"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm test",
+        "cwd": "apps/tauri"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint src",
+        "cwd": "apps/tauri"
+      }
+    }
+  }
+}
