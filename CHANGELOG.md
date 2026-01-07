@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.13.0](https://github.com/kunish-homelab/sql-pro/compare/v1.12.0...v1.13.0) (2026-01-07)
+
+
+### Features
+
+* change shortcut key for toggling schema details to 'i' and update documentation ([03a8bfa](https://github.com/kunish-homelab/sql-pro/commit/03a8bfacf69efea7939feeeb3831dbfe04c8f2e5))
+* **data-tabs:** add selectedRowId to DataTab and update openTable method ([8b564be](https://github.com/kunish-homelab/sql-pro/commit/8b564beb118c65d8ec0dd1ebfdb8eb5e732dadab))
+* **database-adapters:** add connection timeout and improve error messages for MySQL and PostgreSQL ([0a2b8f7](https://github.com/kunish-homelab/sql-pro/commit/0a2b8f76a7ace59f65d6a85bd6c6e92d238b6379))
+* **DataTabBar:** integrate ScrollArea and ScrollBar for improved tab navigation ([0b497d8](https://github.com/kunish-homelab/sql-pro/commit/0b497d832ec70d3c16bc16565864e9d96d645400))
+* **dialog:** add AboutDialog component and integrate with dialog store ([b84e03f](https://github.com/kunish-homelab/sql-pro/commit/b84e03fba250eee6bdb5db4f4c21d0f12b726ed0))
+* **electron:** enhance application with new features, improve performance ([a55ae39](https://github.com/kunish-homelab/sql-pro/commit/a55ae39fed61e5753335fc0a7e9b2c9dd9672013))
+* **file-watcher:** implement file watcher for database changes ([201cc3f](https://github.com/kunish-homelab/sql-pro/commit/201cc3f7b54ea3be608afa369eeb9e138eb012d9))
+* **password:** implement password storage using Tauri store ([f03a95c](https://github.com/kunish-homelab/sql-pro/commit/f03a95cc5d9e66c64c0c33783086c68c06a14909))
+* **selection-stats:** add Excel-like selection statistics component ([daafbfd](https://github.com/kunish-homelab/sql-pro/commit/daafbfd4d24c99b322b28dcdd482e15848840bce))
+* **tauri:** initialize Tauri app with essential files and configurations ([8998e3c](https://github.com/kunish-homelab/sql-pro/commit/8998e3cb0168a79fd18b242d968959f047dff773))
+* **WelcomeScreen:** prevent duplicate connections by switching to existing ones ([0a2b8f7](https://github.com/kunish-homelab/sql-pro/commit/0a2b8f76a7ace59f65d6a85bd6c6e92d238b6379))
+
+
+### Bug Fixes
+
+* **DatabaseView:** update tab styles for improved visual consistency ([9dced80](https://github.com/kunish-homelab/sql-pro/commit/9dced80a5da4b00bd3c31c5fcdecb6dfa51555fb))
+* **DataTabBar:** adjust ScrollArea height for better tab layout ([7925642](https://github.com/kunish-homelab/sql-pro/commit/7925642031350f2b54834a88d99195e47b2ab751))
+* **menu:** restrict developer tools access in production mode ([4d02325](https://github.com/kunish-homelab/sql-pro/commit/4d02325144d8932db7f6dc852ceae6e3e25f4e15))
+* refactor setState in useEffect to render-time comparison pattern ([020cde9](https://github.com/kunish-homelab/sql-pro/commit/020cde92750f598b271eae5af2d1a2e779e79e4c))
+* replace window.alert/confirm with proper dialog components ([4169b92](https://github.com/kunish-homelab/sql-pro/commit/4169b924f103d7900f79f63e7ada513e4a80770a))
+* resolve react-hooks/exhaustive-deps violations in 5 files ([1acc3c2](https://github.com/kunish-homelab/sql-pro/commit/1acc3c2cb9ce483cd7ae32cd5acd8b369e51085a))
+* use error message as stable key instead of array index in FieldError ([c16de44](https://github.com/kunish-homelab/sql-pro/commit/c16de44c9ff797cdfc010d159ea1ec36053a1c94))
+* **WelcomeScreen:** handle existing connections before opening a new one ([82f1f87](https://github.com/kunish-homelab/sql-pro/commit/82f1f871a3f51445852d4359c1344671707325b2))
+
 ## [1.12.0](https://github.com/kunish-homelab/sql-pro/compare/v1.11.0...v1.12.0) (2026-01-06)
 
 
