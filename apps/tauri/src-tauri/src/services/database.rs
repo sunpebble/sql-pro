@@ -14,6 +14,7 @@ use std::time::Instant;
 use uuid::Uuid;
 
 /// Internal connection information with the actual database connection
+#[allow(dead_code)]
 struct InternalConnection {
     pub connection: Connection,
     pub path: String,

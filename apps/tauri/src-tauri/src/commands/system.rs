@@ -195,10 +195,12 @@ pub struct MemoryPressureChangeEvent {
 
 /// Get process memory usage on macOS
 #[cfg(target_os = "macos")]
+#[allow(deprecated)]
 fn get_process_memory() -> (u64, u64) {
     use std::mem::MaybeUninit;
-    
+
     // Use mach task_info to get memory usage
+    // Note: mach_task_self is deprecated but still functional
     unsafe {
         let task = libc::mach_task_self();
         let mut info: MaybeUninit<libc::mach_task_basic_info> = MaybeUninit::uninit();

@@ -84,6 +84,12 @@ custom-protocol = ["tauri/custom-protocol"]
 # mysql = ["mysql_async"]
 # postgresql = ["tokio-postgres"]
 
+# Suppress warnings for expected but undefined cfg conditions
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = [
+  "cfg(feature, values(\"mysql\", \"postgresql\"))",
+] }
+
 [profile.release]
 panic = "abort"
 codegen-units = 1
