@@ -22,6 +22,8 @@ export interface DataTab {
   grouping: string[];
   /** UI filters */
   filters: UIFilterState[];
+  /** ID of the selected row to highlight */
+  selectedRowId?: string | number;
 }
 
 interface ConnectionDataTabState {
@@ -43,7 +45,11 @@ interface DataTabsState {
    * Open a table in a new tab or focus existing tab if already open
    * @returns The tab ID (new or existing)
    */
-  openTable: (connectionId: string, table: TableSchema) => string;
+  openTable: (
+    connectionId: string,
+    table: TableSchema,
+    selectedRowId?: string | number
+  ) => string;
 
   /**
    * Close a specific tab
@@ -169,6 +175,7 @@ const createDataTab = (connectionId: string, table: TableSchema): DataTab => ({
   sort: null,
   grouping: [],
   filters: [],
+  selectedRowId: undefined,
 });
 
 const createDefaultConnectionState = (): ConnectionDataTabState => ({
@@ -222,7 +229,7 @@ export const useDataTabsStore = create<DataTabsState>()((set, get) => ({
     }
   },
 
-  openTable: (connectionId, table) => {
+  openTable: (connectionId, table, selectedRowId) => {
     const state = get();
     const connState = getOrCreateConnectionState(
       state.tabsByConnection,
@@ -242,6 +249,12 @@ export const useDataTabsStore = create<DataTabsState>()((set, get) => ({
           ...state.tabsByConnection,
           [connectionId]: {
             ...connState,
+            // Update selectedRowId if provided
+            tabs: selectedRowId
+              ? connState.tabs.map((t) =>
+                  t.id === existingTab.id ? { ...t, selectedRowId } : t
+                )
+              : connState.tabs,
             activeTabId: existingTab.id,
           },
         },
@@ -251,6 +264,9 @@ export const useDataTabsStore = create<DataTabsState>()((set, get) => ({
 
     // Create a new tab
     const newTab = createDataTab(connectionId, table);
+    if (selectedRowId) {
+      newTab.selectedRowId = selectedRowId;
+    }
 
     set({
       tabsByConnection: {
