@@ -65,7 +65,7 @@ export function Toolbar() {
                 })
               );
             }}
-            className="text-muted-foreground h-7 gap-1.5 text-xs"
+            className="text-muted-foreground h-7 gap-1.5 text-xs duration-150 hover:scale-[1.02] active:scale-[0.98]"
           >
             <span>Commands</span>
             <ShortcutKbd action="action.command-palette" />
