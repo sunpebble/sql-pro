@@ -95,13 +95,13 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@tanstack/ai':
-        specifier: ^0.2.0
+        specifier: ^0.2.1
         version: 0.2.1
       '@tanstack/ai-anthropic':
         specifier: ^0.2.0
         version: 0.2.0(@tanstack/ai@0.2.1)(zod@4.3.5)
       '@tanstack/ai-react':
-        specifier: ^0.2.0
+        specifier: ^0.2.1
         version: 0.2.1(@tanstack/ai@0.2.1)(@types/react@19.2.7)(react@19.2.3)
       '@tanstack/db':
         specifier: ^0.5.16
@@ -209,13 +209,13 @@ importers:
         specifier: ^7.70.0
         version: 7.70.0(react@19.2.3)
       react-resizable-panels:
-        specifier: ^4.2.0
+        specifier: ^4.3.0
         version: 4.3.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       recharts:
         specifier: 3.6.0
         version: 3.6.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react-is@18.3.1)(react@19.2.3)(redux@5.0.1)
       shadcn:
-        specifier: ^3.6.2
+        specifier: ^3.6.3
         version: 3.6.3(@types/node@25.0.3)(babel-plugin-macros@3.1.0)(hono@4.11.3)(typescript@5.9.3)
       sonner:
         specifier: ^2.0.7

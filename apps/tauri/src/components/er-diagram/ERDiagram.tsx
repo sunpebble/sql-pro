@@ -90,18 +90,19 @@ export function ERDiagram() {
     return applyAutoLayout(rawNodes, rawEdges, 'LR');
   }, [rawNodes, rawEdges, storedPositions]);
 
-  const [nodes, setNodes, onNodesChange] =
-    useNodesState<ERTableNode>(layoutedNodes);
-  const [edges, setEdges, onEdgesChange] =
-    useEdgesState<ERRelationshipEdge>(rawEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState<ERTableNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<ERRelationshipEdge>(
+    []
+  );
 
   // Update nodes when schema or layout changes
   useEffect(() => {
-    if (layoutedNodes.length > 0) {
-      setNodes(layoutedNodes);
-      setEdges(rawEdges);
+    // Always update nodes and edges when layoutedNodes changes
+    setNodes(layoutedNodes);
+    setEdges(rawEdges);
 
-      // Save positions if this is a fresh layout (no stored positions)
+    // Save positions if this is a fresh layout (no stored positions)
+    if (layoutedNodes.length > 0) {
       const hasStoredPositions = Object.keys(storedPositions).length > 0;
       if (!hasStoredPositions && !hasAppliedInitialLayout.current) {
         hasAppliedInitialLayout.current = true;
@@ -199,7 +200,8 @@ export function ERDiagram() {
     );
   }
 
-  if (nodes.length === 0) {
+  // Check rawNodes instead of nodes state to avoid race conditions
+  if (rawNodes.length === 0) {
     return (
       <div className="text-muted-foreground flex h-full items-center justify-center">
         No tables in database

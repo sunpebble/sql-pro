@@ -345,17 +345,43 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
     set((state) => {
       const newSchemas = new Map(state.schemas);
       if (schema) {
-        newSchemas.set(connectionId, schema);
+        // Ensure flat tables/views arrays are populated from nested schemas if empty
+        let normalizedSchema = schema;
+        if (
+          schema.schemas?.length > 0 &&
+          (!schema.tables?.length || !schema.views?.length)
+        ) {
+          const flatTables = schema.tables?.length
+            ? schema.tables
+            : schema.schemas.flatMap((s) => s.tables || []);
+          const flatViews = schema.views?.length
+            ? schema.views
+            : schema.schemas.flatMap((s) => s.views || []);
+          normalizedSchema = {
+            ...schema,
+            tables: flatTables,
+            views: flatViews,
+          };
+        }
+        newSchemas.set(connectionId, normalizedSchema);
+
+        return {
+          schemas: newSchemas,
+          // Legacy compatibility
+          schema:
+            state.activeConnectionId === connectionId
+              ? normalizedSchema
+              : state.schema,
+        };
       } else {
         newSchemas.delete(connectionId);
+        return {
+          schemas: newSchemas,
+          // Legacy compatibility
+          schema:
+            state.activeConnectionId === connectionId ? null : state.schema,
+        };
       }
-
-      return {
-        schemas: newSchemas,
-        // Legacy compatibility
-        schema:
-          state.activeConnectionId === connectionId ? schema : state.schema,
-      };
     }),
 
   setLazySchema: (connectionId, schemas) =>

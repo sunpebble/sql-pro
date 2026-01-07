@@ -15,6 +15,30 @@ export function getTableNodeId(table: TableSchema): string {
 }
 
 /**
+ * Gets all tables and views from the schema, handling both flat and nested structures
+ */
+function getAllTablesFromSchema(schema: DatabaseSchema): TableSchema[] {
+  // Try flat lists first
+  if (schema.tables?.length > 0 || schema.views?.length > 0) {
+    return [...(schema.tables || []), ...(schema.views || [])];
+  }
+
+  // Fall back to nested structure (used by lazy loading)
+  const allTables: TableSchema[] = [];
+  if (schema.schemas?.length > 0) {
+    for (const schemaInfo of schema.schemas) {
+      if (schemaInfo.tables) {
+        allTables.push(...schemaInfo.tables);
+      }
+      if (schemaInfo.views) {
+        allTables.push(...schemaInfo.views);
+      }
+    }
+  }
+  return allTables;
+}
+
+/**
  * Determines the cardinality of a foreign key relationship
  * - 1:1 if FK column has unique constraint or is part of PK
  * - 1:N otherwise (most common)
@@ -46,7 +70,7 @@ function determineCardinality(
  * Converts database schema to React Flow nodes
  */
 export function schemaToNodes(schema: DatabaseSchema): ERTableNode[] {
-  const allTables = [...schema.tables, ...schema.views];
+  const allTables = getAllTablesFromSchema(schema);
 
   return allTables.map((table) => {
     const nodeData: ERTableNodeData = {
@@ -73,7 +97,7 @@ export function schemaToNodes(schema: DatabaseSchema): ERTableNode[] {
  */
 export function schemaToEdges(schema: DatabaseSchema): ERRelationshipEdge[] {
   const edges: ERRelationshipEdge[] = [];
-  const allTables = [...schema.tables, ...schema.views];
+  const allTables = getAllTablesFromSchema(schema);
 
   // Create a set of valid table IDs for validation
   const validTableIds = new Set(allTables.map((t) => getTableNodeId(t)));
@@ -125,7 +149,7 @@ function findReferencedTableId(
   tableName: string,
   preferredSchema: string
 ): string | null {
-  const allTables = [...schema.tables, ...schema.views];
+  const allTables = getAllTablesFromSchema(schema);
 
   // First try to find in the same schema
   const sameSchemaTable = allTables.find(
