@@ -8,6 +8,8 @@
 // ============ Type Definitions ============
 // Import from shared types
 import type {
+  AIAgentMessage,
+  AIStreamChunk,
   AnalyzeQueryPlanRequest,
   AnalyzeQueryPlanResponse,
   ApplyChangesRequest,
@@ -16,6 +18,11 @@ import type {
   ChangePasswordResponse,
   CloseDatabaseRequest,
   CloseDatabaseResponse,
+  CompareConnectionsResponse,
+  CompareConnectionToSnapshotResponse,
+  CompareSnapshotsResponse,
+  CompareTablesResponse,
+  ConnectionProfile,
   ExecuteQueryRequest,
   ExecuteQueryResponse,
   GetSchemaListRequest,
@@ -26,12 +33,16 @@ import type {
   GetTableDataResponse,
   GetTableDetailsRequest,
   GetTableDetailsResponse,
+  ImportQueryResponse,
+  ImportSchemaResponse,
   MemoryPressureChangeEvent,
   MemoryPressureLevel,
   MemoryStats,
   MemoryStatsUpdateEvent,
   OpenDatabaseRequest,
   OpenDatabaseResponse,
+  ProfileFolder,
+  SchemaSnapshot,
   TestConnectionRequest,
   TestConnectionResponse,
   ValidateChangesRequest,
@@ -48,6 +59,7 @@ import { isMockMode, mockSqlProAPI } from './mock-api';
 // ============ Helper Functions ============
 
 // Convert camelCase to snake_case for Rust command names
+// @ts-expect-error Reserved for future use
 function _toSnakeCase(str: string): string {
   return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 }
@@ -281,7 +293,7 @@ const tauriAPI = {
       dbPath?: string;
       password: string;
     }) =>
-      invoke('password_save', {
+      invoke<{ success: boolean; error?: string }>('password_save', {
         request: {
           identifier: request.identifier || request.dbPath,
           password: request.password,
@@ -289,9 +301,12 @@ const tauriAPI = {
       }),
 
     get: (request: { identifier?: string; dbPath?: string }) =>
-      invoke<{ success: boolean; password?: string }>('password_get', {
-        request: { identifier: request.identifier || request.dbPath },
-      }),
+      invoke<{ success: boolean; password?: string; error?: string }>(
+        'password_get',
+        {
+          request: { identifier: request.identifier || request.dbPath },
+        }
+      ),
 
     has: (request: { identifier?: string; dbPath?: string }) =>
       invoke<{ success: boolean; hasPassword: boolean }>('password_has', {
@@ -299,7 +314,7 @@ const tauriAPI = {
       }),
 
     remove: (request: { identifier?: string; dbPath?: string }) =>
-      invoke('password_remove', {
+      invoke<{ success: boolean; error?: string }>('password_remove', {
         request: { identifier: request.identifier || request.dbPath },
       }),
   },
@@ -391,11 +406,11 @@ const tauriAPI = {
         { request }
       ),
 
-    onStreamChunk: (callback: (chunk: unknown) => void): (() => void) => {
+    onStreamChunk: (callback: (chunk: AIStreamChunk) => void): (() => void) => {
       let unlisten: UnlistenFn | undefined;
       let isCleanedUp = false;
 
-      listen<unknown>('ai-stream-chunk', (event) => {
+      listen<AIStreamChunk>('ai-stream-chunk', (event) => {
         callback(event.payload);
       }).then((fn) => {
         if (isCleanedUp) {
@@ -411,11 +426,13 @@ const tauriAPI = {
       };
     },
 
-    onAgentMessage: (callback: (message: unknown) => void): (() => void) => {
+    onAgentMessage: (
+      callback: (message: AIAgentMessage) => void
+    ): (() => void) => {
       let unlisten: UnlistenFn | undefined;
       let isCleanedUp = false;
 
-      listen<unknown>('ai-agent-message', (event) => {
+      listen<AIAgentMessage>('ai-agent-message', (event) => {
         callback(event.payload);
       }).then((fn) => {
         if (isCleanedUp) {
@@ -492,7 +509,9 @@ const tauriAPI = {
     getAll: async () => ({ success: true, shortcuts: {} }),
     register: async () => ({ success: true }),
     unregister: async () => ({ success: true }),
-    update: async () => ({ success: true }),
+    update: async (_options: { shortcuts: Record<string, unknown> }) => ({
+      success: true,
+    }),
   },
 
   // SQL Log operations
@@ -532,25 +551,28 @@ const tauriAPI = {
   // Schema snapshot operations
   schemaSnapshot: {
     list: () =>
-      invoke<{ success: boolean; snapshots?: unknown[] }>(
+      invoke<{ success: boolean; snapshots?: SchemaSnapshot[] }>(
         'schema_get_snapshots'
       ),
     getAll: () =>
-      invoke<{ success: boolean; snapshots?: unknown[] }>(
+      invoke<{ success: boolean; snapshots?: SchemaSnapshot[] }>(
         'schema_get_snapshots'
       ),
     get: (snapshotId: string) =>
-      invoke<{ success: boolean; snapshot?: unknown }>('schema_get_snapshot', {
-        request: { snapshotId },
-      }),
+      invoke<{ success: boolean; snapshot?: SchemaSnapshot }>(
+        'schema_get_snapshot',
+        {
+          request: { snapshotId },
+        }
+      ),
     create: (request: {
       name: string;
       description?: string;
       connectionPath?: string;
       connectionId?: string;
-      schema: unknown;
+      schema?: unknown;
     }) =>
-      invoke<{ success: boolean; snapshot?: unknown; error?: string }>(
+      invoke<{ success: boolean; snapshot?: SchemaSnapshot; error?: string }>(
         'schema_save_snapshot',
         {
           request,
@@ -561,9 +583,9 @@ const tauriAPI = {
       description?: string;
       connectionPath?: string;
       connectionId?: string;
-      schema: unknown;
+      schema?: unknown;
     }) =>
-      invoke<{ success: boolean; snapshot?: unknown; error?: string }>(
+      invoke<{ success: boolean; snapshot?: SchemaSnapshot; error?: string }>(
         'schema_save_snapshot',
         {
           request,
@@ -590,12 +612,9 @@ const tauriAPI = {
               targetSnapshotId: targetSnapshotId!,
             }
           : sourceSnapshotIdOrRequest;
-      return invoke<{
-        success: boolean;
-        comparison?: unknown;
-        result?: unknown;
-        error?: string;
-      }>('schema_compare_snapshots', { request });
+      return invoke<CompareSnapshotsResponse>('schema_compare_snapshots', {
+        request,
+      });
     },
     compareConnections: (
       sourceConnectionIdOrRequest:
@@ -610,12 +629,9 @@ const tauriAPI = {
               targetConnectionId: targetConnectionId!,
             }
           : sourceConnectionIdOrRequest;
-      return invoke<{
-        success: boolean;
-        comparison?: unknown;
-        result?: unknown;
-        error?: string;
-      }>('schema_compare_connections', { request });
+      return invoke<CompareConnectionsResponse>('schema_compare_connections', {
+        request,
+      });
     },
     compareConnectionToSnapshot: (
       connectionIdOrRequest:
@@ -627,20 +643,13 @@ const tauriAPI = {
         typeof connectionIdOrRequest === 'string'
           ? { connectionId: connectionIdOrRequest, snapshotId: snapshotId! }
           : connectionIdOrRequest;
-      return invoke<{
-        success: boolean;
-        comparison?: unknown;
-        result?: unknown;
-        error?: string;
-      }>('schema_compare_connection_to_snapshot', { request });
+      return invoke<CompareConnectionToSnapshotResponse>(
+        'schema_compare_connection_to_snapshot',
+        { request }
+      );
     },
     compareTables: (request: unknown) =>
-      invoke<{
-        success: boolean;
-        comparison?: unknown;
-        result?: unknown;
-        error?: string;
-      }>('table_compare', {
+      invoke<CompareTablesResponse>('table_compare', {
         request,
       }),
     compare: (
@@ -700,10 +709,7 @@ const tauriAPI = {
         error?: string;
       }>('sharing_export_query', { request }),
     importQuery: (request: unknown) =>
-      invoke<{ success: boolean; query?: unknown; error?: string }>(
-        'sharing_import_query',
-        { request }
-      ),
+      invoke<ImportQueryResponse>('sharing_import_query', { request }),
     exportQueryBundle: (request: unknown) =>
       invoke<{
         success: boolean;
@@ -726,10 +732,7 @@ const tauriAPI = {
         error?: string;
       }>('sharing_export_schema', { request }),
     importSchema: (request: unknown) =>
-      invoke<{ success: boolean; schema?: unknown; error?: string }>(
-        'sharing_import_schema',
-        { request }
-      ),
+      invoke<ImportSchemaResponse>('sharing_import_schema', { request }),
   },
 
   // Schema comparison operations
@@ -903,17 +906,20 @@ const tauriAPI = {
 
   // Connection profiles
   profile: {
-    getAll: () =>
-      invoke<{ success: boolean; profiles?: unknown[]; error?: string }>(
-        'profiles_get'
-      ),
+    getAll: (request?: { folderId?: string }) =>
+      invoke<{
+        success: boolean;
+        profiles?: ConnectionProfile[];
+        error?: string;
+      }>('profiles_get', { request: request ?? {} }),
     save: (request: unknown) =>
-      invoke<{ success: boolean; profile?: unknown; error?: string }>(
-        'profiles_save',
-        {
-          request,
-        }
-      ),
+      invoke<{
+        success: boolean;
+        profile?: ConnectionProfile;
+        error?: string;
+      }>('profiles_save', {
+        request,
+      }),
     update: (request: {
       id: string;
       name?: string;
@@ -921,12 +927,13 @@ const tauriAPI = {
       config?: unknown;
       updates?: unknown;
     }) =>
-      invoke<{ success: boolean; profile?: unknown; error?: string }>(
-        'profiles_update',
-        {
-          request,
-        }
-      ),
+      invoke<{
+        success: boolean;
+        profile?: ConnectionProfile;
+        error?: string;
+      }>('profiles_update', {
+        request,
+      }),
     delete: (request: string | { id: string; removePassword?: boolean }) =>
       invoke<{ success: boolean; error?: string }>('profiles_delete', {
         request: typeof request === 'string' ? { id: request } : request,
@@ -938,34 +945,39 @@ const tauriAPI = {
           request,
         }
       ),
-    import: (request: { data: string; filePath?: string; merge?: boolean }) =>
-      invoke<{ success: boolean; profiles?: unknown[]; error?: string }>(
-        'profiles_import',
-        {
-          request,
-        }
-      ),
+    import: (request: { data?: string; filePath?: string; merge?: boolean }) =>
+      invoke<{
+        success: boolean;
+        profiles?: ConnectionProfile[];
+        error?: string;
+      }>('profiles_import', {
+        request,
+      }),
   },
 
   // Connection operations
   connection: {
     update: (request: unknown) =>
-      invoke<{ success: boolean }>('connection_update', { request }),
+      invoke<{ success: boolean; error?: string }>('connection_update', {
+        request,
+      }),
     remove: (request: { path: string; removePassword?: boolean }) =>
-      invoke<{ success: boolean }>('connection_remove', { request }),
+      invoke<{ success: boolean; error?: string }>('connection_remove', {
+        request,
+      }),
   },
 
   // Folder operations
   folder: {
     getAll: (request?: { parentId?: string }) =>
-      invoke<{ success: boolean; folders?: unknown[]; error?: string }>(
+      invoke<{ success: boolean; folders?: ProfileFolder[]; error?: string }>(
         'folders_get',
         {
           request: request ?? {},
         }
       ),
     create: (request: { name?: string; alias?: string; parentId?: string }) =>
-      invoke<{ success: boolean; folder?: unknown; error?: string }>(
+      invoke<{ success: boolean; folder?: ProfileFolder; error?: string }>(
         'folders_save',
         {
           request,
@@ -978,7 +990,7 @@ const tauriAPI = {
       alias?: string;
       updates?: unknown;
     }) =>
-      invoke<{ success: boolean; folder?: unknown; error?: string }>(
+      invoke<{ success: boolean; folder?: ProfileFolder; error?: string }>(
         'folders_update',
         {
           request,
@@ -1028,10 +1040,10 @@ const tauriAPI = {
       success: true,
       error: undefined as string | undefined,
     }),
-    fetchMarketplace: async () => ({
+    fetchMarketplace: async (_request?: unknown) => ({
       success: true,
       plugins: [] as unknown[],
-      registry: [] as unknown[],
+      registry: { plugins: [] as unknown[] },
       error: undefined as string | undefined,
     }),
     onEvent: (_callback: (event: unknown) => void) => () => {},

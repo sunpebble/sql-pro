@@ -437,10 +437,13 @@ export function WelcomeScreen() {
 
       // Save password if requested
       if (shouldRemember) {
-        await sqlPro.password.save({
+        const saveResult = await sqlPro.password.save({
           dbPath: pendingPath,
           password,
         });
+        if (!saveResult.success) {
+          console.error('Failed to save password:', saveResult.error);
+        }
       }
 
       // Connect with settings if available

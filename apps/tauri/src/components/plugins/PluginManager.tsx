@@ -141,7 +141,7 @@ export function PluginManager({
 
       if (response.success && response.plugins) {
         setState({
-          plugins: response.plugins,
+          plugins: response.plugins as PluginInfo[],
           isLoading: false,
           error: null,
         });
@@ -169,15 +169,16 @@ export function PluginManager({
 
   // Subscribe to plugin events for real-time updates
   React.useEffect(() => {
-    const unsubscribe = window.sqlPro.plugin.onEvent((event) => {
+    const unsubscribe = window.sqlPro.plugin.onEvent((event: unknown) => {
       // Refresh plugins list on relevant events
+      const pluginEvent = event as { type: string };
       if (
-        event.type === 'plugin:installed' ||
-        event.type === 'plugin:uninstalled' ||
-        event.type === 'plugin:enabled' ||
-        event.type === 'plugin:disabled' ||
-        event.type === 'plugin:updated' ||
-        event.type === 'plugin:error'
+        pluginEvent.type === 'plugin:installed' ||
+        pluginEvent.type === 'plugin:uninstalled' ||
+        pluginEvent.type === 'plugin:enabled' ||
+        pluginEvent.type === 'plugin:disabled' ||
+        pluginEvent.type === 'plugin:updated' ||
+        pluginEvent.type === 'plugin:error'
       ) {
         fetchPlugins();
       }

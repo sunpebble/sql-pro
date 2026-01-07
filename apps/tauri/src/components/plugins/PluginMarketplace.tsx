@@ -162,9 +162,10 @@ export function PluginMarketplace({
       const response = await window.sqlPro.plugin.fetchMarketplace({});
 
       if (response.success && response.registry?.plugins) {
-        const categories = extractCategories(response.registry.plugins);
+        const pluginList = response.registry.plugins as PluginListing[];
+        const categories = extractCategories(pluginList);
         setState({
-          plugins: response.registry.plugins,
+          plugins: pluginList,
           categories,
           isLoading: false,
           error: null,

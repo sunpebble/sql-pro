@@ -237,6 +237,9 @@ pub fn run() {
             database_manager.set_app_handle(app.handle().clone());
             app.manage(database_manager);
 
+            // Initialize password service from stored data
+            commands::password::init_password_service(app.handle());
+
             // Create and set the application menu
             let menu = create_menu(app.handle())?;
             app.set_menu(menu)?;

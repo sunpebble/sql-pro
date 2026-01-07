@@ -115,6 +115,7 @@ const DISPLAY_FONTS = new Set([
 ]);
 
 // Category ordering for sorting (used for reference, sorting done in backend)
+// @ts-expect-error Reserved for future use
 const _CATEGORY_ORDER: Record<FontCategory, number> = {
   monospace: 0,
   'sans-serif': 1,

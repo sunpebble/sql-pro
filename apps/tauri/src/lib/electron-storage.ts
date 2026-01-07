@@ -27,7 +27,10 @@ export type {
 
 // ============ Lazy Store Instance ============
 
-const store = new LazyStore('sql-pro-renderer.json', { autoSave: true });
+const store = new LazyStore('sql-pro-renderer.json', {
+  defaults: {},
+  autoSave: true,
+});
 
 // ============ Cache for loaded data ============
 

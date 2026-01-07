@@ -53,8 +53,8 @@ anyhow = "1"
 # Date/time
 chrono = { version = "0.4", features = ["serde"] }
 
-# Keyring for password storage
-keyring = "3"
+# Note: We use tauri-plugin-store for password storage instead of keyring
+# for better reliability across platforms
 
 # Async traits
 async-trait = "0.1"

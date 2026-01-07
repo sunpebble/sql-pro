@@ -36,6 +36,47 @@ export function useDragAndDrop() {
     setActiveConnection,
   } = useConnectionStore();
 
+  // Helper function to connect with password and load schema
+  const connectWithPassword = useCallback(
+    async (filePath: string, password: string) => {
+      setIsConnecting(true);
+      const result = await sqlPro.db.open({ path: filePath, password });
+      setIsConnecting(false);
+
+      if (result.success && result.connection) {
+        addConnection({
+          id: result.connection.id,
+          path: result.connection.path,
+          filename: result.connection.filename,
+          isEncrypted: result.connection.isEncrypted,
+          isReadOnly: result.connection.isReadOnly,
+          status: 'connected',
+        });
+
+        // Load schema
+        setIsLoadingSchema(true);
+        const schemaResult = await sqlPro.db.getSchema({
+          connectionId: result.connection.id,
+        });
+
+        if (schemaResult.success) {
+          setSchema(result.connection.id, {
+            schemas: schemaResult.schemas || [],
+            tables: schemaResult.tables || [],
+            views: schemaResult.views || [],
+          });
+        }
+        setIsLoadingSchema(false);
+
+        // Navigate to database view
+        navigate({ to: '/database' });
+        return true;
+      }
+      return false;
+    },
+    [navigate, addConnection, setSchema, setIsConnecting, setIsLoadingSchema]
+  );
+
   // Handler for file opening logic
   const openDatabaseFile = useCallback(
     async (filePath: string) => {
@@ -89,12 +130,34 @@ export function useDragAndDrop() {
 
           // Navigate to database view
           navigate({ to: '/database' });
-        } else if (isEncrypted || !probeResult.success) {
-          // For encrypted databases or errors, we need to show dialogs
-          // Trigger a custom event that the appropriate page can listen to
+        } else if (isEncrypted) {
+          // For encrypted databases, try saved password first
+          const savedPasswordResult = await sqlPro.password.get({
+            dbPath: filePath,
+          });
+
+          if (savedPasswordResult.success && savedPasswordResult.password) {
+            // Try to connect with saved password
+            const connected = await connectWithPassword(
+              filePath,
+              savedPasswordResult.password
+            );
+            if (connected) {
+              return;
+            }
+          }
+
+          // No saved password or it failed, show password dialog
           window.dispatchEvent(
             new CustomEvent('open-database-file', {
               detail: { filePath, filename, isEncrypted },
+            })
+          );
+        } else if (!probeResult.success) {
+          // For other errors, show dialog
+          window.dispatchEvent(
+            new CustomEvent('open-database-file', {
+              detail: { filePath, filename, isEncrypted: false },
             })
           );
         }
@@ -111,6 +174,7 @@ export function useDragAndDrop() {
       setIsLoadingSchema,
       getAllConnections,
       setActiveConnection,
+      connectWithPassword,
     ]
   );
 
@@ -193,28 +257,34 @@ export function useDragAndDrop() {
       try {
         const webview = getCurrentWebviewWindow();
         unlisten = await webview.onDragDropEvent((event) => {
-          if (event.payload.type === 'over') {
-            // Check if any of the paths are database files
-            const paths = event.payload.paths || [];
-            const hasDbFile = paths.some((path) => {
+          const payload = event.payload;
+
+          if (payload.type === 'enter') {
+            // Files entered the window - check if any are database files
+            const paths = payload.paths || [];
+            const hasDbFile = paths.some((path: string) => {
               const filename = getFilenameFromPath(path);
               return isDatabaseFile(filename);
             });
             if (hasDbFile) {
               setIsDragging(true);
             }
-          } else if (event.payload.type === 'drop') {
+          } else if (payload.type === 'over') {
+            // Files are hovering over the window - keep dragging state
+            // 'over' events only have position, not paths
+          } else if (payload.type === 'drop') {
             setIsDragging(false);
             // Find the first database file
-            const paths = event.payload.paths || [];
-            const dbPath = paths.find((path) => {
+            const paths = payload.paths || [];
+            const dbPath = paths.find((path: string) => {
               const filename = getFilenameFromPath(path);
               return isDatabaseFile(filename);
             });
             if (dbPath) {
               openDatabaseFile(dbPath);
             }
-          } else if (event.payload.type === 'cancel') {
+          } else if (payload.type === 'leave') {
+            // Files left the window without dropping
             setIsDragging(false);
           }
         });

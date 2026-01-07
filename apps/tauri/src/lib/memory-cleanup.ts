@@ -276,18 +276,24 @@ export async function requestGC(force = false): Promise<{
 }> {
   try {
     if (typeof window !== 'undefined' && window.sqlPro?.memory) {
-      return await window.sqlPro.memory.triggerGC({ force });
+      const result = await window.sqlPro.memory.triggerGC({ force });
+      return {
+        success: result.success,
+        gcTriggered: result.gcTriggered ?? false,
+        statsAfterGC: result.statsAfterGC,
+        error: result.error,
+      };
     }
     return {
       success: false,
       gcTriggered: false,
       error: 'Memory API not available',
     };
-  } catch (error) {
+  } catch (err) {
     return {
       success: false,
       gcTriggered: false,
-      error: error instanceof Error ? error.message : 'Failed to trigger GC',
+      error: err instanceof Error ? err.message : 'Failed to trigger GC',
     };
   }
 }

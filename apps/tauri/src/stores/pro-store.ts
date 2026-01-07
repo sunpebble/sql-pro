@@ -68,7 +68,7 @@ export const useProStore = create<ProState>((set, get) => ({
           licenseKey: result.status.licenseKey,
           activatedAt: result.status.activatedAt,
           expiresAt: result.status.expiresAt,
-          features: result.status.features,
+          features: result.status.features as ProFeature[],
         });
       }
     } catch (error) {
@@ -88,7 +88,7 @@ export const useProStore = create<ProState>((set, get) => ({
           licenseKey: result.status.licenseKey,
           activatedAt: result.status.activatedAt,
           expiresAt: result.status.expiresAt,
-          features: result.status.features,
+          features: result.status.features as ProFeature[],
         });
         return true;
       }

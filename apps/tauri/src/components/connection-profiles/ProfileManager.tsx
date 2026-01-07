@@ -545,7 +545,15 @@ export function ProfileManager({
       const result = await sqlPro.dialog.openFile();
       if (result.success && !result.canceled && result.filePath) {
         const filename = result.filePath.split('/').pop() || result.filePath;
-        const isEncrypted = result.isEncrypted ?? false;
+        // Try to open the file to check if it's encrypted
+        const probeResult = await sqlPro.db.open({
+          path: result.filePath,
+        });
+        const isEncrypted = probeResult.needsPassword ?? false;
+        // Close the connection if it was opened successfully
+        if (probeResult.success && probeResult.connection?.id) {
+          await sqlPro.db.close({ connectionId: probeResult.connection.id });
+        }
 
         setPendingNewConnection({
           path: result.filePath,

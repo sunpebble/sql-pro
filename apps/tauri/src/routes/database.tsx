@@ -218,7 +218,9 @@ export function DatabasePage() {
           // Refresh recent connections
           const connectionsResult = await sqlPro.app.getRecentConnections();
           if (connectionsResult.success && connectionsResult.connections) {
-            setRecentConnections(connectionsResult.connections);
+            setRecentConnections(
+              connectionsResult.connections as RecentConnection[]
+            );
           }
 
           // Clear pending state
@@ -367,7 +369,9 @@ export function DatabasePage() {
             // Refresh recent connections
             const connectionsResult = await sqlPro.app.getRecentConnections();
             if (connectionsResult.success && connectionsResult.connections) {
-              setRecentConnections(connectionsResult.connections);
+              setRecentConnections(
+                connectionsResult.connections as RecentConnection[]
+              );
             }
           }
         } catch (err) {
@@ -459,7 +463,13 @@ export function DatabasePage() {
         remember || pendingSettings?.rememberPassword || false;
 
       if (shouldRemember) {
-        await sqlPro.password.save({ dbPath: pendingPath, password });
+        const saveResult = await sqlPro.password.save({
+          dbPath: pendingPath,
+          password,
+        });
+        if (!saveResult.success) {
+          console.error('Failed to save password:', saveResult.error);
+        }
       }
 
       await connectToDatabase(

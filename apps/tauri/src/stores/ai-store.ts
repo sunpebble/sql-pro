@@ -63,16 +63,16 @@ export const useAIStore = create<AIState>((set, get) => ({
       const result = await sqlPro.ai.getSettings();
       if (result.success && result.settings) {
         const settings = result.settings as {
-          provider?: string;
+          provider?: AIProvider;
           apiKey?: string;
           model?: string;
           baseUrl?: string;
           claudeCodePaths?: string[];
         };
         set({
-          provider: settings.provider,
-          apiKey: settings.apiKey,
-          model: settings.model,
+          provider: settings.provider ?? ('openai' as AIProvider),
+          apiKey: settings.apiKey ?? '',
+          model: settings.model ?? '',
           baseUrl: settings.baseUrl || '',
           claudeCodePath: settings.claudeCodePaths?.[0] || '',
           isConfigured: Boolean(settings.apiKey),
