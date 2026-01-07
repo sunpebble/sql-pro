@@ -2,14 +2,13 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "main",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": ["{projectRoot}/**/*"],
     "production": [
       "default",
       "!{projectRoot}/**/*.test.{ts,tsx}",
       "!{projectRoot}/**/*.spec.{ts,tsx}",
       "!{projectRoot}/**/test/**/*"
-    ],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    ]
   },
   "targetDefaults": {
     "build": {
@@ -17,6 +16,9 @@
       "cache": true
     },
     "lint": {
+      "cache": true
+    },
+    "typecheck": {
       "cache": true
     },
     "test": {
@@ -27,5 +29,6 @@
     "appsDir": "apps",
     "libsDir": "packages"
   },
-  "nxCloudId": "6959fd57d916979c94d1fc62"
+  "nxCloudId": "6959fd57d916979c94d1fc62",
+  "neverConnectToCloud": true
 }

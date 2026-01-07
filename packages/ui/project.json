@@ -6,12 +6,18 @@
   "tags": ["scope:ui", "type:lib"],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
       "options": {
-        "outputPath": "packages/ui/dist",
-        "main": "packages/ui/src/index.ts",
-        "tsConfig": "packages/ui/tsconfig.build.json"
+        "command": "tsgo -p tsconfig.build.json",
+        "cwd": "packages/ui"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsgo --noEmit",
+        "cwd": "packages/ui"
       }
     },
     "lint": {
