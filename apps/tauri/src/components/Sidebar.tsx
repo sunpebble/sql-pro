@@ -30,6 +30,7 @@ import {
 } from '@sqlpro/ui/dropdown-menu';
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
