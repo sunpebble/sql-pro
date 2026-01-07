@@ -1,11 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-// Import electron-storage utilities (Tauri-compatible)
-import {
-  hydrateStores,
-  initializeElectronStorage,
-} from './lib/electron-storage';
+// Import storage utilities
+import { hydrateStores, initializeStorage } from './lib/storage';
 
 import './styles/globals.css';
 
@@ -19,7 +16,7 @@ import './stores/onboarding-store';
 async function bootstrap() {
   try {
     // Initialize storage and load persisted data
-    await initializeElectronStorage();
+    await initializeStorage();
 
     // Hydrate Zustand stores with persisted data
     hydrateStores();

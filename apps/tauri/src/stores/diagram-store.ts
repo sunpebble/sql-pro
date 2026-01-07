@@ -1,10 +1,7 @@
 import type { RendererDiagramState } from '@shared/types/renderer-store';
 import type { DiagramViewport, NodePosition } from '@/types/er-diagram';
 import { create } from 'zustand';
-import {
-  persistDiagram,
-  registerDiagramHydrator,
-} from '@/lib/electron-storage';
+import { persistDiagram, registerDiagramHydrator } from '@/lib/storage';
 
 interface DiagramState {
   // Per-database node positions (keyed by database path)

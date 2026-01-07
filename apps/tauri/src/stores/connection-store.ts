@@ -13,12 +13,12 @@ import type {
 } from '@/types/database';
 import { create } from 'zustand';
 import { sqlPro } from '@/lib/api';
+import { memoryCleanup } from '@/lib/memory-cleanup';
+import { schemaCache } from '@/lib/schema-cache';
 import {
   persistConnectionUi,
   registerConnectionUiHydrator,
-} from '@/lib/electron-storage';
-import { memoryCleanup } from '@/lib/memory-cleanup';
-import { schemaCache } from '@/lib/schema-cache';
+} from '@/lib/storage';
 import { useChangesStore } from './changes-store';
 
 interface ConnectionState {

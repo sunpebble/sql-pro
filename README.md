@@ -15,7 +15,7 @@
   <a href="https://kunish-homelab.github.io/sql-pro/"><img src="https://img.shields.io/badge/docs-blue?style=flat&logo=readthedocs&logoColor=white" alt="Documentation"></a>
 </p>
 
-> 🚀 A modern, cross-platform SQLite database manager built with Electron, React, and TypeScript. Features include encrypted database support, visual diff preview for changes, and powerful query tools.
+> 🚀 A modern, cross-platform SQLite database manager built with Tauri, React, and Rust. Features include encrypted database support, visual diff preview for changes, and powerful query tools.
 
 ## ✨ Features
 
@@ -91,19 +91,18 @@
 
 Download the latest release for your platform:
 
-| Platform                 | Download                                                                          | Architecture |
-| ------------------------ | --------------------------------------------------------------------------------- | ------------ |
-| 🍎 macOS (Apple Silicon) | [sql-pro-x.x.x-arm64.dmg](https://github.com/kunish-homelab/sql-pro/releases)     | M1/M2/M3/M4  |
-| 🍎 macOS (Intel)         | [sql-pro-x.x.x-x64.dmg](https://github.com/kunish-homelab/sql-pro/releases)       | Intel        |
-| 🪟 Windows               | [sql-pro-x.x.x-setup-x64.exe](https://github.com/kunish-homelab/sql-pro/releases) | x64          |
-| 🐧 Linux (AppImage)      | [sql-pro-x.x.x-x64.AppImage](https://github.com/kunish-homelab/sql-pro/releases)  | x64          |
-| 🐧 Linux (deb)           | [sql-pro-x.x.x-x64.deb](https://github.com/kunish-homelab/sql-pro/releases)       | x64          |
+| Platform             | Download                                                                      | Architecture        |
+| -------------------- | ----------------------------------------------------------------------------- | ------------------- |
+| 🍎 macOS (Universal) | [sql-pro-x.x.x.dmg](https://github.com/kunish-homelab/sql-pro/releases)       | M1/M2/M3/M4 + Intel |
+| 🪟 Windows           | [sql-pro-x.x.x-setup.exe](https://github.com/kunish-homelab/sql-pro/releases) | x64                 |
+| 🐧 Linux (AppImage)  | [sql-pro-x.x.x.AppImage](https://github.com/kunish-homelab/sql-pro/releases)  | x64                 |
+| 🐧 Linux (deb)       | [sql-pro-x.x.x.deb](https://github.com/kunish-homelab/sql-pro/releases)       | x64                 |
 
 > 💡 **New to SQL Pro?** Check out our [Getting Started Guide](https://kunish-homelab.github.io/sql-pro/getting-started/) for detailed installation instructions and first-time setup.
 
 ### Build from Source
 
-**Prerequisites:** Node.js 20+, pnpm 10+
+**Prerequisites:** Node.js 20+, pnpm 10+, Rust 1.75+
 
 ```bash
 # Clone the repository
@@ -150,19 +149,19 @@ pnpm build:linux  # Linux
 
 ```
 sql-pro/
-├── src/
-│   ├── main/           # Electron main process
-│   │   └── services/   # Database, IPC handlers
-│   ├── preload/        # Preload scripts
-│   └── renderer/       # React frontend
-│       ├── components/ # UI components
-│       ├── stores/     # Zustand stores
-│       └── routes/     # TanStack Router routes
+├── apps/
+│   └── tauri/              # Tauri application
+│       ├── src/            # React frontend
+│       │   ├── components/ # UI components
+│       │   ├── stores/     # Zustand stores
+│       │   └── routes/     # TanStack Router routes
+│       └── src-tauri/      # Rust backend
+│           └── src/        # Tauri commands and services
 ├── packages/
-│   ├── docs/           # VitePress documentation
-│   ├── plugin-sdk/     # Plugin development SDK & templates
-│   └── ui/             # Shared UI components
-└── resources/          # App icons and assets
+│   ├── docs/               # VitePress documentation
+│   ├── plugin-sdk/         # Plugin development SDK & templates
+│   └── ui/                 # Shared UI components
+└── resources/              # App icons and assets
 ```
 
 ### Available Scripts
@@ -170,7 +169,6 @@ sql-pro/
 ```bash
 # Development
 pnpm dev              # Start dev server
-pnpm dev:mock         # Start with mock data
 
 # Building
 pnpm build            # Build application
@@ -187,15 +185,10 @@ pnpm typecheck        # TypeScript type checking
 pnpm test             # Run tests in watch mode
 pnpm test:run         # Run tests once
 pnpm test:coverage    # Generate coverage report
-pnpm test:ui          # Open Vitest UI
 
 # Documentation
 pnpm docs:dev         # Start docs dev server
 pnpm docs:build       # Build documentation
-pnpm screenshots      # Capture app screenshots
-
-# Utilities
-pnpm build:icons      # Generate app icons
 ```
 
 ### Testing
@@ -213,19 +206,7 @@ Run tests during development:
 ```bash
 pnpm test              # Watch mode with auto-reload
 pnpm test:coverage     # Generate detailed coverage report
-pnpm test:ui           # Interactive test interface
 ```
-
-### Mock Mode & Screenshots
-
-For demos and documentation without a real database:
-
-```bash
-pnpm dev:mock         # Start app with sample data
-pnpm screenshots      # Capture documentation screenshots
-```
-
-Mock mode provides sample data and realistic responses for testing UI without database files.
 
 > 📖 **For detailed development guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md)**
 
@@ -287,11 +268,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 SQL Pro is built with amazing open-source technologies:
 
-- **[Electron](https://www.electronjs.org/)** - Cross-platform desktop framework
+- **[Tauri](https://tauri.app/)** - Cross-platform desktop framework
 - **[React](https://react.dev/)** - UI library
+- **[Rust](https://www.rust-lang.org/)** - Backend language
 - **[Monaco Editor](https://microsoft.github.io/monaco-editor/)** - VS Code's editor
 - **[TanStack Table](https://tanstack.com/table)** - Headless table library
-- **[better-sqlite3-multiple-ciphers](https://github.com/nicofuenzalida/better-sqlite3-multiple-ciphers)** - SQLite with encryption
+- **[rusqlite](https://github.com/rusqlite/rusqlite)** - SQLite bindings for Rust with SQLCipher support
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Zustand](https://zustand-demo.pmnd.rs/)** - State management
 - **[Vite](https://vitejs.dev/)** - Build tool and dev server

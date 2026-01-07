@@ -1,9 +1,9 @@
 {
-  "name": "@sqlpro/tauri",
+  "name": "@sqlpro/app",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/tauri/src",
   "projectType": "application",
-  "tags": ["app", "tauri"],
+  "tags": ["scope:app", "type:app"],
   "targets": {
     "dev": {
       "executor": "nx:run-commands",
@@ -25,6 +25,30 @@
       "dependsOn": ["^build"],
       "options": {
         "command": "pnpm tauri build --debug",
+        "cwd": "apps/tauri"
+      }
+    },
+    "build:mac": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "options": {
+        "command": "pnpm tauri build --target universal-apple-darwin",
+        "cwd": "apps/tauri"
+      }
+    },
+    "build:win": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "options": {
+        "command": "pnpm tauri build",
+        "cwd": "apps/tauri"
+      }
+    },
+    "build:linux": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "options": {
+        "command": "pnpm tauri build",
         "cwd": "apps/tauri"
       }
     },

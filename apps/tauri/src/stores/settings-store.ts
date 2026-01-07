@@ -1,10 +1,7 @@
 import type { FontConfig, FontSettings } from '@shared/types/font';
 import type { RendererSettingsState } from '@shared/types/renderer-store';
 import { create } from 'zustand';
-import {
-  persistSettings,
-  registerSettingsHydrator,
-} from '@/lib/electron-storage';
+import { persistSettings, registerSettingsHydrator } from '@/lib/storage';
 
 // Common monospace fonts available on different platforms
 export const MONOSPACE_FONTS = [

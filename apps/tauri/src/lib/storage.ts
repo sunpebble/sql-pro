@@ -2,7 +2,6 @@
  * Tauri Store Persistence Utility for Zustand
  *
  * Provides centralized persistence for renderer state via tauri-plugin-store.
- * This is a Tauri-compatible replacement for the Electron version.
  */
 
 import type {
@@ -58,7 +57,7 @@ let initialized = false;
  * Initialize storage by loading all data from tauri-plugin-store.
  * Call this early in app startup before accessing any cached data.
  */
-export async function initializeElectronStorage(): Promise<void> {
+export async function initializeStorage(): Promise<void> {
   if (initialized) return;
 
   try {
@@ -116,15 +115,8 @@ export function isStorageInitialized(): boolean {
 /**
  * Helper to check if running in Tauri environment
  */
-export function isElectronEnvironment(): boolean {
-  return typeof window !== 'undefined' && '__TAURI__' in window;
-}
-
-/**
- * Alias for Tauri environment check (for compatibility)
- */
 export function isTauriEnvironment(): boolean {
-  return isElectronEnvironment();
+  return typeof window !== 'undefined' && '__TAURI__' in window;
 }
 
 // ============ Getters ============

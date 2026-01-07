@@ -1,9 +1,6 @@
 import type { RendererOnboardingState } from '@shared/types/renderer-store';
 import { create } from 'zustand';
-import {
-  persistOnboarding,
-  registerOnboardingHydrator,
-} from '@/lib/electron-storage';
+import { persistOnboarding, registerOnboardingHydrator } from '@/lib/storage';
 
 interface OnboardingState {
   // Onboarding state
