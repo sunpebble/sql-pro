@@ -66,6 +66,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -82,6 +83,13 @@ import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 interface SidebarProps {
   onSwitchToQuery?: () => void;
 }
+
+// Sample CREATE TABLE SQL template for empty database state
+const SAMPLE_CREATE_TABLE_SQL = `CREATE TABLE example (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
 
 export function Sidebar({ onSwitchToQuery }: SidebarProps) {
   const {
@@ -289,6 +297,24 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
   const handleCopyCreateStatement = useCallback((table: TableSchema) => {
     if (table.sql) {
       navigator.clipboard.writeText(table.sql);
+    }
+  }, []);
+
+  // Open SQL Query Editor for empty state
+  const handleOpenSqlTab = useCallback(() => {
+    if (activeConnectionId) {
+      createTab(activeConnectionId, 'New Query', '');
+      onSwitchToQuery?.();
+    }
+  }, [activeConnectionId, createTab, onSwitchToQuery]);
+
+  // Copy sample CREATE TABLE SQL to clipboard
+  const handleCopySampleSQL = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(SAMPLE_CREATE_TABLE_SQL);
+      toast.success('Sample SQL copied to clipboard');
+    } catch (error) {
+      toast.error('Failed to copy SQL to clipboard');
     }
   }, []);
 
@@ -882,10 +908,32 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
                     </EmptyMedia>
                     <EmptyTitle>No tables yet</EmptyTitle>
                     <EmptyDescription>
-                      This database is empty. Use the SQL Query tab to create
-                      tables.
+                      This database is empty. Create your first table using the
+                      SQL Query Editor or paste a CREATE TABLE statement.
                     </EmptyDescription>
                   </EmptyHeader>
+                  <EmptyContent>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleOpenSqlTab}
+                        className="w-full sm:w-auto"
+                      >
+                        <Code className="mr-2 size-4" />
+                        Open SQL Query Editor
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCopySampleSQL}
+                        className="w-full sm:w-auto"
+                      >
+                        <Copy className="mr-2 size-4" />
+                        Copy Sample SQL
+                      </Button>
+                    </div>
+                  </EmptyContent>
                 </Empty>
               )}
 
