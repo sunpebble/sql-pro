@@ -37,7 +37,7 @@ export function Toolbar() {
       {hasChanges() && (
         <button
           onClick={openChangesPanel}
-          className="flex shrink-0 items-center gap-2 rounded-md bg-amber-500/10 px-3 py-1 text-sm text-amber-600 transition-colors hover:bg-amber-500/20 dark:text-amber-400"
+          className="flex shrink-0 items-center gap-2 rounded-md bg-amber-500/10 px-3 py-1 text-sm text-amber-600 transition-all duration-150 hover:scale-[1.02] hover:bg-amber-500/20 active:scale-[0.98] dark:text-amber-400"
         >
           <FileText className="h-4 w-4" />
           <span>

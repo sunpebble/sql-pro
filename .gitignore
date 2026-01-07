@@ -40,3 +40,6 @@ packages/docs/.vitepress/cache
 .claude_settings.json
 .nx/cache
 .nx/workspace-data
+
+# Auto Claude data directory
+.auto-claude/
