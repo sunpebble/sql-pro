@@ -33,7 +33,11 @@ export function LayoutButtons() {
       <Tooltip>
         <TooltipTrigger>
           <DropdownMenuTrigger>
-            <Button variant="ghost" size="icon">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="duration-150 hover:scale-[1.02] active:scale-[0.98]"
+            >
               <LayoutGrid className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
