@@ -10,8 +10,9 @@ export function cn(...inputs: ClassValue[]) {
  * Shared Tailwind class string for toolbar button micro-interactions.
  * Provides subtle hover scale-up and active press-down animations.
  * - duration-150: Quick 150ms animation
+ * - ease-in-out: Natural acceleration/deceleration curve
  * - hover:scale-[1.02]: 2% scale up on hover (subtle professional feel)
  * - active:scale-[0.98]: 2% scale down on press (tactile feedback)
  */
 export const TOOLBAR_BUTTON_INTERACTIVE =
-  'duration-150 hover:scale-[1.02] active:scale-[0.98]';
+  'duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98]';
