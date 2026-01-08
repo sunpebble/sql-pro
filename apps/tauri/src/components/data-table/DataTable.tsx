@@ -204,22 +204,23 @@ export const DataTable = function DataTable({
     }
   }, [enableSelection, selectedRowIds, onSelectionChange]);
 
-  // Calculate column size CSS variables for performance
-  // This recalculates when columnSizing or columnSizingInfo changes
-  const columnSizing = table.getState().columnSizing;
-  const columnSizingInfo = table.getState().columnSizingInfo;
+  // Get column sizing state for dependency tracking
   // columnSizing and columnSizingInfo are intentionally included as dependencies even though
   // they're derived from table.getState(). The table object is stable between renders, but we
-  // need to recalculate columnSizeVars when the sizing state changes. The linter incorrectly
-  // flags these as unnecessary because it doesn't understand TanStack Table's stable reference pattern.
-  const columnSizeVars = useMemo(() => {
+  // need to recalculate column sizes when the sizing state changes.
+  const columnSizing = table.getState().columnSizing;
+  const columnSizingInfo = table.getState().columnSizingInfo;
+
+  // Pre-compute column sizes as a Map for O(1) lookup
+  // This avoids creating CSS variables which trigger style recalculation on the entire table
+   
+  const columnSizes = useMemo(() => {
     const headers = table.getFlatHeaders();
-    const colSizes: Record<string, number> = {};
+    const sizes = new Map<string, number>();
     for (const header of headers) {
-      colSizes[`--col-${header.id}-size`] = header.getSize();
+      sizes.set(header.id, header.getSize());
     }
-    return colSizes;
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- columnSizing/columnSizingInfo trigger recalc, table is stable
+    return sizes;
   }, [columnSizing, columnSizingInfo, table]);
 
   // Get rows from table
@@ -338,14 +339,13 @@ export const DataTable = function DataTable({
   const ROW_HEIGHT = 24;
 
   // Calculate dynamic overscan based on data size for better performance
-  // Use high overscan values to prevent flickering during fast scrolling
-  // The trade-off is more DOM nodes, but smoother scrolling experience
+  // Lower overscan reduces DOM nodes and style recalculations during scroll
   const rowOverscan = useMemo(() => {
-    // For very large datasets, we still need to limit overscan to avoid memory issues
     if (rows.length > 100000) return 10;
     if (rows.length > 50000) return 15;
     if (rows.length > 20000) return 20;
-    // For smaller datasets, use generous overscan for smooth scrolling
+    if (rows.length > 5000) return 25;
+    // For moderate datasets, use moderate overscan
     return 30;
   }, [rows.length]);
 
@@ -367,20 +367,35 @@ export const DataTable = function DataTable({
     estimateSize: () => ROW_HEIGHT,
     overscan: rowOverscan,
     getItemKey: getRowKey,
+    // Enable smooth scrolling mode - reduces re-renders during scroll
+    isScrollingResetDelay: 150,
   } satisfies Partial<VirtualizerOptions<HTMLDivElement, Element>>);
 
   // Get the virtual items for visible range calculation
   const virtualItems = rowVirtualizer.getVirtualItems();
 
-  // Calculate visible range from virtual items
+  // Track previous visible range to avoid unnecessary updates
+  const prevVisibleRangeRef = useRef({ startIndex: 0, endIndex: 0 });
+
+  // Calculate visible range from virtual items - only update when range actually changes
   const visibleRange = useMemo(() => {
     if (virtualItems.length === 0) {
-      return { startIndex: 0, endIndex: 0 };
+      return prevVisibleRangeRef.current;
     }
-    return {
-      startIndex: virtualItems[0].index,
-      endIndex: virtualItems[virtualItems.length - 1].index,
-    };
+    const newStart = virtualItems[0].index;
+    const newEnd = virtualItems[virtualItems.length - 1].index;
+
+    // Only create new object if range actually changed
+    if (
+      newStart === prevVisibleRangeRef.current.startIndex &&
+      newEnd === prevVisibleRangeRef.current.endIndex
+    ) {
+      return prevVisibleRangeRef.current;
+    }
+
+    const newRange = { startIndex: newStart, endIndex: newEnd };
+    prevVisibleRangeRef.current = newRange;
+    return newRange;
   }, [virtualItems]);
 
   // Use virtual data management for memory-efficient row handling
@@ -449,27 +464,32 @@ export const DataTable = function DataTable({
       onFocus={handleContainerFocus}
     >
       <table
-        className="w-max min-w-full border-separate border-spacing-0"
+        className="bg-background w-max min-w-full border-separate border-spacing-0"
         style={{
-          ...columnSizeVars,
           minWidth: table.getTotalSize(),
           fontFamily: tableFont.family || undefined,
           fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
+          // Force GPU compositing layer to reduce flickering
+          transform: 'translateZ(0)',
+          willChange: 'transform',
         }}
       >
-        {/* Column group for width control - use CSS variables for dynamic sizing */}
+        {/* Column group for width control - apply sizes directly to avoid CSS variable overhead */}
         <colgroup>
           {/* Selection column - auto width based on content */}
           {enableSelection && <col />}
-          {table.getVisibleLeafColumns().map((column) => (
-            <col
-              key={column.id}
-              style={{
-                width: `calc(var(--col-${column.id}-size) * 1px)`,
-                minWidth: `calc(var(--col-${column.id}-size) * 1px)`,
-              }}
-            />
-          ))}
+          {table.getVisibleLeafColumns().map((column) => {
+            const size = columnSizes.get(column.id) ?? 150;
+            return (
+              <col
+                key={column.id}
+                style={{
+                  width: size,
+                  minWidth: size,
+                }}
+              />
+            );
+          })}
         </colgroup>
         {/* Fixed header */}
         <TableHeader
@@ -506,12 +526,13 @@ export const DataTable = function DataTable({
           editingCellKey={editingCellKey}
           changes={changes}
           pinnedColumns={pinnedColumns}
-          getColumnSize={(columnId) =>
-            table.getColumn(columnId)?.getSize() ?? 150
-          }
+          getColumnSize={(columnId) => columnSizes.get(columnId) ?? 150}
           enableSelection={enableSelection}
           onDragStart={handleDragStart}
           isInDragRange={isInDragRange}
+          // Disable virtualization for very small datasets to prevent flickering
+          // Keep threshold low (50) to avoid layout thrashing with many DOM nodes
+          disableVirtualization={rows.length < 50}
         />
       </table>
 

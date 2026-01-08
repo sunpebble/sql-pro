@@ -299,3 +299,40 @@ textarea,
     transform: translateX(400%);
   }
 }
+
+/* GPU compositing for data table scroll to reduce flickering */
+[data-slot='scroll-area-viewport'] {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* CSS containment for table performance optimization */
+/* Limits style recalculation and layout scope to improve rendering performance */
+table {
+  table-layout: fixed;
+  contain: layout style;
+}
+
+tbody {
+  contain: layout;
+  /* Hint browser to optimize for scroll/transform changes */
+  will-change: transform;
+}
+
+tr {
+  contain: layout style;
+}
+
+td,
+th {
+  contain: layout style paint;
+}
+
+/* Optimize scroll container for compositing */
+[data-slot='scroll-area-viewport'] table {
+  /* Force GPU layer for smoother scrolling */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

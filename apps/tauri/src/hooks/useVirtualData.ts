@@ -163,12 +163,10 @@ const DEFAULT_BUFFER_ABOVE = 50;
 const DEFAULT_BUFFER_BELOW = 50;
 const DEFAULT_MIN_ROWS = 100;
 const DEFAULT_MAX_MEMORY = 5 * 1024 * 1024; // 5MB
-// Debounce delay for range updates during rapid scrolling
-const RANGE_UPDATE_DEBOUNCE_MS = 16; // ~1 frame at 60fps
 
 /**
  * Estimate memory size of a single row
- * Optimized version with caching for repeated row structures
+ * Optimized version with caching and reduced allocations
  */
 const rowSizeCache = new WeakMap<VirtualRowData, number>();
 
@@ -181,30 +179,35 @@ function estimateRowSize(row: VirtualRowData): number {
 
   let size = BYTE_SIZES.OBJECT_OVERHEAD;
 
-  for (const [key, value] of Object.entries(row)) {
-    // Key string
+  // Use for-in loop instead of Object.entries() to avoid array allocation
+  for (const key in row) {
+    if (!Object.prototype.hasOwnProperty.call(row, key)) continue;
+
+    const value = row[key];
+
+    // Key string size
     size += key.length * 2 + BYTE_SIZES.STRING_OVERHEAD;
 
-    // Value
+    // Value size estimation
     if (value === null || value === undefined) {
       size += BYTE_SIZES.NULL_UNDEFINED;
-    } else if (typeof value === 'string') {
-      size += value.length * 2 + BYTE_SIZES.STRING_OVERHEAD;
-    } else if (typeof value === 'number') {
-      size += BYTE_SIZES.NUMBER;
-    } else if (typeof value === 'boolean') {
-      size += BYTE_SIZES.BOOLEAN;
-    } else if (value instanceof Date) {
-      size += BYTE_SIZES.DATE;
-    } else if (ArrayBuffer.isView(value)) {
-      size += value.byteLength;
-    } else if (typeof value === 'object') {
-      // Rough estimate for nested objects
-      try {
-        const json = JSON.stringify(value);
-        size += json.length * 2;
-      } catch {
-        size += 256; // Conservative fallback
+    } else {
+      const valueType = typeof value;
+      if (valueType === 'string') {
+        size += (value as string).length * 2 + BYTE_SIZES.STRING_OVERHEAD;
+      } else if (valueType === 'number') {
+        size += BYTE_SIZES.NUMBER;
+      } else if (valueType === 'boolean') {
+        size += BYTE_SIZES.BOOLEAN;
+      } else if (value instanceof Date) {
+        size += BYTE_SIZES.DATE;
+      } else if (ArrayBuffer.isView(value)) {
+        size += (value as ArrayBufferView).byteLength;
+      } else if (valueType === 'object') {
+        // Estimate nested object size without JSON.stringify to reduce GC
+        // Use a rough heuristic based on object key count
+        const objKeys = Object.keys(value as object);
+        size += BYTE_SIZES.OBJECT_OVERHEAD + objKeys.length * 64; // ~64 bytes per property
       }
     }
 
@@ -254,14 +257,6 @@ export function useVirtualData<T extends VirtualRowData>(
 
   // Track if memory limit was reached
   const memoryLimitReachedRef = useRef(false);
-
-  // Debounce timer for range updates during rapid scrolling
-  const rangeUpdateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
-
-  // Track pending range update for debouncing
-  const pendingRangeRef = useRef<{ start: number; end: number } | null>(null);
 
   // Calculate the desired retained range based on visible range + buffer
   const desiredRange = useMemo(() => {
@@ -344,6 +339,7 @@ export function useVirtualData<T extends VirtualRowData>(
   }, [enabled, allRows, retainedRange, minRowsInMemory, maxMemoryBytes]);
 
   // Update retained range when visible range changes
+  // Synchronous updates to prevent flickering - no debounce
   // This useEffect is intentionally calling setState based on prop changes,
   // which is a valid pattern for derived state from props
   useEffect(() => {
@@ -363,53 +359,26 @@ export function useVirtualData<T extends VirtualRowData>(
 
     // Only update if range actually changed
     if (newStart !== retainedRange.start || newEnd !== retainedRange.end) {
-      // Store the pending range
-      pendingRangeRef.current = { start: newStart, end: newEnd };
-
-      // Clear any existing timer
-      if (rangeUpdateTimerRef.current) {
-        clearTimeout(rangeUpdateTimerRef.current);
+      // Synchronous update to prevent flickering during fast scrolling
+      if (aggressiveRelease) {
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        setRetainedRange({ start: newStart, end: newEnd });
+      } else {
+        // Keep the range expanded (don't shrink, only grow)
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        setRetainedRange((prev) => ({
+          start: Math.min(prev.start, newStart),
+          end: Math.max(prev.end, newEnd),
+        }));
       }
 
-      // Debounce the range update to avoid excessive re-renders during rapid scrolling
-      rangeUpdateTimerRef.current = setTimeout(() => {
-        const pending = pendingRangeRef.current;
-        if (!pending) return;
-
-        // If aggressively releasing, immediately update the range
-        if (aggressiveRelease) {
-          setRetainedRange({ start: pending.start, end: pending.end });
-        } else {
-          // Keep the range expanded (don't shrink, only grow)
-
-          setRetainedRange((prev) => ({
-            start: Math.min(prev.start, pending.start),
-            end: Math.max(prev.end, pending.end),
-          }));
+      // Notify if rows are needed that might have been released
+      if (onRowsNeeded && aggressiveRelease) {
+        if (newStart < retainedRange.start || newEnd > retainedRange.end) {
+          onRowsNeeded(newStart, newEnd);
         }
-
-        // Notify if rows are needed that might have been released
-        if (onRowsNeeded && aggressiveRelease) {
-          if (
-            pending.start < retainedRange.start ||
-            pending.end > retainedRange.end
-          ) {
-            onRowsNeeded(pending.start, pending.end);
-          }
-        }
-
-        pendingRangeRef.current = null;
-        rangeUpdateTimerRef.current = null;
-      }, RANGE_UPDATE_DEBOUNCE_MS);
+      }
     }
-
-    // Cleanup timer on unmount or dependency change
-    return () => {
-      if (rangeUpdateTimerRef.current) {
-        clearTimeout(rangeUpdateTimerRef.current);
-        rangeUpdateTimerRef.current = null;
-      }
-    };
   }, [
     enabled,
     allRows.length,

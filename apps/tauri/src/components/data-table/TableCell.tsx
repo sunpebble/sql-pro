@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema } from '@/types/database';
 import { flexRender } from '@tanstack/react-table';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 // Memoized cell display component for better performance
@@ -112,13 +112,25 @@ export const TableCell = memo(
     const columnSchema = columnMeta?.schema;
     const columnType = columnSchema?.type ?? columnMeta?.type ?? 'text';
 
+    // Use refs for callback dependencies to avoid recreating handlers
+    const callbackRefs = useRef({
+      onCellClick,
+      onCellDoubleClick,
+      onCellSave,
+      stopEditing,
+    });
+    callbackRefs.current = {
+      onCellClick,
+      onCellDoubleClick,
+      onCellSave,
+      stopEditing,
+    };
+
     // Track whether we were previously editing to detect edit mode transitions
     const prevIsEditingRef = useRef(isEditing);
 
-    // Initialize edit state when entering edit mode - this avoids useEffect setState
-    // by checking state changes during render (React's recommended pattern)
+    // Initialize edit state when entering edit mode
     if (isEditing && !prevIsEditingRef.current) {
-      // Entering edit mode - set initial values synchronously during render
       setEditValue(value === null ? '' : String(value));
       setValidationError(null);
     }
@@ -133,118 +145,109 @@ export const TableCell = memo(
       return undefined;
     }, [isEditing]);
 
-    // Memoized validation function
+    // Stable validation function using ref
     const validateValue = useCallback(
       (val: string): string | null => {
-        // Check NOT NULL constraint
         if (columnSchema && !columnSchema.nullable) {
           if (val === '' || val.toLowerCase() === 'null') {
             return 'This field cannot be empty';
           }
         }
-
-        // Type validation for numeric types
         const type = columnType.toLowerCase();
-        if (type.includes('int')) {
-          if (val !== '' && val.toLowerCase() !== 'null') {
-            const parsed = Number.parseInt(val, 10);
-            if (Number.isNaN(parsed)) {
-              return 'Must be a valid integer';
-            }
-          }
-        } else if (
-          type.includes('real') ||
-          type.includes('float') ||
-          type.includes('double')
+        if (
+          type.includes('int') &&
+          val !== '' &&
+          val.toLowerCase() !== 'null'
         ) {
-          if (val !== '' && val.toLowerCase() !== 'null') {
-            const parsed = Number.parseFloat(val);
-            if (Number.isNaN(parsed)) {
-              return 'Must be a valid number';
-            }
-          }
+          if (Number.isNaN(Number.parseInt(val, 10)))
+            return 'Must be a valid integer';
+        } else if (
+          (type.includes('real') ||
+            type.includes('float') ||
+            type.includes('double')) &&
+          val !== '' &&
+          val.toLowerCase() !== 'null'
+        ) {
+          if (Number.isNaN(Number.parseFloat(val)))
+            return 'Must be a valid number';
         }
-
         return null;
       },
       [columnSchema, columnType]
     );
 
-    // Memoized save handler
+    // Stable save handler using refs - no dependency on editValue
     const handleSave = useCallback(() => {
-      const error = validateValue(editValue);
+      const currentEditValue = inputRef.current?.value ?? '';
+      const error = validateValue(currentEditValue);
       if (error) {
         setValidationError(error);
         return;
       }
 
-      let newValue: unknown = editValue;
+      let newValue: unknown = currentEditValue;
       const type = columnType.toLowerCase();
 
-      // Convert to appropriate type
-      if (editValue === '' || editValue.toLowerCase() === 'null') {
+      if (
+        currentEditValue === '' ||
+        currentEditValue.toLowerCase() === 'null'
+      ) {
         newValue = null;
       } else if (type.includes('int')) {
-        newValue = Number.parseInt(editValue, 10);
-        if (Number.isNaN(newValue as number)) newValue = editValue;
+        const parsed = Number.parseInt(currentEditValue, 10);
+        newValue = Number.isNaN(parsed) ? currentEditValue : parsed;
       } else if (
         type.includes('real') ||
         type.includes('float') ||
         type.includes('double')
       ) {
-        newValue = Number.parseFloat(editValue);
-        if (Number.isNaN(newValue as number)) newValue = editValue;
+        const parsed = Number.parseFloat(currentEditValue);
+        newValue = Number.isNaN(parsed) ? currentEditValue : parsed;
       }
 
       setValidationError(null);
-      onCellSave?.(newValue);
-    }, [editValue, columnType, validateValue, onCellSave]);
+      callbackRefs.current.onCellSave?.(newValue);
+    }, [columnType, validateValue]);
 
-    // Memoized key handler
+    // Stable key handler
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
-        if (e.key === 'Tab') {
-          handleSave();
-        } else if (e.key === 'Enter') {
+        if (e.key === 'Tab' || e.key === 'Enter') {
           handleSave();
         } else if (e.key === 'Escape') {
           setValidationError(null);
-          stopEditing?.();
+          callbackRefs.current.stopEditing?.();
         }
       },
-      [handleSave, stopEditing]
+      [handleSave]
     );
 
-    // Memoized change handler
+    // Stable change handler
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         setEditValue(e.target.value);
-        if (validationError) {
-          setValidationError(null);
-        }
+        setValidationError(null);
       },
-      [validationError]
+      []
     );
 
-    // Memoized click handler
+    // Stable click handler using refs
     const handleClick = useCallback(() => {
-      onCellClick?.(rowId, columnId);
-    }, [onCellClick, rowId, columnId]);
+      callbackRefs.current.onCellClick?.(rowId, columnId);
+    }, [rowId, columnId]);
 
-    // Memoized double-click handler
+    // Stable double-click handler using refs
     const handleDoubleClick = useCallback(() => {
       if (editable) {
-        onCellDoubleClick?.(rowId, columnId);
+        callbackRefs.current.onCellDoubleClick?.(rowId, columnId);
       }
-    }, [editable, onCellDoubleClick, rowId, columnId]);
+    }, [editable, rowId, columnId]);
 
-    // Calculate pinned styles
-    const pinnedStyles: React.CSSProperties = {};
-    if (isPinned) {
-      pinnedStyles.position = 'sticky';
-      pinnedStyles.left = pinnedOffset ?? 0;
-      pinnedStyles.zIndex = 1;
-    }
+    // Memoize pinned styles to avoid object recreation
+    const pinnedStyles = useMemo<React.CSSProperties>(() => {
+      if (!isPinned) return {};
+      return { position: 'sticky', left: pinnedOffset ?? 0, zIndex: 1 };
+    }, [isPinned, pinnedOffset]);
 
     const pinnedClassName = cn(
       isPinned && 'bg-background',

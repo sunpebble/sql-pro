@@ -22,9 +22,10 @@ function generateRows(count: number): VirtualRowData[] {
 }
 
 // Helper to advance timers and flush updates
-async function flushDebounce() {
+// Note: With debounce removed, this just wraps act() for consistency
+async function flushUpdates() {
   await act(async () => {
-    vi.advanceTimersByTime(20); // Slightly more than the 16ms debounce
+    // Allow React state updates to settle
   });
 }
 
@@ -105,7 +106,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // Row at index 50 should be accessible (within visible range)
       const row = result.current.getRow(50);
@@ -134,7 +135,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for initial debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // Row at index 0 should be undefined when visible range is 200-220
       // with aggressive release and small buffer
@@ -142,7 +143,7 @@ describe('useVirtualData', () => {
         rerender({ visibleRange: { startIndex: 200, endIndex: 220 } });
       });
 
-      await flushDebounce();
+      await flushUpdates();
 
       // Check that a row far from the visible range returns undefined with getRow
       // However, getRow accesses allRows directly based on retainedRange
@@ -185,7 +186,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // Row in visible range should be in memory
       expect(result.current.isRowInMemory(60)).toBe(true);
@@ -208,7 +209,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // Row far from visible range should not be in memory
       expect(result.current.isRowInMemory(0)).toBe(false);
@@ -251,7 +252,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const { stats } = result.current;
 
@@ -306,7 +307,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for initial debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const initialRowsInMemory = result.current.stats.rowsInMemory;
 
@@ -316,7 +317,7 @@ describe('useVirtualData', () => {
       });
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // With non-aggressive release, range should have expanded
       const expandedRowsInMemory = result.current.stats.rowsInMemory;
@@ -385,7 +386,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const range = result.current.getRetainedRange();
 
@@ -415,7 +416,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for initial debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const initialRange = result.current.getRetainedRange();
       expect(initialRange.start).toBe(0);
@@ -426,7 +427,7 @@ describe('useVirtualData', () => {
       });
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const newRange = result.current.getRetainedRange();
       expect(newRange.start).toBeLessThanOrEqual(100);
@@ -454,7 +455,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for initial debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const initialRange = result.current.getRetainedRange();
 
@@ -464,7 +465,7 @@ describe('useVirtualData', () => {
       });
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const newRange = result.current.getRetainedRange();
 
@@ -494,7 +495,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for initial debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // Scroll to a completely different location
       act(() => {
@@ -502,7 +503,7 @@ describe('useVirtualData', () => {
       });
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       const newRange = result.current.getRetainedRange();
 
@@ -596,7 +597,7 @@ describe('useVirtualData', () => {
       );
 
       // Wait for initial debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // Scroll to a new area outside previous retained range
       act(() => {
@@ -604,7 +605,7 @@ describe('useVirtualData', () => {
       });
 
       // Wait for debounced range update
-      await flushDebounce();
+      await flushUpdates();
 
       // onRowsNeeded should have been called
       expect(onRowsNeeded).toHaveBeenCalled();

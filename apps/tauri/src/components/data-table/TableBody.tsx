@@ -248,6 +248,8 @@ interface TableBodyProps {
   onDragStart?: (e: React.MouseEvent, rowIndex: number) => void;
   /** Check if row is in drag selection range */
   isInDragRange?: (rowIndex: number) => boolean;
+  /** Disable virtualization - render all rows without spacers */
+  disableVirtualization?: boolean;
 }
 
 export const TableBody = memo(
@@ -270,6 +272,7 @@ export const TableBody = memo(
     enableSelection = false,
     onDragStart,
     isInDragRange,
+    disableVirtualization = false,
   }: TableBodyProps) => {
     // Calculate pinned offsets
     // Selection column width: checkbox (16px) + padding (12px * 2) + border (1px) ≈ 41px
@@ -300,25 +303,65 @@ export const TableBody = memo(
       return handler;
     }, []);
 
+    // Pre-compute focused and editing row IDs to avoid string operations in render loop
+    // Extract row ID from cell key format "rowId:columnId"
+    const focusedRowId = useMemo(() => {
+      if (!focusedCellKey) return null;
+      const colonIndex = focusedCellKey.indexOf(':');
+      return colonIndex > 0 ? focusedCellKey.slice(0, colonIndex) : null;
+    }, [focusedCellKey]);
+
+    const editingRowId = useMemo(() => {
+      if (!editingCellKey) return null;
+      const colonIndex = editingCellKey.indexOf(':');
+      return colonIndex > 0 ? editingCellKey.slice(0, colonIndex) : null;
+    }, [editingCellKey]);
+
+    // Memoize rows to render to avoid creating new array on each render
+    const rowsToRender = useMemo(() => {
+      if (disableVirtualization) {
+        return rows.map((row, index) => ({ index, row }));
+      }
+      return virtualRowItems.map((virtualItem) => ({
+        index: virtualItem.index,
+        row: rows[virtualItem.index],
+      }));
+    }, [disableVirtualization, rows, virtualRowItems]);
+
+    // Pre-compute top spacer height
+    const topSpacerHeight = useMemo(() => {
+      if (disableVirtualization || virtualRowItems.length === 0) return 0;
+      return virtualRowItems[0].start;
+    }, [disableVirtualization, virtualRowItems]);
+
+    // Pre-compute bottom spacer height
+    const bottomSpacerHeight = useMemo(() => {
+      if (disableVirtualization || virtualRowItems.length === 0) return 0;
+      return Math.max(
+        0,
+        totalRowSize - virtualRowItems[virtualRowItems.length - 1].end
+      );
+    }, [disableVirtualization, virtualRowItems, totalRowSize]);
+
     return (
       <tbody>
-        {/* Top spacer - use a single row with height */}
-        {virtualRowItems.length > 0 && virtualRowItems[0].start > 0 && (
+        {/* Top spacer - only for virtualized mode */}
+        {topSpacerHeight > 0 && (
           <tr aria-hidden="true">
             <td
               colSpan={1000}
               style={{
-                height: virtualRowItems[0].start,
+                height: topSpacerHeight,
                 padding: 0,
                 border: 'none',
+                background: 'transparent',
               }}
             />
           </tr>
         )}
 
-        {/* Render only visible rows */}
-        {virtualRowItems.map((virtualItem) => {
-          const row = rows[virtualItem.index];
+        {/* Render rows */}
+        {rowsToRender.map(({ index: dataIndex, row }) => {
           if (!row) return null;
 
           const isGroupRow = row.getIsGrouped?.() ?? false;
@@ -340,19 +383,17 @@ export const TableBody = memo(
             );
           }
 
-          // Calculate cell keys for this row to detect focus/edit changes
-          const rowFocusedCellKey = focusedCellKey?.startsWith(`${row.id}:`)
-            ? focusedCellKey
-            : null;
-          const rowEditingCellKey = editingCellKey?.startsWith(`${row.id}:`)
-            ? editingCellKey
-            : null;
+          // Use pre-computed row IDs for faster comparison
+          const rowFocusedCellKey =
+            focusedRowId === row.id ? focusedCellKey : null;
+          const rowEditingCellKey =
+            editingRowId === row.id ? editingCellKey : null;
 
           return (
             <DataRow
               key={rowId}
               row={row}
-              dataIndex={virtualItem.index}
+              dataIndex={dataIndex}
               isDeleted={isDeleted}
               isNewRow={isNewRow}
               isSelected={row.getIsSelected()}
@@ -370,24 +411,22 @@ export const TableBody = memo(
               pinnedOffsets={pinnedOffsets}
               enableSelection={enableSelection}
               onDragStart={onDragStart}
-              isInDragRange={isInDragRange?.(virtualItem.index)}
+              isInDragRange={isInDragRange?.(dataIndex)}
               onToggleSelected={getToggleHandler(row)}
             />
           );
         })}
 
-        {/* Bottom spacer */}
-        {virtualRowItems.length > 0 && (
+        {/* Bottom spacer - only for virtualized mode */}
+        {bottomSpacerHeight > 0 && (
           <tr aria-hidden="true">
             <td
               colSpan={1000}
               style={{
-                height: Math.max(
-                  0,
-                  totalRowSize - virtualRowItems[virtualRowItems.length - 1].end
-                ),
+                height: bottomSpacerHeight,
                 padding: 0,
                 border: 'none',
+                background: 'transparent',
               }}
             />
           </tr>
