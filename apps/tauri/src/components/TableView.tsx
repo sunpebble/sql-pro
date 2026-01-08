@@ -40,6 +40,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { useClientSearch } from '@/hooks/useClientSearch';
 import { useExport } from '@/hooks/useExport';
+import { useInfiniteTableData } from '@/hooks/useInfiniteTableData';
 import { usePendingChanges } from '@/hooks/usePendingChanges';
 import { useTableData } from '@/hooks/useTableData';
 import { convertUIFiltersToAPIFilters } from '@/lib/filter-utils';
@@ -98,8 +99,11 @@ export function TableView({ tableOverride }: TableViewProps) {
   const pageSizeOption = usePageSize();
   const setPageSize = useSettingsStore((s) => s.setPageSize);
 
-  // Calculate actual page size - use a very large number for 'all'
-  const pageSize = pageSizeOption === 'all' ? 1000000 : pageSizeOption;
+  // Determine if using infinite scroll mode (when 'all' is selected)
+  const useInfiniteScroll = pageSizeOption === 'all';
+
+  // Calculate actual page size for paginated mode
+  const pageSize = useInfiniteScroll ? 100 : pageSizeOption;
 
   // Use state from store (persisted per tab)
   const page = activeTab?.page ?? 1;
@@ -191,31 +195,64 @@ export function TableView({ tableOverride }: TableViewProps) {
     return convertUIFiltersToAPIFilters(filters);
   }, [filters]);
 
-  // Use TanStack DB hooks for data and changes
-  const {
-    rows,
-    columns,
-    totalRows,
-    totalPages,
-    isLoading,
-    isFetching,
-    error,
-    updateRow,
-    insertRow,
-    deleteRow,
-    refetch,
-  } = useTableData({
+  // Use paginated data hook for normal pagination
+  const paginatedData = useTableData({
     connectionId: connection?.id || null,
     schema: selectedTable?.schema,
     table: selectedTable?.name || null,
     page,
-    pageSize,
+    pageSize: typeof pageSize === 'number' ? pageSize : 100,
     sortColumn: sort?.column,
     sortDirection: sort?.direction,
     filters: apiFilters,
-    enabled: Boolean(connection && selectedTable),
+    enabled: Boolean(connection && selectedTable && !useInfiniteScroll),
     primaryKeyColumn,
   });
+
+  // Use infinite scroll data hook for 'all' mode
+  const infiniteData = useInfiniteTableData({
+    connectionId: connection?.id || null,
+    schema: selectedTable?.schema,
+    table: selectedTable?.name || null,
+    pageSize: 100, // Load 100 rows at a time
+    sortColumn: sort?.column,
+    sortDirection: sort?.direction,
+    filters: apiFilters,
+    enabled: Boolean(connection && selectedTable && useInfiniteScroll),
+    primaryKeyColumn,
+  });
+
+  // Unified data interface - select based on mode
+  const rows = useInfiniteScroll ? infiniteData.rows : paginatedData.rows;
+  const columns = useInfiniteScroll
+    ? infiniteData.columns
+    : paginatedData.columns;
+  const totalRows = useInfiniteScroll
+    ? infiniteData.totalRows
+    : paginatedData.totalRows;
+  const totalPages = useInfiniteScroll ? 1 : paginatedData.totalPages;
+  const isLoading = useInfiniteScroll
+    ? infiniteData.isLoading
+    : paginatedData.isLoading;
+  const isFetching = useInfiniteScroll
+    ? infiniteData.isFetching
+    : paginatedData.isFetching;
+  const error = useInfiniteScroll ? infiniteData.error : paginatedData.error;
+  const updateRow = useInfiniteScroll
+    ? infiniteData.updateRow
+    : paginatedData.updateRow;
+  const insertRow = useInfiniteScroll
+    ? infiniteData.insertRow
+    : paginatedData.insertRow;
+  const deleteRow = useInfiniteScroll
+    ? infiniteData.deleteRow
+    : paginatedData.deleteRow;
+  const refetch = useInfiniteScroll
+    ? infiniteData.refetch
+    : paginatedData.refetch;
+
+  // Infinite scroll specific
+  const { fetchNextPage, hasNextPage, isFetchingNextPage } = infiniteData;
 
   const {
     changes: pendingChanges,
@@ -728,6 +765,10 @@ export function TableView({ tableOverride }: TableViewProps) {
               hasActiveSearch={searchTerm.length > 0}
               onClearFilters={handleFiltersClear}
               onClearSearch={() => setSearchTerm('')}
+              // Infinite scroll props
+              onLoadMore={useInfiniteScroll ? fetchNextPage : undefined}
+              hasMore={useInfiniteScroll ? hasNextPage : false}
+              isLoadingMore={useInfiniteScroll ? isFetchingNextPage : false}
             />
           )}
         </div>
@@ -744,8 +785,14 @@ export function TableView({ tableOverride }: TableViewProps) {
         <div className="bg-background flex shrink-0 flex-wrap items-center justify-between gap-2 border-t px-4 py-2">
           <div className="flex flex-wrap items-center gap-4">
             <div className="text-muted-foreground text-sm">
-              {pageSizeOption === 'all' ? (
-                <>Showing all {totalRows.toLocaleString()} rows</>
+              {useInfiniteScroll ? (
+                <>
+                  Showing {rows.length.toLocaleString()} of{' '}
+                  {totalRows.toLocaleString()} rows
+                  {isFetchingNextPage && (
+                    <span className="text-primary ml-2">Loading more...</span>
+                  )}
+                </>
               ) : (
                 <>
                   Page {page} of {totalPages || 1}

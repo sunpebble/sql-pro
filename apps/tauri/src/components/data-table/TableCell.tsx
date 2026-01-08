@@ -3,20 +3,49 @@ import type { ReactNode } from 'react';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema } from '@/types/database';
 import { flexRender } from '@tanstack/react-table';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+
+// Memoized cell display component for better performance
+const CellDisplay = memo(
+  ({ value, type }: { value: unknown; type: string }) => {
+    if (value === null) {
+      return <span className="text-muted-foreground italic">NULL</span>;
+    }
+
+    if (typeof value === 'boolean') {
+      return <span>{value ? 'true' : 'false'}</span>;
+    }
+
+    if (typeof value === 'number') {
+      return <span className="font-mono tabular-nums">{value}</span>;
+    }
+
+    if (type.toLowerCase().includes('blob')) {
+      return <span className="text-muted-foreground italic">[BLOB]</span>;
+    }
+
+    const strValue = String(value);
+    return (
+      <span className="whitespace-nowrap" title={strValue}>
+        {strValue}
+      </span>
+    );
+  }
+);
 
 interface TableCellProps {
   cell: Cell<TableRowData, unknown>;
+  rowId: string;
   isFocused: boolean;
   isEditing: boolean;
   hasChange: boolean;
   oldValue?: unknown;
-  onEdit: () => void;
-  onSave: (value: unknown) => void;
-  onCancel: () => void;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
-  onClick?: () => void;
+  editable?: boolean;
+  onCellClick?: (rowId: string, columnId: string) => void;
+  onCellDoubleClick?: (rowId: string, columnId: string) => void;
+  onCellSave?: (value: unknown) => void;
+  stopEditing?: () => void;
   /** Whether this column is pinned */
   isPinned?: boolean;
   /** Offset for pinned columns */
@@ -25,18 +54,48 @@ interface TableCellProps {
   isLastPinned?: boolean;
 }
 
+// Custom comparison function for TableCell to avoid unnecessary re-renders
+function areTableCellPropsEqual(
+  prevProps: TableCellProps,
+  nextProps: TableCellProps
+): boolean {
+  // Check cell identity - if the cell object is the same, values are the same
+  if (prevProps.cell !== nextProps.cell) return false;
+  if (prevProps.rowId !== nextProps.rowId) return false;
+
+  // Check visual state flags
+  if (prevProps.isFocused !== nextProps.isFocused) return false;
+  if (prevProps.isEditing !== nextProps.isEditing) return false;
+  if (prevProps.hasChange !== nextProps.hasChange) return false;
+  if (prevProps.editable !== nextProps.editable) return false;
+
+  // Check pinning state
+  if (prevProps.isPinned !== nextProps.isPinned) return false;
+  if (prevProps.pinnedOffset !== nextProps.pinnedOffset) return false;
+  if (prevProps.isLastPinned !== nextProps.isLastPinned) return false;
+
+  // oldValue only matters if hasChange is true
+  if (nextProps.hasChange && prevProps.oldValue !== nextProps.oldValue) {
+    return false;
+  }
+
+  // Callbacks are stable (memoized in parent), skip comparison
+  return true;
+}
+
 export const TableCell = memo(
   ({
     cell,
+    rowId,
     isFocused,
     isEditing,
     hasChange,
     oldValue,
-    onEdit,
-    onSave,
-    onCancel,
-    onKeyDown,
-    onClick,
+    editable,
+    onCellClick,
+    onCellDoubleClick,
+    onCellSave,
+    stopEditing,
     isPinned,
     pinnedOffset,
     isLastPinned,
@@ -45,6 +104,7 @@ export const TableCell = memo(
     const [validationError, setValidationError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    const columnId = cell.column.id;
     const value = cell.getValue();
     const columnMeta = cell.column.columnDef.meta as
       | { schema?: ColumnSchema; type?: string }
@@ -73,40 +133,45 @@ export const TableCell = memo(
       return undefined;
     }, [isEditing]);
 
-    const validateValue = (val: string): string | null => {
-      // Check NOT NULL constraint
-      if (columnSchema && !columnSchema.nullable) {
-        if (val === '' || val.toLowerCase() === 'null') {
-          return 'This field cannot be empty';
-        }
-      }
-
-      // Type validation for numeric types
-      const type = columnType.toLowerCase();
-      if (type.includes('int')) {
-        if (val !== '' && val.toLowerCase() !== 'null') {
-          const parsed = Number.parseInt(val, 10);
-          if (Number.isNaN(parsed)) {
-            return 'Must be a valid integer';
+    // Memoized validation function
+    const validateValue = useCallback(
+      (val: string): string | null => {
+        // Check NOT NULL constraint
+        if (columnSchema && !columnSchema.nullable) {
+          if (val === '' || val.toLowerCase() === 'null') {
+            return 'This field cannot be empty';
           }
         }
-      } else if (
-        type.includes('real') ||
-        type.includes('float') ||
-        type.includes('double')
-      ) {
-        if (val !== '' && val.toLowerCase() !== 'null') {
-          const parsed = Number.parseFloat(val);
-          if (Number.isNaN(parsed)) {
-            return 'Must be a valid number';
+
+        // Type validation for numeric types
+        const type = columnType.toLowerCase();
+        if (type.includes('int')) {
+          if (val !== '' && val.toLowerCase() !== 'null') {
+            const parsed = Number.parseInt(val, 10);
+            if (Number.isNaN(parsed)) {
+              return 'Must be a valid integer';
+            }
+          }
+        } else if (
+          type.includes('real') ||
+          type.includes('float') ||
+          type.includes('double')
+        ) {
+          if (val !== '' && val.toLowerCase() !== 'null') {
+            const parsed = Number.parseFloat(val);
+            if (Number.isNaN(parsed)) {
+              return 'Must be a valid number';
+            }
           }
         }
-      }
 
-      return null;
-    };
+        return null;
+      },
+      [columnSchema, columnType]
+    );
 
-    const handleSave = () => {
+    // Memoized save handler
+    const handleSave = useCallback(() => {
       const error = validateValue(editValue);
       if (error) {
         setValidationError(error);
@@ -132,22 +197,46 @@ export const TableCell = memo(
       }
 
       setValidationError(null);
-      onSave(newValue);
-    };
+      onCellSave?.(newValue);
+    }, [editValue, columnType, validateValue, onCellSave]);
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        handleSave();
-        onKeyDown?.(e);
-      } else if (e.key === 'Enter') {
-        handleSave();
-        onKeyDown?.(e);
-      } else if (e.key === 'Escape') {
-        setValidationError(null);
-        onCancel();
-        onKeyDown?.(e);
+    // Memoized key handler
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          handleSave();
+        } else if (e.key === 'Enter') {
+          handleSave();
+        } else if (e.key === 'Escape') {
+          setValidationError(null);
+          stopEditing?.();
+        }
+      },
+      [handleSave, stopEditing]
+    );
+
+    // Memoized change handler
+    const handleChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditValue(e.target.value);
+        if (validationError) {
+          setValidationError(null);
+        }
+      },
+      [validationError]
+    );
+
+    // Memoized click handler
+    const handleClick = useCallback(() => {
+      onCellClick?.(rowId, columnId);
+    }, [onCellClick, rowId, columnId]);
+
+    // Memoized double-click handler
+    const handleDoubleClick = useCallback(() => {
+      if (editable) {
+        onCellDoubleClick?.(rowId, columnId);
       }
-    };
+    }, [editable, onCellDoubleClick, rowId, columnId]);
 
     // Calculate pinned styles
     const pinnedStyles: React.CSSProperties = {};
@@ -171,7 +260,7 @@ export const TableCell = memo(
       return (
         <td
           className={cn(
-            'text-muted-foreground border-border border-r border-b px-2 py-1 whitespace-nowrap',
+            'text-muted-foreground border-border border-r border-b px-1.5 py-0.5 whitespace-nowrap',
             pinnedClassName
           )}
           style={pinnedStyles}
@@ -205,16 +294,11 @@ export const TableCell = memo(
             ref={inputRef}
             type="text"
             value={editValue}
-            onChange={(e) => {
-              setEditValue(e.target.value);
-              if (validationError) {
-                setValidationError(null);
-              }
-            }}
+            onChange={handleChange}
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
             className={cn(
-              'bg-background h-full w-full px-2 py-1 ring-2 outline-none ring-inset',
+              'bg-background h-full w-full px-1.5 py-0.5 ring-2 outline-none ring-inset',
               validationError ? 'ring-destructive' : 'ring-ring'
             )}
             aria-invalid={!!validationError}
@@ -235,10 +319,10 @@ export const TableCell = memo(
     // Display mode
     return (
       <td
-        onClick={onClick}
-        onDoubleClick={onEdit}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
         className={cn(
-          'border-border cursor-pointer border-r border-b px-2 py-1 whitespace-nowrap',
+          'border-border cursor-pointer border-r border-b px-1.5 py-0.5 whitespace-nowrap',
           isFocused && 'ring-ring ring-2 ring-inset',
           hasChange && 'bg-amber-500/20',
           pinnedClassName
@@ -253,30 +337,6 @@ export const TableCell = memo(
         <CellDisplay value={value} type={columnType} />
       </td>
     );
-  }
+  },
+  areTableCellPropsEqual
 );
-
-function CellDisplay({ value, type }: { value: unknown; type: string }) {
-  if (value === null) {
-    return <span className="text-muted-foreground italic">NULL</span>;
-  }
-
-  if (typeof value === 'boolean') {
-    return <span>{value ? 'true' : 'false'}</span>;
-  }
-
-  if (typeof value === 'number') {
-    return <span className="font-mono tabular-nums">{value}</span>;
-  }
-
-  if (type.toLowerCase().includes('blob')) {
-    return <span className="text-muted-foreground italic">[BLOB]</span>;
-  }
-
-  const strValue = String(value);
-  return (
-    <span className="whitespace-nowrap" title={strValue}>
-      {strValue}
-    </span>
-  );
-}

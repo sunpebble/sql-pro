@@ -1,3 +1,4 @@
+import type { VirtualizerOptions } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type {
   VirtualDataConfig,
@@ -108,6 +109,22 @@ export interface DataTableProps {
    * Useful for monitoring memory usage
    */
   onVirtualDataStatsChange?: (stats: VirtualDataStats) => void;
+
+  // Infinite scroll support
+  /**
+   * Callback to load more data when scrolling near the bottom
+   */
+  onLoadMore?: () => void;
+
+  /**
+   * Whether there is more data to load
+   */
+  hasMore?: boolean;
+
+  /**
+   * Whether more data is currently being loaded
+   */
+  isLoadingMore?: boolean;
 }
 
 export interface DataTableRef {
@@ -152,6 +169,9 @@ export const DataTable = function DataTable({
   enableVirtualDataManagement = false,
   virtualDataConfig,
   onVirtualDataStatsChange,
+  onLoadMore,
+  hasMore = false,
+  isLoadingMore = false,
 }: DataTableProps & { ref?: React.RefObject<DataTableRef | null> }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tableFont = useTableFont();
@@ -215,6 +235,7 @@ export const DataTable = function DataTable({
   // Initialize editing
   const {
     focusedCell,
+    editingCell,
     handleCellClick,
     handleCellDoubleClick,
     handleKeyDown,
@@ -232,6 +253,14 @@ export const DataTable = function DataTable({
     onRowDelete,
     onRowInsert,
   });
+
+  // Create cell keys for memo comparison in child components
+  const focusedCellKey = focusedCell
+    ? `${focusedCell.rowId}:${focusedCell.columnId}`
+    : null;
+  const editingCellKey = editingCell
+    ? `${editingCell.rowId}:${editingCell.columnId}`
+    : null;
 
   // Initialize drag selection for row multi-select
   const { handleMouseDown: handleDragStart, isInDragRange } = useDragSelection({
@@ -305,16 +334,40 @@ export const DataTable = function DataTable({
     }
   }, [focusedCell, rows, table, handleCellClick]);
 
-  // Row height for virtualization
-  const ROW_HEIGHT = 32;
+  // Row height for virtualization (compact VS Code style)
+  const ROW_HEIGHT = 24;
 
-  // Setup row virtualization
+  // Calculate dynamic overscan based on data size for better performance
+  // Use high overscan values to prevent flickering during fast scrolling
+  // The trade-off is more DOM nodes, but smoother scrolling experience
+  const rowOverscan = useMemo(() => {
+    // For very large datasets, we still need to limit overscan to avoid memory issues
+    if (rows.length > 100000) return 10;
+    if (rows.length > 50000) return 15;
+    if (rows.length > 20000) return 20;
+    // For smaller datasets, use generous overscan for smooth scrolling
+    return 30;
+  }, [rows.length]);
+
+  // Stable callbacks for virtualizers - defined outside useVirtualizer to avoid recreating on each render
+  const getRowKey = useCallback(
+    (index: number) => {
+      const row = rows[index];
+      if (!row) return index;
+      const rowData = row.original as TableRowData;
+      return rowData.__rowId ?? row.id;
+    },
+    [rows]
+  );
+
+  // Setup row virtualization with optimized configuration
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => containerRef.current,
     estimateSize: () => ROW_HEIGHT,
-    overscan: 10,
-  });
+    overscan: rowOverscan,
+    getItemKey: getRowKey,
+  } satisfies Partial<VirtualizerOptions<HTMLDivElement, Element>>);
 
   // Get the virtual items for visible range calculation
   const virtualItems = rowVirtualizer.getVirtualItems();
@@ -348,6 +401,20 @@ export const DataTable = function DataTable({
     virtualData.stats,
     onVirtualDataStatsChange,
   ]);
+
+  // Infinite scroll: load more when approaching the end
+  useEffect(() => {
+    if (!onLoadMore || !hasMore || isLoadingMore) return;
+
+    // Check if we're near the end of the data
+    const lastVisibleIndex = visibleRange.endIndex;
+    const totalRows = rows.length;
+    const threshold = 20; // Load more when within 20 rows of the end
+
+    if (totalRows > 0 && lastVisibleIndex >= totalRows - threshold) {
+      onLoadMore();
+    }
+  }, [visibleRange.endIndex, rows.length, onLoadMore, hasMore, isLoadingMore]);
 
   // Expose imperative methods
   useImperativeHandle(ref, () => ({
@@ -426,8 +493,8 @@ export const DataTable = function DataTable({
         {/* Virtualized table body */}
         <TableBody
           rows={rows}
-          virtualItems={virtualItems}
-          totalSize={rowVirtualizer.getTotalSize()}
+          virtualRowItems={virtualItems}
+          totalRowSize={rowVirtualizer.getTotalSize()}
           editable={editable}
           onCellClick={handleCellClick}
           onCellDoubleClick={handleCellDoubleClick}
@@ -435,6 +502,8 @@ export const DataTable = function DataTable({
           stopEditing={stopEditing}
           isCellFocused={isCellFocused}
           isCellEditing={isCellEditing}
+          focusedCellKey={focusedCellKey}
+          editingCellKey={editingCellKey}
           changes={changes}
           pinnedColumns={pinnedColumns}
           getColumnSize={(columnId) =>

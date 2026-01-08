@@ -222,7 +222,7 @@ export function TourSpotlight({
           y="0"
           width="100%"
           height="100%"
-          fill="rgba(0, 0, 0, 0.6)"
+          fill="rgba(0, 0, 0, 0.85)"
           mask={`url(#${maskIdRef.current})`}
           style={{ pointerEvents: 'auto' }}
         />
@@ -233,7 +233,7 @@ export function TourSpotlight({
         <div
           className={cn(
             'pointer-events-none absolute',
-            'ring-primary/50 ring-2',
+            'border-2 border-white/80',
             'transition-all duration-300 ease-out'
           )}
           style={{
@@ -242,6 +242,8 @@ export function TourSpotlight({
             width: spotlightRect.width,
             height: spotlightRect.height,
             borderRadius,
+            boxShadow:
+              '0 0 0 4px rgba(255, 255, 255, 0.15), 0 0 40px 12px rgba(255, 255, 255, 0.2), inset 0 0 20px 4px rgba(255, 255, 255, 0.05)',
           }}
         />
       )}

@@ -24,6 +24,7 @@ export {
   type DataTableRef,
   type TableRowData,
 } from './DataTable';
+
 export { GroupRow } from './GroupRow';
 
 // Hooks

@@ -162,6 +162,82 @@ export function MonacoSqlEditor({
         () => onExecuteRef.current()
       );
 
+      // Register global navigation shortcuts that should work even when editor is focused
+      // These shortcuts use Cmd+Ctrl (Meta+Control on macOS) which Monaco doesn't handle by default
+      // We register them as commands that trigger clicks on the activity bar buttons
+
+      // Cmd+Ctrl+1: Switch to Data Browser
+      editor.addCommand(
+        monacoInstance.KeyMod.CtrlCmd |
+          monacoInstance.KeyMod.WinCtrl |
+          monacoInstance.KeyCode.Digit1,
+        () => {
+          document
+            .querySelector<HTMLButtonElement>('[data-tab="data"]')
+            ?.click();
+        }
+      );
+
+      // Cmd+Ctrl+2: Switch to Query Editor
+      editor.addCommand(
+        monacoInstance.KeyMod.CtrlCmd |
+          monacoInstance.KeyMod.WinCtrl |
+          monacoInstance.KeyCode.Digit2,
+        () => {
+          document
+            .querySelector<HTMLButtonElement>('[data-tab="query"]')
+            ?.click();
+        }
+      );
+
+      // Cmd+Ctrl+3: Switch to ER Diagram
+      editor.addCommand(
+        monacoInstance.KeyMod.CtrlCmd |
+          monacoInstance.KeyMod.WinCtrl |
+          monacoInstance.KeyCode.Digit3,
+        () => {
+          document
+            .querySelector<HTMLButtonElement>('[data-tab="diagram"]')
+            ?.click();
+        }
+      );
+
+      // Cmd+Ctrl+4: Switch to Schema Compare
+      editor.addCommand(
+        monacoInstance.KeyMod.CtrlCmd |
+          monacoInstance.KeyMod.WinCtrl |
+          monacoInstance.KeyCode.Digit4,
+        () => {
+          document
+            .querySelector<HTMLButtonElement>('[data-tab="compare"]')
+            ?.click();
+        }
+      );
+
+      // Cmd+Ctrl+5: Switch to Data Diff
+      editor.addCommand(
+        monacoInstance.KeyMod.CtrlCmd |
+          monacoInstance.KeyMod.WinCtrl |
+          monacoInstance.KeyCode.Digit5,
+        () => {
+          document
+            .querySelector<HTMLButtonElement>('[data-tab="dataDiff"]')
+            ?.click();
+        }
+      );
+
+      // Cmd+B: Toggle Sidebar
+      editor.addCommand(
+        monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.KeyB,
+        () => {
+          document
+            .querySelector<HTMLButtonElement>(
+              'button[data-action="toggle-sidebar"]'
+            )
+            ?.click();
+        }
+      );
+
       // Register Cmd/Ctrl+Option/Alt+F shortcut for SQL formatting
       // Note: Cmd+Shift+F on macOS types special character 'Ï', so we use Option/Alt instead
       editor.addAction({

@@ -38,6 +38,7 @@
     "@sqlpro/tsconfig": "workspace:*",
     "@typescript/native-preview": "7.0.0-dev.20260105.1",
     "eslint": "^9.39.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.26",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",

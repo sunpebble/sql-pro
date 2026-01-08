@@ -3,16 +3,18 @@ import type { VirtualItem } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type { PendingChange } from '@/types/database';
 import { Checkbox } from '@sqlpro/ui/checkbox';
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { GroupRow } from './GroupRow';
 import { TableCell } from './TableCell';
 
 interface DataRowProps {
   row: Row<TableRowData>;
-  rowIndex: number;
+  /** The actual row index in the data array (stable) */
+  dataIndex: number;
   isDeleted: boolean;
   isNewRow: boolean;
+  isSelected: boolean;
   change?: PendingChange;
   editable?: boolean;
   onCellClick?: (rowId: string, columnId: string) => void;
@@ -21,6 +23,10 @@ interface DataRowProps {
   stopEditing?: () => void;
   isCellFocused?: (rowId: string, columnId: string) => boolean;
   isCellEditing?: (rowId: string, columnId: string) => boolean;
+  /** Key of the currently focused cell in this row (rowId:columnId format), or null */
+  focusedCellKey?: string | null;
+  /** Key of the currently editing cell in this row (rowId:columnId format), or null */
+  editingCellKey?: string | null;
   /** Pinned column IDs (left only) */
   pinnedColumns?: string[];
   /** Pinned column offsets */
@@ -31,14 +37,79 @@ interface DataRowProps {
   onDragStart?: (e: React.MouseEvent, rowIndex: number) => void;
   /** Whether this row is in the current drag selection range */
   isInDragRange?: boolean;
+  /** Callback to toggle row selection */
+  onToggleSelected?: (selected: boolean) => void;
 }
+
+// Custom comparison function for DataRow to avoid unnecessary re-renders
+function areDataRowPropsEqual(
+  prevProps: DataRowProps,
+  nextProps: DataRowProps
+): boolean {
+  // Always re-render if row data changed
+  if (prevProps.row !== nextProps.row) return false;
+  // dataIndex is stable (based on data array position), not virtual position
+  if (prevProps.dataIndex !== nextProps.dataIndex) return false;
+
+  // Check state flags
+  if (prevProps.isDeleted !== nextProps.isDeleted) return false;
+  if (prevProps.isNewRow !== nextProps.isNewRow) return false;
+  if (prevProps.isSelected !== nextProps.isSelected) return false;
+  if (prevProps.editable !== nextProps.editable) return false;
+  if (prevProps.enableSelection !== nextProps.enableSelection) return false;
+  if (prevProps.isInDragRange !== nextProps.isInDragRange) return false;
+
+  // Check focused and editing cell keys - these determine which cells need focus/edit styling
+  if (prevProps.focusedCellKey !== nextProps.focusedCellKey) return false;
+  if (prevProps.editingCellKey !== nextProps.editingCellKey) return false;
+
+  // Check change object - only compare if it exists
+  if (prevProps.change !== nextProps.change) {
+    // If one is undefined and other isn't, re-render
+    if (!prevProps.change || !nextProps.change) return false;
+    // Compare relevant change properties
+    if (prevProps.change.type !== nextProps.change.type) return false;
+    if (prevProps.change.newValues !== nextProps.change.newValues) return false;
+  }
+
+  // Check pinned columns array (shallow comparison)
+  if (prevProps.pinnedColumns !== nextProps.pinnedColumns) {
+    if (!prevProps.pinnedColumns || !nextProps.pinnedColumns) return false;
+    if (prevProps.pinnedColumns.length !== nextProps.pinnedColumns.length)
+      return false;
+    for (let i = 0; i < prevProps.pinnedColumns.length; i++) {
+      if (prevProps.pinnedColumns[i] !== nextProps.pinnedColumns[i])
+        return false;
+    }
+  }
+
+  // Check pinned offsets object
+  if (prevProps.pinnedOffsets !== nextProps.pinnedOffsets) {
+    if (!prevProps.pinnedOffsets || !nextProps.pinnedOffsets) return false;
+    const prevKeys = Object.keys(prevProps.pinnedOffsets);
+    const nextKeys = Object.keys(nextProps.pinnedOffsets);
+    if (prevKeys.length !== nextKeys.length) return false;
+    for (const key of prevKeys) {
+      if (prevProps.pinnedOffsets[key] !== nextProps.pinnedOffsets[key])
+        return false;
+    }
+  }
+
+  // Callbacks are stable (memoized in parent), skip comparison
+
+  return true;
+}
+
+// Stable event handler to avoid creating new function on each render
+const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
 const DataRow = memo(
   ({
     row,
-    rowIndex,
+    dataIndex,
     isDeleted,
     isNewRow,
+    isSelected,
     change,
     editable,
     onCellClick,
@@ -47,19 +118,36 @@ const DataRow = memo(
     stopEditing,
     isCellFocused,
     isCellEditing,
+    focusedCellKey: _focusedCellKey,
+    editingCellKey: _editingCellKey,
     pinnedColumns = [],
     pinnedOffsets = {},
     enableSelection = false,
     onDragStart,
     isInDragRange = false,
+    onToggleSelected,
   }: DataRowProps) => {
-    const isEven = rowIndex % 2 === 0;
-    const isSelected = row.getIsSelected();
+    // Use stable dataIndex for even/odd styling (not virtual index)
+    const isEven = dataIndex % 2 === 0;
+
+    // Memoize handlers to avoid creating new functions on each render
+    const handleDragStart = useCallback(
+      (e: React.MouseEvent) => onDragStart?.(e, dataIndex),
+      [onDragStart, dataIndex]
+    );
+
+    const handleToggleSelected = useCallback(
+      (checked: boolean | 'indeterminate') => onToggleSelected?.(!!checked),
+      [onToggleSelected]
+    );
+
+    // Get all cells for this row - this is called once per row
+    const allCells = row.getVisibleCells();
 
     return (
       <tr
         className={cn(
-          'border-border h-8 border-b',
+          'border-border h-6 border-b',
           isEven ? 'bg-background' : 'bg-muted/20',
           isDeleted && 'bg-destructive/10 line-through opacity-50',
           isNewRow && 'bg-green-500/10',
@@ -67,23 +155,25 @@ const DataRow = memo(
           isInDragRange && !isSelected && 'bg-primary/5'
         )}
         data-row-id={row.id}
-        data-row-index={rowIndex}
+        data-row-index={dataIndex}
       >
         {/* Selection cell */}
         {enableSelection && (
           <td
-            className="bg-background sticky left-0 z-10 cursor-default border-r px-3 select-none"
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => onDragStart?.(e, rowIndex)}
+            className="bg-background sticky left-0 z-10 cursor-default border-r px-2 select-none"
+            onClick={stopPropagation}
+            onMouseDown={handleDragStart}
           >
             <Checkbox
               checked={isSelected}
-              onCheckedChange={(checked) => row.toggleSelected(!!checked)}
+              onCheckedChange={handleToggleSelected}
               aria-label="Select row"
             />
           </td>
         )}
-        {row.getVisibleCells().map((cell) => {
+
+        {/* Render all cells directly - no column virtualization */}
+        {allCells.map((cell) => {
           const columnId = cell.column.id;
           const isFocused = isCellFocused?.(row.id, columnId) ?? false;
           const isEditing = isCellEditing?.(row.id, columnId) ?? false;
@@ -107,24 +197,16 @@ const DataRow = memo(
             <TableCell
               key={cell.id}
               cell={cell}
+              rowId={row.id}
               isFocused={isFocused}
               isEditing={isEditing && !!editable && !isDeleted}
               hasChange={hasChange ?? false}
               oldValue={oldValue}
-              onEdit={() => {
-                if (editable && !isDeleted) {
-                  onCellDoubleClick?.(row.id, columnId);
-                }
-              }}
-              onSave={(value) => {
-                onCellSave?.(value);
-              }}
-              onCancel={() => {
-                stopEditing?.();
-              }}
-              onClick={() => {
-                onCellClick?.(row.id, columnId);
-              }}
+              editable={editable && !isDeleted}
+              onCellClick={onCellClick}
+              onCellDoubleClick={onCellDoubleClick}
+              onCellSave={onCellSave}
+              stopEditing={stopEditing}
               isPinned={isPinned}
               pinnedOffset={isPinned ? pinnedOffsets[columnId] : undefined}
               isLastPinned={isLastPinned}
@@ -133,14 +215,15 @@ const DataRow = memo(
         })}
       </tr>
     );
-  }
+  },
+  areDataRowPropsEqual
 );
 
 interface TableBodyProps {
   rows: Row<TableRowData>[];
-  // Virtualization props
-  virtualItems: VirtualItem[];
-  totalSize: number;
+  // Row virtualization props
+  virtualRowItems: VirtualItem[];
+  totalRowSize: number;
   // Editing props
   editable?: boolean;
   onCellClick?: (rowId: string, columnId: string) => void;
@@ -149,6 +232,10 @@ interface TableBodyProps {
   stopEditing?: () => void;
   isCellFocused?: (rowId: string, columnId: string) => boolean;
   isCellEditing?: (rowId: string, columnId: string) => boolean;
+  /** Currently focused cell key in format "rowId:columnId", or null */
+  focusedCellKey?: string | null;
+  /** Currently editing cell key in format "rowId:columnId", or null */
+  editingCellKey?: string | null;
   // Change tracking
   changes?: Map<string | number, PendingChange>;
   // Column pinning (left only)
@@ -166,8 +253,8 @@ interface TableBodyProps {
 export const TableBody = memo(
   ({
     rows,
-    virtualItems,
-    totalSize,
+    virtualRowItems,
+    totalRowSize,
     editable = false,
     onCellClick,
     onCellDoubleClick,
@@ -175,6 +262,8 @@ export const TableBody = memo(
     stopEditing,
     isCellFocused,
     isCellEditing,
+    focusedCellKey,
+    editingCellKey,
     changes,
     pinnedColumns = [],
     getColumnSize,
@@ -195,15 +284,40 @@ export const TableBody = memo(
       return offsets;
     }, [pinnedColumns, getColumnSize, enableSelection]);
 
+    // Stable callback for toggling row selection
+    // This uses the row from the closure, so each row gets its own stable callback
+    const toggleHandlersRef = useRef(
+      new Map<string, (selected: boolean) => void>()
+    );
+
+    // Get or create a stable toggle handler for a row
+    const getToggleHandler = useCallback((row: Row<TableRowData>) => {
+      let handler = toggleHandlersRef.current.get(row.id);
+      if (!handler) {
+        handler = (selected: boolean) => row.toggleSelected(selected);
+        toggleHandlersRef.current.set(row.id, handler);
+      }
+      return handler;
+    }, []);
+
     return (
       <tbody>
-        {/* Padding row for virtualization - top spacer */}
-        {virtualItems.length > 0 && virtualItems[0].start > 0 && (
-          <tr style={{ height: virtualItems[0].start }} />
+        {/* Top spacer - use a single row with height */}
+        {virtualRowItems.length > 0 && virtualRowItems[0].start > 0 && (
+          <tr aria-hidden="true">
+            <td
+              colSpan={1000}
+              style={{
+                height: virtualRowItems[0].start,
+                padding: 0,
+                border: 'none',
+              }}
+            />
+          </tr>
         )}
 
         {/* Render only visible rows */}
-        {virtualItems.map((virtualItem) => {
+        {virtualRowItems.map((virtualItem) => {
           const row = rows[virtualItem.index];
           if (!row) return null;
 
@@ -219,20 +333,29 @@ export const TableBody = memo(
           if (isGroupRow) {
             return (
               <GroupRow
-                key={`group-${virtualItem.index}`}
+                key={`group-${rowId}`}
                 row={row}
                 isExpanded={row.getIsExpanded()}
               />
             );
           }
 
+          // Calculate cell keys for this row to detect focus/edit changes
+          const rowFocusedCellKey = focusedCellKey?.startsWith(`${row.id}:`)
+            ? focusedCellKey
+            : null;
+          const rowEditingCellKey = editingCellKey?.startsWith(`${row.id}:`)
+            ? editingCellKey
+            : null;
+
           return (
             <DataRow
-              key={`row-${virtualItem.index}-${rowId}`}
+              key={rowId}
               row={row}
-              rowIndex={virtualItem.index}
+              dataIndex={virtualItem.index}
               isDeleted={isDeleted}
               isNewRow={isNewRow}
+              isSelected={row.getIsSelected()}
               change={change}
               editable={editable}
               onCellClick={onCellClick}
@@ -241,24 +364,34 @@ export const TableBody = memo(
               stopEditing={stopEditing}
               isCellFocused={isCellFocused}
               isCellEditing={isCellEditing}
+              focusedCellKey={rowFocusedCellKey}
+              editingCellKey={rowEditingCellKey}
               pinnedColumns={pinnedColumns}
               pinnedOffsets={pinnedOffsets}
               enableSelection={enableSelection}
               onDragStart={onDragStart}
               isInDragRange={isInDragRange?.(virtualItem.index)}
+              onToggleSelected={getToggleHandler(row)}
             />
           );
         })}
 
-        {/* Padding row for virtualization - bottom spacer */}
-        {virtualItems.length > 0 &&
-          totalSize - virtualItems[virtualItems.length - 1].end > 0 && (
-            <tr
+        {/* Bottom spacer */}
+        {virtualRowItems.length > 0 && (
+          <tr aria-hidden="true">
+            <td
+              colSpan={1000}
               style={{
-                height: totalSize - virtualItems[virtualItems.length - 1].end,
+                height: Math.max(
+                  0,
+                  totalRowSize - virtualRowItems[virtualRowItems.length - 1].end
+                ),
+                padding: 0,
+                border: 'none',
               }}
             />
-          )}
+          </tr>
+        )}
       </tbody>
     );
   }

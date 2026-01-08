@@ -696,7 +696,7 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
       data-tour-target="sidebar"
     >
       {/* Search */}
-      <div className="p-2">
+      <div className="p-1.5">
         <div className="relative">
           <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
           <input
@@ -709,14 +709,14 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
-            className="border-input bg-background placeholder:text-muted-foreground focus:ring-ring w-full rounded-md border py-1.5 pr-3 pl-8 text-sm focus:ring-2 focus:outline-none"
+            className="border-input bg-background placeholder:text-muted-foreground focus:ring-ring w-full rounded-md border py-1 pr-3 pl-8 text-sm focus:ring-2 focus:outline-none"
           />
         </div>
       </div>
 
       {/* Sort and Filter Controls */}
       <ScrollArea className="w-full border-b">
-        <div className="flex min-w-0 items-center gap-1 px-2 pb-2">
+        <div className="flex min-w-0 items-center gap-1 px-1.5 pb-1.5">
           {/* Sort Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -814,7 +814,7 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
       {/* Schema Tree */}
       <ScrollArea className="min-h-0 min-w-0 flex-1">
         <div
-          className="min-w-0 overflow-hidden p-2"
+          className="min-w-0 overflow-hidden p-1.5"
           style={{
             fontFamily: tableFont.family || undefined,
             fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
@@ -1055,7 +1055,7 @@ function SchemaSection({
       {showSchemaHeader && (
         <button
           onClick={onToggleSchema}
-          className="text-muted-foreground hover:bg-accent/50 flex w-full items-center gap-1.5 rounded-sm px-1.5 py-1 text-xs font-medium tracking-wide uppercase"
+          className="text-muted-foreground hover:bg-accent/50 flex w-full items-center gap-1.5 rounded-sm px-1.5 py-0.5 text-xs font-medium tracking-wide uppercase"
         >
           {isSchemaExpanded ? (
             <ChevronDown className="h-3 w-3" />
@@ -1290,7 +1290,7 @@ function TableItem({
         <button
           onClick={onClick}
           className={cn(
-            'flex w-full items-center gap-1.5 overflow-hidden rounded px-1.5 py-1 text-[13px] transition-colors',
+            'flex w-full items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 text-[13px] transition-colors',
             isSelected
               ? 'bg-primary/15 text-primary font-medium'
               : 'hover:bg-accent/50 text-foreground/90',
@@ -1468,7 +1468,7 @@ interface TriggerItemProps {
 
 function TriggerItem({ trigger }: TriggerItemProps) {
   return (
-    <div className="text-foreground/90 hover:bg-accent/50 flex w-full items-center gap-1.5 rounded px-1.5 py-1 text-[13px] transition-colors">
+    <div className="text-foreground/90 hover:bg-accent/50 flex w-full items-center gap-1.5 rounded px-1.5 py-0.5 text-[13px] transition-colors">
       <Zap className="text-muted-foreground/70 h-3.5 w-3.5 shrink-0" />
       <span className="truncate">{trigger.name}</span>
       <span className="text-muted-foreground/60 ml-auto text-[11px]">

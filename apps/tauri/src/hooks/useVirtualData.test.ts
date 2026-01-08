@@ -21,13 +21,22 @@ function generateRows(count: number): VirtualRowData[] {
   }));
 }
 
+// Helper to advance timers and flush updates
+async function flushDebounce() {
+  await act(async () => {
+    vi.advanceTimersByTime(20); // Slightly more than the 16ms debounce
+  });
+}
+
 describe('useVirtualData', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   describe('initial state', () => {
@@ -80,7 +89,7 @@ describe('useVirtualData', () => {
   });
 
   describe('getRow', () => {
-    it('should return row when within retained range', () => {
+    it('should return row when within retained range', async () => {
       const rows = generateRows(200);
       const { result } = renderHook(() =>
         useVirtualData({
@@ -95,13 +104,16 @@ describe('useVirtualData', () => {
         })
       );
 
+      // Wait for debounced range update
+      await flushDebounce();
+
       // Row at index 50 should be accessible (within visible range)
       const row = result.current.getRow(50);
       expect(row).toBeDefined();
       expect(row?.id).toBe(50);
     });
 
-    it('should return undefined for rows outside retained range when aggressive release is enabled', () => {
+    it('should return undefined for rows outside retained range when aggressive release is enabled', async () => {
       const rows = generateRows(500);
       const { result, rerender } = renderHook(
         ({ visibleRange }) =>
@@ -121,11 +133,16 @@ describe('useVirtualData', () => {
         }
       );
 
+      // Wait for initial debounced range update
+      await flushDebounce();
+
       // Row at index 0 should be undefined when visible range is 200-220
       // with aggressive release and small buffer
       act(() => {
         rerender({ visibleRange: { startIndex: 200, endIndex: 220 } });
       });
+
+      await flushDebounce();
 
       // Check that a row far from the visible range returns undefined with getRow
       // However, getRow accesses allRows directly based on retainedRange
@@ -152,7 +169,7 @@ describe('useVirtualData', () => {
   });
 
   describe('isRowInMemory', () => {
-    it('should return true for rows within retained range', () => {
+    it('should return true for rows within retained range', async () => {
       const rows = generateRows(200);
       const { result } = renderHook(() =>
         useVirtualData({
@@ -167,11 +184,14 @@ describe('useVirtualData', () => {
         })
       );
 
+      // Wait for debounced range update
+      await flushDebounce();
+
       // Row in visible range should be in memory
       expect(result.current.isRowInMemory(60)).toBe(true);
     });
 
-    it('should return false for rows outside retained range with aggressive release', () => {
+    it('should return false for rows outside retained range with aggressive release', async () => {
       const rows = generateRows(500);
       const { result } = renderHook(() =>
         useVirtualData({
@@ -186,6 +206,9 @@ describe('useVirtualData', () => {
           },
         })
       );
+
+      // Wait for debounced range update
+      await flushDebounce();
 
       // Row far from visible range should not be in memory
       expect(result.current.isRowInMemory(0)).toBe(false);
@@ -212,7 +235,7 @@ describe('useVirtualData', () => {
   });
 
   describe('stats', () => {
-    it('should provide accurate memory statistics', () => {
+    it('should provide accurate memory statistics', async () => {
       const rows = generateRows(1000);
       const { result } = renderHook(() =>
         useVirtualData({
@@ -226,6 +249,9 @@ describe('useVirtualData', () => {
           },
         })
       );
+
+      // Wait for debounced range update
+      await flushDebounce();
 
       const { stats } = result.current;
 
@@ -259,7 +285,7 @@ describe('useVirtualData', () => {
   });
 
   describe('releaseOutOfBufferRows', () => {
-    it('should release rows outside the buffer', () => {
+    it('should release rows outside the buffer', async () => {
       const rows = generateRows(500);
       const { result, rerender } = renderHook(
         ({ visibleRange }) =>
@@ -279,12 +305,18 @@ describe('useVirtualData', () => {
         }
       );
 
+      // Wait for initial debounced range update
+      await flushDebounce();
+
       const initialRowsInMemory = result.current.stats.rowsInMemory;
 
       // Move visible range to the end
       act(() => {
         rerender({ visibleRange: { startIndex: 450, endIndex: 480 } });
       });
+
+      // Wait for debounced range update
+      await flushDebounce();
 
       // With non-aggressive release, range should have expanded
       const expandedRowsInMemory = result.current.stats.rowsInMemory;
@@ -337,7 +369,7 @@ describe('useVirtualData', () => {
   });
 
   describe('getRetainedRange', () => {
-    it('should return the current retained range', () => {
+    it('should return the current retained range', async () => {
       const rows = generateRows(200);
       const { result } = renderHook(() =>
         useVirtualData({
@@ -352,6 +384,9 @@ describe('useVirtualData', () => {
         })
       );
 
+      // Wait for debounced range update
+      await flushDebounce();
+
       const range = result.current.getRetainedRange();
 
       expect(range.start).toBeLessThanOrEqual(50);
@@ -360,7 +395,7 @@ describe('useVirtualData', () => {
   });
 
   describe('visible range changes', () => {
-    it('should update retained range when scrolling', () => {
+    it('should update retained range when scrolling', async () => {
       const rows = generateRows(500);
       const { result, rerender } = renderHook(
         ({ visibleRange }) =>
@@ -379,6 +414,9 @@ describe('useVirtualData', () => {
         }
       );
 
+      // Wait for initial debounced range update
+      await flushDebounce();
+
       const initialRange = result.current.getRetainedRange();
       expect(initialRange.start).toBe(0);
 
@@ -387,12 +425,15 @@ describe('useVirtualData', () => {
         rerender({ visibleRange: { startIndex: 100, endIndex: 130 } });
       });
 
+      // Wait for debounced range update
+      await flushDebounce();
+
       const newRange = result.current.getRetainedRange();
       expect(newRange.start).toBeLessThanOrEqual(100);
       expect(newRange.end).toBeGreaterThanOrEqual(130);
     });
 
-    it('should expand range when scrolling with non-aggressive release', () => {
+    it('should expand range when scrolling with non-aggressive release', async () => {
       const rows = generateRows(300);
       const { result, rerender } = renderHook(
         ({ visibleRange }) =>
@@ -412,12 +453,18 @@ describe('useVirtualData', () => {
         }
       );
 
+      // Wait for initial debounced range update
+      await flushDebounce();
+
       const initialRange = result.current.getRetainedRange();
 
       // Scroll to different location
       act(() => {
         rerender({ visibleRange: { startIndex: 150, endIndex: 170 } });
       });
+
+      // Wait for debounced range update
+      await flushDebounce();
 
       const newRange = result.current.getRetainedRange();
 
@@ -426,7 +473,7 @@ describe('useVirtualData', () => {
       expect(newRange.end).toBeGreaterThanOrEqual(170 + 10); // visible + buffer
     });
 
-    it('should shrink range immediately with aggressive release', () => {
+    it('should shrink range immediately with aggressive release', async () => {
       const rows = generateRows(300);
       const { result, rerender } = renderHook(
         ({ visibleRange }) =>
@@ -446,10 +493,16 @@ describe('useVirtualData', () => {
         }
       );
 
+      // Wait for initial debounced range update
+      await flushDebounce();
+
       // Scroll to a completely different location
       act(() => {
         rerender({ visibleRange: { startIndex: 200, endIndex: 220 } });
       });
+
+      // Wait for debounced range update
+      await flushDebounce();
 
       const newRange = result.current.getRetainedRange();
 
@@ -519,7 +572,7 @@ describe('useVirtualData', () => {
   });
 
   describe('callback', () => {
-    it('should call onRowsNeeded when rows might be needed', () => {
+    it('should call onRowsNeeded when rows might be needed', async () => {
       const rows = generateRows(500);
       const onRowsNeeded = vi.fn();
 
@@ -542,10 +595,16 @@ describe('useVirtualData', () => {
         }
       );
 
+      // Wait for initial debounced range update
+      await flushDebounce();
+
       // Scroll to a new area outside previous retained range
       act(() => {
         rerender({ visibleRange: { startIndex: 200, endIndex: 230 } });
       });
+
+      // Wait for debounced range update
+      await flushDebounce();
 
       // onRowsNeeded should have been called
       expect(onRowsNeeded).toHaveBeenCalled();

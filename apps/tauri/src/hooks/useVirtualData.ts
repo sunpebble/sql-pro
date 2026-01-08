@@ -163,11 +163,22 @@ const DEFAULT_BUFFER_ABOVE = 50;
 const DEFAULT_BUFFER_BELOW = 50;
 const DEFAULT_MIN_ROWS = 100;
 const DEFAULT_MAX_MEMORY = 5 * 1024 * 1024; // 5MB
+// Debounce delay for range updates during rapid scrolling
+const RANGE_UPDATE_DEBOUNCE_MS = 16; // ~1 frame at 60fps
 
 /**
  * Estimate memory size of a single row
+ * Optimized version with caching for repeated row structures
  */
+const rowSizeCache = new WeakMap<VirtualRowData, number>();
+
 function estimateRowSize(row: VirtualRowData): number {
+  // Check cache first for performance
+  const cached = rowSizeCache.get(row);
+  if (cached !== undefined) {
+    return cached;
+  }
+
   let size = BYTE_SIZES.OBJECT_OVERHEAD;
 
   for (const [key, value] of Object.entries(row)) {
@@ -200,6 +211,9 @@ function estimateRowSize(row: VirtualRowData): number {
     // Reference overhead
     size += BYTE_SIZES.REFERENCE;
   }
+
+  // Cache the result
+  rowSizeCache.set(row, size);
 
   return size;
 }
@@ -241,6 +255,14 @@ export function useVirtualData<T extends VirtualRowData>(
   // Track if memory limit was reached
   const memoryLimitReachedRef = useRef(false);
 
+  // Debounce timer for range updates during rapid scrolling
+  const rangeUpdateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  // Track pending range update for debouncing
+  const pendingRangeRef = useRef<{ start: number; end: number } | null>(null);
+
   // Calculate the desired retained range based on visible range + buffer
   const desiredRange = useMemo(() => {
     const start = Math.max(0, visibleRange.startIndex - bufferAbove);
@@ -258,6 +280,7 @@ export function useVirtualData<T extends VirtualRowData>(
   ]);
 
   // Create the windowed rows array
+  // Optimized to avoid recalculating row sizes on every render
   const windowedRows = useMemo<T[]>(() => {
     if (!enabled || allRows.length === 0) {
       return allRows;
@@ -269,32 +292,53 @@ export function useVirtualData<T extends VirtualRowData>(
     }
 
     // Create a new array with only the retained range
-    const retained: T[] = [];
     const start = Math.max(0, retainedRange.start);
     const end = Math.min(allRows.length, retainedRange.end);
+    const rangeLength = end - start;
 
-    // Calculate memory usage for the retained range
-    let totalMemory = 0;
+    // For small ranges, calculate memory directly
+    // For larger ranges, use sampling to estimate if we'll exceed memory limit
+    if (rangeLength <= minRowsInMemory) {
+      const retained = allRows.slice(start, end);
+      releasedRowsRef.current = allRows.length - retained.length;
+      memoryLimitReachedRef.current = false;
+      return retained;
+    }
 
-    for (let i = start; i < end; i++) {
-      const row = allRows[i];
-      if (row) {
-        const rowSize = estimateRowSize(row);
-        if (
-          totalMemory + rowSize > maxMemoryBytes &&
-          i > start + minRowsInMemory
-        ) {
-          // Memory limit reached, stop adding rows
-          memoryLimitReachedRef.current = true;
-          break;
-        }
-        totalMemory += rowSize;
-        retained.push(row);
+    // Sample-based memory estimation for large ranges
+    const sampleSize = Math.min(50, Math.floor(rangeLength / 10));
+    const sampleStep = Math.floor(rangeLength / sampleSize);
+    let sampleTotalSize = 0;
+
+    for (let i = 0; i < sampleSize; i++) {
+      const idx = start + i * sampleStep;
+      if (idx < end && allRows[idx]) {
+        sampleTotalSize += estimateRowSize(allRows[idx]);
       }
     }
 
+    const avgRowSize = sampleTotalSize / sampleSize;
+    const estimatedTotalSize = avgRowSize * rangeLength;
+
+    // If estimated size is within budget, return the full range
+    if (estimatedTotalSize <= maxMemoryBytes) {
+      const retained = allRows.slice(start, end);
+      releasedRowsRef.current = allRows.length - retained.length;
+      memoryLimitReachedRef.current = false;
+      return retained;
+    }
+
+    // Memory limit would be exceeded - calculate how many rows we can keep
+    const maxRows = Math.max(
+      minRowsInMemory,
+      Math.floor(maxMemoryBytes / avgRowSize)
+    );
+    const actualEnd = Math.min(end, start + maxRows);
+    const retained = allRows.slice(start, actualEnd);
+
     // Track released rows
     releasedRowsRef.current = allRows.length - retained.length;
+    memoryLimitReachedRef.current = true;
 
     return retained;
   }, [enabled, allRows, retainedRange, minRowsInMemory, maxMemoryBytes]);
@@ -319,26 +363,53 @@ export function useVirtualData<T extends VirtualRowData>(
 
     // Only update if range actually changed
     if (newStart !== retainedRange.start || newEnd !== retainedRange.end) {
-      // If aggressively releasing, immediately update the range
-      if (aggressiveRelease) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
-        setRetainedRange({ start: newStart, end: newEnd });
-      } else {
-        // Keep the range expanded (don't shrink, only grow)
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
-        setRetainedRange((prev) => ({
-          start: Math.min(prev.start, newStart),
-          end: Math.max(prev.end, newEnd),
-        }));
+      // Store the pending range
+      pendingRangeRef.current = { start: newStart, end: newEnd };
+
+      // Clear any existing timer
+      if (rangeUpdateTimerRef.current) {
+        clearTimeout(rangeUpdateTimerRef.current);
       }
 
-      // Notify if rows are needed that might have been released
-      if (onRowsNeeded && aggressiveRelease) {
-        if (newStart < retainedRange.start || newEnd > retainedRange.end) {
-          onRowsNeeded(newStart, newEnd);
+      // Debounce the range update to avoid excessive re-renders during rapid scrolling
+      rangeUpdateTimerRef.current = setTimeout(() => {
+        const pending = pendingRangeRef.current;
+        if (!pending) return;
+
+        // If aggressively releasing, immediately update the range
+        if (aggressiveRelease) {
+          setRetainedRange({ start: pending.start, end: pending.end });
+        } else {
+          // Keep the range expanded (don't shrink, only grow)
+
+          setRetainedRange((prev) => ({
+            start: Math.min(prev.start, pending.start),
+            end: Math.max(prev.end, pending.end),
+          }));
         }
-      }
+
+        // Notify if rows are needed that might have been released
+        if (onRowsNeeded && aggressiveRelease) {
+          if (
+            pending.start < retainedRange.start ||
+            pending.end > retainedRange.end
+          ) {
+            onRowsNeeded(pending.start, pending.end);
+          }
+        }
+
+        pendingRangeRef.current = null;
+        rangeUpdateTimerRef.current = null;
+      }, RANGE_UPDATE_DEBOUNCE_MS);
     }
+
+    // Cleanup timer on unmount or dependency change
+    return () => {
+      if (rangeUpdateTimerRef.current) {
+        clearTimeout(rangeUpdateTimerRef.current);
+        rangeUpdateTimerRef.current = null;
+      }
+    };
   }, [
     enabled,
     allRows.length,

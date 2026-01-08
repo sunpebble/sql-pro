@@ -232,7 +232,7 @@ const ConnectionTab = memo(
                   ref={setNodeRef}
                   aria-selected={isActive}
                   className={cn(
-                    'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-2 text-sm transition-colors',
+                    'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-1.5 text-sm transition-colors',
                     isActive
                       ? 'bg-background text-foreground'
                       : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground',

@@ -207,15 +207,11 @@ export function WelcomeTour({
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 z-[9998] bg-black/50 transition-opacity duration-300"
-        onClick={onSkip}
-        aria-hidden="true"
+      {/* Spotlight overlay with cutout for current target */}
+      <SpotlightHighlight
+        targetSelector={step.target}
+        onOverlayClick={onSkip}
       />
-
-      {/* Spotlight for current target */}
-      <SpotlightHighlight targetSelector={step.target} />
 
       {/* Tooltip */}
       <div
@@ -314,9 +310,19 @@ export function WelcomeTour({
 
 /**
  * Spotlight highlight component to highlight the target element
+ * Uses SVG mask to create a true cutout effect
  */
-function SpotlightHighlight({ targetSelector }: { targetSelector: string }) {
+function SpotlightHighlight({
+  targetSelector,
+  onOverlayClick,
+}: {
+  targetSelector: string;
+  onOverlayClick?: () => void;
+}) {
   const [rect, setRect] = useState<DOMRect | null>(null);
+  const maskIdRef = useRef(
+    `welcome-spotlight-mask-${Math.random().toString(36).slice(2)}`
+  );
 
   useEffect(() => {
     const targetElement = document.querySelector(targetSelector);
@@ -341,17 +347,62 @@ function SpotlightHighlight({ targetSelector }: { targetSelector: string }) {
   const padding = 8;
   const borderRadius = 8;
 
+  const spotlightRect = {
+    top: rect.top - padding,
+    left: rect.left - padding,
+    width: rect.width + padding * 2,
+    height: rect.height + padding * 2,
+  };
+
   return (
-    <div
-      className="ring-primary/50 pointer-events-none fixed z-[9999] rounded-lg ring-4"
-      style={{
-        top: rect.top - padding,
-        left: rect.left - padding,
-        width: rect.width + padding * 2,
-        height: rect.height + padding * 2,
-        borderRadius,
-        boxShadow: '0 0 0 4000px rgba(0, 0, 0, 0.5)',
-      }}
-    />
+    <>
+      {/* SVG overlay with spotlight cutout */}
+      <svg
+        className="fixed inset-0 z-[9998] h-full w-full"
+        onClick={onOverlayClick}
+        aria-hidden="true"
+      >
+        <defs>
+          <mask id={maskIdRef.current}>
+            {/* White background = visible overlay */}
+            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+            {/* Black rectangle = transparent cutout */}
+            <rect
+              x={spotlightRect.left}
+              y={spotlightRect.top}
+              width={spotlightRect.width}
+              height={spotlightRect.height}
+              rx={borderRadius}
+              ry={borderRadius}
+              fill="black"
+            />
+          </mask>
+        </defs>
+        {/* Overlay rectangle with mask applied */}
+        <rect
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          fill="rgba(0, 0, 0, 0.85)"
+          mask={`url(#${maskIdRef.current})`}
+          style={{ cursor: 'pointer' }}
+        />
+      </svg>
+
+      {/* Spotlight ring/border highlight */}
+      <div
+        className="pointer-events-none fixed z-[9999] border-2 border-white/80"
+        style={{
+          top: spotlightRect.top,
+          left: spotlightRect.left,
+          width: spotlightRect.width,
+          height: spotlightRect.height,
+          borderRadius,
+          boxShadow:
+            '0 0 0 4px rgba(255, 255, 255, 0.15), 0 0 40px 12px rgba(255, 255, 255, 0.2), inset 0 0 20px 4px rgba(255, 255, 255, 0.05)',
+        }}
+      />
+    </>
   );
 }

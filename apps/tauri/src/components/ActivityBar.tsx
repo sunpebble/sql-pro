@@ -83,13 +83,13 @@ export function ActivityBar({
                 data-tour-target={item.tourTarget}
                 onClick={() => onViewChange(item.id)}
                 className={cn(
-                  'relative flex h-12 w-full items-center justify-center transition-colors',
+                  'relative flex h-11 w-full items-center justify-center transition-colors',
                   isActive
                     ? 'text-primary bg-background shadow-[inset_2px_0_0_0_hsl(var(--primary))]'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-[18px] w-[18px]" />
                 {badgeCount !== undefined && badgeCount > 0 && (
                   <span className="bg-primary text-primary-foreground absolute top-1.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-medium">
                     {badgeCount > 99 ? '99+' : badgeCount}

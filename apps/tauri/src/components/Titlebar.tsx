@@ -46,7 +46,7 @@ export function Titlebar() {
 
   return (
     <div
-      className="titlebar border-border/50 flex h-10 shrink-0 items-center border-b"
+      className="titlebar border-border/50 flex h-9 shrink-0 items-center border-b"
       data-tauri-drag-region
     >
       {/* macOS traffic light padding - approximately 70px on macOS */}

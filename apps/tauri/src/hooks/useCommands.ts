@@ -172,6 +172,65 @@ export function useCommands() {
         return;
       }
 
+      // View navigation shortcuts - work everywhere including in Monaco editor
+      // These use Cmd+Ctrl+1-5 which don't conflict with editor shortcuts
+      const dataBrowserBinding = getShortcut('nav.data-browser');
+      if (matchesBinding(e, dataBrowserBinding)) {
+        e.preventDefault();
+        document.querySelector<HTMLButtonElement>('[data-tab="data"]')?.click();
+        return;
+      }
+
+      const queryEditorBinding = getShortcut('nav.query-editor');
+      if (matchesBinding(e, queryEditorBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="query"]')
+          ?.click();
+        return;
+      }
+
+      // ER Diagram shortcut
+      const erDiagramBinding = getShortcut('nav.er-diagram');
+      if (matchesBinding(e, erDiagramBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="diagram"]')
+          ?.click();
+        return;
+      }
+
+      // Schema Compare shortcut
+      const schemaCompareBinding = getShortcut('nav.schema-compare');
+      if (matchesBinding(e, schemaCompareBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="compare"]')
+          ?.click();
+        return;
+      }
+
+      // Data Diff shortcut
+      const dataDiffBinding = getShortcut('nav.data-diff');
+      if (matchesBinding(e, dataDiffBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="dataDiff"]')
+          ?.click();
+        return;
+      }
+
+      // Toggle sidebar shortcut - works everywhere
+      const toggleSidebarBinding = getShortcut('nav.toggle-sidebar');
+      if (matchesBinding(e, toggleSidebarBinding)) {
+        e.preventDefault();
+        const sidebarToggle = document.querySelector<HTMLButtonElement>(
+          'button[data-action="toggle-sidebar"]'
+        );
+        sidebarToggle?.click();
+        return;
+      }
+
       // Skip other shortcuts if typing in input
       if (isInputField) return;
 
@@ -184,17 +243,6 @@ export function useCommands() {
             queryKey: ['tableData', activeConnectionId],
           });
         }
-        return;
-      }
-
-      // Toggle sidebar shortcut
-      const toggleSidebarBinding = getShortcut('nav.toggle-sidebar');
-      if (matchesBinding(e, toggleSidebarBinding)) {
-        e.preventDefault();
-        const sidebarToggle = document.querySelector<HTMLButtonElement>(
-          'button[data-action="toggle-sidebar"]'
-        );
-        sidebarToggle?.click();
         return;
       }
 
@@ -271,53 +319,6 @@ export function useCommands() {
           'button[data-action="export-data"]'
         );
         exportButton?.click();
-        return;
-      }
-
-      // Navigation shortcuts for tab switching
-      const dataBrowserBinding = getShortcut('nav.data-browser');
-      if (matchesBinding(e, dataBrowserBinding)) {
-        e.preventDefault();
-        document.querySelector<HTMLButtonElement>('[data-tab="data"]')?.click();
-        return;
-      }
-
-      const queryEditorBinding = getShortcut('nav.query-editor');
-      if (matchesBinding(e, queryEditorBinding)) {
-        e.preventDefault();
-        document
-          .querySelector<HTMLButtonElement>('[data-tab="query"]')
-          ?.click();
-        return;
-      }
-
-      // ER Diagram shortcut
-      const erDiagramBinding = getShortcut('nav.er-diagram');
-      if (matchesBinding(e, erDiagramBinding)) {
-        e.preventDefault();
-        document
-          .querySelector<HTMLButtonElement>('[data-tab="diagram"]')
-          ?.click();
-        return;
-      }
-
-      // Schema Compare shortcut
-      const schemaCompareBinding = getShortcut('nav.schema-compare');
-      if (matchesBinding(e, schemaCompareBinding)) {
-        e.preventDefault();
-        document
-          .querySelector<HTMLButtonElement>('[data-tab="compare"]')
-          ?.click();
-        return;
-      }
-
-      // Data Diff shortcut
-      const dataDiffBinding = getShortcut('nav.data-diff');
-      if (matchesBinding(e, dataDiffBinding)) {
-        e.preventDefault();
-        document
-          .querySelector<HTMLButtonElement>('[data-tab="dataDiff"]')
-          ?.click();
         return;
       }
 
@@ -457,8 +458,9 @@ export function useCommands() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    // Use capture phase to handle shortcuts before Monaco editor intercepts them
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [toggle, openConnectionSwitcher]);
 
   // Register commands only once on mount

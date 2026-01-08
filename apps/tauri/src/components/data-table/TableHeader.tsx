@@ -67,7 +67,7 @@ const HeaderCell = memo(
     const resizeHandleClickedRef = useRef<boolean>(false);
 
     if (header.isPlaceholder) {
-      return <th className="h-9" />;
+      return <th className="h-7" />;
     }
 
     const canSort = header.column.getCanSort();
@@ -149,7 +149,7 @@ const HeaderCell = memo(
           'group border-border relative border-r border-b',
           'bg-background whitespace-nowrap select-none',
           canSort && 'hover:bg-muted cursor-pointer',
-          columnSchema ? 'min-h-14' : 'h-9',
+          columnSchema ? 'min-h-10' : 'h-7',
           // Pinned column styles
           isPinned && 'z-20',
           isLastPinned &&
@@ -158,7 +158,7 @@ const HeaderCell = memo(
         style={pinnedStyles}
         onClick={handleClick}
       >
-        <div className="flex items-center px-2 py-1">
+        <div className="flex items-center px-1.5 py-0.5">
           {/* Column content */}
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             {/* Column name row */}
@@ -390,7 +390,7 @@ export const TableHeader = memo(
           <tr key={headerGroup.id}>
             {/* Selection column header */}
             {enableSelection && (
-              <th className="bg-background sticky left-0 z-10 h-9 border-r px-3">
+              <th className="bg-background sticky left-0 z-10 h-7 border-r px-2">
                 <Checkbox
                   checked={table.getIsAllPageRowsSelected()}
                   indeterminate={

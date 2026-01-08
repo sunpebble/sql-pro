@@ -30,7 +30,7 @@ export function Toolbar() {
 
   return (
     <div
-      className="flex shrink-0 items-center gap-1"
+      className="flex shrink-0 items-center gap-0.5"
       data-tour-target="toolbar"
     >
       {/* Pending Changes Indicator - Clickable */}

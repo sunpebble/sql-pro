@@ -21,14 +21,61 @@ interface StackFrame {
 }
 
 // Parse stack trace into structured frames
+// Supports multiple formats:
+// - V8/Node.js: "at functionName (file:line:col)" or "at file:line:col"
+// - Safari/WebKit: "functionName@file:line:col" or "file:line:col"
+// - Firefox: "functionName@file:line:col"
 function parseStackTrace(stack: string): StackFrame[] {
-  const lines = stack.split('\n').slice(1);
+  const lines = stack.split('\n');
+
   return lines
-    .map((line) => {
+    .map((line, index) => {
       const trimmed = line.trim();
-      if (!trimmed.startsWith('at ')) {
+      if (!trimmed) {
+        return null;
+      }
+
+      // Skip the first line if it's just the error message (common in V8)
+      if (index === 0 && !trimmed.includes('@') && !trimmed.startsWith('at ')) {
+        return null;
+      }
+
+      // V8/Node.js format: "at functionName (file:line:col)" or "at file:line:col"
+      if (trimmed.startsWith('at ')) {
+        const content = trimmed.slice(3); // Remove "at "
+
+        // Try to match "functionName (location)" pattern
+        const parenIndex = content.lastIndexOf('(');
+        if (parenIndex !== -1 && content.endsWith(')')) {
+          const functionName = content.slice(0, parenIndex).trim();
+          const location = content.slice(parenIndex + 1, -1);
+          const locMatch = location.match(/^(.+):(\d+):(\d+)$/);
+          if (locMatch) {
+            return {
+              functionName: functionName || '(anonymous)',
+              fileName: locMatch[1],
+              lineNumber: locMatch[2],
+              columnNumber: locMatch[3],
+              raw: trimmed,
+            };
+          }
+        }
+
+        // Try to match direct "file:line:col" pattern
+        const locMatch = content.match(/^(.+):(\d+):(\d+)$/);
+        if (locMatch) {
+          return {
+            functionName: '(anonymous)',
+            fileName: locMatch[1],
+            lineNumber: locMatch[2],
+            columnNumber: locMatch[3],
+            raw: trimmed,
+          };
+        }
+
+        // Fallback for V8 format without location
         return {
-          functionName: '',
+          functionName: content || '(anonymous)',
           fileName: '',
           lineNumber: '',
           columnNumber: '',
@@ -36,28 +83,48 @@ function parseStackTrace(stack: string): StackFrame[] {
         };
       }
 
-      // Parse "at functionName (file:line:col)" or "at file:line:col"
-      const content = trimmed.slice(3); // Remove "at "
+      // Safari/WebKit and Firefox format: "functionName@file:line:col" or just "global code@file:line:col"
+      const atIndex = trimmed.indexOf('@');
+      if (atIndex !== -1) {
+        const functionName = trimmed.slice(0, atIndex) || '(anonymous)';
+        const location = trimmed.slice(atIndex + 1);
 
-      // Try to match "functionName (location)" pattern
-      const parenIndex = content.lastIndexOf('(');
-      if (parenIndex !== -1 && content.endsWith(')')) {
-        const functionName = content.slice(0, parenIndex).trim();
-        const location = content.slice(parenIndex + 1, -1);
+        // Try to match "file:line:col" pattern
         const locMatch = location.match(/^(.+):(\d+):(\d+)$/);
         if (locMatch) {
           return {
-            functionName: functionName || '(anonymous)',
+            functionName,
             fileName: locMatch[1],
             lineNumber: locMatch[2],
             columnNumber: locMatch[3],
             raw: trimmed,
           };
         }
+
+        // Try to match "file:line" pattern (no column)
+        const locMatchNoCol = location.match(/^(.+):(\d+)$/);
+        if (locMatchNoCol) {
+          return {
+            functionName,
+            fileName: locMatchNoCol[1],
+            lineNumber: locMatchNoCol[2],
+            columnNumber: '',
+            raw: trimmed,
+          };
+        }
+
+        // Fallback
+        return {
+          functionName,
+          fileName: location,
+          lineNumber: '',
+          columnNumber: '',
+          raw: trimmed,
+        };
       }
 
-      // Try to match direct "file:line:col" pattern
-      const locMatch = content.match(/^(.+):(\d+):(\d+)$/);
+      // Try to parse as just a location (Safari sometimes does this)
+      const locMatch = trimmed.match(/^(.+):(\d+):(\d+)$/);
       if (locMatch) {
         return {
           functionName: '(anonymous)',
@@ -68,15 +135,18 @@ function parseStackTrace(stack: string): StackFrame[] {
         };
       }
 
+      // Fallback: treat as function name or raw frame
       return {
-        functionName: '',
+        functionName: trimmed,
         fileName: '',
         lineNumber: '',
         columnNumber: '',
         raw: trimmed,
       };
     })
-    .filter((frame) => frame.raw.startsWith('at'));
+    .filter(
+      (frame): frame is StackFrame => frame !== null && frame.raw.length > 0
+    );
 }
 
 function formatFilePath(path: string): string {
