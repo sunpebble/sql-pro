@@ -1,0 +1,536 @@
+import type { RecentConnection } from '@shared/types';
+import type { ConnectionSettings } from '@/components/ConnectionSettingsDialog';
+import { useNavigate } from '@tanstack/react-router';
+import { useCallback, useEffect, useState } from 'react';
+import { ConnectionSettingsDialog } from '@/components/ConnectionSettingsDialog';
+import { ConnectionSwitcher } from '@/components/ConnectionSwitcher';
+import { DatabaseView } from '@/components/DatabaseView';
+import { PasswordDialog } from '@/components/PasswordDialog';
+import {
+  QueryExportDialog,
+  QueryImportDialog,
+  SchemaExportDialog,
+  SchemaImportDialog,
+} from '@/components/sharing';
+import { sqlPro } from '@/lib/api';
+import {
+  useChangesStore,
+  useConnectionStore,
+  useQueryTabsStore,
+  useTableDataStore,
+} from '@/stores';
+
+/**
+ * Database page route component.
+ * Displays the database view and handles navigation when disconnected.
+ * Now supports multiple database connections.
+ *
+ * Navigation:
+ * - Data Browser, SQL Query, ER Diagram, Schema Compare, and Data Diff tabs
+ *   are managed in DatabaseView component (not as separate routes)
+ */
+export function DatabasePage() {
+  const navigate = useNavigate();
+  const {
+    connection,
+    activeConnectionId,
+    addConnection,
+    setSchema,
+    // setActiveConnection is available but not used currently
+    setIsConnecting,
+    setIsLoadingSchema,
+    setError,
+    setRecentConnections,
+  } = useConnectionStore();
+
+  const { setActiveConnectionId: setTabsActiveConnection } =
+    useQueryTabsStore();
+  const { setActiveConnectionId: setTableDataActiveConnection } =
+    useTableDataStore();
+  // clearChangesForConnection available for future use
+  useChangesStore();
+
+  // Dialog states
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
+  const [pendingFilename, setPendingFilename] = useState<string>('');
+  const [pendingIsEncrypted, setPendingIsEncrypted] = useState(false);
+  const [pendingSettings, setPendingSettings] =
+    useState<ConnectionSettings | null>(null);
+
+  // Sharing dialog states
+  const [queryExportDialogOpen, setQueryExportDialogOpen] = useState(false);
+  const [queryImportDialogOpen, setQueryImportDialogOpen] = useState(false);
+  const [schemaExportDialogOpen, setSchemaExportDialogOpen] = useState(false);
+  const [schemaImportDialogOpen, setSchemaImportDialogOpen] = useState(false);
+
+  // Navigate back to welcome when no connections
+  useEffect(() => {
+    if (!connection && !activeConnectionId) {
+      navigate({ to: '/' });
+    }
+  }, [connection, activeConnectionId, navigate]);
+
+  // Sync active connection across stores
+  useEffect(() => {
+    if (activeConnectionId) {
+      setTabsActiveConnection(activeConnectionId);
+      setTableDataActiveConnection(activeConnectionId);
+    }
+  }, [
+    activeConnectionId,
+    setTabsActiveConnection,
+    setTableDataActiveConnection,
+  ]);
+
+  // Note: File change handling is done by useFileWatcher hook in App.tsx
+  // It handles schema refresh and query invalidation without causing sidebar flicker
+
+  // Connect to a database
+  const connectToDatabase = useCallback(
+    async (
+      path: string,
+      password?: string,
+      readOnly?: boolean,
+      settings?: ConnectionSettings
+    ) => {
+      setIsConnecting(true);
+      setError(null);
+
+      try {
+        const result = await sqlPro.db.open({ path, password, readOnly });
+
+        if (!result.success) {
+          if (result.needsPassword) {
+            // Try saved password first
+            const savedPasswordResult = await sqlPro.password.get({
+              dbPath: path,
+            });
+            if (savedPasswordResult.success && savedPasswordResult.password) {
+              setIsConnecting(false);
+              await connectToDatabase(path, savedPasswordResult.password);
+              return;
+            }
+
+            // Show password dialog
+            setPendingPath(path);
+            setPasswordDialogOpen(true);
+            setIsConnecting(false);
+            return;
+          }
+          setError(result.error || 'Failed to open database');
+          setIsConnecting(false);
+          return;
+        }
+
+        if (result.connection) {
+          // Save connection settings if provided
+          if (settings) {
+            await sqlPro.connection.update({
+              path: result.connection.path,
+              displayName: settings.displayName,
+              readOnly: settings.readOnly,
+            });
+          }
+
+          // Add connection to store (this will also set it as active)
+          addConnection({
+            id: result.connection.id,
+            path: result.connection.path,
+            filename: result.connection.filename,
+            isEncrypted: result.connection.isEncrypted,
+            isReadOnly: result.connection.isReadOnly,
+            status: 'connected',
+          });
+
+          // Load schema for this connection
+          setIsLoadingSchema(true);
+          const schemaResult = await sqlPro.db.getSchema({
+            connectionId: result.connection.id,
+          });
+
+          if (schemaResult.success) {
+            setSchema(result.connection.id, {
+              schemas: schemaResult.schemas || [],
+              tables: schemaResult.tables || [],
+              views: schemaResult.views || [],
+            });
+          } else {
+            console.error('Failed to load schema:', schemaResult.error);
+          }
+          setIsLoadingSchema(false);
+
+          // Refresh recent connections
+          const connectionsResult = await sqlPro.app.getRecentConnections();
+          if (connectionsResult.success && connectionsResult.connections) {
+            setRecentConnections(
+              connectionsResult.connections as RecentConnection[]
+            );
+          }
+
+          // Clear pending state
+          setPendingPath(null);
+          setPendingSettings(null);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setIsConnecting(false);
+      }
+    },
+    [
+      addConnection,
+      setSchema,
+      setIsConnecting,
+      setIsLoadingSchema,
+      setError,
+      setRecentConnections,
+    ]
+  );
+
+  // Listen for open-database-file events (from drag-and-drop on encrypted databases)
+  useEffect(() => {
+    const handleOpenDatabaseFile = (
+      event: CustomEvent<{
+        filePath: string;
+        filename: string;
+        isEncrypted: boolean;
+      }>
+    ) => {
+      const { filePath, filename, isEncrypted } = event.detail || {};
+      if (filePath && filename !== undefined) {
+        setPendingPath(filePath);
+        setPendingFilename(filename);
+        setPendingIsEncrypted(isEncrypted || false);
+        // For encrypted databases, show password dialog directly
+        // For non-encrypted, show settings dialog
+        if (isEncrypted) {
+          // Try saved password first
+          sqlPro.password
+            .get({ dbPath: filePath })
+            .then(
+              (savedPasswordResult: {
+                success: boolean;
+                password?: string;
+              }) => {
+                if (
+                  savedPasswordResult.success &&
+                  savedPasswordResult.password
+                ) {
+                  connectToDatabase(filePath, savedPasswordResult.password);
+                } else {
+                  setPasswordDialogOpen(true);
+                }
+              }
+            );
+        } else {
+          setSettingsDialogOpen(true);
+        }
+      }
+    };
+
+    window.addEventListener(
+      'open-database-file',
+      handleOpenDatabaseFile as EventListener
+    );
+    return () => {
+      window.removeEventListener(
+        'open-database-file',
+        handleOpenDatabaseFile as EventListener
+      );
+    };
+  }, [connectToDatabase]);
+
+  // Open database file dialog
+  const handleOpenDatabase = useCallback(async () => {
+    const result = await sqlPro.dialog.openFile();
+    if (result.success && result.filePath && !result.canceled) {
+      const filePath = result.filePath;
+      const filename = filePath.split('/').pop() || filePath;
+
+      // Check if encrypted by trying to open without password
+      setIsConnecting(true);
+      const probeResult = await sqlPro.db.open({ path: filePath });
+      setIsConnecting(false);
+
+      const isEncrypted = probeResult.needsPassword === true;
+
+      // Close the probe connection if it was opened successfully
+      // (we'll open it again properly after user confirms settings)
+      if (probeResult.success && probeResult.connection) {
+        await sqlPro.db.close({ connectionId: probeResult.connection.id });
+      }
+
+      // Show settings dialog for new connections
+      setPendingPath(filePath);
+      setPendingFilename(filename);
+      setPendingIsEncrypted(isEncrypted);
+      setSettingsDialogOpen(true);
+    }
+  }, [setIsConnecting]);
+
+  // Open a recent connection directly (skip file picker and settings dialog)
+  const handleOpenRecentConnection = useCallback(
+    async (conn: RecentConnection) => {
+      // For server databases (MySQL, PostgreSQL, Supabase), use connectionConfig
+      if (
+        conn.databaseType &&
+        conn.databaseType !== 'sqlite' &&
+        conn.connectionConfig
+      ) {
+        setIsConnecting(true);
+        setError(null);
+
+        try {
+          const result = await sqlPro.db.open({
+            config: conn.connectionConfig,
+          });
+
+          if (!result.success) {
+            setError(result.error || 'Failed to connect to database');
+            setIsConnecting(false);
+            return;
+          }
+
+          if (result.connection) {
+            addConnection({
+              id: result.connection.id,
+              path: result.connection.path,
+              filename: result.connection.filename,
+              isEncrypted: result.connection.isEncrypted,
+              isReadOnly: result.connection.isReadOnly,
+              status: 'connected',
+              databaseType:
+                result.connection.databaseType || conn.connectionConfig.type,
+            });
+
+            // Load schema
+            setIsLoadingSchema(true);
+            const schemaResult = await sqlPro.db.getSchema({
+              connectionId: result.connection.id,
+            });
+
+            if (schemaResult.success) {
+              setSchema(result.connection.id, {
+                schemas: schemaResult.schemas || [],
+                tables: schemaResult.tables || [],
+                views: schemaResult.views || [],
+              });
+            }
+            setIsLoadingSchema(false);
+
+            // Refresh recent connections
+            const connectionsResult = await sqlPro.app.getRecentConnections();
+            if (connectionsResult.success && connectionsResult.connections) {
+              setRecentConnections(
+                connectionsResult.connections as RecentConnection[]
+              );
+            }
+          }
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+          setIsConnecting(false);
+        }
+        return;
+      }
+
+      // For SQLite databases, use the original logic
+      const { path, isEncrypted, readOnly } = conn;
+      const filename = path.split('/').pop() || path;
+      setPendingPath(path);
+      setPendingFilename(filename);
+      setPendingIsEncrypted(isEncrypted);
+      setPendingSettings(
+        readOnly
+          ? { displayName: filename, readOnly, rememberPassword: false }
+          : null
+      );
+
+      if (isEncrypted) {
+        // Check for saved password
+        const savedPasswordResult = await sqlPro.password.get({ dbPath: path });
+        if (savedPasswordResult.success && savedPasswordResult.password) {
+          await connectToDatabase(path, savedPasswordResult.password, readOnly);
+        } else {
+          setPasswordDialogOpen(true);
+        }
+      } else {
+        await connectToDatabase(path, undefined, readOnly);
+      }
+    },
+    [
+      connectToDatabase,
+      setIsConnecting,
+      setError,
+      addConnection,
+      setSchema,
+      setIsLoadingSchema,
+      setRecentConnections,
+    ]
+  );
+
+  // Handle settings dialog submit
+  const handleSettingsSubmit = useCallback(
+    async (settings: ConnectionSettings) => {
+      if (!pendingPath) return;
+
+      setSettingsDialogOpen(false);
+      setPendingSettings(settings);
+
+      if (pendingIsEncrypted) {
+        // Check for saved password
+        const savedPasswordResult = await sqlPro.password.get({
+          dbPath: pendingPath,
+        });
+        if (savedPasswordResult.success && savedPasswordResult.password) {
+          await connectToDatabase(
+            pendingPath,
+            savedPasswordResult.password,
+            settings.readOnly,
+            settings
+          );
+        } else {
+          setPasswordDialogOpen(true);
+        }
+      } else {
+        await connectToDatabase(
+          pendingPath,
+          undefined,
+          settings.readOnly,
+          settings
+        );
+      }
+    },
+    [pendingPath, pendingIsEncrypted, connectToDatabase]
+  );
+
+  // Handle password dialog submit
+  const handlePasswordSubmit = useCallback(
+    async (password: string, remember: boolean) => {
+      if (!pendingPath) return;
+
+      setPasswordDialogOpen(false);
+
+      const shouldRemember =
+        remember || pendingSettings?.rememberPassword || false;
+
+      if (shouldRemember) {
+        const saveResult = await sqlPro.password.save({
+          dbPath: pendingPath,
+          password,
+        });
+        if (!saveResult.success) {
+          console.error('Failed to save password:', saveResult.error);
+        }
+      }
+
+      await connectToDatabase(
+        pendingPath,
+        password,
+        pendingSettings?.readOnly,
+        pendingSettings ?? undefined
+      );
+    },
+    [pendingPath, pendingSettings, connectToDatabase]
+  );
+
+  if (!connection) {
+    return null;
+  }
+
+  return (
+    <>
+      <DatabaseView />
+
+      {/* Connection Settings Dialog */}
+      <ConnectionSettingsDialog
+        open={settingsDialogOpen}
+        onOpenChange={setSettingsDialogOpen}
+        filename={pendingFilename}
+        dbPath={pendingPath || ''}
+        isEncrypted={pendingIsEncrypted}
+        onSubmit={handleSettingsSubmit}
+      />
+
+      {/* Password Dialog */}
+      <PasswordDialog
+        open={passwordDialogOpen}
+        onOpenChange={setPasswordDialogOpen}
+        filename={pendingFilename}
+        dbPath={pendingPath || ''}
+        onSubmit={handlePasswordSubmit}
+      />
+
+      {/* Connection Switcher Dialog */}
+      <ConnectionSwitcher onOpenRecentConnection={handleOpenRecentConnection} />
+
+      {/* Hidden trigger buttons for menu actions */}
+      <button
+        data-action="open-database"
+        className="hidden"
+        onClick={handleOpenDatabase}
+        aria-hidden="true"
+      />
+      <button
+        data-action="export-query"
+        className="hidden"
+        onClick={() => setQueryExportDialogOpen(true)}
+        aria-hidden="true"
+      />
+      <button
+        data-action="import-query"
+        className="hidden"
+        onClick={() => setQueryImportDialogOpen(true)}
+        aria-hidden="true"
+      />
+      <button
+        data-action="export-schema"
+        className="hidden"
+        onClick={() => setSchemaExportDialogOpen(true)}
+        aria-hidden="true"
+      />
+      <button
+        data-action="import-schema"
+        className="hidden"
+        onClick={() => setSchemaImportDialogOpen(true)}
+        aria-hidden="true"
+      />
+
+      {/* Sharing Dialogs */}
+      {activeConnectionId && (
+        <>
+          <QueryExportDialog
+            open={queryExportDialogOpen}
+            onOpenChange={setQueryExportDialogOpen}
+            sql=""
+            initialDatabaseContext={connection?.filename || ''}
+          />
+          <QueryImportDialog
+            open={queryImportDialogOpen}
+            onOpenChange={setQueryImportDialogOpen}
+            onImportComplete={() => {
+              // Query import from menu - no specific action needed
+              setQueryImportDialogOpen(false);
+            }}
+          />
+          <SchemaExportDialog
+            open={schemaExportDialogOpen}
+            onOpenChange={setSchemaExportDialogOpen}
+            connectionId={activeConnectionId}
+            databaseName={connection?.filename || ''}
+          />
+          <SchemaImportDialog
+            open={schemaImportDialogOpen}
+            onOpenChange={setSchemaImportDialogOpen}
+            onImportComplete={() => {
+              // Schema import from menu - no specific action needed
+              setSchemaImportDialogOpen(false);
+            }}
+          />
+        </>
+      )}
+    </>
+  );
+}
