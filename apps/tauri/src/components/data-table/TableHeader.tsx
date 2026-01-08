@@ -385,7 +385,10 @@ export const TableHeader = memo(
         : 0;
 
     return (
-      <thead className="bg-background after:bg-border sticky top-0 z-20 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px">
+      <thead
+        className="bg-background after:bg-border sticky top-0 z-20 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px"
+        style={{ willChange: 'transform' }}
+      >
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
             {/* Selection column header */}
