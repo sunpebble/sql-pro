@@ -82,6 +82,16 @@ export function createApplicationMenu(): void {
           accelerator: 'CmdOrCtrl+W',
           click: () => sendMenuAction('close-database'),
         },
+        {
+          label: 'Close Window',
+          accelerator: 'CmdOrCtrl+Shift+W',
+          click: () => {
+            const focusedWindow = BrowserWindow.getFocusedWindow();
+            if (focusedWindow) {
+              focusedWindow.close();
+            }
+          },
+        },
         { type: 'separator' },
         {
           label: 'Refresh Schema',

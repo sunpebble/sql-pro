@@ -696,7 +696,7 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
       data-tour-target="sidebar"
     >
       {/* Search */}
-      <div className="p-1.5">
+      <div className="p-1.5 pt-9">
         <div className="relative">
           <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
           <input
@@ -1079,7 +1079,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(tablesKey)}
-                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[11px] font-medium tracking-wider uppercase"
+                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[0.75em] font-medium tracking-wider uppercase"
               >
                 {tablesExpanded ? (
                   <ChevronDown className="h-3 w-3" />
@@ -1141,7 +1141,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(viewsKey)}
-                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[11px] font-medium tracking-wider uppercase"
+                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[0.75em] font-medium tracking-wider uppercase"
               >
                 {viewsExpanded ? (
                   <ChevronDown className="h-3 w-3" />
@@ -1290,7 +1290,7 @@ function TableItem({
         <button
           onClick={onClick}
           className={cn(
-            'flex w-full items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 text-[13px] transition-colors',
+            'flex w-full items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 transition-colors',
             isSelected
               ? 'bg-primary/15 text-primary font-medium'
               : 'hover:bg-accent/50 text-foreground/90',

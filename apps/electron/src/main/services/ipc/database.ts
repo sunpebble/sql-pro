@@ -45,6 +45,14 @@ export function setupDatabaseHandlers(): void {
             request.config.readOnly, // readOnly
             request.config // connectionConfig - save full config for edit mode
           );
+
+          // Start watching the database file for external changes (SQLite only)
+          if (result.connection.databaseType === 'sqlite') {
+            fileWatcherService.watch(
+              result.connection.id,
+              result.connection.path
+            );
+          }
         }
 
         return result;

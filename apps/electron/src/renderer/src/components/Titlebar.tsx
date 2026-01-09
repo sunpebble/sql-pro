@@ -49,8 +49,8 @@ export function Titlebar() {
       className="titlebar border-border/50 flex h-9 shrink-0 items-center border-b"
       data-tauri-drag-region
     >
-      {/* macOS traffic light padding - approximately 70px on macOS */}
-      <div className="w-[70px] shrink-0" data-tauri-drag-region />
+      {/* macOS traffic light padding - approximately 84px on macOS */}
+      <div className="w-[84px] shrink-0" data-tauri-drag-region />
 
       {/* Connection Tabs - flexible width, also draggable in empty space */}
       {connection ? (
