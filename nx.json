@@ -29,6 +29,5 @@
     "appsDir": "apps",
     "libsDir": "packages"
   },
-  "nxCloudId": "6959fd57d916979c94d1fc62",
   "neverConnectToCloud": true
 }

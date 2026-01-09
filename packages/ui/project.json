@@ -21,9 +21,10 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
+      "executor": "nx:run-commands",
       "options": {
-        "lintFilePatterns": ["packages/ui/**/*.{ts,tsx}"]
+        "command": "eslint .",
+        "cwd": "packages/ui"
       }
     }
   }

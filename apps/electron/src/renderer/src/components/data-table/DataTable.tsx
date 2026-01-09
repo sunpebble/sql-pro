@@ -221,6 +221,7 @@ export const DataTable = function DataTable({
       sizes.set(header.id, header.getSize());
     }
     return sizes;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- columnSizing/columnSizingInfo intentionally trigger recalculation
   }, [columnSizing, columnSizingInfo, table]);
 
   // Get rows from table

@@ -45,15 +45,17 @@
       }
     },
     "test": {
-      "executor": "@nx/vite:test",
+      "executor": "nx:run-commands",
       "options": {
-        "config": "apps/electron/vitest.config.ts"
+        "command": "vitest",
+        "cwd": "apps/electron"
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
+      "executor": "nx:run-commands",
       "options": {
-        "lintFilePatterns": ["apps/electron/src/**/*.{ts,tsx}"]
+        "command": "eslint src --ext .ts,.tsx",
+        "cwd": "apps/electron"
       }
     },
     "typecheck": {
