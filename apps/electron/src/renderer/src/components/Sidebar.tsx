@@ -695,10 +695,10 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
       onKeyDown={handleKeyDown}
       data-tour-target="sidebar"
     >
-      {/* Search */}
-      <div className="p-1.5 pt-9">
-        <div className="relative">
-          <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
+      {/* Search - matches DataTabBar height */}
+      <div className="flex h-8 shrink-0 items-center border-b px-1.5">
+        <div className="relative flex-1">
+          <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
           <input
             ref={searchInputRef}
             type="text"
@@ -709,14 +709,14 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
-            className="border-input bg-background placeholder:text-muted-foreground focus:ring-ring w-full rounded-md border py-1 pr-3 pl-8 text-sm focus:ring-2 focus:outline-none"
+            className="placeholder:text-muted-foreground focus:ring-ring h-6 w-full rounded-sm bg-transparent pr-2 pl-6 text-sm focus:ring-1 focus:outline-none"
           />
         </div>
       </div>
 
       {/* Sort and Filter Controls */}
-      <ScrollArea className="w-full border-b">
-        <div className="flex min-w-0 items-center gap-1 px-1.5 pb-1.5">
+      <ScrollArea className="h-8 w-full shrink-0 border-b">
+        <div className="flex h-full min-w-0 items-center gap-1 px-1.5">
           {/* Sort Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger>
