@@ -264,7 +264,23 @@ const ConnectionTab = memo(
                       </TooltipContent>
                     </Tooltip>
                   )}
-                  <span className="flex-1 truncate">{connection.filename}</span>
+                  <div className="min-w-0 flex-1">
+                    <span className="block truncate">
+                      {connection.filename}
+                    </span>
+                    {/* Show parent directory for context */}
+                    {connection.path &&
+                      (() => {
+                        const parts = connection.path.split('/');
+                        const parentDir =
+                          parts.length > 1 ? parts[parts.length - 2] : null;
+                        return parentDir ? (
+                          <span className="text-muted-foreground block truncate text-[10px] leading-tight">
+                            {parentDir}
+                          </span>
+                        ) : null;
+                      })()}
+                  </div>
                   <Tooltip>
                     <TooltipTrigger>
                       <button
@@ -286,7 +302,7 @@ const ConnectionTab = memo(
               <TooltipContent side="bottom" className="max-w-80 text-xs">
                 <div className="flex flex-col gap-1">
                   <div className="font-medium">{connection.filename}</div>
-                  <div className="text-muted-foreground text-xs break-all">
+                  <div className="text-muted-foreground font-mono text-[11px] break-all">
                     {connection.path}
                   </div>
                 </div>

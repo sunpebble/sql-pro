@@ -11,6 +11,11 @@ import {
   session,
   shell,
 } from 'electron';
+import {
+  getWindowBoundsOptions,
+  loadWindowState,
+  saveWindowState,
+} from './lib/window-state';
 import { fileWatcherService } from './services/file-watcher';
 import { cleanupIpcHandlers, setupIpcHandlers } from './services/ipc-handlers';
 import {
@@ -150,9 +155,12 @@ function createWindow(): BrowserWindow {
   const iconPath = getIconPath();
   const icon = nativeImage.createFromPath(iconPath);
 
+  // Load saved window state
+  const savedState = loadWindowState();
+  const boundsOptions = getWindowBoundsOptions();
+
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    ...boundsOptions,
     minWidth: 900,
     minHeight: 600,
     show: false,
@@ -160,11 +168,45 @@ function createWindow(): BrowserWindow {
     icon: icon.isEmpty() ? undefined : icon,
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 15, y: 10 },
+    // macOS native vibrancy effect for sidebar blur
+    vibrancy: 'sidebar',
+    visualEffectState: 'followWindow',
+    transparent: true,
+    backgroundColor: '#00000000',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
+      // Native app experience - disable browser features
+      spellcheck: false,
+      enableWebSQL: false,
     },
   });
+
+  // Restore maximized/fullscreen state
+  if (savedState.isMaximized) {
+    mainWindow.maximize();
+  } else if (savedState.isFullScreen) {
+    mainWindow.setFullScreen(true);
+  }
+
+  // Save window state on close and resize
+  const saveState = () => {
+    if (!mainWindow.isDestroyed()) {
+      const bounds = mainWindow.getBounds();
+      saveWindowState({
+        x: bounds.x,
+        y: bounds.y,
+        width: bounds.width,
+        height: bounds.height,
+        isMaximized: mainWindow.isMaximized(),
+        isFullScreen: mainWindow.isFullScreen(),
+      });
+    }
+  };
+
+  mainWindow.on('close', saveState);
+  mainWindow.on('resize', saveState);
+  mainWindow.on('move', saveState);
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();

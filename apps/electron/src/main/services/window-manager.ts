@@ -67,9 +67,17 @@ class WindowManager {
       icon: icon.isEmpty() ? undefined : icon,
       titleBarStyle: 'hiddenInset',
       trafficLightPosition: { x: 15, y: 10 },
+      // macOS native vibrancy effect for sidebar blur
+      vibrancy: 'sidebar',
+      visualEffectState: 'followWindow',
+      transparent: true,
+      backgroundColor: '#00000000',
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),
         sandbox: false,
+        // Native app experience - disable browser features
+        spellcheck: false,
+        enableWebSQL: false,
       },
     });
 

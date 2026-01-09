@@ -129,6 +129,131 @@
   }
   html {
     @apply font-sans;
+    /* Smooth scrolling for native feel */
+    scroll-behavior: smooth;
+  }
+
+  /* ============================================
+   * NATIVE APP EXPERIENCE STYLES
+   * Eliminate browser-like behaviors
+   * ============================================ */
+
+  /* Disable text selection on UI elements (native apps don't allow selecting labels) */
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+    /* Prevent overscroll bounce on macOS */
+    overscroll-behavior: none;
+  }
+
+  /* Allow text selection only in editable/content areas */
+  input,
+  textarea,
+  [contenteditable='true'],
+  pre,
+  code,
+  .selectable,
+  [data-selectable],
+  /* Monaco editor content */
+  .monaco-editor .view-lines,
+  /* Table cell content when editing */
+  [data-editing='true'],
+  /* Query results that users might want to copy */
+  [data-table-font] td {
+    -webkit-user-select: text;
+    user-select: text;
+    cursor: text;
+  }
+
+  /* macOS-style native scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.5 0 0 / 20%);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.5 0 0 / 35%);
+    background-clip: padding-box;
+  }
+
+  /* Hide scrollbar until hover (native macOS behavior) */
+  ::-webkit-scrollbar-thumb:not(:hover) {
+    background: oklch(0.5 0 0 / 12%);
+    background-clip: padding-box;
+  }
+
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar-thumb {
+    background: oklch(0.8 0 0 / 20%);
+    background-clip: padding-box;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.8 0 0 / 35%);
+    background-clip: padding-box;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:not(:hover) {
+    background: oklch(0.8 0 0 / 12%);
+    background-clip: padding-box;
+  }
+
+  /* Remove outline focus ring on click (use :focus-visible for keyboard only) */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Subtle focus ring for keyboard navigation only */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Disable image/element dragging (native app behavior) */
+  img,
+  svg,
+  [draggable='false'] {
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+
+  /* Disable text cursor on non-editable elements */
+  label,
+  span,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  div,
+  li,
+  button {
+    cursor: default;
+  }
+
+  /* Proper cursor for interactive elements */
+  a,
+  button,
+  [role='button'],
+  [role='tab'],
+  [role='menuitem'],
+  [role='option'],
+  .cursor-pointer {
+    cursor: pointer;
   }
 }
 
@@ -335,4 +460,19 @@ th {
   /* Force GPU layer for smoother scrolling */
   transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+/* macOS vibrancy support - areas that should be transparent for blur effect */
+[data-vibrancy] {
+  background-color: transparent !important;
+}
+
+/* Dark mode vibrancy - slightly darker overlay for better contrast */
+.dark [data-vibrancy] {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Light mode vibrancy - very subtle white overlay */
+:root:not(.dark) [data-vibrancy] {
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
