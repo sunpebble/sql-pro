@@ -1,6 +1,5 @@
 import type { MenuAction, ShortcutPreset } from '@shared/types';
 import process from 'node:process';
-import { is } from '@electron-toolkit/utils';
 import {
   bindingToAccelerator,
   DEFAULT_SHORTCUTS,
@@ -194,7 +193,7 @@ export function createApplicationMenu(): void {
           click: () => sendMenuAction('toggle-history'),
         },
         // Developer submenu only in development mode
-        ...(is.dev
+        ...(!app.isPackaged
           ? [
               { type: 'separator' as const },
               {

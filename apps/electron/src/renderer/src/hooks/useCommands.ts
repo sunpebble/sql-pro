@@ -231,20 +231,28 @@ export function useCommands() {
         return;
       }
 
-      // Skip other shortcuts if typing in input
-      if (isInputField) return;
-
-      // Refresh table shortcut (prevent browser refresh)
+      // Refresh table shortcut - works everywhere (prevent browser refresh)
       const refreshTableBinding = getShortcut('action.refresh-table');
       if (matchesBinding(e, refreshTableBinding)) {
         e.preventDefault();
+        console.log(
+          '[useCommands] Refresh table triggered, activeConnectionId:',
+          activeConnectionId
+        );
         if (activeConnectionId) {
+          console.log(
+            '[useCommands] Invalidating queries for:',
+            activeConnectionId
+          );
           queryClient.invalidateQueries({
             queryKey: ['tableData', activeConnectionId],
           });
         }
         return;
       }
+
+      // Skip other shortcuts if typing in input
+      if (isInputField) return;
 
       // Toggle schema details panel shortcut (only works in Data Browser view)
       const toggleSchemaDetailsBinding = getShortcut(

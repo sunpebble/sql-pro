@@ -29,11 +29,17 @@ class FileWatcherService {
   watch(connectionId: string, dbPath: string): void {
     // Don't watch if already watching this connection
     if (this.watchers.has(connectionId)) {
+      console.log(`[FileWatcher] Already watching connection: ${connectionId}`);
       return;
     }
 
+    console.log(
+      `[FileWatcher] Starting watch for ${dbPath} (connection: ${connectionId})`
+    );
+
     try {
       const watcher = watch(dbPath, (eventType: WatchEventType) => {
+        console.log(`[FileWatcher] Event detected: ${eventType} for ${dbPath}`);
         // Skip if path is in ignored set (our own writes)
         if (this.ignoredPaths.has(dbPath)) {
           return;
@@ -45,11 +51,12 @@ class FileWatcherService {
 
       // Handle watcher errors gracefully
       watcher.on('error', (err) => {
-        console.warn(`File watcher error for ${dbPath}:`, err);
+        console.error(`[FileWatcher] Error for ${dbPath}:`, err);
         this.unwatch(connectionId);
       });
 
       this.watchers.set(connectionId, watcher);
+      console.log(`[FileWatcher] Successfully started watching ${dbPath}`);
     } catch (error) {
       console.warn(`Failed to start file watcher for ${dbPath}:`, error);
     }
@@ -129,6 +136,9 @@ class FileWatcherService {
     // Set new timer
     const timer = setTimeout(() => {
       this.debounceTimers.delete(connectionId);
+      console.log(
+        `[FileWatcher] Debounce complete, notifying renderer for ${dbPath}`
+      );
       this.notifyRenderer(connectionId, dbPath, eventType);
     }, this.debounceDelay);
 
@@ -151,6 +161,10 @@ class FileWatcherService {
 
     // Send to all windows
     const allWindows = BrowserWindow.getAllWindows();
+    console.log(
+      `[FileWatcher] Notifying ${allWindows.length} window(s) of file change:`,
+      event
+    );
     for (const window of allWindows) {
       if (!window.isDestroyed()) {
         window.webContents.send(IPC_CHANNELS.DB_FILE_CHANGED, event);

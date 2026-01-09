@@ -13,9 +13,11 @@ import { useConnectionStore } from '@/stores';
  */
 export function useFileWatcher() {
   useEffect(() => {
+    console.log('[useFileWatcher] Setting up file change listener');
     // In Electron, listen for file change events via IPC
     const unsubscribe = window.sqlPro.db.onFileChanged(
       async (event: FileChangeEvent) => {
+        console.log('[useFileWatcher] Received file change event:', event);
         const { connectionId } = event;
 
         const connectionStore = useConnectionStore.getState();
@@ -24,8 +26,15 @@ export function useFileWatcher() {
 
         // Get the connection for this event
         const targetConnection = getConnectionById(connectionId);
+        console.log(
+          '[useFileWatcher] Target connection:',
+          targetConnection?.id,
+          'Active:',
+          activeConnectionId
+        );
 
         if (!targetConnection) {
+          console.log('[useFileWatcher] Connection not found, ignoring event');
           return;
         }
 

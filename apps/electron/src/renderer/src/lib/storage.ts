@@ -65,22 +65,22 @@ export async function initializeStorage(): Promise<void> {
       keys.map(async (key) => {
         try {
           const result = await window.sqlPro.rendererStore.get({ key });
-          if (result.success && result.value !== undefined) {
+          if (result.success && result.data !== undefined) {
             switch (key) {
               case 'settings':
-                cache.settings = result.value as RendererSettingsState;
+                cache.settings = result.data as RendererSettingsState;
                 break;
               case 'diagram':
-                cache.diagram = result.value as RendererDiagramState;
+                cache.diagram = result.data as RendererDiagramState;
                 break;
               case 'panelWidths':
-                cache.panelWidths = result.value as RendererPanelWidths;
+                cache.panelWidths = result.data as RendererPanelWidths;
                 break;
               case 'connectionUi':
-                cache.connectionUi = result.value as RendererConnectionState;
+                cache.connectionUi = result.data as RendererConnectionState;
                 break;
               case 'onboarding':
-                cache.onboarding = result.value as RendererOnboardingState;
+                cache.onboarding = result.data as RendererOnboardingState;
                 break;
             }
           }

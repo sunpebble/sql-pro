@@ -21,18 +21,26 @@ const DEFAULT_STATE: WindowState = {
   isFullScreen: false,
 };
 
-const store = new Store<WindowStateStoreSchema>({
-  name: 'window-state',
-  defaults: {
-    windowState: DEFAULT_STATE,
-  },
-});
+// Lazy initialization to avoid creating store before app is ready
+let _store: Store<WindowStateStoreSchema> | null = null;
+
+function getStore(): Store<WindowStateStoreSchema> {
+  if (!_store) {
+    _store = new Store<WindowStateStoreSchema>({
+      name: 'window-state',
+      defaults: {
+        windowState: DEFAULT_STATE,
+      },
+    });
+  }
+  return _store;
+}
 
 /**
  * Load the saved window state from persistent storage
  */
 export function loadWindowState(): WindowState {
-  const savedState = store.get('windowState', DEFAULT_STATE);
+  const savedState = getStore().get('windowState', DEFAULT_STATE);
 
   // Validate that the saved position is still visible on a connected display
   if (savedState.x !== undefined && savedState.y !== undefined) {
@@ -64,7 +72,7 @@ export function loadWindowState(): WindowState {
  * Save the window state to persistent storage
  */
 export function saveWindowState(state: WindowState): void {
-  store.set('windowState', state);
+  getStore().set('windowState', state);
 }
 
 /**

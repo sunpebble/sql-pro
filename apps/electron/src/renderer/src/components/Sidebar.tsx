@@ -696,7 +696,7 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
       data-tour-target="sidebar"
     >
       {/* Search - matches DataTabBar height */}
-      <div className="flex h-8 shrink-0 items-center border-b px-1.5">
+      <div className="mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
         <div className="relative flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
           <input
