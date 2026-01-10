@@ -1,6 +1,7 @@
 import type { ProFeature } from '@shared/types';
 import { create } from 'zustand';
 import { sqlPro } from '@/lib/api';
+import { withRetryOrDefault } from '@/lib/ipc-retry';
 
 interface ProState {
   // Pro status
@@ -61,7 +62,11 @@ export const useProStore = create<ProState>((set, get) => ({
   loadStatus: async () => {
     set({ isLoading: true });
     try {
-      const result = await sqlPro.pro.getStatus();
+      const result = await withRetryOrDefault(
+        () => sqlPro.pro.getStatus(),
+        { success: false } as Awaited<ReturnType<typeof sqlPro.pro.getStatus>>,
+        { silent: true }
+      );
       if (result.success && result.status) {
         set({
           isPro: result.status.isPro,

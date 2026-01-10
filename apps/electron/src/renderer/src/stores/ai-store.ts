@@ -2,6 +2,7 @@ import type { AIProvider, AISettings } from '@shared/types';
 import { DEFAULT_AI_BASE_URLS } from '@shared/types';
 import { create } from 'zustand';
 import { sqlPro } from '@/lib/api';
+import { withRetryOrDefault } from '@/lib/ipc-retry';
 
 interface AIState {
   // Settings
@@ -60,7 +61,11 @@ export const useAIStore = create<AIState>((set, get) => ({
   loadSettings: async () => {
     set({ isLoading: true });
     try {
-      const result = await sqlPro.ai.getSettings();
+      const result = await withRetryOrDefault(
+        () => sqlPro.ai.getSettings(),
+        { success: false } as Awaited<ReturnType<typeof sqlPro.ai.getSettings>>,
+        { silent: true }
+      );
       if (result.success && result.settings) {
         const settings = result.settings as {
           provider?: AIProvider;

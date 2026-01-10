@@ -43,27 +43,30 @@ const cache: StorageCache = {
 
 let initialized = false;
 
-// ============ Initialization ============
-
 /**
  * Initialize storage by loading all data from Electron's renderer store.
  * Call this early in app startup before accessing any cached data.
+ * Includes retry logic to handle race condition where IPC handlers
+ * may not be fully registered when new windows start.
  */
 export async function initializeStorage(): Promise<void> {
   if (initialized) return;
 
-  try {
-    const keys: (keyof RendererStoreSchema)[] = [
-      'settings',
-      'diagram',
-      'panelWidths',
-      'connectionUi',
-      'onboarding',
-    ];
+  const maxRetries = 5;
+  const retryDelayMs = 100;
 
-    await Promise.all(
-      keys.map(async (key) => {
-        try {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const keys: (keyof RendererStoreSchema)[] = [
+        'settings',
+        'diagram',
+        'panelWidths',
+        'connectionUi',
+        'onboarding',
+      ];
+
+      await Promise.all(
+        keys.map(async (key) => {
           const result = await window.sqlPro.rendererStore.get({ key });
           if (result.success && result.data !== undefined) {
             switch (key) {
@@ -84,16 +87,22 @@ export async function initializeStorage(): Promise<void> {
                 break;
             }
           }
-        } catch (error) {
-          console.error(`Failed to load ${key} from store:`, error);
-        }
-      })
-    );
+        })
+      );
 
-    initialized = true;
-  } catch (error) {
-    console.error('Failed to initialize storage:', error);
-    initialized = true; // Still mark as initialized to prevent retries
+      initialized = true;
+      return; // Success, exit retry loop
+    } catch (error) {
+      if (attempt < maxRetries - 1) {
+        // Wait before retrying with exponential backoff
+        await new Promise((resolve) =>
+          setTimeout(resolve, retryDelayMs * 2**attempt)
+        );
+      } else {
+        console.error('Failed to initialize storage after retries:', error);
+        initialized = true; // Mark as initialized to prevent infinite retries
+      }
+    }
   }
 }
 

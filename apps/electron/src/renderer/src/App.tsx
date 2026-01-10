@@ -10,6 +10,7 @@ import { WelcomeDialog } from '@/components/onboarding';
 import { SqlLogPanel } from '@/components/SqlLogPanel';
 import { useFileWatcher } from '@/hooks/useFileWatcher';
 import { sqlPro } from '@/lib/api';
+import { withRetryOrDefault } from '@/lib/ipc-retry';
 import { initMockMode, isMockMode } from '@/lib/mock-api';
 import { queryClient } from '@/lib/query-client';
 import { router } from '@/routes';
@@ -111,7 +112,13 @@ function App(): React.JSX.Element {
         }
       }
 
-      const result = await sqlPro.app.getRecentConnections();
+      const result = await withRetryOrDefault(
+        () => sqlPro.app.getRecentConnections(),
+        { success: false, connections: [] } as Awaited<
+          ReturnType<typeof sqlPro.app.getRecentConnections>
+        >,
+        { silent: true }
+      );
       if (result.success && result.connections) {
         setRecentConnections(result.connections as RecentConnection[]);
       }
