@@ -126,7 +126,10 @@ export function DatabaseView() {
             maxWidth={480}
             storageKey="sidebar"
           >
-            <Sidebar onSwitchToQuery={() => setActiveView('query')} />
+            <Sidebar
+              onSwitchToQuery={() => setActiveView('query')}
+              onSwitchToData={() => setActiveView('data')}
+            />
           </ResizablePanel>
         )}
 

@@ -82,6 +82,7 @@ import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
 interface SidebarProps {
   onSwitchToQuery?: () => void;
+  onSwitchToData?: () => void;
 }
 
 // Sample CREATE TABLE SQL template for empty database state
@@ -91,7 +92,7 @@ const SAMPLE_CREATE_TABLE_SQL = `CREATE TABLE example (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`;
 
-export function Sidebar({ onSwitchToQuery }: SidebarProps) {
+export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   const {
     schema,
     selectedTable,
@@ -285,8 +286,16 @@ export function Sidebar({ onSwitchToQuery }: SidebarProps) {
       // Open the table in a data tab (or switch to existing tab)
       // TableView will fetch data automatically via useTableData hook
       openTable(activeConnectionId, table);
+      // Switch to data view if not already there
+      onSwitchToData?.();
     },
-    [connection, activeConnectionId, setSelectedTable, openTable]
+    [
+      connection,
+      activeConnectionId,
+      setSelectedTable,
+      openTable,
+      onSwitchToData,
+    ]
   );
 
   // Table context menu handlers
