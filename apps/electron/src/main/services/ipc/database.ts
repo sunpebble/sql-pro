@@ -16,6 +16,7 @@ import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
 import { databaseManager, databaseService } from '../database';
 import { fileWatcherService } from '../file-watcher';
+import { pgNotifyService } from '../pg-notify-service';
 import { addRecentConnection } from '../store';
 
 export function setupDatabaseHandlers(): void {
@@ -51,6 +52,17 @@ export function setupDatabaseHandlers(): void {
             fileWatcherService.watch(
               result.connection.id,
               result.connection.path
+            );
+          }
+
+          // Register for LISTEN/NOTIFY (PostgreSQL/Supabase only)
+          if (
+            result.connection.databaseType === 'postgresql' ||
+            result.connection.databaseType === 'supabase'
+          ) {
+            pgNotifyService.registerConnection(
+              result.connection.id,
+              request.config
             );
           }
         }
@@ -95,6 +107,9 @@ export function setupDatabaseHandlers(): void {
     async (_event, request: CloseDatabaseRequest) => {
       // Stop watching the file before closing the connection
       fileWatcherService.unwatch(request.connectionId);
+
+      // Unregister from LISTEN/NOTIFY
+      pgNotifyService.unregisterConnection(request.connectionId);
 
       // Try database manager first (for new connections)
       const managerResult = databaseManager.close(request.connectionId);

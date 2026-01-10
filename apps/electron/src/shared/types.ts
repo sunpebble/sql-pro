@@ -2664,6 +2664,12 @@ export const IPC_CHANNELS = {
   MEMORY_TRIGGER_GC: 'memory:trigger-gc',
   MEMORY_STATS_UPDATE: 'memory:stats-update',
   MEMORY_PRESSURE_CHANGE: 'memory:pressure-change',
+
+  // PostgreSQL LISTEN/NOTIFY
+  PG_NOTIFY_SUBSCRIBE: 'pg-notify:subscribe',
+  PG_NOTIFY_UNSUBSCRIBE: 'pg-notify:unsubscribe',
+  PG_NOTIFY_GET_SUBSCRIPTIONS: 'pg-notify:get-subscriptions',
+  PG_NOTIFY_EVENT: 'pg-notify:event',
 } as const;
 
 // ============ Keyboard Shortcuts Types ============

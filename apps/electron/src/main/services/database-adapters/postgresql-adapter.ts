@@ -508,14 +508,25 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
       return { success: false, error: 'Connection not found' };
     }
 
+    const startTime = performance.now();
+
     try {
       // Get all schemas (excluding system schemas)
-      const schemasResult = await conn.client.query(
-        `SELECT schema_name 
+      const schemasSql = `SELECT schema_name 
          FROM information_schema.schemata 
          WHERE schema_name NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
-         ORDER BY schema_name`
-      );
+         ORDER BY schema_name`;
+      const schemasResult = await conn.client.query(schemasSql);
+
+      // Log the schema query
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.filename,
+        sql: schemasSql,
+        executionTimeMs: Math.round(performance.now() - startTime),
+        success: true,
+        rowCount: schemasResult.rows.length,
+      });
 
       const schemas: SchemaInfo[] = [];
       const allTables: TableInfo[] = [];
@@ -566,9 +577,21 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
 
       return { success: true, schemas, tables: allTables, views: allViews };
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to get schema';
+
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.filename,
+        sql: 'SELECT schema_name FROM information_schema.schemata...',
+        executionTimeMs: Math.round(performance.now() - startTime),
+        success: false,
+        error: errorMessage,
+      });
+
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to get schema',
+        error: errorMessage,
       };
     }
   }
@@ -943,6 +966,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
     let sql = `SELECT * FROM "${schemaName}"."${table}"`;
     const params: unknown[] = [];
     let paramIndex = 1;
+    const startTime = performance.now();
 
     try {
       if (filters && filters.length > 0) {
@@ -1001,6 +1025,16 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
 
       const result = await conn.client.query(sql, params);
 
+      // Log the query
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.filename,
+        sql,
+        executionTimeMs: Math.round(performance.now() - startTime),
+        success: true,
+        rowCount: result.rows.length,
+      });
+
       // Get column info
       const tableInfo = await this.getTableInfoAsync(conn, schemaName, table);
 
@@ -1011,10 +1045,21 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         totalRows,
       };
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to get table data';
+
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.filename,
+        sql,
+        executionTimeMs: Math.round(performance.now() - startTime),
+        success: false,
+        error: errorMessage,
+      });
+
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get table data',
+        error: errorMessage,
       };
     }
   }

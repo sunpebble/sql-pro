@@ -9,6 +9,7 @@ import { setupHistoryHandlers } from './history';
 import { setupImportHandlers } from './import';
 import { cleanupMemoryHandlers, setupMemoryHandlers } from './memory';
 import { setupPasswordHandlers } from './password';
+import { cleanupPgNotifyHandlers, setupPgNotifyHandlers } from './pg-notify';
 import { setupPreferencesHandlers } from './preferences';
 import { setupProHandlers } from './pro';
 import { setupProfilesHandlers } from './profiles';
@@ -41,6 +42,7 @@ export function setupIpcHandlers(): void {
   setupRendererStoreHandlers();
   setupSqlLogHandlers();
   setupMemoryHandlers();
+  setupPgNotifyHandlers();
 }
 
 export function cleanupIpcHandlers(): void {
@@ -51,4 +53,6 @@ export function cleanupIpcHandlers(): void {
   cleanupRendererStoreHandlers();
   // Clean up memory handler subscriptions
   cleanupMemoryHandlers();
+  // Clean up PG notify subscriptions
+  cleanupPgNotifyHandlers();
 }

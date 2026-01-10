@@ -38,6 +38,61 @@ const DATABASE_LABELS: Record<DatabaseType, string> = {
   supabase: 'Supabase',
 };
 
+/**
+ * Parse a PostgreSQL/MySQL connection string URL
+ * Supports formats:
+ * - postgresql://user:password@host:port/database
+ * - postgres://user:password@host:port/database
+ * - mysql://user:password@host:port/database
+ * - user:password@host:port/database (without scheme)
+ */
+function parseConnectionString(connectionString: string): {
+  host?: string;
+  port?: string;
+  database?: string;
+  username?: string;
+  password?: string;
+  ssl?: boolean;
+} | null {
+  try {
+    let urlString = connectionString.trim();
+
+    // Add scheme if missing for URL parsing
+    if (!urlString.includes('://')) {
+      urlString = `postgresql://${urlString}`;
+    }
+
+    const url = new URL(urlString);
+    const result: {
+      host?: string;
+      port?: string;
+      database?: string;
+      username?: string;
+      password?: string;
+      ssl?: boolean;
+    } = {};
+
+    if (url.hostname) result.host = url.hostname;
+    if (url.port) result.port = url.port;
+    if (url.pathname && url.pathname.length > 1) {
+      result.database = url.pathname.slice(1); // Remove leading /
+    }
+    if (url.username) result.username = decodeURIComponent(url.username);
+    if (url.password) result.password = decodeURIComponent(url.password);
+
+    // Check for SSL in query params
+    const sslParam =
+      url.searchParams.get('sslmode') || url.searchParams.get('ssl');
+    if (sslParam && sslParam !== 'disable') {
+      result.ssl = true;
+    }
+
+    return result;
+  } catch {
+    return null;
+  }
+}
+
 interface ServerConnectionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -191,8 +246,38 @@ export function ServerConnectionDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <ScrollArea className="h-[50vh]">
-            <div className="space-y-4 pr-4">
+          <ScrollArea className="h-[50vh] overflow-x-hidden">
+            <div className="space-y-4 px-1 pr-5">
+              {/* Quick import from connection string (for non-Supabase) */}
+              {!isSupabase && !isEditMode && (
+                <div className="space-y-2">
+                  <Label htmlFor="connectionString">
+                    Import from URL{' '}
+                    <span className="text-muted-foreground text-xs">
+                      (paste to auto-fill)
+                    </span>
+                  </Label>
+                  <Input
+                    id="connectionString"
+                    placeholder="postgresql://user:password@host:port/database"
+                    onChange={(e) => {
+                      const parsed = parseConnectionString(e.target.value);
+                      if (parsed) {
+                        if (parsed.host) setHost(parsed.host);
+                        if (parsed.port) setPort(parsed.port);
+                        if (parsed.database) setDatabase(parsed.database);
+                        if (parsed.username) setUsername(parsed.username);
+                        if (parsed.password) setPassword(parsed.password);
+                        if (parsed.ssl !== undefined) setUseSSL(parsed.ssl);
+                        // Clear the input after successful parse
+                        e.target.value = '';
+                      }
+                    }}
+                    className="font-mono text-xs"
+                  />
+                </div>
+              )}
+
               {/* Display name (optional) */}
               <div className="space-y-2">
                 <Label htmlFor="displayName">Connection Name (optional)</Label>

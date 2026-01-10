@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
-import { queryClient } from '@/lib/query-client';
+import { invalidateTableData } from '@/lib/query-refresh';
 import {
   useChangesStore,
   useCommandPaletteStore,
@@ -91,9 +91,16 @@ export function useMenuActions() {
         }
 
         case 'refresh-schema': {
-          const { connection, activeConnectionId, setSchema } = connectionStore;
+          const {
+            connection,
+            activeConnectionId,
+            setSchema,
+            invalidateSchemaCache,
+          } = connectionStore;
           if (connection && activeConnectionId) {
             const toastId = toast.loading('Refreshing...');
+            // Invalidate cache first to force fresh data
+            invalidateSchemaCache(activeConnectionId);
             sqlPro.db
               .getSchema({ connectionId: connection.id })
               .then((result: GetSchemaResponse) => {
@@ -118,20 +125,7 @@ export function useMenuActions() {
         case 'refresh-table': {
           const { activeConnectionId } = connectionStore;
           if (activeConnectionId) {
-            // Directly refetch table data queries
-            const queries = queryClient.getQueryCache().findAll({
-              predicate: (query) => {
-                const queryKey = query.queryKey;
-                return (
-                  Array.isArray(queryKey) &&
-                  queryKey[0] === 'tableData' &&
-                  queryKey[1] === activeConnectionId
-                );
-              },
-            });
-            for (const query of queries) {
-              query.fetch();
-            }
+            invalidateTableData(activeConnectionId);
           }
           break;
         }

@@ -22,8 +22,9 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
-import { queryClient } from '@/lib/query-client';
+import { invalidateTableData } from '@/lib/query-refresh';
 import {
   formatShortcutBinding,
   matchesBinding,
@@ -236,23 +237,44 @@ export function useCommands() {
       const refreshTableBinding = getShortcut('action.refresh-table');
       if (matchesBinding(e, refreshTableBinding)) {
         e.preventDefault();
-
         if (activeConnectionId) {
-          const queries = queryClient.getQueryCache().findAll({
-            predicate: (query) => {
-              const queryKey = query.queryKey;
-              return (
-                Array.isArray(queryKey) &&
-                queryKey[0] === 'tableData' &&
-                queryKey[1] === activeConnectionId
-              );
-            },
-          });
+          invalidateTableData(activeConnectionId);
+        }
+        return;
+      }
 
-          // Directly refetch each query
-          for (const query of queries) {
-            query.fetch();
-          }
+      // Refresh Schema shortcut - needs to work everywhere (prevent browser hard refresh)
+      const refreshSchemaBinding = getShortcut('action.refresh-schema');
+      if (matchesBinding(e, refreshSchemaBinding)) {
+        e.preventDefault();
+        e.stopPropagation();
+        const {
+          connection,
+          activeConnectionId,
+          setSchema,
+          invalidateSchemaCache,
+        } = connectionStoreRef.current!;
+        if (connection && activeConnectionId) {
+          // Invalidate cache first to force fresh data
+          invalidateSchemaCache(activeConnectionId);
+          // Fetch fresh schema
+          sqlPro.db
+            .getSchema({ connectionId: connection.id })
+            .then((result) => {
+              if (result.success) {
+                setSchema(activeConnectionId, {
+                  schemas: result.schemas || [],
+                  tables: result.tables || [],
+                  views: result.views || [],
+                });
+                toast.success('Schema refreshed');
+              } else {
+                toast.error('Failed to refresh schema');
+              }
+            })
+            .catch(() => {
+              toast.error('Failed to refresh schema');
+            });
         }
         return;
       }
@@ -406,17 +428,6 @@ export function useCommands() {
           'button[data-action="toggle-history"]'
         );
         historyButton?.click();
-        return;
-      }
-
-      // Refresh Schema shortcut
-      const refreshSchemaBinding = getShortcut('action.refresh-schema');
-      if (matchesBinding(e, refreshSchemaBinding)) {
-        e.preventDefault();
-        const refreshSchemaButton = document.querySelector<HTMLButtonElement>(
-          'button[data-action="refresh-schema"]'
-        );
-        refreshSchemaButton?.click();
         return;
       }
 
@@ -644,19 +655,7 @@ export function useCommands() {
         action: () => {
           const { activeConnectionId } = connectionStoreRef.current!;
           if (activeConnectionId) {
-            const queries = queryClient.getQueryCache().findAll({
-              predicate: (query) => {
-                const queryKey = query.queryKey;
-                return (
-                  Array.isArray(queryKey) &&
-                  queryKey[0] === 'tableData' &&
-                  queryKey[1] === activeConnectionId
-                );
-              },
-            });
-            for (const query of queries) {
-              query.fetch();
-            }
+            invalidateTableData(activeConnectionId);
           }
         },
       },

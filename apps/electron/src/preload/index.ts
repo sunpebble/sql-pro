@@ -509,6 +509,58 @@ const sqlProAPI = {
     },
   },
 
+  // PostgreSQL LISTEN/NOTIFY operations
+  pgNotify: {
+    subscribe: (request: {
+      connectionId: string;
+      channel: string;
+      table?: string;
+    }): Promise<
+      | { success: true; subscriptionId: string }
+      | { success: false; error: string }
+    > => ipcRenderer.invoke(IPC_CHANNELS.PG_NOTIFY_SUBSCRIBE, request),
+    unsubscribe: (request: {
+      subscriptionId: string;
+    }): Promise<{ success: true } | { success: false; error: string }> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PG_NOTIFY_UNSUBSCRIBE, request),
+    getSubscriptions: (request: {
+      connectionId: string;
+    }): Promise<{
+      success: boolean;
+      subscriptions: Array<{
+        id: string;
+        connectionId: string;
+        channel: string;
+        table?: string;
+        createdAt: number;
+      }>;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.PG_NOTIFY_GET_SUBSCRIPTIONS, request),
+    onEvent: (
+      callback: (event: {
+        subscriptionId: string;
+        connectionId: string;
+        channel: string;
+        payload: string;
+        table?: string;
+        timestamp: number;
+      }) => void
+    ): (() => void) => {
+      const handler = (
+        _event: Electron.IpcRendererEvent,
+        notifyEvent: {
+          subscriptionId: string;
+          connectionId: string;
+          channel: string;
+          payload: string;
+          table?: string;
+          timestamp: number;
+        }
+      ) => callback(notifyEvent);
+      ipcRenderer.on(IPC_CHANNELS.PG_NOTIFY_EVENT, handler);
+      return () => ipcRenderer.off(IPC_CHANNELS.PG_NOTIFY_EVENT, handler);
+    },
+  },
+
   // Window operations
   window: {
     create: (): Promise<CreateWindowResponse> =>
