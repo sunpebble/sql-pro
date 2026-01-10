@@ -10,8 +10,8 @@
     </linearGradient>
   </defs>
 
-  <!-- Background rounded square -->
-  <rect x="32" y="32" width="448" height="448" rx="80" ry="80" fill="url(#bg)" />
+  <!-- Background: 10% padding (50px), 22% corner radius (412 * 0.22 ≈ 90) -->
+  <rect x="50" y="50" width="412" height="412" rx="90" ry="90" fill="url(#bg)" />
 
   <!-- Database cylinder -->
   <ellipse cx="256" cy="160" rx="120" ry="40" fill="url(#accent)" />
