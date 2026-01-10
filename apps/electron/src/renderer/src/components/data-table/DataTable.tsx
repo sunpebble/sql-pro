@@ -31,6 +31,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVirtualData } from '@/hooks/useVirtualData';
+import { generateSQLInsert } from '@/lib/sql-insert-generator';
 import { cn } from '@/lib/utils';
 import { useTableFont } from '@/stores';
 import { useDragSelection } from './hooks/useDragSelection';
@@ -43,6 +44,10 @@ export interface DataTableProps {
   // Data
   columns: ColumnSchema[];
   data: TableRowData[];
+
+  // Context menu - SQL INSERT generation
+  /** Table name for generating SQL INSERT statements */
+  tableName?: string;
 
   // Sorting
   sort?: SortState | null;
@@ -173,6 +178,7 @@ export const DataTable = function DataTable({
   onLoadMore,
   hasMore = false,
   isLoadingMore = false,
+  tableName,
 }: DataTableProps & { ref?: React.RefObject<DataTableRef | null> }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tableFont = useTableFont();
@@ -336,6 +342,94 @@ export const DataTable = function DataTable({
       }
     }
   }, [focusedCell, rows, table, handleCellClick]);
+
+  // Context menu handlers for row actions
+
+  /**
+   * Copy row(s) as SQL INSERT statements to clipboard
+   * If multiple rows are selected and one is right-clicked, copies all selected rows
+   */
+  const handleCopyRowAsSQL = useCallback(
+    (rowIds: string[]) => {
+      if (!tableName) return;
+
+      // If the clicked row is selected and there are other selected rows, copy all selected
+      const selectedRows = table.getSelectedRowModel().rows;
+      const clickedRowId = rowIds[0];
+      const isClickedRowSelected = selectedRows.some(
+        (r) => r.id === clickedRowId
+      );
+
+      // Determine which rows to copy
+      const rowsToCopy =
+        isClickedRowSelected && selectedRows.length > 1
+          ? selectedRows
+          : rows.filter((r) => rowIds.includes(r.id));
+
+      // Extract row data, filtering out internal properties
+      const rowData = rowsToCopy.map((row) => {
+        const original = row.original as TableRowData;
+        const data: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(original)) {
+          // Skip internal properties that start with __
+          if (!key.startsWith('__')) {
+            data[key] = value;
+          }
+        }
+        return data;
+      });
+
+      // Generate SQL INSERT statements
+      const sql = generateSQLInsert(rowData, {
+        tableName,
+        columns: columns.map((c) => c.name),
+      });
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(sql);
+    },
+    [tableName, table, rows, columns]
+  );
+
+  /**
+   * Copy a single row's data to clipboard as tab-separated values
+   */
+  const handleCopyRow = useCallback(
+    (rowId: string) => {
+      const row = rows.find((r) => r.id === rowId);
+      if (!row) return;
+
+      const original = row.original as TableRowData;
+      const values: string[] = [];
+      for (const col of columns) {
+        const value = original[col.name];
+        if (value === null || value === undefined) {
+          values.push('');
+        } else {
+          values.push(String(value));
+        }
+      }
+
+      // Copy as tab-separated values
+      navigator.clipboard.writeText(values.join('\t'));
+    },
+    [rows, columns]
+  );
+
+  /**
+   * Delete a row - delegates to the onRowDelete prop
+   */
+  const handleDeleteRow = useCallback(
+    (rowId: string) => {
+      const row = rows.find((r) => r.id === rowId);
+      if (!row) return;
+
+      const original = row.original as TableRowData;
+      const actualRowId = original.__rowId ?? rowId;
+      onRowDelete?.(actualRowId);
+    },
+    [rows, onRowDelete]
+  );
 
   // Row height for virtualization (compact VS Code style)
   const ROW_HEIGHT = 24;
@@ -574,6 +668,12 @@ export const DataTable = function DataTable({
           // Disable virtualization for very small datasets to prevent flickering
           // Keep threshold low (50) to avoid layout thrashing with many DOM nodes
           disableVirtualization={rows.length < 50}
+          // Context menu props for SQL INSERT generation
+          tableName={tableName}
+          columns={columns}
+          onCopyRowAsSQL={handleCopyRowAsSQL}
+          onCopyRow={handleCopyRow}
+          onDeleteRow={handleDeleteRow}
         />
       </table>
 
