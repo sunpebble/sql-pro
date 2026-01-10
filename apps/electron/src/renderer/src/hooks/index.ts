@@ -5,4 +5,5 @@ export * from './useMemoryMonitor';
 export * from './usePendingChanges';
 export * from './useResizableColumns';
 export * from './useTableData';
+export * from './useTableNavigation';
 export * from './useVirtualData';
