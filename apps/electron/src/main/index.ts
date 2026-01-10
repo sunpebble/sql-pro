@@ -297,8 +297,10 @@ app.on('window-all-closed', async () => {
   // Clean up file watchers
   fileWatcherService.unwatchAll();
 
-  cleanupIpcHandlers();
+  // On macOS, apps typically stay active even with no windows open
+  // Don't cleanup IPC handlers here since new windows can still be created
   if (process.platform !== 'darwin') {
+    cleanupIpcHandlers();
     app.quit();
   }
 });
