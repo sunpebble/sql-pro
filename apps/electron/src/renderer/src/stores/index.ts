@@ -45,6 +45,12 @@ export type {
 } from './keyboard-shortcuts-store';
 export { useOnboardingStore } from './onboarding-store';
 export { ALL_PRO_FEATURES, useProStore } from './pro-store';
+export { useQueryHistoryStore } from './query-history-store';
+export type {
+  QueryHistoryDateRange,
+  QueryHistoryFilter,
+  QueryHistoryStatus,
+} from './query-history-store';
 export { useQueryStore } from './query-store';
 export { useQueryTabsStore } from './query-tabs-store';
 export type {
