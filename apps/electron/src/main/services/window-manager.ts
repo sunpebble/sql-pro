@@ -17,10 +17,9 @@ function getIconPath(): string {
 
   if (process.platform === 'win32') {
     return join(resourcesPath, 'icon.ico');
-  } else if (process.platform === 'darwin') {
-    return join(resourcesPath, 'icon.icns');
   } else {
-    return join(resourcesPath, 'icons/512x512.png');
+    // Use PNG for macOS and Linux - nativeImage has better PNG support
+    return join(resourcesPath, 'icon.png');
   }
 }
 

@@ -49,6 +49,7 @@ import {
   ChevronsDownUp,
   ChevronsUpDown,
   Code,
+  Compass,
   Copy,
   Database,
   Eye,
@@ -73,6 +74,7 @@ import { cn } from '@/lib/utils';
 import {
   useConnectionStore,
   useDataTabsStore,
+  useOnboardingStore,
   useQueryTabsStore,
   useSettingsStore,
   useTableFont,
@@ -104,6 +106,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   } = useConnectionStore();
   const { openTable } = useDataTabsStore();
   const { createTab } = useQueryTabsStore();
+  const { startTour, hasCompletedTour, isTourVisible } = useOnboardingStore();
 
   // Table organization store
   const {
@@ -731,6 +734,17 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       onKeyDown={handleKeyDown}
       data-tour-target="sidebar"
     >
+      {/* Take a Tour button - show when tour not completed and not currently visible */}
+      {!hasCompletedTour && !isTourVisible && (
+        <button
+          onClick={startTour}
+          className="text-muted-foreground hover:text-foreground hover:bg-muted/50 mx-1.5 mt-1 flex h-7 shrink-0 items-center gap-2 rounded-md px-2 text-xs transition-colors"
+        >
+          <Compass className="h-3.5 w-3.5" />
+          Take a Tour
+        </button>
+      )}
+
       {/* Search - matches DataTabBar height */}
       <div className="mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
         <div className="relative flex-1">

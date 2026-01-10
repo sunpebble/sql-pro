@@ -86,12 +86,13 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
   },
   // Connection
   {
-    id: 'conn.recent-connections',
-    label: 'Recent Connections',
-    description: 'Show recent database connections',
+    id: 'conn.new-connection',
+    label: 'New Connection',
+    description: 'Open a new database connection',
     category: 'navigation',
     scope: 'global',
   },
+
   {
     id: 'conn.next-connection',
     label: 'Next Connection',
@@ -244,7 +245,7 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
   'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },
   'nav.data-diff': { key: '5', modifiers: { cmd: true, ctrl: true } },
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
-  'conn.recent-connections': { key: 'r', modifiers: { ctrl: true } },
+  'conn.new-connection': { key: 't', modifiers: { cmd: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, shift: true } },
@@ -282,7 +283,7 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },
   'nav.data-diff': { key: '5', modifiers: { cmd: true, ctrl: true } },
   'nav.toggle-sidebar': { key: 'k', modifiers: { cmd: true } },
-  'conn.recent-connections': { key: 'r', modifiers: { ctrl: true } },
+  'conn.new-connection': { key: 't', modifiers: { cmd: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, alt: true } },

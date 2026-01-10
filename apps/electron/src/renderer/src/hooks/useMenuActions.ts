@@ -118,10 +118,20 @@ export function useMenuActions() {
         case 'refresh-table': {
           const { activeConnectionId } = connectionStore;
           if (activeConnectionId) {
-            // Invalidate table data queries to trigger refetch
-            queryClient.invalidateQueries({
-              queryKey: ['tableData', activeConnectionId],
+            // Directly refetch table data queries
+            const queries = queryClient.getQueryCache().findAll({
+              predicate: (query) => {
+                const queryKey = query.queryKey;
+                return (
+                  Array.isArray(queryKey) &&
+                  queryKey[0] === 'tableData' &&
+                  queryKey[1] === activeConnectionId
+                );
+              },
             });
+            for (const query of queries) {
+              query.fetch();
+            }
           }
           break;
         }

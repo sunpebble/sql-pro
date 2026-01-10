@@ -2717,7 +2717,7 @@ export type ShortcutAction =
   | 'action.export-data'
   | 'action.focus-search'
   // Connection
-  | 'conn.recent-connections'
+  | 'conn.new-connection'
   | 'conn.next-connection'
   | 'conn.prev-connection'
   // Settings
@@ -2813,7 +2813,7 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'action.delete-row': { key: 'Backspace', modifiers: { cmd: true } },
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
-  'conn.recent-connections': { key: 'r', modifiers: { ctrl: true } },
+  'conn.new-connection': { key: 't', modifiers: { cmd: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },

@@ -2,7 +2,7 @@
   "name": "sql-pro-monorepo",
   "version": "1.14.0",
   "private": true,
-  "packageManager": "pnpm@10.27.0",
+  "packageManager": "pnpm@10.28.0",
   "description": "SQL Pro Monorepo - Professional SQLite database manager",
   "author": {
     "name": "kunish",
@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.3",
-    "@commitlint/cli": "^20.3.0",
-    "@commitlint/config-conventional": "^20.3.0",
-    "@eslint-react/eslint-plugin": "^2.5.1",
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "@eslint-react/eslint-plugin": "^2.5.3",
     "@nx/js": "^22.3.3",
     "@nx/vite": "^22.3.3",
     "@nx/workspace": "^22.3.3",

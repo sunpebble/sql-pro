@@ -143,10 +143,9 @@ function getIconPath(): string {
 
   if (process.platform === 'win32') {
     return join(resourcesPath, 'icon.ico');
-  } else if (process.platform === 'darwin') {
-    return join(resourcesPath, 'icon.icns');
   } else {
-    return join(resourcesPath, 'icons/512x512.png');
+    // Use PNG for macOS and Linux - nativeImage has better PNG support
+    return join(resourcesPath, 'icon.png');
   }
 }
 
@@ -230,6 +229,17 @@ app.whenReady().then(async () => {
   // Set app name for development mode (must be after app is ready)
   if (is.dev) {
     app.name = 'SQL Pro';
+  }
+
+  // Set Dock icon on macOS (especially important for development mode)
+  if (process.platform === 'darwin') {
+    const iconPath = getIconPath();
+    const icon = nativeImage.createFromPath(iconPath);
+    if (!icon.isEmpty()) {
+      app.dock?.setIcon(icon);
+    } else {
+      console.warn('[Dev] Icon file not found or empty at:', iconPath);
+    }
   }
 
   setAppUserModelId('com.sqlpro.app');

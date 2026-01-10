@@ -5,7 +5,6 @@ import {
   GitCompare,
   GitFork,
   Keyboard,
-  Link,
   Monitor,
   PanelLeft,
   PanelLeftClose,
@@ -163,11 +162,13 @@ export function useCommands() {
         return;
       }
 
-      // Recent connections shortcut (Ctrl+R) - works everywhere
-      const recentConnectionsBinding = getShortcut('conn.recent-connections');
-      if (matchesBinding(e, recentConnectionsBinding)) {
+      // New connection shortcut (Cmd+T) - works everywhere
+      // Opens the connection switcher to select a connection for a new tab
+      const newConnectionBinding = getShortcut('conn.new-connection');
+      if (matchesBinding(e, newConnectionBinding)) {
         e.preventDefault();
-        // Open connection switcher dialog
+        e.stopPropagation();
+        // Open connection switcher to select a connection
         openConnectionSwitcher();
         return;
       }
@@ -237,9 +238,21 @@ export function useCommands() {
         e.preventDefault();
 
         if (activeConnectionId) {
-          queryClient.invalidateQueries({
-            queryKey: ['tableData', activeConnectionId],
+          const queries = queryClient.getQueryCache().findAll({
+            predicate: (query) => {
+              const queryKey = query.queryKey;
+              return (
+                Array.isArray(queryKey) &&
+                queryKey[0] === 'tableData' &&
+                queryKey[1] === activeConnectionId
+              );
+            },
           });
+
+          // Directly refetch each query
+          for (const query of queries) {
+            query.fetch();
+          }
         }
         return;
       }
@@ -561,17 +574,18 @@ export function useCommands() {
 
       // Connection commands
       {
-        id: 'conn.recent-connections',
-        label: 'Recent Connections',
-        shortcut: getShortcutDisplay('conn.recent-connections'),
-        icon: Link,
+        id: 'conn.new-connection',
+        label: 'New Connection Tab',
+        shortcut: getShortcutDisplay('conn.new-connection'),
+        icon: Plus,
         category: 'navigation',
-        keywords: ['recent', 'connection', 'database', 'switch'],
+        keywords: ['new', 'connection', 'tab', 'database', 'switch', 'select'],
         action: () => {
-          // Open connection switcher dialog
+          // Open connection switcher to select a connection for a new tab
           useConnectionSwitcherStore.getState().open();
         },
       },
+
       {
         id: 'conn.next-connection',
         label: 'Next Connection',
@@ -630,9 +644,19 @@ export function useCommands() {
         action: () => {
           const { activeConnectionId } = connectionStoreRef.current!;
           if (activeConnectionId) {
-            queryClient.invalidateQueries({
-              queryKey: ['tableData', activeConnectionId],
+            const queries = queryClient.getQueryCache().findAll({
+              predicate: (query) => {
+                const queryKey = query.queryKey;
+                return (
+                  Array.isArray(queryKey) &&
+                  queryKey[0] === 'tableData' &&
+                  queryKey[1] === activeConnectionId
+                );
+              },
             });
+            for (const query of queries) {
+              query.fetch();
+            }
           }
         },
       },

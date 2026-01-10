@@ -38,6 +38,12 @@ interface TourTooltipProps {
 const VIEWPORT_MARGIN = 16;
 
 /**
+ * Top margin specifically for macOS traffic lights (window controls)
+ * This ensures the tooltip doesn't overlap with the traffic lights area
+ */
+const TOP_MARGIN = 52;
+
+/**
  * Tooltip offset from the target element
  */
 const TOOLTIP_OFFSET = 16;
@@ -66,7 +72,7 @@ function calculateTooltipPosition(
         )
       ),
       top: Math.max(
-        VIEWPORT_MARGIN,
+        TOP_MARGIN,
         Math.min(
           viewportHeight - tooltipHeight - VIEWPORT_MARGIN,
           (viewportHeight - tooltipHeight) / 2
@@ -138,9 +144,9 @@ function adjustForViewport(
     left = viewportWidth - tooltipWidth - VIEWPORT_MARGIN;
   }
 
-  // Vertical adjustment
-  if (top < VIEWPORT_MARGIN) {
-    top = VIEWPORT_MARGIN;
+  // Vertical adjustment - use TOP_MARGIN for top edge to avoid traffic lights
+  if (top < TOP_MARGIN) {
+    top = TOP_MARGIN;
   } else if (top + tooltipHeight > viewportHeight - VIEWPORT_MARGIN) {
     top = viewportHeight - tooltipHeight - VIEWPORT_MARGIN;
   }
