@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ShortcutKbd } from '@/components/ui/kbd';
+import { useAutoRefresh } from '@/hooks/useAutoRefresh';
 import { useClientSearch } from '@/hooks/useClientSearch';
 import { useExport } from '@/hooks/useExport';
 import { useInfiniteTableData } from '@/hooks/useInfiniteTableData';
@@ -196,15 +197,25 @@ export function TableView({ tableOverride }: TableViewProps) {
     return convertUIFiltersToAPIFilters(filters);
   }, [filters]);
 
-  // PostgreSQL LISTEN/NOTIFY auto-refresh
-  // Only enable for PostgreSQL/Supabase connections
+  // Auto-refresh configuration
   const isPostgres =
     connection?.databaseType === 'postgresql' ||
     connection?.databaseType === 'supabase';
+  const isMySql = connection?.databaseType === 'mysql';
+
+  // PostgreSQL LISTEN/NOTIFY auto-refresh (real-time when triggers are set up)
   usePgNotify(isPostgres ? activeConnectionId : null, 'table_changes', {
     enabled: isPostgres && !!selectedTable,
     autoRefreshTable: selectedTable?.name,
     autoRefreshDebounceMs: 500,
+  });
+
+  // Polling-based auto-refresh for MySQL (and as fallback for PostgreSQL)
+  // Uses a longer interval (30s) to avoid excessive queries
+  useAutoRefresh(isMySql ? activeConnectionId : null, {
+    enabled: isMySql && !!selectedTable,
+    intervalMs: 30000, // 30 seconds
+    pauseWhenHidden: true,
   });
 
   // Use paginated data hook for normal pagination
