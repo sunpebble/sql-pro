@@ -2817,6 +2817,9 @@ export type ShortcutAction =
   | 'conn.new-connection'
   | 'conn.next-connection'
   | 'conn.prev-connection'
+  // Table navigation
+  | 'table.next-table'
+  | 'table.prev-table'
   // Settings
   | 'settings.open'
   // Onboarding
