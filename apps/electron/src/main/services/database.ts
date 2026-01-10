@@ -1496,6 +1496,212 @@ class DatabaseService {
   }
 
   /**
+   * Get a range of rows from a table using LIMIT/OFFSET pagination.
+   * Designed for virtual scrolling and infinite scroll patterns.
+   *
+   * This method is optimized for large tables:
+   * - Uses LIMIT/OFFSET for efficient chunked loading
+   * - Returns estimated total count for large tables (>100k rows)
+   * - Supports sorting and filtering
+   *
+   * @param connectionId - The database connection ID
+   * @param table - The table name to fetch from
+   * @param startRow - Starting row index (0-based)
+   * @param endRow - Ending row index (exclusive)
+   * @param sortColumn - Optional column to sort by
+   * @param sortDirection - Sort direction (defaults to 'asc')
+   * @param filters - Optional filters to apply
+   * @param schema - Database schema (defaults to 'main')
+   */
+  getTableRowRange(
+    connectionId: string,
+    table: string,
+    startRow: number,
+    endRow: number,
+    sortColumn?: string,
+    sortDirection?: 'asc' | 'desc',
+    filters?: Array<{
+      column: string;
+      operator: string;
+      value: string;
+    }>,
+    schema?: string
+  ): {
+    success: boolean;
+    columns?: ColumnInfo[];
+    rows?: Record<string, unknown>[];
+    totalRows?: number;
+    isEstimatedTotal?: boolean;
+    actualStartRow?: number;
+    actualEndRow?: number;
+    error?: string;
+  } {
+    const conn = this.connections.get(connectionId);
+    if (!conn) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    // Validate row range
+    if (startRow < 0) {
+      startRow = 0;
+    }
+    if (endRow <= startRow) {
+      return {
+        success: true,
+        columns: [],
+        rows: [],
+        totalRows: 0,
+        isEstimatedTotal: false,
+        actualStartRow: startRow,
+        actualEndRow: startRow,
+      };
+    }
+
+    const schemaPrefix = schema ? `"${schema}".` : '';
+    const schemaName = schema || 'main';
+    let sql = `SELECT * FROM ${schemaPrefix}"${table}"`;
+    const params: unknown[] = [];
+
+    try {
+      // Build WHERE clause from filters
+      if (filters && filters.length > 0) {
+        const conditions = filters.map((f) => {
+          switch (f.operator) {
+            case 'eq':
+              params.push(f.value);
+              return `"${f.column}" = ?`;
+            case 'neq':
+              params.push(f.value);
+              return `"${f.column}" != ?`;
+            case 'gt':
+              params.push(f.value);
+              return `"${f.column}" > ?`;
+            case 'lt':
+              params.push(f.value);
+              return `"${f.column}" < ?`;
+            case 'gte':
+              params.push(f.value);
+              return `"${f.column}" >= ?`;
+            case 'lte':
+              params.push(f.value);
+              return `"${f.column}" <= ?`;
+            case 'like':
+              params.push(`%${f.value}%`);
+              return `"${f.column}" LIKE ?`;
+            case 'isnull':
+              return `"${f.column}" IS NULL`;
+            case 'notnull':
+              return `"${f.column}" IS NOT NULL`;
+            default:
+              params.push(f.value);
+              return `"${f.column}" = ?`;
+          }
+        });
+        sql += ` WHERE ${conditions.join(' AND ')}`;
+      }
+
+      // Apply ORDER BY
+      if (sortColumn) {
+        sql += ` ORDER BY "${sortColumn}" ${sortDirection === 'desc' ? 'DESC' : 'ASC'}`;
+      }
+
+      // Get total row count (with estimation for large tables)
+      // For filtered queries, we need exact count; for unfiltered, we can estimate
+      let totalRows: number;
+      let isEstimatedTotal = false;
+
+      if (filters && filters.length > 0) {
+        // For filtered queries, get exact count
+        const countSql = sql.replace(/SELECT \*/, 'SELECT COUNT(*) as count');
+        const countStartTime = performance.now();
+        const countResult = conn.db.prepare(countSql).get(...params) as {
+          count: number;
+        };
+        const countDurationMs = performance.now() - countStartTime;
+        totalRows = countResult.count;
+
+        sqlLogger.logQuery({
+          connectionId,
+          dbPath: conn.path,
+          sql: countSql,
+          durationMs: countDurationMs,
+          success: true,
+          rowCount: 1,
+        });
+      } else {
+        // For unfiltered queries, use fast estimation for large tables
+        const countMeta = this.getRowCountWithMetadata(
+          conn.db,
+          table,
+          schemaName
+        );
+        totalRows = countMeta.count;
+        isEstimatedTotal = countMeta.isEstimated;
+      }
+
+      // Calculate the actual range to fetch
+      const actualStartRow = Math.min(startRow, totalRows);
+      const limit = endRow - startRow;
+      const offset = actualStartRow;
+
+      // Apply LIMIT/OFFSET for the row range
+      sql += ` LIMIT ? OFFSET ?`;
+      params.push(limit, offset);
+
+      // Execute the query
+      const dataStartTime = performance.now();
+      const rows = conn.db.prepare(sql).all(...params) as Array<
+        Record<string, unknown>
+      >;
+      const dataDurationMs = performance.now() - dataStartTime;
+
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.path,
+        sql,
+        durationMs: dataDurationMs,
+        success: true,
+        rowCount: rows.length,
+      });
+
+      // Get column information
+      const columns = this.getColumns(conn.db, table, schemaName);
+
+      // Calculate actual end row
+      const actualEndRow = actualStartRow + rows.length;
+
+      return {
+        success: true,
+        columns,
+        rows,
+        totalRows,
+        isEstimatedTotal,
+        actualStartRow,
+        actualEndRow,
+      };
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to get table row range';
+
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.path,
+        sql,
+        durationMs: 0,
+        success: false,
+        error: errorMessage,
+      });
+
+      return {
+        success: false,
+        error: errorMessage,
+      };
+    }
+  }
+
+  /**
    * Split SQL string into individual statements.
    * Handles semicolons inside strings and comments.
    */

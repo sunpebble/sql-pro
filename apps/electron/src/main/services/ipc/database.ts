@@ -8,6 +8,7 @@ import type {
   GetSchemaRequest,
   GetTableDataRequest,
   GetTableDetailsRequest,
+  GetTableRowRangeRequest,
   OpenDatabaseRequest,
   TestConnectionRequest,
   ValidateChangesRequest,
@@ -269,6 +270,74 @@ export function setupDatabaseHandlers(): void {
         request.table,
         request.page,
         request.pageSize,
+        request.sortColumn,
+        request.sortDirection,
+        request.filters,
+        request.schema
+      );
+    }
+  );
+
+  // Database: Get Table Row Range (for virtual scrolling)
+  ipcMain.handle(
+    IPC_CHANNELS.DB_GET_TABLE_ROW_RANGE,
+    async (_event, request: GetTableRowRangeRequest) => {
+      // Check if connection is async (MySQL/PostgreSQL)
+      // For now, async adapters don't support row range - fall back to regular data fetch
+      if (databaseManager.isAsyncConnection(request.connectionId)) {
+        // Convert row range to page/pageSize for async connections
+        const pageSize = request.endRow - request.startRow;
+        const page = Math.floor(request.startRow / pageSize) + 1;
+
+        const result = await databaseManager.getTableDataAsync(
+          request.connectionId,
+          request.table,
+          page,
+          pageSize,
+          request.sortColumn,
+          request.sortDirection,
+          request.filters,
+          request.schema
+        );
+
+        if (!result.success) {
+          return result;
+        }
+
+        // Transform to row range response format
+        return {
+          success: true,
+          columns: result.columns,
+          rows: result.rows,
+          totalRows: result.totalRows,
+          isEstimatedTotal: false,
+          actualStartRow: request.startRow,
+          actualEndRow: request.startRow + (result.rows?.length || 0),
+        };
+      }
+
+      // Try database manager for new connections (SQLite adapter)
+      const conn = databaseManager.getConnection(request.connectionId);
+      if (conn) {
+        // Use the database manager's getTableRowRange method
+        return databaseManager.getTableRowRange(
+          request.connectionId,
+          request.table,
+          request.startRow,
+          request.endRow,
+          request.sortColumn,
+          request.sortDirection,
+          request.filters,
+          request.schema
+        );
+      }
+
+      // Fall back to legacy database service
+      return databaseService.getTableRowRange(
+        request.connectionId,
+        request.table,
+        request.startRow,
+        request.endRow,
         request.sortColumn,
         request.sortDirection,
         request.filters,

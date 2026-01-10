@@ -92,6 +92,8 @@ import type {
   GetTableDataResponse,
   GetTableDetailsRequest,
   GetTableDetailsResponse,
+  GetTableRowRangeRequest,
+  GetTableRowRangeResponse,
   HasPasswordRequest,
   HasPasswordResponse,
   ImportBundleRequest,
@@ -208,6 +210,10 @@ const sqlProAPI = {
       request: GetTableDataRequest
     ): Promise<GetTableDataResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_GET_TABLE_DATA, request),
+    getTableRowRange: (
+      request: GetTableRowRangeRequest
+    ): Promise<GetTableRowRangeResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_GET_TABLE_ROW_RANGE, request),
     executeQuery: (
       request: ExecuteQueryRequest
     ): Promise<ExecuteQueryResponse> =>

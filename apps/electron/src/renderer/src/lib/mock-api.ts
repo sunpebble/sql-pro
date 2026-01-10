@@ -18,6 +18,7 @@ import type {
   GetSchemaRequest,
   GetSchemaSnapshotRequest,
   GetTableDataRequest,
+  GetTableRowRangeRequest,
   HasPasswordRequest,
   OpenDatabaseRequest,
   OpenFileDialogRequest,
@@ -727,6 +728,29 @@ export const mockSqlProAPI: any = {
         columns,
         rows: data.slice(offset, offset + pageSize),
         totalRows: data.length,
+      };
+    },
+    getTableRowRange: async (
+      _request: GetTableRowRangeRequest
+    ): Promise<any> => {
+      await delay(200);
+      const tableName = _request.table;
+      const data = mockTableData[tableName] || [];
+      const startRow = Math.max(0, _request.startRow);
+      const endRow = Math.min(data.length, _request.endRow);
+
+      // Find the table schema to get columns
+      const tableSchema = mockTables.find((t) => t.name === tableName);
+      const columns = tableSchema?.columns || [];
+
+      return {
+        success: true,
+        columns,
+        rows: data.slice(startRow, endRow),
+        totalRows: data.length,
+        isEstimatedTotal: false,
+        actualStartRow: startRow,
+        actualEndRow: startRow + data.slice(startRow, endRow).length,
       };
     },
   },

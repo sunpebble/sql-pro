@@ -362,6 +362,67 @@ export interface GetTableDataRequest {
   }>;
 }
 
+// ============ Streaming Row Data Types ============
+
+/**
+ * Request for streaming row data using LIMIT/OFFSET pagination.
+ * Designed for virtual scrolling and infinite scroll patterns.
+ */
+export interface GetTableRowRangeRequest {
+  connectionId: string;
+  /** Database schema (defaults to 'main' for SQLite) */
+  schema?: string;
+  /** Table name to fetch data from */
+  table: string;
+  /** Starting row index (0-based) */
+  startRow: number;
+  /** Ending row index (exclusive) - fetches rows from startRow to endRow-1 */
+  endRow: number;
+  /** Optional column to sort by */
+  sortColumn?: string;
+  /** Sort direction (defaults to 'asc') */
+  sortDirection?: 'asc' | 'desc';
+  /** Optional filters to apply */
+  filters?: Array<{
+    column: string;
+    operator:
+      | 'eq'
+      | 'neq'
+      | 'gt'
+      | 'lt'
+      | 'gte'
+      | 'lte'
+      | 'like'
+      | 'isnull'
+      | 'notnull';
+    value: string;
+  }>;
+}
+
+/**
+ * Response for streaming row data.
+ * Returns a chunk of rows for the requested range.
+ */
+export interface GetTableRowRangeResponse {
+  success: boolean;
+  /** Column information for the table */
+  columns?: ColumnInfo[];
+  /** The rows in the requested range */
+  rows?: Record<string, unknown>[];
+  /** Total number of rows (may be estimated for large tables) */
+  totalRows?: number;
+  /** Whether the total row count is an estimate */
+  isEstimatedTotal?: boolean;
+  /** The actual start row returned (may differ if beyond table bounds) */
+  actualStartRow?: number;
+  /** The actual end row returned (exclusive) */
+  actualEndRow?: number;
+  /** Error message if request failed */
+  error?: string;
+  /** Error code for programmatic handling */
+  errorCode?: ErrorCode;
+}
+
 export interface GetTableDataResponse {
   success: boolean;
   columns?: ColumnInfo[];
@@ -2438,6 +2499,7 @@ export const IPC_CHANNELS = {
   DB_GET_SCHEMA_LIST: 'db:get-schema-list',
   DB_GET_TABLE_DETAILS: 'db:get-table-details',
   DB_GET_TABLE_DATA: 'db:get-table-data',
+  DB_GET_TABLE_ROW_RANGE: 'db:get-table-row-range',
   DB_EXECUTE_QUERY: 'db:execute-query',
   DB_VALIDATE_CHANGES: 'db:validate-changes',
   DB_APPLY_CHANGES: 'db:apply-changes',

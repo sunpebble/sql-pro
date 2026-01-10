@@ -5,6 +5,7 @@
  */
 
 import type {
+  ColumnInfo,
   DatabaseConnectionConfig,
   DatabaseType,
   GetTableDataResponse,
@@ -352,6 +353,86 @@ class DatabaseManager {
       filters,
       schema
     );
+  }
+
+  /**
+   * Get a range of rows from a table using LIMIT/OFFSET pagination.
+   * Designed for virtual scrolling and infinite scroll patterns.
+   */
+  getTableRowRange(
+    connectionId: string,
+    table: string,
+    startRow: number,
+    endRow: number,
+    sortColumn?: string,
+    sortDirection?: 'asc' | 'desc',
+    filters?: Array<{
+      column: string;
+      operator: string;
+      value: string;
+    }>,
+    schema?: string
+  ): {
+    success: boolean;
+    columns?: ColumnInfo[];
+    rows?: Record<string, unknown>[];
+    totalRows?: number;
+    isEstimatedTotal?: boolean;
+    actualStartRow?: number;
+    actualEndRow?: number;
+    error?: string;
+  } {
+    const adapter = this.getConnectionAdapter(connectionId);
+    if (!adapter) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    // Check if adapter has getTableRowRange method (SQLite adapter has it)
+    if (
+      'getTableRowRange' in adapter &&
+      typeof (adapter as any).getTableRowRange === 'function'
+    ) {
+      return (adapter as any).getTableRowRange(
+        connectionId,
+        table,
+        startRow,
+        endRow,
+        sortColumn,
+        sortDirection,
+        filters,
+        schema
+      );
+    }
+
+    // Fallback: convert row range to page/pageSize for adapters without getTableRowRange
+    const pageSize = endRow - startRow;
+    const page = Math.floor(startRow / pageSize) + 1;
+
+    const result = adapter.getTableData(
+      connectionId,
+      table,
+      page,
+      pageSize,
+      sortColumn,
+      sortDirection,
+      filters,
+      schema
+    );
+
+    if (!result.success) {
+      return { success: false, error: result.error };
+    }
+
+    return {
+      success: true,
+      columns: result.columns,
+      rows: result.rows as Record<string, unknown>[],
+      totalRows: result.totalRows,
+      isEstimatedTotal: false,
+      actualStartRow: startRow,
+      actualEndRow:
+        startRow + ((result.rows as Record<string, unknown>[])?.length || 0),
+    };
   }
 
   /**
