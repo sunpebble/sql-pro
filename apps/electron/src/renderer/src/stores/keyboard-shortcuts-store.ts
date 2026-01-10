@@ -107,6 +107,20 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
     category: 'navigation',
     scope: 'global',
   },
+  {
+    id: 'table.next-table',
+    label: 'Next Table',
+    description: 'Navigate to the next table in the sidebar',
+    category: 'navigation',
+    scope: 'global',
+  },
+  {
+    id: 'table.prev-table',
+    label: 'Previous Table',
+    description: 'Navigate to the previous table in the sidebar',
+    category: 'navigation',
+    scope: 'global',
+  },
   // View
   {
     id: 'view.toggle-history',
@@ -248,6 +262,8 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
   'conn.new-connection': { key: 't', modifiers: { cmd: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
+  'table.next-table': { key: ']', modifiers: { cmd: true, alt: true } },
+  'table.prev-table': { key: '[', modifiers: { cmd: true, alt: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, shift: true } },
   'view.toggle-schema-details': {
     key: 'i',
@@ -286,6 +302,8 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'conn.new-connection': { key: 't', modifiers: { cmd: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
+  'table.next-table': { key: ']', modifiers: { cmd: true, alt: true } },
+  'table.prev-table': { key: '[', modifiers: { cmd: true, alt: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true, alt: true } },
   'view.toggle-schema-details': {
     key: 'i',

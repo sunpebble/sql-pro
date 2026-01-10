@@ -2916,6 +2916,8 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'conn.new-connection': { key: 't', modifiers: { cmd: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },
+  'table.next-table': { key: ']', modifiers: { cmd: true, alt: true } },
+  'table.prev-table': { key: '[', modifiers: { cmd: true, alt: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
   'onboarding.skip': { key: 'Escape', modifiers: {} },
   'onboarding.next': { key: 'Enter', modifiers: {} },
