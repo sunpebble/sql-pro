@@ -62,11 +62,13 @@ import { cn } from '@/lib/utils';
 import {
   useAIStore,
   useConnectionStore,
+  useQueryHistoryStore,
   useQueryStore,
   useQueryTabsStore,
 } from '@/stores';
 import { QueryOptimizerPanel } from './data-tools/QueryOptimizerPanel';
 import { MonacoSqlEditor } from './MonacoSqlEditor';
+import { QueryHistoryFilters } from './query-editor/QueryHistoryFilters';
 import { QueryPane } from './query-editor/QueryPane';
 import { QueryTabBar } from './query-editor/QueryTabBar';
 import { QueryTemplatesPicker } from './query-editor/QueryTemplatesPicker';
@@ -131,7 +133,6 @@ export function QueryEditor() {
   const activePaneId = connectionTabState?.activePaneId || 'pane-main';
 
   const [showSidePanel, setShowSidePanel] = useState(false);
-  const [historySearch, setHistorySearch] = useState('');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showOptimizer, setShowOptimizer] = useState(false);
@@ -149,6 +150,16 @@ export function QueryEditor() {
 
   // AI store
   const { isConfigured: isAIConfigured } = useAIStore();
+
+  // Query history filter store
+  const historyFilter = useQueryHistoryStore((state) => state.filter);
+  const setHistoryFilter = useQueryHistoryStore((state) => state.setFilter);
+  const getFilteredHistory = useQueryHistoryStore(
+    (state) => state.getFilteredHistory
+  );
+  const getActiveFilterCount = useQueryHistoryStore(
+    (state) => state.getActiveFilterCount
+  );
 
   // Check if in split view mode
   const isSplitView = activeConnectionId ? isSplit(activeConnectionId) : false;
@@ -168,16 +179,13 @@ export function QueryEditor() {
     }
   }, [activeConnectionId, setTabsActiveConnection]);
 
-  // Filter history based on search term (case-insensitive)
+  // Filter history using the query history store
+  // Note: historyFilter dependency is needed to trigger re-computation when filters change,
+  // even though it's not directly used in the callback (getFilteredHistory accesses it via store)
   const filteredHistory = useMemo(() => {
-    if (!historySearch.trim()) {
-      return history;
-    }
-    const searchLower = historySearch.toLowerCase();
-    return history.filter((item) =>
-      (item.queryText ?? '').toLowerCase().includes(searchLower)
-    );
-  }, [history, historySearch]);
+    return getFilteredHistory(history);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history, getFilteredHistory, historyFilter]);
 
   // Load history when connection changes
   useEffect(() => {
@@ -702,19 +710,26 @@ export function QueryEditor() {
                   <Input
                     type="text"
                     placeholder="Search history..."
-                    value={historySearch}
-                    onChange={(e) => setHistorySearch(e.target.value)}
+                    value={historyFilter.searchText || ''}
+                    onChange={(e) =>
+                      setHistoryFilter({
+                        searchText: e.target.value || undefined,
+                      })
+                    }
                     className="h-8 pl-8 text-sm"
                   />
                 </div>
               </div>
+
+              {/* History Filters */}
+              <QueryHistoryFilters className="shrink-0 border-b" />
 
               {/* History List */}
               <ScrollArea className="min-h-0 flex-1">
                 <div className="space-y-1 p-2">
                   {filteredHistory.length === 0 ? (
                     <p className="text-muted-foreground py-8 text-center text-sm">
-                      {historySearch.trim()
+                      {getActiveFilterCount() > 0
                         ? 'No matching queries'
                         : 'No queries yet'}
                     </p>
