@@ -916,19 +916,151 @@ class DatabaseService {
     });
   }
 
+  /**
+   * Threshold for using estimated row counts vs exact COUNT(*)
+   * For tables larger than this, we use estimation to avoid long query times
+   */
+  private static readonly FAST_COUNT_THRESHOLD = 100000;
+
+  /**
+   * Get row count for a table, using estimation for large tables.
+   *
+   * For performance, we use a tiered approach:
+   * 1. Try sqlite_stat1 first (if ANALYZE has been run)
+   * 2. Fall back to MAX(rowid) estimation for tables without deletes
+   * 3. Use COUNT(*) only for small tables or as last resort
+   *
+   * The returned count may be approximate for large tables, indicated
+   * by the isEstimated flag when using getRowCountWithMetadata().
+   */
   private getRowCount(
     db: Database.Database,
     tableName: string,
     schema: string = 'main'
   ): number {
+    const result = this.getRowCountWithMetadata(db, tableName, schema);
+    return result.count;
+  }
+
+  /**
+   * Get row count with metadata about whether it's an estimate.
+   * Useful for displaying to users when count is approximate.
+   */
+  private getRowCountWithMetadata(
+    db: Database.Database,
+    tableName: string,
+    schema: string = 'main'
+  ): { count: number; isEstimated: boolean } {
     try {
+      // First, try to get an estimate from sqlite_stat1
+      // This is populated when ANALYZE has been run on the database
+      const statResult = this.getEstimatedCountFromStat1(db, tableName, schema);
+      if (
+        statResult !== null &&
+        statResult >= DatabaseService.FAST_COUNT_THRESHOLD
+      ) {
+        return { count: statResult, isEstimated: true };
+      }
+
+      // Try MAX(rowid) estimation - fast for tables with rowid
+      // This works well for tables without many deletions
+      const rowidEstimate = this.getEstimatedCountFromRowid(
+        db,
+        tableName,
+        schema
+      );
+      if (
+        rowidEstimate !== null &&
+        rowidEstimate >= DatabaseService.FAST_COUNT_THRESHOLD
+      ) {
+        return { count: rowidEstimate, isEstimated: true };
+      }
+
+      // For smaller tables or when estimation fails, use exact COUNT(*)
       const result = db
         .prepare(`SELECT COUNT(*) as count FROM "${schema}"."${tableName}"`)
         .get() as { count: number };
-      return result.count;
+      return { count: result.count, isEstimated: false };
     } catch {
-      // If count fails, return 0
-      return 0;
+      return { count: 0, isEstimated: false };
+    }
+  }
+
+  /**
+   * Get estimated row count from sqlite_stat1 table.
+   * Returns null if the table doesn't exist or has no statistics.
+   *
+   * sqlite_stat1 format: tbl, idx, stat
+   * - For the table itself (when idx is null or the PK), stat starts with row count
+   * - stat format is "rowcount col1_avg col2_avg ..."
+   */
+  private getEstimatedCountFromStat1(
+    db: Database.Database,
+    tableName: string,
+    schema: string = 'main'
+  ): number | null {
+    try {
+      // Check if sqlite_stat1 exists
+      const statTableExists = db
+        .prepare(
+          `SELECT name FROM "${schema}".sqlite_master WHERE type='table' AND name='sqlite_stat1'`
+        )
+        .get() as { name: string } | undefined;
+
+      if (!statTableExists) {
+        return null;
+      }
+
+      // Query sqlite_stat1 for this table
+      // The stat column contains space-separated values, first is row count
+      const statResult = db
+        .prepare(
+          `SELECT stat FROM "${schema}".sqlite_stat1 WHERE tbl = ? ORDER BY idx NULLS FIRST LIMIT 1`
+        )
+        .get(tableName) as { stat: string } | undefined;
+
+      if (!statResult || !statResult.stat) {
+        return null;
+      }
+
+      // Parse the first number from stat (row count)
+      const rowCount = Number.parseInt(statResult.stat.split(' ')[0], 10);
+      if (Number.isNaN(rowCount)) {
+        return null;
+      }
+
+      return rowCount;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Get estimated row count using MAX(rowid).
+   * This is fast but may overestimate if rows have been deleted.
+   * Returns null for tables without rowid (WITHOUT ROWID tables).
+   */
+  private getEstimatedCountFromRowid(
+    db: Database.Database,
+    tableName: string,
+    schema: string = 'main'
+  ): number | null {
+    try {
+      // Try to get MAX(rowid) - this is O(1) with an index
+      const result = db
+        .prepare(
+          `SELECT MAX(rowid) as max_rowid FROM "${schema}"."${tableName}"`
+        )
+        .get() as { max_rowid: number | null } | undefined;
+
+      if (!result || result.max_rowid === null) {
+        return null;
+      }
+
+      return result.max_rowid;
+    } catch {
+      // Table might be WITHOUT ROWID or have other issues
+      return null;
     }
   }
 
