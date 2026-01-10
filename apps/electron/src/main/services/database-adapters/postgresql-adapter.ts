@@ -523,7 +523,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         connectionId,
         dbPath: conn.filename,
         sql: schemasSql,
-        executionTimeMs: Math.round(performance.now() - startTime),
+        durationMs: Math.round(performance.now() - startTime),
         success: true,
         rowCount: schemasResult.rows.length,
       });
@@ -584,7 +584,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         connectionId,
         dbPath: conn.filename,
         sql: 'SELECT schema_name FROM information_schema.schemata...',
-        executionTimeMs: Math.round(performance.now() - startTime),
+        durationMs: Math.round(performance.now() - startTime),
         success: false,
         error: errorMessage,
       });
@@ -1030,7 +1030,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         connectionId,
         dbPath: conn.filename,
         sql,
-        executionTimeMs: Math.round(performance.now() - startTime),
+        durationMs: Math.round(performance.now() - startTime),
         success: true,
         rowCount: result.rows.length,
       });
@@ -1052,7 +1052,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         connectionId,
         dbPath: conn.filename,
         sql,
-        executionTimeMs: Math.round(performance.now() - startTime),
+        durationMs: Math.round(performance.now() - startTime),
         success: false,
         error: errorMessage,
       });

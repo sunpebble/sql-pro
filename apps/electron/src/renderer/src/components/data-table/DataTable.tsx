@@ -419,8 +419,10 @@ export const DataTable = function DataTable({
   ]);
 
   // Refs for debounced load-more to prevent blocking scroll
-  const loadMoreTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const loadMoreIdleCallbackRef = useRef<number>();
+  const loadMoreTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  const loadMoreIdleCallbackRef = useRef<number | undefined>(undefined);
 
   // Infinite scroll: load more when approaching the end (debounced & non-blocking)
   useEffect(() => {

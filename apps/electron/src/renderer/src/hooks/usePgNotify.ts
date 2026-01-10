@@ -112,7 +112,9 @@ export function usePgNotify(
 
   const queryClient = useQueryClient();
   const onNotificationRef = useRef(onNotification);
-  const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
 
   // Update callback ref
   useEffect(() => {
@@ -179,7 +181,7 @@ export function usePgNotify(
           setError(null);
 
           // Listen for events
-          cleanup = window.sqlPro.pgNotify.onEvent((event) => {
+          cleanup = window.sqlPro.pgNotify.onEvent((event: PgNotifyEvent) => {
             if (event.subscriptionId === currentSubscriptionId) {
               setNotificationCount((c) => c + 1);
               setLastNotification(event);

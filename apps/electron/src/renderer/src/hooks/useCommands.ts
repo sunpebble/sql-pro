@@ -1,3 +1,4 @@
+import type { GetSchemaResponse } from '@shared/types';
 import type { Command } from '@/stores';
 import {
   Code,
@@ -260,7 +261,7 @@ export function useCommands() {
           // Fetch fresh schema
           sqlPro.db
             .getSchema({ connectionId: connection.id })
-            .then((result) => {
+            .then((result: GetSchemaResponse) => {
               if (result.success) {
                 setSchema(activeConnectionId, {
                   schemas: result.schemas || [],
