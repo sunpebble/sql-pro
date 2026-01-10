@@ -42,6 +42,7 @@ import { useClientSearch } from '@/hooks/useClientSearch';
 import { useExport } from '@/hooks/useExport';
 import { useInfiniteTableData } from '@/hooks/useInfiniteTableData';
 import { usePendingChanges } from '@/hooks/usePendingChanges';
+import { usePgNotify } from '@/hooks/usePgNotify';
 import { useTableData } from '@/hooks/useTableData';
 import { convertUIFiltersToAPIFilters } from '@/lib/filter-utils';
 import {
@@ -194,6 +195,17 @@ export function TableView({ tableOverride }: TableViewProps) {
   const apiFilters = useMemo(() => {
     return convertUIFiltersToAPIFilters(filters);
   }, [filters]);
+
+  // PostgreSQL LISTEN/NOTIFY auto-refresh
+  // Only enable for PostgreSQL/Supabase connections
+  const isPostgres =
+    connection?.databaseType === 'postgresql' ||
+    connection?.databaseType === 'supabase';
+  usePgNotify(isPostgres ? activeConnectionId : null, 'table_changes', {
+    enabled: isPostgres && !!selectedTable,
+    autoRefreshTable: selectedTable?.name,
+    autoRefreshDebounceMs: 500,
+  });
 
   // Use paginated data hook for normal pagination
   const paginatedData = useTableData({
