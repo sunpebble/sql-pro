@@ -48,8 +48,12 @@ export function setupSystemHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.WINDOW_CLOSE,
     createHandler(async (request: CloseWindowRequest) => {
-      const windowId = request?.windowId;
-      if (windowId) {
+      const windowIdStr = request?.windowId;
+      if (windowIdStr) {
+        const windowId = Number.parseInt(windowIdStr, 10);
+        if (Number.isNaN(windowId)) {
+          return { success: false, error: 'Invalid window ID' };
+        }
         const window = BrowserWindow.fromId(windowId);
         if (window && !window.isDestroyed()) {
           window.close();

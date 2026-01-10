@@ -235,15 +235,8 @@ export function useCommands() {
       const refreshTableBinding = getShortcut('action.refresh-table');
       if (matchesBinding(e, refreshTableBinding)) {
         e.preventDefault();
-        console.log(
-          '[useCommands] Refresh table triggered, activeConnectionId:',
-          activeConnectionId
-        );
+
         if (activeConnectionId) {
-          console.log(
-            '[useCommands] Invalidating queries for:',
-            activeConnectionId
-          );
           queryClient.invalidateQueries({
             queryKey: ['tableData', activeConnectionId],
           });
