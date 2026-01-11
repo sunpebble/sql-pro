@@ -8,6 +8,7 @@ import {
 } from '@sqlpro/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Monitor, Moon, Settings, Sun } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useConnectionStore, useDialogStore, useThemeStore } from '@/stores';
 import { ConnectionTabBar } from './ConnectionTabBar';
 import { Toolbar } from './Toolbar';
@@ -21,6 +22,7 @@ export function Titlebar() {
   const { theme, setTheme } = useThemeStore();
   const openSettings = useDialogStore((s) => s.openSettings);
   const { connection } = useConnectionStore();
+  const { t } = useTranslation('common');
 
   const getThemeIcon = () => {
     switch (theme) {
@@ -36,11 +38,11 @@ export function Titlebar() {
   const getThemeLabel = () => {
     switch (theme) {
       case 'light':
-        return 'Light';
+        return t('theme.light', { defaultValue: 'Light' });
       case 'dark':
-        return 'Dark';
+        return t('theme.dark', { defaultValue: 'Dark' });
       default:
-        return 'System';
+        return t('theme.system', { defaultValue: 'System' });
     }
   };
 
@@ -80,19 +82,24 @@ export function Titlebar() {
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent>Theme: {getThemeLabel()}</TooltipContent>
+            <TooltipContent>
+              {t('theme.tooltip', {
+                theme: getThemeLabel(),
+                defaultValue: 'Theme: {{theme}}',
+              })}
+            </TooltipContent>
           </Tooltip>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setTheme('light')}>
               <Sun className="mr-2 h-4 w-4" />
-              Light
+              {t('theme.light', { defaultValue: 'Light' })}
               {theme === 'light' && (
                 <span className="text-primary ml-auto">✓</span>
               )}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setTheme('dark')}>
               <Moon className="mr-2 h-4 w-4" />
-              Dark
+              {t('theme.dark', { defaultValue: 'Dark' })}
               {theme === 'dark' && (
                 <span className="text-primary ml-auto">✓</span>
               )}
@@ -100,7 +107,7 @@ export function Titlebar() {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setTheme('system')}>
               <Monitor className="mr-2 h-4 w-4" />
-              System
+              {t('theme.system', { defaultValue: 'System' })}
               {theme === 'system' && (
                 <span className="text-primary ml-auto">✓</span>
               )}
@@ -121,7 +128,9 @@ export function Titlebar() {
               <Settings className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Settings</TooltipContent>
+          <TooltipContent>
+            {t('theme.settings', { defaultValue: 'Settings' })}
+          </TooltipContent>
         </Tooltip>
       </div>
     </div>

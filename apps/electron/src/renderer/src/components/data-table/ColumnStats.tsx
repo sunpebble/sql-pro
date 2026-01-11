@@ -233,7 +233,8 @@ export const ColumnStats = memo(
                               : 'bg-muted'
                         )}
                       >
-                        {nullPercentage.toFixed(0)}% null
+                        {nullPercentage.toFixed(0)}%{' '}
+                        {t('columnStats.null', { defaultValue: 'null' })}
                       </span>
                     )}
                   </button>
@@ -248,15 +249,25 @@ export const ColumnStats = memo(
                 <div className="grid grid-cols-4 gap-3">
                   <StatCard
                     icon={<Hash className="h-3 w-3" />}
-                    label="Distinct"
+                    label={t('columnStats.distinct', {
+                      defaultValue: 'Distinct',
+                    })}
                     value={selectedStats.distinctCount.toLocaleString()}
-                    subtitle={`of ${selectedStats.totalCount.toLocaleString()}`}
+                    subtitle={t('columnStats.ofTotal', {
+                      count: selectedStats.totalCount,
+                      defaultValue: 'of {{count}}',
+                    })}
                   />
                   <StatCard
                     icon={<Percent className="h-3 w-3" />}
-                    label="Null Rate"
+                    label={t('columnStats.nullRate', {
+                      defaultValue: 'Null Rate',
+                    })}
                     value={`${((selectedStats.nullCount / selectedStats.totalCount) * 100).toFixed(1)}%`}
-                    subtitle={`${selectedStats.nullCount} nulls`}
+                    subtitle={t('columnStats.nullsCount', {
+                      count: selectedStats.nullCount,
+                      defaultValue: '{{count}} nulls',
+                    })}
                     warning={
                       selectedStats.nullCount / selectedStats.totalCount > 0.5
                     }
@@ -264,28 +275,32 @@ export const ColumnStats = memo(
                   {selectedStats.min !== undefined && (
                     <StatCard
                       icon={<TrendingDown className="h-3 w-3" />}
-                      label="Min"
+                      label={t('columnStats.min', { defaultValue: 'Min' })}
                       value={formatNumber(selectedStats.min)}
                     />
                   )}
                   {selectedStats.max !== undefined && (
                     <StatCard
                       icon={<TrendingUp className="h-3 w-3" />}
-                      label="Max"
+                      label={t('columnStats.max', { defaultValue: 'Max' })}
                       value={formatNumber(selectedStats.max)}
                     />
                   )}
                   {selectedStats.avg !== undefined && (
                     <StatCard
                       icon={<Sparkles className="h-3 w-3" />}
-                      label="Average"
+                      label={t('columnStats.average', {
+                        defaultValue: 'Average',
+                      })}
                       value={formatNumber(selectedStats.avg)}
                     />
                   )}
                   {selectedStats.avgLength !== undefined && (
                     <StatCard
                       icon={<Sparkles className="h-3 w-3" />}
-                      label="Avg Length"
+                      label={t('columnStats.avgLength', {
+                        defaultValue: 'Avg Length',
+                      })}
                       value={selectedStats.avgLength.toFixed(1)}
                       subtitle={`${selectedStats.minLength}-${selectedStats.maxLength}`}
                     />
@@ -296,7 +311,9 @@ export const ColumnStats = memo(
                 {selectedStats.topValues.length > 0 && (
                   <div className="space-y-1.5">
                     <span className="text-muted-foreground text-[10px] font-medium uppercase">
-                      Top Values
+                      {t('columnStats.topValues', {
+                        defaultValue: 'Top Values',
+                      })}
                     </span>
                     <div className="space-y-1">
                       {selectedStats.topValues.map((item) => (

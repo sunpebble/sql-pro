@@ -1,4 +1,11 @@
 {
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "tooltip": "Theme: {{theme}}",
+    "settings": "Settings"
+  },
   "profiles": {
     "title": "Connection Profiles",
     "addConnection": "Add Connection",
@@ -94,6 +101,18 @@
     "previousPage": "Previous page",
     "nextPage": "Next page",
     "lastPage": "Last page"
+  },
+  "columnStats": {
+    "null": "null",
+    "distinct": "Distinct",
+    "ofTotal": "of {{count}}",
+    "nullRate": "Null Rate",
+    "nullsCount": "{{count}} nulls",
+    "min": "Min",
+    "max": "Max",
+    "average": "Average",
+    "avgLength": "Avg Length",
+    "topValues": "Top Values"
   },
   "schema": {
     "title": "Schema Details",

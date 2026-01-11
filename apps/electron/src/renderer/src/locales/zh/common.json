@@ -1,4 +1,11 @@
 {
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "tooltip": "主题: {{theme}}",
+    "settings": "设置"
+  },
   "profiles": {
     "title": "连接配置文件",
     "addConnection": "添加连接",
@@ -94,6 +101,18 @@
     "previousPage": "上一页",
     "nextPage": "下一页",
     "lastPage": "最后一页"
+  },
+  "columnStats": {
+    "null": "空值",
+    "distinct": "唯一值",
+    "ofTotal": "共 {{count}} 个",
+    "nullRate": "空值率",
+    "nullsCount": "{{count}} 个空值",
+    "min": "最小值",
+    "max": "最大值",
+    "average": "平均值",
+    "avgLength": "平均长度",
+    "topValues": "顶部值"
   },
   "schema": {
     "title": "结构详情",
