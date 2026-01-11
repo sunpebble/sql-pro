@@ -43,3 +43,4 @@ packages/docs/.vitepress/cache
 
 # Auto Claude data directory
 .auto-claude/
+packages/license-api/.dev.vars

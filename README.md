@@ -15,7 +15,7 @@
   <a href="https://kunish-homelab.github.io/sql-pro/"><img src="https://img.shields.io/badge/docs-blue?style=flat&logo=readthedocs&logoColor=white" alt="Documentation"></a>
 </p>
 
-> 🚀 A modern, cross-platform SQLite database manager built with Tauri, React, and Rust. Features include encrypted database support, visual diff preview for changes, and powerful query tools.
+> 🚀 A modern, cross-platform SQLite database manager built with Electron, React, and TypeScript. Features include encrypted database support, visual diff preview for changes, AI-powered query tools, and comprehensive internationalization.
 
 ## ✨ Features
 
@@ -28,7 +28,7 @@
 - **SQLite & SQLCipher** support
 - **Encrypted databases** with secure password storage
 - **Multiple connections** with tab-based interface
-- **Recent databases** quick access
+- **Connection profiles** for quick access
 
 ### 📝 Query Tools
 
@@ -47,12 +47,33 @@
 - **Bulk operations** for multiple rows
 - **Advanced filtering** across all columns
 
+### 🤖 AI Integration
+
+- **Natural Language to SQL** conversion
+- **Multiple AI providers** (Anthropic, OpenAI, Custom)
+- **Claude Code** integration for advanced queries
+- **Per-provider settings** with independent configuration
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
 ### 🎨 Visualization
 
 - **ER diagrams** with relationships
 - **Schema browser** with structure view
 - **Dark/Light theme** auto-switching
 - **Customizable keyboard shortcuts**
+
+</td>
+<td width="50%">
+
+### 🌍 Internationalization
+
+- **Multi-language support** (English, Chinese)
+- **Full UI translation** coverage
+- **Locale-aware formatting**
 
 </td>
 </tr>
@@ -77,7 +98,7 @@ Download the latest release for your platform:
 
 ### Build from Source
 
-**Prerequisites:** Node.js 20+, pnpm 10+, Rust 1.75+
+**Prerequisites:** Node.js 20+, pnpm 10+
 
 ```bash
 # Clone the repository
@@ -125,18 +146,20 @@ pnpm build:linux  # Linux
 ```
 sql-pro/
 ├── apps/
-│   └── tauri/              # Tauri application
-│       ├── src/            # React frontend
-│       │   ├── components/ # UI components
-│       │   ├── stores/     # Zustand stores
-│       │   └── routes/     # TanStack Router routes
-│       └── src-tauri/      # Rust backend
-│           └── src/        # Tauri commands and services
+│   ├── electron/           # Electron application
+│   │   ├── src/
+│   │   │   ├── main/       # Main process (Node.js)
+│   │   │   ├── preload/    # Preload scripts
+│   │   │   ├── renderer/   # React frontend
+│   │   │   └── shared/     # Shared types
+│   │   └── resources/      # App icons and assets
+│   └── website/            # Official website
 ├── packages/
 │   ├── docs/               # VitePress documentation
-│   ├── plugin-sdk/         # Plugin development SDK & templates
+│   ├── plugin-sdk/         # Plugin development SDK
+│   ├── tsconfig/           # Shared TypeScript configs
 │   └── ui/                 # Shared UI components
-└── resources/              # App icons and assets
+└── nx.json                 # Nx monorepo configuration
 ```
 
 ### Available Scripts
@@ -164,23 +187,6 @@ pnpm test:coverage    # Generate coverage report
 # Documentation
 pnpm docs:dev         # Start docs dev server
 pnpm docs:build       # Build documentation
-```
-
-### Testing
-
-The project uses [Vitest](https://vitest.dev/) with comprehensive test coverage:
-
-| Category  | Coverage      | Description                |
-| --------- | ------------- | -------------------------- |
-| Utilities | 99%+          | Core utility functions     |
-| Stores    | 80%+          | State management           |
-| SQL Logic | Comprehensive | SQL parsing and formatting |
-
-Run tests during development:
-
-```bash
-pnpm test              # Watch mode with auto-reload
-pnpm test:coverage     # Generate detailed coverage report
 ```
 
 > 📖 **For detailed development guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md)**
@@ -221,7 +227,7 @@ We're actively developing SQL Pro with exciting features planned. See our [detai
 
 - 🔌 **Plugin System** - Extensible architecture for custom functionality
 - 📊 **Query Optimizer** - AI-powered query analysis and suggestions
-- 🔄 **Multi-tab Editor** - Work with multiple queries simultaneously
+- 🔄 **Schema Comparison** - Compare and sync database schemas
 - 📥 **Data Import/Export** - Enhanced CSV, JSON, and Excel support
 - 🔍 **Full-text Search** - Fast search across all database content
 
@@ -232,6 +238,9 @@ We're actively developing SQL Pro with exciting features planned. See our [detai
 - ✅ Bulk edit operations
 - ✅ Query history with search
 - ✅ ER diagram visualization
+- ✅ AI-powered Natural Language to SQL
+- ✅ Multi-language support (i18n)
+- ✅ Per-provider AI settings
 
 > 💡 **Have a feature idea?** [Open a feature request](https://github.com/kunish-homelab/sql-pro/issues/new?template=feature_request.md)
 
@@ -243,15 +252,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 SQL Pro is built with amazing open-source technologies:
 
-- **[Tauri](https://tauri.app/)** - Cross-platform desktop framework
+- **[Electron](https://www.electronjs.org/)** - Cross-platform desktop framework
 - **[React](https://react.dev/)** - UI library
-- **[Rust](https://www.rust-lang.org/)** - Backend language
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
 - **[Monaco Editor](https://microsoft.github.io/monaco-editor/)** - VS Code's editor
 - **[TanStack Table](https://tanstack.com/table)** - Headless table library
-- **[rusqlite](https://github.com/rusqlite/rusqlite)** - SQLite bindings for Rust with SQLCipher support
+- **[better-sqlite3](https://github.com/WiseLibs/better-sqlite3)** - SQLite bindings for Node.js
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Zustand](https://zustand-demo.pmnd.rs/)** - State management
 - **[Vite](https://vitejs.dev/)** - Build tool and dev server
+- **[Nx](https://nx.dev/)** - Monorepo build system
 
 Special thanks to all [contributors](https://github.com/kunish-homelab/sql-pro/graphs/contributors) who have helped make SQL Pro better!
 

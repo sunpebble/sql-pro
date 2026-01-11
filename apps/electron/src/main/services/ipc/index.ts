@@ -7,6 +7,7 @@ import { setupExportHandlers } from './export';
 import { setupFoldersHandlers } from './folders';
 import { setupHistoryHandlers } from './history';
 import { setupImportHandlers } from './import';
+import { setupLicenseHandlers } from './license';
 import { cleanupMemoryHandlers, setupMemoryHandlers } from './memory';
 import { setupPasswordHandlers } from './password';
 import { cleanupPgNotifyHandlers, setupPgNotifyHandlers } from './pg-notify';
@@ -36,6 +37,7 @@ export function setupIpcHandlers(): void {
   setupPasswordHandlers();
   setupPreferencesHandlers();
   setupProHandlers();
+  setupLicenseHandlers();
   setupAIHandlers();
   setupSystemHandlers();
   setupUpdatesHandlers();

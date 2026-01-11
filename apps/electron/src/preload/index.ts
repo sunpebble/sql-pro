@@ -493,6 +493,69 @@ const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.PRO_DEACTIVATE),
   },
 
+  // License operations (Stripe subscription)
+  license: {
+    getMachineId: (): Promise<{
+      success: boolean;
+      machineId?: string;
+      platform?: string;
+      hostname?: string;
+      error?: string;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_GET_MACHINE_ID),
+
+    createCheckout: (request: {
+      email: string;
+      plan: 'monthly' | 'yearly' | 'lifetime';
+    }): Promise<{
+      success: boolean;
+      sessionId?: string;
+      error?: string;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_CREATE_CHECKOUT, request),
+
+    activate: (request: {
+      email: string;
+      licenseKey: string;
+    }): Promise<{
+      success: boolean;
+      license?: {
+        email: string;
+        plan: string;
+        status: string;
+        expiresAt: string;
+      };
+      error?: string;
+      activations?: Array<{
+        machineId: string;
+        platform: string;
+        hostname: string;
+        activatedAt: string;
+      }>;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_ACTIVATE, request),
+
+    verify: (): Promise<{
+      valid: boolean;
+      license?: {
+        email: string;
+        plan: string;
+        status: string;
+        expiresAt: string;
+      };
+      cached?: boolean;
+      offline?: boolean;
+      error?: string;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_VERIFY),
+
+    deactivate: (): Promise<{
+      success: boolean;
+      warning?: string;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_DEACTIVATE),
+
+    getPortalUrl: (): Promise<{
+      success: boolean;
+      error?: string;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_GET_PORTAL_URL),
+  },
+
   // Memory monitoring operations
   memory: {
     getStats: (

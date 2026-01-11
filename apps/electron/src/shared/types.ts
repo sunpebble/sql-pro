@@ -2500,6 +2500,14 @@ export const IPC_CHANNELS = {
   PRO_ACTIVATE: 'pro:activate',
   PRO_DEACTIVATE: 'pro:deactivate',
 
+  // License
+  LICENSE_CREATE_CHECKOUT: 'license:create-checkout',
+  LICENSE_ACTIVATE: 'license:activate',
+  LICENSE_VERIFY: 'license:verify',
+  LICENSE_DEACTIVATE: 'license:deactivate',
+  LICENSE_GET_PORTAL_URL: 'license:get-portal-url',
+  LICENSE_GET_MACHINE_ID: 'license:get-machine-id',
+
   // Window
   WINDOW_CLOSE: 'window:close',
   WINDOW_FOCUS: 'window:focus',
