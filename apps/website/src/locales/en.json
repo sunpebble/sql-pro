@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "title": "SQL Pro - Professional SQLite Database Manager",
+    "description": "A modern, cross-platform SQLite database manager with encrypted database support, visual diff preview, and powerful query tools."
+  },
+  "hero": {
+    "title": "SQL Pro",
+    "subtitle": "Professional SQLite Database Manager",
+    "description": "SQLCipher encryption support, visual diff preview, powerful query tools. Cross-platform, modern, and efficient.",
+    "download": "Download Now",
+    "github": "GitHub",
+    "scrollHint": "Scroll down"
+  },
+  "features": {
+    "title": "Powerful Features,",
+    "titleHighlight": "Professional Experience",
+    "subtitle": "SQL Pro provides a complete SQLite database management solution",
+    "database": {
+      "title": "Database Management",
+      "description": "SQLite and SQLCipher encrypted database support, secure password storage, multi-connection tabbed interface"
+    },
+    "query": {
+      "title": "Query Tools",
+      "description": "Monaco editor with syntax highlighting, intelligent autocomplete, Vim mode, query history search"
+    },
+    "data": {
+      "title": "Data Operations",
+      "description": "Inline table editing, diff preview before applying, bulk operations, advanced multi-column filtering"
+    },
+    "visualization": {
+      "title": "Visualization",
+      "description": "ER diagram relationships, structure view browsing, automatic dark/light theme switching"
+    },
+    "security": {
+      "title": "Secure Encryption",
+      "description": "SQLCipher support, seamless encrypted database integration, secure keychain storage"
+    },
+    "crossPlatform": {
+      "title": "Cross-Platform",
+      "description": "Native support for macOS, Windows, Linux with unified experience and high performance"
+    }
+  },
+  "screenshots": {
+    "title": "Interface Preview",
+    "subtitle": "Modern design, professional experience",
+    "welcome": "Elegant welcome interface",
+    "database": "Powerful database browser",
+    "table": "High-performance data table",
+    "query": "Monaco SQL editor",
+    "prev": "Previous",
+    "next": "Next",
+    "goTo": "Go to slide {{number}}"
+  },
+  "download": {
+    "title": "Start using",
+    "titleHighlight": "SQL Pro",
+    "subtitle": "Free download, cross-platform support",
+    "downloadFor": "Download for {{platform}}",
+    "otherPlatforms": "Other platforms:",
+    "buildGuide": "Need to build from source? Check the",
+    "buildGuideLink": "build guide",
+    "platforms": {
+      "mac": "macOS",
+      "windows": "Windows",
+      "linux": "Linux",
+      "unknown": "Download"
+    },
+    "arch": {
+      "mac": "Universal (M1/M2/M3/M4 + Intel)",
+      "windows": "x64",
+      "linux": "x64 (AppImage / deb)",
+      "unknown": "All platforms"
+    }
+  },
+  "footer": {
+    "docs": "Documentation",
+    "github": "GitHub",
+    "releases": "Releases",
+    "issues": "Issues",
+    "discussions": "Discussions",
+    "copyright": "© {{year}} SQL Pro Team. Open source under MIT license.",
+    "techStack": "Tech stack:"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "languageSelector": "Select language",
+    "mainNavigation": "Main navigation",
+    "featureCard": "Feature: {{title}}",
+    "socialLink": "Visit {{name}} (opens in new tab)"
+  }
+}

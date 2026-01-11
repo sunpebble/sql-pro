@@ -28,6 +28,9 @@
   /* Shadows */
   --glow-primary: 0 0 60px rgba(59, 130, 246, 0.3);
   --glow-accent: 0 0 40px rgba(34, 211, 238, 0.2);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--color-primary);
 }
 
 * {
@@ -278,5 +281,43 @@ body {
 @media (max-width: 480px) {
   :root {
     --section-padding: 60px;
+  }
+}
+
+/* =========================================
+   Accessibility
+   ========================================= */
+
+/* Focus visible for keyboard navigation */
+.btn:focus-visible,
+a:focus-visible,
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

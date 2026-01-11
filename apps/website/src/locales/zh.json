@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "title": "SQL Pro - 专业的 SQLite 数据库管理工具",
+    "description": "现代化、跨平台的 SQLite 数据库管理工具，支持加密数据库、可视化差异预览和强大的查询功能。"
+  },
+  "hero": {
+    "title": "SQL Pro",
+    "subtitle": "专业的 SQLite 数据库管理工具",
+    "description": "支持 SQLCipher 加密、可视化差异预览、强大的查询工具。跨平台、现代化、高效能。",
+    "download": "立即下载",
+    "github": "GitHub",
+    "scrollHint": "向下滚动"
+  },
+  "features": {
+    "title": "强大功能，",
+    "titleHighlight": "专业体验",
+    "subtitle": "SQL Pro 提供完整的 SQLite 数据库管理解决方案",
+    "database": {
+      "title": "数据库管理",
+      "description": "支持 SQLite 和 SQLCipher 加密数据库，安全密码存储，多连接标签页界面"
+    },
+    "query": {
+      "title": "查询工具",
+      "description": "Monaco 编辑器语法高亮，智能自动补全，Vim 模式，查询历史搜索"
+    },
+    "data": {
+      "title": "数据操作",
+      "description": "表格内联编辑，应用前差异预览，批量操作，多列高级过滤"
+    },
+    "visualization": {
+      "title": "可视化",
+      "description": "ER 图关系展示，结构视图浏览，深色/浅色主题自动切换"
+    },
+    "security": {
+      "title": "安全加密",
+      "description": "SQLCipher 支持，加密数据库无缝集成，系统密钥链安全存储"
+    },
+    "crossPlatform": {
+      "title": "跨平台",
+      "description": "macOS、Windows、Linux 原生支持，统一体验，高性能"
+    }
+  },
+  "screenshots": {
+    "title": "界面预览",
+    "subtitle": "现代化设计，专业体验",
+    "welcome": "简洁优雅的欢迎界面",
+    "database": "强大的数据库浏览器",
+    "table": "高性能数据表格",
+    "query": "Monaco SQL 编辑器",
+    "prev": "上一张",
+    "next": "下一张",
+    "goTo": "跳转到第 {{number}} 张"
+  },
+  "download": {
+    "title": "立即开始使用",
+    "titleHighlight": "SQL Pro",
+    "subtitle": "免费下载，跨平台支持",
+    "downloadFor": "下载 {{platform}} 版本",
+    "otherPlatforms": "其他平台：",
+    "buildGuide": "需要源码编译？查看",
+    "buildGuideLink": "构建指南",
+    "platforms": {
+      "mac": "macOS",
+      "windows": "Windows",
+      "linux": "Linux",
+      "unknown": "下载"
+    },
+    "arch": {
+      "mac": "Universal (M1/M2/M3/M4 + Intel)",
+      "windows": "x64",
+      "linux": "x64 (AppImage / deb)",
+      "unknown": "所有平台"
+    }
+  },
+  "footer": {
+    "docs": "文档",
+    "github": "GitHub",
+    "releases": "发布记录",
+    "issues": "问题反馈",
+    "discussions": "讨论区",
+    "copyright": "© {{year}} SQL Pro Team. 基于 MIT 协议开源。",
+    "techStack": "技术栈："
+  },
+  "a11y": {
+    "skipToContent": "跳转到主要内容",
+    "languageSelector": "选择语言",
+    "mainNavigation": "主导航",
+    "featureCard": "功能：{{title}}",
+    "socialLink": "访问 {{name}}（在新标签页打开）"
+  }
+}

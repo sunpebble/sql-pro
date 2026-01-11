@@ -1,32 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Screenshots.css';
 
-const screenshots = [
-  {
-    src: '/screenshots/welcome-dark.png',
-    alt: '欢迎界面',
-    caption: '简洁优雅的欢迎界面',
-  },
-  {
-    src: '/screenshots/database-dark.png',
-    alt: '数据库视图',
-    caption: '强大的数据库浏览器',
-  },
-  {
-    src: '/screenshots/table-dark.png',
-    alt: '表格视图',
-    caption: '高性能数据表格',
-  },
-  {
-    src: '/screenshots/query-dark.png',
-    alt: '查询编辑器',
-    caption: 'Monaco SQL 编辑器',
-  },
-];
+const screenshotKeys = ['welcome', 'database', 'table', 'query'] as const;
 
 export default function Screenshots() {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const screenshots = screenshotKeys.map((key) => ({
+    src: `/screenshots/${key}-dark.png`,
+    alt: t(`screenshots.${key}`),
+    caption: t(`screenshots.${key}`),
+  }));
 
   useEffect(() => {
     if (!isAutoPlaying) return;
@@ -34,7 +21,7 @@ export default function Screenshots() {
       setCurrent((prev) => (prev + 1) % screenshots.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, screenshots.length]);
 
   const goTo = (index: number) => {
     setCurrent(index);
@@ -47,20 +34,30 @@ export default function Screenshots() {
   const goNext = () => goTo((current + 1) % screenshots.length);
 
   return (
-    <section className="screenshots" id="screenshots">
+    <section
+      className="screenshots"
+      id="screenshots"
+      aria-labelledby="screenshots-title"
+    >
       <div className="container">
-        <div className="screenshots-header">
-          <h2 className="screenshots-title">
-            <span className="gradient-text">界面预览</span>
+        <header className="screenshots-header">
+          <h2 id="screenshots-title" className="screenshots-title">
+            <span className="gradient-text">{t('screenshots.title')}</span>
           </h2>
-          <p className="screenshots-subtitle">现代化设计，专业体验</p>
-        </div>
+          <p className="screenshots-subtitle">{t('screenshots.subtitle')}</p>
+        </header>
 
-        <div className="carousel">
+        <div
+          className="carousel"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={t('screenshots.title')}
+        >
           <button
             className="carousel-btn carousel-prev"
             onClick={goPrev}
-            aria-label="上一张"
+            aria-label={t('screenshots.prev')}
+            type="button"
           >
             <svg
               width="24"
@@ -69,12 +66,13 @@ export default function Screenshots() {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              aria-hidden="true"
             >
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
 
-          <div className="carousel-track">
+          <div className="carousel-track" aria-live="polite">
             {screenshots.map((shot, index) => {
               const offset = index - current;
               return (
@@ -86,9 +84,13 @@ export default function Screenshots() {
                     opacity: Math.abs(offset) > 1 ? 0 : offset === 0 ? 1 : 0.4,
                     zIndex: offset === 0 ? 10 : 5 - Math.abs(offset),
                   }}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${index + 1} / ${screenshots.length}`}
+                  aria-hidden={offset !== 0}
                 >
                   <div className="screenshot-frame">
-                    <div className="screenshot-header">
+                    <div className="screenshot-header" aria-hidden="true">
                       <div className="screenshot-dots">
                         <span className="dot red" />
                         <span className="dot yellow" />
@@ -107,7 +109,8 @@ export default function Screenshots() {
           <button
             className="carousel-btn carousel-next"
             onClick={goNext}
-            aria-label="下一张"
+            aria-label={t('screenshots.next')}
+            type="button"
           >
             <svg
               width="24"
@@ -116,19 +119,27 @@ export default function Screenshots() {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              aria-hidden="true"
             >
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </button>
         </div>
 
-        <div className="carousel-dots">
+        <div
+          className="carousel-dots"
+          role="tablist"
+          aria-label={t('screenshots.title')}
+        >
           {screenshots.map((_, index) => (
             <button
               key={index}
               className={`carousel-dot ${index === current ? 'active' : ''}`}
               onClick={() => goTo(index)}
-              aria-label={`跳转到第 ${index + 1} 张`}
+              role="tab"
+              aria-selected={index === current}
+              aria-label={t('screenshots.goTo', { number: index + 1 })}
+              type="button"
             />
           ))}
         </div>
