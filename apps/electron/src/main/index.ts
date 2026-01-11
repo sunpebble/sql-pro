@@ -20,6 +20,7 @@ import { fileWatcherService } from './services/file-watcher';
 import { cleanupIpcHandlers, setupIpcHandlers } from './services/ipc-handlers';
 import {
   createApplicationMenu,
+  registerLanguageHandler,
   registerShortcutsHandler,
 } from './services/menu';
 import { pluginService } from './services/plugin/PluginService';
@@ -252,6 +253,9 @@ app.whenReady().then(async () => {
 
   // Register shortcuts sync handler
   registerShortcutsHandler();
+
+  // Register language sync handler for menu translations
+  registerLanguageHandler();
 
   // Initialize plugin system (after IPC handlers are ready)
   const pluginInitResult = await pluginService.initialize();

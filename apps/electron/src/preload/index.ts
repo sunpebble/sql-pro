@@ -398,6 +398,14 @@ const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.SHORTCUTS_UPDATE, request),
   },
 
+  // Language
+  language: {
+    update: (request: {
+      language: 'en' | 'zh';
+    }): Promise<{ success: boolean }> =>
+      ipcRenderer.invoke(IPC_CHANNELS.LANGUAGE_UPDATE, request),
+  },
+
   // AI operations
   ai: {
     getSettings: (): Promise<GetAISettingsResponse> =>

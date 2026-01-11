@@ -2578,6 +2578,9 @@ export const IPC_CHANNELS = {
   // Shortcuts
   SHORTCUTS_UPDATE: 'shortcuts:update',
 
+  // Language
+  LANGUAGE_UPDATE: 'language:update',
+
   // Query History (aliases)
   QUERY_HISTORY_GET: 'history:get',
   QUERY_HISTORY_SAVE: 'history:save',

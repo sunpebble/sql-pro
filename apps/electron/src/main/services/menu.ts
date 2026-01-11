@@ -12,6 +12,84 @@ import { windowManager } from './window-manager';
 // Current shortcuts state (synced from renderer)
 let currentShortcuts: ShortcutPreset = DEFAULT_SHORTCUTS;
 
+// Current language (synced from renderer)
+let currentLanguage: 'en' | 'zh' = 'en';
+
+// Menu translations
+const menuTranslations = {
+  en: {
+    file: 'File',
+    newWindow: 'New Window',
+    openDatabase: 'Open Database...',
+    closeDatabase: 'Close Database',
+    closeWindow: 'Close Window',
+    refreshSchema: 'Refresh Schema',
+    refreshTable: 'Refresh Table',
+    exportQuery: 'Export Query...',
+    importQuery: 'Import Query...',
+    exportSchema: 'Export Schema...',
+    importSchema: 'Import Schema...',
+    settings: 'Settings...',
+    edit: 'Edit',
+    view: 'View',
+    commandPalette: 'Command Palette...',
+    dataBrowser: 'Data Browser',
+    sqlQuery: 'SQL Query',
+    schemaCompare: 'Schema Compare',
+    queryHistory: 'Query History',
+    developer: 'Developer',
+    memoryMonitor: 'Memory Monitor',
+    query: 'Query',
+    executeQuery: 'Execute Query',
+    viewUnsavedChanges: 'View Unsaved Changes',
+    window: 'Window',
+    help: 'Help',
+    keyboardShortcuts: 'Keyboard Shortcuts',
+    checkForUpdates: 'Check for Updates...',
+    learnMore: 'Learn More',
+    reportIssue: 'Report Issue',
+    closeAll: 'Close All',
+  },
+  zh: {
+    file: '文件',
+    newWindow: '新建窗口',
+    openDatabase: '打开数据库...',
+    closeDatabase: '关闭数据库',
+    closeWindow: '关闭窗口',
+    refreshSchema: '刷新结构',
+    refreshTable: '刷新表',
+    exportQuery: '导出查询...',
+    importQuery: '导入查询...',
+    exportSchema: '导出结构...',
+    importSchema: '导入结构...',
+    settings: '设置...',
+    edit: '编辑',
+    view: '视图',
+    commandPalette: '命令面板...',
+    dataBrowser: '数据浏览',
+    sqlQuery: 'SQL 查询',
+    schemaCompare: '结构对比',
+    queryHistory: '查询历史',
+    developer: '开发者',
+    memoryMonitor: '内存监控',
+    query: '查询',
+    executeQuery: '执行查询',
+    viewUnsavedChanges: '查看未保存更改',
+    window: '窗口',
+    help: '帮助',
+    keyboardShortcuts: '键盘快捷键',
+    checkForUpdates: '检查更新...',
+    learnMore: '了解更多',
+    reportIssue: '报告问题',
+    closeAll: '全部关闭',
+  },
+};
+
+// Helper to get translated string
+function t(key: keyof typeof menuTranslations.en): string {
+  return menuTranslations[currentLanguage][key];
+}
+
 /**
  * Get accelerator for a shortcut action
  */
@@ -42,7 +120,7 @@ export function createApplicationMenu(): void {
               { role: 'about' as const },
               { type: 'separator' as const },
               {
-                label: 'Settings...',
+                label: t('settings'),
                 accelerator: getAccelerator('settings.open'),
                 click: () => sendMenuAction('open-settings'),
               },
@@ -61,10 +139,10 @@ export function createApplicationMenu(): void {
 
     // File menu
     {
-      label: 'File',
+      label: t('file'),
       submenu: [
         {
-          label: 'New Window',
+          label: t('newWindow'),
           accelerator: getAccelerator('action.new-window'),
           click: () => {
             windowManager.createWindow();
@@ -72,17 +150,17 @@ export function createApplicationMenu(): void {
         },
         { type: 'separator' },
         {
-          label: 'Open Database...',
+          label: t('openDatabase'),
           accelerator: getAccelerator('action.open-database'),
           click: () => sendMenuAction('open-database'),
         },
         {
-          label: 'Close Database',
+          label: t('closeDatabase'),
           accelerator: 'CmdOrCtrl+W',
           click: () => sendMenuAction('close-database'),
         },
         {
-          label: 'Close Window',
+          label: t('closeWindow'),
           accelerator: 'CmdOrCtrl+Shift+W',
           click: () => {
             const focusedWindow = BrowserWindow.getFocusedWindow();
@@ -93,33 +171,33 @@ export function createApplicationMenu(): void {
         },
         { type: 'separator' },
         {
-          label: 'Refresh Schema',
+          label: t('refreshSchema'),
           accelerator: getAccelerator('action.refresh-schema'),
           click: () => sendMenuAction('refresh-schema'),
         },
         {
-          label: 'Refresh Table',
+          label: t('refreshTable'),
           accelerator: getAccelerator('action.refresh-table'),
           click: () => sendMenuAction('refresh-table'),
         },
         { type: 'separator' },
         {
-          label: 'Export Query...',
+          label: t('exportQuery'),
           accelerator: 'CmdOrCtrl+Shift+E',
           click: () => sendMenuAction('export-query'),
         },
         {
-          label: 'Import Query...',
+          label: t('importQuery'),
           accelerator: 'CmdOrCtrl+Shift+I',
           click: () => sendMenuAction('import-query'),
         },
         { type: 'separator' },
         {
-          label: 'Export Schema...',
+          label: t('exportSchema'),
           click: () => sendMenuAction('export-schema'),
         },
         {
-          label: 'Import Schema...',
+          label: t('importSchema'),
           click: () => sendMenuAction('import-schema'),
         },
         { type: 'separator' },
@@ -127,7 +205,7 @@ export function createApplicationMenu(): void {
           ? []
           : [
               {
-                label: 'Settings...',
+                label: t('settings'),
                 accelerator: getAccelerator('settings.open'),
                 click: () => sendMenuAction('open-settings'),
               },
@@ -139,7 +217,7 @@ export function createApplicationMenu(): void {
 
     // Edit menu
     {
-      label: 'Edit',
+      label: t('edit'),
       submenu: [
         { role: 'undo' },
         { role: 'redo' },
@@ -163,32 +241,32 @@ export function createApplicationMenu(): void {
 
     // View menu
     {
-      label: 'View',
+      label: t('view'),
       submenu: [
         {
-          label: 'Command Palette...',
+          label: t('commandPalette'),
           accelerator: getAccelerator('action.command-palette'),
           click: () => sendMenuAction('toggle-command-palette'),
         },
         { type: 'separator' },
         {
-          label: 'Data Browser',
+          label: t('dataBrowser'),
           accelerator: getAccelerator('nav.data-browser'),
           click: () => sendMenuAction('switch-to-data'),
         },
         {
-          label: 'SQL Query',
+          label: t('sqlQuery'),
           accelerator: getAccelerator('nav.query-editor'),
           click: () => sendMenuAction('switch-to-query'),
         },
         {
-          label: 'Schema Compare',
+          label: t('schemaCompare'),
           accelerator: getAccelerator('nav.schema-compare'),
           click: () => sendMenuAction('switch-to-schema-compare'),
         },
         { type: 'separator' },
         {
-          label: 'Query History',
+          label: t('queryHistory'),
           accelerator: getAccelerator('view.toggle-history'),
           click: () => sendMenuAction('toggle-history'),
         },
@@ -197,12 +275,12 @@ export function createApplicationMenu(): void {
           ? [
               { type: 'separator' as const },
               {
-                label: 'Developer',
+                label: t('developer'),
                 submenu: [
                   { role: 'toggleDevTools' as const },
                   { type: 'separator' as const },
                   {
-                    label: 'Memory Monitor',
+                    label: t('memoryMonitor'),
                     accelerator: 'CmdOrCtrl+Shift+M',
                     click: () => sendMenuAction('toggle-memory-monitor'),
                   },
@@ -221,16 +299,16 @@ export function createApplicationMenu(): void {
 
     // Query menu
     {
-      label: 'Query',
+      label: t('query'),
       submenu: [
         {
-          label: 'Execute Query',
+          label: t('executeQuery'),
           accelerator: getAccelerator('action.execute-query'),
           click: () => sendMenuAction('execute-query'),
         },
         { type: 'separator' },
         {
-          label: 'View Unsaved Changes',
+          label: t('viewUnsavedChanges'),
           accelerator: getAccelerator('action.view-changes'),
           click: () => sendMenuAction('view-changes'),
         },
@@ -239,10 +317,10 @@ export function createApplicationMenu(): void {
 
     // Window menu
     {
-      label: 'Window',
+      label: t('window'),
       submenu: [
         {
-          label: 'New Window',
+          label: t('newWindow'),
           accelerator: getAccelerator('action.new-window'),
           click: () => {
             windowManager.createWindow();
@@ -264,28 +342,28 @@ export function createApplicationMenu(): void {
 
     // Help menu
     {
-      role: 'help',
+      label: t('help'),
       submenu: [
         {
-          label: 'Keyboard Shortcuts',
+          label: t('keyboardShortcuts'),
           click: () => sendMenuAction('show-shortcuts'),
         },
         { type: 'separator' },
         {
-          label: 'Check for Updates...',
+          label: t('checkForUpdates'),
           click: () => {
             checkForUpdates(false);
           },
         },
         { type: 'separator' },
         {
-          label: 'Learn More',
+          label: t('learnMore'),
           click: async () => {
             await shell.openExternal('https://github.com/nicepkg/sql-pro');
           },
         },
         {
-          label: 'Report Issue',
+          label: t('reportIssue'),
           click: async () => {
             await shell.openExternal(
               'https://github.com/nicepkg/sql-pro/issues'
@@ -309,6 +387,14 @@ export function updateShortcuts(shortcuts: ShortcutPreset): void {
 }
 
 /**
+ * Update language and rebuild menu
+ */
+export function updateLanguage(language: 'en' | 'zh'): void {
+  currentLanguage = language;
+  createApplicationMenu();
+}
+
+/**
  * Register IPC handler for shortcuts sync
  */
 export function registerShortcutsHandler(): void {
@@ -316,6 +402,19 @@ export function registerShortcutsHandler(): void {
     IPC_CHANNELS.SHORTCUTS_UPDATE,
     (_event, payload: { shortcuts: ShortcutPreset }) => {
       updateShortcuts(payload.shortcuts);
+      return { success: true };
+    }
+  );
+}
+
+/**
+ * Register IPC handler for language sync
+ */
+export function registerLanguageHandler(): void {
+  ipcMain.handle(
+    IPC_CHANNELS.LANGUAGE_UPDATE,
+    (_event, payload: { language: 'en' | 'zh' }) => {
+      updateLanguage(payload.language);
       return { success: true };
     }
   );
