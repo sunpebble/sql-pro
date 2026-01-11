@@ -25,6 +25,7 @@ import {
   X,
 } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -226,6 +227,7 @@ export const KeyboardShortcutsSettings = memo(
       importShortcuts,
     } = useKeyboardShortcutsStore();
 
+    const { t } = useTranslation('settings');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Get current shortcuts
@@ -244,11 +246,11 @@ export const KeyboardShortcutsSettings = memo(
     );
 
     const categoryLabels: Record<string, string> = {
-      actions: 'Actions',
-      navigation: 'Navigation',
-      view: 'View',
-      settings: 'Settings',
-      help: 'Help',
+      actions: t('shortcuts.actions'),
+      navigation: t('shortcuts.navigation'),
+      view: t('shortcuts.view'),
+      settings: t('shortcuts.settings'),
+      help: t('shortcuts.help'),
     };
 
     const categoryOrder = ['actions', 'navigation', 'view', 'settings', 'help'];
@@ -274,7 +276,7 @@ export const KeyboardShortcutsSettings = memo(
       a.download = `sql-pro-shortcuts-${new Date().toISOString().split('T')[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success('Shortcuts exported successfully');
+      toast.success(t('shortcuts.exportSuccess'));
     };
 
     const handleImport = () => {
@@ -290,12 +292,12 @@ export const KeyboardShortcutsSettings = memo(
         const data = JSON.parse(text) as ShortcutsExport;
 
         if (importShortcuts(data)) {
-          toast.success('Shortcuts imported successfully');
+          toast.success(t('shortcuts.importSuccess'));
         } else {
-          toast.error('Failed to import shortcuts: Invalid format');
+          toast.error(t('shortcuts.importError'));
         }
       } catch {
-        toast.error('Failed to import shortcuts: Invalid JSON');
+        toast.error(t('shortcuts.importJsonError'));
       }
 
       // Reset file input
@@ -304,7 +306,7 @@ export const KeyboardShortcutsSettings = memo(
 
     const handleResetAll = () => {
       resetToPreset('default');
-      toast.success('Shortcuts reset to defaults');
+      toast.success(t('shortcuts.resetSuccess'));
     };
 
     return (
@@ -313,11 +315,9 @@ export const KeyboardShortcutsSettings = memo(
           <DialogHeader className="shrink-0 px-6 pt-6 pb-4">
             <DialogTitle className="flex items-center gap-2">
               <Keyboard className="h-5 w-5" />
-              Keyboard Shortcuts
+              {t('shortcuts.title')}
             </DialogTitle>
-            <DialogDescription>
-              Customize keyboard shortcuts for all application actions
-            </DialogDescription>
+            <DialogDescription>{t('shortcuts.description')}</DialogDescription>
           </DialogHeader>
 
           <ScrollArea className="h-[60vh]">
@@ -325,7 +325,9 @@ export const KeyboardShortcutsSettings = memo(
               {/* Preset Selection */}
               <div className="mb-6 space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium">Preset</Label>
+                  <Label className="text-sm font-medium">
+                    {t('shortcuts.preset')}
+                  </Label>
                   <div className="flex items-center gap-2">
                     <Button
                       variant="outline"
@@ -334,7 +336,7 @@ export const KeyboardShortcutsSettings = memo(
                       className="h-7 gap-1.5 text-xs"
                     >
                       <Upload className="h-3 w-3" />
-                      Import
+                      {t('shortcuts.import')}
                     </Button>
                     <Button
                       variant="outline"
@@ -343,7 +345,7 @@ export const KeyboardShortcutsSettings = memo(
                       className="h-7 gap-1.5 text-xs"
                     >
                       <Download className="h-3 w-3" />
-                      Export
+                      {t('shortcuts.export')}
                     </Button>
                   </div>
                 </div>
@@ -373,7 +375,7 @@ export const KeyboardShortcutsSettings = memo(
 
                 {activePreset === 'custom' && (
                   <p className="text-muted-foreground text-xs">
-                    Click on any shortcut to change it. Press Escape to clear.
+                    {t('shortcuts.clickToChange')}
                   </p>
                 )}
               </div>
@@ -424,9 +426,11 @@ export const KeyboardShortcutsSettings = memo(
               className="gap-1.5"
             >
               <RotateCcw className="h-4 w-4" />
-              Reset All
+              {t('shortcuts.reset')}
             </Button>
-            <Button onClick={() => onOpenChange(false)}>Done</Button>
+            <Button onClick={() => onOpenChange(false)}>
+              {t('shortcuts.done')}
+            </Button>
           </DialogFooter>
 
           {/* Hidden file input for import */}
