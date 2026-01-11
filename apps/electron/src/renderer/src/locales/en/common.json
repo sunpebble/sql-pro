@@ -42,6 +42,7 @@
     "targetLabel": "Target:",
     "summary": "Summary",
     "tablesCompared": "{{count}} tables compared",
+    "changes": "changes",
     "added": "Added",
     "removed": "Removed",
     "modified": "Modified",
@@ -57,7 +58,49 @@
     "rowsAdded": "Rows Added",
     "rowsRemoved": "Rows Removed",
     "rowsModified": "Rows Modified",
-    "selectSourceAndTargetData": "Select source and target tables, then click Compare Data"
+    "selectSourceAndTargetData": "Select source and target tables, then click Compare Data",
+    "rowsUnchanged": "Unchanged",
+    "rowsSummary": "Summary ({{sourceRows}} source rows, {{targetRows}} target rows)",
+    "rowDifferences": "Row Differences",
+    "detailedDiffPlaceholder": "Detailed diff view will be implemented in subsequent subtasks."
+  },
+  "migration": {
+    "title": "Migration SQL",
+    "statements": "{{count}} statement(s)",
+    "reverseMigration": "Reverse Migration",
+    "reverseDescription": "Generate SQL to go from target back to source",
+    "includeDropStatements": "Include DROP Statements",
+    "includeDropDescription": "Include statements that remove tables/columns (may lose data)",
+    "generating": "Generating migration SQL...",
+    "generationError": "Generation Error",
+    "noChanges": "No Changes Detected",
+    "noChangesDescription": "The schemas are identical - no migration is needed",
+    "warnings": "Warnings",
+    "copyToClipboard": "Copy to Clipboard",
+    "copied": "Copied!",
+    "saveToFile": "Save to File",
+    "saved": "Saved!",
+    "saveFailed": "Save Failed",
+    "openInQueryEditor": "Open in Query Editor",
+    "generatedSql": "Generated SQL:",
+    "tip": "💡 Tip: Review the SQL carefully before executing, especially if DROP statements are included. Consider backing up your database first."
+  },
+  "diffFilter": {
+    "onlyDifferences": "Only Differences",
+    "changeType": "Change Type:",
+    "added": "Added",
+    "removed": "Removed",
+    "modified": "Modified",
+    "show": "Show:",
+    "tables": "Tables",
+    "columns": "Columns",
+    "indexes": "Indexes",
+    "foreignKeys": "FKs",
+    "triggers": "Triggers",
+    "searchPlaceholder": "Search by name...",
+    "reset": "Reset",
+    "unchanged": "Unchanged",
+    "noDifferences": "No differences detected"
   },
   "profiles": {
     "title": "Connection Profiles",
@@ -66,7 +109,14 @@
     "searchPlaceholder": "Search profiles...",
     "noProfiles": "No connection profiles yet",
     "noSearchResults": "No profiles found matching your search",
-    "getStarted": "Connect to a database and save it as a profile to get started"
+    "getStarted": "Connect to a database and save it as a profile to get started",
+    "createFolder": "Create Folder",
+    "renameFolder": "Rename Folder",
+    "folderName": "Folder Name",
+    "folderNamePlaceholder": "Enter folder name",
+    "creatingSubfolderIn": "Creating subfolder in: {{name}}",
+    "create": "Create",
+    "rename": "Rename"
   },
   "app": {
     "name": "SQL Pro",
@@ -120,6 +170,7 @@
     "dataBrowser": "Data Browser",
     "sqlQuery": "SQL Query",
     "erDiagram": "ER Diagram",
+    "compare": "Compare",
     "schemaCompare": "Schema Compare",
     "dataDiff": "Data Diff"
   },
@@ -324,5 +375,31 @@
     "invalidEmail": "Invalid email address",
     "invalidUrl": "Invalid URL",
     "invalidNumber": "Invalid number"
+  },
+  "pro": {
+    "upgrade": "Upgrade to Pro",
+    "unlockAll": "Unlock all Pro features",
+    "features": {
+      "ai-nl-to-sql": {
+        "name": "Natural Language to SQL",
+        "description": "Convert natural language questions into SQL queries using AI."
+      },
+      "ai-data-analysis": {
+        "name": "AI Data Analysis",
+        "description": "Get AI-powered insights and analysis of your data."
+      },
+      "advanced-export": {
+        "name": "Advanced Export",
+        "description": "Export data to Excel, JSON, and other formats with advanced options."
+      },
+      "plugin-system": {
+        "name": "Plugin System",
+        "description": "Extend functionality with plugins from the marketplace."
+      },
+      "query-optimizer": {
+        "name": "Query Optimizer",
+        "description": "Analyze and optimize your SQL queries for better performance."
+      }
+    }
   }
 }

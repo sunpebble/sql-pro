@@ -16,6 +16,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useSchemaComparisonStore } from '@/stores';
 
@@ -36,6 +37,8 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
     setSearchText,
     resetFilters,
   } = useSchemaComparisonStore();
+
+  const { t } = useTranslation('common');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -80,7 +83,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
           aria-label="Show only differences"
           title="Toggle show only differences (⌘D)"
         >
-          Only Differences
+          {t('diffFilter.onlyDifferences')}
         </Toggle>
       </div>
 
@@ -89,7 +92,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
       {/* Change Type Filters */}
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground text-xs font-medium">
-          Change Type:
+          {t('diffFilter.changeType')}
         </span>
         <div className="flex gap-1">
           <Toggle
@@ -101,7 +104,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Plus className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
-            <span>Added</span>
+            <span>{t('diffFilter.added')}</span>
           </Toggle>
           <Toggle
             pressed={filters.changeTypes.removed}
@@ -114,7 +117,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Minus className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
-            <span>Removed</span>
+            <span>{t('diffFilter.removed')}</span>
           </Toggle>
           <Toggle
             pressed={filters.changeTypes.modified}
@@ -127,7 +130,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Edit className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-            <span>Modified</span>
+            <span>{t('diffFilter.modified')}</span>
           </Toggle>
         </div>
       </div>
@@ -136,7 +139,9 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
 
       {/* Object Type Filters */}
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xs font-medium">Show:</span>
+        <span className="text-muted-foreground text-xs font-medium">
+          {t('diffFilter.show')}
+        </span>
         <div className="flex gap-1">
           <Toggle
             pressed={filters.objectTypes.tables}
@@ -149,7 +154,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Database className="h-3.5 w-3.5" />
-            <span>Tables</span>
+            <span>{t('diffFilter.tables')}</span>
           </Toggle>
           <Toggle
             pressed={filters.objectTypes.columns}
@@ -162,7 +167,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Columns className="h-3.5 w-3.5" />
-            <span>Columns</span>
+            <span>{t('diffFilter.columns')}</span>
           </Toggle>
           <Toggle
             pressed={filters.objectTypes.indexes}
@@ -175,7 +180,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Hash className="h-3.5 w-3.5" />
-            <span>Indexes</span>
+            <span>{t('diffFilter.indexes')}</span>
           </Toggle>
           <Toggle
             pressed={filters.objectTypes.foreignKeys}
@@ -188,7 +193,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Link className="h-3.5 w-3.5" />
-            <span>FKs</span>
+            <span>{t('diffFilter.foreignKeys')}</span>
           </Toggle>
           <Toggle
             pressed={filters.objectTypes.triggers}
@@ -201,7 +206,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             className="gap-1.5"
           >
             <Zap className="h-3.5 w-3.5" />
-            <span>Triggers</span>
+            <span>{t('diffFilter.triggers')}</span>
           </Toggle>
         </div>
       </div>
@@ -213,7 +218,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
         <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
         <Input
           type="text"
-          placeholder="Search by name..."
+          placeholder={t('diffFilter.searchPlaceholder')}
           value={filters.searchText}
           onChange={handleSearchChange}
           className="h-8 w-full pr-8 pl-8 text-sm"
@@ -243,7 +248,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             title="Reset all filters (⌘R)"
           >
             <RotateCcw className="h-4 w-4" />
-            <span className="hidden sm:inline">Reset</span>
+            <span className="hidden sm:inline">{t('diffFilter.reset')}</span>
           </Button>
         </>
       )}

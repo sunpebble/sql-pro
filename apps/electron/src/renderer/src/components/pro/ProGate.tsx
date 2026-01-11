@@ -2,34 +2,19 @@ import type { ProFeature } from '@shared/types';
 import type { ReactNode } from 'react';
 import { Button } from '@sqlpro/ui/button';
 import { Crown, Lock, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useProStore } from '@/stores';
+import { useAIStore, useProStore } from '@/stores';
 import { ProBadge } from './ProBadge';
 
 /**
- * Human-readable names for Pro features.
+ * AI features that can be unlocked with user's own API key.
  */
-const FEATURE_NAMES: Record<ProFeature, string> = {
-  'ai-nl-to-sql': 'Natural Language to SQL',
-  'ai-data-analysis': 'AI Data Analysis',
-  'advanced-export': 'Advanced Export',
-  'plugin-system': 'Plugin System',
-  'query-optimizer': 'Query Optimizer',
-};
-
-/**
- * Descriptions for each Pro feature to display in upgrade prompts.
- */
-const FEATURE_DESCRIPTIONS: Record<ProFeature, string> = {
-  'ai-nl-to-sql':
-    'Convert natural language questions into SQL queries using AI.',
-  'ai-data-analysis': 'Get AI-powered insights and analysis of your data.',
-  'advanced-export':
-    'Export data to Excel, JSON, and other formats with advanced options.',
-  'plugin-system': 'Extend functionality with plugins from the marketplace.',
-  'query-optimizer':
-    'Analyze and optimize your SQL queries for better performance.',
-};
+const AI_FEATURES: ProFeature[] = [
+  'ai-nl-to-sql',
+  'ai-data-analysis',
+  'query-optimizer',
+];
 
 interface ProGateProps {
   /**
@@ -59,6 +44,7 @@ interface ProGateProps {
 /**
  * Component that gates Pro features.
  * Shows children if user has Pro access for the specified feature,
+ * or if user has configured their own API key for AI features,
  * otherwise shows an upgrade prompt (or custom fallback).
  *
  * @example
@@ -75,10 +61,16 @@ export function ProGate({
   onUpgrade,
   className,
 }: ProGateProps) {
+  const { t } = useTranslation('common');
   const { isPro, hasFeature } = useProStore();
+  const { isConfigured: hasOwnApiKey } = useAIStore();
 
   // Check if user has access to this specific feature
-  const hasAccess = isPro && hasFeature(feature);
+  // Pro users get access through their subscription
+  // For AI features, users with their own API key also get access
+  const isAIFeature = AI_FEATURES.includes(feature);
+  const hasAccess =
+    (isPro && hasFeature(feature)) || (isAIFeature && hasOwnApiKey);
 
   // If user has access, render children
   if (hasAccess) {
@@ -90,9 +82,13 @@ export function ProGate({
     return <>{fallback}</>;
   }
 
-  // Render default upgrade prompt
-  const featureName = FEATURE_NAMES[feature];
-  const featureDescription = FEATURE_DESCRIPTIONS[feature];
+  // Get translated feature names and descriptions
+  const featureName = t(`pro.features.${feature}.name`, {
+    defaultValue: feature,
+  });
+  const featureDescription = t(`pro.features.${feature}.description`, {
+    defaultValue: '',
+  });
 
   return (
     <div
@@ -131,9 +127,11 @@ export function ProGate({
           className="bg-linear-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600"
         >
           <Sparkles className="mr-2 h-4 w-4" />
-          Upgrade to Pro
+          {t('pro.upgrade', { defaultValue: 'Upgrade to Pro' })}
         </Button>
-        <p className="text-muted-foreground text-xs">Unlock all Pro features</p>
+        <p className="text-muted-foreground text-xs">
+          {t('pro.unlockAll', { defaultValue: 'Unlock all Pro features' })}
+        </p>
       </div>
     </div>
   );
@@ -160,7 +158,12 @@ export function ProGateInline({
   onUpgrade,
 }: Omit<ProGateProps, 'className'>) {
   const { isPro, hasFeature } = useProStore();
-  const hasAccess = isPro && hasFeature(feature);
+  const { isConfigured: hasOwnApiKey } = useAIStore();
+
+  // Check if user has access - same logic as ProGate
+  const isAIFeature = AI_FEATURES.includes(feature);
+  const hasAccess =
+    (isPro && hasFeature(feature)) || (isAIFeature && hasOwnApiKey);
 
   if (hasAccess) {
     return <>{children}</>;

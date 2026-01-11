@@ -13,6 +13,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { Database, FileText, Loader2, Plus, Save } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -44,8 +45,9 @@ export function SourceSelector({
   type,
   value,
   onChange,
-  label = type === 'source' ? 'Source' : 'Target',
+  label,
 }: SourceSelectorProps) {
+  const { t } = useTranslation('common');
   const { getAllConnections } = useConnectionStore();
   const { availableSnapshots, addSnapshot } = useSchemaComparisonStore();
 
@@ -191,18 +193,21 @@ export function SourceSelector({
   return (
     <>
       <div className="space-y-3">
-        <Label className="text-sm font-medium">{label}</Label>
+        <Label className="text-sm font-medium">
+          {label ||
+            (type === 'source' ? t('compare.source') : t('compare.target'))}
+        </Label>
 
         {/* Toggle between Connection and Snapshot */}
         <Tabs value={sourceType} onValueChange={handleSourceTypeChange}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="connection">
               <Database className="mr-2 h-3.5 w-3.5" />
-              Connection
+              {t('compare.connection')}
             </TabsTrigger>
             <TabsTrigger value="snapshot">
               <FileText className="mr-2 h-3.5 w-3.5" />
-              Snapshot
+              {t('compare.snapshot')}
             </TabsTrigger>
           </TabsList>
 
@@ -258,7 +263,7 @@ export function SourceSelector({
               </Select>
             ) : (
               <div className="text-muted-foreground rounded-md border border-dashed p-4 text-center text-sm">
-                No connections available. Open a database first.
+                {t('compare.noConnections')}
               </div>
             )}
           </TabsContent>
@@ -301,7 +306,7 @@ export function SourceSelector({
               </Select>
             ) : (
               <div className="text-muted-foreground rounded-md border border-dashed p-4 text-center text-sm">
-                No snapshots available. Create one below.
+                {t('compare.noSnapshots')}
               </div>
             )}
 
@@ -314,11 +319,11 @@ export function SourceSelector({
               className="w-full"
             >
               <Plus className="mr-2 h-3.5 w-3.5" />
-              Create New Snapshot
+              {t('compare.createSnapshot')}
             </Button>
             {availableConnections.length === 0 && (
               <p className="text-muted-foreground text-xs">
-                Open a database connection first
+                {t('compare.openDbFirst')}
               </p>
             )}
           </TabsContent>
@@ -332,19 +337,19 @@ export function SourceSelector({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Schema Snapshot</DialogTitle>
+            <DialogTitle>{t('compare.createSchemaSnapshot')}</DialogTitle>
             <DialogDescription>
-              Save the current schema state for later comparison
+              {t('compare.saveCurrentSchema')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             {/* Snapshot Name */}
             <div className="space-y-2">
-              <Label htmlFor="snapshot-name">Snapshot Name</Label>
+              <Label htmlFor="snapshot-name">{t('compare.snapshotName')}</Label>
               <Input
                 id="snapshot-name"
-                placeholder="e.g., Production v1.2.0"
+                placeholder={t('compare.snapshotPlaceholder')}
                 value={snapshotName}
                 onChange={(e) => setSnapshotName(e.target.value)}
                 onKeyDown={(e) => {
@@ -357,7 +362,9 @@ export function SourceSelector({
 
             {/* Connection Selection */}
             <div className="space-y-2">
-              <Label htmlFor="snapshot-connection">Connection</Label>
+              <Label htmlFor="snapshot-connection">
+                {t('compare.connection')}
+              </Label>
               <Select
                 value={selectedConnectionForSnapshot}
                 onValueChange={(value) => {
@@ -418,12 +425,12 @@ export function SourceSelector({
               {isCreatingSnapshot ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  {t('compare.creating')}
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-4 w-4" />
-                  Create Snapshot
+                  {t('compare.createSnapshot')}
                 </>
               )}
             </Button>

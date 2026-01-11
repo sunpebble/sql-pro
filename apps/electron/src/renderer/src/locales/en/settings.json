@@ -87,7 +87,17 @@
     "importSuccess": "Shortcuts imported successfully",
     "importError": "Failed to import shortcuts: Invalid format",
     "importJsonError": "Failed to import shortcuts: Invalid JSON",
-    "resetSuccess": "Shortcuts reset to defaults"
+    "resetSuccess": "Shortcuts reset to defaults",
+    "presets": {
+      "default": "SQL Pro",
+      "defaultDesc": "Default SQL Pro shortcuts",
+      "vscode": "VS Code",
+      "vscodeDesc": "Visual Studio Code-style shortcuts",
+      "sublime": "Sublime Text",
+      "sublimeDesc": "Sublime Text-style shortcuts",
+      "custom": "Custom",
+      "customDesc": "Your customized shortcuts"
+    }
   },
   "pro": {
     "title": "SQL Pro",
@@ -107,12 +117,15 @@
     "baseUrl": "Base URL (Optional)",
     "enabled": "Enable AI Features",
     "enabledDescription": "Use AI-powered features like natural language to SQL",
-    "claudeCodePath": "Claude Code Path"
+    "claudeCodePath": "Claude Code Path",
+    "apiKeyPlaceholder": "Enter your API key",
+    "selectPath": "Select path...",
+    "baseUrlHint": "Leave empty to use default API endpoint, or set a custom URL for proxy/compatible endpoints"
   },
   "developer": {
     "title": "Developer",
     "memoryMonitor": "Memory Monitor",
-    "memoryMonitorDescription": "View memory usage and performance metrics"
+    "memoryMonitorDescription": "View real-time memory usage and cache statistics"
   },
   "about": {
     "title": "About",

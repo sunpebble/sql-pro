@@ -42,6 +42,7 @@
     "targetLabel": "目标:",
     "summary": "概览",
     "tablesCompared": "已对比 {{count}} 个表",
+    "changes": "项变更",
     "added": "新增",
     "removed": "删除",
     "modified": "修改",
@@ -57,7 +58,49 @@
     "rowsAdded": "新增行数",
     "rowsRemoved": "删除行数",
     "rowsModified": "修改行数",
-    "selectSourceAndTargetData": "选择源表和目标表，然后点击对比数据"
+    "selectSourceAndTargetData": "选择源表和目标表，然后点击对比数据",
+    "rowsUnchanged": "无变化",
+    "rowsSummary": "概览 ({{sourceRows}} 源行, {{targetRows}} 目标行)",
+    "rowDifferences": "行差异",
+    "detailedDiffPlaceholder": "详细差异视图将在后续开发中实现。"
+  },
+  "migration": {
+    "title": "迁移 SQL",
+    "statements": "{{count}} 条语句",
+    "reverseMigration": "反向迁移",
+    "reverseDescription": "生成从目标回到源的 SQL",
+    "includeDropStatements": "包含 DROP 语句",
+    "includeDropDescription": "包含删除表/列的语句（可能丢失数据）",
+    "generating": "正在生成迁移 SQL...",
+    "generationError": "生成错误",
+    "noChanges": "未检测到更改",
+    "noChangesDescription": "结构相同，无需迁移",
+    "warnings": "警告",
+    "copyToClipboard": "复制到剪贴板",
+    "copied": "已复制！",
+    "saveToFile": "保存到文件",
+    "saved": "已保存！",
+    "saveFailed": "保存失败",
+    "openInQueryEditor": "在查询编辑器中打开",
+    "generatedSql": "生成的 SQL:",
+    "tip": "💡 提示：执行前请仔细检查 SQL，特别是包含 DROP 语句时。建议先备份数据库。"
+  },
+  "diffFilter": {
+    "onlyDifferences": "仅差异",
+    "changeType": "变更类型:",
+    "added": "新增",
+    "removed": "删除",
+    "modified": "修改",
+    "show": "显示:",
+    "tables": "表",
+    "columns": "列",
+    "indexes": "索引",
+    "foreignKeys": "外键",
+    "triggers": "触发器",
+    "searchPlaceholder": "按名称搜索...",
+    "reset": "重置",
+    "unchanged": "无变化",
+    "noDifferences": "未检测到差异"
   },
   "profiles": {
     "title": "连接配置文件",
@@ -66,7 +109,14 @@
     "searchPlaceholder": "搜索配置文件...",
     "noProfiles": "暂无连接配置文件",
     "noSearchResults": "未找到匹配的配置文件",
-    "getStarted": "连接到数据库并保存为配置文件即可开始"
+    "getStarted": "连接到数据库并保存为配置文件即可开始",
+    "createFolder": "创建文件夹",
+    "renameFolder": "重命名文件夹",
+    "folderName": "文件夹名称",
+    "folderNamePlaceholder": "输入文件夹名称",
+    "creatingSubfolderIn": "正在创建子文件夹：{{name}}",
+    "create": "创建",
+    "rename": "重命名"
   },
   "app": {
     "name": "SQL Pro",
@@ -120,6 +170,7 @@
     "dataBrowser": "数据浏览器",
     "sqlQuery": "SQL 查询",
     "erDiagram": "ER 图",
+    "compare": "对比",
     "schemaCompare": "结构对比",
     "dataDiff": "数据对比"
   },
@@ -323,5 +374,31 @@
     "invalidEmail": "无效的邮箱地址",
     "invalidUrl": "无效的 URL",
     "invalidNumber": "无效的数字"
+  },
+  "pro": {
+    "upgrade": "升级到 Pro",
+    "unlockAll": "解锁所有 Pro 功能",
+    "features": {
+      "ai-nl-to-sql": {
+        "name": "自然语言转 SQL",
+        "description": "使用 AI 将自然语言问题转换为 SQL 查询"
+      },
+      "ai-data-analysis": {
+        "name": "AI 数据分析",
+        "description": "获取 AI 驱动的数据洞察和分析"
+      },
+      "advanced-export": {
+        "name": "高级导出",
+        "description": "导出数据到 Excel、JSON 等格式，支持高级选项"
+      },
+      "plugin-system": {
+        "name": "插件系统",
+        "description": "使用市场插件扩展功能"
+      },
+      "query-optimizer": {
+        "name": "查询优化器",
+        "description": "分析并优化 SQL 查询以获得更好的性能"
+      }
+    }
   }
 }

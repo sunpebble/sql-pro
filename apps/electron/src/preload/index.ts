@@ -464,6 +464,23 @@ const sqlProAPI = {
       ipcRenderer.on(IPC_CHANNELS.AI_AGENT_MESSAGE, handler);
       return () => ipcRenderer.off(IPC_CHANNELS.AI_AGENT_MESSAGE, handler);
     },
+    listModels: (request: {
+      provider: string;
+      baseUrl?: string;
+      apiKey: string;
+    }): Promise<{
+      success: boolean;
+      models?: string[];
+      warning?: string;
+      error?: string;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.AI_LIST_MODELS, request),
+    getClaudeCodeInfo: (request: {
+      path: string;
+    }): Promise<{
+      success: boolean;
+      info?: { version: string; path: string };
+      error?: string;
+    }> => ipcRenderer.invoke(IPC_CHANNELS.AI_GET_CLAUDE_CODE_INFO, request),
   },
 
   // Pro tier operations

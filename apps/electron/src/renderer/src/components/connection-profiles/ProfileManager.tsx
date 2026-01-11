@@ -915,26 +915,28 @@ export function ProfileManager({
           <DialogHeader>
             <DialogTitle>
               {folderDialogMode === 'create'
-                ? 'Create Folder'
-                : 'Rename Folder'}
+                ? t('profiles.createFolder')
+                : t('profiles.renameFolder')}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleFolderDialogSubmit} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="folderName" className="text-sm font-medium">
-                Folder Name
+                {t('profiles.folderName')}
               </label>
               <Input
                 id="folderName"
                 type="text"
                 value={folderName}
                 onChange={(e) => setFolderName(e.target.value)}
-                placeholder="Enter folder name"
+                placeholder={t('profiles.folderNamePlaceholder')}
                 autoFocus
               />
               {editingFolder && folderDialogMode === 'create' && (
                 <p className="text-muted-foreground text-xs">
-                  Creating subfolder in: {editingFolder.name}
+                  {t('profiles.creatingSubfolderIn', {
+                    name: editingFolder.name,
+                  })}
                 </p>
               )}
             </div>
@@ -948,10 +950,12 @@ export function ProfileManager({
                   setEditingFolder(null);
                 }}
               >
-                Cancel
+                {t('actions.cancel')}
               </Button>
               <Button type="submit">
-                {folderDialogMode === 'create' ? 'Create' : 'Rename'}
+                {folderDialogMode === 'create'
+                  ? t('profiles.create')
+                  : t('profiles.rename')}
               </Button>
             </div>
           </form>

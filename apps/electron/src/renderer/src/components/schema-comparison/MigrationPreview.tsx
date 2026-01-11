@@ -18,6 +18,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -40,6 +41,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
   const { comparisonResult } = useSchemaComparisonStore();
   const { activeConnectionId } = useConnectionStore();
   const { createTab } = useQueryTabsStore();
+  const { t } = useTranslation('common');
 
   const [migrationSQL, setMigrationSQL] =
     useState<GenerateMigrationSQLResponse | null>(null);
@@ -72,7 +74,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
     const generateSQL = async () => {
       setIsGenerating(true);
       try {
-        const response = await sqlPro.schemaComparison.generateMigrationSQL({
+        const response = await sqlPro.migration.generateSQL({
           comparisonResult,
           reverse,
           includeDropStatements,
@@ -179,12 +181,13 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Migration SQL
+            {t('migration.title')}
           </CardTitle>
           {migrationSQL?.statements && (
             <Badge variant="secondary">
-              {migrationSQL.statements.length} statement
-              {migrationSQL.statements.length !== 1 ? 's' : ''}
+              {t('migration.statements', {
+                count: migrationSQL.statements.length,
+              })}
             </Badge>
           )}
         </div>
@@ -205,10 +208,10 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             >
               <div className="flex items-center gap-1.5">
                 <RotateCcw className="h-3.5 w-3.5" />
-                Reverse Migration
+                {t('migration.reverseMigration')}
               </div>
               <p className="text-muted-foreground mt-0.5 text-xs font-normal">
-                Generate SQL to go from target back to source
+                {t('migration.reverseDescription')}
               </p>
             </Label>
           </div>
@@ -225,10 +228,10 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             <Label htmlFor="include-drops" className="cursor-pointer text-sm">
               <div className="flex items-center gap-1.5">
                 <AlertCircle className="text-destructive h-3.5 w-3.5" />
-                Include DROP Statements
+                {t('migration.includeDropStatements')}
               </div>
               <p className="text-muted-foreground mt-0.5 text-xs font-normal">
-                Include statements that remove tables/columns (may lose data)
+                {t('migration.includeDropDescription')}
               </p>
             </Label>
           </div>
@@ -238,7 +241,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
         {isGenerating && (
           <div className="text-muted-foreground flex items-center justify-center gap-2 py-8 text-sm">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Generating migration SQL...
+            {t('migration.generating')}
           </div>
         )}
 
@@ -246,7 +249,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
         {migrationSQL && !migrationSQL.success && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Generation Error</AlertTitle>
+            <AlertTitle>{t('migration.generationError')}</AlertTitle>
             <AlertDescription>{migrationSQL.error}</AlertDescription>
           </Alert>
         )}
@@ -255,10 +258,8 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
         {!isGenerating && migrationSQL?.success && !hasChanges && (
           <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-8 text-center">
             <Check className="h-12 w-12 opacity-30" />
-            <p className="font-medium">No Changes Detected</p>
-            <p className="text-sm">
-              The schemas are identical - no migration is needed
-            </p>
+            <p className="font-medium">{t('migration.noChanges')}</p>
+            <p className="text-sm">{t('migration.noChangesDescription')}</p>
           </div>
         )}
 
@@ -270,7 +271,9 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle className="flex items-center justify-between">
-                  <span>Warnings ({migrationSQL.warnings.length})</span>
+                  <span>
+                    {t('migration.warnings')} ({migrationSQL.warnings.length})
+                  </span>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -307,12 +310,12 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                 {copied ? (
                   <>
                     <Check className="mr-2 h-4 w-4" />
-                    Copied!
+                    {t('migration.copied')}
                   </>
                 ) : (
                   <>
                     <Copy className="mr-2 h-4 w-4" />
-                    Copy to Clipboard
+                    {t('migration.copyToClipboard')}
                   </>
                 )}
               </Button>
@@ -326,17 +329,17 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                 {saved ? (
                   <>
                     <Check className="mr-2 h-4 w-4" />
-                    Saved!
+                    {t('migration.saved')}
                   </>
                 ) : saveError ? (
                   <>
                     <AlertCircle className="mr-2 h-4 w-4" />
-                    Save Failed
+                    {t('migration.saveFailed')}
                   </>
                 ) : (
                   <>
                     <FileDown className="mr-2 h-4 w-4" />
-                    Save to File
+                    {t('migration.saveToFile')}
                   </>
                 )}
               </Button>
@@ -349,7 +352,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                   disabled={!migrationSQL.sql}
                 >
                   <FileText className="mr-2 h-4 w-4" />
-                  Open in Query Editor
+                  {t('migration.openInQueryEditor')}
                 </Button>
               )}
             </div>
@@ -367,7 +370,9 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             {/* SQL Display */}
             {migrationSQL.sql && (
               <div className="space-y-2">
-                <Label className="text-xs font-medium">Generated SQL:</Label>
+                <Label className="text-xs font-medium">
+                  {t('migration.generatedSql')}
+                </Label>
                 <ScrollArea className="h-100 rounded-lg border">
                   <div className="p-4">
                     <SqlHighlight
@@ -385,9 +390,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             {/* Statement Count Info */}
             {migrationSQL.statements && migrationSQL.statements.length > 0 && (
               <p className="text-muted-foreground text-xs">
-                💡 Tip: Review the SQL carefully before executing, especially if
-                DROP statements are included. Consider backing up your database
-                first.
+                {t('migration.tip')}
               </p>
             )}
           </>

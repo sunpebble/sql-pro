@@ -22,6 +22,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useSchemaComparisonStore } from '@/stores';
 
@@ -48,6 +49,8 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
     setChangeTypeFilter,
     resetFilters,
   } = useSchemaComparisonStore();
+
+  const { t } = useTranslation('common');
 
   // Calculate detailed counts from tableDiffs
   const counts = useMemo(() => {
@@ -137,7 +140,7 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
         onClick={toggleSummaryExpanded}
       >
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Summary</CardTitle>
+          <CardTitle className="text-base">{t('compare.summary')}</CardTitle>
           {isExpanded ? (
             <ChevronUp className="text-muted-foreground h-4 w-4" />
           ) : (
@@ -151,8 +154,12 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
           {/* Tables */}
           <SummarySection
             icon={Database}
-            title="Tables"
+            title={t('diffFilter.tables')}
             counts={counts.tables}
+            addedLabel={t('diffFilter.added')}
+            removedLabel={t('diffFilter.removed')}
+            modifiedLabel={t('diffFilter.modified')}
+            changesLabel={t('compare.changes')}
             onClickCount={(changeType) =>
               handleSectionClick('tables', changeType)
             }
@@ -161,8 +168,12 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
           {/* Columns */}
           <SummarySection
             icon={Columns}
-            title="Columns"
+            title={t('diffFilter.columns')}
             counts={counts.columns}
+            addedLabel={t('diffFilter.added')}
+            removedLabel={t('diffFilter.removed')}
+            modifiedLabel={t('diffFilter.modified')}
+            changesLabel={t('compare.changes')}
             onClickCount={(changeType) =>
               handleSectionClick('columns', changeType)
             }
@@ -171,8 +182,12 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
           {/* Indexes */}
           <SummarySection
             icon={Hash}
-            title="Indexes"
+            title={t('diffFilter.indexes')}
             counts={counts.indexes}
+            addedLabel={t('diffFilter.added')}
+            removedLabel={t('diffFilter.removed')}
+            modifiedLabel={t('diffFilter.modified')}
+            changesLabel={t('compare.changes')}
             onClickCount={(changeType) =>
               handleSectionClick('indexes', changeType)
             }
@@ -181,8 +196,12 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
           {/* Foreign Keys */}
           <SummarySection
             icon={Link}
-            title="Foreign Keys"
+            title={t('diffFilter.foreignKeys')}
             counts={counts.foreignKeys}
+            addedLabel={t('diffFilter.added')}
+            removedLabel={t('diffFilter.removed')}
+            modifiedLabel={t('diffFilter.modified')}
+            changesLabel={t('compare.changes')}
             onClickCount={(changeType) =>
               handleSectionClick('foreignKeys', changeType)
             }
@@ -191,8 +210,12 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
           {/* Triggers */}
           <SummarySection
             icon={Zap}
-            title="Triggers"
+            title={t('diffFilter.triggers')}
             counts={counts.triggers}
+            addedLabel={t('diffFilter.added')}
+            removedLabel={t('diffFilter.removed')}
+            modifiedLabel={t('diffFilter.modified')}
+            changesLabel={t('compare.changes')}
             onClickCount={(changeType) =>
               handleSectionClick('triggers', changeType)
             }
@@ -207,6 +230,10 @@ interface SummarySectionProps {
   icon: React.ElementType;
   title: string;
   counts: DiffCounts;
+  addedLabel: string;
+  removedLabel: string;
+  modifiedLabel: string;
+  changesLabel: string;
   onClickCount: (changeType: DiffType) => void;
 }
 
@@ -214,6 +241,10 @@ function SummarySection({
   icon: Icon,
   title,
   counts,
+  addedLabel,
+  removedLabel,
+  modifiedLabel,
+  changesLabel,
   onClickCount,
 }: SummarySectionProps) {
   const total = counts.added + counts.removed + counts.modified;
@@ -228,7 +259,9 @@ function SummarySection({
       <div className="flex items-center gap-2">
         <Icon className="text-muted-foreground h-4 w-4" />
         <span className="text-sm font-medium">{title}</span>
-        <span className="text-muted-foreground text-xs">({total} changes)</span>
+        <span className="text-muted-foreground text-xs">
+          ({total} {changesLabel})
+        </span>
       </div>
       <div className="grid grid-cols-3 gap-2">
         {/* Added */}
@@ -242,7 +275,7 @@ function SummarySection({
           >
             <div className="flex items-center gap-1.5 text-green-700 dark:text-green-300">
               <Plus className="h-3.5 w-3.5" />
-              <span className="text-xs">Added</span>
+              <span className="text-xs">{addedLabel}</span>
             </div>
             <span className="text-foreground text-lg font-semibold">
               {counts.added}
@@ -261,7 +294,7 @@ function SummarySection({
           >
             <div className="flex items-center gap-1.5 text-red-700 dark:text-red-300">
               <Minus className="h-3.5 w-3.5" />
-              <span className="text-xs">Removed</span>
+              <span className="text-xs">{removedLabel}</span>
             </div>
             <span className="text-foreground text-lg font-semibold">
               {counts.removed}
@@ -280,7 +313,7 @@ function SummarySection({
           >
             <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-300">
               <Edit className="h-3.5 w-3.5" />
-              <span className="text-xs">Modified</span>
+              <span className="text-xs">{modifiedLabel}</span>
             </div>
             <span className="text-foreground text-lg font-semibold">
               {counts.modified}

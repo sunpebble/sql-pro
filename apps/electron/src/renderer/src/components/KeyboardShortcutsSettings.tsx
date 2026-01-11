@@ -363,9 +363,15 @@ export const KeyboardShortcutsSettings = memo(
                     {Object.entries(PRESET_INFO).map(([key, info]) => (
                       <SelectItem key={key} value={key}>
                         <div className="flex flex-col">
-                          <span>{info.label}</span>
+                          <span>
+                            {t(`shortcuts.presets.${key}`, {
+                              defaultValue: info.label,
+                            })}
+                          </span>
                           <span className="text-muted-foreground text-xs">
-                            {info.description}
+                            {t(`shortcuts.presets.${key}Desc`, {
+                              defaultValue: info.description,
+                            })}
                           </span>
                         </div>
                       </SelectItem>
@@ -401,8 +407,13 @@ export const KeyboardShortcutsSettings = memo(
                           return (
                             <ShortcutEditor
                               key={action.id}
-                              label={action.label}
-                              description={action.description}
+                              label={t(`shortcuts.actionLabels.${action.id}`, {
+                                defaultValue: action.label,
+                              })}
+                              description={t(
+                                `shortcuts.actionDescriptions.${action.id}`,
+                                { defaultValue: action.description }
+                              )}
                               binding={binding}
                               onBindingChange={(newBinding) =>
                                 setShortcut(action.id, newBinding)

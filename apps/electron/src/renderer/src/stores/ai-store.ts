@@ -1,19 +1,27 @@
-import type { AIProvider, AISettings } from '@shared/types';
+import type {
+  AIProvider,
+  AIProviderSettings,
+  AISettings,
+  AISettingsUpdate,
+} from '@shared/types';
 import { DEFAULT_AI_BASE_URLS } from '@shared/types';
 import { create } from 'zustand';
 import { sqlPro } from '@/lib/api';
 import { withRetryOrDefault } from '@/lib/ipc-retry';
 
 interface AIState {
-  // Settings
+  // Current provider
   provider: AIProvider;
-  apiKey: string;
-  model: string;
-  baseUrl: string;
-  claudeCodePath: string;
-  isConfigured: boolean;
 
-  // Claude Code paths
+  // Per-provider settings
+  providerSettings: {
+    anthropic: AIProviderSettings;
+    openai: AIProviderSettings;
+    custom: AIProviderSettings;
+  };
+
+  // Claude Code
+  claudeCodePath: string;
   availableClaudeCodePaths: string[];
   isLoadingClaudeCodePaths: boolean;
 
@@ -21,9 +29,13 @@ interface AIState {
   isLoading: boolean;
   isSaving: boolean;
 
+  // Computed accessor for current provider's settings
+  getCurrentSettings: () => AIProviderSettings;
+  isConfigured: boolean;
+
   // Actions
   loadSettings: () => Promise<void>;
-  saveSettings: (settings: Partial<AISettings>) => Promise<boolean>;
+  saveSettings: (settings: AISettingsUpdate) => Promise<boolean>;
   loadClaudeCodePaths: () => Promise<void>;
   setProvider: (provider: AIProvider) => void;
   setApiKey: (apiKey: string) => void;
@@ -32,31 +44,66 @@ interface AIState {
   setClaudeCodePath: (path: string) => void;
   clearSettings: () => void;
   getEffectiveBaseUrl: () => string;
+
+  // Legacy accessors for backward compatibility
+  apiKey: string;
+  model: string;
+  baseUrl: string;
 }
 
 // Default models for each provider
 export const DEFAULT_MODELS: Record<AIProvider, string[]> = {
   openai: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'],
   anthropic: [
-    'claude-opus-4-5',
-    'claude-sonnet-4-5',
+    'claude-sonnet-4-20250514',
+    'claude-3-7-sonnet-20250219',
     'claude-3-5-sonnet-20241022',
     'claude-3-5-haiku-20241022',
   ],
   custom: [],
 };
 
+const DEFAULT_PROVIDER_SETTINGS: Record<AIProvider, AIProviderSettings> = {
+  anthropic: { apiKey: '', baseUrl: '', model: DEFAULT_MODELS.anthropic[0] },
+  openai: { apiKey: '', baseUrl: '', model: DEFAULT_MODELS.openai[0] },
+  custom: { apiKey: '', baseUrl: '', model: '' },
+};
+
 export const useAIStore = create<AIState>((set, get) => ({
-  provider: 'openai',
-  apiKey: '',
-  model: 'gpt-4o',
-  baseUrl: '',
+  provider: 'anthropic',
+  providerSettings: {
+    anthropic: { ...DEFAULT_PROVIDER_SETTINGS.anthropic },
+    openai: { ...DEFAULT_PROVIDER_SETTINGS.openai },
+    custom: { ...DEFAULT_PROVIDER_SETTINGS.custom },
+  },
   claudeCodePath: '',
-  isConfigured: false,
   availableClaudeCodePaths: [],
   isLoadingClaudeCodePaths: false,
   isLoading: false,
   isSaving: false,
+
+  // Legacy getters for backward compatibility
+  get apiKey() {
+    const state = get();
+    return state.providerSettings[state.provider]?.apiKey || '';
+  },
+  get model() {
+    const state = get();
+    return state.providerSettings[state.provider]?.model || '';
+  },
+  get baseUrl() {
+    const state = get();
+    return state.providerSettings[state.provider]?.baseUrl || '';
+  },
+  get isConfigured() {
+    const state = get();
+    return Boolean(state.providerSettings[state.provider]?.apiKey);
+  },
+
+  getCurrentSettings: () => {
+    const state = get();
+    return state.providerSettings[state.provider] || {};
+  },
 
   loadSettings: async () => {
     set({ isLoading: true });
@@ -67,20 +114,35 @@ export const useAIStore = create<AIState>((set, get) => ({
         { silent: true }
       );
       if (result.success && result.settings) {
-        const settings = result.settings as {
-          provider?: AIProvider;
-          apiKey?: string;
-          model?: string;
-          baseUrl?: string;
-          claudeCodePaths?: string[];
+        const settings = result.settings as AISettings;
+
+        // Load per-provider settings
+        const providerSettings = {
+          anthropic: {
+            apiKey: settings.providerSettings?.anthropic?.apiKey || '',
+            baseUrl: settings.providerSettings?.anthropic?.baseUrl || '',
+            model:
+              settings.providerSettings?.anthropic?.model ||
+              DEFAULT_MODELS.anthropic[0],
+          },
+          openai: {
+            apiKey: settings.providerSettings?.openai?.apiKey || '',
+            baseUrl: settings.providerSettings?.openai?.baseUrl || '',
+            model:
+              settings.providerSettings?.openai?.model ||
+              DEFAULT_MODELS.openai[0],
+          },
+          custom: {
+            apiKey: settings.providerSettings?.custom?.apiKey || '',
+            baseUrl: settings.providerSettings?.custom?.baseUrl || '',
+            model: settings.providerSettings?.custom?.model || '',
+          },
         };
+
         set({
-          provider: settings.provider ?? ('openai' as AIProvider),
-          apiKey: settings.apiKey ?? '',
-          model: settings.model ?? '',
-          baseUrl: settings.baseUrl || '',
-          claudeCodePath: settings.claudeCodePaths?.[0] || '',
-          isConfigured: Boolean(settings.apiKey),
+          provider: settings.provider ?? 'anthropic',
+          providerSettings,
+          claudeCodePath: settings.claudeCodePath || '',
         });
       }
     } catch (error) {
@@ -106,11 +168,38 @@ export const useAIStore = create<AIState>((set, get) => ({
 
   saveSettings: async (settings) => {
     const state = get();
+
+    // Build the new provider settings
+    const newProviderSettings = { ...state.providerSettings };
+
+    if (settings.provider !== undefined) {
+      // Provider is changing
+    }
+
+    // Update current provider's settings if provided
+    const currentProvider = settings.provider ?? state.provider;
+    if (settings.apiKey !== undefined) {
+      newProviderSettings[currentProvider] = {
+        ...newProviderSettings[currentProvider],
+        apiKey: settings.apiKey,
+      };
+    }
+    if (settings.baseUrl !== undefined) {
+      newProviderSettings[currentProvider] = {
+        ...newProviderSettings[currentProvider],
+        baseUrl: settings.baseUrl,
+      };
+    }
+    if (settings.model !== undefined) {
+      newProviderSettings[currentProvider] = {
+        ...newProviderSettings[currentProvider],
+        model: settings.model,
+      };
+    }
+
     const newSettings: AISettings = {
       provider: settings.provider ?? state.provider,
-      apiKey: settings.apiKey ?? state.apiKey,
-      model: settings.model ?? state.model,
-      baseUrl: settings.baseUrl ?? state.baseUrl,
+      providerSettings: newProviderSettings,
       claudeCodePath: settings.claudeCodePath ?? state.claudeCodePath,
     };
 
@@ -121,8 +210,9 @@ export const useAIStore = create<AIState>((set, get) => ({
       });
       if (result.success) {
         set({
-          ...newSettings,
-          isConfigured: Boolean(newSettings.apiKey),
+          provider: newSettings.provider,
+          providerSettings: newProviderSettings,
+          claudeCodePath: newSettings.claudeCodePath || '',
         });
         return true;
       }
@@ -136,34 +226,56 @@ export const useAIStore = create<AIState>((set, get) => ({
   },
 
   setProvider: (provider) => {
-    const models = DEFAULT_MODELS[provider];
-    set({
-      provider,
-      model: models[0], // Reset to default model for new provider
-      baseUrl: '', // Reset base URL when switching providers
-    });
+    // Just switch provider - settings are already stored per-provider
+    set({ provider });
   },
 
-  setApiKey: (apiKey) => set({ apiKey }),
+  setApiKey: (apiKey) => {
+    const state = get();
+    const newProviderSettings = { ...state.providerSettings };
+    newProviderSettings[state.provider] = {
+      ...newProviderSettings[state.provider],
+      apiKey,
+    };
+    set({ providerSettings: newProviderSettings });
+  },
 
-  setModel: (model) => set({ model }),
+  setModel: (model) => {
+    const state = get();
+    const newProviderSettings = { ...state.providerSettings };
+    newProviderSettings[state.provider] = {
+      ...newProviderSettings[state.provider],
+      model,
+    };
+    set({ providerSettings: newProviderSettings });
+  },
 
-  setBaseUrl: (baseUrl) => set({ baseUrl }),
+  setBaseUrl: (baseUrl) => {
+    const state = get();
+    const newProviderSettings = { ...state.providerSettings };
+    newProviderSettings[state.provider] = {
+      ...newProviderSettings[state.provider],
+      baseUrl,
+    };
+    set({ providerSettings: newProviderSettings });
+  },
 
   setClaudeCodePath: (claudeCodePath) => set({ claudeCodePath }),
 
   clearSettings: () =>
     set({
-      provider: 'openai',
-      apiKey: '',
-      model: 'gpt-4o',
-      baseUrl: '',
+      provider: 'anthropic',
+      providerSettings: {
+        anthropic: { ...DEFAULT_PROVIDER_SETTINGS.anthropic },
+        openai: { ...DEFAULT_PROVIDER_SETTINGS.openai },
+        custom: { ...DEFAULT_PROVIDER_SETTINGS.custom },
+      },
       claudeCodePath: '',
-      isConfigured: false,
     }),
 
   getEffectiveBaseUrl: () => {
     const state = get();
-    return state.baseUrl || DEFAULT_AI_BASE_URLS[state.provider];
+    const providerBaseUrl = state.providerSettings[state.provider]?.baseUrl;
+    return providerBaseUrl || DEFAULT_AI_BASE_URLS[state.provider];
   },
 }));

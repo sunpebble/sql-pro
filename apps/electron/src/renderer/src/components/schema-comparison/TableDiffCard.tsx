@@ -19,6 +19,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface TableDiffCardProps {
@@ -51,6 +52,7 @@ export function TableDiffCard({
   className,
 }: TableDiffCardProps) {
   const { diffType, name, schema } = tableDiff;
+  const { t } = useTranslation('common');
 
   // Get styling based on diff type
   const getDiffStyle = () => {
@@ -61,14 +63,14 @@ export function TableDiffCard({
           icon: <Plus className="h-4 w-4 text-green-600 dark:text-green-400" />,
           badge:
             'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-          label: 'Added',
+          label: t('diffFilter.added'),
         };
       case 'removed':
         return {
           bg: 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950',
           icon: <Minus className="h-4 w-4 text-red-600 dark:text-red-400" />,
           badge: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
-          label: 'Removed',
+          label: t('diffFilter.removed'),
         };
       case 'modified':
         return {
@@ -78,7 +80,7 @@ export function TableDiffCard({
           ),
           badge:
             'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
-          label: 'Modified',
+          label: t('diffFilter.modified'),
         };
       case 'unchanged':
       default:
@@ -87,7 +89,7 @@ export function TableDiffCard({
           icon: <Table className="h-4 w-4 text-gray-600 dark:text-gray-400" />,
           badge:
             'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-          label: 'Unchanged',
+          label: t('diffFilter.unchanged'),
         };
     }
   };
@@ -315,7 +317,7 @@ export function TableDiffCard({
           {/* Unchanged tables */}
           {diffType === 'unchanged' && (
             <p className="text-muted-foreground text-sm">
-              No differences detected
+              {t('diffFilter.noDifferences')}
             </p>
           )}
         </CardContent>

@@ -1129,19 +1129,38 @@ export const DEFAULT_AI_BASE_URLS: Record<AIProvider, string> = {
   custom: '',
 };
 
-export interface AISettings {
-  provider: AIProvider;
+export interface AIProviderSettings {
   apiKey?: string;
   baseUrl?: string;
   model?: string;
-  maxTokens?: number;
-  temperature?: number;
-  customClaudePath?: string;
+}
+
+export interface AISettings {
+  /** Current active provider */
+  provider: AIProvider;
+  /** Per-provider settings (API key, base URL, model for each provider) */
+  providerSettings?: {
+    anthropic?: AIProviderSettings;
+    openai?: AIProviderSettings;
+    custom?: AIProviderSettings;
+  };
+  /** Claude Code executable path */
   claudeCodePath?: string;
-  /** Anthropic API key */
-  anthropicApiKey?: string;
-  /** OpenAI API key */
-  openaiApiKey?: string;
+}
+
+/**
+ * Type for updating AI settings from UI.
+ * Fields like apiKey, baseUrl, model update the current provider's settings.
+ */
+export interface AISettingsUpdate {
+  provider?: AIProvider;
+  /** Updates current provider's API key */
+  apiKey?: string;
+  /** Updates current provider's base URL */
+  baseUrl?: string;
+  /** Updates current provider's model */
+  model?: string;
+  claudeCodePath?: string;
 }
 
 // ============ Data Analysis Types ============
@@ -2472,6 +2491,9 @@ export const IPC_CHANNELS = {
   AI_STREAM_OPENAI: 'ai:stream-openai',
   AI_AGENT_QUERY: 'ai:agent-query',
   AI_CANCEL_STREAM: 'ai:cancel-stream',
+  AI_LIST_MODELS: 'ai:list-models',
+  AI_QUERY: 'ai:query',
+  AI_GET_CLAUDE_CODE_INFO: 'ai:get-claude-code-info',
 
   // Pro
   PRO_GET_STATUS: 'pro:get-status',
@@ -2629,10 +2651,6 @@ export const IPC_CHANNELS = {
   // System
   SYSTEM_FIND_CLAUDE_PATHS: 'ai:get-claude-code-paths',
   SYSTEM_FOCUS_WINDOW: 'window:focus',
-
-  // AI (additional)
-  AI_QUERY: 'ai:agent-query',
-  AI_STREAM: 'ai:stream-anthropic',
 
   // Unsaved changes
   CHECK_UNSAVED_CHANGES: 'unsaved-changes:check',

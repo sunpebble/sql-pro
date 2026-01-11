@@ -224,8 +224,8 @@ export function SchemaComparisonPanel({
         throw new Error('Invalid comparison configuration');
       }
 
-      if (response.success && response.result) {
-        setComparisonResult(response.result);
+      if (response.success && (response.result || response.comparison)) {
+        setComparisonResult(response.result || response.comparison);
       } else {
         setComparisonError(response.error || 'Comparison failed');
       }
@@ -339,12 +339,7 @@ export function SchemaComparisonPanel({
           <div className="grid gap-4 md:grid-cols-2">
             {/* Source Selector */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-base">
-                  {t('compare.source')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <SourceSelector
                   type="source"
                   value={source}
@@ -360,12 +355,7 @@ export function SchemaComparisonPanel({
 
             {/* Target Selector */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-base">
-                  {t('compare.target')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <SourceSelector
                   type="target"
                   value={target}
@@ -411,7 +401,7 @@ export function SchemaComparisonPanel({
           {isLoadingSnapshots && (
             <div className="text-muted-foreground flex items-center justify-center gap-2 text-sm">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Loading snapshots...
+              {t('compare.loadingSnapshots')}
             </div>
           )}
 
@@ -421,7 +411,7 @@ export function SchemaComparisonPanel({
               {/* Summary Card */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                  <CardTitle>Comparison Results</CardTitle>
+                  <CardTitle>{t('compare.comparisonResults')}</CardTitle>
                   <Button
                     variant="outline"
                     size="sm"
@@ -429,34 +419,39 @@ export function SchemaComparisonPanel({
                     title="Export comparison report (⌘E)"
                   >
                     <FileDown className="mr-2 h-4 w-4" />
-                    Export Report
+                    {t('compare.exportReport')}
                   </Button>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Source:</span>
+                      <span className="text-muted-foreground">
+                        {t('compare.sourceLabel')}
+                      </span>
                       <span className="font-medium">
                         {comparisonResult.sourceName}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Target:</span>
+                      <span className="text-muted-foreground">
+                        {t('compare.targetLabel')}
+                      </span>
                       <span className="font-medium">
                         {comparisonResult.targetName}
                       </span>
                     </div>
                     <div className="mt-4 border-t pt-2">
                       <p className="text-muted-foreground text-sm">
-                        Summary (
-                        {comparisonResult.summary.sourceTables +
-                          comparisonResult.summary.targetTables}{' '}
-                        tables compared)
+                        {t('compare.tablesCompared', {
+                          count:
+                            comparisonResult.summary.sourceTables +
+                            comparisonResult.summary.targetTables,
+                        })}
                       </p>
                       <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
                         <div className="rounded bg-green-100 p-2 dark:bg-green-950">
                           <div className="text-green-700 dark:text-green-300">
-                            Added
+                            {t('compare.added')}
                           </div>
                           <div className="text-lg font-semibold">
                             {comparisonResult.summary.tablesAdded}
@@ -464,7 +459,7 @@ export function SchemaComparisonPanel({
                         </div>
                         <div className="rounded bg-red-100 p-2 dark:bg-red-950">
                           <div className="text-red-700 dark:text-red-300">
-                            Removed
+                            {t('compare.removed')}
                           </div>
                           <div className="text-lg font-semibold">
                             {comparisonResult.summary.tablesRemoved}
@@ -472,7 +467,7 @@ export function SchemaComparisonPanel({
                         </div>
                         <div className="rounded bg-amber-100 p-2 dark:bg-amber-950">
                           <div className="text-amber-700 dark:text-amber-300">
-                            Modified
+                            {t('compare.modified')}
                           </div>
                           <div className="text-lg font-semibold">
                             {comparisonResult.summary.tablesModified}
@@ -490,7 +485,7 @@ export function SchemaComparisonPanel({
               {/* Detailed Diff View */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Schema Differences</CardTitle>
+                  <CardTitle>{t('compare.schemaDifferences')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Filter Bar */}
@@ -510,10 +505,8 @@ export function SchemaComparisonPanel({
           {!comparisonResult && !comparisonError && !isComparing && (
             <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-12 text-center">
               <GitCompare className="h-12 w-12 opacity-30" />
-              <p className="font-medium">Ready to Compare</p>
-              <p className="text-sm">
-                Select a source and target, then click Compare Schemas
-              </p>
+              <p className="font-medium">{t('compare.readyToCompare')}</p>
+              <p className="text-sm">{t('compare.selectSourceAndTarget')}</p>
             </div>
           )}
         </div>

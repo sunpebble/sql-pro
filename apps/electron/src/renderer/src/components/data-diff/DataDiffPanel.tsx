@@ -21,6 +21,7 @@ import {
   Table2,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { useConnectionStore, useDataDiffStore } from '@/stores';
 
@@ -53,6 +54,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
   const connections = getAllConnections();
 
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const { t } = useTranslation('common');
 
   // Ref to hold handleCompare function for keyboard shortcuts
   const handleCompareRef = useRef<(() => void) | null>(null);
@@ -169,8 +171,10 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
         return;
       }
 
-      if (response.result) {
-        useDataDiffStore.getState().setComparisonResult(response.result);
+      if (response.result || response.comparison) {
+        useDataDiffStore
+          .getState()
+          .setComparisonResult(response.result || response.comparison);
       }
     } catch (error) {
       setComparisonError(
@@ -204,9 +208,11 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
             <div className="flex items-center gap-3">
               <GitCompare className="text-primary h-6 w-6" />
               <div>
-                <h1 className="text-2xl font-semibold">Data Comparison</h1>
+                <h1 className="text-2xl font-semibold">
+                  {t('compare.dataComparison')}
+                </h1>
                 <p className="text-muted-foreground text-sm">
-                  Compare data between tables to identify row-level differences
+                  {t('compare.dataDescription')}
                 </p>
               </div>
             </div>
@@ -218,7 +224,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               title="Show keyboard shortcuts"
             >
               <Keyboard className="h-4 w-4" />
-              <span className="hidden sm:inline">Shortcuts</span>
+              <span className="hidden sm:inline">{t('compare.shortcuts')}</span>
               {showKeyboardShortcuts ? (
                 <ChevronUp className="h-4 w-4" />
               ) : (
@@ -233,14 +239,14 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Keyboard className="h-4 w-4" />
-                  Keyboard Shortcuts
+                  {t('compare.keyboardShortcuts')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground whitespace-nowrap">
-                      Run comparison
+                      {t('compare.runComparison')}
                     </span>
                     <ShortcutKbd
                       binding={{ key: 'Enter', modifiers: { cmd: true } }}
@@ -248,7 +254,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground whitespace-nowrap">
-                      Toggle only differences
+                      {t('compare.toggleOnlyDifferences')}
                     </span>
                     <ShortcutKbd
                       binding={{ key: 'd', modifiers: { cmd: true } }}
@@ -256,7 +262,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground whitespace-nowrap">
-                      Reset filters
+                      {t('compare.resetFilters')}
                     </span>
                     <ShortcutKbd
                       binding={{ key: 'r', modifiers: { cmd: true } }}
@@ -274,14 +280,14 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Database className="h-4 w-4" />
-                  Source
+                  {t('compare.source')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {/* Connection Selector */}
                 <div className="space-y-2">
                   <label className="text-muted-foreground text-xs font-medium">
-                    Connection
+                    {t('compare.connection')}
                   </label>
                   <Select
                     value={source?.connectionId ?? ''}
@@ -320,7 +326,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                 {/* Table Selector */}
                 <div className="space-y-2">
                   <label className="text-muted-foreground text-xs font-medium">
-                    Table
+                    {t('compare.table')}
                   </label>
                   <Select
                     value={source?.tableName ?? ''}
@@ -370,14 +376,14 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Database className="h-4 w-4" />
-                  Target
+                  {t('compare.target')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {/* Connection Selector */}
                 <div className="space-y-2">
                   <label className="text-muted-foreground text-xs font-medium">
-                    Connection
+                    {t('compare.connection')}
                   </label>
                   <Select
                     value={target?.connectionId ?? ''}
@@ -416,7 +422,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                 {/* Table Selector */}
                 <div className="space-y-2">
                   <label className="text-muted-foreground text-xs font-medium">
-                    Table
+                    {t('compare.table')}
                   </label>
                   <Select
                     value={target?.tableName ?? ''}
@@ -469,12 +475,12 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               {isComparing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Comparing...
+                  {t('compare.comparing')}
                 </>
               ) : (
                 <>
                   <GitCompare className="mr-2 h-4 w-4" />
-                  Compare Data
+                  {t('compare.compareData')}
                 </>
               )}
             </Button>
@@ -484,7 +490,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
           {comparisonError && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Comparison Error</AlertTitle>
+              <AlertTitle>{t('compare.comparisonError')}</AlertTitle>
               <AlertDescription>{comparisonError}</AlertDescription>
             </Alert>
           )}
@@ -495,31 +501,37 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               {/* Summary Card */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Comparison Results</CardTitle>
+                  <CardTitle>{t('compare.comparisonResults')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Source:</span>
+                      <span className="text-muted-foreground">
+                        {t('compare.sourceLabel')}
+                      </span>
                       <span className="font-medium">
                         {comparisonResult.sourceName}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Target:</span>
+                      <span className="text-muted-foreground">
+                        {t('compare.targetLabel')}
+                      </span>
                       <span className="font-medium">
                         {comparisonResult.targetName}
                       </span>
                     </div>
                     <div className="mt-4 border-t pt-2">
                       <p className="text-muted-foreground text-sm">
-                        Summary ({comparisonResult.summary.sourceRows} source
-                        rows, {comparisonResult.summary.targetRows} target rows)
+                        {t('compare.rowsSummary', {
+                          sourceRows: comparisonResult.summary.sourceRows,
+                          targetRows: comparisonResult.summary.targetRows,
+                        })}
                       </p>
                       <div className="mt-2 grid grid-cols-4 gap-2 text-xs">
                         <div className="rounded bg-green-100 p-2 dark:bg-green-950">
                           <div className="text-green-700 dark:text-green-300">
-                            Added
+                            {t('compare.rowsAdded')}
                           </div>
                           <div className="text-lg font-semibold">
                             {comparisonResult.summary.rowsAdded}
@@ -527,7 +539,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                         </div>
                         <div className="rounded bg-red-100 p-2 dark:bg-red-950">
                           <div className="text-red-700 dark:text-red-300">
-                            Removed
+                            {t('compare.rowsRemoved')}
                           </div>
                           <div className="text-lg font-semibold">
                             {comparisonResult.summary.rowsRemoved}
@@ -535,7 +547,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                         </div>
                         <div className="rounded bg-amber-100 p-2 dark:bg-amber-950">
                           <div className="text-amber-700 dark:text-amber-300">
-                            Modified
+                            {t('compare.rowsModified')}
                           </div>
                           <div className="text-lg font-semibold">
                             {comparisonResult.summary.rowsModified}
@@ -543,7 +555,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                         </div>
                         <div className="rounded bg-blue-100 p-2 dark:bg-blue-950">
                           <div className="text-blue-700 dark:text-blue-300">
-                            Unchanged
+                            {t('compare.rowsUnchanged')}
                           </div>
                           <div className="text-lg font-semibold">
                             {comparisonResult.summary.rowsUnchanged}
@@ -558,12 +570,11 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               {/* Detailed Diff View - Placeholder for future components */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Row Differences</CardTitle>
+                  <CardTitle>{t('compare.rowDifferences')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">
-                    Detailed diff view will be implemented in subsequent
-                    subtasks.
+                    {t('compare.detailedDiffPlaceholder')}
                   </p>
                 </CardContent>
               </Card>
@@ -574,9 +585,9 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
           {!comparisonResult && !comparisonError && !isComparing && (
             <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-12 text-center">
               <GitCompare className="h-12 w-12 opacity-30" />
-              <p className="font-medium">Ready to Compare</p>
+              <p className="font-medium">{t('compare.readyToCompare')}</p>
               <p className="text-sm">
-                Select source and target tables, then click Compare Data
+                {t('compare.selectSourceAndTargetData')}
               </p>
             </div>
           )}

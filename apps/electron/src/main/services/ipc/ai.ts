@@ -147,12 +147,26 @@ export function setupAIHandlers(): void {
       }
 
       if (request.provider === 'anthropic') {
+        // Get API key from providerSettings or environment variable
+        const providerConfig = settings.providerSettings?.anthropic;
+        const apiKey =
+          providerConfig?.apiKey || process.env.ANTHROPIC_API_KEY || '';
+        // Get base URL from providerSettings or environment variable
+        const baseUrl =
+          providerConfig?.baseUrl ||
+          process.env.ANTHROPIC_BASE_URL ||
+          undefined;
+
         const client = new Anthropic({
-          apiKey: settings.anthropicApiKey,
+          apiKey,
+          ...(baseUrl && { baseURL: baseUrl }),
         });
 
         const response = await client.messages.create({
-          model: request.model || 'claude-3-5-sonnet-20241022',
+          model:
+            request.model ||
+            providerConfig?.model ||
+            'claude-3-5-sonnet-20241022',
           max_tokens: request.maxTokens || 2048,
           messages: (request.messages ||
             []) as Anthropic.Messages.MessageParam[],
@@ -174,12 +188,22 @@ export function setupAIHandlers(): void {
           },
         };
       } else if (request.provider === 'openai') {
+        // Get API key from providerSettings or environment variable
+        const providerConfig = settings.providerSettings?.openai;
+        const apiKey =
+          providerConfig?.apiKey || process.env.OPENAI_API_KEY || '';
+        // Get base URL from providerSettings or environment variable
+        const baseUrl =
+          providerConfig?.baseUrl || process.env.OPENAI_BASE_URL || undefined;
+
         const client = new OpenAI({
-          apiKey: settings.openaiApiKey,
+          apiKey,
+          ...(baseUrl && { baseURL: baseUrl }),
         });
 
         const response = await client.chat.completions.create({
-          model: request.model || 'gpt-4-turbo-preview',
+          model:
+            request.model || providerConfig?.model || 'gpt-4-turbo-preview',
           max_tokens: request.maxTokens || 2048,
           messages: (request.messages || []).map((msg) => ({
             role: msg.role as 'user' | 'assistant' | 'system',
@@ -220,9 +244,9 @@ export function setupAIHandlers(): void {
     })
   );
 
-  // AI: Stream
+  // AI: Stream (Anthropic) - not yet implemented
   ipcMain.handle(
-    IPC_CHANNELS.AI_STREAM,
+    IPC_CHANNELS.AI_STREAM_ANTHROPIC,
     async (
       _event,
       _request: AIStreamAnthropicRequest | AIStreamOpenAIRequest
@@ -235,23 +259,30 @@ export function setupAIHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.AI_FETCH_ANTHROPIC,
     createHandler(async (request: AIFetchAnthropicRequest) => {
+      // Get base URL from request or environment variable
+      const baseUrl =
+        request.baseUrl || process.env.ANTHROPIC_BASE_URL || undefined;
+
       const client = new Anthropic({
         apiKey: request.apiKey,
+        ...(baseUrl && { baseURL: baseUrl }),
       });
 
       const response = await client.messages.create({
         model: request.model || 'claude-3-5-sonnet-20241022',
         max_tokens: request.maxTokens || 2048,
         messages: (request.messages || []) as Anthropic.Messages.MessageParam[],
+        ...(request.system && { system: request.system }),
       });
+
+      // Extract text content from response
+      const content =
+        response.content[0]?.type === 'text' ? response.content[0].text : '';
 
       return {
         success: true,
-        response: {
-          content:
-            response.content[0].type === 'text' ? response.content[0].text : '',
-          stopReason: response.stop_reason,
-        },
+        content,
+        stopReason: response.stop_reason,
       };
     })
   );
@@ -306,4 +337,142 @@ export function setupAIHandlers(): void {
       };
     }
   });
+
+  // AI: Get Claude Code Info
+  ipcMain.handle(
+    IPC_CHANNELS.AI_GET_CLAUDE_CODE_INFO,
+    async (_event, request: { path: string }) => {
+      try {
+        const claudePath = request.path;
+        if (!claudePath || !fs.existsSync(claudePath)) {
+          return {
+            success: false,
+            error: 'Claude Code path not found',
+          };
+        }
+
+        // Run claude --version to get version info
+        const { stdout } = await execAsync(`"${claudePath}" --version`);
+        const version = stdout.trim();
+
+        return {
+          success: true,
+          info: {
+            version,
+            path: claudePath,
+          },
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : 'Failed to get Claude Code info',
+        };
+      }
+    }
+  );
+
+  // AI: List Models
+  ipcMain.handle(
+    IPC_CHANNELS.AI_LIST_MODELS,
+    async (
+      _event,
+      request: { provider: string; baseUrl?: string; apiKey: string }
+    ) => {
+      try {
+        const { provider, baseUrl, apiKey } = request;
+
+        if (!apiKey) {
+          return { success: false, error: 'API key is required' };
+        }
+
+        if (provider === 'openai' || provider === 'custom') {
+          // Fetch models from OpenAI-compatible API
+          const effectiveBaseUrl =
+            baseUrl ||
+            process.env.OPENAI_BASE_URL ||
+            'https://api.openai.com/v1';
+          const client = new OpenAI({
+            apiKey,
+            baseURL: effectiveBaseUrl,
+          });
+
+          try {
+            const modelsPage = await client.models.list();
+            const models = modelsPage.data
+              .filter(
+                (m) =>
+                  // Filter for chat models (gpt, claude for custom endpoints, etc.)
+                  m.id.includes('gpt') ||
+                  m.id.includes('claude') ||
+                  m.id.includes('gemini') ||
+                  m.id.includes('llama') ||
+                  m.id.includes('mistral') ||
+                  m.id.includes('qwen') ||
+                  m.id.includes('deepseek')
+              )
+              .map((m) => m.id)
+              .sort();
+
+            return { success: true, models };
+          } catch {
+            // If fetching fails, return default models
+            return {
+              success: true,
+              models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'],
+              warning: 'Could not fetch models from API, using defaults',
+            };
+          }
+        } else if (provider === 'anthropic') {
+          // Anthropic now supports /v1/models endpoint
+          const effectiveBaseUrl =
+            baseUrl || process.env.ANTHROPIC_BASE_URL || undefined;
+
+          try {
+            const client = new Anthropic({
+              apiKey,
+              ...(effectiveBaseUrl && { baseURL: effectiveBaseUrl }),
+            });
+
+            // Fetch models from Anthropic API
+            const modelsPage = await client.models.list();
+            const models = modelsPage.data
+              .map((m) => m.id)
+              .sort((a, b) => {
+                // Sort by date (newer first) by extracting date from model name
+                const dateA = a.match(/\d{8}/)?.[0] || '0';
+                const dateB = b.match(/\d{8}/)?.[0] || '0';
+                return dateB.localeCompare(dateA);
+              });
+
+            return { success: true, models };
+          } catch (fetchError) {
+            // If fetching fails, return default models
+            console.error('Failed to fetch Anthropic models:', fetchError);
+            return {
+              success: true,
+              models: [
+                'claude-sonnet-4-20250514',
+                'claude-3-7-sonnet-20250219',
+                'claude-3-5-sonnet-20241022',
+                'claude-3-5-haiku-20241022',
+                'claude-3-opus-20240229',
+              ],
+              warning: 'Could not fetch models from API, using defaults',
+            };
+          }
+        }
+
+        return { success: false, error: 'Unknown provider' };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error ? error.message : 'Failed to list models',
+        };
+      }
+    }
+  );
 }
