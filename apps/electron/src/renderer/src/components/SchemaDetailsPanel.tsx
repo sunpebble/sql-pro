@@ -20,6 +20,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { cn } from '@/lib/utils';
 
@@ -34,6 +35,7 @@ export function SchemaDetailsPanel({
   table,
   onClose,
 }: SchemaDetailsPanelProps) {
+  const { t } = useTranslation('common');
   const [expandedSections, setExpandedSections] = useState<
     Record<SectionKey, boolean>
   >({
@@ -55,13 +57,17 @@ export function SchemaDetailsPanel({
     return (
       <div className="bg-background flex h-full w-full flex-col overflow-hidden border-l">
         <div className="flex items-center justify-between border-b px-4 py-3">
-          <h2 className="font-semibold">Schema Details</h2>
+          <h2 className="font-semibold">
+            {t('schema.title', { defaultValue: 'Schema Details' })}
+          </h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
         <div className="text-muted-foreground flex flex-1 items-center justify-center text-sm">
-          Select a table or view to see details
+          {t('schema.selectTable', {
+            defaultValue: 'Select a table or view to see details',
+          })}
         </div>
       </div>
     );
@@ -82,7 +88,15 @@ export function SchemaDetailsPanel({
           <div>
             <h2 className="font-semibold">{table.name}</h2>
             <p className="text-muted-foreground text-sm">
-              {isView ? 'View' : 'Table'} in {table.schema}
+              {isView
+                ? t('schema.viewIn', {
+                    defaultValue: 'View in {{schema}}',
+                    schema: table.schema,
+                  })
+                : t('schema.tableIn', {
+                    defaultValue: 'Table in {{schema}}',
+                    schema: table.schema,
+                  })}
             </p>
           </div>
         </div>
@@ -96,7 +110,7 @@ export function SchemaDetailsPanel({
         <div className="space-y-4 p-4">
           {/* Columns Section */}
           <Section
-            title="Columns"
+            title={t('schema.columns', { defaultValue: 'Columns' })}
             icon={<Columns3 className="h-4 w-4" />}
             count={table.columns.length}
             isExpanded={expandedSections.columns}
@@ -105,26 +119,27 @@ export function SchemaDetailsPanel({
             <ColumnsTable
               columns={table.columns}
               primaryKey={table.primaryKey}
+              t={t}
             />
           </Section>
 
           {/* Indexes Section */}
           {table.indexes.length > 0 && (
             <Section
-              title="Indexes"
+              title={t('schema.indexes', { defaultValue: 'Indexes' })}
               icon={<Key className="h-4 w-4" />}
               count={table.indexes.length}
               isExpanded={expandedSections.indexes}
               onToggle={() => toggleSection('indexes')}
             >
-              <IndexesList indexes={table.indexes} />
+              <IndexesList indexes={table.indexes} t={t} />
             </Section>
           )}
 
           {/* Foreign Keys Section */}
           {table.foreignKeys.length > 0 && (
             <Section
-              title="Foreign Keys"
+              title={t('schema.foreignKeys', { defaultValue: 'Foreign Keys' })}
               icon={<Link2 className="h-4 w-4" />}
               count={table.foreignKeys.length}
               isExpanded={expandedSections.foreignKeys}
@@ -137,7 +152,7 @@ export function SchemaDetailsPanel({
           {/* Triggers Section (only for tables, not views) */}
           {!isView && table.triggers.length > 0 && (
             <Section
-              title="Triggers"
+              title={t('schema.triggers', { defaultValue: 'Triggers' })}
               icon={<Zap className="h-4 w-4" />}
               count={table.triggers.length}
               isExpanded={expandedSections.triggers}
@@ -150,7 +165,9 @@ export function SchemaDetailsPanel({
           {/* CREATE Statement Section */}
           {table.sql && (
             <Section
-              title="CREATE Statement"
+              title={t('schema.createStatement', {
+                defaultValue: 'CREATE Statement',
+              })}
               icon={<Code className="h-4 w-4" />}
               isExpanded={expandedSections.sql}
               onToggle={() => toggleSection('sql')}
@@ -208,13 +225,14 @@ function Section({
 interface ColumnsTableProps {
   columns: ColumnSchema[];
   primaryKey: string[];
+  t: (key: string, options?: Record<string, unknown>) => string;
 }
 
-function ColumnsTable({ columns, primaryKey }: ColumnsTableProps) {
+function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
   if (columns.length === 0) {
     return (
       <div className="text-muted-foreground py-2 text-sm">
-        No columns defined
+        {t('schema.noColumns', { defaultValue: 'No columns defined' })}
       </div>
     );
   }
@@ -224,10 +242,18 @@ function ColumnsTable({ columns, primaryKey }: ColumnsTableProps) {
       <table className="w-full text-sm">
         <thead>
           <tr className="text-muted-foreground border-b text-left">
-            <th className="pr-3 pb-2 font-medium whitespace-nowrap">Name</th>
-            <th className="pr-3 pb-2 font-medium whitespace-nowrap">Type</th>
-            <th className="pr-3 pb-2 font-medium whitespace-nowrap">Null</th>
-            <th className="pb-2 font-medium whitespace-nowrap">Key</th>
+            <th className="pr-3 pb-2 font-medium whitespace-nowrap">
+              {t('schema.columnName', { defaultValue: 'Name' })}
+            </th>
+            <th className="pr-3 pb-2 font-medium whitespace-nowrap">
+              {t('schema.columnType', { defaultValue: 'Type' })}
+            </th>
+            <th className="pr-3 pb-2 font-medium whitespace-nowrap">
+              {t('schema.columnNull', { defaultValue: 'Null' })}
+            </th>
+            <th className="pb-2 font-medium whitespace-nowrap">
+              {t('schema.columnKey', { defaultValue: 'Key' })}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -253,7 +279,9 @@ function ColumnsTable({ columns, primaryKey }: ColumnsTableProps) {
                         : 'text-amber-600'
                     )}
                   >
-                    {column.nullable ? 'Yes' : 'No'}
+                    {column.nullable
+                      ? t('schema.yes', { defaultValue: 'Yes' })
+                      : t('schema.no', { defaultValue: 'No' })}
                   </span>
                 </td>
                 <td className="py-1.5 whitespace-nowrap">
@@ -274,9 +302,10 @@ function ColumnsTable({ columns, primaryKey }: ColumnsTableProps) {
 
 interface IndexesListProps {
   indexes: IndexSchema[];
+  t: (key: string, options?: Record<string, unknown>) => string;
 }
 
-function IndexesList({ indexes }: IndexesListProps) {
+function IndexesList({ indexes, t }: IndexesListProps) {
   return (
     <div className="space-y-2">
       {indexes.map((index) => (
@@ -290,7 +319,8 @@ function IndexesList({ indexes }: IndexesListProps) {
             )}
           </div>
           <div className="text-muted-foreground mt-1 text-xs">
-            Columns: {index.columns.join(', ')}
+            {t('schema.columnsLabel', { defaultValue: 'Columns:' })}{' '}
+            {index.columns.join(', ')}
           </div>
           {index.sql && (
             <div className="mt-2">

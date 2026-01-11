@@ -37,6 +37,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { useAutoRefresh } from '@/hooks/useAutoRefresh';
 import { useClientSearch } from '@/hooks/useClientSearch';
@@ -96,6 +97,8 @@ export function TableView({ tableOverride }: TableViewProps) {
   const activeTab = activeConnectionId
     ? getActiveTab(activeConnectionId)
     : undefined;
+
+  const { t } = useTranslation('common');
 
   // Global page size setting
   const pageSizeOption = usePageSize();
@@ -599,13 +602,13 @@ export function TableView({ tableOverride }: TableViewProps) {
             </span>
             {searchStats.isSearching && (
               <span className="bg-primary/10 text-primary shrink-0 rounded px-1.5 py-0.5 text-xs font-medium">
-                Filtered
+                {t('table.filtered', { defaultValue: 'Filtered' })}
               </span>
             )}
             {selectedTable.type === 'view' && (
               <span className="bg-secondary text-muted-foreground flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-xs">
                 <Eye className="h-3 w-3" />
-                View
+                {t('table.view', { defaultValue: 'View' })}
               </span>
             )}
             {/* Data Quality Indicator */}
@@ -621,7 +624,9 @@ export function TableView({ tableOverride }: TableViewProps) {
               <Input
                 ref={searchInputRef}
                 type="text"
-                placeholder="Search in results..."
+                placeholder={t('table.searchInResults', {
+                  defaultValue: 'Search in results...',
+                })}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="h-8 w-48 pr-8 pl-8 text-sm"
@@ -631,7 +636,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                   type="button"
                   onClick={() => setSearchTerm('')}
                   className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2"
-                  title="Clear search"
+                  title={t('table.clearSearch', {
+                    defaultValue: 'Clear search',
+                  })}
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -646,7 +653,8 @@ export function TableView({ tableOverride }: TableViewProps) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                Refresh table data (
+                {t('table.refreshData', { defaultValue: 'Refresh table data' })}{' '}
+                (
                 <ShortcutKbd action="action.refresh-table" />)
               </TooltipContent>
             </Tooltip>
@@ -665,7 +673,8 @@ export function TableView({ tableOverride }: TableViewProps) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                Export data (<ShortcutKbd action="action.export-data" />)
+                {t('table.exportData', { defaultValue: 'Export data' })} (
+                <ShortcutKbd action="action.export-data" />)
               </TooltipContent>
             </Tooltip>
 
@@ -683,7 +692,8 @@ export function TableView({ tableOverride }: TableViewProps) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  Add row (<ShortcutKbd action="action.add-row" />)
+                  {t('table.addRow', { defaultValue: 'Add row' })} (
+                  <ShortcutKbd action="action.add-row" />)
                 </TooltipContent>
               </Tooltip>
             )}
@@ -702,7 +712,10 @@ export function TableView({ tableOverride }: TableViewProps) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  View pending changes (
+                  {t('table.viewChanges', {
+                    defaultValue: 'View pending changes',
+                  })}{' '}
+                  (
                   <ShortcutKbd action="action.view-changes" />)
                 </TooltipContent>
               </Tooltip>
@@ -722,8 +735,12 @@ export function TableView({ tableOverride }: TableViewProps) {
               </TooltipTrigger>
               <TooltipContent>
                 {showSchemaDetails
-                  ? 'Hide schema details'
-                  : 'View schema details'}
+                  ? t('table.hideSchemaDetails', {
+                      defaultValue: 'Hide schema details',
+                    })
+                  : t('table.viewSchemaDetails', {
+                      defaultValue: 'View schema details',
+                    })}
                 {' ('}
                 <ShortcutKbd action="view.toggle-schema-details" />
                 {')'}
@@ -810,17 +827,33 @@ export function TableView({ tableOverride }: TableViewProps) {
             <div className="text-muted-foreground text-sm">
               {useInfiniteScroll ? (
                 <>
-                  Showing {rows.length.toLocaleString()} of{' '}
-                  {totalRows.toLocaleString()} rows
+                  {t('table.showing', {
+                    defaultValue: 'Showing {{shown}} of {{total}} rows',
+                    shown: rows.length.toLocaleString(),
+                    total: totalRows.toLocaleString(),
+                  })}
                   {isFetchingNextPage && (
-                    <span className="text-primary ml-2">Loading more...</span>
+                    <span className="text-primary ml-2">
+                      {t('table.loadingMore', {
+                        defaultValue: 'Loading more...',
+                      })}
+                    </span>
                   )}
                 </>
               ) : (
                 <>
-                  Page {page} of {totalPages || 1}
+                  {t('table.pageInfo', {
+                    defaultValue: 'Page {{page}} of {{totalPages}}',
+                    page,
+                    totalPages: totalPages || 1,
+                  })}
                   <span className="text-muted-foreground/70 ml-1">
-                    ({totalRows.toLocaleString()} total)
+                    (
+                    {t('table.totalRows', {
+                      defaultValue: '{{count}} total',
+                      count: totalRows,
+                    })}
+                    )
                   </span>
                 </>
               )}
@@ -828,7 +861,9 @@ export function TableView({ tableOverride }: TableViewProps) {
 
             {/* Page Size Selector */}
             <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-sm">Rows:</span>
+              <span className="text-muted-foreground text-sm">
+                {t('table.rowsLabel', { defaultValue: 'Rows:' })}
+              </span>
               <Select
                 value={String(pageSizeOption)}
                 onValueChange={handlePageSizeChange}
@@ -839,7 +874,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                 <SelectContent align="center">
                   {PAGE_SIZE_OPTIONS.map((size) => (
                     <SelectItem key={size} value={String(size)}>
-                      {size === 'all' ? 'All' : size.toLocaleString()}
+                      {size === 'all'
+                        ? t('table.all', { defaultValue: 'All' })
+                        : size.toLocaleString()}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -851,7 +888,12 @@ export function TableView({ tableOverride }: TableViewProps) {
                       <AlertTriangle className="text-warning h-4 w-4 text-amber-500" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Loading all rows may be slow for large tables</p>
+                      <p>
+                        {t('table.largeTableWarning', {
+                          defaultValue:
+                            'Loading all rows may be slow for large tables',
+                        })}
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -868,7 +910,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 className="h-8 w-8"
                 onClick={() => handlePageChange(1)}
                 disabled={page <= 1 || isLoading}
-                title="First page"
+                title={t('table.firstPage', { defaultValue: 'First page' })}
               >
                 <ChevronsLeft className="h-4 w-4" />
               </Button>
@@ -878,7 +920,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                 className="h-8 w-8"
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page <= 1 || isLoading}
-                title="Previous page"
+                title={t('table.previousPage', {
+                  defaultValue: 'Previous page',
+                })}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -929,7 +973,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 className="h-8 w-8"
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page >= totalPages || isLoading}
-                title="Next page"
+                title={t('table.nextPage', { defaultValue: 'Next page' })}
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -939,7 +983,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 className="h-8 w-8"
                 onClick={() => handlePageChange(totalPages)}
                 disabled={page >= totalPages || isLoading}
-                title="Last page"
+                title={t('table.lastPage', { defaultValue: 'Last page' })}
               >
                 <ChevronsRight className="h-4 w-4" />
               </Button>
