@@ -1359,6 +1359,7 @@ function TableItem({
   onTogglePinned,
 }: TableItemProps) {
   const [newTagInput, setNewTagInput] = useState('');
+  const { t } = useTranslation('sidebar');
 
   const handleAddNewTag = () => {
     if (newTagInput.trim()) {
@@ -1432,33 +1433,36 @@ function TableItem({
       <ContextMenuContent>
         <ContextMenuItem onClick={onOpenInQueryEditor}>
           <FileSearch className="size-4" />
-          Open in Query Editor
+          {t('contextMenu.openInQueryEditor', {
+            defaultValue: 'Open in Query Editor',
+          })}
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem onClick={onTogglePinned}>
           {isPinned ? (
             <>
               <PinOff className="size-4" />
-              Unpin
+              {t('contextMenu.unpin', { defaultValue: 'Unpin' })}
             </>
           ) : (
             <>
               <Pin className="size-4" />
-              Pin to Top
+              {t('contextMenu.pinToTop', { defaultValue: 'Pin to Top' })}
             </>
           )}
         </ContextMenuItem>
         <ContextMenuSub>
           <ContextMenuSubTrigger nativeButton={false}>
             <Tag className="size-4" />
-            Tags
+            {t('contextMenu.tags', { defaultValue: 'Tags' })}
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
-            {/* Current tags */}
             {tags.length > 0 && (
               <>
                 <div className="text-muted-foreground px-2 py-1 text-xs font-medium">
-                  Current Tags
+                  {t('contextMenu.currentTags', {
+                    defaultValue: 'Current Tags',
+                  })}
                 </div>
                 {tags.map((tag) => (
                   <ContextMenuItem key={tag} onClick={() => onRemoveTag(tag)}>
@@ -1473,7 +1477,7 @@ function TableItem({
             {availableTags.filter((t) => !tags.includes(t)).length > 0 && (
               <>
                 <div className="text-muted-foreground px-2 py-1 text-xs font-medium">
-                  Add Tag
+                  {t('contextMenu.addTag', { defaultValue: 'Add Tag' })}
                 </div>
                 {availableTags
                   .filter((t) => !tags.includes(t))
@@ -1490,7 +1494,9 @@ function TableItem({
             <div className="p-2">
               <div className="flex gap-1">
                 <Input
-                  placeholder="New tag..."
+                  placeholder={t('contextMenu.newTagPlaceholder', {
+                    defaultValue: 'New tag...',
+                  })}
                   value={newTagInput}
                   onChange={(e) => setNewTagInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -1518,27 +1524,30 @@ function TableItem({
         <ContextMenuSeparator />
         <ContextMenuItem onClick={onCopyTableName}>
           <Copy className="size-4" />
-          Copy Name
+          {t('contextMenu.copyName', { defaultValue: 'Copy Name' })}
         </ContextMenuItem>
         <ContextMenuItem onClick={onCopyCreateStatement} disabled={!table.sql}>
           <Code className="size-4" />
-          Copy CREATE Statement
+          {t('contextMenu.copyCreateStatement', {
+            defaultValue: 'Copy CREATE Statement',
+          })}
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem onClick={onExportSchema}>
           <FileDown className="size-4" />
-          Export Schema
+          {t('contextMenu.exportSchema', { defaultValue: 'Export Schema' })}
         </ContextMenuItem>
-        <ContextMenuSeparator />
         {!isView && (
           <ContextMenuItem onClick={onTruncateTable}>
             <Trash2 className="size-4" />
-            Truncate Table
+            {t('contextMenu.truncateTable', { defaultValue: 'Truncate Table' })}
           </ContextMenuItem>
         )}
         <ContextMenuItem variant="destructive" onClick={onDropTable}>
           <Trash2 className="size-4" />
-          Drop {isView ? 'View' : 'Table'}
+          {isView
+            ? t('contextMenu.dropView', { defaultValue: 'Drop View' })
+            : t('contextMenu.dropTable', { defaultValue: 'Drop Table' })}
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

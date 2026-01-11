@@ -40,15 +40,19 @@
     "custom": "自定义"
   },
   "contextMenu": {
-    "copyName": "复制表名",
-    "copyCreate": "复制 CREATE 语句",
-    "openInQuery": "在查询编辑器中打开",
-    "exportSchema": "导出结构",
-    "truncate": "清空表",
-    "drop": "删除表",
-    "pin": "置顶",
+    "openInQueryEditor": "在查询编辑器中打开",
     "unpin": "取消置顶",
-    "addTag": "添加标签"
+    "pinToTop": "置顶",
+    "tags": "标签",
+    "currentTags": "当前标签",
+    "addTag": "添加标签",
+    "newTagPlaceholder": "新标签...",
+    "copyName": "复制名称",
+    "copyCreateStatement": "复制 CREATE 语句",
+    "exportSchema": "导出结构",
+    "truncateTable": "清空表",
+    "dropTable": "删除表",
+    "dropView": "删除视图"
   },
   "empty": {
     "title": "暂无表",

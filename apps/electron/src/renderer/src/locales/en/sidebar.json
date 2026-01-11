@@ -40,15 +40,19 @@
     "custom": "Custom"
   },
   "contextMenu": {
-    "copyName": "Copy Table Name",
-    "copyCreate": "Copy CREATE Statement",
-    "openInQuery": "Open in Query Editor",
-    "exportSchema": "Export Schema",
-    "truncate": "Truncate Table",
-    "drop": "Drop Table",
-    "pin": "Pin",
+    "openInQueryEditor": "Open in Query Editor",
     "unpin": "Unpin",
-    "addTag": "Add Tag"
+    "pinToTop": "Pin to Top",
+    "tags": "Tags",
+    "currentTags": "Current Tags",
+    "addTag": "Add Tag",
+    "newTagPlaceholder": "New tag...",
+    "copyName": "Copy Name",
+    "copyCreateStatement": "Copy CREATE Statement",
+    "exportSchema": "Export Schema",
+    "truncateTable": "Truncate Table",
+    "dropTable": "Drop Table",
+    "dropView": "Drop View"
   },
   "empty": {
     "title": "No Tables Yet",
