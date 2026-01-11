@@ -15,6 +15,7 @@ import { Label } from '@sqlpro/ui/label';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -116,6 +117,7 @@ export function ServerConnectionDialog({
   mode = 'new',
   initialConfig,
 }: ServerConnectionDialogProps) {
+  const { t } = useTranslation('dialog');
   const isSupabase = databaseType === 'supabase';
   const isEditMode = mode === 'edit';
 
@@ -232,17 +234,21 @@ export function ServerConnectionDialog({
         >
           <DialogHeader className="pb-4">
             <DialogTitle>
-              {isEditMode ? 'Edit' : 'Connect to'}{' '}
+              {isEditMode ? t('connection.editTitle') : t('connection.title')}{' '}
               {DATABASE_LABELS[databaseType]}
             </DialogTitle>
             <DialogDescription>
               {isSupabase
                 ? isEditMode
-                  ? 'Update your Supabase project details'
-                  : 'Enter your Supabase project details to connect'
+                  ? t('connection.editDescriptionSupabase')
+                  : t('connection.descriptionSupabase')
                 : isEditMode
-                  ? `Update your ${DATABASE_LABELS[databaseType]} connection settings`
-                  : `Configure your ${DATABASE_LABELS[databaseType]} connection`}
+                  ? t('connection.editDescription', {
+                      dbType: DATABASE_LABELS[databaseType],
+                    })
+                  : t('connection.description', {
+                      dbType: DATABASE_LABELS[databaseType],
+                    })}
             </DialogDescription>
           </DialogHeader>
 
@@ -280,10 +286,12 @@ export function ServerConnectionDialog({
 
               {/* Display name (optional) */}
               <div className="space-y-2">
-                <Label htmlFor="displayName">Connection Name (optional)</Label>
+                <Label htmlFor="displayName">
+                  {t('connection.connectionName')}
+                </Label>
                 <Input
                   id="displayName"
-                  placeholder="My Database"
+                  placeholder={t('connection.connectionNamePlaceholder')}
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                 />

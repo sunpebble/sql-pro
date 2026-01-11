@@ -1,9 +1,14 @@
 {
   "connection": {
-    "title": "New Connection",
-    "editTitle": "Edit Connection",
+    "title": "Connect to",
+    "editTitle": "Edit",
+    "description": "Configure your {{dbType}} connection",
+    "editDescription": "Update your {{dbType}} connection settings",
+    "descriptionSupabase": "Enter your Supabase project details to connect",
+    "editDescriptionSupabase": "Update your Supabase project details",
     "databaseType": "Database Type",
-    "connectionName": "Connection Name",
+    "connectionName": "Connection Name (optional)",
+    "connectionNamePlaceholder": "My Database",
     "host": "Host",
     "port": "Port",
     "database": "Database",
@@ -44,10 +49,11 @@
     "saveChanges": "Save Changes"
   },
   "quit": {
-    "title": "Unsaved Changes",
-    "message": "You have unsaved changes in the following connections:",
-    "saveAll": "Save All and Quit",
-    "discardAll": "Discard All and Quit",
+    "title": "Quit with Unsaved Changes?",
+    "message": "You have {{count}} unsaved changes across {{connections}} connections. What would you like to do?",
+    "saveAll": "Save All Changes",
+    "discardAll": "Discard All Changes",
+    "saving": "Saving...",
     "cancel": "Cancel"
   }
 }

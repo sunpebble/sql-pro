@@ -1,9 +1,14 @@
 {
   "connection": {
-    "title": "新建连接",
-    "editTitle": "编辑连接",
+    "title": "连接到",
+    "editTitle": "编辑",
+    "description": "配置您的 {{dbType}} 连接",
+    "editDescription": "更新您的 {{dbType}} 连接设置",
+    "descriptionSupabase": "输入您的 Supabase 项目详情以连接",
+    "editDescriptionSupabase": "更新您的 Supabase 项目详情",
     "databaseType": "数据库类型",
-    "connectionName": "连接名称",
+    "connectionName": "连接名称（可选）",
+    "connectionNamePlaceholder": "我的数据库",
     "host": "主机",
     "port": "端口",
     "database": "数据库",
@@ -44,10 +49,11 @@
     "saveChanges": "保存更改"
   },
   "quit": {
-    "title": "未保存的更改",
-    "message": "以下连接有未保存的更改：",
-    "saveAll": "全部保存并退出",
-    "discardAll": "全部放弃并退出",
+    "title": "退出时有未保存的更改？",
+    "message": "您有 {{count}} 个未保存的更改，涉及 {{connections}} 个连接。您想怎么做？",
+    "saveAll": "保存所有更改",
+    "discardAll": "放弃所有更改",
+    "saving": "正在保存...",
     "cancel": "取消"
   }
 }

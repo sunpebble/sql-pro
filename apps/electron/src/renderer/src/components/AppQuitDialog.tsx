@@ -14,6 +14,7 @@ import { Button } from '@sqlpro/ui/button';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { AlertTriangle, Edit3, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ConnectionChanges {
   connectionId: string;
@@ -41,6 +42,7 @@ export function AppQuitDialog({
   onDiscard,
   onCancel,
 }: AppQuitDialogProps) {
+  const { t } = useTranslation('dialog');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -96,13 +98,12 @@ export function AppQuitDialog({
           <AlertDialogMedia>
             <AlertTriangle className="text-amber-600" />
           </AlertDialogMedia>
-          <AlertDialogTitle>Quit with Unsaved Changes?</AlertDialogTitle>
+          <AlertDialogTitle>{t('quit.title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            You have {totalChanges} unsaved{' '}
-            {totalChanges === 1 ? 'change' : 'changes'} across{' '}
-            {connectionsWithChanges.length}{' '}
-            {connectionsWithChanges.length === 1 ? 'connection' : 'connections'}
-            . What would you like to do?
+            {t('quit.message', {
+              count: totalChanges,
+              connections: connectionsWithChanges.length,
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -160,17 +161,17 @@ export function AppQuitDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel} disabled={isLoading}>
-            Cancel
+            {t('quit.cancel', { ns: 'common', defaultValue: 'Cancel' })}
           </AlertDialogCancel>
           <Button
             variant="destructive"
             onClick={handleDiscard}
             disabled={isLoading}
           >
-            Discard All Changes
+            {t('quit.discardAll')}
           </Button>
           <AlertDialogAction onClick={handleSave} disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Save All Changes'}
+            {isLoading ? t('quit.saving') : t('quit.saveAll')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
