@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   Dialog,
@@ -97,6 +98,8 @@ export function ProfileManager({
     string | null
   >(null);
   const [deleteFolderMessage, setDeleteFolderMessage] = useState('');
+
+  const { t } = useTranslation('common');
 
   // Check if keychain is available
   const checkKeychainAvailability = useCallback(async () => {
@@ -615,11 +618,13 @@ export function ProfileManager({
       {/* Header */}
       <div className="border-b p-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Connection Profiles</h2>
+          <h2 className="text-lg font-semibold">
+            {t('profiles.title', { defaultValue: 'Connection Profiles' })}
+          </h2>
           <div className="flex items-center gap-2">
             <Button size="sm" variant="default" onClick={handleAddConnection}>
               <Plus className="size-4" />
-              Add Connection
+              {t('profiles.addConnection', { defaultValue: 'Add Connection' })}
             </Button>
             <Button
               size="sm"
@@ -627,7 +632,7 @@ export function ProfileManager({
               onClick={() => handleCreateFolder()}
             >
               <FolderPlus className="size-4" />
-              New Folder
+              {t('profiles.newFolder', { defaultValue: 'New Folder' })}
             </Button>
           </div>
         </div>
@@ -637,7 +642,9 @@ export function ProfileManager({
           <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
           <Input
             type="text"
-            placeholder="Search profiles..."
+            placeholder={t('profiles.searchPlaceholder', {
+              defaultValue: 'Search profiles...',
+            })}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pr-9 pl-9"
@@ -743,13 +750,20 @@ export function ProfileManager({
                     <Database className="size-12" />
                     <p className="text-sm">
                       {searchQuery
-                        ? 'No profiles found matching your search'
-                        : 'No connection profiles yet'}
+                        ? t('profiles.noSearchResults', {
+                            defaultValue:
+                              'No profiles found matching your search',
+                          })
+                        : t('profiles.noProfiles', {
+                            defaultValue: 'No connection profiles yet',
+                          })}
                     </p>
                     {!searchQuery && (
                       <p className="text-xs">
-                        Connect to a database and save it as a profile to get
-                        started
+                        {t('profiles.getStarted', {
+                          defaultValue:
+                            'Connect to a database and save it as a profile to get started',
+                        })}
                       </p>
                     )}
                   </div>

@@ -916,7 +916,9 @@ export function WelcomeScreen() {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            {showProfiles ? 'Hide' : 'Show'} Profiles
+            {showProfiles
+              ? t('welcome.hideProfiles')
+              : t('welcome.showProfiles')}
           </TooltipContent>
         </Tooltip>
       </div>

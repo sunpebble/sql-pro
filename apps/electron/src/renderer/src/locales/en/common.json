@@ -1,4 +1,13 @@
 {
+  "profiles": {
+    "title": "Connection Profiles",
+    "addConnection": "Add Connection",
+    "newFolder": "New Folder",
+    "searchPlaceholder": "Search profiles...",
+    "noProfiles": "No connection profiles yet",
+    "noSearchResults": "No profiles found matching your search",
+    "getStarted": "Connect to a database and save it as a profile to get started"
+  },
   "app": {
     "name": "SQL Pro",
     "loading": "Loading...",

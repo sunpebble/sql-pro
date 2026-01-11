@@ -457,7 +457,7 @@ function DialogFormContent({
             className="flex-1"
             onClick={() => onOpenChange(false)}
           >
-            {t('common.cancel', { ns: 'common' })}
+            {t('actions.cancel', { ns: 'common' })}
           </Button>
           <Button type="submit" className="flex-1" disabled={!isValid}>
             {submitLabel}

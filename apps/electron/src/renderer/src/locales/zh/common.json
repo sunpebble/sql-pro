@@ -1,4 +1,13 @@
 {
+  "profiles": {
+    "title": "连接配置文件",
+    "addConnection": "添加连接",
+    "newFolder": "新建文件夹",
+    "searchPlaceholder": "搜索配置文件...",
+    "noProfiles": "暂无连接配置文件",
+    "noSearchResults": "未找到匹配的配置文件",
+    "getStarted": "连接到数据库并保存为配置文件即可开始"
+  },
   "app": {
     "name": "SQL Pro",
     "loading": "加载中...",
