@@ -6,6 +6,10 @@
     "tooltip": "主题: {{theme}}",
     "settings": "设置"
   },
+  "compare": {
+    "schemaCompare": "结构对比",
+    "dataCompare": "数据对比"
+  },
   "profiles": {
     "title": "连接配置文件",
     "addConnection": "添加连接",

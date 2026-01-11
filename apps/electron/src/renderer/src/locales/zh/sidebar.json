@@ -27,7 +27,8 @@
   "navigation": {
     "dataBrowser": "数据浏览",
     "queryEditor": "SQL 查询",
-    "schemaCompare": "结构对比",
+    "erDiagram": "ER 图",
+    "compare": "对比",
     "history": "查询历史",
     "settings": "设置",
     "takeTour": "开始导览"

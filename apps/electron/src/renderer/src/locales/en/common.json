@@ -6,6 +6,10 @@
     "tooltip": "Theme: {{theme}}",
     "settings": "Settings"
   },
+  "compare": {
+    "schemaCompare": "Schema Compare",
+    "dataCompare": "Data Compare"
+  },
   "profiles": {
     "title": "Connection Profiles",
     "addConnection": "Add Connection",

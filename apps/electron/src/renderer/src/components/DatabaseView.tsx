@@ -10,13 +10,12 @@ import {
   useSettingsStore,
 } from '@/stores';
 import { ActivityBar } from './ActivityBar';
-import { DataDiffPanel } from './data-diff/DataDiffPanel';
+import { CompareView } from './CompareView';
 import { DataTabBar } from './data-table';
 import { DiffPreview } from './DiffPreview';
 import { ERDiagram } from './er-diagram';
 import { QueryEditor } from './QueryEditor';
 import { ResizablePanel } from './ResizablePanel';
-import { SchemaComparisonPanel } from './schema-comparison';
 import { SchemaDetailsPanel } from './SchemaDetailsPanel';
 import { Sidebar } from './Sidebar';
 import { TableView } from './TableView';
@@ -193,10 +192,7 @@ export function DatabaseView() {
           {activeView === 'diagram' && <ERDiagram />}
 
           {/* Schema Compare View */}
-          {activeView === 'compare' && <SchemaComparisonPanel />}
-
-          {/* Data Diff View */}
-          {activeView === 'dataDiff' && <DataDiffPanel />}
+          {activeView === 'compare' && <CompareView />}
         </div>
 
         {/* Changes Panel - Resizable */}
@@ -222,7 +218,6 @@ export function DatabaseView() {
             query: 'query',
             diagram: 'diagram',
             compare: 'compare',
-            dataDiff: 'dataDiff',
           };
           setActiveView(viewMap[tab] || 'data');
         }}

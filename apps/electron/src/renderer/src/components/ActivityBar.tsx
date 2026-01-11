@@ -1,11 +1,11 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
+import { Code, GitCompare, GitFork, Table } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { cn } from '@/lib/utils';
 
-export type ViewType = 'data' | 'query' | 'diagram' | 'compare' | 'dataDiff';
+export type ViewType = 'data' | 'query' | 'diagram' | 'compare';
 
 interface ActivityBarItem {
   id: ViewType;
@@ -40,16 +40,9 @@ const ACTIVITY_BAR_ITEMS: ActivityBarItem[] = [
   {
     id: 'compare',
     icon: GitCompare,
-    labelKey: 'navigation.schemaCompare',
+    labelKey: 'navigation.compare',
     shortcutAction: 'nav.schema-compare',
-    tourTarget: 'schema-compare-tab',
-  },
-  {
-    id: 'dataDiff',
-    icon: ArrowLeftRight,
-    labelKey: 'navigation.dataDiff',
-    shortcutAction: 'nav.data-diff',
-    tourTarget: 'data-diff-tab',
+    tourTarget: 'compare-tab',
   },
 ];
 

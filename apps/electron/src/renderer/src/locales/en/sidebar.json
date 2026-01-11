@@ -27,7 +27,8 @@
   "navigation": {
     "dataBrowser": "Data Browser",
     "queryEditor": "SQL Query",
-    "schemaCompare": "Schema Compare",
+    "erDiagram": "ER Diagram",
+    "compare": "Compare",
     "history": "Query History",
     "settings": "Settings",
     "takeTour": "Take a Tour"
