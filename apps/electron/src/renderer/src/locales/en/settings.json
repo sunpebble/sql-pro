@@ -25,9 +25,9 @@
     "title": "Vim Mode",
     "description": "Enable Vim keybindings for different parts of the application",
     "editor": "Editor",
-    "editorDescription": "Monaco SQL editor",
+    "editorDesc": "Monaco SQL editor",
     "app": "App",
-    "appDescription": "Sidebar & DataTable",
+    "appDesc": "Sidebar & DataTable",
     "on": "VIM",
     "off": "OFF"
   },
@@ -35,16 +35,19 @@
     "title": "Font Settings",
     "synced": "Synced",
     "independent": "Independent",
-    "syncedDescription": "Changes apply to all categories",
+    "syncDescription": "Changes apply to all categories",
     "editor": "Editor",
-    "editorDescription": "SQL editor font",
+    "editorDesc": "SQL editor font",
     "table": "Table",
-    "tableDescription": "Data table cells",
+    "tableDesc": "Data table cells",
     "ui": "UI",
-    "uiDescription": "Application interface",
+    "uiDesc": "Application interface",
     "systemDefault": "System Default",
     "loadingFonts": "Loading fonts...",
     "noFontFound": "No font found."
+  },
+  "tabSize": {
+    "title": "Tab Size"
   },
   "editor": {
     "title": "Editor",
@@ -61,7 +64,7 @@
   "session": {
     "title": "Session",
     "restore": "Restore session on startup",
-    "restoreDescription": "Automatically restore tabs and queries when you reopen the app"
+    "restoreDesc": "Automatically restore tabs and queries when you reopen the app"
   },
   "shortcuts": {
     "title": "Keyboard Shortcuts",

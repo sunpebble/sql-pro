@@ -281,20 +281,22 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
             {/* Vim Mode Section */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Vim Mode</Label>
+              <Label className="text-sm font-medium">
+                {t('vim.title', { ns: 'settings' })}
+              </Label>
               <p className="text-muted-foreground text-xs">
-                Enable Vim keybindings for different parts of the application
+                {t('vim.description', { ns: 'settings' })}
               </p>
               <div className="grid grid-cols-2 gap-2">
                 <VimModeToggle
-                  label="Editor"
-                  description="Monaco SQL editor"
+                  label={t('vim.editor', { ns: 'settings' })}
+                  description={t('vim.editorDesc', { ns: 'settings' })}
                   enabled={editorVimMode}
                   onToggle={setEditorVimMode}
                 />
                 <VimModeToggle
-                  label="App"
-                  description="Sidebar & DataTable"
+                  label={t('vim.app', { ns: 'settings' })}
+                  description={t('vim.appDesc', { ns: 'settings' })}
                   enabled={appVimMode}
                   onToggle={setAppVimMode}
                 />
@@ -304,7 +306,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             {/* Font Settings Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Font Settings</Label>
+                <Label className="text-sm font-medium">
+                  {t('fonts.title', { ns: 'settings' })}
+                </Label>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -319,21 +323,23 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   ) : (
                     <Unlink className="h-3.5 w-3.5" />
                   )}
-                  {fonts.syncAll ? 'Synced' : 'Independent'}
+                  {fonts.syncAll
+                    ? t('fonts.synced', { ns: 'settings' })
+                    : t('fonts.independent', { ns: 'settings' })}
                 </Button>
               </div>
 
               {fonts.syncAll && (
                 <p className="text-muted-foreground -mt-2 text-xs">
-                  Changes apply to all categories
+                  {t('fonts.syncDescription', { ns: 'settings' })}
                 </p>
               )}
 
               {/* Font Controls */}
               <div className="space-y-4">
                 <FontSettingsSection
-                  label="Editor"
-                  description="SQL editor font"
+                  label={t('fonts.editor', { ns: 'settings' })}
+                  description={t('fonts.editorDesc', { ns: 'settings' })}
                   config={fonts.editor}
                   onChange={(config) => setFont('editor', config)}
                   availableFonts={availableFonts}
@@ -342,8 +348,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   loading={fontsLoading}
                 />
                 <FontSettingsSection
-                  label="Table"
-                  description="Data table cells"
+                  label={t('fonts.table', { ns: 'settings' })}
+                  description={t('fonts.tableDesc', { ns: 'settings' })}
                   config={fonts.table}
                   onChange={(config) => setFont('table', config)}
                   availableFonts={availableFonts}
@@ -352,8 +358,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   loading={fontsLoading}
                 />
                 <FontSettingsSection
-                  label="UI"
-                  description="Application interface"
+                  label={t('fonts.ui', { ns: 'settings' })}
+                  description={t('fonts.uiDesc', { ns: 'settings' })}
                   config={fonts.ui}
                   onChange={(config) => setFont('ui', config)}
                   availableFonts={availableFonts}
@@ -366,7 +372,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
             {/* Tab Size Section */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Tab Size</Label>
+              <Label className="text-sm font-medium">
+                {t('tabSize.title', { ns: 'settings' })}
+              </Label>
               <div className="flex gap-2">
                 {[2, 4, 8].map((size) => (
                   <Button
@@ -383,18 +391,19 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
             {/* Session Section */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Session</Label>
+              <Label className="text-sm font-medium">
+                {t('session.title', { ns: 'settings' })}
+              </Label>
               <div className="flex items-center justify-between rounded-lg border p-3">
                 <div className="space-y-0.5">
                   <Label
                     htmlFor="restore-session"
                     className="cursor-pointer text-sm font-medium"
                   >
-                    Restore session on startup
+                    {t('session.restore', { ns: 'settings' })}
                   </Label>
                   <p className="text-muted-foreground text-xs">
-                    Automatically restore tabs and queries when you reopen the
-                    app
+                    {t('session.restoreDesc', { ns: 'settings' })}
                   </p>
                 </div>
                 <Switch

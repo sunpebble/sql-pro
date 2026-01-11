@@ -25,9 +25,9 @@
     "title": "Vim 模式",
     "description": "为应用程序的不同部分启用 Vim 键位绑定",
     "editor": "编辑器",
-    "editorDescription": "Monaco SQL 编辑器",
+    "editorDesc": "Monaco SQL 编辑器",
     "app": "应用",
-    "appDescription": "侧边栏和数据表",
+    "appDesc": "侧边栏和数据表",
     "on": "VIM",
     "off": "关闭"
   },
@@ -35,16 +35,19 @@
     "title": "字体设置",
     "synced": "已同步",
     "independent": "独立",
-    "syncedDescription": "更改将应用于所有类别",
+    "syncDescription": "更改将应用于所有类别",
     "editor": "编辑器",
-    "editorDescription": "SQL 编辑器字体",
+    "editorDesc": "SQL 编辑器字体",
     "table": "表格",
-    "tableDescription": "数据表单元格",
+    "tableDesc": "数据表单元格",
     "ui": "界面",
-    "uiDescription": "应用程序界面",
+    "uiDesc": "应用程序界面",
     "systemDefault": "系统默认",
     "loadingFonts": "加载字体中...",
     "noFontFound": "未找到字体"
+  },
+  "tabSize": {
+    "title": "Tab 大小"
   },
   "editor": {
     "title": "编辑器",
@@ -61,7 +64,7 @@
   "session": {
     "title": "会话",
     "restore": "启动时恢复会话",
-    "restoreDescription": "重新打开应用时自动恢复标签页和查询"
+    "restoreDesc": "重新打开应用时自动恢复标签页和查询"
   },
   "shortcuts": {
     "title": "快捷键",
