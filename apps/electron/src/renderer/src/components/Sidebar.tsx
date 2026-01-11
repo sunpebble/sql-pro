@@ -1586,6 +1586,7 @@ function FilterTagsPopover({
   onAddTag,
   onRemoveTag,
 }: FilterTagsPopoverProps) {
+  const { t } = useTranslation('sidebar');
   const [newTagInput, setNewTagInput] = useState('');
   const [activeTab, setActiveTab] = useState<'filter' | 'manage'>('filter');
 

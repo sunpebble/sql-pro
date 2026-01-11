@@ -738,6 +738,7 @@ function FontSettingsSection({
 }
 
 function AISettingsSection() {
+  const { t } = useTranslation('settings');
   const {
     provider,
     apiKey,
@@ -795,7 +796,7 @@ function AISettingsSection() {
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4" />
-          <Label className="text-sm font-medium">AI Settings</Label>
+          <Label className="text-sm font-medium">{t('ai.title')}</Label>
         </div>
         <div className="flex items-center justify-center py-8">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -808,13 +809,13 @@ function AISettingsSection() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Sparkles className="h-4 w-4" />
-        <Label className="text-sm font-medium">AI Settings</Label>
+        <Label className="text-sm font-medium">{t('ai.title')}</Label>
       </div>
 
       {/* Provider Selection */}
       <div className="space-y-2">
         <Label htmlFor="provider-select" className="text-xs font-medium">
-          AI Provider
+          {t('ai.provider')}
         </Label>
         <Select
           value={provider}
@@ -834,7 +835,7 @@ function AISettingsSection() {
       {/* API Key Input */}
       <div className="space-y-2">
         <Label htmlFor="api-key-input" className="text-xs font-medium">
-          API Key
+          {t('ai.apiKey')}
         </Label>
         <div className="flex gap-2">
           <div className="relative flex-1">
@@ -862,7 +863,7 @@ function AISettingsSection() {
 
       {/* Model Selection */}
       <div className="space-y-2">
-        <Label className="text-xs font-medium">Model</Label>
+        <Label className="text-xs font-medium">{t('ai.model')}</Label>
         <Popover
           open={modelPopoverOpen}
           onOpenChange={setModelPopoverOpen}
