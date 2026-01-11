@@ -81,7 +81,7 @@ interface FontOption {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('settings');
   const { theme, setTheme } = useThemeStore();
   const {
     editorVimMode,
@@ -215,14 +215,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
         <DialogHeader className="shrink-0 px-6 pt-6 pb-4">
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>
+            {t('dialog.settings.title', { ns: 'dialog' })}
+          </DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="h-[60vh]">
           <div className="space-y-6 px-6 pb-6">
             {/* Theme Section */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Theme</Label>
+              <Label className="text-sm font-medium">
+                {t('appearance.theme')}
+              </Label>
               <div className="grid grid-cols-3 gap-2">
                 <Button
                   variant={theme === 'light' ? 'default' : 'outline'}
@@ -231,7 +235,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   className="justify-start"
                 >
                   <Sun className="mr-2 h-4 w-4" />
-                  Light
+                  {t('appearance.light')}
                 </Button>
                 <Button
                   variant={theme === 'dark' ? 'default' : 'outline'}
@@ -240,7 +244,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   className="justify-start"
                 >
                   <Moon className="mr-2 h-4 w-4" />
-                  Dark
+                  {t('appearance.dark')}
                 </Button>
                 <Button
                   variant={theme === 'system' ? 'default' : 'outline'}
@@ -249,14 +253,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   className="justify-start"
                 >
                   <Monitor className="mr-2 h-4 w-4" />
-                  System
+                  {t('appearance.system')}
                 </Button>
               </div>
             </div>
 
             {/* Language Section */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Language</Label>
+              <Label className="text-sm font-medium">
+                {t('general.language')}
+              </Label>
               <div className="grid grid-cols-2 gap-2">
                 {(Object.keys(LANGUAGES) as LanguageCode[]).map((code) => (
                   <Button

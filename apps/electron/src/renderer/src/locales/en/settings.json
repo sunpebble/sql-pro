@@ -21,6 +21,31 @@
     "compact": "Compact",
     "comfortable": "Comfortable"
   },
+  "vim": {
+    "title": "Vim Mode",
+    "description": "Enable Vim keybindings for different parts of the application",
+    "editor": "Editor",
+    "editorDescription": "Monaco SQL editor",
+    "app": "App",
+    "appDescription": "Sidebar & DataTable",
+    "on": "VIM",
+    "off": "OFF"
+  },
+  "fonts": {
+    "title": "Font Settings",
+    "synced": "Synced",
+    "independent": "Independent",
+    "syncedDescription": "Changes apply to all categories",
+    "editor": "Editor",
+    "editorDescription": "SQL editor font",
+    "table": "Table",
+    "tableDescription": "Data table cells",
+    "ui": "UI",
+    "uiDescription": "Application interface",
+    "systemDefault": "System Default",
+    "loadingFonts": "Loading fonts...",
+    "noFontFound": "No font found."
+  },
   "editor": {
     "title": "Editor",
     "fontFamily": "Editor Font",
@@ -33,19 +58,42 @@
     "formatOnSave": "Format on Save",
     "highlightCurrentLine": "Highlight Current Line"
   },
+  "session": {
+    "title": "Session",
+    "restore": "Restore session on startup",
+    "restoreDescription": "Automatically restore tabs and queries when you reopen the app"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "reset": "Reset to Defaults",
+    "search": "Search shortcuts...",
+    "preset": "{{preset}} Preset",
+    "customize": "Click to customize shortcuts"
+  },
+  "pro": {
+    "title": "SQL Pro",
+    "active": "Pro Active",
+    "free": "Free Plan",
+    "featuresUnlocked": "{{count}} features unlocked",
+    "activated": "Activated {{date}}",
+    "unlockFeatures": "Unlock AI features and advanced tools",
+    "upgrade": "Upgrade",
+    "manage": "Manage"
+  },
   "ai": {
-    "title": "AI Assistant",
+    "title": "AI Settings",
     "provider": "AI Provider",
     "apiKey": "API Key",
     "model": "Model",
     "baseUrl": "Base URL (Optional)",
     "enabled": "Enable AI Features",
-    "enabledDescription": "Use AI-powered features like natural language to SQL"
+    "enabledDescription": "Use AI-powered features like natural language to SQL",
+    "claudeCodePath": "Claude Code Path"
   },
-  "shortcuts": {
-    "title": "Keyboard Shortcuts",
-    "reset": "Reset to Defaults",
-    "search": "Search shortcuts..."
+  "developer": {
+    "title": "Developer",
+    "memoryMonitor": "Memory Monitor",
+    "memoryMonitorDescription": "View memory usage and performance metrics"
   },
   "about": {
     "title": "About",

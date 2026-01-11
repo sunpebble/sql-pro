@@ -21,6 +21,31 @@
     "compact": "紧凑",
     "comfortable": "舒适"
   },
+  "vim": {
+    "title": "Vim 模式",
+    "description": "为应用程序的不同部分启用 Vim 键位绑定",
+    "editor": "编辑器",
+    "editorDescription": "Monaco SQL 编辑器",
+    "app": "应用",
+    "appDescription": "侧边栏和数据表",
+    "on": "VIM",
+    "off": "关闭"
+  },
+  "fonts": {
+    "title": "字体设置",
+    "synced": "已同步",
+    "independent": "独立",
+    "syncedDescription": "更改将应用于所有类别",
+    "editor": "编辑器",
+    "editorDescription": "SQL 编辑器字体",
+    "table": "表格",
+    "tableDescription": "数据表单元格",
+    "ui": "界面",
+    "uiDescription": "应用程序界面",
+    "systemDefault": "系统默认",
+    "loadingFonts": "加载字体中...",
+    "noFontFound": "未找到字体"
+  },
   "editor": {
     "title": "编辑器",
     "fontFamily": "编辑器字体",
@@ -33,19 +58,42 @@
     "formatOnSave": "保存时格式化",
     "highlightCurrentLine": "高亮当前行"
   },
+  "session": {
+    "title": "会话",
+    "restore": "启动时恢复会话",
+    "restoreDescription": "重新打开应用时自动恢复标签页和查询"
+  },
+  "shortcuts": {
+    "title": "快捷键",
+    "reset": "恢复默认",
+    "search": "搜索快捷键...",
+    "preset": "{{preset}} 预设",
+    "customize": "点击自定义快捷键"
+  },
+  "pro": {
+    "title": "SQL Pro",
+    "active": "专业版已激活",
+    "free": "免费版",
+    "featuresUnlocked": "已解锁 {{count}} 项功能",
+    "activated": "激活于 {{date}}",
+    "unlockFeatures": "解锁 AI 功能和高级工具",
+    "upgrade": "升级",
+    "manage": "管理"
+  },
   "ai": {
-    "title": "AI 助手",
+    "title": "AI 设置",
     "provider": "AI 服务商",
     "apiKey": "API 密钥",
     "model": "模型",
     "baseUrl": "API 地址（可选）",
     "enabled": "启用 AI 功能",
-    "enabledDescription": "使用 AI 驱动的功能，如自然语言转 SQL"
+    "enabledDescription": "使用 AI 驱动的功能，如自然语言转 SQL",
+    "claudeCodePath": "Claude Code 路径"
   },
-  "shortcuts": {
-    "title": "快捷键",
-    "reset": "恢复默认",
-    "search": "搜索快捷键..."
+  "developer": {
+    "title": "开发者",
+    "memoryMonitor": "内存监控",
+    "memoryMonitorDescription": "查看内存使用和性能指标"
   },
   "about": {
     "title": "关于",
