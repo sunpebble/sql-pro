@@ -215,9 +215,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
         <DialogHeader className="shrink-0 px-6 pt-6 pb-4">
-          <DialogTitle>
-            {t('dialog.settings.title', { ns: 'dialog' })}
-          </DialogTitle>
+          <DialogTitle>{t('settings.title', { ns: 'dialog' })}</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="h-[60vh]">

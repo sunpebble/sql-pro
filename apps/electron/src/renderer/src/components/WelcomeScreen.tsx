@@ -32,6 +32,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { WelcomeDialog } from '@/components/onboarding/WelcomeDialog';
 import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
 import {
@@ -117,6 +118,8 @@ export function WelcomeScreen() {
   );
   const { hasSeenWelcome, setHasSeenWelcome, completeTour } =
     useOnboardingStore();
+
+  const { t } = useTranslation('common');
 
   // Welcome tour state
   const [welcomeTourVisible, setWelcomeTourVisible] = useState(false);
@@ -935,9 +938,13 @@ export function WelcomeScreen() {
               <div className="bg-primary/10 mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl">
                 <Database className="text-primary h-7 w-7" />
               </div>
-              <h1 className="text-xl font-semibold tracking-tight">SQL Pro</h1>
+              <h1 className="text-xl font-semibold tracking-tight">
+                {t('app.name')}
+              </h1>
               <p className="text-muted-foreground mt-0.5 text-sm">
-                Professional Database Manager
+                {t('welcome.subtitle', {
+                  defaultValue: 'Professional Database Manager',
+                })}
               </p>
             </div>
 
@@ -959,7 +966,11 @@ export function WelcomeScreen() {
                 data-action="open-database"
               >
                 <FolderOpen className="mr-2 h-4 w-4" />
-                {isConnecting ? 'Opening...' : 'Open SQLite Database'}
+                {isConnecting
+                  ? t('status.connecting')
+                  : t('welcome.openSqlite', {
+                      defaultValue: 'Open SQLite Database',
+                    })}
               </Button>
               <Button
                 className="w-full"
@@ -970,10 +981,14 @@ export function WelcomeScreen() {
                 data-action="connect-server"
               >
                 <Server className="mr-2 h-4 w-4" />
-                Connect to Server
+                {t('welcome.connectServer', {
+                  defaultValue: 'Connect to Server',
+                })}
               </Button>
               <p className="text-muted-foreground text-center text-xs">
-                Supports MySQL, PostgreSQL, and Supabase
+                {t('welcome.supportsDb', {
+                  defaultValue: 'Supports MySQL, PostgreSQL, and Supabase',
+                })}
               </p>
             </div>
 
@@ -993,7 +1008,9 @@ export function WelcomeScreen() {
                 >
                   <div className="flex shrink-0 items-center justify-between px-1">
                     <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                      Recent Connections
+                      {t('welcome.recentConnections', {
+                        defaultValue: 'Recent Connections',
+                      })}
                     </span>
                     <Clock className="text-muted-foreground h-3.5 w-3.5" />
                   </div>

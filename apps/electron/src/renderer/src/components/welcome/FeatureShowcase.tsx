@@ -12,6 +12,7 @@ import {
   PlayCircle,
   Settings,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useOnboardingStore } from '@/stores';
 
 interface FeatureShowcaseProps {
@@ -19,62 +20,41 @@ interface FeatureShowcaseProps {
   onStartTour?: () => void;
 }
 
-interface Feature {
+interface FeatureKey {
   icon: React.ReactNode;
-  title: string;
-  description: string;
+  key: string;
 }
 
-const features: Feature[] = [
+const featureKeys: FeatureKey[] = [
   {
     icon: <Database className="h-5 w-5 text-blue-500" />,
-    title: 'Schema Browser',
-    description: 'Navigate tables, views, and database objects',
+    key: 'schemaBrowser',
   },
-  {
-    icon: <Edit className="h-5 w-5 text-green-500" />,
-    title: 'Inline Editing',
-    description: 'Edit data directly with diff preview',
-  },
-  {
-    icon: <Code className="h-5 w-5 text-purple-500" />,
-    title: 'SQL Editor',
-    description: 'Syntax highlighting and autocomplete',
-  },
-  {
-    icon: <GitFork className="h-5 w-5 text-orange-500" />,
-    title: 'ER Diagram',
-    description: 'Visualize table relationships',
-  },
+  { icon: <Edit className="h-5 w-5 text-green-500" />, key: 'inlineEditing' },
+  { icon: <Code className="h-5 w-5 text-purple-500" />, key: 'sqlEditor' },
+  { icon: <GitFork className="h-5 w-5 text-orange-500" />, key: 'erDiagram' },
   {
     icon: <GitCompare className="h-5 w-5 text-cyan-500" />,
-    title: 'Schema Compare',
-    description: 'Compare database structures',
+    key: 'schemaCompare',
   },
   {
     icon: <ArrowLeftRight className="h-5 w-5 text-pink-500" />,
-    title: 'Data Diff',
-    description: 'Compare table data across databases',
+    key: 'dataDiff',
   },
   {
     icon: <Command className="h-5 w-5 text-yellow-500" />,
-    title: 'Command Palette',
-    description: 'Quick access with ⌘K / Ctrl+K',
+    key: 'commandPalette',
   },
-  {
-    icon: <Keyboard className="h-5 w-5 text-lime-500" />,
-    title: 'Vim Mode',
-    description: 'Keyboard-driven editing',
-  },
+  { icon: <Keyboard className="h-5 w-5 text-lime-500" />, key: 'vimMode' },
   {
     icon: <Settings className="h-5 w-5 text-slate-500" />,
-    title: 'Customizable',
-    description: 'Themes, fonts, and shortcuts',
+    key: 'customizable',
   },
 ];
 
 export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
   const { hasCompletedTour } = useOnboardingStore();
+  const { t } = useTranslation('common');
 
   const handleOpenDocs = () => {
     window.open('https://kunish-homelab.github.io/sql-pro/', '_blank');
@@ -85,7 +65,9 @@ export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
       <div data-tour-target="feature-showcase">
         {/* Header */}
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold">Features</h2>
+          <h2 className="text-sm font-semibold">
+            {t('features.title', { defaultValue: 'Features' })}
+          </h2>
           <Button
             variant="ghost"
             size="sm"
@@ -93,23 +75,23 @@ export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
             onClick={handleOpenDocs}
           >
             <BookOpen className="mr-1 h-3 w-3" />
-            Documentation
+            {t('features.docs', { defaultValue: 'Documentation' })}
           </Button>
         </div>
 
         {/* Feature Grid */}
         <div className="grid grid-cols-3 gap-2">
-          {features.map((feature) => (
+          {featureKeys.map((feature) => (
             <div
-              key={feature.title}
+              key={feature.key}
               className="bg-card/50 hover:bg-card flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-colors"
             >
               {feature.icon}
               <span className="text-xs leading-tight font-medium">
-                {feature.title}
+                {t(`features.${feature.key}.title`)}
               </span>
               <span className="text-muted-foreground line-clamp-2 text-[10px] leading-tight">
-                {feature.description}
+                {t(`features.${feature.key}.desc`)}
               </span>
             </div>
           ))}
@@ -123,7 +105,7 @@ export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
               onClick={onStartTour}
               className="text-primary cursor-pointer border-none bg-transparent text-xs hover:underline"
             >
-              Take the quick tour
+              {t('features.takeTour', { defaultValue: 'Take the quick tour' })}
             </button>
           </div>
         )}

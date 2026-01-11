@@ -49,6 +49,58 @@
     "query": "SQL 查询",
     "diagram": "关系图"
   },
+  "welcome": {
+    "subtitle": "专业数据库管理器",
+    "openSqlite": "打开 SQLite 数据库",
+    "connectServer": "连接到服务器",
+    "supportsDb": "支持 MySQL、PostgreSQL 和 Supabase",
+    "recentConnections": "最近连接",
+    "showProfiles": "显示配置文件",
+    "hideProfiles": "隐藏配置文件",
+    "passwordSaved": "密码已保存",
+    "readOnly": "只读"
+  },
+  "features": {
+    "title": "功能",
+    "docs": "文档",
+    "takeTour": "开始快速导览",
+    "schemaBrowser": {
+      "title": "结构浏览器",
+      "desc": "浏览表、视图和数据库对象"
+    },
+    "inlineEditing": {
+      "title": "内联编辑",
+      "desc": "直接编辑数据并预览更改"
+    },
+    "sqlEditor": {
+      "title": "SQL 编辑器",
+      "desc": "语法高亮和自动补全"
+    },
+    "erDiagram": {
+      "title": "ER 图",
+      "desc": "可视化表关系"
+    },
+    "schemaCompare": {
+      "title": "结构对比",
+      "desc": "比较数据库结构"
+    },
+    "dataDiff": {
+      "title": "数据对比",
+      "desc": "跨数据库比较表数据"
+    },
+    "commandPalette": {
+      "title": "命令面板",
+      "desc": "使用 ⌘K / Ctrl+K 快速访问"
+    },
+    "vimMode": {
+      "title": "Vim 模式",
+      "desc": "键盘驱动编辑"
+    },
+    "customizable": {
+      "title": "可定制",
+      "desc": "主题、字体和快捷键"
+    }
+  },
   "status": {
     "connected": "已连接",
     "disconnected": "已断开",

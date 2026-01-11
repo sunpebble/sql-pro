@@ -49,6 +49,58 @@
     "query": "SQL Query",
     "diagram": "Diagram"
   },
+  "welcome": {
+    "subtitle": "Professional Database Manager",
+    "openSqlite": "Open SQLite Database",
+    "connectServer": "Connect to Server",
+    "supportsDb": "Supports MySQL, PostgreSQL, and Supabase",
+    "recentConnections": "Recent Connections",
+    "showProfiles": "Show Profiles",
+    "hideProfiles": "Hide Profiles",
+    "passwordSaved": "Password saved",
+    "readOnly": "Read-only"
+  },
+  "features": {
+    "title": "Features",
+    "docs": "Documentation",
+    "takeTour": "Take the quick tour",
+    "schemaBrowser": {
+      "title": "Schema Browser",
+      "desc": "Navigate tables, views, and database objects"
+    },
+    "inlineEditing": {
+      "title": "Inline Editing",
+      "desc": "Edit data directly with diff preview"
+    },
+    "sqlEditor": {
+      "title": "SQL Editor",
+      "desc": "Syntax highlighting and autocomplete"
+    },
+    "erDiagram": {
+      "title": "ER Diagram",
+      "desc": "Visualize table relationships"
+    },
+    "schemaCompare": {
+      "title": "Schema Compare",
+      "desc": "Compare database structures"
+    },
+    "dataDiff": {
+      "title": "Data Diff",
+      "desc": "Compare table data across databases"
+    },
+    "commandPalette": {
+      "title": "Command Palette",
+      "desc": "Quick access with ⌘K / Ctrl+K"
+    },
+    "vimMode": {
+      "title": "Vim Mode",
+      "desc": "Keyboard-driven editing"
+    },
+    "customizable": {
+      "title": "Customizable",
+      "desc": "Themes, fonts, and shortcuts"
+    }
+  },
   "status": {
     "connected": "Connected",
     "disconnected": "Disconnected",
