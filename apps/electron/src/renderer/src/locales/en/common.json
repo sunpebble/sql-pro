@@ -127,6 +127,47 @@
     "schemaDetails": "Schema Details",
     "sqlLog": "SQL Log"
   },
+  "commandPalette": {
+    "title": "Command Palette",
+    "placeholder": "Search commands...",
+    "noCommands": "No commands found",
+    "select": "Select",
+    "run": "Run",
+    "commandsCount": "{{count}} commands",
+    "categories": {
+      "navigation": "Navigation",
+      "view": "View",
+      "actions": "Actions",
+      "settings": "Settings",
+      "help": "Help"
+    }
+  },
+  "commands": {
+    "openDataBrowser": "Open Data Browser",
+    "openSqlQuery": "Open SQL Query",
+    "searchTables": "Search Tables",
+    "openSchemaCompare": "Open Schema Compare",
+    "openErDiagram": "Open ER Diagram",
+    "toggleSidebar": "Toggle Sidebar",
+    "newConnectionTab": "New Connection Tab",
+    "nextConnection": "Next Connection",
+    "previousConnection": "Previous Connection",
+    "refreshTable": "Refresh Table",
+    "saveChanges": "Save Changes",
+    "discardChanges": "Discard Changes",
+    "addRow": "Add Row",
+    "deleteRow": "Delete Row",
+    "exportData": "Export Data",
+    "toggleSchemaDetails": "Toggle Schema Details",
+    "toggleFullScreen": "Toggle Full Screen",
+    "toggleTheme": "Toggle Theme",
+    "clearHistory": "Clear History",
+    "openSettings": "Open Settings",
+    "commandPalette": "Command Palette",
+    "focusSearch": "Focus Search",
+    "skipTour": "Skip Tour",
+    "nextStep": "Next Step"
+  },
   "welcome": {
     "subtitle": "Professional Database Manager",
     "openSqlite": "Open SQLite Database",

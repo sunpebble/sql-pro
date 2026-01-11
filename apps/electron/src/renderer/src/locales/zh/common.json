@@ -126,6 +126,47 @@
     "schemaDetails": "结构详情",
     "sqlLog": "SQL 日志"
   },
+  "commandPalette": {
+    "title": "命令面板",
+    "placeholder": "搜索命令...",
+    "noCommands": "未找到命令",
+    "select": "选择",
+    "run": "执行",
+    "commandsCount": "{{count}} 个命令",
+    "categories": {
+      "navigation": "导航",
+      "view": "视图",
+      "actions": "操作",
+      "settings": "设置",
+      "help": "帮助"
+    }
+  },
+  "commands": {
+    "openDataBrowser": "打开数据浏览器",
+    "openSqlQuery": "打开 SQL 查询",
+    "searchTables": "搜索表",
+    "openSchemaCompare": "打开结构对比",
+    "openErDiagram": "打开 ER 图",
+    "toggleSidebar": "切换侧边栏",
+    "newConnectionTab": "新建连接标签页",
+    "nextConnection": "下一个连接",
+    "previousConnection": "上一个连接",
+    "refreshTable": "刷新表",
+    "saveChanges": "保存更改",
+    "discardChanges": "放弃更改",
+    "addRow": "添加行",
+    "deleteRow": "删除行",
+    "exportData": "导出数据",
+    "toggleSchemaDetails": "切换结构详情",
+    "toggleFullScreen": "切换全屏",
+    "toggleTheme": "切换主题",
+    "clearHistory": "清除历史",
+    "openSettings": "打开设置",
+    "commandPalette": "命令面板",
+    "focusSearch": "聚焦搜索",
+    "skipTour": "跳过导览",
+    "nextStep": "下一步"
+  },
   "welcome": {
     "subtitle": "专业数据库管理器",
     "openSqlite": "打开 SQLite 数据库",

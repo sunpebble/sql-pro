@@ -23,6 +23,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
 import { invalidateTableData } from '@/lib/query-refresh';
@@ -49,6 +50,7 @@ export function useCommands() {
   const registerCommands = useCommandPaletteStore((s) => s.registerCommands);
   const unregisterCommand = useCommandPaletteStore((s) => s.unregisterCommand);
   const openConnectionSwitcher = useConnectionSwitcherStore((s) => s.open);
+  const { t } = useTranslation('common');
 
   // Use refs to store latest values for use in command actions
   // This prevents re-registering commands when these values change
@@ -506,7 +508,9 @@ export function useCommands() {
       // Navigation commands
       {
         id: 'nav.data-browser',
-        label: 'Open Data Browser',
+        label: t('commands.openDataBrowser', {
+          defaultValue: 'Open Data Browser',
+        }),
         shortcut: getShortcutDisplay('nav.data-browser'),
         icon: Table,
         category: 'navigation',
@@ -519,7 +523,7 @@ export function useCommands() {
       },
       {
         id: 'nav.query-editor',
-        label: 'Open SQL Query',
+        label: t('commands.openSqlQuery', { defaultValue: 'Open SQL Query' }),
         shortcut: getShortcutDisplay('nav.query-editor'),
         icon: Code,
         category: 'navigation',
@@ -532,7 +536,7 @@ export function useCommands() {
       },
       {
         id: 'nav.search-tables',
-        label: 'Search Tables',
+        label: t('commands.searchTables', { defaultValue: 'Search Tables' }),
         shortcut: getShortcutDisplay('nav.search-tables'),
         icon: Search,
         category: 'navigation',
@@ -545,7 +549,9 @@ export function useCommands() {
       },
       {
         id: 'nav.schema-compare',
-        label: 'Open Schema Compare',
+        label: t('commands.openSchemaCompare', {
+          defaultValue: 'Open Schema Compare',
+        }),
         shortcut: getShortcutDisplay('nav.schema-compare'),
         icon: GitCompare,
         category: 'navigation',
@@ -558,7 +564,7 @@ export function useCommands() {
       },
       {
         id: 'nav.er-diagram',
-        label: 'Open ER Diagram',
+        label: t('commands.openErDiagram', { defaultValue: 'Open ER Diagram' }),
         shortcut: getShortcutDisplay('nav.er-diagram'),
         icon: GitFork,
         category: 'navigation',
@@ -571,7 +577,7 @@ export function useCommands() {
       },
       {
         id: 'nav.toggle-sidebar',
-        label: 'Toggle Sidebar',
+        label: t('commands.toggleSidebar', { defaultValue: 'Toggle Sidebar' }),
         shortcut: getShortcutDisplay('nav.toggle-sidebar'),
         icon: PanelLeftClose,
         category: 'navigation',
@@ -587,7 +593,9 @@ export function useCommands() {
       // Connection commands
       {
         id: 'conn.new-connection',
-        label: 'New Connection Tab',
+        label: t('commands.newConnectionTab', {
+          defaultValue: 'New Connection Tab',
+        }),
         shortcut: getShortcutDisplay('conn.new-connection'),
         icon: Plus,
         category: 'navigation',
@@ -600,7 +608,9 @@ export function useCommands() {
 
       {
         id: 'conn.next-connection',
-        label: 'Next Connection',
+        label: t('commands.nextConnection', {
+          defaultValue: 'Next Connection',
+        }),
         shortcut: getShortcutDisplay('conn.next-connection'),
         icon: SkipForward,
         category: 'navigation',
@@ -622,7 +632,9 @@ export function useCommands() {
       },
       {
         id: 'conn.prev-connection',
-        label: 'Previous Connection',
+        label: t('commands.previousConnection', {
+          defaultValue: 'Previous Connection',
+        }),
         shortcut: getShortcutDisplay('conn.prev-connection'),
         icon: SkipBack,
         category: 'navigation',
@@ -648,7 +660,7 @@ export function useCommands() {
       // Table commands
       {
         id: 'action.refresh-table',
-        label: 'Refresh Table',
+        label: t('commands.refreshTable', { defaultValue: 'Refresh Table' }),
         shortcut: getShortcutDisplay('action.refresh-table'),
         icon: RefreshCw,
         category: 'table',
@@ -662,7 +674,7 @@ export function useCommands() {
       },
       {
         id: 'action.save-changes',
-        label: 'Save Changes',
+        label: t('commands.saveChanges', { defaultValue: 'Save Changes' }),
         shortcut: getShortcutDisplay('action.save-changes'),
         icon: Save,
         category: 'table',
@@ -677,7 +689,9 @@ export function useCommands() {
       },
       {
         id: 'action.discard-changes',
-        label: 'Discard Changes',
+        label: t('commands.discardChanges', {
+          defaultValue: 'Discard Changes',
+        }),
         shortcut: getShortcutDisplay('action.discard-changes'),
         icon: Undo2,
         category: 'table',
@@ -692,7 +706,7 @@ export function useCommands() {
       },
       {
         id: 'action.add-row',
-        label: 'Add Row',
+        label: t('commands.addRow', { defaultValue: 'Add Row' }),
         shortcut: getShortcutDisplay('action.add-row'),
         icon: Plus,
         category: 'table',
@@ -706,7 +720,7 @@ export function useCommands() {
       },
       {
         id: 'action.delete-row',
-        label: 'Delete Row',
+        label: t('commands.deleteRow', { defaultValue: 'Delete Row' }),
         shortcut: getShortcutDisplay('action.delete-row'),
         icon: Trash2,
         category: 'table',
@@ -720,7 +734,7 @@ export function useCommands() {
       },
       {
         id: 'action.export-data',
-        label: 'Export Data',
+        label: t('commands.exportData', { defaultValue: 'Export Data' }),
         shortcut: getShortcutDisplay('action.export-data'),
         icon: FileDown,
         category: 'table',
@@ -736,7 +750,9 @@ export function useCommands() {
       // View commands
       {
         id: 'view.toggle-schema-details',
-        label: 'Toggle Schema Details',
+        label: t('commands.toggleSchemaDetails', {
+          defaultValue: 'Toggle Schema Details',
+        }),
         shortcut: getShortcutDisplay('view.toggle-schema-details'),
         icon: Monitor,
         category: 'view',
@@ -747,7 +763,9 @@ export function useCommands() {
       },
       {
         id: 'view.full-screen',
-        label: 'Toggle Full Screen',
+        label: t('commands.toggleFullScreen', {
+          defaultValue: 'Toggle Full Screen',
+        }),
         shortcut: getShortcutDisplay('view.full-screen'),
         icon: PanelLeft,
         category: 'view',
@@ -763,7 +781,7 @@ export function useCommands() {
       // Theme commands
       {
         id: 'theme.toggle',
-        label: 'Toggle Theme',
+        label: t('commands.toggleTheme', { defaultValue: 'Toggle Theme' }),
         shortcut: getShortcutDisplay('theme.toggle'),
         icon: Sun,
         category: 'theme',
@@ -776,7 +794,7 @@ export function useCommands() {
       // History commands
       {
         id: 'history.clear',
-        label: 'Clear History',
+        label: t('commands.clearHistory', { defaultValue: 'Clear History' }),
         shortcut: getShortcutDisplay('history.clear'),
         icon: Trash2,
         category: 'history',
@@ -792,7 +810,7 @@ export function useCommands() {
       // Settings commands
       {
         id: 'settings.open',
-        label: 'Open Settings',
+        label: t('commands.openSettings', { defaultValue: 'Open Settings' }),
         shortcut: getShortcutDisplay('settings.open'),
         icon: Settings,
         category: 'settings',
@@ -808,7 +826,9 @@ export function useCommands() {
       // Command Palette
       {
         id: 'action.command-palette',
-        label: 'Command Palette',
+        label: t('commands.commandPalette', {
+          defaultValue: 'Command Palette',
+        }),
         shortcut: getShortcutDisplay('action.command-palette'),
         icon: Keyboard,
         category: 'command-palette',
@@ -817,7 +837,7 @@ export function useCommands() {
       },
       {
         id: 'action.focus-search',
-        label: 'Focus Search',
+        label: t('commands.focusSearch', { defaultValue: 'Focus Search' }),
         shortcut: getShortcutDisplay('action.focus-search'),
         icon: Search,
         category: 'command-palette',
@@ -834,7 +854,7 @@ export function useCommands() {
       // Onboarding commands
       {
         id: 'onboarding.skip',
-        label: 'Skip Tour',
+        label: t('commands.skipTour', { defaultValue: 'Skip Tour' }),
         shortcut: getShortcutDisplay('onboarding.skip'),
         icon: X,
         category: 'onboarding',
@@ -847,7 +867,7 @@ export function useCommands() {
       },
       {
         id: 'onboarding.next',
-        label: 'Next Step',
+        label: t('commands.nextStep', { defaultValue: 'Next Step' }),
         shortcut: getShortcutDisplay('onboarding.next'),
         icon: SkipForward,
         category: 'onboarding',
@@ -866,5 +886,6 @@ export function useCommands() {
     return () => {
       commands.forEach(({ id }) => unregisterCommand(id));
     };
-  }, [registerCommands, unregisterCommand, toggle]);
+    // Note: We include `t` in dependencies because command labels are translated
+  }, [registerCommands, unregisterCommand, toggle, t]);
 }

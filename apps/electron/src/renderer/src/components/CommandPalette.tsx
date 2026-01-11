@@ -9,20 +9,13 @@ import {
 } from '@sqlpro/ui/command';
 import { Command as CommandIcon } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
   getFilteredCommands,
   useCommandPaletteStore,
   useUIFont,
 } from '@/stores';
-
-const categoryLabels: Record<string, string> = {
-  navigation: 'Navigation',
-  view: 'View',
-  actions: 'Actions',
-  settings: 'Settings',
-  help: 'Help',
-};
 
 const categoryOrder = ['actions', 'navigation', 'view', 'settings', 'help'];
 
@@ -34,6 +27,26 @@ export function CommandPalette() {
   const close = useCommandPaletteStore((s) => s.close);
   const setSearch = useCommandPaletteStore((s) => s.setSearch);
   const executeCommand = useCommandPaletteStore((s) => s.executeCommand);
+
+  const { t } = useTranslation('common');
+
+  // Category labels with translations
+  const categoryLabels: Record<string, string> = useMemo(
+    () => ({
+      navigation: t('commandPalette.categories.navigation', {
+        defaultValue: 'Navigation',
+      }),
+      view: t('commandPalette.categories.view', { defaultValue: 'View' }),
+      actions: t('commandPalette.categories.actions', {
+        defaultValue: 'Actions',
+      }),
+      settings: t('commandPalette.categories.settings', {
+        defaultValue: 'Settings',
+      }),
+      help: t('commandPalette.categories.help', { defaultValue: 'Help' }),
+    }),
+    [t]
+  );
 
   // Get UI font settings
   const uiFont = useUIFont();
@@ -90,18 +103,26 @@ export function CommandPalette() {
         style={fontStyle}
         showCloseButton={false}
       >
-        <DialogTitle className="sr-only">Command Palette</DialogTitle>
+        <DialogTitle className="sr-only">
+          {t('commandPalette.title', { defaultValue: 'Command Palette' })}
+        </DialogTitle>
         <Command
           className="**:[[cmdk-group-heading]]:text-muted-foreground **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group]]:px-2"
           shouldFilter={false}
         >
           <CommandInput
-            placeholder="Search commands..."
+            placeholder={t('commandPalette.placeholder', {
+              defaultValue: 'Search commands...',
+            })}
             value={search}
             onValueChange={setSearch}
           />
           <CommandList className="max-h-75">
-            <CommandEmpty>No commands found</CommandEmpty>
+            <CommandEmpty>
+              {t('commandPalette.noCommands', {
+                defaultValue: 'No commands found',
+              })}
+            </CommandEmpty>
             {categoryOrder
               .filter((category) => groupedCommands[category]?.length > 0)
               .map((category) => (
@@ -139,16 +160,23 @@ export function CommandPalette() {
                 <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">
                   ↑↓
                 </kbd>
-                <span>Select</span>
+                <span>
+                  {t('commandPalette.select', { defaultValue: 'Select' })}
+                </span>
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">
                   ↵
                 </kbd>
-                <span>Run</span>
+                <span>{t('commandPalette.run', { defaultValue: 'Run' })}</span>
               </span>
             </div>
-            <span>{filteredCommands.length} commands</span>
+            <span>
+              {t('commandPalette.commandsCount', {
+                count: filteredCommands.length,
+                defaultValue: '{{count}} commands',
+              })}
+            </span>
           </div>
         </Command>
       </DialogContent>
