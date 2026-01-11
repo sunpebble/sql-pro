@@ -5,6 +5,7 @@ import { Separator } from '@sqlpro/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, Info, KeyRound, Settings, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -74,6 +75,8 @@ function DialogFormContent({
   const [showRemovePasswordConfirm, setShowRemovePasswordConfirm] =
     useState(false);
 
+  const { t } = useTranslation('dialog');
+
   // Check if password storage is available and if there's a saved password
   useEffect(() => {
     if (isEncrypted && dbPath) {
@@ -98,10 +101,12 @@ function DialogFormContent({
   const validateDisplayName = (value: string): string | null => {
     const trimmed = value.trim();
     if (trimmed.length === 0) {
-      return 'Display name cannot be empty';
+      return t('connectionSettings.validation.empty');
     }
     if (trimmed.length > MAX_DISPLAY_NAME_LENGTH) {
-      return `Display name cannot exceed ${MAX_DISPLAY_NAME_LENGTH} characters`;
+      return t('connectionSettings.validation.tooLong', {
+        max: MAX_DISPLAY_NAME_LENGTH,
+      });
     }
     return null;
   };
@@ -191,8 +196,13 @@ function DialogFormContent({
 
   const isValid = !validateDisplayName(displayName);
   const dialogTitle =
-    mode === 'new' ? 'Connection Settings' : 'Edit Connection';
-  const submitLabel = mode === 'new' ? 'Save & Connect' : 'Save Changes';
+    mode === 'new'
+      ? t('connectionSettings.title')
+      : t('connectionSettings.editTitle');
+  const submitLabel =
+    mode === 'new'
+      ? t('connectionSettings.saveConnect')
+      : t('connectionSettings.saveChanges');
 
   return (
     <>
@@ -204,7 +214,7 @@ function DialogFormContent({
           {dialogTitle}
         </Dialog.Title>
         <Dialog.Description className="text-muted-foreground mt-2 text-sm">
-          Configure settings for <span className="font-medium">{filename}</span>
+          {t('connectionSettings.description', { filename })}
         </Dialog.Description>
       </div>
 
@@ -212,7 +222,7 @@ function DialogFormContent({
         {/* Display Name */}
         <div className="space-y-2">
           <label htmlFor="displayName" className="text-sm font-medium">
-            Display Name
+            {t('connectionSettings.displayName')}
           </label>
           <input
             id="displayName"
@@ -232,7 +242,10 @@ function DialogFormContent({
             <p className="text-destructive text-xs">{validationError}</p>
           )}
           <p className="text-muted-foreground text-xs">
-            {displayName.trim().length}/{MAX_DISPLAY_NAME_LENGTH} characters
+            {t('connectionSettings.charCount', {
+              current: displayName.trim().length,
+              max: MAX_DISPLAY_NAME_LENGTH,
+            })}
           </p>
         </div>
 
@@ -245,9 +258,11 @@ function DialogFormContent({
             className="border-input h-4 w-4 rounded"
           />
           <div className="flex-1">
-            <span className="text-sm font-medium">Open in read-only mode</span>
+            <span className="text-sm font-medium">
+              {t('connectionSettings.readOnly')}
+            </span>
             <p className="text-muted-foreground text-xs">
-              Prevents accidental modifications to the database
+              {t('connectionSettings.readOnlyDesc')}
             </p>
           </div>
         </label>
@@ -271,20 +286,22 @@ function DialogFormContent({
             />
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Remember password</span>
+                <span className="text-sm font-medium">
+                  {t('connectionSettings.rememberPassword')}
+                </span>
                 {!isStorageAvailable && (
                   <Tooltip>
                     <TooltipTrigger>
                       <Info className="text-muted-foreground h-3.5 w-3.5" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Secure storage is not available on this system</p>
+                      <p>{t('connectionSettings.storageUnavailable')}</p>
                     </TooltipContent>
                   </Tooltip>
                 )}
               </div>
               <p className="text-muted-foreground text-xs">
-                Securely store password in system keychain
+                {t('connectionSettings.rememberPasswordDesc')}
               </p>
             </div>
           </label>
@@ -440,7 +457,7 @@ function DialogFormContent({
             className="flex-1"
             onClick={() => onOpenChange(false)}
           >
-            Cancel
+            {t('common.cancel', { ns: 'common' })}
           </Button>
           <Button type="submit" className="flex-1" disabled={!isValid}>
             {submitLabel}

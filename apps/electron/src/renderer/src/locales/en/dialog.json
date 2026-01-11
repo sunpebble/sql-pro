@@ -48,6 +48,24 @@
     "discardChanges": "Discard Changes",
     "saveChanges": "Save Changes"
   },
+  "connectionSettings": {
+    "title": "Connection Settings",
+    "editTitle": "Edit Connection",
+    "description": "Configure settings for {{filename}}",
+    "displayName": "Display Name",
+    "charCount": "{{current}}/{{max}} characters",
+    "readOnly": "Open in read-only mode",
+    "readOnlyDesc": "Prevents accidental modifications to the database",
+    "rememberPassword": "Remember password",
+    "rememberPasswordDesc": "Securely store password in system keychain",
+    "storageUnavailable": "Secure storage is not available on this system",
+    "saveConnect": "Save & Connect",
+    "saveChanges": "Save Changes",
+    "validation": {
+      "empty": "Display name cannot be empty",
+      "tooLong": "Display name cannot exceed {{max}} characters"
+    }
+  },
   "quit": {
     "title": "Quit with Unsaved Changes?",
     "message": "You have {{count}} unsaved changes across {{connections}} connections. What would you like to do?",

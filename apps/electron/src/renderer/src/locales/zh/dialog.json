@@ -48,6 +48,24 @@
     "discardChanges": "放弃更改",
     "saveChanges": "保存更改"
   },
+  "connectionSettings": {
+    "title": "连接设置",
+    "editTitle": "编辑连接",
+    "description": "配置 {{filename}} 的设置",
+    "displayName": "显示名称",
+    "charCount": "{{current}}/{{max}} 个字符",
+    "readOnly": "以只读模式打开",
+    "readOnlyDesc": "防止意外修改数据库",
+    "rememberPassword": "记住密码",
+    "rememberPasswordDesc": "安全地将密码存储在系统钥匙串中",
+    "storageUnavailable": "安全存储在此系统上不可用",
+    "saveConnect": "保存并连接",
+    "saveChanges": "保存更改",
+    "validation": {
+      "empty": "显示名称不能为空",
+      "tooLong": "显示名称不能超过 {{max}} 个字符"
+    }
+  },
   "quit": {
     "title": "退出时有未保存的更改？",
     "message": "您有 {{count}} 个未保存的更改，涉及 {{connections}} 个连接。您想怎么做？",
