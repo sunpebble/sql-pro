@@ -13,6 +13,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -56,6 +57,7 @@ export function SchemaComparisonPanel({
 
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const { t } = useTranslation('common');
 
   // Ref to hold handleCompare function for keyboard shortcuts (defined before useEffect)
   const handleCompareRef = useRef<(() => void) | null>(null);
@@ -252,10 +254,11 @@ export function SchemaComparisonPanel({
             <div className="flex items-center gap-3">
               <GitCompare className="text-primary h-6 w-6" />
               <div>
-                <h1 className="text-2xl font-semibold">Schema Comparison</h1>
+                <h1 className="text-2xl font-semibold">
+                  {t('compare.schemaComparison')}
+                </h1>
                 <p className="text-muted-foreground text-sm">
-                  Compare schemas between databases or snapshots to identify
-                  differences
+                  {t('compare.schemaDescription')}
                 </p>
               </div>
             </div>
@@ -267,7 +270,7 @@ export function SchemaComparisonPanel({
               title="Show keyboard shortcuts"
             >
               <Keyboard className="h-4 w-4" />
-              <span className="hidden sm:inline">Shortcuts</span>
+              <span className="hidden sm:inline">{t('compare.shortcuts')}</span>
               {showKeyboardShortcuts ? (
                 <ChevronUp className="h-4 w-4" />
               ) : (
@@ -282,14 +285,14 @@ export function SchemaComparisonPanel({
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Keyboard className="h-4 w-4" />
-                  Keyboard Shortcuts
+                  {t('compare.keyboardShortcuts')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-2 text-sm sm:grid-cols-2">
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground">
-                      Run comparison
+                      {t('compare.runComparison')}
                     </span>
                     <ShortcutKbd
                       binding={{ key: 'Enter', modifiers: { cmd: true } }}
@@ -297,26 +300,32 @@ export function SchemaComparisonPanel({
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground">
-                      Toggle only differences
+                      {t('compare.toggleOnlyDifferences')}
                     </span>
                     <ShortcutKbd
                       binding={{ key: 'd', modifiers: { cmd: true } }}
                     />
                   </div>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="text-muted-foreground">Export report</span>
+                    <span className="text-muted-foreground">
+                      {t('compare.exportReport')}
+                    </span>
                     <ShortcutKbd
                       binding={{ key: 'e', modifiers: { cmd: true } }}
                     />
                   </div>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="text-muted-foreground">Reset filters</span>
+                    <span className="text-muted-foreground">
+                      {t('compare.resetFilters')}
+                    </span>
                     <ShortcutKbd
                       binding={{ key: 'r', modifiers: { cmd: true } }}
                     />
                   </div>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="text-muted-foreground">Focus search</span>
+                    <span className="text-muted-foreground">
+                      {t('compare.focusSearch')}
+                    </span>
                     <ShortcutKbd
                       binding={{ key: 'f', modifiers: { cmd: true } }}
                     />
@@ -331,7 +340,9 @@ export function SchemaComparisonPanel({
             {/* Source Selector */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Source</CardTitle>
+                <CardTitle className="text-base">
+                  {t('compare.source')}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <SourceSelector
@@ -350,7 +361,9 @@ export function SchemaComparisonPanel({
             {/* Target Selector */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Target</CardTitle>
+                <CardTitle className="text-base">
+                  {t('compare.target')}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <SourceSelector
@@ -374,12 +387,12 @@ export function SchemaComparisonPanel({
               {isComparing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Comparing...
+                  {t('compare.comparing')}
                 </>
               ) : (
                 <>
                   <GitCompare className="mr-2 h-4 w-4" />
-                  Compare Schemas
+                  {t('compare.compareSchemas')}
                 </>
               )}
             </Button>
