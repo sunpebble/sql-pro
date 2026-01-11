@@ -58,7 +58,8 @@
     "showProfiles": "显示配置文件",
     "hideProfiles": "隐藏配置文件",
     "passwordSaved": "密码已保存",
-    "readOnly": "只读"
+    "readOnly": "只读",
+    "saveAsProfile": "保存为配置文件"
   },
   "features": {
     "title": "功能",

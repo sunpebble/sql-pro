@@ -58,7 +58,8 @@
     "showProfiles": "Show Profiles",
     "hideProfiles": "Hide Profiles",
     "passwordSaved": "Password saved",
-    "readOnly": "Read-only"
+    "readOnly": "Read-only",
+    "saveAsProfile": "Save as Profile"
   },
   "features": {
     "title": "Features",

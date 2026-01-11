@@ -1056,7 +1056,9 @@ export function WelcomeScreen() {
                                       <TooltipTrigger>
                                         <Eye className="text-muted-foreground h-3 w-3" />
                                       </TooltipTrigger>
-                                      <TooltipContent>Read-only</TooltipContent>
+                                      <TooltipContent>
+                                        {t('welcome.readOnly')}
+                                      </TooltipContent>
                                     </Tooltip>
                                   )}
                                   <HasSavedPasswordIndicator path={conn.path} />
@@ -1087,14 +1089,18 @@ export function WelcomeScreen() {
                                 className="whitespace-nowrap"
                               >
                                 <Pencil className="mr-2 h-4 w-4" />
-                                <span>Edit</span>
+                                <span>{t('actions.edit')}</span>
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleSaveAsProfile(conn)}
                                 className="whitespace-nowrap"
                               >
                                 <BookmarkPlus className="mr-2 h-4 w-4" />
-                                <span>Save as Profile</span>
+                                <span>
+                                  {t('welcome.saveAsProfile', {
+                                    defaultValue: 'Save as Profile',
+                                  })}
+                                </span>
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
@@ -1102,7 +1108,7 @@ export function WelcomeScreen() {
                                 className="text-destructive focus:text-destructive whitespace-nowrap"
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                <span>Remove</span>
+                                <span>{t('actions.remove')}</span>
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
