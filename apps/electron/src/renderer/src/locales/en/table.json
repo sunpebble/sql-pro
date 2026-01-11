@@ -12,6 +12,15 @@
     "selected": "{{count}} selected",
     "page": "Page {{current}} of {{total}}"
   },
+  "empty": {
+    "noMatch": "No matching results",
+    "noSearchResults": "No rows match your search criteria",
+    "noFilterResults": "No rows match the current filters",
+    "clearSearch": "Clear search",
+    "clearFilters": "Clear all filters",
+    "noData": "No data",
+    "tableEmpty": "This table is empty"
+  },
   "actions": {
     "insertRow": "Insert Row",
     "deleteRow": "Delete Row",

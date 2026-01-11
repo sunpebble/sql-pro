@@ -12,6 +12,15 @@
     "selected": "已选择 {{count}} 项",
     "page": "第 {{current}} / {{total}} 页"
   },
+  "empty": {
+    "noMatch": "无匹配结果",
+    "noSearchResults": "没有行匹配您的搜索条件",
+    "noFilterResults": "没有行匹配当前筛选条件",
+    "clearSearch": "清除搜索",
+    "clearFilters": "清除所有筛选",
+    "noData": "暂无数据",
+    "tableEmpty": "此表为空"
+  },
   "actions": {
     "insertRow": "插入行",
     "deleteRow": "删除行",

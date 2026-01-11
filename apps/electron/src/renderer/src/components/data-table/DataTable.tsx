@@ -29,6 +29,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useVirtualData } from '@/hooks/useVirtualData';
 import { cn } from '@/lib/utils';
 import { useTableFont } from '@/stores';
@@ -609,6 +610,8 @@ function EmptyState({
   onClearFilters?: () => void;
   onClearSearch?: () => void;
 }) {
+  const { t } = useTranslation('table');
+
   // Case 3: Client-side search produced no results (but there were rows before search)
   if (
     hasActiveSearch &&
@@ -621,14 +624,12 @@ function EmptyState({
           <EmptyMedia variant="icon">
             <SearchX className="h-5 w-5" />
           </EmptyMedia>
-          <EmptyTitle>No matching results</EmptyTitle>
-          <EmptyDescription>
-            No rows match your search criteria
-          </EmptyDescription>
+          <EmptyTitle>{t('empty.noMatch')}</EmptyTitle>
+          <EmptyDescription>{t('empty.noSearchResults')}</EmptyDescription>
         </EmptyHeader>
         {onClearSearch && (
           <Button variant="outline" size="sm" onClick={onClearSearch}>
-            Clear search
+            {t('empty.clearSearch')}
           </Button>
         )}
       </Empty>
@@ -643,12 +644,12 @@ function EmptyState({
           <EmptyMedia variant="icon">
             <Filter className="h-5 w-5" />
           </EmptyMedia>
-          <EmptyTitle>No matching results</EmptyTitle>
-          <EmptyDescription>No rows match the current filters</EmptyDescription>
+          <EmptyTitle>{t('empty.noMatch')}</EmptyTitle>
+          <EmptyDescription>{t('empty.noFilterResults')}</EmptyDescription>
         </EmptyHeader>
         {onClearFilters && (
           <Button variant="outline" size="sm" onClick={onClearFilters}>
-            Clear all filters
+            {t('empty.clearFilters')}
           </Button>
         )}
       </Empty>
@@ -662,8 +663,8 @@ function EmptyState({
         <EmptyMedia variant="icon">
           <Inbox className="h-5 w-5" />
         </EmptyMedia>
-        <EmptyTitle>No data</EmptyTitle>
-        <EmptyDescription>This table is empty</EmptyDescription>
+        <EmptyTitle>{t('empty.noData')}</EmptyTitle>
+        <EmptyDescription>{t('empty.tableEmpty')}</EmptyDescription>
       </EmptyHeader>
     </Empty>
   );
