@@ -1,6 +1,6 @@
 import type { AIProvider } from '@shared/types';
 import type { FontCategory, SystemFont } from '@shared/types/font';
-import type {LanguageCode} from '@/lib/i18n';
+import type { LanguageCode } from '@/lib/i18n';
 import type { FontConfig } from '@/stores/settings-store';
 import { FONT_CATEGORY_LABELS } from '@shared/types/font';
 import { Button } from '@sqlpro/ui/button';
@@ -45,6 +45,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -52,12 +53,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { getSystemFonts, isLocalFontAccessAvailable } from '@/lib/font-utils';
-import {
-  changeLanguage,
-  getCurrentLanguage,
-  
-  LANGUAGES
-} from '@/lib/i18n';
+import { changeLanguage, LANGUAGES } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import {
   DEFAULT_MODELS,
@@ -85,6 +81,7 @@ interface FontOption {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+  const { i18n } = useTranslation();
   const { theme, setTheme } = useThemeStore();
   const {
     editorVimMode,
@@ -265,7 +262,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   <Button
                     key={code}
                     variant={
-                      getCurrentLanguage() === code ? 'default' : 'outline'
+                      i18n.language?.startsWith(code) ? 'default' : 'outline'
                     }
                     size="sm"
                     onClick={() => changeLanguage(code)}
