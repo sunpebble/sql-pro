@@ -1,5 +1,6 @@
 import type { AIProvider } from '@shared/types';
 import type { FontCategory, SystemFont } from '@shared/types/font';
+import type {LanguageCode} from '@/lib/i18n';
 import type { FontConfig } from '@/stores/settings-store';
 import { FONT_CATEGORY_LABELS } from '@shared/types/font';
 import { Button } from '@sqlpro/ui/button';
@@ -32,6 +33,7 @@ import {
   Eye,
   EyeOff,
   FolderSearch,
+  Globe,
   Keyboard,
   Link,
   Loader2,
@@ -50,6 +52,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { getSystemFonts, isLocalFontAccessAvailable } from '@/lib/font-utils';
+import {
+  changeLanguage,
+  getCurrentLanguage,
+  
+  LANGUAGES
+} from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import {
   DEFAULT_MODELS,
@@ -246,6 +254,27 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   <Monitor className="mr-2 h-4 w-4" />
                   System
                 </Button>
+              </div>
+            </div>
+
+            {/* Language Section */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Language</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {(Object.keys(LANGUAGES) as LanguageCode[]).map((code) => (
+                  <Button
+                    key={code}
+                    variant={
+                      getCurrentLanguage() === code ? 'default' : 'outline'
+                    }
+                    size="sm"
+                    onClick={() => changeLanguage(code)}
+                    className="justify-start"
+                  >
+                    <Globe className="mr-2 h-4 w-4" />
+                    {LANGUAGES[code].nativeName}
+                  </Button>
+                ))}
               </div>
             </div>
 

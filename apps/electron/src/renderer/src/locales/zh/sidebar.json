@@ -1,0 +1,40 @@
+{
+  "connection": {
+    "title": "连接",
+    "new": "新建连接",
+    "recent": "最近连接",
+    "noConnections": "暂无连接",
+    "connect": "连接",
+    "disconnect": "断开连接",
+    "delete": "删除连接",
+    "edit": "编辑连接",
+    "duplicate": "复制连接"
+  },
+  "schema": {
+    "title": "数据库结构",
+    "tables": "表",
+    "views": "视图",
+    "noTables": "未找到表",
+    "noViews": "未找到视图",
+    "refresh": "刷新结构",
+    "search": "搜索表...",
+    "columns": "列",
+    "indexes": "索引",
+    "foreignKeys": "外键",
+    "triggers": "触发器"
+  },
+  "navigation": {
+    "dataBrowser": "数据浏览",
+    "queryEditor": "SQL 查询",
+    "schemaCompare": "结构对比",
+    "history": "查询历史",
+    "settings": "设置"
+  },
+  "folders": {
+    "title": "文件夹",
+    "new": "新建文件夹",
+    "rename": "重命名文件夹",
+    "delete": "删除文件夹",
+    "noFolders": "暂无文件夹"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "connection": {
+    "title": "Connections",
+    "new": "New Connection",
+    "recent": "Recent Connections",
+    "noConnections": "No connections yet",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "delete": "Delete Connection",
+    "edit": "Edit Connection",
+    "duplicate": "Duplicate Connection"
+  },
+  "schema": {
+    "title": "Schema",
+    "tables": "Tables",
+    "views": "Views",
+    "noTables": "No tables found",
+    "noViews": "No views found",
+    "refresh": "Refresh Schema",
+    "search": "Search tables...",
+    "columns": "Columns",
+    "indexes": "Indexes",
+    "foreignKeys": "Foreign Keys",
+    "triggers": "Triggers"
+  },
+  "navigation": {
+    "dataBrowser": "Data Browser",
+    "queryEditor": "SQL Query",
+    "schemaCompare": "Schema Compare",
+    "history": "Query History",
+    "settings": "Settings"
+  },
+  "folders": {
+    "title": "Folders",
+    "new": "New Folder",
+    "rename": "Rename Folder",
+    "delete": "Delete Folder",
+    "noFolders": "No folders"
+  }
+}

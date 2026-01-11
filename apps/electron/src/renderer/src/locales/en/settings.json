@@ -1,0 +1,58 @@
+{
+  "general": {
+    "title": "General",
+    "language": "Language",
+    "languageDescription": "Select your preferred language",
+    "autoUpdate": "Automatic Updates",
+    "autoUpdateDescription": "Check for updates automatically",
+    "telemetry": "Usage Analytics",
+    "telemetryDescription": "Help improve SQL Pro by sending anonymous usage data"
+  },
+  "appearance": {
+    "title": "Appearance",
+    "theme": "Theme",
+    "themeDescription": "Choose your preferred color theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "fontSize": "Font Size",
+    "fontFamily": "Font Family",
+    "density": "Density",
+    "compact": "Compact",
+    "comfortable": "Comfortable"
+  },
+  "editor": {
+    "title": "Editor",
+    "fontFamily": "Editor Font",
+    "fontSize": "Editor Font Size",
+    "tabSize": "Tab Size",
+    "wordWrap": "Word Wrap",
+    "lineNumbers": "Line Numbers",
+    "minimap": "Minimap",
+    "autoComplete": "Auto Complete",
+    "formatOnSave": "Format on Save",
+    "highlightCurrentLine": "Highlight Current Line"
+  },
+  "ai": {
+    "title": "AI Assistant",
+    "provider": "AI Provider",
+    "apiKey": "API Key",
+    "model": "Model",
+    "baseUrl": "Base URL (Optional)",
+    "enabled": "Enable AI Features",
+    "enabledDescription": "Use AI-powered features like natural language to SQL"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "reset": "Reset to Defaults",
+    "search": "Search shortcuts..."
+  },
+  "about": {
+    "title": "About",
+    "version": "Version",
+    "checkUpdates": "Check for Updates",
+    "license": "License",
+    "github": "GitHub Repository",
+    "reportIssue": "Report an Issue"
+  }
+}

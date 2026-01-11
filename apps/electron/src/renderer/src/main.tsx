@@ -6,6 +6,9 @@ import { hydrateStores, initializeStorage } from './lib/storage';
 
 import './styles/globals.css';
 
+// Initialize i18n (must be before any components that use translations)
+import './lib/i18n';
+
 // Initialize stores (they register their hydrators on import)
 import './stores/connection-store';
 import './stores/diagram-store';

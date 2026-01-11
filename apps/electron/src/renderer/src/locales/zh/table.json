@@ -1,0 +1,55 @@
+{
+  "data": {
+    "row": "行",
+    "rows": "行",
+    "column": "列",
+    "columns": "列",
+    "cell": "单元格",
+    "noData": "暂无数据",
+    "loading": "正在加载数据...",
+    "loadingMore": "正在加载更多行...",
+    "total": "共 {{count}} 行",
+    "selected": "已选择 {{count}} 项",
+    "page": "第 {{current}} / {{total}} 页"
+  },
+  "actions": {
+    "insertRow": "插入行",
+    "deleteRow": "删除行",
+    "duplicateRow": "复制行",
+    "editCell": "编辑单元格",
+    "copyCell": "复制单元格",
+    "pasteCell": "粘贴单元格",
+    "setNull": "设为 NULL",
+    "revertChanges": "撤销更改"
+  },
+  "filter": {
+    "title": "筛选",
+    "addFilter": "添加筛选条件",
+    "clearFilters": "清除筛选",
+    "column": "列",
+    "operator": "运算符",
+    "value": "值",
+    "equals": "等于",
+    "notEquals": "不等于",
+    "contains": "包含",
+    "startsWith": "开头为",
+    "endsWith": "结尾为",
+    "greaterThan": "大于",
+    "lessThan": "小于",
+    "isNull": "为空",
+    "isNotNull": "非空"
+  },
+  "sort": {
+    "ascending": "升序排列",
+    "descending": "降序排列",
+    "clear": "取消排序"
+  },
+  "export": {
+    "title": "导出数据",
+    "format": "格式",
+    "csv": "CSV",
+    "json": "JSON",
+    "sql": "SQL 插入语句",
+    "excel": "Excel"
+  }
+}

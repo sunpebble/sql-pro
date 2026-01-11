@@ -1,0 +1,55 @@
+{
+  "data": {
+    "row": "row",
+    "rows": "rows",
+    "column": "column",
+    "columns": "columns",
+    "cell": "Cell",
+    "noData": "No data to display",
+    "loading": "Loading data...",
+    "loadingMore": "Loading more rows...",
+    "total": "Total: {{count}} rows",
+    "selected": "{{count}} selected",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "actions": {
+    "insertRow": "Insert Row",
+    "deleteRow": "Delete Row",
+    "duplicateRow": "Duplicate Row",
+    "editCell": "Edit Cell",
+    "copyCell": "Copy Cell",
+    "pasteCell": "Paste Cell",
+    "setNull": "Set NULL",
+    "revertChanges": "Revert Changes"
+  },
+  "filter": {
+    "title": "Filter",
+    "addFilter": "Add Filter",
+    "clearFilters": "Clear Filters",
+    "column": "Column",
+    "operator": "Operator",
+    "value": "Value",
+    "equals": "Equals",
+    "notEquals": "Not Equals",
+    "contains": "Contains",
+    "startsWith": "Starts With",
+    "endsWith": "Ends With",
+    "greaterThan": "Greater Than",
+    "lessThan": "Less Than",
+    "isNull": "Is NULL",
+    "isNotNull": "Is Not NULL"
+  },
+  "sort": {
+    "ascending": "Sort Ascending",
+    "descending": "Sort Descending",
+    "clear": "Clear Sort"
+  },
+  "export": {
+    "title": "Export Data",
+    "format": "Format",
+    "csv": "CSV",
+    "json": "JSON",
+    "sql": "SQL Insert",
+    "excel": "Excel"
+  }
+}

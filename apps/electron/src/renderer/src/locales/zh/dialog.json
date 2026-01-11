@@ -1,0 +1,53 @@
+{
+  "connection": {
+    "title": "新建连接",
+    "editTitle": "编辑连接",
+    "databaseType": "数据库类型",
+    "connectionName": "连接名称",
+    "host": "主机",
+    "port": "端口",
+    "database": "数据库",
+    "username": "用户名",
+    "password": "密码",
+    "connectionUrl": "连接 URL",
+    "useUrl": "使用连接 URL",
+    "test": "测试连接",
+    "testSuccess": "连接成功！",
+    "testFailed": "连接失败",
+    "save": "保存连接",
+    "sqlite": {
+      "file": "数据库文件",
+      "browse": "浏览",
+      "create": "创建新数据库"
+    },
+    "advanced": {
+      "title": "高级选项",
+      "ssl": "使用 SSL",
+      "sslMode": "SSL 模式",
+      "timeout": "连接超时（秒）"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "general": "通用",
+    "appearance": "外观",
+    "editor": "编辑器",
+    "ai": "AI 助手",
+    "shortcuts": "快捷键",
+    "about": "关于"
+  },
+  "confirm": {
+    "title": "确认",
+    "delete": "确定要删除吗？",
+    "unsavedChanges": "您有未保存的更改。是否保存？",
+    "discardChanges": "放弃更改",
+    "saveChanges": "保存更改"
+  },
+  "quit": {
+    "title": "未保存的更改",
+    "message": "以下连接有未保存的更改：",
+    "saveAll": "全部保存并退出",
+    "discardAll": "全部放弃并退出",
+    "cancel": "取消"
+  }
+}

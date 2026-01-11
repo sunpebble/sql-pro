@@ -1,0 +1,58 @@
+{
+  "general": {
+    "title": "通用",
+    "language": "语言",
+    "languageDescription": "选择您的首选语言",
+    "autoUpdate": "自动更新",
+    "autoUpdateDescription": "自动检查更新",
+    "telemetry": "使用分析",
+    "telemetryDescription": "发送匿名使用数据以帮助改进 SQL Pro"
+  },
+  "appearance": {
+    "title": "外观",
+    "theme": "主题",
+    "themeDescription": "选择您喜欢的颜色主题",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "fontSize": "字体大小",
+    "fontFamily": "字体",
+    "density": "布局密度",
+    "compact": "紧凑",
+    "comfortable": "舒适"
+  },
+  "editor": {
+    "title": "编辑器",
+    "fontFamily": "编辑器字体",
+    "fontSize": "编辑器字体大小",
+    "tabSize": "Tab 大小",
+    "wordWrap": "自动换行",
+    "lineNumbers": "行号",
+    "minimap": "小地图",
+    "autoComplete": "自动补全",
+    "formatOnSave": "保存时格式化",
+    "highlightCurrentLine": "高亮当前行"
+  },
+  "ai": {
+    "title": "AI 助手",
+    "provider": "AI 服务商",
+    "apiKey": "API 密钥",
+    "model": "模型",
+    "baseUrl": "API 地址（可选）",
+    "enabled": "启用 AI 功能",
+    "enabledDescription": "使用 AI 驱动的功能，如自然语言转 SQL"
+  },
+  "shortcuts": {
+    "title": "快捷键",
+    "reset": "恢复默认",
+    "search": "搜索快捷键..."
+  },
+  "about": {
+    "title": "关于",
+    "version": "版本",
+    "checkUpdates": "检查更新",
+    "license": "许可证",
+    "github": "GitHub 仓库",
+    "reportIssue": "报告问题"
+  }
+}

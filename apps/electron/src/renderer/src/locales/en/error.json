@@ -1,0 +1,35 @@
+{
+  "connection": {
+    "failed": "Failed to connect to database",
+    "timeout": "Connection timed out",
+    "refused": "Connection refused",
+    "notFound": "Database not found",
+    "authFailed": "Authentication failed",
+    "invalidCredentials": "Invalid username or password"
+  },
+  "query": {
+    "failed": "Query execution failed",
+    "syntaxError": "SQL syntax error",
+    "timeout": "Query timed out",
+    "cancelled": "Query was cancelled"
+  },
+  "file": {
+    "notFound": "File not found",
+    "readFailed": "Failed to read file",
+    "writeFailed": "Failed to write file",
+    "invalidFormat": "Invalid file format"
+  },
+  "data": {
+    "saveFailed": "Failed to save changes",
+    "loadFailed": "Failed to load data",
+    "deleteFailed": "Failed to delete record",
+    "insertFailed": "Failed to insert record",
+    "updateFailed": "Failed to update record"
+  },
+  "generic": {
+    "unknown": "An unknown error occurred",
+    "network": "Network error. Please check your connection.",
+    "permission": "Permission denied",
+    "internal": "Internal error"
+  }
+}

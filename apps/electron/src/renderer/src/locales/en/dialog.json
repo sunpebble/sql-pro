@@ -1,0 +1,53 @@
+{
+  "connection": {
+    "title": "New Connection",
+    "editTitle": "Edit Connection",
+    "databaseType": "Database Type",
+    "connectionName": "Connection Name",
+    "host": "Host",
+    "port": "Port",
+    "database": "Database",
+    "username": "Username",
+    "password": "Password",
+    "connectionUrl": "Connection URL",
+    "useUrl": "Use Connection URL",
+    "test": "Test Connection",
+    "testSuccess": "Connection successful!",
+    "testFailed": "Connection failed",
+    "save": "Save Connection",
+    "sqlite": {
+      "file": "Database File",
+      "browse": "Browse",
+      "create": "Create New Database"
+    },
+    "advanced": {
+      "title": "Advanced Options",
+      "ssl": "Use SSL",
+      "sslMode": "SSL Mode",
+      "timeout": "Connection Timeout (seconds)"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "appearance": "Appearance",
+    "editor": "Editor",
+    "ai": "AI Assistant",
+    "shortcuts": "Keyboard Shortcuts",
+    "about": "About"
+  },
+  "confirm": {
+    "title": "Confirm",
+    "delete": "Are you sure you want to delete?",
+    "unsavedChanges": "You have unsaved changes. Do you want to save them?",
+    "discardChanges": "Discard Changes",
+    "saveChanges": "Save Changes"
+  },
+  "quit": {
+    "title": "Unsaved Changes",
+    "message": "You have unsaved changes in the following connections:",
+    "saveAll": "Save All and Quit",
+    "discardAll": "Discard All and Quit",
+    "cancel": "Cancel"
+  }
+}
