@@ -43,6 +43,12 @@
     "continue": "Continue",
     "finish": "Finish"
   },
+  "navigation": {
+    "takeTour": "Take a Tour",
+    "data": "Data",
+    "query": "SQL Query",
+    "diagram": "Diagram"
+  },
   "status": {
     "connected": "Connected",
     "disconnected": "Disconnected",

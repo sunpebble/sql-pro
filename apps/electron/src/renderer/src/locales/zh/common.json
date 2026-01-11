@@ -43,6 +43,12 @@
     "continue": "继续",
     "finish": "完成"
   },
+  "navigation": {
+    "takeTour": "开始导览",
+    "data": "数据",
+    "query": "SQL 查询",
+    "diagram": "关系图"
+  },
   "status": {
     "connected": "已连接",
     "disconnected": "已断开",
