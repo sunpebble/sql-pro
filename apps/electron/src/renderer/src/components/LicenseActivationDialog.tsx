@@ -433,7 +433,7 @@ export function LicenseActivationDialog({
         onOpenChange={setConfirmDeactivate}
         title="Deactivate License"
         description="Are you sure you want to deactivate your license on this machine? You can reactivate it later."
-        confirmText="Deactivate"
+        confirmLabel="Deactivate"
         onConfirm={handleDeactivate}
         variant="destructive"
       />
