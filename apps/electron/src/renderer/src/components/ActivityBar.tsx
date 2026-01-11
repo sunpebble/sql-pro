@@ -1,6 +1,7 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { ArrowLeftRight, Code, GitCompare, GitFork, Table } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { cn } from '@/lib/utils';
 
@@ -9,7 +10,7 @@ export type ViewType = 'data' | 'query' | 'diagram' | 'compare' | 'dataDiff';
 interface ActivityBarItem {
   id: ViewType;
   icon: React.ElementType;
-  label: string;
+  labelKey: string;
   shortcutAction: ShortcutAction;
   tourTarget: string;
 }
@@ -18,35 +19,35 @@ const ACTIVITY_BAR_ITEMS: ActivityBarItem[] = [
   {
     id: 'data',
     icon: Table,
-    label: 'Data Browser',
+    labelKey: 'navigation.dataBrowser',
     shortcutAction: 'nav.data-browser',
     tourTarget: 'data-browser-tab',
   },
   {
     id: 'query',
     icon: Code,
-    label: 'SQL Query',
+    labelKey: 'navigation.sqlQuery',
     shortcutAction: 'nav.query-editor',
     tourTarget: 'query-editor-tab',
   },
   {
     id: 'diagram',
     icon: GitFork,
-    label: 'ER Diagram',
+    labelKey: 'navigation.erDiagram',
     shortcutAction: 'nav.er-diagram',
     tourTarget: 'diagram-tab',
   },
   {
     id: 'compare',
     icon: GitCompare,
-    label: 'Schema Compare',
+    labelKey: 'navigation.schemaCompare',
     shortcutAction: 'nav.schema-compare',
     tourTarget: 'schema-compare-tab',
   },
   {
     id: 'dataDiff',
     icon: ArrowLeftRight,
-    label: 'Data Diff',
+    labelKey: 'navigation.dataDiff',
     shortcutAction: 'nav.data-diff',
     tourTarget: 'data-diff-tab',
   },
@@ -68,6 +69,8 @@ export function ActivityBar({
   onViewChange,
   badges,
 }: ActivityBarProps) {
+  const { t } = useTranslation('common');
+
   return (
     <div className="bg-muted/30 flex h-full w-12 shrink-0 flex-col border-r">
       {ACTIVITY_BAR_ITEMS.map((item) => {
@@ -98,7 +101,7 @@ export function ActivityBar({
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" className="flex items-center gap-2">
-              <span>{item.label}</span>
+              <span>{t(item.labelKey)}</span>
               <ShortcutKbd action={item.shortcutAction} />
             </TooltipContent>
           </Tooltip>

@@ -56,7 +56,15 @@
     "takeTour": "开始导览",
     "data": "数据",
     "query": "SQL 查询",
-    "diagram": "关系图"
+    "diagram": "图表",
+    "dataBrowser": "数据浏览器",
+    "sqlQuery": "SQL 查询",
+    "erDiagram": "ER 图",
+    "schemaCompare": "结构对比",
+    "dataDiff": "数据对比"
+  },
+  "database": {
+    "selectTable": "从侧边栏选择表以查看数据"
   },
   "welcome": {
     "subtitle": "专业数据库管理器",

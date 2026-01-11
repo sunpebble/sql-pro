@@ -56,7 +56,15 @@
     "takeTour": "Take a Tour",
     "data": "Data",
     "query": "SQL Query",
-    "diagram": "Diagram"
+    "diagram": "Diagram",
+    "dataBrowser": "Data Browser",
+    "sqlQuery": "SQL Query",
+    "erDiagram": "ER Diagram",
+    "schemaCompare": "Schema Compare",
+    "dataDiff": "Data Diff"
+  },
+  "database": {
+    "selectTable": "Select a table from the sidebar to view its data"
   },
   "welcome": {
     "subtitle": "Professional Database Manager",

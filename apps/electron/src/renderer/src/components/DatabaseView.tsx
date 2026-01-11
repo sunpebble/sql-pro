@@ -1,5 +1,6 @@
 import type { ViewType } from './ActivityBar';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tour } from '@/components/onboarding';
 import {
   useChangesStore,
@@ -39,6 +40,7 @@ export function DatabaseView() {
     useDialogStore();
 
   const [activeView, setActiveView] = useState<ViewType>('data');
+  const { t } = useTranslation('common');
 
   // Get the active data tab for current connection
   const activeDataTab = activeConnectionId
@@ -155,7 +157,12 @@ export function DatabaseView() {
                     <TableView />
                   ) : (
                     <div className="bg-grid-dot text-muted-foreground flex h-full flex-1 items-center justify-center">
-                      <p>Select a table from the sidebar to view its data</p>
+                      <p>
+                        {t('database.selectTable', {
+                          defaultValue:
+                            'Select a table from the sidebar to view its data',
+                        })}
+                      </p>
                     </div>
                   )}
                 </div>
