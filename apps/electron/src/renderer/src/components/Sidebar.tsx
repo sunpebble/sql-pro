@@ -865,7 +865,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
-              {isAllExpanded ? 'Collapse All' : 'Expand All'}
+              {isAllExpanded ? t('filter.collapseAll') : t('filter.expandAll')}
             </TooltipContent>
           </Tooltip>
         </div>
@@ -1637,7 +1637,7 @@ function FilterTagsPopover({
             )}
             onClick={() => setActiveTab('filter')}
           >
-            Filter
+            {t('filter.filter')}
           </button>
           <button
             className={cn(
@@ -1648,7 +1648,7 @@ function FilterTagsPopover({
             )}
             onClick={() => setActiveTab('manage')}
           >
-            Manage Tags
+            {t('filter.manageTags')}
           </button>
         </div>
 
@@ -1658,9 +1658,9 @@ function FilterTagsPopover({
             <div className="space-y-1">
               {availableTags.length === 0 ? (
                 <div className="text-muted-foreground py-2 text-center text-xs">
-                  No tags created yet.
+                  {t('filter.noTags')}
                   <br />
-                  Go to "Manage Tags" to create one.
+                  {t('filter.goToManageTags')}
                 </div>
               ) : (
                 <>
@@ -1672,7 +1672,7 @@ function FilterTagsPopover({
                       onClick={() => onSetActiveTagFilter(null)}
                     >
                       <X className="h-3 w-3" />
-                      Clear filter
+                      {t('filter.clearFilter')}
                     </Button>
                   )}
                   {availableTags.map((tag) => (

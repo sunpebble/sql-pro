@@ -36,9 +36,18 @@
   "sort": {
     "nameAsc": "Name (A-Z)",
     "nameDesc": "Name (Z-A)",
-    "rowsAsc": "Rows ↑",
-    "rowsDesc": "Rows ↓",
+    "rowsAsc": "Row Count (Low to High)",
+    "rowsDesc": "Row Count (High to Low)",
     "custom": "Custom"
+  },
+  "filter": {
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All",
+    "filter": "Filter",
+    "manageTags": "Manage Tags",
+    "noTags": "No tags created yet.",
+    "goToManageTags": "Go to \"Manage Tags\" to create one.",
+    "clearFilter": "Clear filter"
   },
   "contextMenu": {
     "openInQueryEditor": "Open in Query Editor",

@@ -36,9 +36,18 @@
   "sort": {
     "nameAsc": "名称 (A-Z)",
     "nameDesc": "名称 (Z-A)",
-    "rowsAsc": "行数 ↑",
-    "rowsDesc": "行数 ↓",
+    "rowsAsc": "行数 (由低到高)",
+    "rowsDesc": "行数 (由高到低)",
     "custom": "自定义"
+  },
+  "filter": {
+    "expandAll": "全部展开",
+    "collapseAll": "全部折叠",
+    "filter": "筛选",
+    "manageTags": "管理标签",
+    "noTags": "暂无标签。",
+    "goToManageTags": "前往「管理标签」创建。",
+    "clearFilter": "清除筛选"
   },
   "contextMenu": {
     "openInQueryEditor": "在查询编辑器中打开",
