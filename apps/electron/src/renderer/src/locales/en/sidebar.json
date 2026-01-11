@@ -18,6 +18,7 @@
     "noViews": "No views found",
     "refresh": "Refresh Schema",
     "search": "Search tables...",
+    "searchVim": "Search tables (/ to focus)",
     "columns": "Columns",
     "indexes": "Indexes",
     "foreignKeys": "Foreign Keys",
@@ -28,7 +29,32 @@
     "queryEditor": "SQL Query",
     "schemaCompare": "Schema Compare",
     "history": "Query History",
-    "settings": "Settings"
+    "settings": "Settings",
+    "takeTour": "Take a Tour"
+  },
+  "sort": {
+    "nameAsc": "Name (A-Z)",
+    "nameDesc": "Name (Z-A)",
+    "rowsAsc": "Rows ↑",
+    "rowsDesc": "Rows ↓",
+    "custom": "Custom"
+  },
+  "contextMenu": {
+    "copyName": "Copy Table Name",
+    "copyCreate": "Copy CREATE Statement",
+    "openInQuery": "Open in Query Editor",
+    "exportSchema": "Export Schema",
+    "truncate": "Truncate Table",
+    "drop": "Drop Table",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "addTag": "Add Tag"
+  },
+  "empty": {
+    "title": "No Tables Yet",
+    "description": "Create your first table to get started",
+    "openSqlEditor": "Open SQL Editor",
+    "copySample": "Copy Sample CREATE TABLE"
   },
   "folders": {
     "title": "Folders",

@@ -18,6 +18,7 @@
     "noViews": "未找到视图",
     "refresh": "刷新结构",
     "search": "搜索表...",
+    "searchVim": "搜索表（/ 聚焦）",
     "columns": "列",
     "indexes": "索引",
     "foreignKeys": "外键",
@@ -28,7 +29,32 @@
     "queryEditor": "SQL 查询",
     "schemaCompare": "结构对比",
     "history": "查询历史",
-    "settings": "设置"
+    "settings": "设置",
+    "takeTour": "开始导览"
+  },
+  "sort": {
+    "nameAsc": "名称 (A-Z)",
+    "nameDesc": "名称 (Z-A)",
+    "rowsAsc": "行数 ↑",
+    "rowsDesc": "行数 ↓",
+    "custom": "自定义"
+  },
+  "contextMenu": {
+    "copyName": "复制表名",
+    "copyCreate": "复制 CREATE 语句",
+    "openInQuery": "在查询编辑器中打开",
+    "exportSchema": "导出结构",
+    "truncate": "清空表",
+    "drop": "删除表",
+    "pin": "置顶",
+    "unpin": "取消置顶",
+    "addTag": "添加标签"
+  },
+  "empty": {
+    "title": "暂无表",
+    "description": "创建您的第一个表开始使用",
+    "openSqlEditor": "打开 SQL 编辑器",
+    "copySample": "复制示例 CREATE TABLE"
   },
   "folders": {
     "title": "文件夹",

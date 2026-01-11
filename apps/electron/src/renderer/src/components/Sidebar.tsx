@@ -67,6 +67,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
@@ -123,6 +124,9 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
     getTableKey,
     getTableMetadata,
   } = useTableOrganizationStore();
+
+  // i18n hook
+  const { t } = useTranslation('sidebar');
 
   // Expansion state for schemas (key is schema name)
   const [expandedSchemas, setExpandedSchemas] = useState<
@@ -741,7 +745,10 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
           className="text-muted-foreground hover:text-foreground hover:bg-muted/50 mx-1.5 mt-1 flex h-7 shrink-0 items-center gap-2 rounded-md px-2 text-xs transition-colors"
         >
           <Compass className="h-3.5 w-3.5" />
-          Take a Tour
+          {t('navigation.takeTour', {
+            ns: 'common',
+            defaultValue: 'Take a Tour',
+          })}
         </button>
       )}
 
@@ -753,7 +760,11 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
             ref={searchInputRef}
             type="text"
             placeholder={
-              appVimMode ? 'Search tables (/ to focus)' : 'Search tables...'
+              appVimMode
+                ? t('schema.searchVim', {
+                    defaultValue: 'Search tables (/ to focus)',
+                  })
+                : t('schema.search')
             }
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
