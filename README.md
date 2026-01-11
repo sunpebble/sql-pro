@@ -1,7 +1,7 @@
 # SQL Pro
 
 <p align="center">
-  <img src="resources/icon.svg" width="128" height="128" alt="SQL Pro Logo">
+  <img src="apps/electron/resources/icon.svg" width="128" height="128" alt="SQL Pro Logo">
 </p>
 
 <p align="center">
@@ -54,31 +54,6 @@
 - **Dark/Light theme** auto-switching
 - **Customizable keyboard shortcuts**
 
-</td>
-</tr>
-</table>
-
-## 📸 Screenshots
-
-<table>
-<tr>
-<td width="50%">
-  <img src="screenshots/welcome-dark.png" alt="Welcome Screen">
-  <p align="center"><em>Welcome Screen</em></p>
-</td>
-<td width="50%">
-  <img src="screenshots/database-dark.png" alt="Database View">
-  <p align="center"><em>Schema Browser & Data Grid</em></p>
-</td>
-</tr>
-<tr>
-<td width="50%">
-  <img src="screenshots/table-dark.png" alt="Table View">
-  <p align="center"><em>Inline Data Editing</em></p>
-</td>
-<td width="50%">
-  <img src="screenshots/query-dark.png" alt="Query Editor">
-  <p align="center"><em>SQL Query Editor</em></p>
 </td>
 </tr>
 </table>
