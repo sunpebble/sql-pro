@@ -3,6 +3,7 @@ import type { ColumnSchema } from '@/types/database';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Hash, Sparkles, Tag, X } from 'lucide-react';
 import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface QuickFilterTagsProps {
@@ -142,6 +143,8 @@ export const QuickFilterTags = memo(
       [columns, data]
     );
 
+    const { t } = useTranslation('common');
+
     // Check if a suggestion is currently active
     const isFilterActive = (suggestion: QuickFilterSuggestion): boolean => {
       return activeFilters.some(
@@ -213,7 +216,7 @@ export const QuickFilterTags = memo(
         <div className="flex shrink-0 items-center gap-1.5">
           <Sparkles className="h-3 w-3 text-amber-500" />
           <span className="text-muted-foreground text-[10px] font-medium uppercase">
-            Quick Filters
+            {t('table.quickFilters', { defaultValue: 'Quick Filters' })}
           </span>
         </div>
 
@@ -259,8 +262,11 @@ export const QuickFilterTags = memo(
                         : ` = "${formatValue(suggestion.value)}"`}
                     </div>
                     <div className="text-muted-foreground">
-                      {suggestion.count.toLocaleString()} rows (
-                      {suggestion.percentage.toFixed(1)}%)
+                      {t('table.rowCount', {
+                        count: suggestion.count,
+                        defaultValue: '{{count}} rows',
+                      })}{' '}
+                      ({suggestion.percentage.toFixed(1)}%)
                     </div>
                   </div>
                 </TooltipContent>

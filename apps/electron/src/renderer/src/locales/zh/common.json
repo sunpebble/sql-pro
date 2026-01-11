@@ -66,6 +66,14 @@
   "database": {
     "selectTable": "从侧边栏选择表以查看数据"
   },
+  "table": {
+    "quickFilters": "快速筛选",
+    "rowCount": "{{count}} 行",
+    "columnStats": "列统计",
+    "columnsCount": "{{count}} 列",
+    "rowsCount": "{{count}} 行",
+    "selectColumn": "选择上方的列以查看详细统计信息"
+  },
   "welcome": {
     "subtitle": "专业数据库管理器",
     "openSqlite": "打开 SQLite 数据库",

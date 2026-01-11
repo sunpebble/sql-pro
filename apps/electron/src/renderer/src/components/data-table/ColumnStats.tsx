@@ -16,6 +16,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface ColumnStatsProps {
@@ -148,6 +149,8 @@ export const ColumnStats = memo(
       );
     }, [columns, data]);
 
+    const { t } = useTranslation('common');
+
     // Get selected column stats
     const selectedStats = useMemo(() => {
       if (!selectedColumn) return null;
@@ -167,9 +170,21 @@ export const ColumnStats = memo(
         >
           <div className="flex items-center gap-2">
             <BarChart3 className="text-muted-foreground h-3.5 w-3.5" />
-            <span className="text-xs font-medium">Column Statistics</span>
+            <span className="text-xs font-medium">
+              {t('table.columnStats', { defaultValue: 'Column Statistics' })}
+            </span>
             <span className="text-muted-foreground text-[10px]">
-              ({columns.length} columns, {data.length} rows)
+              (
+              {t('table.columnsCount', {
+                count: columns.length,
+                defaultValue: '{{count}} columns',
+              })}
+              ,{' '}
+              {t('table.rowsCount', {
+                count: data.length,
+                defaultValue: '{{count}} rows',
+              })}
+              )
             </span>
           </div>
           {isOpen ? (
@@ -314,7 +329,10 @@ export const ColumnStats = memo(
               </div>
             ) : (
               <div className="text-muted-foreground p-4 text-center text-xs">
-                Select a column above to view detailed statistics
+                {t('table.selectColumn', {
+                  defaultValue:
+                    'Select a column above to view detailed statistics',
+                })}
               </div>
             )}
           </div>

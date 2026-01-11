@@ -66,6 +66,14 @@
   "database": {
     "selectTable": "Select a table from the sidebar to view its data"
   },
+  "table": {
+    "quickFilters": "Quick Filters",
+    "rowCount": "{{count}} rows",
+    "columnStats": "Column Statistics",
+    "columnsCount": "{{count}} columns",
+    "rowsCount": "{{count}} rows",
+    "selectColumn": "Select a column above to view detailed statistics"
+  },
   "welcome": {
     "subtitle": "Professional Database Manager",
     "openSqlite": "Open SQLite Database",
