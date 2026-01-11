@@ -114,6 +114,19 @@
     "no": "No",
     "columnsLabel": "Columns:"
   },
+  "toolbar": {
+    "unsavedChanges": "{{count}} unsaved change",
+    "unsavedChanges_plural": "{{count}} unsaved changes",
+    "commands": "Commands",
+    "openCommandPalette": "Open command palette",
+    "help": "Help",
+    "takeATour": "Take a Tour",
+    "layoutOptions": "Layout Options",
+    "panels": "Panels",
+    "sidebar": "Sidebar",
+    "schemaDetails": "Schema Details",
+    "sqlLog": "SQL Log"
+  },
   "welcome": {
     "subtitle": "Professional Database Manager",
     "openSqlite": "Open SQLite Database",

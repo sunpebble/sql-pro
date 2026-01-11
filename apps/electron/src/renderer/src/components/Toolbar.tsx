@@ -7,6 +7,7 @@ import {
 } from '@sqlpro/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Compass, FileText, HelpCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { LayoutButtons } from '@/components/LayoutButtons';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { TOOLBAR_BUTTON_INTERACTIVE } from '@/lib/utils';
@@ -26,6 +27,7 @@ export function Toolbar() {
   const { hasChanges, changes } = useChangesStore();
   const { startTour } = useOnboardingStore();
   const openChangesPanel = useDialogStore((s) => s.openChangesPanel);
+  const { t } = useTranslation('common');
 
   if (!connection) return null;
 
@@ -42,7 +44,11 @@ export function Toolbar() {
         >
           <FileText className="h-4 w-4" />
           <span>
-            {changes.length} unsaved change{changes.length !== 1 ? 's' : ''}
+            {t('toolbar.unsavedChanges', {
+              count: changes.length,
+              defaultValue: '{{count}} unsaved change',
+              defaultValue_plural: '{{count}} unsaved changes',
+            })}
           </span>
         </button>
       )}
@@ -68,11 +74,15 @@ export function Toolbar() {
             }}
             className={`text-muted-foreground h-7 gap-1.5 text-xs ${TOOLBAR_BUTTON_INTERACTIVE}`}
           >
-            <span>Commands</span>
+            <span>{t('toolbar.commands', { defaultValue: 'Commands' })}</span>
             <ShortcutKbd action="action.command-palette" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Open command palette</TooltipContent>
+        <TooltipContent>
+          {t('toolbar.openCommandPalette', {
+            defaultValue: 'Open command palette',
+          })}
+        </TooltipContent>
       </Tooltip>
 
       {/* Help Menu */}
@@ -89,12 +99,14 @@ export function Toolbar() {
               </Button>
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent>Help</TooltipContent>
+          <TooltipContent>
+            {t('toolbar.help', { defaultValue: 'Help' })}
+          </TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={startTour}>
             <Compass className="h-4 w-4" />
-            Take a Tour
+            {t('toolbar.takeATour', { defaultValue: 'Take a Tour' })}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

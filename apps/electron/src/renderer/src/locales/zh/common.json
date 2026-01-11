@@ -114,6 +114,18 @@
     "no": "否",
     "columnsLabel": "列:"
   },
+  "toolbar": {
+    "unsavedChanges": "{{count}} 个未保存的更改",
+    "commands": "命令",
+    "openCommandPalette": "打开命令面板",
+    "help": "帮助",
+    "takeATour": "开始导览",
+    "layoutOptions": "布局选项",
+    "panels": "面板",
+    "sidebar": "侧边栏",
+    "schemaDetails": "结构详情",
+    "sqlLog": "SQL 日志"
+  },
   "welcome": {
     "subtitle": "专业数据库管理器",
     "openSqlite": "打开 SQLite 数据库",

@@ -9,6 +9,7 @@ import {
 } from '@sqlpro/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { LayoutGrid } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { TOOLBAR_BUTTON_INTERACTIVE } from '@/lib/utils';
 import { useSettingsStore } from '@/stores';
@@ -29,6 +30,8 @@ export function LayoutButtons() {
   const { isVisible: sqlLogVisible, toggleVisible: toggleSqlLog } =
     useSqlLogStore();
 
+  const { t } = useTranslation('common');
+
   return (
     <DropdownMenu>
       <Tooltip>
@@ -43,17 +46,21 @@ export function LayoutButtons() {
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent side="bottom">Layout Options</TooltipContent>
+        <TooltipContent side="bottom">
+          {t('toolbar.layoutOptions', { defaultValue: 'Layout Options' })}
+        </TooltipContent>
       </Tooltip>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>Panels</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {t('toolbar.panels', { defaultValue: 'Panels' })}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
           checked={!sidebarCollapsed}
           onCheckedChange={() => toggleSidebar()}
         >
           <div className="flex items-center justify-between gap-4">
-            <span>Sidebar</span>
+            <span>{t('toolbar.sidebar', { defaultValue: 'Sidebar' })}</span>
             <ShortcutKbd action="nav.toggle-sidebar" className="ml-auto" />
           </div>
         </DropdownMenuCheckboxItem>
@@ -62,7 +69,9 @@ export function LayoutButtons() {
           onCheckedChange={() => toggleSchemaDetails()}
         >
           <div className="flex items-center justify-between gap-4">
-            <span>Schema Details</span>
+            <span>
+              {t('toolbar.schemaDetails', { defaultValue: 'Schema Details' })}
+            </span>
             <ShortcutKbd
               action="view.toggle-schema-details"
               className="ml-auto"
@@ -73,7 +82,7 @@ export function LayoutButtons() {
           checked={sqlLogVisible}
           onCheckedChange={() => toggleSqlLog()}
         >
-          <span>SQL Log</span>
+          <span>{t('toolbar.sqlLog', { defaultValue: 'SQL Log' })}</span>
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
