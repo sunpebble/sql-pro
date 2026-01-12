@@ -4,6 +4,9 @@ import type { sqlPro } from '@/lib/api';
 
 interface ImportMetaEnv {
   readonly VITE_MOCK_MODE?: string;
+  readonly DEV: boolean;
+  readonly PROD: boolean;
+  readonly MODE: string;
 }
 
 interface ImportMeta {

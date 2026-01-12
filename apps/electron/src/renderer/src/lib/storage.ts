@@ -201,6 +201,8 @@ export function persistConnectionUi(
 
 export function persistOnboarding(onboarding: RendererOnboardingState): void {
   cache.onboarding = onboarding;
+  // Skip persistence in development mode to always trigger tour on restart
+  if (import.meta.env.DEV) return;
   if (!isElectronEnvironment()) return;
   window.sqlPro.rendererStore
     .set({ key: 'onboarding', value: onboarding })
@@ -254,7 +256,8 @@ export function hydrateStores(): void {
   if (cache.connectionUi && storeHydrators.connectionUi) {
     storeHydrators.connectionUi(cache.connectionUi);
   }
-  if (cache.onboarding && storeHydrators.onboarding) {
+  // Skip onboarding hydration in development mode to always trigger tour
+  if (cache.onboarding && storeHydrators.onboarding && !import.meta.env.DEV) {
     storeHydrators.onboarding(cache.onboarding);
   }
 }
