@@ -1374,7 +1374,7 @@ function TableItem({
         <button
           onClick={onClick}
           className={cn(
-            'flex w-full items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 transition-colors',
+            'flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 transition-colors',
             isSelected
               ? 'bg-primary/15 text-primary font-medium'
               : 'hover:bg-accent/50 text-foreground/90',
