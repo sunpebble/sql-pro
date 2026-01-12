@@ -58,7 +58,9 @@ export function setupExportHandlers(): void {
         } else if (request.format === 'sql') {
           output = generateSQL(rows, columns, { tableName: request.table });
         } else if (request.format === 'xlsx') {
-          output = generateExcel(rows, columns, { sheetName: request.table });
+          output = await generateExcel(rows, columns, {
+            sheetName: request.table,
+          });
         }
 
         return {

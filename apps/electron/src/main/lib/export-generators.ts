@@ -4,9 +4,8 @@ import { Buffer } from 'node:buffer';
  * Export generators for various data formats.
  * These utilities convert row data to different export formats (CSV, JSON, SQL, Excel).
  */
+import ExcelJS from 'exceljs';
 import Papa from 'papaparse';
-
-import * as XLSX from 'xlsx';
 
 // ============ CSV Generator ============
 
@@ -216,49 +215,49 @@ export interface ExcelExportOptions {
 }
 
 /**
- * Generates Excel (.xlsx) content from row data using SheetJS.
+ * Generates Excel (.xlsx) content from row data using ExcelJS.
  *
  * @param rows - Array of data objects to export
  * @param allColumns - All available column definitions
  * @param options - Excel export configuration
- * @returns Buffer containing the Excel file data
+ * @returns Promise resolving to Buffer containing the Excel file data
  */
-export function generateExcel(
+export async function generateExcel(
   rows: Record<string, unknown>[],
   allColumns: ColumnInfo[],
   options: ExcelExportOptions = {}
-): Buffer {
+): Promise<Buffer> {
   const { columns, sheetName = 'Sheet1' } = options;
 
   // Determine which columns to include
   const columnNames = columns ?? allColumns.map((c) => c.name);
 
-  // Filter rows to only include selected columns
-  const filteredRows = rows.map((row) => {
+  // Create a new workbook
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet(sheetName);
+
+  // Add header row
+  worksheet.columns = columnNames.map((name) => ({
+    header: name,
+    key: name,
+    width: 15,
+  }));
+
+  // Add data rows
+  for (const row of rows) {
     const filteredRow: Record<string, unknown> = {};
     for (const col of columnNames) {
       filteredRow[col] = row[col];
     }
-    return filteredRow;
-  });
+    worksheet.addRow(filteredRow);
+  }
 
-  // Create a new workbook
-  const workbook = XLSX.utils.book_new();
+  // Style the header row
+  const headerRow = worksheet.getRow(1);
+  headerRow.font = { bold: true };
+  headerRow.commit();
 
-  // Convert data to worksheet
-  const worksheet = XLSX.utils.json_to_sheet(filteredRows, {
-    header: columnNames,
-  });
-
-  // Append worksheet to workbook
-  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-
-  // Write workbook to buffer with compression enabled for smaller file sizes
-  const buffer = XLSX.write(workbook, {
-    type: 'buffer',
-    bookType: 'xlsx',
-    compression: true,
-  });
-
-  return buffer;
+  // Write workbook to buffer
+  const arrayBuffer = await workbook.xlsx.writeBuffer();
+  return Buffer.from(arrayBuffer);
 }
