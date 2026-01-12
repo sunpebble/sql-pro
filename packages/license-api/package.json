@@ -9,14 +9,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@libsql/client": "^0.14.0",
-    "hono": "^4.6.0",
-    "nanoid": "^5.0.0",
-    "stripe": "^17.0.0"
+    "@libsql/client": "^0.17.0",
+    "hono": "^4.11.3",
+    "nanoid": "^5.1.6",
+    "stripe": "^20.1.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241112.0",
-    "typescript": "^5.7.0",
-    "wrangler": "^3.92.0"
+    "@cloudflare/workers-types": "^4.20260111.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.58.0"
   }
 }
