@@ -1,9 +1,26 @@
 import type { ChangeType, PendingChange } from '@/types/database';
 import { create } from 'zustand';
 
+/**
+ * Creates a composite key for indexing changes by table+rowId+connectionId.
+ * This enables O(1) lookups instead of O(n) array searches.
+ */
+function createChangeKey(
+  table: string,
+  rowId: string | number,
+  connectionId?: string
+): string {
+  return connectionId
+    ? `${connectionId}:${table}:${rowId}`
+    : `*:${table}:${rowId}`;
+}
+
 interface ChangesState {
   // Pending changes (now includes connectionId)
   changes: PendingChange[];
+
+  // Index for O(1) lookups by table+rowId+connectionId
+  changeIndex: Map<string, PendingChange>;
 
   // Validation state
   isValidating: boolean;
@@ -43,65 +60,84 @@ function generateChangeId(): string {
 
 export const useChangesStore = create<ChangesState>((set, get) => ({
   changes: [],
+  changeIndex: new Map(),
   isValidating: false,
   isApplying: false,
 
   addChange: (change) => {
-    const existingChange = get().getChangeForRow(
+    const key = createChangeKey(
       change.table,
       change.rowId,
       change.connectionId
     );
+    const existingChange = get().changeIndex.get(key);
 
     if (existingChange) {
       // Merge with existing change
       if (change.type === 'delete') {
         // If we're deleting a newly inserted row, just remove the insert
         if (existingChange.type === 'insert') {
-          set((state) => ({
-            changes: state.changes.filter((c) => c.id !== existingChange.id),
-          }));
+          set((state) => {
+            const newIndex = new Map(state.changeIndex);
+            newIndex.delete(key);
+            return {
+              changes: state.changes.filter((c) => c.id !== existingChange.id),
+              changeIndex: newIndex,
+            };
+          });
           return;
         }
         // Otherwise, update to delete
-        set((state) => ({
-          changes: state.changes.map((c) =>
-            c.id === existingChange.id
-              ? {
-                  ...c,
-                  type: 'delete' as ChangeType,
-                  newValues: null,
-                  timestamp: new Date(),
-                }
-              : c
-          ),
-        }));
+        set((state) => {
+          const updatedChange = {
+            ...existingChange,
+            type: 'delete' as ChangeType,
+            newValues: null,
+            timestamp: new Date(),
+          };
+          const newIndex = new Map(state.changeIndex);
+          newIndex.set(key, updatedChange);
+          return {
+            changes: state.changes.map((c) =>
+              c.id === existingChange.id ? updatedChange : c
+            ),
+            changeIndex: newIndex,
+          };
+        });
       } else if (change.type === 'update') {
         // Merge updates
-        set((state) => ({
-          changes: state.changes.map((c) =>
-            c.id === existingChange.id
-              ? {
-                  ...c,
-                  newValues: { ...c.newValues, ...change.newValues },
-                  timestamp: new Date(),
-                }
-              : c
-          ),
-        }));
+        set((state) => {
+          const updatedChange = {
+            ...existingChange,
+            newValues: { ...existingChange.newValues, ...change.newValues },
+            timestamp: new Date(),
+          };
+          const newIndex = new Map(state.changeIndex);
+          newIndex.set(key, updatedChange);
+          return {
+            changes: state.changes.map((c) =>
+              c.id === existingChange.id ? updatedChange : c
+            ),
+            changeIndex: newIndex,
+          };
+        });
       } else if (change.type === 'insert' && existingChange.type === 'insert') {
         // Update existing insert with new values
-        set((state) => ({
-          changes: state.changes.map((c) =>
-            c.id === existingChange.id
-              ? {
-                  ...c,
-                  newValues: { ...c.newValues, ...change.newValues },
-                  timestamp: new Date(),
-                }
-              : c
-          ),
-        }));
+        set((state) => {
+          const updatedChange = {
+            ...existingChange,
+            newValues: { ...existingChange.newValues, ...change.newValues },
+            timestamp: new Date(),
+          };
+          const newIndex = new Map(state.changeIndex);
+          newIndex.set(key, updatedChange);
+          return {
+            changes: state.changes.map((c) =>
+              c.id === existingChange.id ? updatedChange : c
+            ),
+            changeIndex: newIndex,
+          };
+        });
       }
     } else {
       // Add new change
@@ -111,34 +147,77 @@ export const useChangesStore = create<ChangesState>((set, get) => ({
         timestamp: new Date(),
         isValid: true,
       };
-      set((state) => ({
-        changes: [...state.changes, newChange],
-      }));
+      set((state) => {
+        const newIndex = new Map(state.changeIndex);
+        newIndex.set(key, newChange);
+        return {
+          changes: [...state.changes, newChange],
+          changeIndex: newIndex,
+        };
+      });
     }
   },
 
   updateChange: (id, updates) =>
-    set((state) => ({
-      changes: state.changes.map((c) =>
+    set((state) => {
+      const updatedChanges = state.changes.map((c) =>
         c.id === id ? { ...c, ...updates } : c
-      ),
-    })),
+      );
+      // Rebuild index with updated changes
+      const newIndex = new Map<string, PendingChange>();
+      for (const change of updatedChanges) {
+        const key = createChangeKey(
+          change.table,
+          change.rowId,
+          change.connectionId
+        );
+        newIndex.set(key, change);
+      }
+      return { changes: updatedChanges, changeIndex: newIndex };
+    }),
 
   removeChange: (id) =>
-    set((state) => ({
-      changes: state.changes.filter((c) => c.id !== id),
-    })),
+    set((state) => {
+      const changeToRemove = state.changes.find((c) => c.id === id);
+      if (!changeToRemove) return state;
 
-  clearChanges: () => set({ changes: [] }),
+      const key = createChangeKey(
+        changeToRemove.table,
+        changeToRemove.rowId,
+        changeToRemove.connectionId
+      );
+      const newIndex = new Map(state.changeIndex);
+      newIndex.delete(key);
+
+      return {
+        changes: state.changes.filter((c) => c.id !== id),
+        changeIndex: newIndex,
+      };
+    }),
+
+  clearChanges: () => set({ changes: [], changeIndex: new Map() }),
 
   clearChangesForConnection: (connectionId) =>
-    set((state) => ({
-      changes: state.changes.filter((c) => c.connectionId !== connectionId),
-    })),
+    set((state) => {
+      const remainingChanges = state.changes.filter(
+        (c) => c.connectionId !== connectionId
+      );
+      // Rebuild index with remaining changes
+      const newIndex = new Map<string, PendingChange>();
+      for (const change of remainingChanges) {
+        const key = createChangeKey(
+          change.table,
+          change.rowId,
+          change.connectionId
+        );
+        newIndex.set(key, change);
+      }
+      return { changes: remainingChanges, changeIndex: newIndex };
+    }),
 
   setValidationResult: (results) =>
-    set((state) => ({
-      changes: state.changes.map((c) => {
+    set((state) => {
+      const updatedChanges = state.changes.map((c) => {
         const result = results.find((r) => r.changeId === c.id);
         if (result) {
           return {
@@ -148,8 +227,19 @@ export const useChangesStore = create<ChangesState>((set, get) => ({
           };
         }
         return c;
-      }),
-    })),
+      });
+      // Rebuild index with updated changes
+      const newIndex = new Map<string, PendingChange>();
+      for (const change of updatedChanges) {
+        const key = createChangeKey(
+          change.table,
+          change.rowId,
+          change.connectionId
+        );
+        newIndex.set(key, change);
+      }
+      return { changes: updatedChanges, changeIndex: newIndex };
+    }),
 
   setIsValidating: (isValidating) => set({ isValidating }),
   setIsApplying: (isApplying) => set({ isApplying }),
@@ -170,16 +260,19 @@ export const useChangesStore = create<ChangesState>((set, get) => ({
   getChangesForConnection: (connectionId) =>
     get().changes.filter((c) => c.connectionId === connectionId),
 
+  // O(1) lookup using the index instead of O(n) array search
   getChangeForRow: (table, rowId, connectionId) => {
-    const changes = get().changes;
-    if (connectionId) {
-      return changes.find(
-        (c) =>
-          c.table === table &&
-          c.rowId === rowId &&
-          c.connectionId === connectionId
-      );
+    const key = createChangeKey(table, rowId, connectionId);
+    const indexed = get().changeIndex.get(key);
+    if (indexed) return indexed;
+
+    // Fallback for lookups without connectionId - check all keys ending with table:rowId
+    if (!connectionId) {
+      const suffix = `:${table}:${rowId}`;
+      for (const [k, v] of get().changeIndex) {
+        if (k.endsWith(suffix)) return v;
+      }
     }
-    return changes.find((c) => c.table === table && c.rowId === rowId);
+    return undefined;
   },
 }));
