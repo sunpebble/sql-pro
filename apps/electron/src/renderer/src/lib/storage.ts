@@ -159,6 +159,7 @@ export function getCachedOnboarding(): RendererOnboardingState | null {
 
 export function persistSettings(settings: RendererSettingsState): void {
   cache.settings = settings;
+  if (!isElectronEnvironment()) return;
   window.sqlPro.rendererStore
     .set({ key: 'settings', value: settings })
     .catch((error: unknown) => {
@@ -168,6 +169,7 @@ export function persistSettings(settings: RendererSettingsState): void {
 
 export function persistDiagram(diagram: RendererDiagramState): void {
   cache.diagram = diagram;
+  if (!isElectronEnvironment()) return;
   window.sqlPro.rendererStore
     .set({ key: 'diagram', value: diagram })
     .catch((error: unknown) => {
@@ -177,6 +179,7 @@ export function persistDiagram(diagram: RendererDiagramState): void {
 
 export function persistPanelWidths(panelWidths: RendererPanelWidths): void {
   cache.panelWidths = panelWidths;
+  if (!isElectronEnvironment()) return;
   window.sqlPro.rendererStore
     .set({ key: 'panelWidths', value: panelWidths })
     .catch((error: unknown) => {
@@ -188,6 +191,7 @@ export function persistConnectionUi(
   connectionUi: RendererConnectionState
 ): void {
   cache.connectionUi = connectionUi;
+  if (!isElectronEnvironment()) return;
   window.sqlPro.rendererStore
     .set({ key: 'connectionUi', value: connectionUi })
     .catch((error: unknown) => {
@@ -197,6 +201,7 @@ export function persistConnectionUi(
 
 export function persistOnboarding(onboarding: RendererOnboardingState): void {
   cache.onboarding = onboarding;
+  if (!isElectronEnvironment()) return;
   window.sqlPro.rendererStore
     .set({ key: 'onboarding', value: onboarding })
     .catch((error: unknown) => {
