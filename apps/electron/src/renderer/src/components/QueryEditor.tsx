@@ -39,6 +39,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DataAnalysisPanel, NLToSQLDialog } from '@/components/ai';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import {
@@ -88,6 +89,7 @@ function formatDuration(ms: number): string {
 }
 
 export function QueryEditor() {
+  const { t } = useTranslation('common');
   const { connection, schema, activeConnectionId } = useConnectionStore();
   const {
     currentQuery,
@@ -389,9 +391,9 @@ export function QueryEditor() {
       {/* Editor Header */}
       <div className="flex min-w-0 items-center justify-between gap-4 border-b px-4 py-2">
         <div className="flex shrink-0 items-center gap-2">
-          <h2 className="font-medium">SQL Query</h2>
+          <h2 className="font-medium">{t('queryEditor.title')}</h2>
           <span className="text-muted-foreground hidden text-xs sm:inline">
-            Cmd/Ctrl+Enter to execute
+            {t('queryEditor.executeHint')}
           </span>
         </div>
         <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-1">
@@ -400,7 +402,7 @@ export function QueryEditor() {
             <DropdownMenuTrigger>
               <Button variant="ghost" size="sm" className="gap-1">
                 <Sparkles className="h-4 w-4" />
-                AI
+                {t('queryEditor.ai')}
                 {!isAIConfigured && (
                   <span className="bg-warning ml-1 h-1.5 w-1.5 rounded-full" />
                 )}
@@ -409,14 +411,14 @@ export function QueryEditor() {
             <DropdownMenuContent align="end" className="min-w-50">
               <DropdownMenuItem onClick={() => setShowNLToSQL(true)}>
                 <Wand2 className="mr-2 h-4 w-4" />
-                Natural Language to SQL
+                {t('queryEditor.nlToSql')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setShowDataAnalysis(true)}
                 disabled={!tabResults}
               >
                 <BarChart3 className="mr-2 h-4 w-4" />
-                Analyze Results
+                {t('queryEditor.analyzeResults')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -425,7 +427,7 @@ export function QueryEditor() {
             <DropdownMenuTrigger>
               <Button variant="ghost" size="sm" className="gap-1">
                 <Share2 className="h-4 w-4" />
-                Share
+                {t('queryEditor.share')}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-40">
@@ -434,11 +436,11 @@ export function QueryEditor() {
                 disabled={!tabQuery.trim()}
               >
                 <FileDown className="mr-2 h-4 w-4" />
-                Export Query
+                {t('queryEditor.exportQuery')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setShowQueryImport(true)}>
                 <FileUp className="mr-2 h-4 w-4" />
-                Import Query
+                {t('queryEditor.importQuery')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -449,7 +451,7 @@ export function QueryEditor() {
             className="gap-1"
           >
             <Code className="h-4 w-4" />
-            Templates
+            {t('queryEditor.templates')}
           </Button>
           <Button
             variant="ghost"
@@ -459,7 +461,7 @@ export function QueryEditor() {
             data-action="toggle-history"
           >
             <History className="h-4 w-4" />
-            History
+            {t('queryEditor.history')}
             <ShortcutKbd action="view.toggle-history" className="ml-1" />
           </Button>
           <Button
@@ -471,7 +473,7 @@ export function QueryEditor() {
             title="Analyze query execution plan"
           >
             <Zap className="h-4 w-4" />
-            Analyze
+            {t('queryEditor.analyze')}
           </Button>
           <Button
             size="sm"
@@ -485,7 +487,7 @@ export function QueryEditor() {
             ) : (
               <Play className="h-4 w-4" />
             )}
-            Execute
+            {t('queryEditor.execute')}
           </Button>
         </div>
       </div>
@@ -603,7 +605,7 @@ export function QueryEditor() {
                   </div>
                 ) : (
                   <div className="text-muted-foreground flex h-full items-center justify-center">
-                    <p>Execute a query to see results</p>
+                    <p>{t('queryEditor.noResults')}</p>
                   </div>
                 )}
               </div>

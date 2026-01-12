@@ -400,5 +400,53 @@
         "description": "分析并优化 SQL 查询以获得更好的性能"
       }
     }
+  },
+  "queryEditor": {
+    "title": "SQL 查询",
+    "executeHint": "Cmd/Ctrl+Enter 执行",
+    "ai": "AI",
+    "nlToSql": "自然语言转 SQL",
+    "analyzeResults": "分析结果",
+    "share": "分享",
+    "exportQuery": "导出查询",
+    "importQuery": "导入查询",
+    "templates": "模板",
+    "history": "历史",
+    "analyze": "分析",
+    "execute": "执行",
+    "noResults": "执行查询以查看结果"
+  },
+  "tour": {
+    "step": "第 {{current}} 步，共 {{total}} 步",
+    "skip": "跳过导览",
+    "next": "下一步",
+    "previous": "上一步",
+    "finish": "完成",
+    "steps": {
+      "schemaBrowser": {
+        "title": "结构浏览器",
+        "description": "在这里浏览您的数据库结构。浏览表、视图并搜索特定对象。点击任意表以查看其数据。"
+      },
+      "dataBrowser": {
+        "title": "数据浏览器",
+        "description": "使用强大的类电子表格界面查看和编辑表数据。排序、筛选和内联修改数据。更改会被跟踪，可在保存前预览。"
+      },
+      "queryEditor": {
+        "title": "查询编辑器",
+        "description": "编写和执行带有语法高亮和自动补全的 SQL 查询。支持 Vim 模式进行键盘驱动编辑。"
+      },
+      "erDiagram": {
+        "title": "ER 图",
+        "description": "使用交互式实体关系图可视化您的数据库架构。一目了然地查看表关系和外键。"
+      },
+      "compare": {
+        "title": "对比",
+        "description": "比较不同连接之间的数据库架构和数据。识别表、列和行中的差异。自动生成迁移脚本。"
+      },
+      "commandPalette": {
+        "title": "命令面板与设置",
+        "description": "按 ⌘K（或 Ctrl+K）打开命令面板，快速访问所有操作。访问设置来自定义主题、字体、Vim 模式、键盘快捷键等！"
+      }
+    }
   }
 }

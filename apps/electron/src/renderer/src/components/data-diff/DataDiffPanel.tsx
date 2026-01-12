@@ -305,7 +305,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                     }}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select connection...">
+                      <SelectValue placeholder={t('compare.selectConnection')}>
                         {source?.connectionId
                           ? connections.find(
                               (c) => c.id === source.connectionId
@@ -342,7 +342,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                     }
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select table...">
+                      <SelectValue placeholder={t('compare.selectTable')}>
                         {source?.tableName ? (
                           <div className="flex items-center gap-2">
                             <Table2 className="h-3 w-3 shrink-0" />
@@ -401,7 +401,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                     }}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select connection...">
+                      <SelectValue placeholder={t('compare.selectConnection')}>
                         {target?.connectionId
                           ? connections.find(
                               (c) => c.id === target.connectionId
@@ -438,7 +438,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                     }
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select table...">
+                      <SelectValue placeholder={t('compare.selectTable')}>
                         {target?.tableName ? (
                           <div className="flex items-center gap-2">
                             <Table2 className="h-3 w-3 shrink-0" />

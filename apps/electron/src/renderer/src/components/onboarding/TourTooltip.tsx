@@ -2,6 +2,7 @@ import type { TourStep, TourStepPlacement } from '@/types/onboarding';
 import { Button } from '@sqlpro/ui/button';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 interface TooltipPosition {
@@ -178,6 +179,7 @@ export function TourTooltip({
   hasNext,
   hasPrevious,
 }: TourTooltipProps) {
+  const { t } = useTranslation('common');
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipState, setTooltipState] = useState<TooltipState>({
     position: { top: 0, left: 0 },
@@ -297,14 +299,14 @@ export function TourTooltip({
       {/* Header with step indicator and close button */}
       <div className="border-border/50 flex items-center justify-between border-b px-4 py-3">
         <span className="text-muted-foreground text-xs font-medium">
-          Step {stepNumber} of {totalSteps}
+          {t('tour.step', { current: stepNumber, total: totalSteps })}
         </span>
         <Button
           variant="ghost"
           size="icon-xs"
           onClick={onSkip}
           className="text-muted-foreground hover:text-foreground -mr-1"
-          aria-label="Skip tour"
+          aria-label={t('tour.skip')}
         >
           <X className="h-3.5 w-3.5" />
         </Button>
@@ -337,7 +339,7 @@ export function TourTooltip({
               className="gap-1"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span>Back</span>
+              <span>{t('tour.previous')}</span>
             </Button>
           )}
         </div>
@@ -350,7 +352,7 @@ export function TourTooltip({
               onClick={onSkip}
               className="text-muted-foreground"
             >
-              Skip tour
+              {t('tour.skip')}
             </Button>
           )}
           <Button
@@ -360,10 +362,10 @@ export function TourTooltip({
             className="gap-1"
           >
             {isLastStep ? (
-              <span>Finish</span>
+              <span>{t('tour.finish')}</span>
             ) : (
               <>
-                <span>Next</span>
+                <span>{t('tour.next')}</span>
                 <ChevronRight className="h-4 w-4" />
               </>
             )}

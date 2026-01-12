@@ -792,7 +792,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                   {sortOption === 'name-desc' && 'Z-A'}
                   {sortOption === 'row-count-asc' && 'Rows ↑'}
                   {sortOption === 'row-count-desc' && 'Rows ↓'}
-                  {sortOption === 'custom' && 'Custom'}
+                  {sortOption === 'custom' && t('sort.custom')}
                 </span>
               </Button>
             </DropdownMenuTrigger>
@@ -802,7 +802,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 className="whitespace-nowrap"
               >
                 <ArrowDownAZ className="mr-2 h-4 w-4" />
-                Name (A-Z)
+                {t('sort.nameAsc')}
                 {sortOption === 'name-asc' && (
                   <Check className="ml-auto h-4 w-4" />
                 )}
@@ -812,7 +812,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 className="whitespace-nowrap"
               >
                 <ArrowUpAZ className="mr-2 h-4 w-4" />
-                Name (Z-A)
+                {t('sort.nameDesc')}
                 {sortOption === 'name-desc' && (
                   <Check className="ml-auto h-4 w-4" />
                 )}
@@ -822,7 +822,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 onClick={() => setSortOption('row-count-asc')}
                 className="whitespace-nowrap"
               >
-                Row Count (Low to High)
+                {t('sort.rowsAsc')}
                 {sortOption === 'row-count-asc' && (
                   <Check className="ml-auto h-4 w-4" />
                 )}
@@ -831,7 +831,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 onClick={() => setSortOption('row-count-desc')}
                 className="whitespace-nowrap"
               >
-                Row Count (High to Low)
+                {t('sort.rowsDesc')}
                 {sortOption === 'row-count-desc' && (
                   <Check className="ml-auto h-4 w-4" />
                 )}
