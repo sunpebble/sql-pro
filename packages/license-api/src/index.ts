@@ -21,6 +21,7 @@ import {
   updateActivationLastSeen,
   updateLicenseStatus,
 } from './db';
+import { getErrorMessage } from './error-utils';
 import {
   calculatePeriodEnd,
   generateLicenseKey,
@@ -56,7 +57,7 @@ app.post('/api/init', async (c) => {
     await initDb(c.env);
     return c.json({ success: true });
   } catch (error) {
-    return c.json({ success: false, error: (error as Error).message }, 500);
+    return c.json({ success: false, error: getErrorMessage(error) }, 500);
   }
 });
 
@@ -84,7 +85,7 @@ app.post('/api/checkout', async (c) => {
     });
   } catch (error) {
     console.error('Checkout error:', error);
-    return c.json({ success: false, error: (error as Error).message }, 500);
+    return c.json({ success: false, error: getErrorMessage(error) }, 500);
   }
 });
 
@@ -110,7 +111,7 @@ app.post('/api/portal', async (c) => {
     return c.json({ success: true, url: session.url });
   } catch (error) {
     console.error('Portal error:', error);
-    return c.json({ success: false, error: (error as Error).message }, 500);
+    return c.json({ success: false, error: getErrorMessage(error) }, 500);
   }
 });
 
@@ -207,7 +208,7 @@ app.post('/api/license/activate', async (c) => {
     });
   } catch (error) {
     console.error('Activation error:', error);
-    return c.json({ success: false, error: (error as Error).message }, 500);
+    return c.json({ success: false, error: getErrorMessage(error) }, 500);
   }
 });
 
@@ -274,7 +275,7 @@ app.post('/api/license/verify', async (c) => {
     console.error('Verify error:', error);
     return c.json<VerifyResponse>({
       valid: false,
-      error: (error as Error).message,
+      error: getErrorMessage(error),
     });
   }
 });
@@ -296,7 +297,7 @@ app.post('/api/license/deactivate', async (c) => {
     return c.json({ success: true });
   } catch (error) {
     console.error('Deactivate error:', error);
-    return c.json({ success: false, error: (error as Error).message }, 500);
+    return c.json({ success: false, error: getErrorMessage(error) }, 500);
   }
 });
 
@@ -401,7 +402,7 @@ app.post('/api/webhooks/stripe', async (c) => {
     return c.json({ received: true });
   } catch (error) {
     console.error('Webhook error:', error);
-    return c.json({ error: (error as Error).message }, 400);
+    return c.json({ error: getErrorMessage(error) }, 400);
   }
 });
 

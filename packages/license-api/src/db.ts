@@ -1,4 +1,4 @@
-import type { Client } from '@libsql/client';
+import type { Client, Row } from '@libsql/client';
 import type { Env, License, MachineActivation } from './types';
 import { createClient } from '@libsql/client';
 
@@ -12,6 +12,73 @@ export function getDb(env: Env): Client {
     });
   }
   return dbClient;
+}
+
+// ============ Type-Safe Row Parsers ============
+
+/**
+ * Safely extracts a string value from a database row.
+ */
+function getString(row: Row, key: string): string {
+  const value = row[key];
+  if (typeof value === 'string') return value;
+  if (value === null || value === undefined) return '';
+  return String(value);
+}
+
+/**
+ * Safely extracts a nullable string value from a database row.
+ */
+function getStringOrNull(row: Row, key: string): string | null {
+  const value = row[key];
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'string') return value;
+  return String(value);
+}
+
+/**
+ * Safely extracts a number value from a database row.
+ */
+function getNumber(row: Row, key: string): number {
+  const value = row[key];
+  if (typeof value === 'number') return value;
+  if (typeof value === 'bigint') return Number(value);
+  if (typeof value === 'string') return Number.parseInt(value, 10) || 0;
+  return 0;
+}
+
+/**
+ * Parses a database row into a License object with runtime validation.
+ */
+function parseLicenseRow(row: Row): License {
+  return {
+    id: getString(row, 'id'),
+    email: getString(row, 'email'),
+    license_key: getString(row, 'license_key'),
+    stripe_customer_id: getString(row, 'stripe_customer_id'),
+    stripe_subscription_id: getStringOrNull(row, 'stripe_subscription_id'),
+    plan: getString(row, 'plan') as License['plan'],
+    status: getString(row, 'status') as License['status'],
+    current_period_end: getString(row, 'current_period_end'),
+    max_machines: getNumber(row, 'max_machines'),
+    created_at: getString(row, 'created_at'),
+    updated_at: getString(row, 'updated_at'),
+  };
+}
+
+/**
+ * Parses a database row into a MachineActivation object with runtime validation.
+ */
+function parseMachineActivationRow(row: Row): MachineActivation {
+  return {
+    id: getString(row, 'id'),
+    license_id: getString(row, 'license_id'),
+    machine_id: getString(row, 'machine_id'),
+    platform: getString(row, 'platform'),
+    hostname: getString(row, 'hostname'),
+    activated_at: getString(row, 'activated_at'),
+    last_seen_at: getString(row, 'last_seen_at'),
+  };
 }
 
 // Initialize database schema
@@ -101,7 +168,7 @@ export async function getLicenseByKey(
   });
 
   if (result.rows.length === 0) return null;
-  return result.rows[0] as unknown as License;
+  return parseLicenseRow(result.rows[0]);
 }
 
 export async function getLicenseByEmail(
@@ -115,7 +182,7 @@ export async function getLicenseByEmail(
   });
 
   if (result.rows.length === 0) return null;
-  return result.rows[0] as unknown as License;
+  return parseLicenseRow(result.rows[0]);
 }
 
 export async function getLicenseByStripeCustomer(
@@ -129,7 +196,7 @@ export async function getLicenseByStripeCustomer(
   });
 
   if (result.rows.length === 0) return null;
-  return result.rows[0] as unknown as License;
+  return parseLicenseRow(result.rows[0]);
 }
 
 export async function updateLicenseStatus(
@@ -165,7 +232,7 @@ export async function getActivationsForLicense(
     args: [licenseId],
   });
 
-  return result.rows as unknown as MachineActivation[];
+  return result.rows.map(parseMachineActivationRow);
 }
 
 export async function getActivation(
@@ -180,7 +247,7 @@ export async function getActivation(
   });
 
   if (result.rows.length === 0) return null;
-  return result.rows[0] as unknown as MachineActivation;
+  return parseMachineActivationRow(result.rows[0]);
 }
 
 export async function createActivation(
