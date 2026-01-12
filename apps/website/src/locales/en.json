@@ -134,6 +134,17 @@
       }
     }
   },
+  "checkout": {
+    "title": "Complete Your Purchase",
+    "close": "Close",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "submit": "Continue to Payment",
+    "processing": "Processing...",
+    "secure": "Secure checkout powered by Stripe",
+    "error": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection."
+  },
   "a11y": {
     "skipToContent": "Skip to main content",
     "languageSelector": "Select language",

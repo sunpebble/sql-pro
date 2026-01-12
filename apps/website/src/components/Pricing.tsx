@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import CheckoutModal from './CheckoutModal';
 import './Pricing.css';
 
 const plans = ['monthly', 'yearly', 'lifetime'] as const;
+type Plan = (typeof plans)[number];
 
 const planIcons: Record<string, JSX.Element> = {
   monthly: (
@@ -57,6 +60,18 @@ const planIcons: Record<string, JSX.Element> = {
 
 export default function Pricing() {
   const { t } = useTranslation();
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSelectPlan = (plan: Plan) => {
+    setSelectedPlan(plan);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPlan(null);
+  };
 
   return (
     <section className="pricing" id="pricing" aria-labelledby="pricing-title">
@@ -116,20 +131,25 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-              <a
-                href="https://github.com/kunish-homelab/sql-pro/releases/latest"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => handleSelectPlan(plan)}
                 className={`btn ${plan === 'yearly' ? 'btn-primary' : 'btn-secondary'} pricing-cta`}
               >
                 {t('pricing.cta')}
-              </a>
+              </button>
             </article>
           ))}
         </div>
 
         <p className="pricing-note">{t('pricing.note')}</p>
       </div>
+
+      <CheckoutModal
+        isOpen={isModalOpen}
+        plan={selectedPlan}
+        onClose={handleCloseModal}
+      />
     </section>
   );
 }
