@@ -1,6 +1,6 @@
 /**
  * License Activation Dialog
- * Allows users to purchase, activate, and manage their Pro license
+ * Smart wizard-style dialog for purchasing, activating, and managing Pro license
  */
 
 import { Badge } from '@sqlpro/ui/badge';
@@ -9,20 +9,18 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@sqlpro/ui/card';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import {
+  ArrowLeft,
   Check,
   CreditCard,
   Crown,
   Key,
   Loader2,
-  Settings,
   Sparkles,
   Star,
   Zap,
@@ -39,11 +37,15 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useLicenseStore } from '@/stores/license-store';
+import { LicenseKeyInput, MIN_LICENSE_KEY_LENGTH } from './pro/LicenseKeyInput';
+import { ProStatusCard } from './pro/ProStatusCard';
 
 interface LicenseActivationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+type DialogView = 'main' | 'purchase' | 'activate' | 'manage';
 
 const PLANS = [
   {
@@ -51,14 +53,16 @@ const PLANS = [
     name: 'Monthly',
     price: '$9.99',
     period: '/month',
-    devices: 2,
-    features: ['All Pro features', 'Priority support', '2 devices'],
+    monthlyPrice: '$9.99',
+    devices: 3,
+    features: ['All Pro features', 'Priority support', '3 devices'],
   },
   {
     id: 'yearly' as const,
     name: 'Yearly',
     price: '$79.99',
     period: '/year',
+    monthlyPrice: '$6.67',
     devices: 3,
     popular: true,
     savings: 'Save 33%',
@@ -69,17 +73,18 @@ const PLANS = [
     name: 'Lifetime',
     price: '$199',
     period: 'one-time',
+    monthlyPrice: null,
     devices: 5,
     features: ['All Pro features', 'Lifetime updates', '5 devices'],
   },
 ];
 
 const PRO_FEATURES = [
-  'AI-powered Natural Language to SQL',
-  'Query optimization suggestions',
-  'Schema comparison & sync',
-  'Advanced data export options',
-  'Priority support',
+  { name: 'AI Natural Language to SQL', icon: Sparkles },
+  { name: 'Query Optimization', icon: Zap },
+  { name: 'Schema Comparison & Sync', icon: Check },
+  { name: 'Advanced Data Export', icon: Check },
+  { name: 'Priority Support', icon: Star },
 ];
 
 export function LicenseActivationDialog({
@@ -93,7 +98,6 @@ export function LicenseActivationDialog({
     isLoading,
     isActivating,
     error,
-    machineId,
     isCached,
     isOffline,
     loadMachineId,
@@ -105,9 +109,7 @@ export function LicenseActivationDialog({
     clearError,
   } = useLicenseStore();
 
-  const [activeTab, setActiveTab] = useState<
-    'purchase' | 'activate' | 'manage'
-  >('purchase');
+  const [view, setView] = useState<DialogView>('main');
   const [email, setEmail] = useState('');
   const [licenseKey, setLicenseKey] = useState('');
   const [selectedPlan, setSelectedPlan] = useState<
@@ -115,24 +117,39 @@ export function LicenseActivationDialog({
   >('yearly');
   const [confirmDeactivate, setConfirmDeactivate] = useState(false);
 
+  // Determine initial view based on license status
   useEffect(() => {
     if (open) {
       loadMachineId();
       verifyLicense();
-      // Auto-switch to manage tab if license is valid
+    }
+  }, [open, loadMachineId, verifyLicense]);
 
+  useEffect(() => {
+    // Wait for verification to complete before setting view
+    if (open && !isLoading) {
       if (isValid) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
-        setActiveTab('manage');
+        setView('manage');
+      } else {
+        setView('main');
       }
     }
-  }, [open, loadMachineId, verifyLicense, isValid]);
+  }, [open, isValid, isLoading]);
+
+  // Reset state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setEmail('');
+      setLicenseKey('');
+      clearError();
+    }
+  }, [open, clearError]);
 
   const handlePurchase = async () => {
     if (!email) return;
     const success = await createCheckout(email, selectedPlan);
     if (success) {
-      // Checkout opened in browser
+      // Checkout opened in browser, optionally close dialog
     }
   };
 
@@ -140,39 +157,284 @@ export function LicenseActivationDialog({
     if (!email || !licenseKey) return;
     const success = await activateLicense(email, licenseKey);
     if (success) {
-      setActiveTab('manage');
+      setView('manage');
     }
   };
 
   const handleDeactivate = async () => {
     await deactivateLicense();
-    setActiveTab('purchase');
+    setView('main');
     setConfirmDeactivate(false);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+  const handleBack = () => {
+    clearError();
+    setView('main');
   };
+
+  const renderMainView = () => (
+    <div className="space-y-6">
+      {/* Hero section */}
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-yellow-500">
+          <Crown className="h-8 w-8 text-white" />
+        </div>
+        <h3 className="text-lg font-semibold">Unlock SQL Pro</h3>
+        <p className="text-muted-foreground text-sm">
+          Get access to all Pro features
+        </p>
+      </div>
+
+      {/* Feature list */}
+      <div className="rounded-lg border p-4">
+        <ul className="space-y-2">
+          {PRO_FEATURES.map((feature) => (
+            <li key={feature.name} className="flex items-center gap-3 text-sm">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/10">
+                <feature.icon className="h-3.5 w-3.5 text-amber-600" />
+              </div>
+              {feature.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Action buttons */}
+      <div className="grid grid-cols-2 gap-3">
+        <Button
+          variant="outline"
+          size="lg"
+          className="h-auto flex-col gap-1 py-4"
+          onClick={() => setView('activate')}
+        >
+          <Key className="h-5 w-5" />
+          <span className="font-medium">I have a license</span>
+          <span className="text-muted-foreground text-xs">
+            Activate existing key
+          </span>
+        </Button>
+        <Button
+          size="lg"
+          className="h-auto flex-col gap-1 bg-gradient-to-r from-amber-500 to-yellow-500 py-4 text-white hover:from-amber-600 hover:to-yellow-600"
+          onClick={() => setView('purchase')}
+        >
+          <CreditCard className="h-5 w-5" />
+          <span className="font-medium">Purchase</span>
+          <span className="text-xs opacity-80">Starting at $6.67/mo</span>
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderPurchaseView = () => (
+    <div className="space-y-4">
+      {/* Back button */}
+      <Button variant="ghost" size="sm" className="-ml-2" onClick={handleBack}>
+        <ArrowLeft className="mr-1 h-4 w-4" />
+        Back
+      </Button>
+
+      {/* Email input */}
+      <div className="space-y-2">
+        <Label htmlFor="purchase-email">Email Address</Label>
+        <Input
+          id="purchase-email"
+          type="email"
+          placeholder="your@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoFocus
+        />
+        <p className="text-muted-foreground text-xs">
+          Your license key will be sent to this email
+        </p>
+      </div>
+
+      {/* Plan selection */}
+      <div className="grid grid-cols-3 gap-2">
+        {PLANS.map((plan) => (
+          <Card
+            key={plan.id}
+            className={cn(
+              'relative cursor-pointer transition-all',
+              selectedPlan === plan.id
+                ? 'ring-primary ring-2'
+                : 'hover:border-primary/50'
+            )}
+            onClick={() => setSelectedPlan(plan.id)}
+          >
+            {plan.popular && (
+              <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 text-xs">
+                <Star className="mr-0.5 h-2.5 w-2.5" />
+                Best
+              </Badge>
+            )}
+            <CardHeader className="p-3 pb-1">
+              <CardTitle className="text-sm">{plan.name}</CardTitle>
+              <CardDescription className="space-y-0.5">
+                <span className="text-foreground text-lg font-bold">
+                  {plan.price}
+                </span>
+                <span className="text-muted-foreground text-xs">
+                  {' '}
+                  {plan.period}
+                </span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-3 pt-0">
+              {plan.savings && (
+                <Badge variant="secondary" className="mb-1 text-xs">
+                  {plan.savings}
+                </Badge>
+              )}
+              <p className="text-muted-foreground text-xs">
+                {plan.devices} devices
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Purchase button */}
+      <Button
+        className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600"
+        size="lg"
+        onClick={handlePurchase}
+        disabled={isLoading || !email}
+      >
+        {isLoading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Zap className="mr-2 h-4 w-4" />
+        )}
+        Continue to Checkout
+      </Button>
+
+      {/* Trust badges */}
+      <div className="text-muted-foreground flex items-center justify-center gap-4 text-xs">
+        <span className="flex items-center gap-1">
+          <Check className="h-3 w-3" />
+          Secure payment
+        </span>
+        <span className="flex items-center gap-1">
+          <Check className="h-3 w-3" />
+          30-day guarantee
+        </span>
+      </div>
+    </div>
+  );
+
+  const renderActivateView = () => (
+    <div className="space-y-4">
+      {/* Back button */}
+      <Button variant="ghost" size="sm" className="-ml-2" onClick={handleBack}>
+        <ArrowLeft className="mr-1 h-4 w-4" />
+        Back
+      </Button>
+
+      <div className="text-center">
+        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
+          <Key className="h-6 w-6 text-amber-600" />
+        </div>
+        <h3 className="font-semibold">Activate Your License</h3>
+        <p className="text-muted-foreground text-sm">
+          Enter the license key from your purchase email
+        </p>
+      </div>
+
+      {/* Email input */}
+      <div className="space-y-2">
+        <Label htmlFor="activate-email">Email Address</Label>
+        <Input
+          id="activate-email"
+          type="email"
+          placeholder="your@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoFocus
+        />
+      </div>
+
+      {/* License key input */}
+      <div className="space-y-2">
+        <Label>License Key</Label>
+        <LicenseKeyInput
+          value={licenseKey}
+          onChange={setLicenseKey}
+          disabled={isActivating}
+        />
+      </div>
+
+      {/* Activate button */}
+      <Button
+        className="w-full"
+        size="lg"
+        onClick={handleActivate}
+        disabled={
+          isActivating || !email || licenseKey.length < MIN_LICENSE_KEY_LENGTH
+        }
+      >
+        {isActivating ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Key className="mr-2 h-4 w-4" />
+        )}
+        Activate License
+      </Button>
+
+      {/* Help text */}
+      <p className="text-muted-foreground text-center text-xs">
+        Can't find your license key?{' '}
+        <a
+          href="mailto:support@sqlpro.dev"
+          className="text-primary hover:underline"
+        >
+          Contact support
+        </a>
+      </p>
+    </div>
+  );
+
+  const renderManageView = () => (
+    <div className="space-y-4">
+      {license && (
+        <ProStatusCard
+          license={{
+            email: license.email,
+            plan: license.plan as 'monthly' | 'yearly' | 'lifetime',
+            status: license.status,
+            expiresAt: license.expiresAt,
+          }}
+          isCached={isCached}
+          isOffline={isOffline}
+          isLoading={isLoading}
+          onManageSubscription={() => openPortal()}
+          onDeactivate={() => setConfirmDeactivate(true)}
+        />
+      )}
+    </div>
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5 text-yellow-500" />
-            {t('pro.title', { defaultValue: 'SQL Pro License' })}
+            <Crown className="h-5 w-5 text-amber-500" />
+            {view === 'manage'
+              ? t('pro.title', { defaultValue: 'SQL Pro License' })
+              : t('pro.getStarted', { defaultValue: 'Get SQL Pro' })}
           </DialogTitle>
-          <DialogDescription>
-            {t('pro.description', {
-              defaultValue: 'Unlock all Pro features with a subscription',
-            })}
-          </DialogDescription>
+          {view !== 'manage' && (
+            <DialogDescription>
+              {t('pro.description', {
+                defaultValue: 'Unlock all Pro features with a subscription',
+              })}
+            </DialogDescription>
+          )}
         </DialogHeader>
 
+        {/* Error display */}
         {error && (
           <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
             {error}
@@ -187,252 +449,19 @@ export function LicenseActivationDialog({
           </div>
         )}
 
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as typeof activeTab)}
-        >
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="purchase" className="flex items-center gap-1">
-              <CreditCard className="h-4 w-4" />
-              {t('pro.purchase', { defaultValue: 'Purchase' })}
-            </TabsTrigger>
-            <TabsTrigger value="activate" className="flex items-center gap-1">
-              <Key className="h-4 w-4" />
-              {t('pro.activate', { defaultValue: 'Activate' })}
-            </TabsTrigger>
-            <TabsTrigger
-              value="manage"
-              className="flex items-center gap-1"
-              disabled={!isValid}
-            >
-              <Settings className="h-4 w-4" />
-              {t('pro.manage', { defaultValue: 'Manage' })}
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Purchase Tab */}
-          <TabsContent value="purchase" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="purchase-email">Email</Label>
-              <Input
-                id="purchase-email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-3">
-              {PLANS.map((plan) => (
-                <Card
-                  key={plan.id}
-                  className={cn(
-                    'relative cursor-pointer transition-all',
-                    selectedPlan === plan.id
-                      ? 'ring-primary ring-2'
-                      : 'hover:border-primary/50'
-                  )}
-                  onClick={() => setSelectedPlan(plan.id)}
-                >
-                  {plan.popular && (
-                    <Badge className="absolute -top-2 left-1/2 -translate-x-1/2">
-                      <Star className="mr-1 h-3 w-3" />
-                      Popular
-                    </Badge>
-                  )}
-                  <CardHeader className="p-4 pb-2">
-                    <CardTitle className="text-lg">{plan.name}</CardTitle>
-                    <CardDescription>
-                      <span className="text-foreground text-2xl font-bold">
-                        {plan.price}
-                      </span>
-                      <span className="text-muted-foreground">
-                        {' '}
-                        {plan.period}
-                      </span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-0">
-                    {plan.savings && (
-                      <Badge variant="secondary" className="mb-2">
-                        {plan.savings}
-                      </Badge>
-                    )}
-                    <p className="text-muted-foreground text-sm">
-                      {plan.devices} devices
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="rounded-lg border p-4">
-              <h4 className="mb-2 flex items-center gap-2 font-medium">
-                <Sparkles className="h-4 w-4 text-yellow-500" />
-                Pro Features
-              </h4>
-              <ul className="space-y-1">
-                {PRO_FEATURES.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2 text-sm">
-                    <Check className="text-primary h-4 w-4" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={handlePurchase}
-              disabled={isLoading || !email}
-            >
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Zap className="mr-2 h-4 w-4" />
-              )}
-              {t('pro.purchaseButton', {
-                defaultValue: 'Continue to Checkout',
-              })}
-            </Button>
-          </TabsContent>
-
-          {/* Activate Tab */}
-          <TabsContent value="activate" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="activate-email">Email</Label>
-              <Input
-                id="activate-email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="license-key">License Key</Label>
-              <Input
-                id="license-key"
-                type="text"
-                placeholder="SQLPRO-XXXX-XXXX-XXXX-XXXX"
-                value={licenseKey}
-                onChange={(e) => setLicenseKey(e.target.value.toUpperCase())}
-                className="font-mono"
-              />
-              <p className="text-muted-foreground text-xs">
-                You received your license key via email after purchase.
-              </p>
-            </div>
-
-            {machineId && (
-              <div className="bg-muted/50 rounded-md p-3">
-                <p className="text-muted-foreground text-xs">
-                  Machine ID:{' '}
-                  <code className="text-foreground">
-                    {machineId.slice(0, 16)}...
-                  </code>
-                </p>
-              </div>
-            )}
-
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={handleActivate}
-              disabled={isActivating || !email || !licenseKey}
-            >
-              {isActivating ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Key className="mr-2 h-4 w-4" />
-              )}
-              {t('pro.activateButton', { defaultValue: 'Activate License' })}
-            </Button>
-          </TabsContent>
-
-          {/* Manage Tab */}
-          <TabsContent value="manage" className="space-y-4">
-            {license && (
-              <>
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <Crown className="h-5 w-5 text-yellow-500" />
-                        Pro License Active
-                      </CardTitle>
-                      <Badge
-                        variant={
-                          license.status === 'active'
-                            ? 'default'
-                            : 'destructive'
-                        }
-                      >
-                        {license.status}
-                      </Badge>
-                    </div>
-                    <CardDescription>{license.email}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Plan</span>
-                      <span className="font-medium capitalize">
-                        {license.plan}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Expires</span>
-                      <span className="font-medium">
-                        {formatDate(license.expiresAt)}
-                      </span>
-                    </div>
-                    {(isCached || isOffline) && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Status</span>
-                        <Badge variant="outline">
-                          {isOffline ? 'Offline Mode' : 'Cached'}
-                        </Badge>
-                      </div>
-                    )}
-                  </CardContent>
-                  <CardFooter className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      className="flex-1"
-                      onClick={() => openPortal()}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : (
-                        <Settings className="mr-2 h-4 w-4" />
-                      )}
-                      Manage Subscription
-                    </Button>
-                  </CardFooter>
-                </Card>
-
-                <Button
-                  variant="ghost"
-                  className="text-destructive hover:text-destructive w-full"
-                  onClick={() => setConfirmDeactivate(true)}
-                >
-                  Deactivate on this machine
-                </Button>
-              </>
-            )}
-          </TabsContent>
-        </Tabs>
+        {/* Content based on view */}
+        {view === 'main' && renderMainView()}
+        {view === 'purchase' && renderPurchaseView()}
+        {view === 'activate' && renderActivateView()}
+        {view === 'manage' && renderManageView()}
       </DialogContent>
 
+      {/* Deactivate confirmation */}
       <ConfirmDialog
         open={confirmDeactivate}
         onOpenChange={setConfirmDeactivate}
         title="Deactivate License"
-        description="Are you sure you want to deactivate your license on this machine? You can reactivate it later."
+        description="Are you sure you want to deactivate your license on this device? You can reactivate it later."
         confirmLabel="Deactivate"
         onConfirm={handleDeactivate}
         variant="destructive"

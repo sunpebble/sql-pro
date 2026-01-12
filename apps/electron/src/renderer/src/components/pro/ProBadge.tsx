@@ -16,10 +16,14 @@ const proBadgeVariants = cva(
           'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400',
         subtle:
           'border-transparent bg-amber-500/10 text-amber-700 dark:text-amber-400',
+        pulse:
+          'border-transparent bg-gradient-to-r from-amber-500 to-yellow-500 text-white animate-pulse',
+        glow: 'border-transparent bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-lg shadow-amber-500/30',
       },
       size: {
         default: 'px-2 py-0.5 text-xs',
         sm: 'px-1.5 py-0.5 text-[10px]',
+        lg: 'px-3 py-1 text-sm',
       },
     },
     defaultVariants: {

@@ -55,11 +55,17 @@
 .checkout-plan {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 16px;
   background: var(--color-bg);
   border-radius: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
+}
+
+.checkout-plan-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .checkout-plan-name {
@@ -67,19 +73,63 @@
   color: var(--color-text);
 }
 
+.checkout-plan-description {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  max-width: 200px;
+}
+
 .checkout-plan-price {
   display: flex;
-  align-items: baseline;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-primary);
 }
 
 .checkout-plan-price small {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 400;
   color: var(--color-text-muted);
+}
+
+/* Order summary */
+.checkout-summary {
+  background: var(--color-bg);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.checkout-features {
+  list-style: none;
+  padding: 12px 16px;
+  margin: 0;
+  border-top: 1px solid var(--color-border);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.checkout-features li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.checkout-features li svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.checkout-email-hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: -8px 0 0;
 }
 
 .checkout-form {
@@ -164,13 +214,33 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
-  margin: 8px 0 0;
 }
 
 .checkout-secure svg {
   color: var(--color-primary);
+}
+
+.checkout-trust {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.checkout-guarantee {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.checkout-guarantee svg {
+  color: #22c55e;
 }
 
 @media (max-width: 480px) {

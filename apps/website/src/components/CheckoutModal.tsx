@@ -13,6 +13,12 @@ interface CheckoutModalProps {
 const API_URL =
   import.meta.env.VITE_LICENSE_API_URL || 'https://license.sqlpro.dev';
 
+const PLAN_FEATURES: Record<Plan, string[]> = {
+  monthly: ['All Pro features', '3 devices', 'Priority support'],
+  yearly: ['All Pro features', '5 devices', 'Priority support', 'Save 33%'],
+  lifetime: ['All Pro features', 'Unlimited devices', 'Forever updates'],
+};
+
 export default function CheckoutModal({
   isOpen,
   plan,
@@ -93,6 +99,8 @@ export default function CheckoutModal({
 
   if (!isOpen || !plan) return null;
 
+  const features = PLAN_FEATURES[plan] || [];
+
   return (
     <dialog
       ref={dialogRef}
@@ -125,14 +133,42 @@ export default function CheckoutModal({
           {t('checkout.title')}
         </h2>
 
-        <div className="checkout-plan">
-          <span className="checkout-plan-name">
-            {t(`pricing.plans.${plan}.title`)}
-          </span>
-          <span className="checkout-plan-price">
-            {t(`pricing.plans.${plan}.price`)}
-            <small>{t(`pricing.plans.${plan}.period`)}</small>
-          </span>
+        {/* Order Summary */}
+        <div className="checkout-summary">
+          <div className="checkout-plan">
+            <div className="checkout-plan-info">
+              <span className="checkout-plan-name">
+                {t(`pricing.plans.${plan}.title`)} Plan
+              </span>
+              <span className="checkout-plan-description">
+                {t(`pricing.plans.${plan}.description`)}
+              </span>
+            </div>
+            <span className="checkout-plan-price">
+              {t(`pricing.plans.${plan}.price`)}
+              <small>{t(`pricing.plans.${plan}.period`)}</small>
+            </span>
+          </div>
+
+          {/* Feature list */}
+          <ul className="checkout-features">
+            {features.map((feature, index) => (
+              <li key={index}>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  aria-hidden="true"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                {feature}
+              </li>
+            ))}
+          </ul>
         </div>
 
         <form onSubmit={handleSubmit} className="checkout-form">
@@ -150,6 +186,7 @@ export default function CheckoutModal({
             className="checkout-input"
             disabled={isLoading}
           />
+          <p className="checkout-email-hint">{t('checkout.emailHint')}</p>
 
           {error && (
             <p className="checkout-error" role="alert">
@@ -172,21 +209,38 @@ export default function CheckoutModal({
             )}
           </button>
 
-          <p className="checkout-secure">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            {t('checkout.secure')}
-          </p>
+          {/* Trust indicators */}
+          <div className="checkout-trust">
+            <div className="checkout-secure">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              {t('checkout.secure')}
+            </div>
+            <div className="checkout-guarantee">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              {t('checkout.guarantee')}
+            </div>
+          </div>
         </form>
       </div>
     </dialog>
