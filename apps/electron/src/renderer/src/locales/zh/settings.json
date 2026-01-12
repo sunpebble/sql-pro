@@ -1,4 +1,11 @@
 {
+  "nav": {
+    "general": "通用",
+    "appearance": "外观",
+    "editor": "编辑器",
+    "pro": "专业版",
+    "advanced": "高级"
+  },
   "general": {
     "title": "通用",
     "language": "语言",
