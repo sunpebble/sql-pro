@@ -12,21 +12,26 @@ files:
       - package.json
       - out/**/*
       - '!out/**/*.map'
-      - node_modules/**/*
-      # Exclude unnecessary files from node_modules
-      - '!node_modules/**/*.md'
-      - '!node_modules/**/*.ts'
-      - '!node_modules/**/*.map'
-      - '!node_modules/**/LICENSE*'
-      - '!node_modules/**/CHANGELOG*'
-      - '!node_modules/**/README*'
-      - '!node_modules/**/.github/**'
-      - '!node_modules/**/docs/**'
-      - '!node_modules/**/test/**'
-      - '!node_modules/**/tests/**'
-      - '!node_modules/**/__tests__/**'
-      - '!node_modules/**/example/**'
-      - '!node_modules/**/examples/**'
+  # Include workspace root node_modules (where hoisted dependencies live)
+  - from: ../../node_modules
+    to: node_modules
+    filter:
+      - '**/*'
+      - '!**/*.md'
+      - '!**/*.ts'
+      - '!**/*.map'
+      - '!**/LICENSE*'
+      - '!**/CHANGELOG*'
+      - '!**/README*'
+      - '!**/.github/**'
+      - '!**/docs/**'
+      - '!**/test/**'
+      - '!**/tests/**'
+      - '!**/__tests__/**'
+      - '!**/example/**'
+      - '!**/examples/**'
+      # Exclude pnpm's virtual store (handled separately)
+      - '!.pnpm/**'
 
 # Native modules that need to be unpacked from asar
 asarUnpack:
