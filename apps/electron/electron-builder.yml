@@ -11,10 +11,28 @@ files:
     filter:
       - package.json
       - out/**/*
+      - '!out/**/*.map'
       - node_modules/**/*
+      # Exclude unnecessary files from node_modules
+      - '!node_modules/**/*.md'
+      - '!node_modules/**/*.ts'
+      - '!node_modules/**/*.map'
+      - '!node_modules/**/LICENSE*'
+      - '!node_modules/**/CHANGELOG*'
+      - '!node_modules/**/README*'
+      - '!node_modules/**/.github/**'
+      - '!node_modules/**/docs/**'
+      - '!node_modules/**/test/**'
+      - '!node_modules/**/tests/**'
+      - '!node_modules/**/__tests__/**'
+      - '!node_modules/**/example/**'
+      - '!node_modules/**/examples/**'
 
+# Native modules that need to be unpacked from asar
 asarUnpack:
   - resources/**
+  - node_modules/better-sqlite3-multiple-ciphers/**
+  - node_modules/sharp/**
 
 # Generate required update metadata files
 generateUpdatesFilesForAllChannels: true
