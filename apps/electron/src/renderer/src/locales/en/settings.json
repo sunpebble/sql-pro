@@ -1,4 +1,11 @@
 {
+  "nav": {
+    "general": "General",
+    "appearance": "Appearance",
+    "editor": "Editor",
+    "pro": "Pro",
+    "advanced": "Advanced"
+  },
   "general": {
     "title": "General",
     "language": "Language",
