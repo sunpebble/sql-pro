@@ -101,10 +101,10 @@ export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
         {!hasCompletedTour && (
           <button
             onClick={onStartTour}
-            className="hover:bg-accent mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed bg-transparent p-3 transition-colors"
+            className="hover:bg-accent group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed bg-transparent p-3 transition-colors"
           >
             <PlayCircle className="text-primary h-4 w-4" />
-            <span className="text-primary text-xs">
+            <span className="text-primary text-xs group-hover:underline">
               {t('features.takeTour', { defaultValue: 'Take the quick tour' })}
             </span>
           </button>
