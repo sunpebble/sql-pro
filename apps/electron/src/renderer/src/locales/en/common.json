@@ -427,6 +427,25 @@
     "exportPng": "Export as PNG",
     "exportSvg": "Export as SVG"
   },
+  "connection": {
+    "settings": "Connection Settings",
+    "changePassword": "Change Password",
+    "encryptDatabase": "Encrypt Database",
+    "refreshSchema": "Refresh Schema",
+    "setColor": "Set Color",
+    "close": "Close",
+    "closeConnection": "Close connection",
+    "unsavedChanges": "Unsaved changes",
+    "refreshing": "Refreshing...",
+    "refreshed": "Refreshed",
+    "refreshFailed": "Failed to refresh"
+  },
+  "tabs": {
+    "close": "Close",
+    "closeOthers": "Close Others",
+    "copyTableName": "Copy Table Name",
+    "openFromSidebar": "Open table from sidebar"
+  },
   "welcomeDialog": {
     "title": "Welcome to SQL Pro",
     "description": "Your professional database manager for SQLite, MySQL, PostgreSQL, and Supabase. Take a quick tour to discover powerful features like the command palette, Vim mode, visual diff preview, and ER diagrams.",

@@ -426,6 +426,25 @@
     "exportPng": "导出为 PNG",
     "exportSvg": "导出为 SVG"
   },
+  "connection": {
+    "settings": "连接设置",
+    "changePassword": "修改密码",
+    "encryptDatabase": "加密数据库",
+    "refreshSchema": "刷新结构",
+    "setColor": "设置颜色",
+    "close": "关闭",
+    "closeConnection": "关闭连接",
+    "unsavedChanges": "有未保存的更改",
+    "refreshing": "刷新中...",
+    "refreshed": "刷新完成",
+    "refreshFailed": "刷新失败"
+  },
+  "tabs": {
+    "close": "关闭",
+    "closeOthers": "关闭其他",
+    "copyTableName": "复制表名",
+    "openFromSidebar": "从侧边栏打开表"
+  },
   "welcomeDialog": {
     "title": "欢迎使用 SQL Pro",
     "description": "专为 SQLite、MySQL、PostgreSQL 和 Supabase 打造的专业数据库管理器。快速浏览以了解命令面板、Vim 模式、可视化差异预览和 ER 图等强大功能。",

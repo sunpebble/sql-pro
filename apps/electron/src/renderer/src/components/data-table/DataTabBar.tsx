@@ -16,6 +16,7 @@ import {
 } from '@sqlpro/ui/tooltip';
 import { Eye, Plus, Table, X } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useConnectionStore, useDataTabsStore } from '@/stores';
 
@@ -133,6 +134,7 @@ const TabItem = memo(
     onCloseOthers,
     tabsCount,
   }: TabItemProps) => {
+    const { t } = useTranslation('common');
     const handleCloseClick = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -198,9 +200,9 @@ const TabItem = memo(
           </TooltipProvider>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem onClick={onClose}>Close</ContextMenuItem>
+          <ContextMenuItem onClick={onClose}>{t('tabs.close')}</ContextMenuItem>
           <ContextMenuItem onClick={onCloseOthers} disabled={tabsCount <= 1}>
-            Close Others
+            {t('tabs.closeOthers')}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem
@@ -209,7 +211,7 @@ const TabItem = memo(
               navigator.clipboard.writeText(tab.table.name);
             }}
           >
-            Copy Table Name
+            {t('tabs.copyTableName')}
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
@@ -221,6 +223,7 @@ TabItem.displayName = 'DataTabItem';
 
 export const DataTabBar = memo(
   ({ className, onOpenSidebar }: DataTabBarProps) => {
+    const { t } = useTranslation('common');
     const { activeConnectionId } = useConnectionStore();
     const { tabsByConnection, closeTab, closeOtherTabs, setActiveTab } =
       useDataTabsStore();
@@ -287,7 +290,7 @@ export const DataTabBar = memo(
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="text-xs">
-                  Open table from sidebar
+                  {t('tabs.openFromSidebar')}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

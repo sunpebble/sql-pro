@@ -45,6 +45,7 @@ import {
   X,
 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { sqlPro } from '@/lib/api';
@@ -96,6 +97,7 @@ interface ConnectionTabProps {
 
 const ConnectionTab = memo(
   ({ connection, isActive, onSelect, onClose }: ConnectionTabProps) => {
+    const { t } = useTranslation('common');
     const { getConnectionColor, setConnectionColor, setSchema } =
       useConnectionStore();
     const connectionColor = getConnectionColor(connection.id) || '#3b82f6'; // default blue
@@ -119,7 +121,7 @@ const ConnectionTab = memo(
       if (isRefreshing) return;
 
       setIsRefreshing(true);
-      const toastId = toast.loading('Refreshing...');
+      const toastId = toast.loading(t('connection.refreshing'));
 
       try {
         const result = await sqlPro.db.getSchema({
@@ -146,13 +148,13 @@ const ConnectionTab = memo(
           },
         });
 
-        toast.success('Refreshed', { id: toastId });
+        toast.success(t('connection.refreshed'), { id: toastId });
       } catch {
-        toast.error('Failed to refresh', { id: toastId });
+        toast.error(t('connection.refreshFailed'), { id: toastId });
       } finally {
         setIsRefreshing(false);
       }
-    }, [connection.id, isRefreshing, setSchema]);
+    }, [connection.id, isRefreshing, setSchema, t]);
 
     // Handle connection settings
     const handleConnectionSettings = useCallback(() => {
@@ -260,7 +262,7 @@ const ConnectionTab = memo(
                         <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="text-xs">
-                        Unsaved changes
+                        {t('connection.unsavedChanges')}
                       </TooltipContent>
                     </Tooltip>
                   )}
@@ -294,7 +296,7 @@ const ConnectionTab = memo(
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom" className="text-xs">
-                      Close connection
+                      {t('connection.closeConnection')}
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -313,7 +315,7 @@ const ConnectionTab = memo(
         <ContextMenuContent>
           <ContextMenuItem onClick={handleConnectionSettings}>
             <Settings className="mr-2 h-4 w-4" />
-            Connection Settings
+            {t('connection.settings')}
           </ContextMenuItem>
           {connection.isEncrypted ? (
             <ContextMenuItem
@@ -321,7 +323,7 @@ const ConnectionTab = memo(
               disabled={connection.isReadOnly}
             >
               <Lock className="mr-2 h-4 w-4" />
-              Change Password
+              {t('connection.changePassword')}
             </ContextMenuItem>
           ) : (
             <ContextMenuItem
@@ -329,7 +331,7 @@ const ConnectionTab = memo(
               disabled={connection.isReadOnly}
             >
               <KeyRound className="mr-2 h-4 w-4" />
-              Encrypt Database
+              {t('connection.encryptDatabase')}
             </ContextMenuItem>
           )}
           <ContextMenuItem
@@ -339,13 +341,13 @@ const ConnectionTab = memo(
             <RefreshCw
               className={cn('mr-2 h-4 w-4', isRefreshing && 'animate-spin')}
             />
-            Refresh Schema
+            {t('connection.refreshSchema')}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuSub>
             <ContextMenuSubTrigger nativeButton={false}>
               <Palette className="mr-2 h-4 w-4" />
-              Set Color
+              {t('connection.setColor')}
             </ContextMenuSubTrigger>
             <ContextMenuSubContent>
               <div className="grid grid-cols-3 gap-1 p-1">
@@ -371,7 +373,9 @@ const ConnectionTab = memo(
             </ContextMenuSubContent>
           </ContextMenuSub>
           <ContextMenuSeparator />
-          <ContextMenuItem onClick={onClose}>Close</ContextMenuItem>
+          <ContextMenuItem onClick={onClose}>
+            {t('connection.close')}
+          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
     );
