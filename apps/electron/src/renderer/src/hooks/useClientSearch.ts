@@ -141,7 +141,7 @@ export function useClientSearch<T extends SearchableRow>(
   // Cache for previous search results to avoid re-computation
   const cacheRef = useRef<{
     searchTerm: string;
-    rowsLength: number;
+    rows: T[]; // Store rows reference for proper cache invalidation
     result: UseClientSearchResult<T>;
   } | null>(null);
 
@@ -150,11 +150,12 @@ export function useClientSearch<T extends SearchableRow>(
     const isSearching = trimmedSearch.length > 0;
     const totalRows = rows.length;
 
-    // Check cache - if same search term and same row count, return cached result
+    // Check cache - if same search term AND same rows reference, return cached result
+    // Using rows reference ensures cache invalidates when data changes (e.g., pagination)
     if (
       cacheRef.current &&
       cacheRef.current.searchTerm === trimmedSearch &&
-      cacheRef.current.rowsLength === totalRows
+      cacheRef.current.rows === rows
     ) {
       return cacheRef.current.result;
     }
@@ -171,7 +172,7 @@ export function useClientSearch<T extends SearchableRow>(
       };
       cacheRef.current = {
         searchTerm: trimmedSearch,
-        rowsLength: totalRows,
+        rows,
         result: noSearchResult,
       };
       return noSearchResult;
@@ -208,7 +209,7 @@ export function useClientSearch<T extends SearchableRow>(
     // Update cache
     cacheRef.current = {
       searchTerm: trimmedSearch,
-      rowsLength: totalRows,
+      rows,
       result: searchResult,
     };
 
