@@ -1,10 +1,48 @@
 import type { ColumnSchema, SortState } from '@/types/database';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowDown, ArrowUp, Key } from 'lucide-react';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { cn } from '@/lib/utils';
 import { ColumnResizeHandle } from './ColumnResizeHandle';
+
+interface CellValueProps {
+  value: unknown;
+  type: string;
+}
+
+const CellValue = memo<CellValueProps>(({ value, type }) => {
+  if (value === null) {
+    return <span className="text-muted-foreground text-sm italic">NULL</span>;
+  }
+
+  if (typeof value === 'boolean') {
+    return <span className="text-sm">{value ? 'true' : 'false'}</span>;
+  }
+
+  if (typeof value === 'number') {
+    return <span className="font-mono text-sm tabular-nums">{value}</span>;
+  }
+
+  // Blob/binary data
+  if (value instanceof Uint8Array || type.toLowerCase().includes('blob')) {
+    return (
+      <span className="text-muted-foreground text-sm italic">
+        [BLOB{' '}
+        {typeof value === 'object' ? (value as ArrayBuffer).byteLength : '?'}{' '}
+        bytes]
+      </span>
+    );
+  }
+
+  const strValue = String(value);
+  return (
+    <span className="text-sm whitespace-nowrap" title={strValue}>
+      {strValue}
+    </span>
+  );
+});
+CellValue.displayName = 'CellValue';
 
 interface DataGridProps {
   columns: ColumnSchema[];
@@ -49,19 +87,36 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
     <div
       ref={parentRef}
       className={cn('h-full overflow-auto', isResizing && 'select-none')}
+      role="grid"
+      aria-rowcount={rows.length}
+      aria-colcount={columns.length}
     >
       <div style={{ minWidth: totalWidth }}>
         {/* Header */}
-        <div className="bg-muted/50 sticky top-0 z-10 flex border-b backdrop-blur-sm">
+        <div
+          className="bg-muted/50 sticky top-0 z-10 flex border-b backdrop-blur-sm"
+          role="row"
+          aria-rowindex={1}
+        >
           {columns.map((col, idx) => (
             <div
               key={col.name}
               className="relative flex items-center gap-1 border-r px-3 py-2 last:border-r-0"
               style={{ width: columnWidths[idx], minWidth: columnWidths[idx] }}
+              role="columnheader"
+              aria-colindex={idx + 1}
+              aria-sort={
+                sort?.column === col.name
+                  ? sort.direction === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : undefined
+              }
             >
               <button
                 onClick={() => onSort(col.name)}
                 className="hover:text-foreground flex flex-1 items-center gap-1 text-left text-sm font-medium"
+                aria-label={`Sort by ${col.name}${sort?.column === col.name ? `, currently ${sort.direction === 'asc' ? 'ascending' : 'descending'}` : ''}`}
               >
                 {col.isPrimaryKey && <Key className="h-3 w-3 text-amber-500" />}
                 <span className="truncate">{col.name}</span>
@@ -101,6 +156,8 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
                   height: `${virtualRow.size}px`,
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
+                role="row"
+                aria-rowindex={virtualRow.index + 2}
               >
                 {columns.map((col, idx) => {
                   const value = row[col.name];
@@ -112,6 +169,8 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
                         width: columnWidths[idx],
                         minWidth: columnWidths[idx],
                       }}
+                      role="gridcell"
+                      aria-colindex={idx + 1}
                     >
                       <CellValue value={value} type={col.type} />
                     </div>
@@ -123,42 +182,5 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
         </div>
       </div>
     </div>
-  );
-}
-
-interface CellValueProps {
-  value: unknown;
-  type: string;
-}
-
-function CellValue({ value, type }: CellValueProps) {
-  if (value === null) {
-    return <span className="text-muted-foreground text-sm italic">NULL</span>;
-  }
-
-  if (typeof value === 'boolean') {
-    return <span className="text-sm">{value ? 'true' : 'false'}</span>;
-  }
-
-  if (typeof value === 'number') {
-    return <span className="font-mono text-sm tabular-nums">{value}</span>;
-  }
-
-  // Blob/binary data
-  if (value instanceof Uint8Array || type.toLowerCase().includes('blob')) {
-    return (
-      <span className="text-muted-foreground text-sm italic">
-        [BLOB{' '}
-        {typeof value === 'object' ? (value as ArrayBuffer).byteLength : '?'}{' '}
-        bytes]
-      </span>
-    );
-  }
-
-  const strValue = String(value);
-  return (
-    <span className="text-sm whitespace-nowrap" title={strValue}>
-      {strValue}
-    </span>
   );
 }

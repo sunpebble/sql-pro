@@ -4,7 +4,7 @@ import type {
   QueryResult,
   QueryResultSet,
 } from '@/types/database';
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { DataTable } from './data-table';
 
@@ -17,7 +17,7 @@ interface SingleResultTableProps {
   rows: Record<string, unknown>[];
 }
 
-function SingleResultTable({ columns, rows }: SingleResultTableProps) {
+const SingleResultTable = memo<SingleResultTableProps>(({ columns, rows }) => {
   // Convert simple column names to ColumnSchema objects for DataTable
   const tableColumns = useMemo<ColumnSchema[]>(() => {
     return columns.map((colName) => ({
@@ -53,7 +53,8 @@ function SingleResultTable({ columns, rows }: SingleResultTableProps) {
       className="h-full"
     />
   );
-}
+});
+SingleResultTable.displayName = 'SingleResultTable';
 
 export function QueryResults({ results }: QueryResultsProps) {
   const [activeResultIndex, setActiveResultIndex] = useState(0);
@@ -99,7 +100,11 @@ export function QueryResults({ results }: QueryResultsProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Result Set Tabs */}
-      <div className="bg-muted/30 flex items-center gap-1 overflow-x-auto border-b px-2 py-1">
+      <div
+        className="bg-muted/30 flex items-center gap-1 overflow-x-auto border-b px-2 py-1"
+        role="tablist"
+        aria-label="Query result sets"
+      >
         {resultSets.map((resultSet, index) => (
           <button
             key={`result-${resultSet.columns.join(',')}-${resultSet.rows.length}`}
@@ -110,6 +115,10 @@ export function QueryResults({ results }: QueryResultsProps) {
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
             )}
+            role="tab"
+            aria-selected={activeResultIndex === index}
+            aria-controls={`result-panel-${index}`}
+            id={`result-tab-${index}`}
           >
             <span>Result {index + 1}</span>
             <span className="text-muted-foreground/70">
@@ -120,7 +129,12 @@ export function QueryResults({ results }: QueryResultsProps) {
       </div>
 
       {/* Active Result Table */}
-      <div className="min-h-0 flex-1">
+      <div
+        className="min-h-0 flex-1"
+        role="tabpanel"
+        id={`result-panel-${activeResultIndex}`}
+        aria-labelledby={`result-tab-${activeResultIndex}`}
+      >
         <SingleResultTable
           columns={activeResult.columns}
           rows={activeResult.rows}
