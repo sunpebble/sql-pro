@@ -240,8 +240,7 @@
   h5,
   h6,
   div,
-  li,
-  button {
+  li {
     cursor: default;
   }
 
@@ -252,6 +251,12 @@
   [role='tab'],
   [role='menuitem'],
   [role='option'],
+  [role='checkbox'],
+  [role='radio'],
+  [role='switch'],
+  input[type='checkbox'],
+  input[type='radio'],
+  label[for],
   .cursor-pointer {
     cursor: pointer;
   }
