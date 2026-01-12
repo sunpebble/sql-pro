@@ -52,6 +52,15 @@ let initialized = false;
 export async function initializeStorage(): Promise<void> {
   if (initialized) return;
 
+  // Check if Electron APIs are available before attempting storage initialization
+  if (!isElectronEnvironment()) {
+    console.warn(
+      '[Storage] Electron APIs not available, skipping storage initialization'
+    );
+    initialized = true;
+    return;
+  }
+
   const maxRetries = 5;
   const retryDelayMs = 100;
 
@@ -96,7 +105,7 @@ export async function initializeStorage(): Promise<void> {
       if (attempt < maxRetries - 1) {
         // Wait before retrying with exponential backoff
         await new Promise((resolve) =>
-          setTimeout(resolve, retryDelayMs * 2**attempt)
+          setTimeout(resolve, retryDelayMs * 2 ** attempt)
         );
       } else {
         console.error('Failed to initialize storage after retries:', error);

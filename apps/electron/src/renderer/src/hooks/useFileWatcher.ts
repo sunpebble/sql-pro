@@ -13,6 +13,11 @@ import { useConnectionStore } from '@/stores';
  */
 export function useFileWatcher() {
   useEffect(() => {
+    // Guard: Ensure Electron APIs are available
+    if (typeof window === 'undefined' || !window.sqlPro?.db?.onFileChanged) {
+      return;
+    }
+
     // In Electron, listen for file change events via IPC
     const unsubscribe = window.sqlPro.db.onFileChanged(
       async (event: FileChangeEvent) => {

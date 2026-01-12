@@ -44,7 +44,9 @@ export default defineConfig({
   },
   preload: {
     build: {
-      externalizeDeps: true,
+      // Bundle all dependencies in preload script because it runs in a sandboxed
+      // context that cannot resolve external modules at runtime
+      externalizeDeps: false,
     },
     resolve: {
       alias: {
