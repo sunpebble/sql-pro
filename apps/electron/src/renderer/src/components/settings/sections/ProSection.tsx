@@ -86,7 +86,9 @@ export function ProSection() {
                 className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2"
               >
                 <Crown className="h-3 w-3 text-amber-500" />
-                <span className="text-xs">{feature}</span>
+                <span className="text-xs">
+                  {t(`pro.features.${feature}`, { defaultValue: feature })}
+                </span>
               </div>
             ))}
           </div>

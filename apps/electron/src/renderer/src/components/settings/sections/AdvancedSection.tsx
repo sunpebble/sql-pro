@@ -86,7 +86,7 @@ function AISettingsPanel() {
   // Dynamic models state
   const [dynamicModels, setDynamicModels] = useState<string[]>([]);
   const [isLoadingModels, setIsLoadingModels] = useState(false);
-  const [_modelsError, setModelsError] = useState<string | null>(null);
+  const [modelsError, setModelsError] = useState<string | null>(null);
 
   // Load settings on mount
   useEffect(() => {
@@ -312,6 +312,13 @@ function AISettingsPanel() {
         <div className="flex items-center gap-2">
           <Label className="text-xs font-medium">{t('ai.model')}</Label>
           {isLoadingModels && <Loader2 className="h-3 w-3 animate-spin" />}
+          {modelsError && (
+            <span className="text-destructive text-xs">
+              {t('ai.modelsFetchError', {
+                defaultValue: 'Failed to fetch models, using defaults',
+              })}
+            </span>
+          )}
         </div>
         <div className="flex gap-2">
           <Input
