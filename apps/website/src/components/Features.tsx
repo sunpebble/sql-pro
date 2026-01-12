@@ -6,6 +6,7 @@ const featureKeys = [
   { key: 'database', icon: 'database' },
   { key: 'query', icon: 'code' },
   { key: 'data', icon: 'edit' },
+  { key: 'compare', icon: 'gitCompare' },
   { key: 'visualization', icon: 'image' },
   { key: 'security', icon: 'lock' },
   { key: 'crossPlatform', icon: 'monitor' },
@@ -59,6 +60,24 @@ const icons: Record<string, JSX.Element> = {
     >
       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+    </svg>
+  ),
+  gitCompare: (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="18" cy="18" r="3" />
+      <circle cx="6" cy="6" r="3" />
+      <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+      <path d="M11 18H8a2 2 0 0 1-2-2V9" />
     </svg>
   ),
   image: (

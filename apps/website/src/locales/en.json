@@ -27,6 +27,10 @@
       "title": "Data Operations",
       "description": "Inline table editing, diff preview before applying, bulk operations, advanced multi-column filtering"
     },
+    "compare": {
+      "title": "Schema & Data Compare",
+      "description": "Compare database schemas and table data between connections, generate migration scripts automatically"
+    },
     "visualization": {
       "title": "Visualization",
       "description": "ER diagram relationships, structure view browsing, automatic dark/light theme switching"

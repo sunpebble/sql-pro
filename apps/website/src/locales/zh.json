@@ -27,6 +27,10 @@
       "title": "数据操作",
       "description": "表格内联编辑，应用前差异预览，批量操作，多列高级过滤"
     },
+    "compare": {
+      "title": "结构与数据对比",
+      "description": "对比不同连接间的数据库结构和表数据，自动生成迁移脚本"
+    },
     "visualization": {
       "title": "可视化",
       "description": "ER 图关系展示，结构视图浏览，深色/浅色主题自动切换"
