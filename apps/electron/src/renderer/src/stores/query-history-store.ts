@@ -1,4 +1,4 @@
-import type { QueryHistoryEntry } from '@/shared/types';
+import type { QueryHistoryEntry } from '@shared/types';
 import { create } from 'zustand';
 
 export type QueryHistoryStatus = 'all' | 'success' | 'failed';

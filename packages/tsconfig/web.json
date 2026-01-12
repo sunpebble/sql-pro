@@ -15,6 +15,10 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
     "types": ["vitest/globals"]
   }
 }
