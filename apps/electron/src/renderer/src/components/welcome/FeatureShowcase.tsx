@@ -99,15 +99,15 @@ export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
 
         {/* Tour CTA */}
         {!hasCompletedTour && (
-          <div className="mt-4 flex items-center justify-center gap-2 rounded-lg border border-dashed p-3">
+          <button
+            onClick={onStartTour}
+            className="hover:bg-accent mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed bg-transparent p-3 transition-colors"
+          >
             <PlayCircle className="text-primary h-4 w-4" />
-            <button
-              onClick={onStartTour}
-              className="text-primary cursor-pointer border-none bg-transparent text-xs hover:underline"
-            >
+            <span className="text-primary text-xs">
               {t('features.takeTour', { defaultValue: 'Take the quick tour' })}
-            </button>
-          </div>
+            </span>
+          </button>
         )}
       </div>
     </div>
