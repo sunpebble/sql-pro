@@ -92,6 +92,24 @@
     "popular": "Most Popular",
     "cta": "Get Started",
     "note": "All plans include free updates. Cancel subscription anytime.",
+    "trust": {
+      "secure": "Secure Payment",
+      "guarantee": "30-Day Guarantee",
+      "stripe": "Powered by Stripe"
+    },
+    "comparison": {
+      "title": "Compare Plans",
+      "feature": "Feature",
+      "features": {
+        "proFeatures": "All Pro Features",
+        "sqlcipher": "SQLCipher Support",
+        "schemaCompare": "Schema & Data Compare",
+        "aiFeatures": "AI Features",
+        "devices": "Devices",
+        "support": "Support",
+        "updates": "Updates"
+      }
+    },
     "plans": {
       "monthly": {
         "title": "Monthly",
@@ -139,9 +157,11 @@
     "close": "Close",
     "emailLabel": "Email Address",
     "emailPlaceholder": "you@example.com",
+    "emailHint": "Your license key will be sent to this email",
     "submit": "Continue to Payment",
     "processing": "Processing...",
-    "secure": "Secure checkout powered by Stripe",
+    "secure": "Secure checkout",
+    "guarantee": "30-day guarantee",
     "error": "Something went wrong. Please try again.",
     "networkError": "Network error. Please check your connection."
   },
