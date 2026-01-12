@@ -2,6 +2,7 @@ import type { WelcomeTourStep } from '@/lib/welcome-tour-steps';
 import { Button } from '@sqlpro/ui/button';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import {
   getWelcomeTourStepByIndex,
@@ -44,6 +45,7 @@ export function WelcomeTour({
   onComplete,
   onSkip,
 }: WelcomeTourProps) {
+  const { t } = useTranslation('common');
   const [currentStep, setCurrentStep] = useState(0);
   const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>({
     top: 0,
@@ -205,6 +207,11 @@ export function WelcomeTour({
 
   if (!isVisible || !step) return null;
 
+  const stepTitle = t(`welcomeTour.steps.${step.translationKey}.title`);
+  const stepDescription = t(
+    `welcomeTour.steps.${step.translationKey}.description`
+  );
+
   return (
     <>
       {/* Spotlight overlay with cutout for current target */}
@@ -236,14 +243,14 @@ export function WelcomeTour({
             id="welcome-tour-title"
             className="text-foreground text-base font-semibold"
           >
-            {step.title}
+            {stepTitle}
           </h3>
           <Button
             variant="ghost"
             size="icon"
             className="h-6 w-6 shrink-0"
             onClick={onSkip}
-            aria-label="Close tour"
+            aria-label={t('welcomeTour.closeTour')}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -254,7 +261,7 @@ export function WelcomeTour({
           id="welcome-tour-description"
           className="text-muted-foreground mb-4 text-sm"
         >
-          {step.description}
+          {stepDescription}
         </p>
 
         {/* Progress indicator */}
@@ -284,7 +291,7 @@ export function WelcomeTour({
                 onClick={() => setCurrentStep((prev) => prev - 1)}
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
-                Back
+                {t('welcomeTour.back')}
               </Button>
             )}
 
@@ -293,12 +300,12 @@ export function WelcomeTour({
                 size="sm"
                 onClick={() => setCurrentStep((prev) => prev + 1)}
               >
-                Next
+                {t('welcomeTour.next')}
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             ) : (
               <Button size="sm" onClick={onComplete}>
-                Done
+                {t('welcomeTour.done')}
               </Button>
             )}
           </div>

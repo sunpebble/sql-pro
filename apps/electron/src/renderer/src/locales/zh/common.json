@@ -416,6 +416,40 @@
     "execute": "执行",
     "noResults": "执行查询以查看结果"
   },
+  "welcomeDialog": {
+    "title": "欢迎使用 SQL Pro",
+    "description": "专为 SQLite、MySQL、PostgreSQL 和 Supabase 打造的专业数据库管理器。快速浏览以了解命令面板、Vim 模式、可视化差异预览和 ER 图等强大功能。",
+    "takeTour": "开始导览",
+    "skipForNow": "暂时跳过"
+  },
+  "welcomeTour": {
+    "next": "下一步",
+    "back": "返回",
+    "done": "完成",
+    "closeTour": "关闭导览",
+    "steps": {
+      "features": {
+        "title": "功能概览",
+        "description": "探索 SQL Pro 的强大功能。点击任意功能卡片了解更多，或查阅文档获取详细指南。"
+      },
+      "openDatabase": {
+        "title": "打开数据库",
+        "description": "点击此处打开 SQLite 数据库文件（.db、.sqlite、.sqlite3）。SQL Pro 支持普通和 SQLCipher 加密数据库。"
+      },
+      "serverConnection": {
+        "title": "连接到服务器",
+        "description": "连接到远程数据库服务器，包括 MySQL、PostgreSQL 和 Supabase。配置主机、端口和身份验证设置。"
+      },
+      "profiles": {
+        "title": "连接配置文件",
+        "description": "将常用连接保存为配置文件以便快速访问。整理到文件夹中并添加备注以便管理。"
+      },
+      "recent": {
+        "title": "最近连接",
+        "description": "快速重新连接到最近打开的数据库。右键点击可编辑、保存为配置文件或从历史记录中移除。"
+      }
+    }
+  },
   "tour": {
     "step": "第 {{current}} 步，共 {{total}} 步",
     "skip": "跳过导览",

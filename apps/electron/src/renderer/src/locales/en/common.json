@@ -417,6 +417,40 @@
     "execute": "Execute",
     "noResults": "Execute a query to see results"
   },
+  "welcomeDialog": {
+    "title": "Welcome to SQL Pro",
+    "description": "Your professional database manager for SQLite, MySQL, PostgreSQL, and Supabase. Take a quick tour to discover powerful features like the command palette, Vim mode, visual diff preview, and ER diagrams.",
+    "takeTour": "Take a Tour",
+    "skipForNow": "Skip for Now"
+  },
+  "welcomeTour": {
+    "next": "Next",
+    "back": "Back",
+    "done": "Done",
+    "closeTour": "Close tour",
+    "steps": {
+      "features": {
+        "title": "Feature Overview",
+        "description": "Explore the powerful features of SQL Pro. Click on any feature card to learn more, or check the documentation for detailed guides."
+      },
+      "openDatabase": {
+        "title": "Open Database",
+        "description": "Click here to open a SQLite database file (.db, .sqlite, .sqlite3). SQL Pro supports both regular and encrypted SQLCipher databases."
+      },
+      "serverConnection": {
+        "title": "Connect to Server",
+        "description": "Connect to remote database servers including MySQL, PostgreSQL, and Supabase. Configure host, port, and authentication settings."
+      },
+      "profiles": {
+        "title": "Connection Profiles",
+        "description": "Save your frequently used connections as profiles for quick access. Organize them into folders and add notes for easy management."
+      },
+      "recent": {
+        "title": "Recent Connections",
+        "description": "Quickly reconnect to your recently opened databases. Right-click for options like edit, save as profile, or remove from history."
+      }
+    }
+  },
   "tour": {
     "step": "Step {{current}} of {{total}}",
     "skip": "Skip tour",

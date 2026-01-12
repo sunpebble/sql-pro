@@ -9,54 +9,45 @@ export type WelcomeTourPlacement = 'top' | 'bottom' | 'left' | 'right';
 export interface WelcomeTourStep {
   id: string;
   target: string;
-  title: string;
-  description: string;
+  /** Translation key for the step (e.g., 'features' -> 'welcomeTour.steps.features') */
+  translationKey: string;
   placement: WelcomeTourPlacement;
 }
 
 /**
  * Welcome tour steps configuration for the WelcomeScreen.
  * Introduces users to the main UI elements before connecting to a database.
+ * Title and description are stored in translation files under 'welcomeTour.steps.[translationKey]'
  */
 export const WELCOME_TOUR_STEPS: WelcomeTourStep[] = [
   {
     id: 'welcome-features',
     target: '[data-tour-target="feature-showcase"]',
-    title: 'Feature Overview',
-    description:
-      'Explore the powerful features of SQL Pro. Click on any feature card to learn more, or check the documentation for detailed guides.',
+    translationKey: 'features',
     placement: 'right',
   },
   {
     id: 'welcome-open-database',
     target: '[data-action="open-database"]',
-    title: 'Open Database',
-    description:
-      'Click here to open a SQLite database file (.db, .sqlite, .sqlite3). SQL Pro supports both regular and encrypted SQLCipher databases.',
+    translationKey: 'openDatabase',
     placement: 'left',
   },
   {
     id: 'welcome-server-connection',
     target: '[data-action="connect-server"]',
-    title: 'Connect to Server',
-    description:
-      'Connect to remote database servers including MySQL, PostgreSQL, and Supabase. Configure host, port, and authentication settings.',
+    translationKey: 'serverConnection',
     placement: 'left',
   },
   {
     id: 'welcome-profiles',
     target: '[data-tour-target="profiles-button"]',
-    title: 'Connection Profiles',
-    description:
-      'Save your frequently used connections as profiles for quick access. Organize them into folders and add notes for easy management.',
+    translationKey: 'profiles',
     placement: 'bottom',
   },
   {
     id: 'welcome-recent',
     target: '[data-tour-target="recent-connections"]',
-    title: 'Recent Connections',
-    description:
-      'Quickly reconnect to your recently opened databases. Right-click for options like edit, save as profile, or remove from history.',
+    translationKey: 'recent',
     placement: 'left',
   },
 ];
