@@ -172,7 +172,14 @@
     "activated": "激活于 {{date}}",
     "unlockFeatures": "解锁 AI 功能和高级工具",
     "upgrade": "升级",
-    "manage": "管理"
+    "manage": "管理",
+    "features": {
+      "ai_assistant": "AI 助手",
+      "advanced_analytics": "高级分析",
+      "export_formats": "导出格式",
+      "batch_operations": "批量操作",
+      "performance_monitoring": "性能监控"
+    }
   },
   "ai": {
     "title": "AI 设置",

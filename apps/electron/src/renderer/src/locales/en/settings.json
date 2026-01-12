@@ -114,7 +114,14 @@
     "activated": "Activated {{date}}",
     "unlockFeatures": "Unlock AI features and advanced tools",
     "upgrade": "Upgrade",
-    "manage": "Manage"
+    "manage": "Manage",
+    "features": {
+      "ai_assistant": "AI Assistant",
+      "advanced_analytics": "Advanced Analytics",
+      "export_formats": "Export Formats",
+      "batch_operations": "Batch Operations",
+      "performance_monitoring": "Performance Monitoring"
+    }
   },
   "ai": {
     "title": "AI Settings",

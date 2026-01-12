@@ -25,7 +25,7 @@ export const MONOSPACE_FONTS = [
 export type AppFontCategory = 'editor' | 'table' | 'ui';
 
 // Page size options for data browser
-export const PAGE_SIZE_OPTIONS = [50, 100, 200, 500, 1000, 'all'] as const;
+export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200] as const;
 export type PageSizeOption = (typeof PAGE_SIZE_OPTIONS)[number];
 
 interface SettingsState {

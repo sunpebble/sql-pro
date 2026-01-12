@@ -13,14 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@sqlpro/ui/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
-import {
-  AlertTriangle,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -42,7 +36,6 @@ import { ShortcutKbd } from '@/components/ui/kbd';
 import { useAutoRefresh } from '@/hooks/useAutoRefresh';
 import { useClientSearch } from '@/hooks/useClientSearch';
 import { useExport } from '@/hooks/useExport';
-import { useInfiniteTableData } from '@/hooks/useInfiniteTableData';
 import { usePendingChanges } from '@/hooks/usePendingChanges';
 import { usePgNotify } from '@/hooks/usePgNotify';
 import { useTableData } from '@/hooks/useTableData';
@@ -101,14 +94,8 @@ export function TableView({ tableOverride }: TableViewProps) {
   const { t } = useTranslation('common');
 
   // Global page size setting
-  const pageSizeOption = usePageSize();
+  const pageSize = usePageSize();
   const setPageSize = useSettingsStore((s) => s.setPageSize);
-
-  // Determine if using infinite scroll mode (when 'all' is selected)
-  const useInfiniteScroll = pageSizeOption === 'all';
-
-  // Calculate actual page size for paginated mode
-  const pageSize = useInfiniteScroll ? 100 : pageSizeOption;
 
   // Use state from store (persisted per tab)
   const page = activeTab?.page ?? 1;
@@ -221,64 +208,31 @@ export function TableView({ tableOverride }: TableViewProps) {
     pauseWhenHidden: true,
   });
 
-  // Use paginated data hook for normal pagination
-  const paginatedData = useTableData({
+  // Use paginated data hook
+  const {
+    rows,
+    columns,
+    totalRows,
+    totalPages,
+    isLoading,
+    isFetching,
+    error,
+    updateRow,
+    insertRow,
+    deleteRow,
+    refetch,
+  } = useTableData({
     connectionId: connection?.id || null,
     schema: selectedTable?.schema,
     table: selectedTable?.name || null,
     page,
-    pageSize: typeof pageSize === 'number' ? pageSize : 100,
+    pageSize,
     sortColumn: sort?.column,
     sortDirection: sort?.direction,
     filters: apiFilters,
-    enabled: Boolean(connection && selectedTable && !useInfiniteScroll),
+    enabled: Boolean(connection && selectedTable),
     primaryKeyColumn,
   });
-
-  // Use infinite scroll data hook for 'all' mode
-  const infiniteData = useInfiniteTableData({
-    connectionId: connection?.id || null,
-    schema: selectedTable?.schema,
-    table: selectedTable?.name || null,
-    pageSize: 100, // Load 100 rows at a time
-    sortColumn: sort?.column,
-    sortDirection: sort?.direction,
-    filters: apiFilters,
-    enabled: Boolean(connection && selectedTable && useInfiniteScroll),
-    primaryKeyColumn,
-  });
-
-  // Unified data interface - select based on mode
-  const rows = useInfiniteScroll ? infiniteData.rows : paginatedData.rows;
-  const columns = useInfiniteScroll
-    ? infiniteData.columns
-    : paginatedData.columns;
-  const totalRows = useInfiniteScroll
-    ? infiniteData.totalRows
-    : paginatedData.totalRows;
-  const totalPages = useInfiniteScroll ? 1 : paginatedData.totalPages;
-  const isLoading = useInfiniteScroll
-    ? infiniteData.isLoading
-    : paginatedData.isLoading;
-  const isFetching = useInfiniteScroll
-    ? infiniteData.isFetching
-    : paginatedData.isFetching;
-  const error = useInfiniteScroll ? infiniteData.error : paginatedData.error;
-  const updateRow = useInfiniteScroll
-    ? infiniteData.updateRow
-    : paginatedData.updateRow;
-  const insertRow = useInfiniteScroll
-    ? infiniteData.insertRow
-    : paginatedData.insertRow;
-  const deleteRow = useInfiniteScroll
-    ? infiniteData.deleteRow
-    : paginatedData.deleteRow;
-  const refetch = useInfiniteScroll
-    ? infiniteData.refetch
-    : paginatedData.refetch;
-
-  // Infinite scroll specific
-  const { fetchNextPage, hasNextPage, isFetchingNextPage } = infiniteData;
 
   const {
     changes: pendingChanges,
@@ -347,8 +301,8 @@ export function TableView({ tableOverride }: TableViewProps) {
   const handlePageSizeChange = useCallback(
     (value: string | null) => {
       if (!value) return;
-      const newSize = value === 'all' ? 'all' : Number.parseInt(value, 10);
-      setPageSize(newSize as PageSizeOption);
+      const newSize = Number.parseInt(value, 10) as PageSizeOption;
+      setPageSize(newSize);
       setPage(1); // Reset to first page when changing page size
     },
     [setPageSize, setPage]
@@ -805,10 +759,6 @@ export function TableView({ tableOverride }: TableViewProps) {
               hasActiveSearch={searchTerm.length > 0}
               onClearFilters={handleFiltersClear}
               onClearSearch={() => setSearchTerm('')}
-              // Infinite scroll props
-              onLoadMore={useInfiniteScroll ? fetchNextPage : undefined}
-              hasMore={useInfiniteScroll ? hasNextPage : false}
-              isLoadingMore={useInfiniteScroll ? isFetchingNextPage : false}
             />
           )}
         </div>
@@ -825,38 +775,19 @@ export function TableView({ tableOverride }: TableViewProps) {
         <div className="bg-background flex shrink-0 flex-wrap items-center justify-between gap-2 border-t px-4 py-2">
           <div className="flex flex-wrap items-center gap-4">
             <div className="text-muted-foreground text-sm">
-              {useInfiniteScroll ? (
-                <>
-                  {t('table.showing', {
-                    defaultValue: 'Showing {{shown}} of {{total}} rows',
-                    shown: rows.length.toLocaleString(),
-                    total: totalRows.toLocaleString(),
-                  })}
-                  {isFetchingNextPage && (
-                    <span className="text-primary ml-2">
-                      {t('table.loadingMore', {
-                        defaultValue: 'Loading more...',
-                      })}
-                    </span>
-                  )}
-                </>
-              ) : (
-                <>
-                  {t('table.pageInfo', {
-                    defaultValue: 'Page {{page}} of {{totalPages}}',
-                    page,
-                    totalPages: totalPages || 1,
-                  })}
-                  <span className="text-muted-foreground/70 ml-1">
-                    (
-                    {t('table.totalRows', {
-                      defaultValue: '{{count}} total',
-                      count: totalRows,
-                    })}
-                    )
-                  </span>
-                </>
-              )}
+              {t('table.pageInfo', {
+                defaultValue: 'Page {{page}} of {{totalPages}}',
+                page,
+                totalPages: totalPages || 1,
+              })}
+              <span className="text-muted-foreground/70 ml-1">
+                (
+                {t('table.totalRows', {
+                  defaultValue: '{{count}} total',
+                  count: totalRows,
+                })}
+                )
+              </span>
             </div>
 
             {/* Page Size Selector */}
@@ -865,7 +796,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 {t('table.rowsLabel', { defaultValue: 'Rows:' })}
               </span>
               <Select
-                value={String(pageSizeOption)}
+                value={String(pageSize)}
                 onValueChange={handlePageSizeChange}
               >
                 <SelectTrigger size="sm" className="h-7 w-20">
@@ -874,121 +805,100 @@ export function TableView({ tableOverride }: TableViewProps) {
                 <SelectContent align="center">
                   {PAGE_SIZE_OPTIONS.map((size) => (
                     <SelectItem key={size} value={String(size)}>
-                      {size === 'all'
-                        ? t('table.all', { defaultValue: 'All' })
-                        : size.toLocaleString()}
+                      {size.toLocaleString()}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {pageSizeOption === 'all' && totalRows > 10000 && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <AlertTriangle className="text-warning h-4 w-4 text-amber-500" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        {t('table.largeTableWarning', {
-                          defaultValue:
-                            'Loading all rows may be slow for large tables',
-                        })}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
             </div>
           </div>
 
-          {/* Pagination Controls - hidden when showing all */}
-          {pageSizeOption !== 'all' && (
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => handlePageChange(1)}
-                disabled={page <= 1 || isLoading}
-                title={t('table.firstPage', { defaultValue: 'First page' })}
-              >
-                <ChevronsLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page <= 1 || isLoading}
-                title={t('table.previousPage', {
-                  defaultValue: 'Previous page',
-                })}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
+          {/* Pagination Controls */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => handlePageChange(1)}
+              disabled={page <= 1 || isLoading}
+              title={t('table.firstPage', { defaultValue: 'First page' })}
+            >
+              <ChevronsLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page <= 1 || isLoading}
+              title={t('table.previousPage', {
+                defaultValue: 'Previous page',
+              })}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
 
-              {/* Page Jump Input */}
-              <div className="flex items-center gap-1.5">
-                <Input
-                  type="number"
-                  min={1}
-                  max={totalPages || 1}
-                  value={page}
-                  onChange={(e) => {
-                    const value = Number.parseInt(e.target.value, 10);
-                    if (
-                      !Number.isNaN(value) &&
-                      value >= 1 &&
-                      value <= totalPages
-                    ) {
-                      handlePageChange(value);
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const value = Number.parseInt(
-                        (e.target as HTMLInputElement).value,
-                        10
+            {/* Page Jump Input */}
+            <div className="flex items-center gap-1.5">
+              <Input
+                type="number"
+                min={1}
+                max={totalPages || 1}
+                value={page}
+                onChange={(e) => {
+                  const value = Number.parseInt(e.target.value, 10);
+                  if (
+                    !Number.isNaN(value) &&
+                    value >= 1 &&
+                    value <= totalPages
+                  ) {
+                    handlePageChange(value);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const value = Number.parseInt(
+                      (e.target as HTMLInputElement).value,
+                      10
+                    );
+                    if (!Number.isNaN(value)) {
+                      const clampedValue = Math.max(
+                        1,
+                        Math.min(value, totalPages)
                       );
-                      if (!Number.isNaN(value)) {
-                        const clampedValue = Math.max(
-                          1,
-                          Math.min(value, totalPages)
-                        );
-                        handlePageChange(clampedValue);
-                      }
+                      handlePageChange(clampedValue);
                     }
-                  }}
-                  className="h-8 w-16 text-center text-sm"
-                  disabled={isLoading}
-                />
-                <span className="text-muted-foreground text-sm">
-                  / {totalPages || 1}
-                </span>
-              </div>
-
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page >= totalPages || isLoading}
-                title={t('table.nextPage', { defaultValue: 'Next page' })}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => handlePageChange(totalPages)}
-                disabled={page >= totalPages || isLoading}
-                title={t('table.lastPage', { defaultValue: 'Last page' })}
-              >
-                <ChevronsRight className="h-4 w-4" />
-              </Button>
+                  }
+                }}
+                className="h-8 w-16 text-center text-sm"
+                disabled={isLoading}
+              />
+              <span className="text-muted-foreground text-sm">
+                / {totalPages || 1}
+              </span>
             </div>
-          )}
+
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page >= totalPages || isLoading}
+              title={t('table.nextPage', { defaultValue: 'Next page' })}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => handlePageChange(totalPages)}
+              disabled={page >= totalPages || isLoading}
+              title={t('table.lastPage', { defaultValue: 'Last page' })}
+            >
+              <ChevronsRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 

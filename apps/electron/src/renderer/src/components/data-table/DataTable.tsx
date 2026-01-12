@@ -220,7 +220,6 @@ export const DataTable = function DataTable({
 
   // Pre-compute column sizes as a Map for O(1) lookup
   // This avoids creating CSS variables which trigger style recalculation on the entire table
-
   const columnSizes = useMemo(() => {
     const headers = table.getFlatHeaders();
     const sizes = new Map<string, number>();
@@ -434,16 +433,21 @@ export const DataTable = function DataTable({
   // Row height for virtualization (compact VS Code style)
   const ROW_HEIGHT = 24;
 
+  // Disable virtualization for paginated mode (reasonable page sizes)
+  // This avoids virtualizer overhead for small-medium datasets
+  const shouldVirtualize = rows.length > 500;
+
   // Calculate dynamic overscan based on data size for better performance
   // Lower overscan reduces DOM nodes and style recalculations during scroll
   const rowOverscan = useMemo(() => {
+    if (!shouldVirtualize) return 0;
     if (rows.length > 100000) return 10;
     if (rows.length > 50000) return 15;
     if (rows.length > 20000) return 20;
     if (rows.length > 5000) return 25;
     // For moderate datasets, use moderate overscan
     return 30;
-  }, [rows.length]);
+  }, [rows.length, shouldVirtualize]);
 
   // Stable callbacks for virtualizers - defined outside useVirtualizer to avoid recreating on each render
   const getRowKey = useCallback(
@@ -600,13 +604,6 @@ export const DataTable = function DataTable({
           minWidth: table.getTotalSize(),
           fontFamily: tableFont.family || undefined,
           fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
-          // Force GPU compositing layer to reduce flickering
-          transform: 'translateZ(0)',
-          willChange: 'transform',
-          // Content visibility optimization for large datasets
-          // Browser can skip rendering work for off-screen content
-          contentVisibility: 'auto',
-          containIntrinsicSize: `auto ${rowVirtualizer.getTotalSize()}px`,
         }}
       >
         {/* Column group for width control - apply sizes directly to avoid CSS variable overhead */}
@@ -665,9 +662,8 @@ export const DataTable = function DataTable({
           enableSelection={enableSelection}
           onDragStart={handleDragStart}
           isInDragRange={isInDragRange}
-          // Disable virtualization for very small datasets to prevent flickering
-          // Keep threshold low (50) to avoid layout thrashing with many DOM nodes
-          disableVirtualization={rows.length < 50}
+          // Disable virtualization for paginated mode with reasonable page sizes
+          disableVirtualization={!shouldVirtualize}
           // Context menu props for SQL INSERT generation
           tableName={tableName}
           columns={columns}
