@@ -73,7 +73,7 @@ class WindowManager {
       backgroundColor: '#00000000',
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),
-        sandbox: false,
+        sandbox: true,
         // Native app experience - disable browser features
         spellcheck: false,
         enableWebSQL: false,
