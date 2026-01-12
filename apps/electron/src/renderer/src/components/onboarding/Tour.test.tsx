@@ -55,8 +55,7 @@ describe('tour Component', () => {
       <div data-tour-target="query-editor-tab">Query Editor</div>
       <div data-tour-target="toolbar">Toolbar</div>
       <div data-tour-target="diagram-tab">ER Diagram</div>
-      <div data-tour-target="schema-compare-tab">Schema Compare</div>
-      <div data-tour-target="data-diff-tab">Data Diff</div>
+      <div data-tour-target="compare-tab">Compare</div>
     `;
   });
 
@@ -156,10 +155,10 @@ describe('tour Component', () => {
   it('handles tour completion', async () => {
     const user = userEvent.setup();
 
-    // Mock last step (Command Palette & Settings is now the last step, index 6)
+    // Mock last step (Command Palette & Settings is now the last step, index 5)
     (useOnboardingStore as any).mockReturnValue({
       ...defaultStoreState,
-      currentStep: 6,
+      currentStep: 5,
     });
 
     render(<Tour />);

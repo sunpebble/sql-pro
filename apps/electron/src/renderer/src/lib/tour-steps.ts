@@ -68,13 +68,13 @@ export const TOUR_STEPS: TourStep[] = [
     },
   },
 
-  // Step 5: Schema Compare
+  // Step 5: Compare View (Schema Compare & Data Diff)
   {
-    id: 'schema-compare',
-    target: '[data-tour-target="schema-compare-tab"]',
-    title: 'Schema Compare',
+    id: 'compare-view',
+    target: '[data-tour-target="compare-tab"]',
+    title: 'Compare',
     description:
-      'Compare database schemas between two connections. Identify differences in tables, columns, indexes, and generate migration scripts automatically.',
+      'Compare database schemas and data between connections. Identify differences in tables, columns, and rows. Generate migration scripts automatically.',
     placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
@@ -84,23 +84,7 @@ export const TOUR_STEPS: TourStep[] = [
     },
   },
 
-  // Step 6: Data Diff
-  {
-    id: 'data-diff',
-    target: '[data-tour-target="data-diff-tab"]',
-    title: 'Data Diff',
-    description:
-      'Compare table data between two databases. Visualize row-level differences and identify data changes across environments.',
-    placement: 'right',
-    spotlightMode: true,
-    waitForTarget: true,
-    action: {
-      type: 'switch-tab',
-      tab: 'dataDiff',
-    },
-  },
-
-  // Step 7: Command Palette & Settings (Final step)
+  // Step 6: Command Palette & Settings (Final step)
   {
     id: 'command-palette',
     target: '[data-tour-target="toolbar"]',
