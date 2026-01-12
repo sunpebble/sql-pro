@@ -72,7 +72,6 @@ export function TableView({ tableOverride }: TableViewProps) {
     activeConnectionId,
   } = useConnectionStore();
   const {
-    getActiveTab,
     updateTabSearchTerm,
     updateTabPage,
     updateTabSort,
@@ -86,10 +85,14 @@ export function TableView({ tableOverride }: TableViewProps) {
   const dataTableRef = useRef<DataTableRef>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Get active tab for state (persisted per tab)
-  const activeTab = activeConnectionId
-    ? getActiveTab(activeConnectionId)
-    : undefined;
+  // Subscribe to active tab state directly using selector pattern
+  // This ensures component re-renders when tab state changes (page, sort, filters, etc.)
+  const activeTab = useDataTabsStore((state) => {
+    if (!activeConnectionId) return undefined;
+    const connState = state.tabsByConnection[activeConnectionId];
+    if (!connState?.activeTabId) return undefined;
+    return connState.tabs.find((t) => t.id === connState.activeTabId);
+  });
 
   const { t } = useTranslation('common');
 
