@@ -1,5 +1,5 @@
 import type { ColumnInfo } from '@shared/types';
-import { useMemo } from 'react';
+import { useDeferredValue, useMemo, useRef } from 'react';
 
 /**
  * Row data type with optional __rowId property
@@ -112,6 +112,11 @@ function rowMatchesSearch<T extends SearchableRow>(
  * Filters rows based on a search term, matching against all visible column values.
  * Search is case-insensitive and matches partial strings.
  *
+ * Performance optimizations:
+ * - Uses useDeferredValue to defer expensive filtering during rapid typing
+ * - Caches previous search results to avoid re-computation
+ * - Early exit when search term hasn't changed
+ *
  * @example
  * ```tsx
  * const { filteredRows, stats } = useClientSearch({
@@ -129,14 +134,34 @@ export function useClientSearch<T extends SearchableRow>(
 ): UseClientSearchResult<T> {
   const { rows, columns, searchTerm, excludeColumns = [] } = options;
 
+  // Defer the search term to allow React to prioritize more urgent updates
+  // This prevents UI lag during rapid typing on large datasets
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
+  // Cache for previous search results to avoid re-computation
+  const cacheRef = useRef<{
+    searchTerm: string;
+    rowsLength: number;
+    result: UseClientSearchResult<T>;
+  } | null>(null);
+
   const result = useMemo(() => {
-    const trimmedSearch = searchTerm.trim();
+    const trimmedSearch = deferredSearchTerm.trim();
     const isSearching = trimmedSearch.length > 0;
     const totalRows = rows.length;
 
+    // Check cache - if same search term and same row count, return cached result
+    if (
+      cacheRef.current &&
+      cacheRef.current.searchTerm === trimmedSearch &&
+      cacheRef.current.rowsLength === totalRows
+    ) {
+      return cacheRef.current.result;
+    }
+
     // If no search term, return all rows
     if (!isSearching) {
-      return {
+      const noSearchResult: UseClientSearchResult<T> = {
         filteredRows: rows,
         stats: {
           totalRows,
@@ -144,6 +169,12 @@ export function useClientSearch<T extends SearchableRow>(
           isSearching: false,
         },
       };
+      cacheRef.current = {
+        searchTerm: trimmedSearch,
+        rowsLength: totalRows,
+        result: noSearchResult,
+      };
+      return noSearchResult;
     }
 
     // Build exclude columns set for faster lookup
@@ -165,7 +196,7 @@ export function useClientSearch<T extends SearchableRow>(
       rowMatchesSearch(row, columns, searchTermLower, excludeSet)
     );
 
-    return {
+    const searchResult: UseClientSearchResult<T> = {
       filteredRows,
       stats: {
         totalRows,
@@ -173,7 +204,16 @@ export function useClientSearch<T extends SearchableRow>(
         isSearching: true,
       },
     };
-  }, [rows, columns, searchTerm, excludeColumns]);
+
+    // Update cache
+    cacheRef.current = {
+      searchTerm: trimmedSearch,
+      rowsLength: totalRows,
+      result: searchResult,
+    };
+
+    return searchResult;
+  }, [rows, columns, deferredSearchTerm, excludeColumns]);
 
   return result;
 }
