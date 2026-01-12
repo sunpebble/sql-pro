@@ -258,7 +258,7 @@
   input[type='radio'],
   label[for],
   .cursor-pointer {
-    cursor: pointer;
+    cursor: pointer !important;
   }
 }
 
