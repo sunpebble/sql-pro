@@ -3,14 +3,12 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  lazyRouteComponent,
   redirect,
 } from '@tanstack/react-router';
 import { useConnectionStore } from '@/stores';
-import { DatabasePage } from './database';
 import { RouterErrorFallback } from './error';
-import { PluginsPage } from './plugins';
 import { RootLayout } from './root';
-import { WelcomePage } from './welcome';
 
 // Use hash history for Electron file:// protocol compatibility
 const hashHistory = createHashHistory();
@@ -25,7 +23,7 @@ const rootRoute = createRootRoute({
 const welcomeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: WelcomePage,
+  component: lazyRouteComponent(() => import('./welcome'), 'WelcomePage'),
   beforeLoad: () => {
     const { connection } = useConnectionStore.getState();
     if (connection) {
@@ -38,7 +36,7 @@ const welcomeRoute = createRoute({
 const databaseRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/database',
-  component: DatabasePage,
+  component: lazyRouteComponent(() => import('./database'), 'DatabasePage'),
   beforeLoad: () => {
     const { connection } = useConnectionStore.getState();
     if (!connection) {
@@ -51,7 +49,7 @@ const databaseRoute = createRoute({
 const pluginsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/plugins',
-  component: PluginsPage,
+  component: lazyRouteComponent(() => import('./plugins'), 'PluginsPage'),
 });
 
 // Create the route tree
