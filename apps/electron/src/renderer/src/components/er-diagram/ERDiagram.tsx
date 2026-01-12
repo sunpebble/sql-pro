@@ -2,7 +2,6 @@ import type { ColorMode, NodeChange, OnNodesChange } from '@xyflow/react';
 import type { ERRelationshipEdge, ERTableNode } from '@/types/er-diagram';
 import {
   Background,
-  Controls,
   MiniMap,
   ReactFlow,
   useEdgesState,
@@ -229,7 +228,6 @@ export function ERDiagram() {
         proOptions={{ hideAttribution: true }}
       >
         <Background />
-        <Controls showInteractive={false} />
         <MiniMap
           nodeStrokeWidth={3}
           zoomable

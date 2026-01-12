@@ -417,6 +417,16 @@
     "execute": "Execute",
     "noResults": "Execute a query to see results"
   },
+  "erDiagram": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetZoom": "Reset zoom to 100%",
+    "fitView": "Fit to view",
+    "resetLayout": "Reset layout",
+    "export": "Export diagram",
+    "exportPng": "Export as PNG",
+    "exportSvg": "Export as SVG"
+  },
   "welcomeDialog": {
     "title": "Welcome to SQL Pro",
     "description": "Your professional database manager for SQLite, MySQL, PostgreSQL, and Supabase. Take a quick tour to discover powerful features like the command palette, Vim mode, visual diff preview, and ER diagrams.",

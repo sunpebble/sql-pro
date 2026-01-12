@@ -416,6 +416,16 @@
     "execute": "执行",
     "noResults": "执行查询以查看结果"
   },
+  "erDiagram": {
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "resetZoom": "重置缩放到 100%",
+    "fitView": "适应视图",
+    "resetLayout": "重置布局",
+    "export": "导出图表",
+    "exportPng": "导出为 PNG",
+    "exportSvg": "导出为 SVG"
+  },
   "welcomeDialog": {
     "title": "欢迎使用 SQL Pro",
     "description": "专为 SQLite、MySQL、PostgreSQL 和 Supabase 打造的专业数据库管理器。快速浏览以了解命令面板、Vim 模式、可视化差异预览和 ER 图等强大功能。",

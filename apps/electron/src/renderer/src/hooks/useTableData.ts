@@ -152,6 +152,12 @@ export function useTableData(options: UseTableDataOptions): UseTableDataResult {
       };
     },
     enabled: Boolean(connectionId && table && enabled),
+    // Ensure fresh data on every page/filter change
+    staleTime: 0,
+    // Don't keep old page data in cache for long
+    gcTime: 30000, // 30 seconds
+    // Always refetch when query key changes (page navigation)
+    refetchOnMount: true,
   });
 
   // Get pending changes for this table (reactive via pendingChangesVersion)

@@ -771,54 +771,29 @@ export function TableView({ tableOverride }: TableViewProps) {
         {/* Selection Quick Stats - Excel-like status bar */}
         <SelectionStats selectedRows={selectedRowsData} columns={columns} />
 
-        {/* Pagination */}
-        <div className="bg-background flex shrink-0 flex-wrap items-center justify-between gap-2 border-t px-4 py-2">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="text-muted-foreground text-sm">
-              {t('table.pageInfo', {
-                defaultValue: 'Page {{page}} of {{totalPages}}',
-                page,
-                totalPages: totalPages || 1,
-              })}
-              <span className="text-muted-foreground/70 ml-1">
-                (
-                {t('table.totalRows', {
-                  defaultValue: '{{count}} total',
-                  count: totalRows,
-                })}
-                )
-              </span>
-            </div>
-
-            {/* Page Size Selector */}
-            <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-sm">
-                {t('table.rowsLabel', { defaultValue: 'Rows:' })}
-              </span>
-              <Select
-                value={String(pageSize)}
-                onValueChange={handlePageSizeChange}
-              >
-                <SelectTrigger size="sm" className="h-7 w-20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent align="center">
-                  {PAGE_SIZE_OPTIONS.map((size) => (
-                    <SelectItem key={size} value={String(size)}>
-                      {size.toLocaleString()}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        {/* Pagination - Single Row Layout */}
+        <div className="bg-background flex shrink-0 items-center justify-center gap-2 border-t px-2 py-2 sm:gap-3 sm:px-4">
+          {/* Page Info - hidden on very small screens */}
+          <div className="text-muted-foreground hidden text-sm whitespace-nowrap sm:block">
+            {t('table.pageInfo', {
+              defaultValue: 'Page {{page}} of {{totalPages}}',
+              page,
+              totalPages: totalPages || 1,
+            })}
+            <span className="text-muted-foreground/70 ml-1">
+              ({totalRows.toLocaleString()})
+            </span>
           </div>
 
+          {/* Divider - hidden on very small screens */}
+          <div className="bg-border hidden h-4 w-px sm:block" />
+
           {/* Pagination Controls */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-7 w-7"
               onClick={() => handlePageChange(1)}
               disabled={page <= 1 || isLoading}
               title={t('table.firstPage', { defaultValue: 'First page' })}
@@ -826,9 +801,9 @@ export function TableView({ tableOverride }: TableViewProps) {
               <ChevronsLeft className="h-4 w-4" />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-7 w-7"
               onClick={() => handlePageChange(page - 1)}
               disabled={page <= 1 || isLoading}
               title={t('table.previousPage', {
@@ -839,7 +814,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             </Button>
 
             {/* Page Jump Input */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 whitespace-nowrap">
               <Input
                 type="number"
                 min={1}
@@ -870,18 +845,18 @@ export function TableView({ tableOverride }: TableViewProps) {
                     }
                   }
                 }}
-                className="h-8 w-16 text-center text-sm"
+                className="h-7 w-12 px-1 text-center text-sm"
                 disabled={isLoading}
               />
-              <span className="text-muted-foreground text-sm">
+              <span className="text-muted-foreground text-sm whitespace-nowrap">
                 / {totalPages || 1}
               </span>
             </div>
 
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-7 w-7"
               onClick={() => handlePageChange(page + 1)}
               disabled={page >= totalPages || isLoading}
               title={t('table.nextPage', { defaultValue: 'Next page' })}
@@ -889,15 +864,37 @@ export function TableView({ tableOverride }: TableViewProps) {
               <ChevronRight className="h-4 w-4" />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-7 w-7"
               onClick={() => handlePageChange(totalPages)}
               disabled={page >= totalPages || isLoading}
               title={t('table.lastPage', { defaultValue: 'Last page' })}
             >
               <ChevronsRight className="h-4 w-4" />
             </Button>
+          </div>
+
+          {/* Divider */}
+          <div className="bg-border h-4 w-px" />
+
+          {/* Page Size Selector */}
+          <div className="flex items-center gap-1.5 whitespace-nowrap">
+            <Select
+              value={String(pageSize)}
+              onValueChange={handlePageSizeChange}
+            >
+              <SelectTrigger size="sm" className="h-7 w-16">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="center">
+                {PAGE_SIZE_OPTIONS.map((size) => (
+                  <SelectItem key={size} value={String(size)}>
+                    {size.toLocaleString()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
