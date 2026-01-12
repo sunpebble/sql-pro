@@ -78,6 +78,8 @@ export function TableView({ tableOverride }: TableViewProps) {
     updateTabGrouping,
     updateTabFilters,
   } = useDataTabsStore();
+  // Subscribe to the entire tabsByConnection state to ensure re-renders on any tab state change
+  const tabsByConnection = useDataTabsStore((state) => state.tabsByConnection);
   const { showSchemaDetails, toggleSchemaDetails } = useSettingsStore();
 
   // Use tableOverride if provided, otherwise fall back to store's selectedTable
@@ -85,14 +87,14 @@ export function TableView({ tableOverride }: TableViewProps) {
   const dataTableRef = useRef<DataTableRef>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Subscribe to active tab state directly using selector pattern
-  // This ensures component re-renders when tab state changes (page, sort, filters, etc.)
-  const activeTab = useDataTabsStore((state) => {
+  // Compute active tab from the subscribed state
+  // This ensures component re-renders when any tab state changes (page, sort, filters, etc.)
+  const activeTab = useMemo(() => {
     if (!activeConnectionId) return undefined;
-    const connState = state.tabsByConnection[activeConnectionId];
+    const connState = tabsByConnection[activeConnectionId];
     if (!connState?.activeTabId) return undefined;
     return connState.tabs.find((t) => t.id === connState.activeTabId);
-  });
+  }, [activeConnectionId, tabsByConnection]);
 
   const { t } = useTranslation('common');
 
