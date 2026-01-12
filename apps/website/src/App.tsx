@@ -5,6 +5,7 @@ import Features from './components/Features';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import Pricing from './components/Pricing';
 import Screenshots from './components/Screenshots';
 import SkipLink from './components/SkipLink';
 
@@ -28,6 +29,7 @@ export default function App() {
         <Hero />
         <Features />
         <Screenshots />
+        <Pricing />
         <Download />
       </main>
       <Footer />

@@ -85,6 +85,55 @@
     "copyright": "© {{year}} SQL Pro Team. Open source under MIT license.",
     "techStack": "Tech stack:"
   },
+  "pricing": {
+    "title": "Simple,",
+    "titleHighlight": "Transparent Pricing",
+    "subtitle": "Choose the plan that works best for you. All plans include full access to all features.",
+    "popular": "Most Popular",
+    "cta": "Get Started",
+    "note": "All plans include free updates. Cancel subscription anytime.",
+    "plans": {
+      "monthly": {
+        "title": "Monthly",
+        "price": "$9",
+        "period": "/month",
+        "description": "Perfect for trying out SQL Pro with full access to all features.",
+        "features": [
+          "All Pro features",
+          "SQLCipher encryption support",
+          "Schema & data comparison",
+          "Priority email support",
+          "Up to 3 devices"
+        ]
+      },
+      "yearly": {
+        "title": "Yearly",
+        "price": "$69",
+        "period": "/year",
+        "description": "Best value for power users. Save over 35% compared to monthly.",
+        "features": [
+          "All Pro features",
+          "SQLCipher encryption support",
+          "Schema & data comparison",
+          "Priority email support",
+          "Up to 5 devices"
+        ]
+      },
+      "lifetime": {
+        "title": "Lifetime",
+        "price": "$199",
+        "period": "one-time",
+        "description": "Pay once, use forever. Includes all future updates.",
+        "features": [
+          "All Pro features forever",
+          "SQLCipher encryption support",
+          "Schema & data comparison",
+          "Priority email support",
+          "Unlimited devices"
+        ]
+      }
+    }
+  },
   "a11y": {
     "skipToContent": "Skip to main content",
     "languageSelector": "Select language",

@@ -85,6 +85,55 @@
     "copyright": "© {{year}} SQL Pro Team. 基于 MIT 协议开源。",
     "techStack": "技术栈："
   },
+  "pricing": {
+    "title": "简单，",
+    "titleHighlight": "透明定价",
+    "subtitle": "选择最适合您的方案。所有方案都包含全部功能。",
+    "popular": "最受欢迎",
+    "cta": "立即开始",
+    "note": "所有方案包含免费更新。订阅可随时取消。",
+    "plans": {
+      "monthly": {
+        "title": "月付",
+        "price": "$9",
+        "period": "/月",
+        "description": "完美试用 SQL Pro 的所有专业功能。",
+        "features": [
+          "所有专业功能",
+          "SQLCipher 加密支持",
+          "结构与数据对比",
+          "优先邮件支持",
+          "最多 3 台设备"
+        ]
+      },
+      "yearly": {
+        "title": "年付",
+        "price": "$69",
+        "period": "/年",
+        "description": "资深用户最佳选择。比月付节省超过 35%。",
+        "features": [
+          "所有专业功能",
+          "SQLCipher 加密支持",
+          "结构与数据对比",
+          "优先邮件支持",
+          "最多 5 台设备"
+        ]
+      },
+      "lifetime": {
+        "title": "终身",
+        "price": "$199",
+        "period": "一次性付款",
+        "description": "一次付款，永久使用。包含所有未来更新。",
+        "features": [
+          "永久享有所有专业功能",
+          "SQLCipher 加密支持",
+          "结构与数据对比",
+          "优先邮件支持",
+          "无限设备"
+        ]
+      }
+    }
+  },
   "a11y": {
     "skipToContent": "跳转到主要内容",
     "languageSelector": "选择语言",
