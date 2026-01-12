@@ -19,6 +19,11 @@ import { Buffer } from 'node:buffer';
 import { readFileSync } from 'node:fs';
 import Database from 'better-sqlite3-multiple-ciphers';
 import { enhanceConnectionError, enhanceQueryError } from '@/lib/error-parser';
+import {
+  buildPragmaKeyValue,
+  buildPragmaRekeyValue,
+  escapePragmaIdentifier,
+} from '@/lib/pragma-escape';
 import { sqlLogger } from './sql-logger';
 
 interface ConnectionInfo {
@@ -165,13 +170,12 @@ class DatabaseService {
             // Set the key (hex format if specified)
             if (config.rawKey) {
               // Treat password as already being a hex key
-              db.pragma(`key = "x'${password}'"`);
+              db.pragma(buildPragmaKeyValue(password, { rawKey: true }));
             } else if (config.hexKey) {
               // Convert password to hex string
-              const hexKey = Buffer.from(password, 'utf8').toString('hex');
-              db.pragma(`key = "x'${hexKey}'"`);
+              db.pragma(buildPragmaKeyValue(password, { hexKey: true }));
             } else {
-              db.pragma(`key = '${password}'`);
+              db.pragma(buildPragmaKeyValue(password));
             }
 
             // Test if we can read from the database
@@ -388,13 +392,7 @@ class DatabaseService {
     try {
       // Use PRAGMA rekey to change the password
       // Empty string removes encryption
-      if (newPassword === '') {
-        // Remove encryption by setting key to empty
-        conn.db.pragma(`rekey = ''`);
-      } else {
-        // Set new password
-        conn.db.pragma(`rekey = '${newPassword}'`);
-      }
+      conn.db.pragma(buildPragmaRekeyValue(newPassword));
 
       // Verify the change by testing a simple query
       conn.db.prepare('SELECT count(*) FROM sqlite_master').get();
@@ -814,8 +812,10 @@ class DatabaseService {
     tableName: string,
     schema: string = 'main'
   ): ForeignKeyInfo[] {
+    const escapedSchema = escapePragmaIdentifier(schema);
+    const escapedTable = escapePragmaIdentifier(tableName);
     const fks = db
-      .prepare(`PRAGMA "${schema}".foreign_key_list("${tableName}")`)
+      .prepare(`PRAGMA "${escapedSchema}".foreign_key_list("${escapedTable}")`)
       .all() as Array<{
       id: number;
       seq: number;
