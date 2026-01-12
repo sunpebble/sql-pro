@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@libsql/client": "^0.14.0",
+    "@libsql/client": "^0.17.0",
     "hono": "^4.6.0",
     "nanoid": "^5.0.0",
     "stripe": "^17.0.0"
