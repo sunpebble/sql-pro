@@ -260,6 +260,21 @@
   .cursor-pointer {
     cursor: pointer !important;
   }
+
+  /* Ensure children of interactive elements inherit cursor */
+  a *,
+  button *,
+  [role='button'] *,
+  [role='tab'] *,
+  [role='menuitem'] *,
+  [role='option'] *,
+  [role='checkbox'] *,
+  [role='radio'] *,
+  [role='switch'] *,
+  label[for] *,
+  .cursor-pointer * {
+    cursor: inherit !important;
+  }
 }
 
 /* Font size inheritance - use CSS variables set by useApplyFont */
