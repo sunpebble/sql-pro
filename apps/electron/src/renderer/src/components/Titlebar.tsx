@@ -89,15 +89,21 @@ export function Titlebar() {
               })}
             </TooltipContent>
           </Tooltip>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTheme('light')}>
+          <DropdownMenuContent align="end" className="w-auto min-w-0">
+            <DropdownMenuItem
+              onClick={() => setTheme('light')}
+              className="whitespace-nowrap"
+            >
               <Sun className="mr-2 h-4 w-4" />
               {t('theme.light', { defaultValue: 'Light' })}
               {theme === 'light' && (
                 <span className="text-primary ml-auto">✓</span>
               )}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme('dark')}>
+            <DropdownMenuItem
+              onClick={() => setTheme('dark')}
+              className="whitespace-nowrap"
+            >
               <Moon className="mr-2 h-4 w-4" />
               {t('theme.dark', { defaultValue: 'Dark' })}
               {theme === 'dark' && (
@@ -105,7 +111,10 @@ export function Titlebar() {
               )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setTheme('system')}>
+            <DropdownMenuItem
+              onClick={() => setTheme('system')}
+              className="whitespace-nowrap"
+            >
               <Monitor className="mr-2 h-4 w-4" />
               {t('theme.system', { defaultValue: 'System' })}
               {theme === 'system' && (
