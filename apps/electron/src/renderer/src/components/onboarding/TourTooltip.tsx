@@ -318,13 +318,13 @@ export function TourTooltip({
           id="tour-tooltip-title"
           className="text-foreground text-base font-semibold"
         >
-          {step.title}
+          {t(step.title)}
         </h3>
         <p
           id="tour-tooltip-description"
           className="text-muted-foreground mt-2 text-sm leading-relaxed"
         >
-          {step.description}
+          {t(step.description)}
         </p>
       </div>
 

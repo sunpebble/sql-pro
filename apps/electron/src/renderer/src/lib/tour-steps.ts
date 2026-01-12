@@ -6,15 +6,17 @@ import type { TourConfig, TourStep } from '@/types/onboarding';
  * ER diagram, schema compare, data diff, and command palette.
  *
  * The tour starts after user connects to a database.
+ *
+ * Note: title and description are translation keys that should be resolved
+ * using t(`tour.steps.${step.id}.title`) and t(`tour.steps.${step.id}.description`)
  */
 export const TOUR_STEPS: TourStep[] = [
   // Step 1: Schema Browser (Sidebar)
   {
-    id: 'schema-browser',
+    id: 'schemaBrowser',
     target: '[data-tour-target="sidebar"]',
-    title: 'Schema Browser',
-    description:
-      'Navigate your database structure here. Browse tables, views, and search for specific objects. Click any table to view its data.',
+    title: 'tour.steps.schemaBrowser.title',
+    description: 'tour.steps.schemaBrowser.description',
     placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
@@ -22,11 +24,10 @@ export const TOUR_STEPS: TourStep[] = [
 
   // Step 2: Data Browser
   {
-    id: 'data-browser',
+    id: 'dataBrowser',
     target: '[data-tour-target="data-browser-tab"]',
-    title: 'Data Browser',
-    description:
-      'View and edit table data with a powerful spreadsheet-like interface. Sort, filter, and modify data inline. Changes are tracked and can be previewed before saving.',
+    title: 'tour.steps.dataBrowser.title',
+    description: 'tour.steps.dataBrowser.description',
     placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
@@ -38,11 +39,10 @@ export const TOUR_STEPS: TourStep[] = [
 
   // Step 3: Query Editor
   {
-    id: 'query-editor',
+    id: 'queryEditor',
     target: '[data-tour-target="query-editor-tab"]',
-    title: 'Query Editor',
-    description:
-      'Write and execute SQL queries with syntax highlighting and autocomplete. Supports Vim mode for keyboard-driven editing.',
+    title: 'tour.steps.queryEditor.title',
+    description: 'tour.steps.queryEditor.description',
     placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
@@ -54,11 +54,10 @@ export const TOUR_STEPS: TourStep[] = [
 
   // Step 4: ER Diagram
   {
-    id: 'er-diagram',
+    id: 'erDiagram',
     target: '[data-tour-target="diagram-tab"]',
-    title: 'ER Diagram',
-    description:
-      'Visualize your database schema with interactive entity-relationship diagrams. See table relationships and foreign keys at a glance.',
+    title: 'tour.steps.erDiagram.title',
+    description: 'tour.steps.erDiagram.description',
     placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
@@ -70,11 +69,10 @@ export const TOUR_STEPS: TourStep[] = [
 
   // Step 5: Compare View (Schema Compare & Data Diff)
   {
-    id: 'compare-view',
+    id: 'compare',
     target: '[data-tour-target="compare-tab"]',
-    title: 'Compare',
-    description:
-      'Compare database schemas and data between connections. Identify differences in tables, columns, and rows. Generate migration scripts automatically.',
+    title: 'tour.steps.compare.title',
+    description: 'tour.steps.compare.description',
     placement: 'right',
     spotlightMode: true,
     waitForTarget: true,
@@ -86,11 +84,10 @@ export const TOUR_STEPS: TourStep[] = [
 
   // Step 6: Command Palette & Settings (Final step)
   {
-    id: 'command-palette',
+    id: 'commandPalette',
     target: '[data-tour-target="toolbar"]',
-    title: 'Command Palette & Settings',
-    description:
-      'Press ⌘K (or Ctrl+K) to open the command palette for quick access to all actions. Access settings to customize themes, fonts, Vim mode, keyboard shortcuts, and more!',
+    title: 'tour.steps.commandPalette.title',
+    description: 'tour.steps.commandPalette.description',
     placement: 'bottom',
     spotlightMode: true,
     waitForTarget: true,

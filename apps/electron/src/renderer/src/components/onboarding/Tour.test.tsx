@@ -10,6 +10,40 @@ vi.mock('../../stores/onboarding-store', () => ({
   useOnboardingStore: vi.fn(),
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: Record<string, unknown>) => {
+      // Return translations for tour step content
+      const translations: Record<string, string> = {
+        'tour.steps.schemaBrowser.title': 'Schema Browser',
+        'tour.steps.schemaBrowser.description':
+          'Navigate your database structure here.',
+        'tour.steps.dataBrowser.title': 'Data Browser',
+        'tour.steps.dataBrowser.description': 'View and edit table data.',
+        'tour.steps.queryEditor.title': 'Query Editor',
+        'tour.steps.queryEditor.description': 'Write and execute SQL queries.',
+        'tour.steps.erDiagram.title': 'ER Diagram',
+        'tour.steps.erDiagram.description': 'Visualize your database schema.',
+        'tour.steps.compare.title': 'Compare',
+        'tour.steps.compare.description': 'Compare database schemas and data.',
+        'tour.steps.commandPalette.title': 'Command Palette & Settings',
+        'tour.steps.commandPalette.description':
+          'Press ⌘K to open the command palette.',
+        'tour.step': `Step ${options?.current ?? '?'} of ${options?.total ?? '?'}`,
+        'tour.skip': 'Skip tour',
+        'tour.next': 'Next',
+        'tour.previous': 'Back',
+        'tour.finish': 'Finish',
+      };
+      return translations[key] ?? key;
+    },
+    i18n: {
+      language: 'en',
+    },
+  }),
+}));
+
 // Mock ResizeObserver
 globalThis.ResizeObserver = class ResizeObserver {
   observe() {}
