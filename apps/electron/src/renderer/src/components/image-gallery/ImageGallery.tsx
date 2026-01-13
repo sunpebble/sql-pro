@@ -51,118 +51,114 @@ interface ImageThumbnailProps {
   onSelect: (e: React.MouseEvent) => void;
 }
 
-const ImageThumbnail = memo(({
-  item,
-  size,
-  isSelected,
-  onClick,
-  onSelect,
-}: ImageThumbnailProps) => {
-  const [loadError, setLoadError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const displayUrl = useMemo(
-    () => getImageDisplayUrl(item.source),
-    [item.source]
-  );
+const ImageThumbnail = memo(
+  ({ item, size, isSelected, onClick, onSelect }: ImageThumbnailProps) => {
+    const [loadError, setLoadError] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const displayUrl = useMemo(
+      () => getImageDisplayUrl(item.source),
+      [item.source]
+    );
 
-  const handleError = useCallback(() => {
-    setLoadError(true);
-  }, []);
+    const handleError = useCallback(() => {
+      setLoadError(true);
+    }, []);
 
-  const handleLoad = useCallback(() => {
-    setIsLoaded(true);
-  }, []);
+    const handleLoad = useCallback(() => {
+      setIsLoaded(true);
+    }, []);
 
-  return (
-    <div
-      className={cn(
-        'group hover:border-primary relative cursor-pointer overflow-hidden rounded-lg border transition-all',
-        isSelected
-          ? 'border-primary ring-primary/50 ring-2'
-          : 'border-border hover:shadow-md'
-      )}
-      style={{ width: size, height: size }}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-    >
-      {/* Selection checkbox */}
+    return (
       <div
         className={cn(
-          'absolute top-2 left-2 z-10 transition-opacity',
-          isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+          'group hover:border-primary relative cursor-pointer overflow-hidden rounded-lg border transition-all',
+          isSelected
+            ? 'border-primary ring-primary/50 ring-2'
+            : 'border-border hover:shadow-md'
         )}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(e);
+        style={{ width: size, height: size }}
+        onClick={onClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+          }
         }}
       >
+        {/* Selection checkbox */}
         <div
           className={cn(
-            'flex h-5 w-5 items-center justify-center rounded border',
-            isSelected
-              ? 'border-primary bg-primary text-primary-foreground'
-              : 'border-white/80 bg-black/30 text-white'
+            'absolute top-2 left-2 z-10 transition-opacity',
+            isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
           )}
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(e);
+          }}
         >
-          {isSelected && (
-            <svg
-              className="h-3 w-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={3}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          )}
-        </div>
-      </div>
-
-      {/* Image */}
-      {displayUrl && !loadError ? (
-        <>
-          {!isLoaded && (
-            <div className="bg-muted absolute inset-0 animate-pulse" />
-          )}
-          <img
-            src={displayUrl}
-            alt={`Row ${item.rowIndex + 1}, ${item.column}`}
+          <div
             className={cn(
-              'h-full w-full object-cover transition-opacity',
-              isLoaded ? 'opacity-100' : 'opacity-0'
+              'flex h-5 w-5 items-center justify-center rounded border',
+              isSelected
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'border-white/80 bg-black/30 text-white'
             )}
-            loading="lazy"
-            onError={handleError}
-            onLoad={handleLoad}
-          />
-        </>
-      ) : (
-        <div className="bg-muted text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-1">
-          <ImageOff className="h-6 w-6" />
-          <span className="text-xs">Error</span>
+          >
+            {isSelected && (
+              <svg
+                className="h-3 w-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            )}
+          </div>
         </div>
-      )}
 
-      {/* Row info overlay */}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
-        <p className="truncate text-xs text-white">
-          Row {item.rowIndex + 1} · {item.column}
-        </p>
+        {/* Image */}
+        {displayUrl && !loadError ? (
+          <>
+            {!isLoaded && (
+              <div className="bg-muted absolute inset-0 animate-pulse" />
+            )}
+            <img
+              src={displayUrl}
+              alt={`Row ${item.rowIndex + 1}, ${item.column}`}
+              className={cn(
+                'h-full w-full object-cover transition-opacity',
+                isLoaded ? 'opacity-100' : 'opacity-0'
+              )}
+              loading="lazy"
+              onError={handleError}
+              onLoad={handleLoad}
+            />
+          </>
+        ) : (
+          <div className="bg-muted text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-1">
+            <ImageOff className="h-6 w-6" />
+            <span className="text-xs">Error</span>
+          </div>
+        )}
+
+        {/* Row info overlay */}
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <p className="truncate text-xs text-white">
+            Row {item.rowIndex + 1} · {item.column}
+          </p>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 // ============================================================================
 // Main ImageGallery Component
@@ -261,12 +257,14 @@ export function ImageGallery({
   if (isLoading) {
     return (
       <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3 p-4">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div
-            key={`skeleton-${i}`}
-            className="bg-muted aspect-square animate-pulse rounded-lg"
-          />
-        ))}
+        {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'].map(
+          (id) => (
+            <div
+              key={`skeleton-${id}`}
+              className="bg-muted aspect-square animate-pulse rounded-lg"
+            />
+          )
+        )}
       </div>
     );
   }

@@ -93,7 +93,7 @@ export function TableImageGallery({
 
   // Handle export selected images
   const handleExportSelected = useCallback(() => {
-    // TODO: Implement batch export via IPC
+    // TODO: Implement batch export via IPC - placeholder for future implementation
   }, []);
 
   // Handle refresh

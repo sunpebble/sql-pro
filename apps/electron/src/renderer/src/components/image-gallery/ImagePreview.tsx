@@ -9,13 +9,7 @@ import {
   ImageOff,
   X,
 } from 'lucide-react';
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import {
@@ -116,11 +110,15 @@ export function ImagePreview({
   );
   const imageInfo = useMemo(() => getImageInfo(item.source), [item.source]);
 
-  // Reset error state when item changes - use layout effect for synchronous reset
-  useLayoutEffect(() => {
+  // Reset error state when item changes - derive from item.id
+  const currentItemId = item.id;
+  const [trackedItemId, setTrackedItemId] = useState(currentItemId);
+
+  if (currentItemId !== trackedItemId) {
+    setTrackedItemId(currentItemId);
     setLoadError(false);
     setImageDimensions(null);
-  }, [item.id]);
+  }
 
   // Keyboard navigation
   useEffect(() => {
