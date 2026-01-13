@@ -1,4 +1,24 @@
 {
+  "databaseType": {
+    "title": "Select Database Type",
+    "description": "Choose the type of database you want to connect to",
+    "sqlite": {
+      "name": "SQLite",
+      "description": "Local file-based database"
+    },
+    "mysql": {
+      "name": "MySQL",
+      "description": "MySQL/MariaDB server"
+    },
+    "postgresql": {
+      "name": "PostgreSQL",
+      "description": "PostgreSQL server"
+    },
+    "supabase": {
+      "name": "Supabase",
+      "description": "Supabase PostgreSQL"
+    }
+  },
   "connection": {
     "title": "Connect to",
     "editTitle": "Edit",
@@ -16,10 +36,19 @@
     "password": "Password",
     "connectionUrl": "Connection URL",
     "useUrl": "Use Connection URL",
+    "importFromUrl": "Import from URL",
+    "pasteToAutoFill": "(paste to auto-fill)",
     "test": "Test Connection",
+    "testing": "Testing...",
     "testSuccess": "Connection successful!",
     "testFailed": "Connection failed",
     "save": "Save Connection",
+    "cancel": "Cancel",
+    "connect": "Connect",
+    "connecting": "Connecting...",
+    "saveAndConnect": "Save & Connect",
+    "ssl": "Use SSL/TLS",
+    "readOnly": "Read-only connection",
     "sqlite": {
       "file": "Database File",
       "browse": "Browse",

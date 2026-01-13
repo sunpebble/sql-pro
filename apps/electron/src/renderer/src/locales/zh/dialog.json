@@ -1,4 +1,24 @@
 {
+  "databaseType": {
+    "title": "选择数据库类型",
+    "description": "选择您要连接的数据库类型",
+    "sqlite": {
+      "name": "SQLite",
+      "description": "本地文件数据库"
+    },
+    "mysql": {
+      "name": "MySQL",
+      "description": "MySQL/MariaDB 服务器"
+    },
+    "postgresql": {
+      "name": "PostgreSQL",
+      "description": "PostgreSQL 服务器"
+    },
+    "supabase": {
+      "name": "Supabase",
+      "description": "Supabase PostgreSQL"
+    }
+  },
   "connection": {
     "title": "连接到",
     "editTitle": "编辑",
@@ -16,10 +36,19 @@
     "password": "密码",
     "connectionUrl": "连接 URL",
     "useUrl": "使用连接 URL",
+    "importFromUrl": "从 URL 导入",
+    "pasteToAutoFill": "（粘贴自动填充）",
     "test": "测试连接",
+    "testing": "测试中...",
     "testSuccess": "连接成功！",
     "testFailed": "连接失败",
     "save": "保存连接",
+    "cancel": "取消",
+    "connect": "连接",
+    "connecting": "连接中...",
+    "saveAndConnect": "保存并连接",
+    "ssl": "使用 SSL/TLS",
+    "readOnly": "只读连接",
     "sqlite": {
       "file": "数据库文件",
       "browse": "浏览",

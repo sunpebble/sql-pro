@@ -41,12 +41,6 @@ interface ProStatusCardProps {
   className?: string;
 }
 
-const PLAN_LABELS: Record<string, string> = {
-  monthly: 'Monthly',
-  yearly: 'Yearly',
-  lifetime: 'Lifetime',
-};
-
 const STATUS_VARIANTS: Record<string, 'default' | 'destructive' | 'outline'> = {
   active: 'default',
   canceled: 'destructive',
@@ -105,11 +99,13 @@ export function ProStatusCard({
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-yellow-500">
               <Crown className="h-4 w-4 text-white" />
             </div>
-            <span>Pro License</span>
+            <span>{t('pro.proLicense')}</span>
           </CardTitle>
           <Badge variant={STATUS_VARIANTS[license.status] || 'outline'}>
             {license.status === 'active' && <Check className="mr-1 h-3 w-3" />}
-            {license.status}
+            {t(`pro.status.${license.status}`, {
+              defaultValue: license.status,
+            })}
           </Badge>
         </div>
         <CardDescription className="flex items-center gap-1.5">
@@ -119,12 +115,12 @@ export function ProStatusCard({
               {isOffline ? (
                 <>
                   <CloudOff className="h-3 w-3" />
-                  Offline
+                  {t('pro.offline')}
                 </>
               ) : (
                 <>
                   <Cloud className="h-3 w-3" />
-                  Cached
+                  {t('pro.cached')}
                 </>
               )}
             </span>
@@ -137,16 +133,16 @@ export function ProStatusCard({
         <div className="flex items-center justify-between rounded-lg bg-white/50 p-3 dark:bg-white/5">
           <div>
             <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-              Current Plan
+              {t('pro.currentPlan')}
             </p>
             <p className="text-lg font-semibold">
-              {PLAN_LABELS[license.plan] || license.plan}
+              {t(`pro.plans.${license.plan}`, { defaultValue: license.plan })}
             </p>
           </div>
           {!isLifetime && (
             <div className="text-right">
               <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-                {isExpiringSoon ? 'Renews Soon' : 'Renews'}
+                {isExpiringSoon ? t('pro.renewsSoon') : t('pro.renews')}
               </p>
               <p
                 className={cn(
@@ -164,7 +160,7 @@ export function ProStatusCard({
               variant="outline"
               className="border-amber-500/50 text-amber-600"
             >
-              Forever
+              {t('pro.forever')}
             </Badge>
           )}
         </div>
@@ -173,9 +169,10 @@ export function ProStatusCard({
         {isExpiringSoon && (
           <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
             <p className="text-sm text-amber-700 dark:text-amber-300">
-              Your subscription renews in {daysUntilExpiry} day
-              {daysUntilExpiry !== 1 && 's'}. Make sure your payment method is
-              up to date.
+              {t('pro.renewsInDays', {
+                days: daysUntilExpiry,
+                count: daysUntilExpiry,
+              })}
             </p>
           </div>
         )}
@@ -207,7 +204,7 @@ export function ProStatusCard({
             className="text-muted-foreground hover:text-destructive w-full text-xs"
             onClick={onDeactivate}
           >
-            Deactivate on this device
+            {t('pro.deactivateDevice')}
           </Button>
         </div>
       )}

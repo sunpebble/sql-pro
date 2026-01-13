@@ -553,10 +553,14 @@ export function TableView({ tableOverride }: TableViewProps) {
               {searchStats.isSearching ? (
                 <>
                   ({searchStats.matchedRows.toLocaleString()} of{' '}
-                  {searchStats.totalRows.toLocaleString()} rows)
+                  {searchStats.totalRows.toLocaleString()}{' '}
+                  {t('table.rows', { defaultValue: 'rows' })})
                 </>
               ) : (
-                <>({totalRows.toLocaleString()} rows)</>
+                <>
+                  ({totalRows.toLocaleString()}{' '}
+                  {t('table.rows', { defaultValue: 'rows' })})
+                </>
               )}
             </span>
             {searchStats.isSearching && (
@@ -850,7 +854,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                     }
                   }
                 }}
-                className="h-7 w-12 px-1 text-center text-sm"
+                className="h-7 w-12 [appearance:textfield] px-1 text-center text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 disabled={isLoading}
               />
               <span className="text-muted-foreground text-sm whitespace-nowrap">

@@ -50,41 +50,41 @@ type DialogView = 'main' | 'purchase' | 'activate' | 'manage';
 const PLANS = [
   {
     id: 'monthly' as const,
-    name: 'Monthly',
+    nameKey: 'pro.plans.monthly',
     price: '$9.99',
-    period: '/month',
+    periodKey: 'pro.periods.month',
     monthlyPrice: '$9.99',
     devices: 3,
-    features: ['All Pro features', 'Priority support', '3 devices'],
+    features: ['allProFeatures', 'prioritySupport', 'devices3'],
   },
   {
     id: 'yearly' as const,
-    name: 'Yearly',
+    nameKey: 'pro.plans.yearly',
     price: '$79.99',
-    period: '/year',
+    periodKey: 'pro.periods.year',
     monthlyPrice: '$6.67',
     devices: 3,
     popular: true,
-    savings: 'Save 33%',
-    features: ['All Pro features', 'Priority support', '3 devices'],
+    savings: 33,
+    features: ['allProFeatures', 'prioritySupport', 'devices3'],
   },
   {
     id: 'lifetime' as const,
-    name: 'Lifetime',
+    nameKey: 'pro.plans.lifetime',
     price: '$199',
-    period: 'one-time',
+    periodKey: 'pro.periods.oneTime',
     monthlyPrice: null,
     devices: 5,
-    features: ['All Pro features', 'Lifetime updates', '5 devices'],
+    features: ['allProFeatures', 'lifetimeUpdates', 'devices5'],
   },
 ];
 
 const PRO_FEATURES = [
-  { name: 'AI Natural Language to SQL', icon: Sparkles },
-  { name: 'Query Optimization', icon: Zap },
-  { name: 'Schema Comparison & Sync', icon: Check },
-  { name: 'Advanced Data Export', icon: Check },
-  { name: 'Priority Support', icon: Star },
+  { nameKey: 'pro.featureList.aiNlToSql', icon: Sparkles },
+  { nameKey: 'pro.featureList.queryOptimization', icon: Zap },
+  { nameKey: 'pro.featureList.schemaCompare', icon: Check },
+  { nameKey: 'pro.featureList.advancedExport', icon: Check },
+  { nameKey: 'pro.featureList.prioritySupport', icon: Star },
 ];
 
 export function LicenseActivationDialog({
@@ -179,21 +179,22 @@ export function LicenseActivationDialog({
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-yellow-500">
           <Crown className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-lg font-semibold">Unlock SQL Pro</h3>
-        <p className="text-muted-foreground text-sm">
-          Get access to all Pro features
-        </p>
+        <h3 className="text-lg font-semibold">{t('pro.unlock')}</h3>
+        <p className="text-muted-foreground text-sm">{t('pro.getAccess')}</p>
       </div>
 
       {/* Feature list */}
       <div className="rounded-lg border p-4">
         <ul className="space-y-2">
           {PRO_FEATURES.map((feature) => (
-            <li key={feature.name} className="flex items-center gap-3 text-sm">
+            <li
+              key={feature.nameKey}
+              className="flex items-center gap-3 text-sm"
+            >
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/10">
                 <feature.icon className="h-3.5 w-3.5 text-amber-600" />
               </div>
-              {feature.name}
+              {t(feature.nameKey)}
             </li>
           ))}
         </ul>
@@ -208,9 +209,9 @@ export function LicenseActivationDialog({
           onClick={() => setView('activate')}
         >
           <Key className="h-5 w-5" />
-          <span className="font-medium">I have a license</span>
+          <span className="font-medium">{t('pro.iHaveLicense')}</span>
           <span className="text-muted-foreground text-xs">
-            Activate existing key
+            {t('pro.activateExisting')}
           </span>
         </Button>
         <Button
@@ -219,8 +220,8 @@ export function LicenseActivationDialog({
           onClick={() => setView('purchase')}
         >
           <CreditCard className="h-5 w-5" />
-          <span className="font-medium">Purchase</span>
-          <span className="text-xs opacity-80">Starting at $6.67/mo</span>
+          <span className="font-medium">{t('pro.purchase')}</span>
+          <span className="text-xs opacity-80">{t('pro.startingAt')}</span>
         </Button>
       </div>
     </div>
@@ -231,22 +232,22 @@ export function LicenseActivationDialog({
       {/* Back button */}
       <Button variant="ghost" size="sm" className="-ml-2" onClick={handleBack}>
         <ArrowLeft className="mr-1 h-4 w-4" />
-        Back
+        {t('pro.back')}
       </Button>
 
       {/* Email input */}
       <div className="space-y-2">
-        <Label htmlFor="purchase-email">Email Address</Label>
+        <Label htmlFor="purchase-email">{t('pro.emailAddress')}</Label>
         <Input
           id="purchase-email"
           type="email"
-          placeholder="your@email.com"
+          placeholder={t('pro.emailPlaceholder')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoFocus
         />
         <p className="text-muted-foreground text-xs">
-          Your license key will be sent to this email
+          {t('pro.licenseEmailHint')}
         </p>
       </div>
 
@@ -266,29 +267,29 @@ export function LicenseActivationDialog({
             {plan.popular && (
               <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 text-xs">
                 <Star className="mr-0.5 h-2.5 w-2.5" />
-                Best
+                {t('pro.best')}
               </Badge>
             )}
             <CardHeader className="p-3 pb-1">
-              <CardTitle className="text-sm">{plan.name}</CardTitle>
+              <CardTitle className="text-sm">{t(plan.nameKey)}</CardTitle>
               <CardDescription className="space-y-0.5">
                 <span className="text-foreground text-lg font-bold">
                   {plan.price}
                 </span>
                 <span className="text-muted-foreground text-xs">
                   {' '}
-                  {plan.period}
+                  {t(plan.periodKey)}
                 </span>
               </CardDescription>
             </CardHeader>
             <CardContent className="p-3 pt-0">
               {plan.savings && (
                 <Badge variant="secondary" className="mb-1 text-xs">
-                  {plan.savings}
+                  {t('pro.save', { percent: plan.savings })}
                 </Badge>
               )}
               <p className="text-muted-foreground text-xs">
-                {plan.devices} devices
+                {t('pro.devices', { count: plan.devices })}
               </p>
             </CardContent>
           </Card>
@@ -307,18 +308,18 @@ export function LicenseActivationDialog({
         ) : (
           <Zap className="mr-2 h-4 w-4" />
         )}
-        Continue to Checkout
+        {t('pro.continueToCheckout')}
       </Button>
 
       {/* Trust badges */}
       <div className="text-muted-foreground flex items-center justify-center gap-4 text-xs">
         <span className="flex items-center gap-1">
           <Check className="h-3 w-3" />
-          Secure payment
+          {t('pro.securePayment')}
         </span>
         <span className="flex items-center gap-1">
           <Check className="h-3 w-3" />
-          30-day guarantee
+          {t('pro.guarantee')}
         </span>
       </div>
     </div>
@@ -329,26 +330,26 @@ export function LicenseActivationDialog({
       {/* Back button */}
       <Button variant="ghost" size="sm" className="-ml-2" onClick={handleBack}>
         <ArrowLeft className="mr-1 h-4 w-4" />
-        Back
+        {t('pro.back')}
       </Button>
 
       <div className="text-center">
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
           <Key className="h-6 w-6 text-amber-600" />
         </div>
-        <h3 className="font-semibold">Activate Your License</h3>
+        <h3 className="font-semibold">{t('pro.activateTitle')}</h3>
         <p className="text-muted-foreground text-sm">
-          Enter the license key from your purchase email
+          {t('pro.activateDescription')}
         </p>
       </div>
 
       {/* Email input */}
       <div className="space-y-2">
-        <Label htmlFor="activate-email">Email Address</Label>
+        <Label htmlFor="activate-email">{t('pro.emailAddress')}</Label>
         <Input
           id="activate-email"
           type="email"
-          placeholder="your@email.com"
+          placeholder={t('pro.emailPlaceholder')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoFocus
@@ -357,7 +358,7 @@ export function LicenseActivationDialog({
 
       {/* License key input */}
       <div className="space-y-2">
-        <Label>License Key</Label>
+        <Label>{t('pro.licenseKey')}</Label>
         <LicenseKeyInput
           value={licenseKey}
           onChange={setLicenseKey}
@@ -379,17 +380,17 @@ export function LicenseActivationDialog({
         ) : (
           <Key className="mr-2 h-4 w-4" />
         )}
-        Activate License
+        {t('pro.activateLicense')}
       </Button>
 
       {/* Help text */}
       <p className="text-muted-foreground text-center text-xs">
-        Can't find your license key?{' '}
+        {t('pro.cantFindKey')}{' '}
         <a
           href="mailto:support@sqlpro.dev"
           className="text-primary hover:underline"
         >
-          Contact support
+          {t('pro.contactSupport')}
         </a>
       </p>
     </div>
@@ -444,7 +445,7 @@ export function LicenseActivationDialog({
               className="ml-2 h-auto p-0"
               onClick={clearError}
             >
-              Dismiss
+              {t('pro.dismiss')}
             </Button>
           </div>
         )}
@@ -460,9 +461,9 @@ export function LicenseActivationDialog({
       <ConfirmDialog
         open={confirmDeactivate}
         onOpenChange={setConfirmDeactivate}
-        title="Deactivate License"
-        description="Are you sure you want to deactivate your license on this device? You can reactivate it later."
-        confirmLabel="Deactivate"
+        title={t('pro.deactivateTitle')}
+        description={t('pro.deactivateDescription')}
+        confirmLabel={t('pro.deactivate')}
         onConfirm={handleDeactivate}
         variant="destructive"
       />

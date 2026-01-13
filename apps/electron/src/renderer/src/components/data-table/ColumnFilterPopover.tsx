@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@sqlpro/ui/select';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   generateFilterId,
   getOperatorsForColumnType,
@@ -57,6 +58,7 @@ export function ColumnFilterPopover({
   onOpenChange,
   children,
 }: ColumnFilterPopoverProps) {
+  const { t } = useTranslation('common');
   const operators = getOperatorsForColumnType(columnType);
   const defaultOperator = operators[0]?.value || 'equals';
 
@@ -191,27 +193,41 @@ export function ColumnFilterPopover({
         className="w-72 p-3"
         align="start"
         onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+        onPointerDownCapture={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-col gap-3">
+        <div
+          className="flex flex-col gap-3"
+          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
           {/* Header */}
           <div className="text-sm font-medium">
-            Filter: <span className="text-muted-foreground">{columnName}</span>
+            {t('filter.title')}{' '}
+            <span className="text-muted-foreground">{columnName}</span>
           </div>
 
           {/* Operator selector */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-muted-foreground text-xs">Operator</label>
+            <label className="text-muted-foreground text-xs">
+              {t('filter.operator')}
+            </label>
             <Select
               value={selectedOperator}
               onValueChange={handleOperatorChange}
             >
-              <SelectTrigger className="h-9">
-                <SelectValue placeholder="Select operator" />
+              <SelectTrigger
+                className="h-9"
+                onPointerDown={(e) => e.stopPropagation()}
+              >
+                <SelectValue placeholder={t('filter.selectOperator')} />
               </SelectTrigger>
               <SelectContent>
                 {operators.map((op) => (
                   <SelectItem key={op.value} value={op.value}>
-                    {op.label}
+                    {t(`filter.operators.${op.value}`, {
+                      defaultValue: op.label,
+                    })}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -222,15 +238,15 @@ export function ColumnFilterPopover({
           {showValueInput && (
             <div className="flex flex-col gap-1.5">
               <label className="text-muted-foreground text-xs">
-                {showSecondValueInput ? 'From' : 'Value'}
+                {showSecondValueInput ? t('filter.from') : t('filter.value')}
               </label>
               <Input
                 className={cn('h-9', hasValueError && 'border-destructive')}
                 type={columnType === 'numeric' ? 'number' : 'text'}
                 placeholder={
                   columnType === 'numeric'
-                    ? 'Enter number...'
-                    : 'Enter value...'
+                    ? t('filter.enterNumber')
+                    : t('filter.enterValue')
                 }
                 value={value}
                 onChange={(e) => {
@@ -247,7 +263,9 @@ export function ColumnFilterPopover({
           {/* Second value input for 'between' */}
           {showSecondValueInput && (
             <div className="flex flex-col gap-1.5">
-              <label className="text-muted-foreground text-xs">To</label>
+              <label className="text-muted-foreground text-xs">
+                {t('filter.to')}
+              </label>
               <Input
                 className={cn(
                   'h-9',
@@ -256,8 +274,8 @@ export function ColumnFilterPopover({
                 type={columnType === 'numeric' ? 'number' : 'text'}
                 placeholder={
                   columnType === 'numeric'
-                    ? 'Enter number...'
-                    : 'Enter value...'
+                    ? t('filter.enterNumber')
+                    : t('filter.enterValue')
                 }
                 value={secondValue}
                 onChange={(e) => {
@@ -281,7 +299,7 @@ export function ColumnFilterPopover({
               className="flex-1"
               onClick={handleApply}
             >
-              Apply
+              {t('filter.apply')}
             </Button>
             <Button
               variant="outline"
@@ -290,7 +308,7 @@ export function ColumnFilterPopover({
               onClick={handleClear}
               disabled={!existingFilter && !value && !secondValue}
             >
-              Clear
+              {t('filter.clear')}
             </Button>
           </div>
         </div>

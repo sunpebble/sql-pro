@@ -179,6 +179,7 @@
   },
   "table": {
     "quickFilters": "快速筛选",
+    "rows": "行",
     "rowCount": "{{count}} 行",
     "columnStats": "列统计",
     "columnsCount": "{{count}} 列",
@@ -205,6 +206,32 @@
     "previousPage": "上一页",
     "nextPage": "下一页",
     "lastPage": "最后一页"
+  },
+  "filter": {
+    "title": "筛选:",
+    "operator": "运算符",
+    "selectOperator": "选择运算符",
+    "value": "值",
+    "from": "从",
+    "to": "到",
+    "enterValue": "输入值...",
+    "enterNumber": "输入数字...",
+    "apply": "应用",
+    "clear": "清除",
+    "operators": {
+      "equals": "等于",
+      "not_equals": "不等于",
+      "contains": "包含",
+      "starts_with": "开头是",
+      "ends_with": "结尾是",
+      "is_null": "为空",
+      "is_not_null": "不为空",
+      "greater_than": "大于",
+      "less_than": "小于",
+      "greater_than_or_equal": "大于等于",
+      "less_than_or_equal": "小于等于",
+      "between": "介于"
+    }
   },
   "columnStats": {
     "null": "空值",
@@ -378,6 +405,80 @@
   "pro": {
     "upgrade": "升级到 Pro",
     "unlockAll": "解锁所有 Pro 功能",
+    "title": "SQL Pro 许可证",
+    "getStarted": "获取 SQL Pro",
+    "description": "通过订阅解锁所有 Pro 功能",
+    "unlock": "解锁 SQL Pro",
+    "getAccess": "获取所有 Pro 功能",
+    "iHaveLicense": "我有许可证",
+    "activateExisting": "激活已有许可证",
+    "purchase": "购买",
+    "startingAt": "起价 $6.67/月",
+    "back": "返回",
+    "emailAddress": "邮箱地址",
+    "emailPlaceholder": "your@email.com",
+    "licenseEmailHint": "许可证密钥将发送到此邮箱",
+    "licenseKey": "许可证密钥",
+    "continueToCheckout": "继续结账",
+    "securePayment": "安全支付",
+    "guarantee": "30天退款保证",
+    "activateTitle": "激活许可证",
+    "activateDescription": "输入购买邮件中的许可证密钥",
+    "activateLicense": "激活许可证",
+    "cantFindKey": "找不到许可证密钥？",
+    "contactSupport": "联系客服",
+    "dismiss": "关闭",
+    "proLicense": "Pro 许可证",
+    "manageSubscription": "管理订阅",
+    "deactivateDevice": "在此设备上停用",
+    "currentPlan": "当前方案",
+    "renewsSoon": "即将续订",
+    "renews": "续订日期",
+    "forever": "永久",
+    "offline": "离线",
+    "cached": "已缓存",
+    "renewsInDays": "您的订阅将在 {{days}} 天后续订，请确保支付方式有效。",
+    "renewsInDays_plural": "您的订阅将在 {{days}} 天后续订，请确保支付方式有效。",
+    "deactivateTitle": "停用许可证",
+    "deactivateDescription": "确定要在此设备上停用许可证吗？您可以稍后重新激活。",
+    "deactivate": "停用",
+    "manageDescription": "管理您的 Pro 许可证并查看已激活的功能。",
+    "enterKeyDescription": "输入许可证密钥以解锁 Pro 功能。",
+    "proActive": "Pro 已激活",
+    "activatedOn": "激活于 {{date}}",
+    "enterLicenseKey": "输入许可证密钥",
+    "keyStoredSecurely": "您的许可证密钥将安全地存储在设备上。",
+    "activeFeatures": "已激活功能",
+    "includedFeatures": "包含功能",
+    "deactivateLicense": "停用许可证",
+    "deactivating": "正在停用...",
+    "activating": "正在激活...",
+    "activatePro": "激活 Pro",
+    "errors": {
+      "enterKey": "请输入许可证密钥",
+      "keyTooShort": "许可证密钥至少需要 8 个字符",
+      "activationFailed": "激活失败，请检查您的许可证密钥。",
+      "deactivationFailed": "停用失败，请重试。"
+    },
+    "plans": {
+      "monthly": "月付",
+      "yearly": "年付",
+      "lifetime": "终身"
+    },
+    "periods": {
+      "month": "/月",
+      "year": "/年",
+      "oneTime": "一次性"
+    },
+    "best": "推荐",
+    "save": "省 {{percent}}%",
+    "devices": "{{count}} 台设备",
+    "status": {
+      "active": "已激活",
+      "canceled": "已取消",
+      "expired": "已过期",
+      "past_due": "逾期"
+    },
     "features": {
       "ai-nl-to-sql": {
         "name": "自然语言转 SQL",
@@ -398,7 +499,22 @@
       "query-optimizer": {
         "name": "查询优化器",
         "description": "分析并优化 SQL 查询以获得更好的性能"
+      },
+      "priority-support": {
+        "name": "优先支持",
+        "description": "获得团队的优先支持"
+      },
+      "schema-compare": {
+        "name": "结构对比与同步",
+        "description": "比较和同步数据库结构"
       }
+    },
+    "featureList": {
+      "aiNlToSql": "AI 自然语言转 SQL",
+      "queryOptimization": "查询优化",
+      "schemaCompare": "结构对比与同步",
+      "advancedExport": "高级数据导出",
+      "prioritySupport": "优先支持"
     }
   },
   "queryEditor": {

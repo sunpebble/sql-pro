@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -25,39 +26,15 @@ import { useProStore } from '@/stores';
 import { ProBadge } from './ProBadge';
 
 /**
- * Human-readable names for Pro features to display in the features list.
+ * Feature IDs that map to translation keys
  */
-const PRO_FEATURE_INFO: {
-  id: string;
-  name: string;
-  description: string;
-}[] = [
-  {
-    id: 'ai-nl-to-sql',
-    name: 'Natural Language to SQL',
-    description: 'Convert questions into SQL queries using AI',
-  },
-  {
-    id: 'ai-data-analysis',
-    name: 'AI Data Analysis',
-    description: 'Get AI-powered insights from your data',
-  },
-  {
-    id: 'advanced-export',
-    name: 'Advanced Export',
-    description: 'Export to Excel, JSON with advanced options',
-  },
-  {
-    id: 'plugin-system',
-    name: 'Plugin System',
-    description: 'Extend functionality with plugins',
-  },
-  {
-    id: 'query-optimizer',
-    name: 'Query Optimizer',
-    description: 'Analyze and optimize SQL performance',
-  },
-];
+const PRO_FEATURE_IDS = [
+  'ai-nl-to-sql',
+  'ai-data-analysis',
+  'advanced-export',
+  'plugin-system',
+  'query-optimizer',
+] as const;
 
 interface ProActivationDialogProps {
   open: boolean;
@@ -73,6 +50,7 @@ export function ProActivationDialog({
   open,
   onOpenChange,
 }: ProActivationDialogProps) {
+  const { t } = useTranslation('common');
   const {
     isPro,
     licenseKey,
@@ -120,12 +98,12 @@ export function ProActivationDialog({
     setError(null);
 
     if (!localLicenseKey.trim()) {
-      setError('Please enter a license key');
+      setError(t('pro.errors.enterKey'));
       return;
     }
 
     if (localLicenseKey.trim().length < 8) {
-      setError('License key must be at least 8 characters');
+      setError(t('pro.errors.keyTooShort'));
       return;
     }
 
@@ -133,7 +111,7 @@ export function ProActivationDialog({
     if (success) {
       onOpenChange(false);
     } else {
-      setError('Failed to activate. Please check your license key.');
+      setError(t('pro.errors.activationFailed'));
     }
   };
 
@@ -141,7 +119,7 @@ export function ProActivationDialog({
     setError(null);
     const success = await deactivate();
     if (!success) {
-      setError('Failed to deactivate. Please try again.');
+      setError(t('pro.errors.deactivationFailed'));
     }
   };
 
@@ -171,9 +149,7 @@ export function ProActivationDialog({
             <ProBadge size="sm" />
           </DialogTitle>
           <DialogDescription>
-            {isPro
-              ? 'Manage your Pro license and see your active features.'
-              : 'Enter your license key to unlock Pro features.'}
+            {isPro ? t('pro.manageDescription') : t('pro.enterKeyDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -191,10 +167,10 @@ export function ProActivationDialog({
                     <Crown className="h-5 w-5 text-amber-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Pro Active</p>
+                    <p className="font-medium">{t('pro.proActive')}</p>
                     {formattedActivatedAt && (
                       <p className="text-muted-foreground text-xs">
-                        Activated on {formattedActivatedAt}
+                        {t('pro.activatedOn', { date: formattedActivatedAt })}
                       </p>
                     )}
                   </div>
@@ -205,7 +181,7 @@ export function ProActivationDialog({
             {/* License Key Input */}
             <div className="grid gap-2">
               <Label htmlFor="licenseKey">
-                {isPro ? 'License Key' : 'Enter License Key'}
+                {isPro ? t('pro.licenseKey') : t('pro.enterLicenseKey')}
               </Label>
               <div className="relative">
                 <Key className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
@@ -235,24 +211,26 @@ export function ProActivationDialog({
               {error && <p className="text-destructive text-xs">{error}</p>}
               {!isPro && (
                 <p className="text-muted-foreground text-xs">
-                  Your license key is stored securely on your device.
+                  {t('pro.keyStoredSecurely')}
                 </p>
               )}
             </div>
 
             {/* Pro Features List */}
             <div className="grid gap-2">
-              <Label>{isPro ? 'Active Features' : 'Included Features'}</Label>
+              <Label>
+                {isPro ? t('pro.activeFeatures') : t('pro.includedFeatures')}
+              </Label>
               <div className="bg-muted/50 space-y-1 rounded-lg border p-3">
-                {PRO_FEATURE_INFO.map((featureInfo) => {
+                {PRO_FEATURE_IDS.map((featureId) => {
                   const isActive =
                     isPro &&
                     features.includes(
-                      featureInfo.id as (typeof ALL_PRO_FEATURES)[number]
+                      featureId as (typeof ALL_PRO_FEATURES)[number]
                     );
                   return (
                     <div
-                      key={featureInfo.id}
+                      key={featureId}
                       className="flex items-center gap-2 py-1"
                     >
                       <div
@@ -276,7 +254,7 @@ export function ProActivationDialog({
                             !isActive && !isPro && 'text-muted-foreground'
                           )}
                         >
-                          {featureInfo.name}
+                          {t(`pro.features.${featureId}.name`)}
                         </p>
                       </div>
                     </div>
@@ -299,14 +277,14 @@ export function ProActivationDialog({
                 {isActivating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Deactivating...
+                    {t('pro.deactivating')}
                   </>
                 ) : (
-                  'Deactivate License'
+                  t('pro.deactivateLicense')
                 )}
               </Button>
               <Button variant="outline" onClick={handleCancel}>
-                Close
+                {t('actions.close')}
               </Button>
             </>
           ) : (
@@ -316,7 +294,7 @@ export function ProActivationDialog({
                 onClick={handleCancel}
                 disabled={isActivating}
               >
-                Cancel
+                {t('actions.cancel')}
               </Button>
               <Button
                 onClick={handleActivate}
@@ -326,12 +304,12 @@ export function ProActivationDialog({
                 {isActivating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Activating...
+                    {t('pro.activating')}
                   </>
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Activate Pro
+                    {t('pro.activatePro')}
                   </>
                 )}
               </Button>

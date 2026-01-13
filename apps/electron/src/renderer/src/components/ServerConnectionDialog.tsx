@@ -258,14 +258,18 @@ export function ServerConnectionDialog({
               {!isSupabase && !isEditMode && (
                 <div className="space-y-2">
                   <Label htmlFor="connectionString">
-                    Import from URL{' '}
+                    {t('connection.importFromUrl')}{' '}
                     <span className="text-muted-foreground text-xs">
-                      (paste to auto-fill)
+                      {t('connection.pasteToAutoFill')}
                     </span>
                   </Label>
                   <Input
                     id="connectionString"
-                    placeholder="postgresql://user:password@host:port/database"
+                    placeholder={
+                      databaseType === 'mysql'
+                        ? 'mysql://user:password@host:port/database'
+                        : 'postgresql://user:password@host:port/database'
+                    }
                     onChange={(e) => {
                       const parsed = parseConnectionString(e.target.value);
                       if (parsed) {
@@ -398,7 +402,8 @@ export function ServerConnectionDialog({
                   {/* Host */}
                   <div className="space-y-2">
                     <Label htmlFor="host">
-                      Host <span className="text-destructive">*</span>
+                      {t('connection.host')}{' '}
+                      <span className="text-destructive">*</span>
                     </Label>
                     <Input
                       id="host"
@@ -411,7 +416,7 @@ export function ServerConnectionDialog({
 
                   {/* Port */}
                   <div className="space-y-2">
-                    <Label htmlFor="port">Port</Label>
+                    <Label htmlFor="port">{t('connection.port')}</Label>
                     <Input
                       id="port"
                       type="number"
@@ -424,7 +429,8 @@ export function ServerConnectionDialog({
                   {/* Database */}
                   <div className="space-y-2">
                     <Label htmlFor="database">
-                      Database <span className="text-destructive">*</span>
+                      {t('connection.database')}{' '}
+                      <span className="text-destructive">*</span>
                     </Label>
                     <Input
                       id="database"
@@ -439,7 +445,7 @@ export function ServerConnectionDialog({
 
                   {/* Username */}
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username">{t('connection.username')}</Label>
                     <Input
                       id="username"
                       placeholder={
@@ -452,7 +458,7 @@ export function ServerConnectionDialog({
 
                   {/* Password */}
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t('connection.password')}</Label>
                     <Input
                       id="password"
                       type="password"
@@ -470,7 +476,7 @@ export function ServerConnectionDialog({
                       onCheckedChange={(checked) => setUseSSL(checked === true)}
                     />
                     <Label htmlFor="ssl" className="font-normal">
-                      Use SSL/TLS
+                      {t('connection.ssl')}
                     </Label>
                   </div>
                 </>
@@ -484,7 +490,7 @@ export function ServerConnectionDialog({
                   onCheckedChange={(checked) => setReadOnly(checked === true)}
                 />
                 <Label htmlFor="readOnly" className="font-normal">
-                  Read-only connection
+                  {t('connection.readOnly')}
                 </Label>
               </div>
 
@@ -594,10 +600,10 @@ export function ServerConnectionDialog({
                   {isTesting ? (
                     <>
                       <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                      Testing...
+                      {t('connection.testing')}
                     </>
                   ) : (
-                    'Test Connection'
+                    t('connection.test')
                   )}
                 </Button>
 
@@ -609,14 +615,14 @@ export function ServerConnectionDialog({
                     onClick={() => onOpenChange(false)}
                     disabled={isConnecting}
                   >
-                    Cancel
+                    {t('connection.cancel')}
                   </Button>
                   <Button type="submit" disabled={!isFormValid || isConnecting}>
                     {isConnecting
-                      ? 'Connecting...'
+                      ? t('connection.connecting')
                       : isEditMode
-                        ? 'Save & Connect'
-                        : 'Connect'}
+                        ? t('connection.saveAndConnect')
+                        : t('connection.connect')}
                   </Button>
                 </div>
               </div>

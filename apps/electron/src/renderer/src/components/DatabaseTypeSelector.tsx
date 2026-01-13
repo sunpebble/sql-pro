@@ -6,6 +6,7 @@
 import type { DatabaseType } from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
 import { Cloud, Database, Server } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -17,8 +18,6 @@ import { cn } from '@/lib/utils';
 
 interface DatabaseTypeOption {
   type: DatabaseType;
-  name: string;
-  description: string;
   icon: typeof Database;
   color: string;
 }
@@ -26,29 +25,21 @@ interface DatabaseTypeOption {
 const DATABASE_TYPES: DatabaseTypeOption[] = [
   {
     type: 'sqlite',
-    name: 'SQLite',
-    description: 'Local file-based database',
     icon: Database,
     color: 'text-blue-500',
   },
   {
     type: 'mysql',
-    name: 'MySQL',
-    description: 'MySQL/MariaDB server',
     icon: Server,
     color: 'text-orange-500',
   },
   {
     type: 'postgresql',
-    name: 'PostgreSQL',
-    description: 'PostgreSQL server',
     icon: Server,
     color: 'text-indigo-500',
   },
   {
     type: 'supabase',
-    name: 'Supabase',
-    description: 'Supabase PostgreSQL',
     icon: Cloud,
     color: 'text-green-500',
   },
@@ -65,14 +56,14 @@ export function DatabaseTypeSelector({
   onOpenChange,
   onSelect,
 }: DatabaseTypeSelectorProps) {
+  const { t } = useTranslation('dialog');
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Select Database Type</DialogTitle>
-          <DialogDescription>
-            Choose the type of database you want to connect to
-          </DialogDescription>
+          <DialogTitle>{t('databaseType.title')}</DialogTitle>
+          <DialogDescription>{t('databaseType.description')}</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-3 pt-4">
           {DATABASE_TYPES.map((option) => {
@@ -89,9 +80,11 @@ export function DatabaseTypeSelector({
               >
                 <Icon className={cn('h-8 w-8', option.color)} />
                 <div className="text-center">
-                  <div className="font-medium">{option.name}</div>
+                  <div className="font-medium">
+                    {t(`databaseType.${option.type}.name`)}
+                  </div>
                   <div className="text-muted-foreground text-xs">
-                    {option.description}
+                    {t(`databaseType.${option.type}.description`)}
                   </div>
                 </div>
               </Button>

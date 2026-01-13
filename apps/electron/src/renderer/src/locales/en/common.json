@@ -179,6 +179,7 @@
   },
   "table": {
     "quickFilters": "Quick Filters",
+    "rows": "rows",
     "rowCount": "{{count}} rows",
     "columnStats": "Column Statistics",
     "columnsCount": "{{count}} columns",
@@ -205,6 +206,32 @@
     "previousPage": "Previous page",
     "nextPage": "Next page",
     "lastPage": "Last page"
+  },
+  "filter": {
+    "title": "Filter:",
+    "operator": "Operator",
+    "selectOperator": "Select operator",
+    "value": "Value",
+    "from": "From",
+    "to": "To",
+    "enterValue": "Enter value...",
+    "enterNumber": "Enter number...",
+    "apply": "Apply",
+    "clear": "Clear",
+    "operators": {
+      "equals": "Equals",
+      "not_equals": "Not equals",
+      "contains": "Contains",
+      "starts_with": "Starts with",
+      "ends_with": "Ends with",
+      "is_null": "Is null",
+      "is_not_null": "Is not null",
+      "greater_than": "Greater than",
+      "less_than": "Less than",
+      "greater_than_or_equal": "Greater than or equal",
+      "less_than_or_equal": "Less than or equal",
+      "between": "Between"
+    }
   },
   "columnStats": {
     "null": "null",
@@ -379,6 +406,80 @@
   "pro": {
     "upgrade": "Upgrade to Pro",
     "unlockAll": "Unlock all Pro features",
+    "title": "SQL Pro License",
+    "getStarted": "Get SQL Pro",
+    "description": "Unlock all Pro features with a subscription",
+    "unlock": "Unlock SQL Pro",
+    "getAccess": "Get access to all Pro features",
+    "iHaveLicense": "I have a license",
+    "activateExisting": "Activate existing key",
+    "purchase": "Purchase",
+    "startingAt": "Starting at $6.67/mo",
+    "back": "Back",
+    "emailAddress": "Email Address",
+    "emailPlaceholder": "your@email.com",
+    "licenseEmailHint": "Your license key will be sent to this email",
+    "licenseKey": "License Key",
+    "continueToCheckout": "Continue to Checkout",
+    "securePayment": "Secure payment",
+    "guarantee": "30-day guarantee",
+    "activateTitle": "Activate Your License",
+    "activateDescription": "Enter the license key from your purchase email",
+    "activateLicense": "Activate License",
+    "cantFindKey": "Can't find your license key?",
+    "contactSupport": "Contact support",
+    "dismiss": "Dismiss",
+    "proLicense": "Pro License",
+    "manageSubscription": "Manage Subscription",
+    "deactivateDevice": "Deactivate on this device",
+    "currentPlan": "Current Plan",
+    "renewsSoon": "Renews Soon",
+    "renews": "Renews",
+    "forever": "Forever",
+    "offline": "Offline",
+    "cached": "Cached",
+    "renewsInDays": "Your subscription renews in {{days}} day. Make sure your payment method is up to date.",
+    "renewsInDays_plural": "Your subscription renews in {{days}} days. Make sure your payment method is up to date.",
+    "deactivateTitle": "Deactivate License",
+    "deactivateDescription": "Are you sure you want to deactivate your license on this device? You can reactivate it later.",
+    "deactivate": "Deactivate",
+    "manageDescription": "Manage your Pro license and see your active features.",
+    "enterKeyDescription": "Enter your license key to unlock Pro features.",
+    "proActive": "Pro Active",
+    "activatedOn": "Activated on {{date}}",
+    "enterLicenseKey": "Enter License Key",
+    "keyStoredSecurely": "Your license key is stored securely on your device.",
+    "activeFeatures": "Active Features",
+    "includedFeatures": "Included Features",
+    "deactivateLicense": "Deactivate License",
+    "deactivating": "Deactivating...",
+    "activating": "Activating...",
+    "activatePro": "Activate Pro",
+    "errors": {
+      "enterKey": "Please enter a license key",
+      "keyTooShort": "License key must be at least 8 characters",
+      "activationFailed": "Failed to activate. Please check your license key.",
+      "deactivationFailed": "Failed to deactivate. Please try again."
+    },
+    "plans": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "lifetime": "Lifetime"
+    },
+    "periods": {
+      "month": "/month",
+      "year": "/year",
+      "oneTime": "one-time"
+    },
+    "best": "Best",
+    "save": "Save {{percent}}%",
+    "devices": "{{count}} devices",
+    "status": {
+      "active": "Active",
+      "canceled": "Canceled",
+      "expired": "Expired",
+      "past_due": "Past Due"
+    },
     "features": {
       "ai-nl-to-sql": {
         "name": "Natural Language to SQL",
@@ -399,7 +500,22 @@
       "query-optimizer": {
         "name": "Query Optimizer",
         "description": "Analyze and optimize your SQL queries for better performance."
+      },
+      "priority-support": {
+        "name": "Priority Support",
+        "description": "Get priority support from our team."
+      },
+      "schema-compare": {
+        "name": "Schema Comparison & Sync",
+        "description": "Compare and sync database schemas."
       }
+    },
+    "featureList": {
+      "aiNlToSql": "AI Natural Language to SQL",
+      "queryOptimization": "Query Optimization",
+      "schemaCompare": "Schema Comparison & Sync",
+      "advancedExport": "Advanced Data Export",
+      "prioritySupport": "Priority Support"
     }
   },
   "queryEditor": {

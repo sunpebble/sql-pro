@@ -85,6 +85,10 @@ const HeaderCell = memo(
         resizeHandleClickedRef.current = false;
         return;
       }
+      // Skip sorting if filter popover is open
+      if (filterPopoverOpen) {
+        return;
+      }
       if (canSort) {
         // Get current sort state
         const currentSort = header.column.getIsSorted();
@@ -266,6 +270,7 @@ const HeaderCell = memo(
                   e.stopPropagation();
                   setFilterPopoverOpen(true);
                 }}
+                onPointerDown={(e) => e.stopPropagation()}
                 title={hasActiveFilter ? 'Edit filter' : 'Filter this column'}
               >
                 <Filter className="h-3 w-3" />

@@ -5,6 +5,7 @@ import type {
   QueryResultSet,
 } from '@/types/database';
 import { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { DataTable } from './data-table';
 
@@ -57,6 +58,7 @@ const SingleResultTable = memo<SingleResultTableProps>(({ columns, rows }) => {
 SingleResultTable.displayName = 'SingleResultTable';
 
 export function QueryResults({ results }: QueryResultsProps) {
+  const { t } = useTranslation('common');
   const [activeResultIndex, setActiveResultIndex] = useState(0);
 
   // Check if we have multiple result sets
@@ -122,7 +124,8 @@ export function QueryResults({ results }: QueryResultsProps) {
           >
             <span>Result {index + 1}</span>
             <span className="text-muted-foreground/70">
-              ({resultSet.rows.length} rows)
+              ({resultSet.rows.length}{' '}
+              {t('table.rows', { defaultValue: 'rows' })})
             </span>
           </button>
         ))}
