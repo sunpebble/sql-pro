@@ -23,10 +23,12 @@ import {
   Edit3,
   Eye,
   FileText,
+  ImageIcon,
   Info,
   Plus,
   RefreshCw,
   Search,
+  Table2,
   Trash2,
   X,
 } from 'lucide-react';
@@ -59,6 +61,7 @@ import {
 import { ActiveFilters } from './data-table/ActiveFilters';
 import { DiffPreview } from './DiffPreview';
 import { ExportDialog } from './ExportDialog';
+import { TableImageGallery } from './image-gallery';
 
 interface TableViewProps {
   /** Optional table override - when provided, uses this table instead of selectedTable from store */
@@ -113,6 +116,8 @@ export function TableView({ tableOverride }: TableViewProps) {
   const [showDiffPreview, setShowDiffPreview] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showBulkEditDialog, setShowBulkEditDialog] = useState(false);
+  // View mode: 'data' for table view, 'images' for image gallery
+  const [viewMode, setViewMode] = useState<'data' | 'images'>('data');
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
 
   // Setters that update the store
@@ -684,6 +689,40 @@ export function TableView({ tableOverride }: TableViewProps) {
               </Tooltip>
             )}
 
+            {/* View Mode Toggle - Data/Images */}
+            <div className="border-border flex rounded-md border">
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant={viewMode === 'data' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    className="rounded-r-none border-r"
+                    onClick={() => setViewMode('data')}
+                  >
+                    <Table2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {t('table.dataView', { defaultValue: 'Data view' })}
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant={viewMode === 'images' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    className="rounded-l-none"
+                    onClick={() => setViewMode('images')}
+                  >
+                    <ImageIcon className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {t('table.imageGallery', { defaultValue: 'Image gallery' })}
+                </TooltipContent>
+              </Tooltip>
+            </div>
+
             {/* Schema Details Toggle */}
             <Tooltip>
               <TooltipTrigger>
@@ -730,9 +769,16 @@ export function TableView({ tableOverride }: TableViewProps) {
           />
         )}
 
-        {/* Data Grid */}
+        {/* Data Grid / Image Gallery */}
         <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
-          {isLoading ? (
+          {viewMode === 'images' ? (
+            <TableImageGallery
+              columns={columns}
+              rows={rows}
+              isLoading={isLoading}
+              onRefresh={refetch}
+            />
+          ) : isLoading ? (
             <SkeletonTable columns={columns.length || 5} rows={15} />
           ) : error ? (
             <div className="text-destructive flex h-full items-center justify-center">
