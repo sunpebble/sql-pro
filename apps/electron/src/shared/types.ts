@@ -440,6 +440,40 @@ export interface GetTableDataResponse {
   };
 }
 
+// ============ Column Distribution Types ============
+
+/** Request to get value distribution for a column (full table aggregation) */
+export interface GetColumnDistributionRequest {
+  connectionId: string;
+  schema?: string;
+  table: string;
+  column: string;
+  /** Optional limit for number of distinct values to return (default: no limit) */
+  limit?: number;
+}
+
+/** Single value in the distribution */
+export interface ColumnDistributionValue {
+  value: unknown;
+  count: number;
+  percentage: number;
+}
+
+/** Response with column value distribution */
+export interface GetColumnDistributionResponse {
+  success: boolean;
+  /** Array of values with their counts, sorted by count descending */
+  distribution?: ColumnDistributionValue[];
+  /** Total number of rows in the table */
+  totalRows?: number;
+  /** Number of distinct non-null values */
+  distinctCount?: number;
+  /** Number of null values */
+  nullCount?: number;
+  error?: string;
+  errorCode?: ErrorCode;
+}
+
 // ============ Query Types ============
 
 export interface ExecuteQueryRequest {
@@ -2166,6 +2200,10 @@ export interface IPCChannels {
 
   // Table Data
   'table:get-data': [GetTableDataRequest, GetTableDataResponse];
+  'table:get-column-distribution': [
+    GetColumnDistributionRequest,
+    GetColumnDistributionResponse,
+  ];
 
   // Query Execution
   'query:execute': [ExecuteQueryRequest, ExecuteQueryResponse];

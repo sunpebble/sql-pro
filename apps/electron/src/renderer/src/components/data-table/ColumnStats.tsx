@@ -1,3 +1,4 @@
+import type { ColumnDistributionValue } from '@shared/types';
 import type { ColumnSchema } from '@/types/database';
 import {
   Collapsible,
@@ -9,7 +10,10 @@ import {
   BarChart3,
   ChevronDown,
   ChevronUp,
+  Database,
+  Filter,
   Hash,
+  Loader2,
   Percent,
   Sparkles,
   TrendingDown,
@@ -17,12 +21,19 @@ import {
 } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useColumnDistribution } from '@/hooks/useColumnDistribution';
 import { cn } from '@/lib/utils';
+
+type StatsMode = 'page' | 'full';
 
 interface ColumnStatsProps {
   columns: ColumnSchema[];
   data: Record<string, unknown>[];
   className?: string;
+  connectionId?: string | null;
+  schema?: string;
+  table?: string | null;
+  onFilterAdd?: (column: string, value: unknown) => void;
 }
 
 interface ColumnStat {
@@ -133,15 +144,26 @@ function calculateColumnStats(
 
 /**
  * A collapsible panel that shows column statistics.
- * Displays min, max, avg, distinct values, null count, and top values.
+ * Supports two modes:
+ * - "page": Statistics from current page data (client-side)
+ * - "full": Full table statistics via GROUP BY query (server-side)
  */
 export const ColumnStats = memo(
-  ({ columns, data, className }: ColumnStatsProps) => {
+  ({
+    columns,
+    data,
+    className,
+    connectionId,
+    schema,
+    table,
+    onFilterAdd,
+  }: ColumnStatsProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
+    const [mode, setMode] = useState<StatsMode>('page');
 
-    // Calculate stats for all columns
-    const stats = useMemo(() => {
+    // Calculate stats for all columns (page mode)
+    const pageStats = useMemo(() => {
       if (data.length === 0) return [];
 
       return columns.map((col) =>
@@ -151,11 +173,30 @@ export const ColumnStats = memo(
 
     const { t } = useTranslation('common');
 
-    // Get selected column stats
-    const selectedStats = useMemo(() => {
+    // Full table distribution (only fetched when mode is 'full' and column is selected)
+    const {
+      distribution: fullDistribution,
+      totalRows: fullTotalRows,
+      distinctCount: fullDistinctCount,
+      nullCount: fullNullCount,
+      isLoading: isLoadingFull,
+      isFetching: isFetchingFull,
+    } = useColumnDistribution({
+      connectionId: connectionId ?? null,
+      schema,
+      table: table ?? null,
+      column: selectedColumn,
+      enabled: mode === 'full' && isOpen && !!selectedColumn,
+    });
+
+    // Get selected column stats (page mode)
+    const selectedPageStats = useMemo(() => {
       if (!selectedColumn) return null;
-      return stats.find((s) => s.column === selectedColumn);
-    }, [stats, selectedColumn]);
+      return pageStats.find((s) => s.column === selectedColumn);
+    }, [pageStats, selectedColumn]);
+
+    // Check if full mode is available
+    const canUseFull = !!connectionId && !!table;
 
     if (data.length === 0) return null;
 
@@ -180,10 +221,15 @@ export const ColumnStats = memo(
                 defaultValue: '{{count}} columns',
               })}
               ,{' '}
-              {t('table.rowsCount', {
-                count: data.length,
-                defaultValue: '{{count}} rows',
-              })}
+              {mode === 'full' && fullTotalRows > 0
+                ? t('table.rowsCount', {
+                    count: fullTotalRows,
+                    defaultValue: '{{count}} rows',
+                  })
+                : t('table.rowsCount', {
+                    count: data.length,
+                    defaultValue: '{{count}} rows',
+                  })}
               )
             </span>
           </div>
@@ -196,162 +242,115 @@ export const ColumnStats = memo(
 
         <CollapsibleContent>
           <div className="bg-muted/30 border-t">
-            {/* Column selector */}
-            <div className="flex gap-1 overflow-x-auto border-b p-2">
-              {columns.map((col) => {
-                const stat = stats.find((s) => s.column === col.name);
-                const isSelected = selectedColumn === col.name;
-                const nullPercentage = stat
-                  ? (stat.nullCount / stat.totalCount) * 100
-                  : 0;
-
-                return (
+            {/* Mode toggle and column selector */}
+            <div className="flex items-center gap-2 border-b p-2">
+              {/* Mode toggle */}
+              {canUseFull && (
+                <div className="bg-muted flex shrink-0 rounded-md p-0.5">
                   <button
-                    key={col.name}
-                    onClick={() =>
-                      setSelectedColumn(isSelected ? null : col.name)
-                    }
+                    onClick={() => setMode('page')}
                     className={cn(
-                      'flex items-center gap-1.5 rounded px-2 py-1 text-xs',
-                      'whitespace-nowrap transition-all duration-150',
-                      isSelected
-                        ? 'bg-primary text-primary-foreground shadow-sm'
-                        : 'hover:bg-muted bg-background border'
+                      'flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors',
+                      mode === 'page'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
                     )}
                   >
-                    <span className="max-w-25 truncate font-medium">
-                      {col.name}
-                    </span>
-                    {nullPercentage > 0 && (
-                      <span
-                        className={cn(
-                          'rounded px-1 text-[9px]',
-                          isSelected
-                            ? 'bg-primary-foreground/20'
-                            : nullPercentage > 50
-                              ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
-                              : 'bg-muted'
-                        )}
-                      >
-                        {nullPercentage.toFixed(0)}%{' '}
-                        {t('columnStats.null', { defaultValue: 'null' })}
-                      </span>
-                    )}
+                    {t('columnStats.currentPage', {
+                      defaultValue: 'Current Page',
+                    })}
                   </button>
-                );
-              })}
-            </div>
-
-            {/* Stats display */}
-            {selectedStats ? (
-              <div className="animate-in fade-in space-y-3 p-3 duration-200">
-                {/* Quick stats row */}
-                <div className="grid grid-cols-4 gap-3">
-                  <StatCard
-                    icon={<Hash className="h-3 w-3" />}
-                    label={t('columnStats.distinct', {
-                      defaultValue: 'Distinct',
-                    })}
-                    value={selectedStats.distinctCount.toLocaleString()}
-                    subtitle={t('columnStats.ofTotal', {
-                      count: selectedStats.totalCount,
-                      defaultValue: 'of {{count}}',
-                    })}
-                  />
-                  <StatCard
-                    icon={<Percent className="h-3 w-3" />}
-                    label={t('columnStats.nullRate', {
-                      defaultValue: 'Null Rate',
-                    })}
-                    value={`${((selectedStats.nullCount / selectedStats.totalCount) * 100).toFixed(1)}%`}
-                    subtitle={t('columnStats.nullsCount', {
-                      count: selectedStats.nullCount,
-                      defaultValue: '{{count}} nulls',
-                    })}
-                    warning={
-                      selectedStats.nullCount / selectedStats.totalCount > 0.5
-                    }
-                  />
-                  {selectedStats.min !== undefined && (
-                    <StatCard
-                      icon={<TrendingDown className="h-3 w-3" />}
-                      label={t('columnStats.min', { defaultValue: 'Min' })}
-                      value={formatNumber(selectedStats.min)}
-                    />
-                  )}
-                  {selectedStats.max !== undefined && (
-                    <StatCard
-                      icon={<TrendingUp className="h-3 w-3" />}
-                      label={t('columnStats.max', { defaultValue: 'Max' })}
-                      value={formatNumber(selectedStats.max)}
-                    />
-                  )}
-                  {selectedStats.avg !== undefined && (
-                    <StatCard
-                      icon={<Sparkles className="h-3 w-3" />}
-                      label={t('columnStats.average', {
-                        defaultValue: 'Average',
-                      })}
-                      value={formatNumber(selectedStats.avg)}
-                    />
-                  )}
-                  {selectedStats.avgLength !== undefined && (
-                    <StatCard
-                      icon={<Sparkles className="h-3 w-3" />}
-                      label={t('columnStats.avgLength', {
-                        defaultValue: 'Avg Length',
-                      })}
-                      value={selectedStats.avgLength.toFixed(1)}
-                      subtitle={`${selectedStats.minLength}-${selectedStats.maxLength}`}
-                    />
-                  )}
+                  <button
+                    onClick={() => setMode('full')}
+                    className={cn(
+                      'flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors',
+                      mode === 'full'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    <Database className="h-3 w-3" />
+                    {t('columnStats.fullTable', { defaultValue: 'Full Table' })}
+                  </button>
                 </div>
+              )}
 
-                {/* Top values */}
-                {selectedStats.topValues.length > 0 && (
-                  <div className="space-y-1.5">
-                    <span className="text-muted-foreground text-[10px] font-medium uppercase">
-                      {t('columnStats.topValues', {
-                        defaultValue: 'Top Values',
-                      })}
-                    </span>
-                    <div className="space-y-1">
-                      {selectedStats.topValues.map((item) => (
-                        <div
-                          key={`${String(item.value)}-${item.count}`}
-                          className="flex items-center gap-2 text-xs"
+              {/* Column selector */}
+              <div className="flex flex-1 gap-1 overflow-x-auto">
+                {columns.map((col) => {
+                  const stat = pageStats.find((s) => s.column === col.name);
+                  const isSelected = selectedColumn === col.name;
+                  const nullPercentage = stat
+                    ? (stat.nullCount / stat.totalCount) * 100
+                    : 0;
+
+                  return (
+                    <button
+                      key={col.name}
+                      onClick={() =>
+                        setSelectedColumn(isSelected ? null : col.name)
+                      }
+                      className={cn(
+                        'flex items-center gap-1.5 rounded px-2 py-1 text-xs',
+                        'whitespace-nowrap transition-all duration-150',
+                        isSelected
+                          ? 'bg-primary text-primary-foreground shadow-sm'
+                          : 'hover:bg-muted bg-background border'
+                      )}
+                    >
+                      <span className="max-w-25 truncate font-medium">
+                        {col.name}
+                      </span>
+                      {nullPercentage > 0 && (
+                        <span
+                          className={cn(
+                            'rounded px-1 text-[9px]',
+                            isSelected
+                              ? 'bg-primary-foreground/20'
+                              : nullPercentage > 50
+                                ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
+                                : 'bg-muted'
+                          )}
                         >
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="truncate font-mono">
-                                {formatValue(item.value)}
-                              </span>
-                              <span className="text-muted-foreground shrink-0">
-                                ({item.count})
-                              </span>
-                            </div>
-                            <Progress
-                              value={item.percentage}
-                              className="mt-0.5 h-1"
-                            />
-                          </div>
-                          <span className="text-muted-foreground w-12 text-right text-[10px]">
-                            {item.percentage.toFixed(1)}%
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-muted-foreground p-4 text-center text-xs">
-                {t('table.selectColumn', {
-                  defaultValue:
-                    'Select a column above to view detailed statistics',
+                          {nullPercentage.toFixed(0)}%{' '}
+                          {t('columnStats.null', { defaultValue: 'null' })}
+                        </span>
+                      )}
+                    </button>
+                  );
                 })}
               </div>
-            )}
+            </div>
+
+            {/* Stats display - fixed height to prevent layout jumps */}
+            <div className="h-[280px] overflow-y-auto">
+              {selectedColumn ? (
+                mode === 'full' ? (
+                  <FullTableStats
+                    column={selectedColumn}
+                    distribution={fullDistribution}
+                    totalRows={fullTotalRows}
+                    distinctCount={fullDistinctCount}
+                    nullCount={fullNullCount}
+                    isLoading={isLoadingFull}
+                    isFetching={isFetchingFull}
+                    onFilterAdd={onFilterAdd}
+                    t={t}
+                  />
+                ) : (
+                  selectedPageStats && (
+                    <PageStats stats={selectedPageStats} t={t} />
+                  )
+                )
+              ) : (
+                <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-center text-xs">
+                  {t('table.selectColumn', {
+                    defaultValue:
+                      'Select a column above to view detailed statistics',
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </CollapsibleContent>
       </Collapsible>
@@ -360,6 +359,229 @@ export const ColumnStats = memo(
 );
 
 ColumnStats.displayName = 'ColumnStats';
+
+// Page stats component (existing functionality)
+interface PageStatsProps {
+  stats: ColumnStat;
+  t: (key: string, options?: Record<string, unknown>) => string;
+}
+
+function PageStats({ stats, t }: PageStatsProps) {
+  return (
+    <div className="animate-in fade-in space-y-3 p-3 duration-200">
+      {/* Quick stats row */}
+      <div className="grid grid-cols-4 gap-3">
+        <StatCard
+          icon={<Hash className="h-3 w-3" />}
+          label={t('columnStats.distinct', { defaultValue: 'Distinct' })}
+          value={stats.distinctCount.toLocaleString()}
+          subtitle={t('columnStats.ofTotal', {
+            count: stats.totalCount,
+            defaultValue: 'of {{count}}',
+          })}
+        />
+        <StatCard
+          icon={<Percent className="h-3 w-3" />}
+          label={t('columnStats.nullRate', { defaultValue: 'Null Rate' })}
+          value={`${((stats.nullCount / stats.totalCount) * 100).toFixed(1)}%`}
+          subtitle={t('columnStats.nullsCount', {
+            count: stats.nullCount,
+            defaultValue: '{{count}} nulls',
+          })}
+          warning={stats.nullCount / stats.totalCount > 0.5}
+        />
+        {stats.min !== undefined && (
+          <StatCard
+            icon={<TrendingDown className="h-3 w-3" />}
+            label={t('columnStats.min', { defaultValue: 'Min' })}
+            value={formatNumber(stats.min)}
+          />
+        )}
+        {stats.max !== undefined && (
+          <StatCard
+            icon={<TrendingUp className="h-3 w-3" />}
+            label={t('columnStats.max', { defaultValue: 'Max' })}
+            value={formatNumber(stats.max)}
+          />
+        )}
+        {stats.avg !== undefined && (
+          <StatCard
+            icon={<Sparkles className="h-3 w-3" />}
+            label={t('columnStats.average', { defaultValue: 'Average' })}
+            value={formatNumber(stats.avg)}
+          />
+        )}
+        {stats.avgLength !== undefined && (
+          <StatCard
+            icon={<Sparkles className="h-3 w-3" />}
+            label={t('columnStats.avgLength', { defaultValue: 'Avg Length' })}
+            value={stats.avgLength.toFixed(1)}
+            subtitle={`${stats.minLength}-${stats.maxLength}`}
+          />
+        )}
+      </div>
+
+      {/* Top values */}
+      {stats.topValues.length > 0 && (
+        <div className="space-y-1.5">
+          <span className="text-muted-foreground text-[10px] font-medium uppercase">
+            {t('columnStats.topValues', { defaultValue: 'Top Values' })}
+          </span>
+          <div className="space-y-1">
+            {stats.topValues.map((item) => (
+              <div
+                key={`${String(item.value)}-${item.count}`}
+                className="flex items-center gap-2 text-xs"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="truncate font-mono">
+                      {formatValue(item.value)}
+                    </span>
+                    <span className="text-muted-foreground shrink-0">
+                      ({item.count})
+                    </span>
+                  </div>
+                  <Progress value={item.percentage} className="mt-0.5 h-1" />
+                </div>
+                <span className="text-muted-foreground w-12 text-right text-[10px]">
+                  {item.percentage.toFixed(1)}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface FullTableStatsProps {
+  column: string;
+  distribution: ColumnDistributionValue[];
+  totalRows: number;
+  distinctCount: number;
+  nullCount: number;
+  isLoading: boolean;
+  isFetching?: boolean;
+  onFilterAdd?: (column: string, value: unknown) => void;
+  t: (key: string, options?: Record<string, unknown>) => string;
+}
+
+function FullTableStats({
+  column,
+  distribution,
+  totalRows,
+  distinctCount,
+  nullCount,
+  isLoading,
+  isFetching,
+  onFilterAdd,
+  t,
+}: FullTableStatsProps) {
+  // Only show loading spinner on initial load (no data yet)
+  // During refetch, keep showing the existing data
+  if (isLoading && distribution.length === 0) {
+    return (
+      <div className="flex items-center justify-center gap-2 p-8">
+        <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+        <span className="text-muted-foreground text-xs">
+          {t('columnStats.loading', {
+            defaultValue: 'Loading full table statistics...',
+          })}
+        </span>
+      </div>
+    );
+  }
+
+  const nullPercentage = totalRows > 0 ? (nullCount / totalRows) * 100 : 0;
+
+  return (
+    <div className="animate-in fade-in relative space-y-3 p-3 duration-200">
+      {/* Subtle refresh indicator */}
+      {isFetching && (
+        <div className="absolute top-2 right-2">
+          <Loader2 className="text-muted-foreground h-3 w-3 animate-spin" />
+        </div>
+      )}
+
+      {/* Summary stats */}
+      <div className="grid grid-cols-3 gap-3">
+        <StatCard
+          icon={<Database className="h-3 w-3" />}
+          label={t('columnStats.totalRows', { defaultValue: 'Total Rows' })}
+          value={totalRows.toLocaleString()}
+        />
+        <StatCard
+          icon={<Hash className="h-3 w-3" />}
+          label={t('columnStats.distinct', { defaultValue: 'Distinct' })}
+          value={distinctCount.toLocaleString()}
+          subtitle={t('columnStats.uniqueValues', {
+            defaultValue: 'unique values',
+          })}
+        />
+        <StatCard
+          icon={<Percent className="h-3 w-3" />}
+          label={t('columnStats.nullRate', { defaultValue: 'Null Rate' })}
+          value={`${nullPercentage.toFixed(1)}%`}
+          subtitle={t('columnStats.nullsCount', {
+            count: nullCount,
+            defaultValue: '{{count}} nulls',
+          })}
+          warning={nullPercentage > 50}
+        />
+      </div>
+
+      {/* All values distribution */}
+      {distribution.length > 0 && (
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-[10px] font-medium uppercase">
+              {t('columnStats.allValues', { defaultValue: 'All Values' })}
+              <span className="text-muted-foreground/70 ml-1 normal-case">
+                ({distribution.length})
+              </span>
+            </span>
+          </div>
+          <div className="space-y-1">
+            {distribution.map((item, index) => (
+              <div
+                key={`${String(item.value)}-${index}`}
+                className="group flex items-center gap-2 text-xs"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="truncate font-mono">
+                      {formatValue(item.value)}
+                    </span>
+                    <span className="text-muted-foreground shrink-0">
+                      ({item.count.toLocaleString()})
+                    </span>
+                  </div>
+                  <Progress value={item.percentage} className="mt-0.5 h-1" />
+                </div>
+                <span className="text-muted-foreground w-12 text-right text-[10px]">
+                  {item.percentage.toFixed(1)}%
+                </span>
+                {onFilterAdd && (
+                  <button
+                    onClick={() => onFilterAdd(column, item.value)}
+                    className="text-muted-foreground hover:text-foreground opacity-0 transition-opacity group-hover:opacity-100"
+                    title={t('columnStats.filterByValue', {
+                      defaultValue: 'Filter by this value',
+                    })}
+                  >
+                    <Filter className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // Helper components
 

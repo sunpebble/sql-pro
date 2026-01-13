@@ -3,6 +3,7 @@ import type {
   ErrorCode,
   ErrorPosition,
   ForeignKeyInfo,
+  GetColumnDistributionResponse,
   GetTableDataResponse,
   IndexInfo,
   PendingChangeInfo,
@@ -2066,6 +2067,87 @@ class DatabaseService {
           error instanceof Error
             ? error.message
             : 'Failed to get pending changes',
+      };
+    }
+  }
+
+  getColumnDistribution(
+    connectionId: string,
+    table: string,
+    column: string,
+    schema?: string,
+    limit?: number
+  ): GetColumnDistributionResponse {
+    const conn = this.connections.get(connectionId);
+    if (!conn) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    const schemaPrefix = schema ? `"${schema}".` : '';
+
+    try {
+      // Get total row count
+      const countSql = `SELECT COUNT(*) as total FROM ${schemaPrefix}"${table}"`;
+      const countResult = conn.db.prepare(countSql).get() as { total: number };
+      const totalRows = countResult.total;
+
+      // Get null count
+      const nullSql = `SELECT COUNT(*) as nulls FROM ${schemaPrefix}"${table}" WHERE "${column}" IS NULL`;
+      const nullResult = conn.db.prepare(nullSql).get() as { nulls: number };
+      const nullCount = nullResult.nulls;
+
+      // Get value distribution with GROUP BY
+      let distributionSql = `
+        SELECT "${column}" as value, COUNT(*) as count
+        FROM ${schemaPrefix}"${table}"
+        GROUP BY "${column}"
+        ORDER BY count DESC
+      `;
+
+      if (limit && limit > 0) {
+        distributionSql += ` LIMIT ${limit}`;
+      }
+
+      const startTime = performance.now();
+      const rows = conn.db.prepare(distributionSql).all() as Array<{
+        value: unknown;
+        count: number;
+      }>;
+      const durationMs = performance.now() - startTime;
+
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.path,
+        sql: distributionSql,
+        durationMs,
+        success: true,
+        rowCount: rows.length,
+      });
+
+      // Calculate percentages and format distribution
+      const distribution = rows.map((row) => ({
+        value: row.value,
+        count: row.count,
+        percentage: totalRows > 0 ? (row.count / totalRows) * 100 : 0,
+      }));
+
+      // Count distinct non-null values
+      const distinctCount = distribution.filter((d) => d.value !== null).length;
+
+      return {
+        success: true,
+        distribution,
+        totalRows,
+        distinctCount,
+        nullCount,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to get column distribution',
       };
     }
   }

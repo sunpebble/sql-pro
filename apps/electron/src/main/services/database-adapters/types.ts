@@ -7,6 +7,7 @@ import type {
   DatabaseType,
   ErrorCode,
   ErrorPosition,
+  GetColumnDistributionResponse,
   GetTableDataResponse,
   PendingChangeInfo,
   QueryPlanNode,
@@ -270,6 +271,19 @@ export interface DatabaseAdapter {
   ) =>
     | { success: true; changes: PendingChangeInfo[] }
     | { success: false; error: string };
+
+  /**
+   * Get column value distribution (full table aggregation via GROUP BY)
+   * Used for viewing complete value distribution regardless of pagination
+   * Returns sync for SQLite, async for MySQL/PostgreSQL
+   */
+  getColumnDistribution: (
+    connectionId: string,
+    table: string,
+    column: string,
+    schema?: string,
+    limit?: number
+  ) => GetColumnDistributionResponse | Promise<GetColumnDistributionResponse>;
 }
 
 /**

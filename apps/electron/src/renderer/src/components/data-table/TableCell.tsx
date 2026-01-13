@@ -272,6 +272,7 @@ export const TableCell = memo(
             pinnedClassName
           )}
           style={pinnedStyles}
+          data-column-id={columnId}
         >
           {renderedValue}
         </td>
@@ -284,6 +285,7 @@ export const TableCell = memo(
         <td
           className={cn('border-border border-r border-b', pinnedClassName)}
           style={pinnedStyles}
+          data-column-id={columnId}
         />
       );
     }
@@ -297,6 +299,7 @@ export const TableCell = memo(
             pinnedClassName
           )}
           style={pinnedStyles}
+          data-column-id={columnId}
         >
           <input
             ref={inputRef}
@@ -336,6 +339,7 @@ export const TableCell = memo(
           pinnedClassName
         )}
         style={pinnedStyles}
+        data-column-id={columnId}
         title={
           hasChange && oldValue !== undefined
             ? `Original: ${oldValue}`

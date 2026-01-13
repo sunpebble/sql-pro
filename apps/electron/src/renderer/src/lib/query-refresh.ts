@@ -22,12 +22,62 @@ export function createTableDataPredicate(connectionId: string) {
 }
 
 /**
+ * Creates a predicate function for matching column distribution queries
+ */
+export function createColumnDistributionPredicate(
+  connectionId: string,
+  tableName?: string
+) {
+  return (query: Query): boolean => {
+    const queryKey = query.queryKey;
+    if (
+      !Array.isArray(queryKey) ||
+      queryKey[0] !== 'column-distribution' ||
+      queryKey[1] !== connectionId
+    ) {
+      return false;
+    }
+    // If tableName is specified, only match that table
+    if (tableName && queryKey[3] !== tableName) {
+      return false;
+    }
+    return true;
+  };
+}
+
+/**
  * Invalidates and refetches table data queries for a connection
  * Uses refetchType: 'active' to only refetch currently active queries
+ * Also invalidates column distribution queries since they depend on table data
  */
-export function invalidateTableData(connectionId: string): void {
+export function invalidateTableData(
+  connectionId: string,
+  tableName?: string
+): void {
+  // Invalidate table data queries
   queryClient.invalidateQueries({
     predicate: createTableDataPredicate(connectionId),
+    refetchType: 'active',
+  });
+
+  // Also invalidate column distribution queries for the same connection/table
+  queryClient.invalidateQueries({
+    predicate: createColumnDistributionPredicate(connectionId, tableName),
+    refetchType: 'active',
+  });
+}
+
+/**
+ * Invalidates column distribution queries for a connection
+ * @param connectionId - The connection ID
+ * @param tableName - Optional table name to limit invalidation
+ */
+export function invalidateColumnDistribution(
+  connectionId: string,
+  tableName?: string
+): void {
+  queryClient.invalidateQueries({
+    predicate: createColumnDistributionPredicate(connectionId, tableName),
     refetchType: 'active',
   });
 }

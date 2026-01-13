@@ -10,8 +10,9 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@sqlpro/ui/context-menu';
-import { ClipboardCopy, Copy, Trash2 } from 'lucide-react';
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { ClipboardCopy, Copy, FileText, Trash2 } from 'lucide-react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { GroupRow } from './GroupRow';
 import { TableCell } from './TableCell';
@@ -55,6 +56,8 @@ interface DataRowProps {
   onCopyRow?: (rowId: string) => void;
   /** Handler to delete row */
   onDeleteRow?: (rowId: string) => void;
+  /** Translation function */
+  t: (key: string, options?: Record<string, unknown>) => string;
 }
 
 // Custom comparison function for DataRow to avoid unnecessary re-renders
@@ -149,6 +152,7 @@ const DataRow = memo(
     onCopyRowAsSQL,
     onCopyRow,
     onDeleteRow,
+    t,
   }: DataRowProps) => {
     // Use stable dataIndex for even/odd styling (not virtual index)
     const isEven = dataIndex % 2 === 0;
@@ -177,18 +181,63 @@ const DataRow = memo(
       onDeleteRow?.(row.id);
     }, [onDeleteRow, row.id]);
 
+    // Track which cell was right-clicked for copy cell feature
+    const [contextMenuCell, setContextMenuCell] = useState<{
+      columnId: string;
+      value: unknown;
+    } | null>(null);
+
+    // Handle context menu open - determine which cell was clicked
+    const handleContextMenuOpenChange = useCallback((open: boolean) => {
+      if (!open) {
+        setContextMenuCell(null);
+      }
+    }, []);
+
+    // Handle right-click to capture the cell
+    const handleRowContextMenu = useCallback(
+      (e: React.MouseEvent) => {
+        // Find the cell that was right-clicked
+        const target = e.target as HTMLElement;
+        const cell = target.closest('td');
+        if (cell) {
+          const columnId = cell.dataset.columnId;
+          if (columnId) {
+            const rowData = row.original as Record<string, unknown>;
+            const value = rowData[columnId];
+            setContextMenuCell({ columnId, value });
+          }
+        }
+      },
+      [row.original]
+    );
+
+    // Copy cell value to clipboard
+    const handleCopyCell = useCallback(() => {
+      if (contextMenuCell) {
+        const value = contextMenuCell.value;
+        const text =
+          value === null ? 'NULL' : value === undefined ? '' : String(value);
+        navigator.clipboard.writeText(text);
+      }
+    }, [contextMenuCell]);
+
     // Get all cells for this row - this is called once per row
     const allCells = row.getVisibleCells();
 
     // Determine the SQL INSERT label based on selection
     const sqlInsertLabel =
       isSelected && selectedRowCount > 1
-        ? `Copy ${selectedRowCount} Rows as SQL INSERT`
-        : 'Copy Row as SQL INSERT';
+        ? t('row.copyRowsAsSQL', {
+            count: selectedRowCount,
+            defaultValue: `Copy ${selectedRowCount} Rows as SQL INSERT`,
+          })
+        : t('row.copyRowAsSQL', { defaultValue: 'Copy Row as SQL INSERT' });
 
     return (
-      <ContextMenu>
+      <ContextMenu onOpenChange={handleContextMenuOpenChange}>
         <ContextMenuTrigger
+          onContextMenu={handleRowContextMenu}
           render={
             <tr
               className={cn(
@@ -262,21 +311,24 @@ const DataRow = memo(
           })}
         </ContextMenuTrigger>
         <ContextMenuContent>
+          <ContextMenuItem onClick={handleCopyCell} disabled={!contextMenuCell}>
+            <FileText className="size-4" />
+            {t('row.copyCell', { defaultValue: 'Copy Cell' })}
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleCopyRow}>
+            <Copy className="size-4" />
+            {t('row.copyRow', { defaultValue: 'Copy Row' })}
+          </ContextMenuItem>
           <ContextMenuItem onClick={handleCopyAsSQL}>
             <ClipboardCopy className="size-4" />
             {sqlInsertLabel}
-          </ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem onClick={handleCopyRow}>
-            <Copy className="size-4" />
-            Copy Row
           </ContextMenuItem>
           {editable && !isDeleted && (
             <>
               <ContextMenuSeparator />
               <ContextMenuItem variant="destructive" onClick={handleDeleteRow}>
                 <Trash2 className="size-4" />
-                Delete Row
+                {t('row.deleteRow', { defaultValue: 'Delete Row' })}
               </ContextMenuItem>
             </>
           )}
@@ -358,6 +410,8 @@ export const TableBody = memo(
     onCopyRow,
     onDeleteRow,
   }: TableBodyProps) => {
+    const { t } = useTranslation('common');
+
     // Calculate pinned offsets
     // Selection column width: checkbox (16px) + padding (12px * 2) + border (1px) ≈ 41px
     const SELECTION_COLUMN_WIDTH = 41;
@@ -520,6 +574,7 @@ export const TableBody = memo(
               onCopyRowAsSQL={onCopyRowAsSQL}
               onCopyRow={onCopyRow}
               onDeleteRow={onDeleteRow}
+              t={t}
             />
           );
         })}

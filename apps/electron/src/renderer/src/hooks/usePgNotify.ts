@@ -128,15 +128,17 @@ export function usePgNotify(
     }
 
     refreshTimeoutRef.current = setTimeout(() => {
-      // Invalidate all table data queries to trigger refetch
+      // Invalidate all table data and column distribution queries to trigger refetch
       queryClient.invalidateQueries({
         predicate: (query) => {
           const key = query.queryKey;
-          // Match infiniteTableData or tableData queries
+          // Match infiniteTableData, tableData, or column-distribution queries
           if (Array.isArray(key)) {
             const [type, connId, , tableName] = key;
             if (
-              (type === 'infiniteTableData' || type === 'tableData') &&
+              (type === 'infiniteTableData' ||
+                type === 'tableData' ||
+                type === 'column-distribution') &&
               connId === connectionId &&
               (!autoRefreshTable || tableName === autoRefreshTable)
             ) {

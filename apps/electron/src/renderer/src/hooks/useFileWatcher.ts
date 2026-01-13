@@ -47,7 +47,9 @@ export function useFileWatcher() {
               const queryKey = query.queryKey;
               return (
                 Array.isArray(queryKey) &&
-                queryKey[0] === 'tableData' &&
+                (queryKey[0] === 'tableData' ||
+                  queryKey[0] === 'infiniteTableData' ||
+                  queryKey[0] === 'column-distribution') &&
                 queryKey[1] === connectionId
               );
             },

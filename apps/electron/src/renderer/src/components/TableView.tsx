@@ -774,7 +774,13 @@ export function TableView({ tableOverride }: TableViewProps) {
 
         {/* Column Statistics Panel - Collapsible */}
         {!isLoading && rows.length > 0 && (
-          <ColumnStats columns={columns} data={rows} />
+          <ColumnStats
+            columns={columns}
+            data={rows}
+            connectionId={activeConnectionId}
+            schema={activeTab?.table?.schema}
+            table={selectedTable?.name}
+          />
         )}
 
         {/* Selection Quick Stats - Excel-like status bar */}

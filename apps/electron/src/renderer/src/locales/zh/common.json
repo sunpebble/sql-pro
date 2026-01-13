@@ -207,6 +207,13 @@
     "nextPage": "下一页",
     "lastPage": "最后一页"
   },
+  "row": {
+    "copyRowAsSQL": "复制行为 SQL INSERT",
+    "copyRowsAsSQL": "复制 {{count}} 行为 SQL INSERT",
+    "copyRow": "复制行",
+    "copyCell": "复制单元格",
+    "deleteRow": "删除行"
+  },
   "filter": {
     "title": "筛选:",
     "operator": "运算符",
@@ -243,7 +250,14 @@
     "max": "最大值",
     "average": "平均值",
     "avgLength": "平均长度",
-    "topValues": "顶部值"
+    "topValues": "顶部值",
+    "fullTable": "全表",
+    "currentPage": "当前页",
+    "totalRows": "总行数",
+    "uniqueValues": "个唯一值",
+    "allValues": "所有值",
+    "filterByValue": "按此值筛选",
+    "loading": "正在加载全表统计..."
   },
   "schema": {
     "title": "结构详情",

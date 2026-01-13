@@ -10,6 +10,7 @@ import type {
   DatabaseType,
   ErrorCode,
   ForeignKeyInfo,
+  GetColumnDistributionResponse,
   GetTableDataResponse,
   IndexInfo,
   PendingChangeInfo,
@@ -1303,6 +1304,92 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
 
   getPendingChanges(_connectionId: string) {
     return { success: true as const, changes: [] as PendingChangeInfo[] };
+  }
+
+  async getColumnDistribution(
+    connectionId: string,
+    table: string,
+    column: string,
+    schema?: string,
+    limit?: number
+  ): Promise<GetColumnDistributionResponse> {
+    const conn = this.connections.get(connectionId);
+    if (!conn) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    const schemaName = schema || 'public';
+
+    try {
+      // Get total row count
+      const countSql = `SELECT COUNT(*) as total FROM "${schemaName}"."${table}"`;
+      const countResult = await conn.client.query(countSql);
+      const totalRows = Number(
+        (countResult.rows[0] as { total: string | number } | undefined)
+          ?.total ?? 0
+      );
+
+      // Get null count
+      const nullSql = `SELECT COUNT(*) as nulls FROM "${schemaName}"."${table}" WHERE "${column}" IS NULL`;
+      const nullResult = await conn.client.query(nullSql);
+      const nullCount = Number(
+        (nullResult.rows[0] as { nulls: string | number } | undefined)?.nulls ??
+          0
+      );
+
+      // Get value distribution with GROUP BY
+      let distributionSql = `
+        SELECT "${column}" as value, COUNT(*) as count
+        FROM "${schemaName}"."${table}"
+        GROUP BY "${column}"
+        ORDER BY count DESC
+      `;
+
+      if (limit && limit > 0) {
+        distributionSql += ` LIMIT ${limit}`;
+      }
+
+      const startTime = performance.now();
+      const result = await conn.client.query(distributionSql);
+      const durationMs = performance.now() - startTime;
+
+      sqlLogger.logQuery({
+        connectionId,
+        dbPath: conn.filename,
+        sql: distributionSql,
+        durationMs,
+        success: true,
+        rowCount: result.rows.length,
+      });
+
+      // Calculate percentages and format distribution
+      const distribution = (
+        result.rows as Array<{ value: unknown; count: string | number }>
+      ).map((row) => ({
+        value: row.value,
+        count: Number(row.count),
+        percentage: totalRows > 0 ? (Number(row.count) / totalRows) * 100 : 0,
+      }));
+
+      // Count distinct non-null values
+      const distinctCount = distribution.filter((d) => d.value !== null).length;
+
+      return {
+        success: true,
+        distribution,
+        totalRows,
+        distinctCount,
+        nullCount,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to get column distribution',
+      };
+    }
   }
 }
 

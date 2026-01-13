@@ -4,6 +4,7 @@ import type {
   ChangePasswordRequest,
   CloseDatabaseRequest,
   ExecuteQueryRequest,
+  GetColumnDistributionRequest,
   GetSchemaListRequest,
   GetSchemaRequest,
   GetTableDataRequest,
@@ -534,6 +535,44 @@ export function setupDatabaseHandlers(): void {
         error: 'Password change is only supported for SQLite databases',
         errorCode: 'ENCRYPTION_ERROR',
       };
+    }
+  );
+
+  // Database: Get Column Distribution (full table aggregation)
+  ipcMain.handle(
+    'table:get-column-distribution',
+    async (_event, request: GetColumnDistributionRequest) => {
+      // Check if connection is async (MySQL/PostgreSQL)
+      if (databaseManager.isAsyncConnection(request.connectionId)) {
+        return databaseManager.getColumnDistribution(
+          request.connectionId,
+          request.table,
+          request.column,
+          request.schema,
+          request.limit
+        );
+      }
+
+      // Try database manager for new connections
+      const conn = databaseManager.getConnection(request.connectionId);
+      if (conn) {
+        return databaseManager.getColumnDistribution(
+          request.connectionId,
+          request.table,
+          request.column,
+          request.schema,
+          request.limit
+        );
+      }
+
+      // Fall back to legacy database service
+      return databaseService.getColumnDistribution(
+        request.connectionId,
+        request.table,
+        request.column,
+        request.schema,
+        request.limit
+      );
     }
   );
 }

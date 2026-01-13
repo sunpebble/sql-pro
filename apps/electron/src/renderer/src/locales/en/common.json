@@ -207,6 +207,13 @@
     "nextPage": "Next page",
     "lastPage": "Last page"
   },
+  "row": {
+    "copyRowAsSQL": "Copy Row as SQL INSERT",
+    "copyRowsAsSQL": "Copy {{count}} Rows as SQL INSERT",
+    "copyRow": "Copy Row",
+    "copyCell": "Copy Cell",
+    "deleteRow": "Delete Row"
+  },
   "filter": {
     "title": "Filter:",
     "operator": "Operator",
@@ -243,7 +250,14 @@
     "max": "Max",
     "average": "Average",
     "avgLength": "Avg Length",
-    "topValues": "Top Values"
+    "topValues": "Top Values",
+    "fullTable": "Full Table",
+    "currentPage": "Current Page",
+    "totalRows": "Total Rows",
+    "uniqueValues": "unique values",
+    "allValues": "All Values",
+    "filterByValue": "Filter by this value",
+    "loading": "Loading full table statistics..."
   },
   "schema": {
     "title": "Schema Details",

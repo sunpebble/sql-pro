@@ -66,6 +66,8 @@ import type {
   GetAISettingsResponse,
   GetAllWindowsResponse,
   GetClaudeCodePathsResponse,
+  GetColumnDistributionRequest,
+  GetColumnDistributionResponse,
   GetCurrentWindowResponse,
   GetFoldersRequest,
   GetFoldersResponse,
@@ -238,6 +240,10 @@ const sqlProAPI = {
       request: ChangePasswordRequest
     ): Promise<ChangePasswordResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_CHANGE_PASSWORD, request),
+    getColumnDistribution: (
+      request: GetColumnDistributionRequest
+    ): Promise<GetColumnDistributionResponse> =>
+      ipcRenderer.invoke('table:get-column-distribution', request),
     onFileChanged: (
       callback: (event: FileChangeEvent) => void
     ): (() => void) => {

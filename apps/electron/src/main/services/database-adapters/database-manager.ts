@@ -8,6 +8,7 @@ import type {
   ColumnInfo,
   DatabaseConnectionConfig,
   DatabaseType,
+  GetColumnDistributionResponse,
   GetTableDataResponse,
   PendingChangeInfo,
   QueryPlanNode,
@@ -650,6 +651,32 @@ class DatabaseManager {
       adapter.closeAll();
     }
     this.connections.clear();
+  }
+
+  /**
+   * Get column value distribution (full table aggregation)
+   * Routes to appropriate adapter based on connection type
+   */
+  async getColumnDistribution(
+    connectionId: string,
+    table: string,
+    column: string,
+    schema?: string,
+    limit?: number
+  ): Promise<GetColumnDistributionResponse> {
+    const managed = this.connections.get(connectionId);
+    if (!managed) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    const adapter = managed.adapter;
+    return adapter.getColumnDistribution(
+      connectionId,
+      table,
+      column,
+      schema,
+      limit
+    );
   }
 }
 
