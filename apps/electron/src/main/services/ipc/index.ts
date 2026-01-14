@@ -6,6 +6,7 @@ import { setupDialogHandlers } from './dialog';
 import { setupExportHandlers } from './export';
 import { setupFoldersHandlers } from './folders';
 import { setupHistoryHandlers } from './history';
+import { cleanupImageHandlers, setupImageHandlers } from './image';
 import { setupImportHandlers } from './import';
 import { setupLicenseHandlers } from './license';
 import { cleanupMemoryHandlers, setupMemoryHandlers } from './memory';
@@ -45,6 +46,7 @@ export function setupIpcHandlers(): void {
   setupSqlLogHandlers();
   setupMemoryHandlers();
   setupPgNotifyHandlers();
+  setupImageHandlers();
 }
 
 export function cleanupIpcHandlers(): void {
@@ -57,4 +59,6 @@ export function cleanupIpcHandlers(): void {
   cleanupMemoryHandlers();
   // Clean up PG notify subscriptions
   cleanupPgNotifyHandlers();
+  // Clean up image handlers
+  cleanupImageHandlers();
 }

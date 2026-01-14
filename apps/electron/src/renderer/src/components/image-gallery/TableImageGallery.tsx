@@ -1,9 +1,15 @@
 import type { ImageItem } from './ImageGallery';
 import type { ViewMode } from './ImageGalleryToolbar';
-import type { ImageColumnInfo } from '@/lib/image-utils';
+import type { ImageColumnInfo, ImageSource } from '@/lib/image-utils';
 import type { ColumnSchema } from '@/types/database';
-import { useCallback, useMemo, useState } from 'react';
-import { detectImageColumns, detectImageSource } from '@/lib/image-utils';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import {
+  detectImageColumns,
+  detectImageColumnsAsync,
+  detectImageSourceAsync,
+} from '@/lib/image-utils';
 import { ImageGallery } from './ImageGallery';
 import { ImageGalleryToolbar } from './ImageGalleryToolbar';
 
@@ -36,17 +42,64 @@ export function TableImageGallery({
   isLoading = false,
   onRefresh,
 }: TableImageGalleryProps) {
+  const { t } = useTranslation('common');
   // State for gallery settings
   const [thumbnailSize, setThumbnailSize] = useState(150);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
 
-  // Detect image columns from the data
-  const imageColumns = useMemo<ImageColumnInfo[]>(() => {
+  // State for async image column detection
+  const [imageColumns, setImageColumns] = useState<ImageColumnInfo[]>([]);
+  const [isDetecting, setIsDetecting] = useState(false);
+
+  // State for async image items (with validated URLs)
+  const [imageItems, setImageItems] = useState<ImageItem[]>([]);
+  const [isBuildingItems, setIsBuildingItems] = useState(false);
+
+  // Sync detection for immediate feedback
+  const syncImageColumns = useMemo<ImageColumnInfo[]>(() => {
     if (columns.length === 0 || rows.length === 0) return [];
     return detectImageColumns(columns, rows, 20); // Sample first 20 rows
   }, [columns, rows]);
+
+  // Async detection with HEAD request for more accuracy
+  useEffect(() => {
+    if (columns.length === 0 || rows.length === 0) {
+      setImageColumns([]);
+      return;
+    }
+
+    // Start with sync results for immediate display
+    setImageColumns(syncImageColumns);
+
+    // Then run async detection for URLs without clear image extensions
+    const runAsyncDetection = async () => {
+      setIsDetecting(true);
+      try {
+        const asyncColumns = await detectImageColumnsAsync(columns, rows, 20);
+        setImageColumns(asyncColumns);
+      } catch (error) {
+        // Log error with context for debugging
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.error(
+          '[TableImageGallery] Async image column detection failed:',
+          {
+            columnsCount: columns.length,
+            rowsCount: rows.length,
+            error: errorMessage,
+          }
+        );
+        // Keep sync results on error - this is a graceful degradation
+        // No toast needed as sync detection already provides results
+      } finally {
+        setIsDetecting(false);
+      }
+    };
+
+    runAsyncDetection();
+  }, [columns, rows, syncImageColumns]);
 
   // Reset selected column if it's no longer available
   const validSelectedColumn = useMemo(() => {
@@ -59,37 +112,93 @@ export function TableImageGallery({
     return selectedColumn;
   }, [imageColumns, selectedColumn]);
 
-  // Build image items from rows
-  const imageItems = useMemo<ImageItem[]>(() => {
-    if (imageColumns.length === 0) return [];
+  // Build image items from rows with async URL validation
+  useEffect(() => {
+    if (imageColumns.length === 0) {
+      setImageItems([]);
+      return;
+    }
 
-    const items: ImageItem[] = [];
     const columnsToScan = validSelectedColumn
       ? imageColumns.filter((c) => c.column === validSelectedColumn)
       : imageColumns;
 
-    rows.forEach((row, rowIndex) => {
-      columnsToScan.forEach((colInfo) => {
-        const value = row[colInfo.column];
-        if (value === null || value === undefined) return;
+    // Build items with async validation for URLs
+    const buildItems = async () => {
+      setIsBuildingItems(true);
+      const items: ImageItem[] = [];
 
-        const col = columns.find((c) => c.name === colInfo.column);
-        const source = detectImageSource(value, col?.type ?? 'text');
+      // Process in batches to avoid overwhelming
+      const promises: Promise<{
+        rowIndex: number;
+        column: string;
+        rowData: Record<string, unknown>;
+        source: ImageSource;
+      } | null>[] = [];
 
-        if (source) {
-          items.push({
-            id: `${rowIndex}-${colInfo.column}`,
-            source,
-            rowIndex,
-            column: colInfo.column,
-            rowData: row,
-          });
-        }
+      rows.forEach((row, rowIndex) => {
+        columnsToScan.forEach((colInfo) => {
+          const value = row[colInfo.column];
+          if (value === null || value === undefined) return;
+
+          const col = columns.find((c) => c.name === colInfo.column);
+          const columnType = col?.type ?? 'text';
+
+          promises.push(
+            (async () => {
+              // Use async detection for accurate URL validation
+              const source = await detectImageSourceAsync(value, columnType);
+              if (source) {
+                return {
+                  rowIndex,
+                  column: colInfo.column,
+                  rowData: row,
+                  source,
+                };
+              }
+              return null;
+            })()
+          );
+        });
       });
-    });
 
-    return items;
-  }, [rows, columns, imageColumns, validSelectedColumn]);
+      try {
+        const results = await Promise.all(promises);
+        for (const result of results) {
+          if (result) {
+            items.push({
+              id: `${result.rowIndex}-${result.column}`,
+              source: result.source,
+              rowIndex: result.rowIndex,
+              column: result.column,
+              rowData: result.rowData,
+            });
+          }
+        }
+      } catch (error) {
+        // Log error with context for debugging
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.error('[TableImageGallery] Error building image items:', {
+          columnsToScan: columnsToScan.map((c) => c.column),
+          rowsCount: rows.length,
+          error: errorMessage,
+        });
+        // Show user feedback for critical failure
+        toast.error(
+          t(
+            'imageGallery.loadError',
+            'Failed to load some images. Please try refreshing.'
+          )
+        );
+      }
+
+      setImageItems(items);
+      setIsBuildingItems(false);
+    };
+
+    buildItems();
+  }, [rows, columns, imageColumns, validSelectedColumn, t]);
 
   // Handle export selected images
   const handleExportSelected = useCallback(() => {
@@ -117,7 +226,7 @@ export function TableImageGallery({
         selectedCount={selectedIds.size}
         onExportSelected={handleExportSelected}
         onRefresh={handleRefresh}
-        isLoading={isLoading}
+        isLoading={isLoading || isDetecting || isBuildingItems}
         totalCount={imageItems.length}
       />
 
@@ -129,6 +238,7 @@ export function TableImageGallery({
           isLoading={isLoading}
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
+          viewMode={viewMode}
         />
       </div>
     </div>

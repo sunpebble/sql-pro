@@ -7,6 +7,7 @@ import {
   Download,
   ExternalLink,
   ImageOff,
+  Loader2,
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -19,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { getImageDisplayUrl, getImageExtension } from '@/lib/image-utils';
 import { cn } from '@/lib/utils';
 
@@ -43,6 +45,20 @@ export interface ImagePreviewProps {
   currentIndex: number;
   /** Total count of images */
   totalCount: number;
+}
+
+/** Sharp metadata from main process */
+interface SharpMetadata {
+  width: number;
+  height: number;
+  format: string;
+  size: number;
+  space?: string;
+  channels?: number;
+  hasAlpha?: boolean;
+  isAnimated?: boolean;
+  density?: number;
+  pages?: number;
 }
 
 // ============================================================================
@@ -103,6 +119,10 @@ export function ImagePreview({
     width: number;
     height: number;
   } | null>(null);
+  const [sharpMetadata, setSharpMetadata] = useState<SharpMetadata | null>(
+    null
+  );
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 
   const displayUrl = useMemo(
     () => getImageDisplayUrl(item.source),
@@ -118,7 +138,42 @@ export function ImagePreview({
     setTrackedItemId(currentItemId);
     setLoadError(false);
     setImageDimensions(null);
+    setSharpMetadata(null);
   }
+
+  // Fetch sharp metadata for URL images
+  useEffect(() => {
+    if (item.source?.type !== 'url') {
+      setSharpMetadata(null);
+      return;
+    }
+
+    const fetchMetadata = async () => {
+      setIsLoadingMetadata(true);
+      try {
+        const result = await window.sqlPro.image.getMetadata({
+          url: item.source?.type === 'url' ? item.source.url : '',
+        });
+        if (result.success && result.metadata) {
+          setSharpMetadata(result.metadata);
+        }
+      } catch (error) {
+        // Log error with context for debugging
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.error(
+          `[ImagePreview] Failed to fetch metadata for URL: ${item.source?.type === 'url' ? item.source.url : 'unknown'}`,
+          { error: errorMessage }
+        );
+        // Metadata is non-critical, so we silently fail and use fallback display info
+        // No toast needed as the image still displays correctly
+      } finally {
+        setIsLoadingMetadata(false);
+      }
+    };
+
+    fetchMetadata();
+  }, [item.source]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -136,15 +191,20 @@ export function ImagePreview({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hasPrev, hasNext, onPrev, onNext, onClose]);
 
-  // Copy image to clipboard
+  // Copy image to clipboard - convert to PNG if needed (clipboard doesn't support webp)
   const handleCopyImage = useCallback(async () => {
     if (!displayUrl) return;
 
     try {
-      // For external URLs, use canvas to avoid CORS
-      if (item.source?.type === 'url') {
+      // Fetch from display URL (sqlpro:// proxy URL is cached, no CORS issues)
+      const response = await fetch(displayUrl);
+      const blob = await response.blob();
+
+      // Clipboard API only supports image/png and image/jpeg
+      // For other formats (like webp), convert to PNG using canvas
+      if (blob.type !== 'image/png' && blob.type !== 'image/jpeg') {
         const img = new Image();
-        img.crossOrigin = 'anonymous';
+        const blobUrl = URL.createObjectURL(blob);
 
         await new Promise<void>((resolve, reject) => {
           img.onload = () => {
@@ -159,14 +219,15 @@ export function ImagePreview({
               }
               ctx.drawImage(img, 0, 0);
 
-              canvas.toBlob(async (blob) => {
-                if (!blob) {
-                  reject(new Error('Failed to create blob'));
+              canvas.toBlob(async (pngBlob) => {
+                URL.revokeObjectURL(blobUrl);
+                if (!pngBlob) {
+                  reject(new Error('Failed to convert to PNG'));
                   return;
                 }
                 try {
                   await navigator.clipboard.write([
-                    new ClipboardItem({ [blob.type]: blob }),
+                    new ClipboardItem({ [pngBlob.type]: pngBlob }),
                   ]);
                   resolve();
                 } catch (e) {
@@ -177,13 +238,14 @@ export function ImagePreview({
               reject(e);
             }
           };
-          img.onerror = () => reject(new Error('Failed to load image'));
-          img.src = item.source?.type === 'url' ? item.source.url : displayUrl;
+          img.onerror = () => {
+            URL.revokeObjectURL(blobUrl);
+            reject(new Error('Failed to load image for conversion'));
+          };
+          img.src = blobUrl;
         });
       } else {
-        // For blob/base64, fetch and copy directly
-        const response = await fetch(displayUrl);
-        const blob = await response.blob();
+        // PNG and JPEG can be copied directly
         await navigator.clipboard.write([
           new ClipboardItem({ [blob.type]: blob }),
         ]);
@@ -194,15 +256,20 @@ export function ImagePreview({
       console.error('Failed to copy image:', error);
       toast.error(t('imageGallery.copyFailed', 'Failed to copy image'));
     }
-  }, [displayUrl, item.source, t]);
+  }, [displayUrl, t]);
+
+  // Copy to clipboard hook
+  const { copy } = useCopyToClipboard();
 
   // Copy image URL to clipboard
   const handleCopyUrl = useCallback(async () => {
     if (item.source?.type === 'url') {
-      await navigator.clipboard.writeText(item.source.url);
-      toast.success(t('imageGallery.urlCopied', 'URL copied to clipboard'));
+      await copy(item.source.url, {
+        successMessage: t('imageGallery.urlCopied', 'URL copied to clipboard'),
+        errorMessage: t('imageGallery.copyUrlFailed', 'Failed to copy URL'),
+      });
     }
-  }, [item.source, t]);
+  }, [item.source, t, copy]);
 
   // Open image in external browser (for URLs)
   const handleOpenExternal = useCallback(() => {
@@ -211,37 +278,34 @@ export function ImagePreview({
     }
   }, [item.source]);
 
-  // Download/export image
+  // Download/export image - use proxy URL for CORS-free download
   const handleDownload = useCallback(async () => {
     if (!displayUrl) return;
 
     try {
-      const extension = getImageExtension(item.source);
+      // Determine extension from sharp metadata or fallback
+      let extension = getImageExtension(item.source);
+      if (sharpMetadata?.format) {
+        extension =
+          sharpMetadata.format === 'jpeg' ? 'jpg' : sharpMetadata.format;
+      }
       const filename = `image_row${item.rowIndex + 1}_${item.column}.${extension}`;
 
-      // For URLs, attempt to download via fetch
-      if (item.source?.type === 'url') {
-        const response = await fetch(item.source.url);
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-      } else {
-        // For blob/base64, use the display URL directly
-        const a = document.createElement('a');
-        a.href = displayUrl;
-        a.download = filename;
-        a.click();
-      }
+      // Fetch from proxy URL (cached, no CORS)
+      const response = await fetch(displayUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
 
       toast.success(t('imageGallery.downloadStarted', 'Download started'));
     } catch {
       toast.error(t('imageGallery.downloadFailed', 'Download failed'));
     }
-  }, [displayUrl, item, t]);
+  }, [displayUrl, item, sharpMetadata, t]);
 
   const handleImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -253,6 +317,29 @@ export function ImagePreview({
     },
     []
   );
+
+  // Determine which metadata to display (prefer sharp metadata over basic)
+  const displayMetadata = useMemo(() => {
+    if (sharpMetadata) {
+      return {
+        format: sharpMetadata.format.toUpperCase(),
+        size: formatBytes(sharpMetadata.size),
+        width: sharpMetadata.width,
+        height: sharpMetadata.height,
+        colorInfo: sharpMetadata.space
+          ? `${sharpMetadata.space}${sharpMetadata.channels ? ` · ${sharpMetadata.channels}ch` : ''}${sharpMetadata.hasAlpha ? ' · α' : ''}`
+          : undefined,
+        isAnimated: sharpMetadata.isAnimated,
+        pages: sharpMetadata.pages,
+      };
+    }
+    return {
+      format: imageInfo.type,
+      size: imageInfo.size,
+      width: imageDimensions?.width,
+      height: imageDimensions?.height,
+    };
+  }, [sharpMetadata, imageInfo, imageDimensions]);
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
@@ -364,20 +451,46 @@ export function ImagePreview({
         <div className="flex flex-col gap-2 border-t px-4 py-3">
           {/* Info badges */}
           <div className="flex flex-wrap items-center gap-2">
+            {/* Format badge */}
             <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-              {t('imageGallery.type', 'Type')}: {imageInfo.type}
+              {t('imageGallery.format', 'Format')}: {displayMetadata.format}
+              {displayMetadata.isAnimated && (
+                <span className="text-muted-foreground ml-1">
+                  ({displayMetadata.pages} frames)
+                </span>
+              )}
             </span>
-            {imageInfo.size && (
+
+            {/* Size badge */}
+            {displayMetadata.size && (
               <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {t('imageGallery.size', 'Size')}: {imageInfo.size}
+                {t('imageGallery.size', 'Size')}: {displayMetadata.size}
               </span>
             )}
-            {imageDimensions && (
+
+            {/* Dimensions badge */}
+            {displayMetadata.width && displayMetadata.height && (
               <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {imageDimensions.width} × {imageDimensions.height}
+                {displayMetadata.width} × {displayMetadata.height}
+              </span>
+            )}
+
+            {/* Color info badge (from sharp) */}
+            {displayMetadata.colorInfo && (
+              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
+                {displayMetadata.colorInfo}
+              </span>
+            )}
+
+            {/* Loading indicator */}
+            {isLoadingMetadata && (
+              <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                {t('imageGallery.loadingMetadata', 'Loading metadata...')}
               </span>
             )}
           </div>
+
           {/* URL with copy button */}
           {item.source?.type === 'url' && (
             <div className="flex items-start gap-2">

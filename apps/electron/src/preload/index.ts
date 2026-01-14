@@ -811,6 +811,62 @@ const sqlProAPI = {
     }): Promise<SetRendererStateResponse> =>
       ipcRenderer.invoke(RENDERER_STORE_CHANNELS.RESET, request),
   },
+
+  // Image operations (proxy and metadata)
+  image: {
+    getMetadata: (request: {
+      url: string;
+    }): Promise<{
+      success: boolean;
+      metadata?: {
+        width: number;
+        height: number;
+        format: string;
+        size: number;
+        space?: string;
+        channels?: number;
+        hasAlpha?: boolean;
+        isAnimated?: boolean;
+        density?: number;
+        pages?: number;
+      };
+      error?: string;
+    }> => ipcRenderer.invoke('image:get-metadata', request),
+    getCacheStats: (): Promise<{
+      success: boolean;
+      stats: {
+        entries: number;
+        size: number;
+        maxEntries: number;
+        maxSize: number;
+      };
+    }> => ipcRenderer.invoke('image:get-cache-stats'),
+    clearCache: (): Promise<{ success: boolean }> =>
+      ipcRenderer.invoke('image:clear-cache'),
+    /** Check if URL is an image using HEAD request preflight */
+    checkUrl: (request: {
+      url: string;
+    }): Promise<{
+      success: boolean;
+      isImage: boolean;
+      mimeType?: string;
+      contentLength?: number;
+      error?: string;
+    }> => ipcRenderer.invoke('image:check-url', request),
+    /** Full validation: HEAD check + Sharp metadata extraction */
+    validateUrl: (request: {
+      url: string;
+    }): Promise<{
+      success: boolean;
+      isValid: boolean;
+      mimeType?: string;
+      width?: number;
+      height?: number;
+      format?: string;
+      size?: number;
+      error?: string;
+    }> => ipcRenderer.invoke('image:validate-url', request),
+  },
 };
 
 contextBridge.exposeInMainWorld('sqlPro', sqlProAPI);

@@ -1,31 +1,71 @@
 import type { ColumnSchema } from '@/types/database';
 
 // ============================================================================
+// Timeout Utility
+// ============================================================================
+
+/**
+ * Wraps a promise with a timeout that properly cleans up the timer.
+ * Unlike Promise.race with setTimeout, this ensures the timer is always cleared.
+ *
+ * @param promise - The promise to wrap with a timeout
+ * @param ms - Timeout in milliseconds
+ * @param fallbackValue - Optional value to return on timeout instead of throwing
+ * @returns The promise result or fallback value on timeout
+ */
+async function withTimeout<T>(
+  promise: Promise<T>,
+  ms: number,
+  fallbackValue?: T
+): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  const timeoutPromise = new Promise<T>((resolve, reject) => {
+    timeoutId = setTimeout(() => {
+      if (fallbackValue !== undefined) {
+        resolve(fallbackValue);
+      } else {
+        reject(new Error(`Operation timed out after ${ms}ms`));
+      }
+    }, ms);
+  });
+
+  try {
+    const result = await Promise.race([promise, timeoutPromise]);
+    return result;
+  } finally {
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
+  }
+}
+
+// ============================================================================
 // Image Magic Bytes Detection
 // ============================================================================
 
 /** Known image format magic bytes */
 const IMAGE_SIGNATURES: { type: string; mimeType: string; magic: number[] }[] =
   [
-    { type: 'png', mimeType: 'image/png', magic: [0x89, 0x50, 0x4E, 0x47] },
-    { type: 'jpg', mimeType: 'image/jpeg', magic: [0xFF, 0xD8, 0xFF] },
+    { type: 'png', mimeType: 'image/png', magic: [0x89, 0x50, 0x4e, 0x47] },
+    { type: 'jpg', mimeType: 'image/jpeg', magic: [0xff, 0xd8, 0xff] },
     { type: 'gif', mimeType: 'image/gif', magic: [0x47, 0x49, 0x46, 0x38] },
     {
       type: 'webp',
       mimeType: 'image/webp',
       magic: [0x52, 0x49, 0x46, 0x46], // RIFF, need to check WEBP at offset 8
     },
-    { type: 'bmp', mimeType: 'image/bmp', magic: [0x42, 0x4D] },
+    { type: 'bmp', mimeType: 'image/bmp', magic: [0x42, 0x4d] },
     { type: 'ico', mimeType: 'image/x-icon', magic: [0x00, 0x00, 0x01, 0x00] },
     {
       type: 'tiff',
       mimeType: 'image/tiff',
-      magic: [0x49, 0x49, 0x2A, 0x00], // Little endian
+      magic: [0x49, 0x49, 0x2a, 0x00], // Little endian
     },
     {
       type: 'tiff',
       mimeType: 'image/tiff',
-      magic: [0x4D, 0x4D, 0x00, 0x2A], // Big endian
+      magic: [0x4d, 0x4d, 0x00, 0x2a], // Big endian
     },
   ];
 
@@ -46,7 +86,7 @@ const IMAGE_EXTENSIONS = [
   '.heif',
 ];
 
-/** Common image hosting domains */
+/** Common image hosting domains - only domains that serve direct images */
 const IMAGE_HOST_PATTERNS = [
   /\.(imgur|imgbb|cloudinary|imagekit|staticflickr)\.com/i,
   /\.(githubusercontent|raw\.github)\.com/i,
@@ -56,8 +96,8 @@ const IMAGE_HOST_PATTERNS = [
   /\.aliyuncs\.com\/.*\.(jpg|jpeg|png|gif|webp)/i,
   /sm\.ms/i,
   /i\.postimg\.cc/i,
-  /unsplash\.com\/photos/i,
-  /images\.unsplash\.com/i,
+  /images\.unsplash\.com/i, // Only images.unsplash.com, not unsplash.com/photos (web pages)
+  /picsum\.photos/i, // Lorem Picsum image service
 ];
 
 // ============================================================================
@@ -191,6 +231,32 @@ export function isImageUrl(value: string): boolean {
 }
 
 /**
+ * Check if a URL points to an image using HEAD request preflight.
+ * This is more accurate than pattern matching as it checks the actual Content-Type.
+ * Falls back to pattern matching if HEAD check fails or is unavailable.
+ */
+export async function isImageUrlAsync(value: string): Promise<boolean> {
+  if (!isHttpUrl(value)) return false;
+
+  // First try quick pattern matching
+  if (isImageUrl(value)) {
+    return true;
+  }
+
+  // For URLs without clear image indicators, use HEAD request check
+  try {
+    const result = await window.sqlPro.image.checkUrl({ url: value.trim() });
+    if (result.success) {
+      return result.isImage;
+    }
+  } catch {
+    // Fall back to pattern matching result
+  }
+
+  return false;
+}
+
+/**
  * Check if a string is a base64 data URL for an image
  */
 export function isBase64Image(value: string): boolean {
@@ -210,7 +276,9 @@ export type ImageSource =
   | null;
 
 /**
- * Detect the image source type from a cell value
+ * Detect image source from a cell value.
+ * Returns null if the value is not a recognized image format.
+ * Note: This is sync and uses pattern matching only for URLs.
  */
 export function detectImageSource(
   value: unknown,
@@ -242,7 +310,7 @@ export function detectImageSource(
       return { type: 'base64', dataUrl: value };
     }
 
-    // Check for HTTP URL
+    // Check for HTTP URL with image extension
     if (isImageUrl(value)) {
       return { type: 'url', url: value };
     }
@@ -252,6 +320,43 @@ export function detectImageSource(
   if (columnType.toLowerCase().includes('blob') && value) {
     // Try to interpret as binary if we have any data
     return null;
+  }
+
+  return null;
+}
+
+/**
+ * Detect image source from a cell value with async URL validation.
+ * For URLs, uses HEAD request to check Content-Type.
+ * This filters out non-image URLs without downloading the full image.
+ */
+export async function detectImageSourceAsync(
+  value: unknown,
+  columnType: string
+): Promise<ImageSource> {
+  // Non-URL types can use sync detection
+  if (!(typeof value === 'string' && isHttpUrl(value))) {
+    return detectImageSource(value, columnType);
+  }
+
+  const url = value.trim();
+
+  // For URLs with clear image extension, trust pattern matching
+  if (isImageUrl(url)) {
+    return { type: 'url', url };
+  }
+
+  // For other URLs, use HEAD check with timeout
+  try {
+    const result = (await withTimeout(
+      window.sqlPro.image.checkUrl({ url }),
+      5000
+    )) as { success?: boolean; isImage?: boolean } | null;
+    if (result && result.success && result.isImage) {
+      return { type: 'url', url };
+    }
+  } catch {
+    // If check fails or times out, don't include this URL
   }
 
   return null;
@@ -307,19 +412,131 @@ export function detectImageColumns(
   return results;
 }
 
+/**
+ * Detect columns that may contain image data by sampling rows.
+ * Uses HEAD request preflight for URLs to verify Content-Type.
+ * Has timeouts to prevent hanging.
+ */
+export async function detectImageColumnsAsync(
+  columns: ColumnSchema[],
+  sampleRows: Record<string, unknown>[],
+  sampleSize = 10
+): Promise<ImageColumnInfo[]> {
+  const results: ImageColumnInfo[] = [];
+
+  const detection = async () => {
+    for (const column of columns) {
+      const columnName = column.name;
+      const columnType = column.type;
+      const seenTypes = new Set<'blob' | 'url' | 'base64'>();
+      let imageCount = 0;
+
+      // Sample rows to detect image data
+      const rowsToCheck = sampleRows.slice(0, sampleSize);
+
+      // Process URLs in parallel for efficiency
+      const checkPromises = rowsToCheck.map(async (row) => {
+        const value = row[columnName];
+        if (value === null || value === undefined) return null;
+
+        // For strings that look like URLs, use HEAD check
+        if (typeof value === 'string' && isHttpUrl(value)) {
+          // Quick pattern match first
+          if (isImageUrl(value)) {
+            return { type: 'url' as const };
+          }
+          // HEAD check for URLs without clear image extension (with timeout)
+          try {
+            const result = (await withTimeout(
+              window.sqlPro.image.checkUrl({ url: value.trim() }),
+              3000
+            )) as { success?: boolean; isImage?: boolean } | null;
+            if (result && result.success && result.isImage) {
+              return { type: 'url' as const };
+            }
+          } catch {
+            // Ignore errors and timeouts
+          }
+          return null;
+        }
+
+        // For non-URL values, use sync detection
+        const source = detectImageSource(value, columnType);
+        if (source) {
+          return { type: source.type };
+        }
+        return null;
+      });
+
+      const checkResults = await Promise.all(checkPromises);
+
+      for (const result of checkResults) {
+        if (result) {
+          imageCount++;
+          seenTypes.add(result.type);
+        }
+      }
+
+      // If we found images in at least 1 row, consider it an image column
+      if (imageCount > 0) {
+        let type: 'blob' | 'url' | 'base64' | 'mixed';
+        if (seenTypes.size > 1) {
+          type = 'mixed';
+        } else {
+          type = [...seenTypes][0];
+        }
+        results.push({ column: columnName, type });
+      }
+    }
+
+    return results;
+  };
+
+  // Overall timeout for the entire detection
+  return withTimeout(detection(), 10000, results);
+}
+
 // ============================================================================
 // Image Processing Utilities
 // ============================================================================
 
 /**
- * Get the display URL for an image source
+ * Convert an HTTP(S) image URL to a sqlpro:// proxy URL.
+ * This enables CORS-free loading and caching in the main process.
+ */
+export function getProxyImageUrl(url: string): string {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    return url; // Not a remote URL
+  }
+  return `sqlpro://image/${encodeURIComponent(url)}`;
+}
+
+/**
+ * Decode a sqlpro:// proxy URL back to the original HTTP(S) URL.
+ */
+export function decodeProxyImageUrl(proxyUrl: string): string | null {
+  if (!proxyUrl.startsWith('sqlpro://image/')) {
+    return null;
+  }
+  const encoded = proxyUrl.slice('sqlpro://image/'.length);
+  try {
+    return decodeURIComponent(encoded);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get the display URL for an image source.
+ * For remote URLs, returns a sqlpro:// proxy URL to bypass CORS.
  */
 export function getImageDisplayUrl(source: ImageSource): string | null {
   if (!source) return null;
 
   switch (source.type) {
     case 'url':
-      return source.url;
+      // Use proxy URL for remote images to bypass CORS
+      return getProxyImageUrl(source.url);
     case 'base64':
       return source.dataUrl;
     case 'blob':

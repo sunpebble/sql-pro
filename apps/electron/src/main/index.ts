@@ -17,6 +17,10 @@ import {
   saveWindowState,
 } from './lib/window-state';
 import { fileWatcherService } from './services/file-watcher';
+import {
+  registerImageProxyScheme,
+  setupImageProxyHandler,
+} from './services/image-proxy';
 import { cleanupIpcHandlers, setupIpcHandlers } from './services/ipc-handlers';
 import {
   createApplicationMenu,
@@ -34,6 +38,10 @@ const is = {
     return !app.isPackaged;
   },
 };
+
+// Register custom sqlpro:// protocol scheme BEFORE app is ready
+// This enables proxying remote images and bypassing CORS
+registerImageProxyScheme();
 
 // React DevTools extension ID from Chrome Web Store
 const REACT_DEVTOOLS_ID = 'fmkadmapgofadopljbjfkapdkoienihi';
@@ -250,6 +258,9 @@ app.whenReady().then(async () => {
 
   // Setup IPC handlers for database operations
   setupIpcHandlers();
+
+  // Setup image proxy protocol handler
+  setupImageProxyHandler();
 
   // Register shortcuts sync handler
   registerShortcutsHandler();

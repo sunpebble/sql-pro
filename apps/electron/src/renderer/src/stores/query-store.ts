@@ -378,7 +378,8 @@ export const useQueryStore = create<QueryState>((set, get) => ({
       } else {
         set({ history: [], isLoadingHistory: false });
       }
-    } catch {
+    } catch (error) {
+      console.warn('[QueryStore] Failed to load history:', error);
       set({ history: [], isLoadingHistory: false });
     }
   },
@@ -412,8 +413,9 @@ export const useQueryStore = create<QueryState>((set, get) => ({
       queryText:
         query.length > MAX_HISTORY_ENTRY_QUERY_SIZE ? query : truncatedQuery,
     };
-    sqlPro.history.save({ entry: fullEntry }).catch(() => {
-      // Silent failure - history is already in memory
+    sqlPro.history.save({ entry: fullEntry }).catch((error: unknown) => {
+      // Non-critical: history is already in memory, log for debugging
+      console.warn('[QueryStore] Failed to persist history entry:', error);
     });
   },
 
@@ -426,7 +428,8 @@ export const useQueryStore = create<QueryState>((set, get) => ({
     // Persist deletion to storage
     try {
       await sqlPro.history.delete({ dbPath, entryId });
-    } catch {
+    } catch (error) {
+      console.warn('[QueryStore] Failed to delete history item:', error);
       // If deletion fails, reload history to restore state
       const response = await sqlPro.history.get({ dbPath });
       if (response.success && response.history) {
@@ -442,7 +445,8 @@ export const useQueryStore = create<QueryState>((set, get) => ({
     // Persist to storage
     try {
       await sqlPro.history.clear({ dbPath });
-    } catch {
+    } catch (error) {
+      console.warn('[QueryStore] Failed to clear history:', error);
       // If clearing fails, reload history to restore state
       const response = await sqlPro.history.get({ dbPath });
       if (response.success && response.history) {
