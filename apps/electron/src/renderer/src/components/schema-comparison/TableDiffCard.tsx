@@ -259,12 +259,12 @@ export function TableDiffCard({
                           {col.type}
                         </span>
                         {col.isPrimaryKey && (
-                          <Badge variant="outline" className="text-[10px]">
+                          <Badge variant="outline" className="text-2xs">
                             PK
                           </Badge>
                         )}
                         {!col.nullable && (
-                          <Badge variant="outline" className="text-[10px]">
+                          <Badge variant="outline" className="text-2xs">
                             NOT NULL
                           </Badge>
                         )}
@@ -297,12 +297,12 @@ export function TableDiffCard({
                           {col.type}
                         </span>
                         {col.isPrimaryKey && (
-                          <Badge variant="outline" className="text-[10px]">
+                          <Badge variant="outline" className="text-2xs">
                             PK
                           </Badge>
                         )}
                         {!col.nullable && (
-                          <Badge variant="outline" className="text-[10px]">
+                          <Badge variant="outline" className="text-2xs">
                             NOT NULL
                           </Badge>
                         )}
@@ -413,12 +413,12 @@ function ColumnDiffRow({ diff }: { diff: ColumnDiff }) {
           {diff.target?.type || diff.source?.type}
         </span>
         {diff.target?.isPrimaryKey && (
-          <Badge variant="outline" className="text-[10px]">
+          <Badge variant="outline" className="text-2xs">
             PK
           </Badge>
         )}
         {diff.target && !diff.target.nullable && (
-          <Badge variant="outline" className="text-[10px]">
+          <Badge variant="outline" className="text-2xs">
             NOT NULL
           </Badge>
         )}
@@ -426,7 +426,7 @@ function ColumnDiffRow({ diff }: { diff: ColumnDiff }) {
 
       {/* Show specific changes for modified columns */}
       {diff.diffType === 'modified' && diff.changes && (
-        <div className="text-muted-foreground ml-5 space-y-0.5 text-[10px]">
+        <div className="text-muted-foreground text-2xs ml-5 space-y-0.5">
           {diff.changes.type && (
             <div>
               Type:{' '}
@@ -533,7 +533,7 @@ function IndexDiffRow({ diff }: { diff: IndexDiff }) {
           ({index?.columns.join(', ')})
         </span>
         {index?.isUnique && (
-          <Badge variant="outline" className="text-[10px]">
+          <Badge variant="outline" className="text-2xs">
             UNIQUE
           </Badge>
         )}
@@ -541,7 +541,7 @@ function IndexDiffRow({ diff }: { diff: IndexDiff }) {
 
       {/* Show specific changes for modified indexes */}
       {diff.diffType === 'modified' && diff.changes && (
-        <div className="text-muted-foreground ml-5 space-y-0.5 text-[10px]">
+        <div className="text-muted-foreground text-2xs ml-5 space-y-0.5">
           {diff.changes.columns && (
             <div>
               Columns:{' '}
@@ -638,7 +638,7 @@ function ForeignKeyDiffRow({ diff }: { diff: ForeignKeyDiff }) {
 
       {/* Show specific changes for modified foreign keys */}
       {diff.diffType === 'modified' && diff.changes && (
-        <div className="text-muted-foreground ml-5 space-y-0.5 text-[10px]">
+        <div className="text-muted-foreground text-2xs ml-5 space-y-0.5">
           {diff.changes.referencedTable && (
             <div>
               Referenced Table:{' '}
@@ -746,7 +746,7 @@ function TriggerDiffRow({ diff }: { diff: TriggerDiff }) {
 
       {/* Show specific changes for modified triggers */}
       {diff.diffType === 'modified' && diff.changes && (
-        <div className="text-muted-foreground ml-5 space-y-0.5 text-[10px]">
+        <div className="text-muted-foreground text-2xs ml-5 space-y-0.5">
           {diff.changes.timing && (
             <div>
               Timing:{' '}

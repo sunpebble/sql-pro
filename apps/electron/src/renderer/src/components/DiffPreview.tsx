@@ -821,12 +821,12 @@ function DiffTable({ change }: { change: PendingChange }) {
                           )}
                         />
                         {validationError && (
-                          <span className="text-destructive text-[10px]">
+                          <span className="text-destructive text-2xs">
                             {validationError}
                           </span>
                         )}
                         {columnSchema && (
-                          <span className="text-muted-foreground/60 text-[10px]">
+                          <span className="text-muted-foreground/60 text-2xs">
                             {columnSchema.type}
                             {!columnSchema.nullable && ' • NOT NULL'}
                           </span>

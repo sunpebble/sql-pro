@@ -16,6 +16,12 @@
   --color-text-secondary: rgba(255, 255, 255, 0.6);
   --color-text-muted: rgba(255, 255, 255, 0.4);
 
+  /* Semantic status colors */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
   /* Spacing */
   --section-padding: 120px;
   --container-max: 1200px;

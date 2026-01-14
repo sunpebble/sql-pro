@@ -173,7 +173,7 @@ const TabItem = memo(
                     {tab.title}
                   </span>
                   {tab.table.schema && tab.table.schema !== 'main' && (
-                    <span className="text-muted-foreground shrink-0 text-[10px]">
+                    <span className="text-muted-foreground text-2xs shrink-0">
                       {tab.table.schema}
                     </span>
                   )}

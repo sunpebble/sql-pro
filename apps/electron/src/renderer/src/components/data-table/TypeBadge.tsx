@@ -31,27 +31,27 @@ export const TypeBadge = memo(
       }
     })();
 
-    // Select color based on type category
+    // Select color based on type category using design tokens
     const colorClasses = (() => {
       switch (typeCategory) {
         case 'numeric':
-          return 'bg-blue-500/10 text-blue-700 dark:text-blue-400';
+          return 'bg-type-numeric-bg text-type-numeric';
         case 'date':
-          return 'bg-purple-500/10 text-purple-700 dark:text-purple-400';
+          return 'bg-type-date-bg text-type-date';
         case 'boolean':
-          return 'bg-green-500/10 text-green-700 dark:text-green-400';
+          return 'bg-type-boolean-bg text-type-boolean';
         case 'text':
-          return 'bg-amber-500/10 text-amber-700 dark:text-amber-400';
+          return 'bg-type-text-bg text-type-text';
         case 'unknown':
         default:
-          return 'bg-gray-500/10 text-gray-700 dark:text-gray-400';
+          return 'bg-type-unknown-bg text-type-unknown';
       }
     })();
 
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium uppercase',
+          'text-2xs inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-medium uppercase',
           colorClasses,
           className
         )}

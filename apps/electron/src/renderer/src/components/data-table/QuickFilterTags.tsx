@@ -215,7 +215,7 @@ export const QuickFilterTags = memo(
       >
         <div className="flex shrink-0 items-center gap-1.5">
           <Sparkles className="h-3 w-3 text-amber-500" />
-          <span className="text-muted-foreground text-[10px] font-medium uppercase">
+          <span className="text-muted-foreground text-2xs font-medium uppercase">
             {t('table.quickFilters', { defaultValue: 'Quick Filters' })}
           </span>
         </div>
@@ -243,7 +243,7 @@ export const QuickFilterTags = memo(
                     </span>
                     <span
                       className={cn(
-                        'text-[10px]',
+                        'text-2xs',
                         isActive ? 'opacity-75' : 'text-muted-foreground'
                       )}
                     >

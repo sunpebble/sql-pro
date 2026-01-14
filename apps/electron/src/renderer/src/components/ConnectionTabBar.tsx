@@ -58,30 +58,33 @@ import {
 } from '@/stores';
 import { useChangesStore } from '@/stores/changes-store';
 
-// Preset colors for connection tabs
+// Preset colors for connection tabs (using OKLch for consistency)
 const PRESET_COLORS = [
-  { name: 'Blue', value: '#3b82f6' },
-  { name: 'Green', value: '#10b981' },
-  { name: 'Red', value: '#ef4444' },
-  { name: 'Yellow', value: '#eab308' },
-  { name: 'Purple', value: '#a855f7' },
-  { name: 'Pink', value: '#ec4899' },
-  { name: 'Orange', value: '#f97316' },
-  { name: 'Teal', value: '#14b8a6' },
-  { name: 'Indigo', value: '#6366f1' },
-  { name: 'Cyan', value: '#06b6d4' },
-  { name: 'Lime', value: '#84cc16' },
-  { name: 'Amber', value: '#f59e0b' },
+  { name: 'Blue', value: 'oklch(0.59 0.20 255)' },
+  { name: 'Green', value: 'oklch(0.70 0.17 160)' },
+  { name: 'Red', value: 'oklch(0.63 0.24 25)' },
+  { name: 'Yellow', value: 'oklch(0.80 0.16 95)' },
+  { name: 'Purple', value: 'oklch(0.65 0.22 300)' },
+  { name: 'Pink', value: 'oklch(0.70 0.22 350)' },
+  { name: 'Orange', value: 'oklch(0.70 0.20 50)' },
+  { name: 'Teal', value: 'oklch(0.70 0.14 180)' },
+  { name: 'Indigo', value: 'oklch(0.55 0.22 270)' },
+  { name: 'Cyan', value: 'oklch(0.75 0.14 200)' },
+  { name: 'Lime', value: 'oklch(0.80 0.18 125)' },
+  { name: 'Amber', value: 'oklch(0.75 0.18 75)' },
 ];
 
 /**
- * Validates if a string is a valid hex color code
- * Supports both 3-digit (#RGB) and 6-digit (#RRGGBB) formats
+ * Validates if a string is a valid color code
+ * Supports hex (#RGB, #RRGGBB) and OKLch formats
  */
-const isValidHexColor = (color: string): boolean => {
+const isValidColor = (color: string): boolean => {
   // Check for valid hex color format: #RGB or #RRGGBB
   const hexColorRegex = /^#(?:[A-F0-9]{6}|[A-F0-9]{3})$/i;
-  return hexColorRegex.test(color);
+  // Check for OKLch format: oklch(L C H) or oklch(L C H / A)
+  const oklchRegex =
+    /^oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+\s*(?:\/\s*[\d.]+%?\s*)?\)$/i;
+  return hexColorRegex.test(color) || oklchRegex.test(color);
 };
 
 interface ConnectionTabBarProps {
@@ -100,7 +103,8 @@ const ConnectionTab = memo(
     const { t } = useTranslation('common');
     const { getConnectionColor, setConnectionColor, setSchema } =
       useConnectionStore();
-    const connectionColor = getConnectionColor(connection.id) || '#3b82f6'; // default blue
+    const connectionColor =
+      getConnectionColor(connection.id) || 'oklch(0.59 0.20 255)'; // default blue
 
     // Check for unsaved changes
     const hasUnsavedChanges = useChangesStore((state) =>
@@ -212,7 +216,7 @@ const ConnectionTab = memo(
 
     const handleColorSelect = (color: string) => {
       // Validate color before setting it
-      if (isValidHexColor(color)) {
+      if (isValidColor(color)) {
         setConnectionColor(connection.id, color);
       }
     };
@@ -277,7 +281,7 @@ const ConnectionTab = memo(
                         const parentDir =
                           parts.length > 1 ? parts[parts.length - 2] : null;
                         return parentDir ? (
-                          <span className="text-muted-foreground block truncate text-[10px] leading-tight">
+                          <span className="text-muted-foreground text-2xs block truncate leading-tight">
                             {parentDir}
                           </span>
                         ) : null;
@@ -304,7 +308,7 @@ const ConnectionTab = memo(
               <TooltipContent side="bottom" className="max-w-80 text-xs">
                 <div className="flex flex-col gap-1">
                   <div className="font-medium">{connection.filename}</div>
-                  <div className="text-muted-foreground font-mono text-[11px] break-all">
+                  <div className="text-muted-foreground font-mono text-xs break-all">
                     {connection.path}
                   </div>
                 </div>

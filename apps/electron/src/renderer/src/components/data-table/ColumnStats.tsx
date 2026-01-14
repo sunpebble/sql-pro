@@ -214,7 +214,7 @@ export const ColumnStats = memo(
             <span className="text-xs font-medium">
               {t('table.columnStats', { defaultValue: 'Column Statistics' })}
             </span>
-            <span className="text-muted-foreground text-[10px]">
+            <span className="text-muted-foreground text-2xs">
               (
               {t('table.columnsCount', {
                 count: columns.length,
@@ -250,7 +250,7 @@ export const ColumnStats = memo(
                   <button
                     onClick={() => setMode('page')}
                     className={cn(
-                      'flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors',
+                      'text-2xs flex items-center gap-1 rounded px-2 py-1 font-medium transition-colors',
                       mode === 'page'
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground'
@@ -263,7 +263,7 @@ export const ColumnStats = memo(
                   <button
                     onClick={() => setMode('full')}
                     className={cn(
-                      'flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors',
+                      'text-2xs flex items-center gap-1 rounded px-2 py-1 font-medium transition-colors',
                       mode === 'full'
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground'
@@ -424,7 +424,7 @@ function PageStats({ stats, t }: PageStatsProps) {
       {/* Top values */}
       {stats.topValues.length > 0 && (
         <div className="space-y-1.5">
-          <span className="text-muted-foreground text-[10px] font-medium uppercase">
+          <span className="text-muted-foreground text-2xs font-medium uppercase">
             {t('columnStats.topValues', { defaultValue: 'Top Values' })}
           </span>
           <div className="space-y-1">
@@ -444,7 +444,7 @@ function PageStats({ stats, t }: PageStatsProps) {
                   </div>
                   <Progress value={item.percentage} className="mt-0.5 h-1" />
                 </div>
-                <span className="text-muted-foreground w-12 text-right text-[10px]">
+                <span className="text-muted-foreground text-2xs w-12 text-right">
                   {item.percentage.toFixed(1)}%
                 </span>
               </div>
@@ -536,7 +536,7 @@ function FullTableStats({
       {distribution.length > 0 && (
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-[10px] font-medium uppercase">
+            <span className="text-muted-foreground text-2xs font-medium uppercase">
               {t('columnStats.allValues', { defaultValue: 'All Values' })}
               <span className="text-muted-foreground/70 ml-1 normal-case">
                 ({distribution.length})
@@ -560,7 +560,7 @@ function FullTableStats({
                   </div>
                   <Progress value={item.percentage} className="mt-0.5 h-1" />
                 </div>
-                <span className="text-muted-foreground w-12 text-right text-[10px]">
+                <span className="text-muted-foreground text-2xs w-12 text-right">
                   {item.percentage.toFixed(1)}%
                 </span>
                 {onFilterAdd && (
@@ -603,11 +603,11 @@ function StatCard({ icon, label, value, subtitle, warning }: StatCardProps) {
     >
       <div className="text-muted-foreground mb-0.5 flex items-center gap-1">
         {icon}
-        <span className="text-[10px] uppercase">{label}</span>
+        <span className="text-2xs uppercase">{label}</span>
       </div>
       <div className="text-sm font-medium">{value}</div>
       {subtitle && (
-        <div className="text-muted-foreground text-[10px]">{subtitle}</div>
+        <div className="text-muted-foreground text-2xs">{subtitle}</div>
       )}
     </div>
   );

@@ -562,7 +562,7 @@ export function EditableDataGrid({
                     >
                       {/* NEW badge for first column of new rows */}
                       {isNew && idx === 0 && (
-                        <span className="mr-1 rounded bg-green-500 px-1 py-0.5 text-[10px] font-medium text-white">
+                        <span className="text-2xs mr-1 rounded bg-green-500 px-1 py-0.5 font-medium text-white">
                           NEW
                         </span>
                       )}

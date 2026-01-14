@@ -218,7 +218,7 @@ export const DataQualityIndicator = memo(
             <span className={cn('text-xs font-medium', colorClass)}>
               {quality.grade}
             </span>
-            <span className="text-muted-foreground text-[10px]">
+            <span className="text-muted-foreground text-2xs">
               ({quality.score}%)
             </span>
           </div>
@@ -279,7 +279,7 @@ export const DataQualityIndicator = memo(
                 ))}
               </div>
               {quality.issues.length > 5 && (
-                <div className="text-muted-foreground border-t px-2 py-1 text-[10px]">
+                <div className="text-muted-foreground text-2xs border-t px-2 py-1">
                   +{quality.issues.length - 5} more issues
                 </div>
               )}

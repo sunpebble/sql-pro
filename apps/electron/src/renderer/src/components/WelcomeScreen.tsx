@@ -1066,7 +1066,7 @@ export function WelcomeScreen() {
                                   <HasSavedPasswordIndicator path={conn.path} />
                                 </div>
                               </div>
-                              <div className="text-muted-foreground truncate font-mono text-[11px]">
+                              <div className="text-muted-foreground truncate font-mono text-xs">
                                 {conn.path}
                               </div>
                             </div>

@@ -22,7 +22,7 @@ const proBadgeVariants = cva(
       },
       size: {
         default: 'px-2 py-0.5 text-xs',
-        sm: 'px-1.5 py-0.5 text-[10px]',
+        sm: 'px-1.5 py-0.5 text-2xs',
         lg: 'px-3 py-1 text-sm',
       },
     },

@@ -193,7 +193,7 @@ export const RowHoverCard = memo(
           {/* Footer (if more columns exist) */}
           {columns.length > 10 && (
             <div className="border-t px-3 py-1.5">
-              <span className="text-muted-foreground text-[10px]">
+              <span className="text-muted-foreground text-2xs">
                 +{columns.length - 10} more columns
               </span>
             </div>
