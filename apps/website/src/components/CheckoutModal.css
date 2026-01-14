@@ -172,7 +172,7 @@
 }
 
 .checkout-error {
-  color: #ef4444;
+  color: var(--color-error);
   font-size: 0.875rem;
   padding: 12px;
   background: rgba(239, 68, 68, 0.1);
@@ -240,7 +240,7 @@
 }
 
 .checkout-guarantee svg {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 @media (max-width: 480px) {

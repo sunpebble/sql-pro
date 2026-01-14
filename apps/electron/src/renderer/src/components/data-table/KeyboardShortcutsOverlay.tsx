@@ -247,7 +247,7 @@ export const KeyboardShortcutsOverlay = memo(
                 {/* Category header */}
                 <div className="bg-muted/50 flex items-center gap-1.5 px-3 py-1.5">
                   {categoryIcons[category]}
-                  <span className="text-muted-foreground text-[10px] font-medium uppercase">
+                  <span className="text-muted-foreground text-2xs font-medium uppercase">
                     {categoryLabels[category]}
                   </span>
                 </div>
@@ -266,7 +266,7 @@ export const KeyboardShortcutsOverlay = memo(
                           <kbd
                             key={key}
                             className={cn(
-                              'rounded px-1.5 py-0.5 font-mono text-[10px]',
+                              'text-2xs rounded px-1.5 py-0.5 font-mono',
                               'bg-muted border shadow-sm',
                               'min-w-5 text-center'
                             )}
@@ -284,9 +284,9 @@ export const KeyboardShortcutsOverlay = memo(
 
           {/* Footer */}
           <div className="bg-muted/30 border-t px-3 py-2">
-            <p className="text-muted-foreground text-center text-[10px]">
+            <p className="text-muted-foreground text-2xs text-center">
               Press{' '}
-              <kbd className="bg-muted rounded border px-1 py-0.5 text-[10px]">
+              <kbd className="bg-muted text-2xs rounded border px-1 py-0.5">
                 ?
               </kbd>{' '}
               to toggle this panel

@@ -87,7 +87,7 @@ export function ActivityBar({
               >
                 <Icon className="h-[18px] w-[18px]" />
                 {badgeCount !== undefined && badgeCount > 0 && (
-                  <span className="bg-primary text-primary-foreground absolute top-1.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-medium">
+                  <span className="bg-primary text-primary-foreground text-2xs absolute top-1.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 font-medium">
                     {badgeCount > 99 ? '99+' : badgeCount}
                   </span>
                 )}

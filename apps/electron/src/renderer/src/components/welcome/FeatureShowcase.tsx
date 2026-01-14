@@ -90,7 +90,7 @@ export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
               <span className="text-xs leading-tight font-medium">
                 {t(`features.${feature.key}.title`)}
               </span>
-              <span className="text-muted-foreground line-clamp-2 text-[10px] leading-tight">
+              <span className="text-muted-foreground text-2xs line-clamp-2 leading-tight">
                 {t(`features.${feature.key}.desc`)}
               </span>
             </div>

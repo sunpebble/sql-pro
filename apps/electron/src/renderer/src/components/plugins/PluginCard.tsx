@@ -343,18 +343,18 @@ export function PluginCard({
             {variant === 'installed' && pluginState && (
               <Badge
                 variant={getStateBadgeVariant(pluginState)}
-                className="px-1.5 text-[10px]"
+                className="text-2xs px-1.5"
               >
                 {getStateLabel(pluginState)}
               </Badge>
             )}
             {variant === 'marketplace' && isInstalled && (
-              <Badge variant="secondary" className="px-1.5 text-[10px]">
+              <Badge variant="secondary" className="text-2xs px-1.5">
                 Installed
               </Badge>
             )}
             {hasUpdate && (
-              <Badge variant="default" className="px-1.5 text-[10px]">
+              <Badge variant="default" className="text-2xs px-1.5">
                 Update
               </Badge>
             )}
