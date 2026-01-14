@@ -9,6 +9,7 @@ import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain, shell } from 'electron';
 import Store from 'electron-store';
 import { machineIdSync } from 'node-machine-id';
+import { createHandler } from './utils';
 
 // License API configuration
 const LICENSE_API_URL = process.env.LICENSE_API_URL || 'http://localhost:8787';
@@ -81,31 +82,25 @@ function getMachineId(): string {
 
 export function setupLicenseHandlers() {
   // Get machine ID for activation
-  ipcMain.handle(IPC_CHANNELS.LICENSE_GET_MACHINE_ID, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.LICENSE_GET_MACHINE_ID,
+    createHandler(async () => {
       return {
-        success: true,
         machineId: getMachineId(),
         platform: os.platform(),
         hostname: os.hostname(),
       };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get machine ID',
-      };
-    }
-  });
+    })
+  );
 
   // Create Stripe Checkout session
   ipcMain.handle(
     IPC_CHANNELS.LICENSE_CREATE_CHECKOUT,
-    async (
-      _event,
-      request: { email: string; plan: 'monthly' | 'yearly' | 'lifetime' }
-    ) => {
-      try {
+    createHandler(
+      async (request: {
+        email: string;
+        plan: 'monthly' | 'yearly' | 'lifetime';
+      }) => {
         const response = await fetch(`${LICENSE_API_URL}/api/checkout`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -121,76 +116,48 @@ export function setupLicenseHandlers() {
         if (data.success && data.url) {
           // Open checkout URL in default browser
           await shell.openExternal(data.url);
-          return { success: true, sessionId: data.sessionId };
+          return { sessionId: data.sessionId };
         }
 
-        return {
-          success: false,
-          error: data.error || 'Failed to create checkout',
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : 'Failed to create checkout',
-        };
+        throw new Error(data.error || 'Failed to create checkout');
       }
-    }
+    )
   );
 
   // Activate license on this machine
   ipcMain.handle(
     IPC_CHANNELS.LICENSE_ACTIVATE,
-    async (_event, request: { email: string; licenseKey: string }) => {
-      try {
-        const machineId = getMachineId();
-        const response = await fetch(
-          `${LICENSE_API_URL}/api/license/activate`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: request.email,
-              licenseKey: request.licenseKey,
-              machineId,
-              platform: os.platform(),
-              hostname: os.hostname(),
-            }),
-          }
-        );
+    createHandler(async (request: { email: string; licenseKey: string }) => {
+      const machineId = getMachineId();
+      const response = await fetch(`${LICENSE_API_URL}/api/license/activate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: request.email,
+          licenseKey: request.licenseKey,
+          machineId,
+          platform: os.platform(),
+          hostname: os.hostname(),
+        }),
+      });
 
-        const data = (await response.json()) as ActivateResponse;
-        if (data.success && data.license) {
-          // Cache license locally
-          store.set('licenseCache', {
-            licenseKey: request.licenseKey,
-            email: request.email,
-            plan: data.license.plan,
-            status: data.license.status,
-            expiresAt: data.license.expiresAt,
-            lastVerified: new Date().toISOString(),
-          });
+      const data = (await response.json()) as ActivateResponse;
+      if (data.success && data.license) {
+        // Cache license locally
+        store.set('licenseCache', {
+          licenseKey: request.licenseKey,
+          email: request.email,
+          plan: data.license.plan,
+          status: data.license.status,
+          expiresAt: data.license.expiresAt,
+          lastVerified: new Date().toISOString(),
+        });
 
-          return { success: true, license: data.license };
-        }
-
-        return {
-          success: false,
-          error: data.error || 'Failed to activate license',
-          activations: data.activations,
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : 'Failed to activate license',
-        };
+        return { license: data.license };
       }
-    }
+
+      throw new Error(data.error || 'Failed to activate license');
+    })
   );
 
   // Verify license
@@ -277,47 +244,49 @@ export function setupLicenseHandlers() {
   });
 
   // Deactivate license on this machine
-  ipcMain.handle(IPC_CHANNELS.LICENSE_DEACTIVATE, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.LICENSE_DEACTIVATE,
+    createHandler(async () => {
       const cached = store.get('licenseCache');
       if (!cached) {
-        return { success: true };
+        return {};
       }
 
       const machineId = getMachineId();
-      await fetch(`${LICENSE_API_URL}/api/license/deactivate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          licenseKey: cached.licenseKey,
-          machineId,
-        }),
-      });
+      try {
+        await fetch(`${LICENSE_API_URL}/api/license/deactivate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            licenseKey: cached.licenseKey,
+            machineId,
+          }),
+        });
+      } catch (error) {
+        // Clear local cache anyway, but include warning
+        store.delete('licenseCache');
+        return {
+          warning:
+            error instanceof Error
+              ? error.message
+              : 'Could not notify server, but local license was removed',
+        };
+      }
 
       // Clear local cache
       store.delete('licenseCache');
 
-      return { success: true };
-    } catch (error) {
-      // Clear local cache anyway
-      store.delete('licenseCache');
-
-      return {
-        success: true,
-        warning:
-          error instanceof Error
-            ? error.message
-            : 'Could not notify server, but local license was removed',
-      };
-    }
-  });
+      return {};
+    })
+  );
 
   // Get Stripe Customer Portal URL
-  ipcMain.handle(IPC_CHANNELS.LICENSE_GET_PORTAL_URL, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.LICENSE_GET_PORTAL_URL,
+    createHandler(async () => {
       const cached = store.get('licenseCache');
       if (!cached) {
-        return { success: false, error: 'No license found' };
+        throw new Error('No license found');
       }
 
       const response = await fetch(`${LICENSE_API_URL}/api/portal`, {
@@ -332,19 +301,10 @@ export function setupLicenseHandlers() {
       const data = (await response.json()) as PortalResponse;
       if (data.success && data.url) {
         await shell.openExternal(data.url);
-        return { success: true };
+        return {};
       }
 
-      return {
-        success: false,
-        error: data.error || 'Failed to get portal URL',
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get portal URL',
-      };
-    }
-  });
+      throw new Error(data.error || 'Failed to get portal URL');
+    })
+  );
 }

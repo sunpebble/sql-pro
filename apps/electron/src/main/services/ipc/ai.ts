@@ -3,6 +3,7 @@ import type {
   AICancelStreamRequest,
   AIFetchAnthropicRequest,
   AIFetchOpenAIRequest,
+  AISettings,
   AIStreamAnthropicRequest,
   AIStreamOpenAIRequest,
 } from '@shared/types';
@@ -109,32 +110,22 @@ export async function findClaudeCodePaths(): Promise<string[]> {
 
 export function setupAIHandlers(): void {
   // AI: Get Settings
-  ipcMain.handle(IPC_CHANNELS.AI_GET_SETTINGS, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.AI_GET_SETTINGS,
+    createHandler(async () => {
       const settings = getAISettings();
-      return { success: true, settings };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get AI settings',
-      };
-    }
-  });
+      return { settings };
+    })
+  );
 
   // AI: Save Settings
-  ipcMain.handle(IPC_CHANNELS.AI_SAVE_SETTINGS, async (_event, request) => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.AI_SAVE_SETTINGS,
+    createHandler(async (request: { settings: AISettings }) => {
       const settings = saveAISettings(request.settings);
-      return { success: true, settings };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to save AI settings',
-      };
-    }
-  });
+      return { settings };
+    })
+  );
 
   // AI: Query
   ipcMain.handle(
@@ -323,69 +314,49 @@ export function setupAIHandlers(): void {
   );
 
   // System: Find Claude Paths
-  ipcMain.handle(IPC_CHANNELS.SYSTEM_FIND_CLAUDE_PATHS, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.SYSTEM_FIND_CLAUDE_PATHS,
+    createHandler(async () => {
       const paths = await findClaudeCodePaths();
-      return { success: true, paths };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to find Claude paths',
-      };
-    }
-  });
+      return { paths };
+    })
+  );
 
   // AI: Get Claude Code Info
   ipcMain.handle(
     IPC_CHANNELS.AI_GET_CLAUDE_CODE_INFO,
-    async (_event, request: { path: string }) => {
-      try {
-        const claudePath = request.path;
-        if (!claudePath || !fs.existsSync(claudePath)) {
-          return {
-            success: false,
-            error: 'Claude Code path not found',
-          };
-        }
-
-        // Run claude --version to get version info
-        const { stdout } = await execAsync(`"${claudePath}" --version`);
-        const version = stdout.trim();
-
-        return {
-          success: true,
-          info: {
-            version,
-            path: claudePath,
-          },
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : 'Failed to get Claude Code info',
-        };
+    createHandler(async (request: { path: string }) => {
+      const claudePath = request.path;
+      if (!claudePath || !fs.existsSync(claudePath)) {
+        throw new Error('Claude Code path not found');
       }
-    }
+
+      // Run claude --version to get version info
+      const { stdout } = await execAsync(`"${claudePath}" --version`);
+      const version = stdout.trim();
+
+      return {
+        info: {
+          version,
+          path: claudePath,
+        },
+      };
+    })
   );
 
   // AI: List Models
   ipcMain.handle(
     IPC_CHANNELS.AI_LIST_MODELS,
-    async (
-      _event,
-      request: { provider: string; baseUrl?: string; apiKey: string }
-    ) => {
-      try {
+    createHandler(
+      async (request: {
+        provider: string;
+        baseUrl?: string;
+        apiKey: string;
+      }) => {
         const { provider, baseUrl, apiKey } = request;
 
         if (!apiKey) {
-          return { success: false, error: 'API key is required' };
+          throw new Error('API key is required');
         }
 
         if (provider === 'openai' || provider === 'custom') {
@@ -416,11 +387,10 @@ export function setupAIHandlers(): void {
               .map((m) => m.id)
               .sort();
 
-            return { success: true, models };
+            return { models };
           } catch {
             // If fetching fails, return default models
             return {
-              success: true,
               models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'],
               warning: 'Could not fetch models from API, using defaults',
             };
@@ -447,12 +417,11 @@ export function setupAIHandlers(): void {
                 return dateB.localeCompare(dateA);
               });
 
-            return { success: true, models };
+            return { models };
           } catch (fetchError) {
             // If fetching fails, return default models
             console.error('Failed to fetch Anthropic models:', fetchError);
             return {
-              success: true,
               models: [
                 'claude-sonnet-4-20250514',
                 'claude-3-7-sonnet-20250219',
@@ -465,14 +434,8 @@ export function setupAIHandlers(): void {
           }
         }
 
-        return { success: false, error: 'Unknown provider' };
-      } catch (error) {
-        return {
-          success: false,
-          error:
-            error instanceof Error ? error.message : 'Failed to list models',
-        };
+        throw new Error('Unknown provider');
       }
-    }
+    )
   );
 }

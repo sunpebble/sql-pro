@@ -30,6 +30,7 @@ import {
   useRef,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDebouncedCallback } from '@/hooks';
 import { useVirtualData } from '@/hooks/useVirtualData';
 import { generateSQLInsert } from '@/lib/sql-insert-generator';
 import { cn } from '@/lib/utils';
@@ -517,18 +518,31 @@ export const DataTable = function DataTable({
     onVirtualDataStatsChange,
   ]);
 
-  // Refs for debounced load-more to prevent blocking scroll
-  const loadMoreTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined
-  );
+  // Ref for idle callback cleanup
   const loadMoreIdleCallbackRef = useRef<number | undefined>(undefined);
 
-  // Infinite scroll: load more when approaching the end (debounced & non-blocking)
+  // Debounced load-more function to prevent blocking scroll
+  const debouncedLoadMore = useDebouncedCallback(
+    () => {
+      if (!onLoadMore) return;
+      // Use requestIdleCallback to avoid blocking scroll
+      if ('requestIdleCallback' in window) {
+        loadMoreIdleCallbackRef.current = window.requestIdleCallback(
+          () => onLoadMore(),
+          { timeout: 300 } // Max wait 300ms before forcing execution
+        );
+      } else {
+        // Fallback for browsers without requestIdleCallback
+        onLoadMore();
+      }
+    },
+    150,
+    { leading: false, trailing: true }
+  );
+
+  // Infinite scroll: load more when approaching the end
   useEffect(() => {
-    // Clear any pending load triggers
-    if (loadMoreTimeoutRef.current) {
-      clearTimeout(loadMoreTimeoutRef.current);
-    }
+    // Clear any pending idle callback
     if (loadMoreIdleCallbackRef.current && 'cancelIdleCallback' in window) {
       window.cancelIdleCallback(loadMoreIdleCallbackRef.current);
     }
@@ -541,30 +555,23 @@ export const DataTable = function DataTable({
     const threshold = 20; // Load more when within 20 rows of the end
 
     if (totalRows > 0 && lastVisibleIndex >= totalRows - threshold) {
-      // Debounce: wait for scroll to settle (150ms)
-      loadMoreTimeoutRef.current = setTimeout(() => {
-        // Use requestIdleCallback to avoid blocking scroll
-        if ('requestIdleCallback' in window) {
-          loadMoreIdleCallbackRef.current = window.requestIdleCallback(
-            () => onLoadMore(),
-            { timeout: 300 } // Max wait 300ms before forcing execution
-          );
-        } else {
-          // Fallback for browsers without requestIdleCallback
-          onLoadMore();
-        }
-      }, 150);
+      debouncedLoadMore();
     }
 
     return () => {
-      if (loadMoreTimeoutRef.current) {
-        clearTimeout(loadMoreTimeoutRef.current);
-      }
+      debouncedLoadMore.cancel();
       if (loadMoreIdleCallbackRef.current && 'cancelIdleCallback' in window) {
         window.cancelIdleCallback(loadMoreIdleCallbackRef.current);
       }
     };
-  }, [visibleRange.endIndex, rows.length, onLoadMore, hasMore, isLoadingMore]);
+  }, [
+    visibleRange.endIndex,
+    rows.length,
+    onLoadMore,
+    hasMore,
+    isLoadingMore,
+    debouncedLoadMore,
+  ]);
 
   // Expose imperative methods
   useImperativeHandle(ref, () => ({

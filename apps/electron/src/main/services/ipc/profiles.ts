@@ -1,6 +1,9 @@
 import type {
+  DeleteProfileRequest,
   RemoveConnectionRequest,
+  SaveProfileRequest,
   UpdateConnectionRequest,
+  UpdateProfileRequest,
 } from '@shared/types';
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
@@ -17,72 +20,46 @@ import { createHandler } from './utils';
 
 export function setupProfilesHandlers(): void {
   // Profiles: Get
-  ipcMain.handle(IPC_CHANNELS.PROFILES_GET, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.PROFILES_GET,
+    createHandler(async () => {
       const profiles = getProfiles();
-      return { success: true, profiles };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get profiles',
-      };
-    }
-  });
+      return { profiles };
+    })
+  );
 
   // Profiles: Save
-  ipcMain.handle(IPC_CHANNELS.PROFILES_SAVE, async (_event, request) => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.PROFILES_SAVE,
+    createHandler(async (request: SaveProfileRequest) => {
       const result = saveProfile({
-        path: request.path || '',
-        filename: request.filename || request.name || '',
-        displayName: request.name,
-        isEncrypted: request.isEncrypted ?? false,
+        ...request.profile,
+        path: request.profile.path || '',
+        filename: request.profile.filename || '',
         lastOpened: new Date().toISOString(),
-        readOnly: request.readOnly ?? false,
         isSaved: true,
-        ...request.config,
       });
       return result;
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to save profile',
-      };
-    }
-  });
+    })
+  );
 
   // Profiles: Update
-  ipcMain.handle(IPC_CHANNELS.PROFILES_UPDATE, async (_event, request) => {
-    try {
-      const result = updateProfile(request.id, {
-        displayName: request.name,
-        ...request.config,
-      });
+  ipcMain.handle(
+    IPC_CHANNELS.PROFILES_UPDATE,
+    createHandler(async (request: UpdateProfileRequest) => {
+      const result = updateProfile(request.id, request.updates);
       return result;
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to update profile',
-      };
-    }
-  });
+    })
+  );
 
   // Profiles: Delete
-  ipcMain.handle(IPC_CHANNELS.PROFILES_DELETE, async (_event, request) => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.PROFILES_DELETE,
+    createHandler(async (request: DeleteProfileRequest) => {
       deleteProfile(request.id);
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to delete profile',
-      };
-    }
-  });
+      return {};
+    })
+  );
 
   // Connections: Update
   ipcMain.handle(

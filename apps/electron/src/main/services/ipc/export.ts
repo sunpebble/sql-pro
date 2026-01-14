@@ -29,52 +29,44 @@ export function setupExportHandlers(): void {
   // Export: Data
   ipcMain.handle(
     IPC_CHANNELS.EXPORT_DATA,
-    async (_event, request: ExportRequest) => {
-      try {
-        let columns: ColumnInfo[] = [];
-        let rows: Record<string, unknown>[] = [];
+    createHandler(async (request: ExportRequest) => {
+      let columns: ColumnInfo[] = [];
+      let rows: Record<string, unknown>[] = [];
 
-        const tableData = await databaseService.getTableData(
-          request.connectionId,
-          request.table,
-          1,
-          999999,
-          undefined,
-          undefined,
-          undefined,
-          request.schema
-        );
+      const tableData = await databaseService.getTableData(
+        request.connectionId,
+        request.table,
+        1,
+        999999,
+        undefined,
+        undefined,
+        undefined,
+        request.schema
+      );
 
-        if (tableData.success) {
-          columns = tableData.columns || [];
-          rows = (tableData.rows || []) as Record<string, unknown>[];
-        }
-
-        let output: Buffer | string = '';
-        if (request.format === 'csv') {
-          output = generateCSV(rows, columns);
-        } else if (request.format === 'json') {
-          output = generateJSON(rows, columns);
-        } else if (request.format === 'sql') {
-          output = generateSQL(rows, columns, { tableName: request.table });
-        } else if (request.format === 'xlsx') {
-          output = await generateExcel(rows, columns, {
-            sheetName: request.table,
-          });
-        }
-
-        return {
-          success: true,
-          data: output,
-          format: request.format,
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: error instanceof Error ? error.message : 'Export failed',
-        };
+      if (tableData.success) {
+        columns = tableData.columns || [];
+        rows = (tableData.rows || []) as Record<string, unknown>[];
       }
-    }
+
+      let output: Buffer | string = '';
+      if (request.format === 'csv') {
+        output = generateCSV(rows, columns);
+      } else if (request.format === 'json') {
+        output = generateJSON(rows, columns);
+      } else if (request.format === 'sql') {
+        output = generateSQL(rows, columns, { tableName: request.table });
+      } else if (request.format === 'xlsx') {
+        output = await generateExcel(rows, columns, {
+          sheetName: request.table,
+        });
+      }
+
+      return {
+        data: output,
+        format: request.format,
+      };
+    })
   );
 
   // Export: Bundle

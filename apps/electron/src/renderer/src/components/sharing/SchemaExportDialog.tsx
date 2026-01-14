@@ -22,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useAsyncOperation } from '@/hooks/useAsyncOperation';
 import { sqlPro } from '@/lib/api';
 
 export interface SchemaExportDialogProps {
@@ -66,25 +67,26 @@ export function SchemaExportDialog({
   const [includeForeignKeys, setIncludeForeignKeys] = useState(true);
 
   // Schema data state
-  const [isLoadingSchema, setIsLoadingSchema] = useState(false);
   const [schemas, setSchemas] = useState<SchemaInfo[]>([]);
   const [selectedTables, setSelectedTables] = useState<Set<string>>(
     () => new Set()
   );
 
-  // Export state
-  const [isExporting, setIsExporting] = useState(false);
+  // Export result state
   const [exportResult, setExportResult] = useState<{
     success: boolean;
     filePath?: string;
     error?: string;
   } | null>(null);
 
-  // Load schema from database
-  const loadSchema = useCallback(async () => {
-    setIsLoadingSchema(true);
-    try {
-      const result = await sqlPro.db.getSchema({ connectionId });
+  // Use useAsyncOperation for loading schema
+  const {
+    loading: isLoadingSchema,
+    execute: executeLoadSchema,
+    reset: resetSchemaLoader,
+  } = useAsyncOperation(
+    async (connId: string) => {
+      const result = await sqlPro.db.getSchema({ connectionId: connId });
       if (result.success && result.schemas) {
         setSchemas(result.schemas);
         // Initially select all tables
@@ -95,20 +97,43 @@ export function SchemaExportDialog({
           });
         });
         setSelectedTables(allTables);
+        return result.schemas;
       }
-    } catch (error) {
-      console.error('Failed to load schema:', error);
-    } finally {
-      setIsLoadingSchema(false);
+      throw new Error('Failed to load schema');
+    },
+    { retries: 2, retryDelay: 500 }
+  );
+
+  // Use useAsyncOperation for export
+  const {
+    loading: isExporting,
+    execute: executeExport,
+    reset: resetExport,
+  } = useAsyncOperation(
+    async (request: ExportSchemaRequest) => {
+      const result = await sqlPro.sharing.exportSchema(request);
+      setExportResult(result);
+      if (result.success && result.filePath && onExportComplete) {
+        onExportComplete(result.filePath);
+      }
+      return result;
+    },
+    {
+      onError: (err) => {
+        setExportResult({
+          success: false,
+          error: err.message || 'Unknown error',
+        });
+      },
     }
-  }, [connectionId]);
+  );
 
   // Load schema when dialog opens
   useEffect(() => {
     if (open && connectionId) {
-      loadSchema();
+      executeLoadSchema(connectionId);
     }
-  }, [open, connectionId, loadSchema]);
+  }, [open, connectionId, executeLoadSchema]);
 
   // Toggle table selection
   const toggleTable = useCallback((tableKey: string) => {
@@ -155,56 +180,40 @@ export function SchemaExportDialog({
   const handleExport = useCallback(async () => {
     if (!isValid) return;
 
-    setIsExporting(true);
     setExportResult(null);
 
-    try {
-      // Filter schemas to only include selected tables
-      const filteredSchemas = schemas
-        .map((schema) => ({
-          ...schema,
-          tables: schema.tables.filter((table) =>
-            selectedTables.has(`${schema.name}.${table.name}`)
-          ),
-          views: [], // Don't include views for now
-        }))
-        .filter((schema) => schema.tables.length > 0);
+    // Filter schemas to only include selected tables
+    const filteredSchemas = schemas
+      .map((schema) => ({
+        ...schema,
+        tables: schema.tables.filter((table) =>
+          selectedTables.has(`${schema.name}.${table.name}`)
+        ),
+        views: [], // Don't include views for now
+      }))
+      .filter((schema) => schema.tables.length > 0);
 
-      const request: ExportSchemaRequest = {
-        connectionId,
-        schema: {
-          name: name.trim(),
-          description: description.trim() || undefined,
-          databaseName: databaseName || undefined,
-          databaseType: 'sqlite',
+    const request: ExportSchemaRequest = {
+      connectionId,
+      schema: {
+        name: name.trim(),
+        description: description.trim() || undefined,
+        databaseName: databaseName || undefined,
+        databaseType: 'sqlite',
+        format,
+        schemas: filteredSchemas,
+        options: {
           format,
-          schemas: filteredSchemas,
-          options: {
-            format,
-            includeIndexes,
-            includeTriggers,
-            includeForeignKeys,
-          },
-          documentation: documentation.trim() || undefined,
+          includeIndexes,
+          includeTriggers,
+          includeForeignKeys,
         },
-        compress,
-      };
+        documentation: documentation.trim() || undefined,
+      },
+      compress,
+    };
 
-      const result = await sqlPro.sharing.exportSchema(request);
-
-      setExportResult(result);
-
-      if (result.success && result.filePath && onExportComplete) {
-        onExportComplete(result.filePath);
-      }
-    } catch (err) {
-      setExportResult({
-        success: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
-      });
-    } finally {
-      setIsExporting(false);
-    }
+    await executeExport(request);
   }, [
     name,
     description,
@@ -219,7 +228,7 @@ export function SchemaExportDialog({
     compress,
     connectionId,
     isValid,
-    onExportComplete,
+    executeExport,
   ]);
 
   // Reset dialog state on close
@@ -236,10 +245,19 @@ export function SchemaExportDialog({
         setIncludeTriggers(true);
         setIncludeForeignKeys(true);
         setExportResult(null);
+        resetSchemaLoader();
+        resetExport();
       }
       onOpenChange(newOpen);
     },
-    [onOpenChange, initialName, initialDescription, initialDocumentation]
+    [
+      onOpenChange,
+      initialName,
+      initialDescription,
+      initialDocumentation,
+      resetSchemaLoader,
+      resetExport,
+    ]
   );
 
   // Calculate total selected tables

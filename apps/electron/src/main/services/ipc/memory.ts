@@ -11,6 +11,7 @@ import type {
 import { IPC_CHANNELS } from '@shared/types';
 import { BrowserWindow, ipcMain } from 'electron';
 import { memoryMonitor } from '../memory-monitor';
+import { createHandler } from './utils';
 
 // Track active subscriptions per window
 const windowSubscriptions = new Map<number, string>();
@@ -66,25 +67,11 @@ export function setupMemoryHandlers(): void {
   // Handle: Get current memory stats
   ipcMain.handle(
     IPC_CHANNELS.MEMORY_GET_STATS,
-    async (_event, _request?: GetMemoryStatsRequest) => {
-      try {
-        const stats = memoryMonitor.getCurrentUsage();
-        const pressureLevel = memoryMonitor.getPressureLevel(stats);
-        return {
-          success: true,
-          stats,
-          pressureLevel,
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : 'Failed to get memory stats',
-        };
-      }
-    }
+    createHandler(async (_request?: GetMemoryStatsRequest) => {
+      const stats = memoryMonitor.getCurrentUsage();
+      const pressureLevel = memoryMonitor.getPressureLevel(stats);
+      return { stats, pressureLevel };
+    })
   );
 
   // Handle: Subscribe to memory updates
@@ -226,50 +213,38 @@ export function setupMemoryHandlers(): void {
   // Handle: Trigger garbage collection
   ipcMain.handle(
     IPC_CHANNELS.MEMORY_TRIGGER_GC,
-    async (_event, request?: MemoryTriggerGCRequest) => {
-      try {
-        const statsBefore = memoryMonitor.getCurrentUsage();
-        const pressureLevel = memoryMonitor.getPressureLevel(statsBefore);
+    createHandler(async (request?: MemoryTriggerGCRequest) => {
+      const statsBefore = memoryMonitor.getCurrentUsage();
+      const pressureLevel = memoryMonitor.getPressureLevel(statsBefore);
 
-        // Only trigger GC if forced or under memory pressure
-        const shouldTrigger = request?.force || pressureLevel !== 'normal';
+      // Only trigger GC if forced or under memory pressure
+      const shouldTrigger = request?.force || pressureLevel !== 'normal';
 
-        if (!shouldTrigger) {
-          return {
-            success: true,
-            gcTriggered: false,
-            error:
-              'GC not triggered: memory pressure is normal (use force: true to override)',
-          };
-        }
-
-        const gcEvent = memoryMonitor.triggerGC(
-          pressureLevel !== 'normal' ? 'pressure' : 'manual'
-        );
-
-        if (gcEvent.triggered) {
-          return {
-            success: true,
-            gcTriggered: true,
-            statsAfterGC: gcEvent.statsAfter,
-            freedBytes: gcEvent.freedBytes,
-          };
-        }
-
+      if (!shouldTrigger) {
         return {
-          success: true,
-          gcTriggered: false,
-          error: 'GC not available (app must be started with --expose-gc flag)',
-        };
-      } catch (error) {
-        return {
-          success: false,
           gcTriggered: false,
           error:
-            error instanceof Error ? error.message : 'Failed to trigger GC',
+            'GC not triggered: memory pressure is normal (use force: true to override)',
         };
       }
-    }
+
+      const gcEvent = memoryMonitor.triggerGC(
+        pressureLevel !== 'normal' ? 'pressure' : 'manual'
+      );
+
+      if (gcEvent.triggered) {
+        return {
+          gcTriggered: true,
+          statsAfterGC: gcEvent.statsAfter,
+          freedBytes: gcEvent.freedBytes,
+        };
+      }
+
+      return {
+        gcTriggered: false,
+        error: 'GC not available (app must be started with --expose-gc flag)',
+      };
+    })
   );
 }
 

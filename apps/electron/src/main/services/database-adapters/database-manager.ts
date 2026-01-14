@@ -196,11 +196,8 @@ class DatabaseManager {
     const adapter = managed.adapter;
 
     // Check if adapter has async method
-    if (
-      'getSchemaAsync' in adapter &&
-      typeof (adapter as any).getSchemaAsync === 'function'
-    ) {
-      return (adapter as any).getSchemaAsync(connectionId);
+    if (adapter.getSchemaAsync) {
+      return adapter.getSchemaAsync(connectionId);
     }
 
     // Fall back to sync method
@@ -229,11 +226,8 @@ class DatabaseManager {
 
     const adapter = managed.adapter;
 
-    if (
-      'executeAsync' in adapter &&
-      typeof (adapter as any).executeAsync === 'function'
-    ) {
-      return (adapter as any).executeAsync(connectionId, sql, params);
+    if (adapter.executeAsync) {
+      return adapter.executeAsync(connectionId, sql, params);
     }
 
     return adapter.execute(connectionId, sql, params);
@@ -261,11 +255,8 @@ class DatabaseManager {
 
     const adapter = managed.adapter;
 
-    if (
-      'queryAsync' in adapter &&
-      typeof (adapter as any).queryAsync === 'function'
-    ) {
-      return (adapter as any).queryAsync(connectionId, sql, params);
+    if (adapter.queryAsync) {
+      return adapter.queryAsync(connectionId, sql, params);
     }
 
     return adapter.query(connectionId, sql, params);
@@ -328,11 +319,8 @@ class DatabaseManager {
 
     const adapter = managed.adapter;
 
-    if (
-      'getTableDataAsync' in adapter &&
-      typeof (adapter as any).getTableDataAsync === 'function'
-    ) {
-      return (adapter as any).getTableDataAsync(
+    if (adapter.getTableDataAsync) {
+      return adapter.getTableDataAsync(
         connectionId,
         table,
         page,
@@ -389,11 +377,8 @@ class DatabaseManager {
     }
 
     // Check if adapter has getTableRowRange method (SQLite adapter has it)
-    if (
-      'getTableRowRange' in adapter &&
-      typeof (adapter as any).getTableRowRange === 'function'
-    ) {
-      return (adapter as any).getTableRowRange(
+    if (adapter.getTableRowRange) {
+      return adapter.getTableRowRange(
         connectionId,
         table,
         startRow,
@@ -458,11 +443,8 @@ class DatabaseManager {
 
     const adapter = managed.adapter;
 
-    if (
-      'executeQueryAsync' in adapter &&
-      typeof (adapter as any).executeQueryAsync === 'function'
-    ) {
-      return (adapter as any).executeQueryAsync(connectionId, query);
+    if (adapter.executeQueryAsync) {
+      return adapter.executeQueryAsync(connectionId, query);
     }
 
     return adapter.executeQuery(connectionId, query);
@@ -512,11 +494,8 @@ class DatabaseManager {
 
     const adapter = managed.adapter;
 
-    if (
-      'explainQueryAsync' in adapter &&
-      typeof (adapter as any).explainQueryAsync === 'function'
-    ) {
-      return (adapter as any).explainQueryAsync(connectionId, sql);
+    if (adapter.explainQueryAsync) {
+      return adapter.explainQueryAsync(connectionId, sql);
     }
 
     return adapter.explainQuery(connectionId, sql);
@@ -555,11 +534,8 @@ class DatabaseManager {
 
     const adapter = managed.adapter;
 
-    if (
-      'applyChangesAsync' in adapter &&
-      typeof (adapter as any).applyChangesAsync === 'function'
-    ) {
-      return (adapter as any).applyChangesAsync(connectionId, changes);
+    if (adapter.applyChangesAsync) {
+      return adapter.applyChangesAsync(connectionId, changes);
     }
 
     return adapter.applyChanges(connectionId, changes);
@@ -599,15 +575,8 @@ class DatabaseManager {
 
     const adapter = managed.adapter;
 
-    if (
-      'getTableStructureAsync' in adapter &&
-      typeof (adapter as any).getTableStructureAsync === 'function'
-    ) {
-      return (adapter as any).getTableStructureAsync(
-        connectionId,
-        tableName,
-        schema
-      );
+    if (adapter.getTableStructureAsync) {
+      return adapter.getTableStructureAsync(connectionId, tableName, schema);
     }
 
     return adapter.getTableStructure(connectionId, tableName, schema);

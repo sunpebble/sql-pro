@@ -7,6 +7,7 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDebouncedCallback } from './useDebounce';
 
 export interface PgNotifyEvent {
   subscriptionId: string;
@@ -112,22 +113,15 @@ export function usePgNotify(
 
   const queryClient = useQueryClient();
   const onNotificationRef = useRef(onNotification);
-  const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined
-  );
 
   // Update callback ref
   useEffect(() => {
     onNotificationRef.current = onNotification;
   }, [onNotification]);
 
-  // Debounced refresh function
-  const scheduleRefresh = useCallback(() => {
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-    }
-
-    refreshTimeoutRef.current = setTimeout(() => {
+  // Debounced refresh function using useDebouncedCallback
+  const scheduleRefresh = useDebouncedCallback(
+    () => {
       // Invalidate all table data and column distribution queries to trigger refetch
       queryClient.invalidateQueries({
         predicate: (query) => {
@@ -148,14 +142,14 @@ export function usePgNotify(
           return false;
         },
       });
-    }, autoRefreshDebounceMs);
-  }, [connectionId, autoRefreshTable, autoRefreshDebounceMs, queryClient]);
+    },
+    autoRefreshDebounceMs,
+    { leading: false, trailing: true }
+  );
 
   // Manual refresh
   const refresh = useCallback(() => {
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-    }
+    scheduleRefresh.cancel();
     scheduleRefresh();
   }, [scheduleRefresh]);
 
@@ -214,9 +208,7 @@ export function usePgNotify(
       cleanup?.();
 
       // Clear any pending refresh
-      if (refreshTimeoutRef.current) {
-        clearTimeout(refreshTimeoutRef.current);
-      }
+      scheduleRefresh.cancel();
 
       // Unsubscribe
       if (currentSubscriptionId) {

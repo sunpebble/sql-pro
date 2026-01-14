@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { usePendingChanges } from '@/hooks/usePendingChanges';
 import { pendingChangesCollection } from '@/lib/collections';
 import { generateSQLScript } from '@/lib/sql-generator';
@@ -69,22 +70,16 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
   );
   // Toggle between diff view and SQL preview
   const [showSqlPreview, setShowSqlPreview] = useState(false);
-  // Copy feedback state
-  const [copied, setCopied] = useState(false);
+  // Copy to clipboard hook
+  const { copy, copied } = useCopyToClipboard();
 
   // Generate full SQL script for all changes
   const sqlScript = useMemo(() => generateSQLScript(changes), [changes]);
 
   // Copy SQL to clipboard
   const copyToClipboard = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(sqlScript);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy SQL:', err);
-    }
-  }, [sqlScript]);
+    await copy(sqlScript, { showToast: false });
+  }, [copy, sqlScript]);
 
   // Group changes by table
   const tableGroups = useMemo((): TableGroup[] => {

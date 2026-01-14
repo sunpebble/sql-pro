@@ -5,6 +5,7 @@
 import type { OpenDatabaseRequest } from '@shared/types';
 import { useCallback, useState } from 'react';
 import { sqlPro } from '../lib/api';
+import { getErrorMessage } from '../lib/error-utils';
 
 // Type matching the structure returned by sqlPro.db.open
 interface ConnectionInfo {
@@ -50,8 +51,7 @@ export function useDatabase() {
         return response;
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = getErrorMessage(error);
       setState({
         connection: null,
         isConnecting: false,
@@ -84,8 +84,7 @@ export function useDatabase() {
 
       return response;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = getErrorMessage(error);
       return {
         success: false as const,
         error: errorMessage,
@@ -108,8 +107,7 @@ export function useDatabase() {
           query,
         });
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error';
+        const errorMessage = getErrorMessage(error);
         return {
           success: false as const,
           error: errorMessage,

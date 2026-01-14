@@ -7,7 +7,7 @@ import type { ElectronAPI } from '@electron-toolkit/preload';
 // Declare the global window extensions exposed by preload
 declare global {
   interface Window {
-    sqlPro: typeof import('../preload/index').sqlProAPI;
+    sqlPro: typeof import('../../preload/index').sqlProAPI;
     electronAPI: ElectronAPI;
   }
 }

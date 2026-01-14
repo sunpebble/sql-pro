@@ -118,14 +118,14 @@ describe('sql-insert-generator', () => {
       it('should convert ArrayBuffer to hex literal', () => {
         const buffer = new ArrayBuffer(3);
         const view = new Uint8Array(buffer);
-        view[0] = 0xAB;
-        view[1] = 0xCD;
-        view[2] = 0xEF;
+        view[0] = 0xab;
+        view[1] = 0xcd;
+        view[2] = 0xef;
         expect(escapeSQLValue(buffer)).toBe("X'abcdef'");
       });
 
       it('should convert Uint8Array to hex literal', () => {
-        const bytes = new Uint8Array([0x01, 0x02, 0xFF]);
+        const bytes = new Uint8Array([0x01, 0x02, 0xff]);
         expect(escapeSQLValue(bytes)).toBe("X'0102ff'");
       });
 
@@ -137,7 +137,7 @@ describe('sql-insert-generator', () => {
       it('should handle serialized Node.js Buffer object', () => {
         const serializedBuffer = {
           type: 'Buffer',
-          data: [0xDE, 0xAD, 0xBE, 0xEF],
+          data: [0xde, 0xad, 0xbe, 0xef],
         };
         expect(escapeSQLValue(serializedBuffer)).toBe("X'deadbeef'");
       });

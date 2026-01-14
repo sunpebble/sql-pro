@@ -5,6 +5,7 @@
 
 import { create } from 'zustand';
 import { sqlPro } from '@/lib/api';
+import { getErrorMessage } from '@/lib/error-utils';
 
 interface LicenseInfo {
   email: string;
@@ -99,7 +100,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
       set({
         isValid: false,
         license: null,
-        error: error instanceof Error ? error.message : 'Verification failed',
+        error: getErrorMessage(error, 'Verification failed'),
         isLoading: false,
       });
       return false;
@@ -127,7 +128,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
       }
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Activation failed',
+        error: getErrorMessage(error, 'Activation failed'),
         isActivating: false,
       });
       return false;
@@ -146,7 +147,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
       });
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Deactivation failed',
+        error: getErrorMessage(error, 'Deactivation failed'),
         isLoading: false,
       });
     }
@@ -164,7 +165,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
       return result.success;
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Checkout failed',
+        error: getErrorMessage(error, 'Checkout failed'),
         isLoading: false,
       });
       return false;
@@ -182,7 +183,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
       set({ isLoading: false });
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Failed to open portal',
+        error: getErrorMessage(error, 'Failed to open portal'),
         isLoading: false,
       });
     }

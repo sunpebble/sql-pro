@@ -83,6 +83,148 @@ export interface DatabaseAdapter {
    */
   readonly type: DatabaseType;
 
+  // ============================================
+  // Optional async methods for MySQL/PostgreSQL
+  // These are implemented by async adapters and
+  // called by DatabaseManager when available
+  // ============================================
+
+  /**
+   * Get database schema (async version for MySQL/PostgreSQL)
+   */
+  getSchemaAsync?: (connectionId: string) => Promise<
+    | {
+        success: true;
+        schemas: SchemaInfo[];
+        tables: TableInfo[];
+        views: TableInfo[];
+      }
+    | { success: false; error: string }
+  >;
+
+  /**
+   * Execute a non-SELECT query (async version for MySQL/PostgreSQL)
+   */
+  executeAsync?: (
+    connectionId: string,
+    sql: string,
+    params?: unknown[]
+  ) => Promise<
+    | { success: true; changes: number; lastInsertRowid: number }
+    | {
+        success: false;
+        error: string;
+        errorCode?: ErrorCode;
+      }
+  >;
+
+  /**
+   * Execute a SELECT query (async version for MySQL/PostgreSQL)
+   */
+  queryAsync?: (
+    connectionId: string,
+    sql: string,
+    params?: unknown[]
+  ) => Promise<
+    | { success: true; columns: string[]; rows: unknown[][] }
+    | { success: false; error: string }
+  >;
+
+  /**
+   * Get table data with pagination (async version for MySQL/PostgreSQL)
+   */
+  getTableDataAsync?: (
+    connectionId: string,
+    table: string,
+    page: number,
+    pageSize: number,
+    sortColumn?: string,
+    sortDirection?: 'asc' | 'desc',
+    filters?: Array<{
+      column: string;
+      operator: string;
+      value: string;
+    }>,
+    schema?: string
+  ) => Promise<GetTableDataResponse>;
+
+  /**
+   * Execute one or more SQL statements (async version for MySQL/PostgreSQL)
+   */
+  executeQueryAsync?: (
+    connectionId: string,
+    query: string
+  ) => Promise<
+    | {
+        success: true;
+        columns?: string[];
+        rows?: Record<string, unknown>[];
+        changes?: number;
+        lastInsertRowid?: number;
+      }
+    | { success: false; error: string }
+  >;
+
+  /**
+   * Get query execution plan (async version for MySQL/PostgreSQL)
+   */
+  explainQueryAsync?: (
+    connectionId: string,
+    sql: string
+  ) => Promise<
+    | { success: true; plan: QueryPlanNode; stats: QueryPlanStats }
+    | { success: false; error: string }
+  >;
+
+  /**
+   * Apply pending changes (async version for MySQL/PostgreSQL)
+   */
+  applyChangesAsync?: (
+    connectionId: string,
+    changes: PendingChangeInfo[]
+  ) => Promise<
+    { success: true; appliedCount: number } | { success: false; error: string }
+  >;
+
+  /**
+   * Get table structure (async version for MySQL/PostgreSQL)
+   */
+  getTableStructureAsync?: (
+    connectionId: string,
+    tableName: string,
+    schema?: string
+  ) => Promise<
+    { success: true; structure: TableInfo } | { success: false; error: string }
+  >;
+
+  /**
+   * Get a range of rows from a table (for virtual scrolling)
+   * Currently only implemented by SQLite adapter
+   */
+  getTableRowRange?: (
+    connectionId: string,
+    table: string,
+    startRow: number,
+    endRow: number,
+    sortColumn?: string,
+    sortDirection?: 'asc' | 'desc',
+    filters?: Array<{
+      column: string;
+      operator: string;
+      value: string;
+    }>,
+    schema?: string
+  ) => {
+    success: boolean;
+    columns?: import('@shared/types').ColumnInfo[];
+    rows?: Record<string, unknown>[];
+    totalRows?: number;
+    isEstimatedTotal?: boolean;
+    actualStartRow?: number;
+    actualEndRow?: number;
+    error?: string;
+  };
+
   /**
    * Test database connection without establishing a persistent connection
    */

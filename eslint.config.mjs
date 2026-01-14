@@ -24,4 +24,8 @@ export default antfu({
     'node_modules/**',
     'pnpm-workspace.yaml',
   ],
+
+  rules: {
+    'unicorn/number-literal-case': 'off',
+  },
 });

@@ -6,6 +6,8 @@
  * This is particularly important when new windows are created.
  */
 
+import { getErrorMessage } from './error-utils';
+
 const DEFAULT_MAX_RETRIES = 5;
 const DEFAULT_RETRY_DELAY_MS = 100;
 
@@ -55,8 +57,7 @@ export async function withRetry<T>(
       lastError = error;
 
       // Check if this is a "no handler registered" error
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = getErrorMessage(error);
       const isHandlerNotRegistered =
         errorMessage.includes('No handler registered') ||
         errorMessage.includes('not defined');

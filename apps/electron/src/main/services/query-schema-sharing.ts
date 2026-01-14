@@ -117,7 +117,7 @@ function isCompressed(data: string | Buffer): boolean {
     const buffer =
       typeof data === 'string' ? Buffer.from(data, 'base64') : data;
     // Gzip magic number: 0x1f 0x8b
-    return buffer.length >= 2 && buffer[0] === 0x1F && buffer[1] === 0x8B;
+    return buffer.length >= 2 && buffer[0] === 0x1f && buffer[1] === 0x8b;
   } catch {
     return false;
   }

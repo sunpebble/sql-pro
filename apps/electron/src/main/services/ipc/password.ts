@@ -11,21 +11,13 @@ import { createHandler } from './utils';
 
 export function setupPasswordHandlers(): void {
   // Password: Is Available
-  ipcMain.handle(IPC_CHANNELS.PASSWORD_IS_AVAILABLE, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.PASSWORD_IS_AVAILABLE,
+    createHandler(async () => {
       const available = passwordStorageService.isAvailable();
-      return { success: true, available };
-    } catch (error) {
-      return {
-        success: false,
-        available: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to check password storage availability',
-      };
-    }
-  });
+      return { available };
+    })
+  );
 
   // Password: Get
   ipcMain.handle(

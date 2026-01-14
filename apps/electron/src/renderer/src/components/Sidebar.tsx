@@ -67,7 +67,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -302,16 +302,25 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
     ]
   );
 
-  // Table context menu handlers
-  const handleCopyTableName = useCallback((table: TableSchema) => {
-    navigator.clipboard.writeText(table.name);
-  }, []);
+  // Copy to clipboard hook
+  const { copy } = useCopyToClipboard();
 
-  const handleCopyCreateStatement = useCallback((table: TableSchema) => {
-    if (table.sql) {
-      navigator.clipboard.writeText(table.sql);
-    }
-  }, []);
+  // Table context menu handlers
+  const handleCopyTableName = useCallback(
+    (table: TableSchema) => {
+      copy(table.name, { showToast: false });
+    },
+    [copy]
+  );
+
+  const handleCopyCreateStatement = useCallback(
+    (table: TableSchema) => {
+      if (table.sql) {
+        copy(table.sql, { showToast: false });
+      }
+    },
+    [copy]
+  );
 
   // Open SQL Query Editor for empty state
   const handleOpenSqlTab = useCallback(() => {
@@ -323,13 +332,11 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
 
   // Copy sample CREATE TABLE SQL to clipboard
   const handleCopySampleSQL = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(SAMPLE_CREATE_TABLE_SQL);
-      toast.success('Sample SQL copied to clipboard');
-    } catch {
-      toast.error('Failed to copy SQL to clipboard');
-    }
-  }, []);
+    await copy(SAMPLE_CREATE_TABLE_SQL, {
+      successMessage: 'Sample SQL copied to clipboard',
+      errorMessage: 'Failed to copy SQL to clipboard',
+    });
+  }, [copy]);
 
   const handleOpenInQueryEditor = useCallback(
     (table: TableSchema) => {

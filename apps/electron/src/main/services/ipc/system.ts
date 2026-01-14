@@ -96,7 +96,7 @@ export function setupSystemHandlers(): void {
           },
         };
       }
-      return { success: false, error: 'No current window found' };
+      throw new Error('No current window found');
     } catch (error) {
       return {
         success: false,

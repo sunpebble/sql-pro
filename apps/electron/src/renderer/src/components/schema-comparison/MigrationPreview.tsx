@@ -20,6 +20,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import {
@@ -48,7 +49,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [reverse, setReverse] = useState(false);
   const [includeDropStatements, setIncludeDropStatements] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const { copy, copied } = useCopyToClipboard();
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showWarnings, setShowWarnings] = useState(true);
@@ -109,15 +110,8 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
 
   const handleCopyToClipboard = useCallback(async () => {
     if (!migrationSQL?.sql) return;
-
-    try {
-      await navigator.clipboard.writeText(migrationSQL.sql);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Handle error silently
-    }
-  }, [migrationSQL?.sql]);
+    await copy(migrationSQL.sql, { showToast: false });
+  }, [copy, migrationSQL?.sql]);
 
   const handleSaveToFile = useCallback(async () => {
     if (!migrationSQL?.sql) return;

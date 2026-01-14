@@ -24,6 +24,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { useDebounce } from '@/hooks';
 import { cn } from '@/lib/utils';
 import {
   cleanupSqlLogListener,
@@ -156,6 +157,7 @@ export function SqlLogPanel() {
   } = useSqlLogStore();
 
   const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   // Initialize listener on mount
   useEffect(() => {
@@ -166,13 +168,10 @@ export function SqlLogPanel() {
     };
   }, [loadLogs]);
 
-  // Update filter when search text changes (debounced)
+  // Update filter when debounced search text changes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFilter({ searchText: searchText || undefined });
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [searchText, setFilter]);
+    setFilter({ searchText: debouncedSearchText || undefined });
+  }, [debouncedSearchText, setFilter]);
 
   // getFilteredLogs reads from store state internally, but we include logs and filter as deps
   // to ensure the memo recalculates when these values change (React's reactivity model requires this)

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import {
@@ -46,7 +47,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
   const [includeInserts, setIncludeInserts] = useState(true);
   const [includeUpdates, setIncludeUpdates] = useState(true);
   const [includeDeletes, setIncludeDeletes] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const { copy, copied } = useCopyToClipboard();
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showWarnings, setShowWarnings] = useState(true);
@@ -120,15 +121,8 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
 
   const handleCopyToClipboard = useCallback(async () => {
     if (!syncSQL?.sql) return;
-
-    try {
-      await navigator.clipboard.writeText(syncSQL.sql);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Handle error silently
-    }
-  }, [syncSQL?.sql]);
+    await copy(syncSQL.sql, { showToast: false });
+  }, [copy, syncSQL?.sql]);
 
   const handleSaveToFile = useCallback(async () => {
     if (!syncSQL?.sql) return;

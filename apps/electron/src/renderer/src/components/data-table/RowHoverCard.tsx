@@ -8,7 +8,8 @@ import {
 } from '@sqlpro/ui/hover-card';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Copy, Maximize2 } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/utils';
 
 interface RowHoverCardProps {
@@ -33,7 +34,7 @@ export const RowHoverCard = memo(
     primaryKeyColumn,
     onExpand,
   }: RowHoverCardProps) => {
-    const [copied, setCopied] = useState(false);
+    const { copy, copied } = useCopyToClipboard();
 
     // Get the row identifier
     const rowId =
@@ -85,9 +86,7 @@ export const RowHoverCard = memo(
         rowData[col.name] = row[col.name];
       });
 
-      await navigator.clipboard.writeText(JSON.stringify(rowData, null, 2));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await copy(JSON.stringify(rowData, null, 2), { showToast: false });
     };
 
     // Get value styling based on type/value

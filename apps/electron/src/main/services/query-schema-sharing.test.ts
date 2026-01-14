@@ -1285,7 +1285,7 @@ describe('query and Schema Sharing Service', () => {
     it('should handle corrupt compressed data gracefully', async () => {
       // Create invalid base64 that looks like gzip header but is corrupted
       const corruptData = Buffer.from([
-        0x1F, 0x8B, 0x00, 0xFF, 0xFF, 0xFF,
+        0x1f, 0x8b, 0x00, 0xff, 0xff, 0xff,
       ]).toString('base64');
 
       await expect(importQuery(corruptData)).rejects.toThrow();

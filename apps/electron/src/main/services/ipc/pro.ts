@@ -19,30 +19,20 @@ export function setupProHandlers(): void {
   );
 
   // Pro: Get Status
-  ipcMain.handle(IPC_CHANNELS.PRO_GET_STATUS, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.PRO_GET_STATUS,
+    createHandler(async () => {
       const status = getProStatus();
-      return { success: true, status };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get pro status',
-      };
-    }
-  });
+      return { status };
+    })
+  );
 
   // Pro: Clear Status
-  ipcMain.handle(IPC_CHANNELS.PRO_CLEAR_STATUS, async () => {
-    try {
+  ipcMain.handle(
+    IPC_CHANNELS.PRO_CLEAR_STATUS,
+    createHandler(async () => {
       clearProStatus();
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to clear pro status',
-      };
-    }
-  });
+      return {};
+    })
+  );
 }

@@ -1,14 +1,9 @@
 'use client';
 
-import type {HTMLAttributes, ReactElement} from 'react';
+import type { HTMLAttributes, ReactElement } from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
-import {
-  cloneElement,
-  
-  isValidElement
-  
-} from 'react';
+import { cloneElement, isValidElement } from 'react';
 
 import { cn } from './lib/utils';
 

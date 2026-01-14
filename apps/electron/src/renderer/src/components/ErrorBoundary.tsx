@@ -11,6 +11,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { Component, useState } from 'react';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/utils';
 
 interface ErrorBoundaryProps {
@@ -140,13 +141,11 @@ function CollapsibleSection({
 
 // Stack trace viewer component
 function StackTraceViewer({ stack }: { stack: string }) {
-  const [copied, setCopied] = useState(false);
+  const { copy, copied } = useCopyToClipboard();
   const frames = parseStackTrace(stack);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(stack);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    await copy(stack, { showToast: false });
   };
 
   return (
@@ -206,7 +205,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
 
 // Component stack viewer
 function ComponentStackViewer({ componentStack }: { componentStack: string }) {
-  const [copied, setCopied] = useState(false);
+  const { copy, copied } = useCopyToClipboard();
   const lines = componentStack
     .trim()
     .split('\n')
@@ -214,9 +213,7 @@ function ComponentStackViewer({ componentStack }: { componentStack: string }) {
     .filter(Boolean);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(componentStack);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    await copy(componentStack, { showToast: false });
   };
 
   return (

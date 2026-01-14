@@ -10,6 +10,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/utils';
 
 interface StackFrame {
@@ -194,13 +195,11 @@ function CollapsibleSection({
 }
 
 function StackTraceViewer({ stack }: { stack: string }) {
-  const [copied, setCopied] = useState(false);
+  const { copy, copied } = useCopyToClipboard();
   const frames = parseStackTrace(stack);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(stack);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    await copy(stack, { showToast: false });
   };
 
   return (

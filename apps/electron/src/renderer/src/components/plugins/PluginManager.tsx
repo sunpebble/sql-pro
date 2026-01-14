@@ -14,6 +14,7 @@ import {
   Search,
 } from 'lucide-react';
 import * as React from 'react';
+import { useAsyncOperation } from '@/hooks/useAsyncOperation';
 import { cn } from '@/lib/utils';
 import { PluginCard } from './PluginCard';
 import { PluginDetailView } from './PluginDetailView';
@@ -29,12 +30,6 @@ export interface PluginManagerProps {
 
 type ViewMode = 'grid' | 'list';
 type FilterState = 'all' | 'enabled' | 'disabled' | 'error';
-
-interface PluginManagerState {
-  plugins: PluginInfo[];
-  isLoading: boolean;
-  error: string | null;
-}
 
 interface OperationState {
   pluginId: string;
@@ -108,12 +103,23 @@ export function PluginManager({
   className,
   onPluginsChange,
 }: PluginManagerProps) {
-  // State for plugins data
-  const [state, setState] = React.useState<PluginManagerState>({
-    plugins: [],
-    isLoading: true,
-    error: null,
-  });
+  // Use useAsyncOperation for fetching plugins
+  const {
+    data: plugins,
+    loading: isLoading,
+    error,
+    execute: fetchPlugins,
+    reset: resetPlugins,
+  } = useAsyncOperation(
+    async () => {
+      const response = await window.sqlPro.plugin.list();
+      if (response.success && response.plugins) {
+        return response.plugins as PluginInfo[];
+      }
+      throw new Error(response.error || 'Failed to fetch plugins');
+    },
+    { retries: 2, retryDelay: 500, initialData: [] }
+  );
 
   // UI state
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -129,38 +135,6 @@ export function PluginManager({
     null
   );
   const [detailViewOpen, setDetailViewOpen] = React.useState(false);
-
-  /**
-   * Fetch installed plugins from the API
-   */
-  const fetchPlugins = React.useCallback(async () => {
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
-    try {
-      const response = await window.sqlPro.plugin.list();
-
-      if (response.success && response.plugins) {
-        setState({
-          plugins: response.plugins as PluginInfo[],
-          isLoading: false,
-          error: null,
-        });
-      } else {
-        setState((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: response.error || 'Failed to fetch plugins',
-        }));
-      }
-    } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch plugins',
-      }));
-    }
-  }, []);
 
   // Fetch plugins on mount
   React.useEffect(() => {
@@ -191,8 +165,10 @@ export function PluginManager({
 
   // Notify parent when plugins change
   React.useEffect(() => {
-    onPluginsChange?.(state.plugins);
-  }, [state.plugins, onPluginsChange]);
+    if (plugins) {
+      onPluginsChange?.(plugins);
+    }
+  }, [plugins, onPluginsChange]);
 
   /**
    * Handle enabling/disabling a plugin
@@ -210,22 +186,17 @@ export function PluginManager({
           : await window.sqlPro.plugin.disable({ pluginId });
 
         if (!response.success) {
-          setState((prev) => ({
-            ...prev,
-            error:
-              response.error ||
-              `Failed to ${enabled ? 'enable' : 'disable'} plugin`,
-          }));
+          console.error(
+            `Failed to ${enabled ? 'enable' : 'disable'} plugin:`,
+            response.error
+          );
         }
         // Plugin events will trigger a refresh
-      } catch (error) {
-        setState((prev) => ({
-          ...prev,
-          error:
-            error instanceof Error
-              ? error.message
-              : `Failed to ${enabled ? 'enable' : 'disable'} plugin`,
-        }));
+      } catch (err) {
+        console.error(
+          `Failed to ${enabled ? 'enable' : 'disable'} plugin:`,
+          err
+        );
       } finally {
         setCurrentOperation(null);
       }
@@ -250,20 +221,11 @@ export function PluginManager({
             setSelectedPlugin(null);
           }
         } else {
-          setState((prev) => ({
-            ...prev,
-            error: response.error || 'Failed to uninstall plugin',
-          }));
+          console.error('Failed to uninstall plugin:', response.error);
         }
         // Plugin events will trigger a refresh
-      } catch (error) {
-        setState((prev) => ({
-          ...prev,
-          error:
-            error instanceof Error
-              ? error.message
-              : 'Failed to uninstall plugin',
-        }));
+      } catch (err) {
+        console.error('Failed to uninstall plugin:', err);
       } finally {
         setCurrentOperation(null);
       }
@@ -276,13 +238,13 @@ export function PluginManager({
    */
   const handleViewDetails = React.useCallback(
     (pluginId: string) => {
-      const plugin = state.plugins.find((p) => p.manifest.id === pluginId);
+      const plugin = (plugins || []).find((p) => p.manifest.id === pluginId);
       if (plugin) {
         setSelectedPlugin(plugin);
         setDetailViewOpen(true);
       }
     },
-    [state.plugins]
+    [plugins]
   );
 
   /**
@@ -299,18 +261,18 @@ export function PluginManager({
    * Clear error message
    */
   const handleClearError = React.useCallback(() => {
-    setState((prev) => ({ ...prev, error: null }));
-  }, []);
+    resetPlugins();
+  }, [resetPlugins]);
 
   // Get filtered plugins and counts
   const filteredPlugins = React.useMemo(
-    () => filterPlugins(state.plugins, searchQuery, filterState),
-    [state.plugins, searchQuery, filterState]
+    () => filterPlugins(plugins || [], searchQuery, filterState),
+    [plugins, searchQuery, filterState]
   );
 
   const stateCounts = React.useMemo(
-    () => getStateCounts(state.plugins),
-    [state.plugins]
+    () => getStateCounts(plugins || []),
+    [plugins]
   );
 
   /**
@@ -334,13 +296,11 @@ export function PluginManager({
           <Button
             variant="outline"
             size="icon"
-            onClick={fetchPlugins}
-            disabled={state.isLoading}
+            onClick={() => fetchPlugins()}
+            disabled={isLoading}
             aria-label="Refresh plugins"
           >
-            <RefreshCw
-              className={cn('h-4 w-4', state.isLoading && 'animate-spin')}
-            />
+            <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
           </Button>
         </div>
 
@@ -402,12 +362,12 @@ export function PluginManager({
       </div>
 
       {/* Error Banner */}
-      {state.error && (
+      {error && (
         <div className="bg-destructive/10 border-destructive/50 mx-4 mt-4 flex items-start gap-3 rounded-lg border p-3">
           <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
           <div className="flex-1">
             <p className="text-destructive text-sm font-medium">Error</p>
-            <p className="text-destructive/80 text-xs">{state.error}</p>
+            <p className="text-destructive/80 text-xs">{error.message}</p>
           </div>
           <Button
             variant="ghost"
@@ -424,7 +384,7 @@ export function PluginManager({
       <ScrollArea className="flex-1">
         <div className="p-4">
           {/* Loading State */}
-          {state.isLoading && (
+          {isLoading && (
             <div className="flex flex-col items-center justify-center gap-3 py-16">
               <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
               <p className="text-muted-foreground text-sm">
@@ -434,7 +394,7 @@ export function PluginManager({
           )}
 
           {/* Empty State - No Plugins Installed */}
-          {!state.isLoading && state.plugins.length === 0 && (
+          {!isLoading && (plugins || []).length === 0 && (
             <div className="flex flex-col items-center justify-center gap-4 py-16">
               <Package className="text-muted-foreground h-12 w-12" />
               <div className="text-center">
@@ -447,8 +407,8 @@ export function PluginManager({
           )}
 
           {/* Empty State - No Matching Plugins */}
-          {!state.isLoading &&
-            state.plugins.length > 0 &&
+          {!isLoading &&
+            (plugins || []).length > 0 &&
             filteredPlugins.length === 0 && (
               <div className="flex flex-col items-center justify-center gap-3 py-16">
                 <Search className="text-muted-foreground h-12 w-12" />
@@ -472,7 +432,7 @@ export function PluginManager({
             )}
 
           {/* Plugin List/Grid */}
-          {!state.isLoading && filteredPlugins.length > 0 && (
+          {!isLoading && filteredPlugins.length > 0 && (
             <div
               className={cn(
                 viewMode === 'grid'
@@ -498,10 +458,10 @@ export function PluginManager({
       </ScrollArea>
 
       {/* Status Bar */}
-      {!state.isLoading && state.plugins.length > 0 && (
+      {!isLoading && (plugins || []).length > 0 && (
         <div className="text-muted-foreground flex items-center justify-between border-t px-4 py-2 text-xs">
           <span>
-            {filteredPlugins.length} of {state.plugins.length} plugins
+            {filteredPlugins.length} of {(plugins || []).length} plugins
             {searchQuery && ` matching "${searchQuery}"`}
             {filterState !== 'all' && ` • ${filterState}`}
           </span>
