@@ -1,14 +1,14 @@
-import type { ImageItem } from './ImageGallery';
+import type { MediaItem } from './ImageGallery';
 import type { ViewMode } from './ImageGalleryToolbar';
-import type { ImageColumnInfo, ImageSource } from '@/lib/image-utils';
+import type { MediaColumnInfo, MediaSource } from '@/lib/image-utils';
 import type { ColumnSchema } from '@/types/database';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import {
-  detectImageColumns,
-  detectImageColumnsAsync,
-  detectImageSourceAsync,
+  detectMediaColumns,
+  detectMediaColumnsAsync,
+  detectMediaSourceAsync,
 } from '@/lib/image-utils';
 import { ImageGallery } from './ImageGallery';
 import { ImageGalleryToolbar } from './ImageGalleryToolbar';
@@ -49,42 +49,42 @@ export function TableImageGallery({
   const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
 
-  // State for async image column detection
-  const [imageColumns, setImageColumns] = useState<ImageColumnInfo[]>([]);
+  // State for async media column detection
+  const [mediaColumns, setMediaColumns] = useState<MediaColumnInfo[]>([]);
   const [isDetecting, setIsDetecting] = useState(false);
 
-  // State for async image items (with validated URLs)
-  const [imageItems, setImageItems] = useState<ImageItem[]>([]);
+  // State for async media items (with validated URLs)
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [isBuildingItems, setIsBuildingItems] = useState(false);
 
   // Sync detection for immediate feedback
-  const syncImageColumns = useMemo<ImageColumnInfo[]>(() => {
+  const syncMediaColumns = useMemo<MediaColumnInfo[]>(() => {
     if (columns.length === 0 || rows.length === 0) return [];
-    return detectImageColumns(columns, rows, 20); // Sample first 20 rows
+    return detectMediaColumns(columns, rows, 20); // Sample first 20 rows
   }, [columns, rows]);
 
   // Async detection with HEAD request for more accuracy
   useEffect(() => {
     if (columns.length === 0 || rows.length === 0) {
-      setImageColumns([]);
+      setMediaColumns([]);
       return;
     }
 
     // Start with sync results for immediate display
-    setImageColumns(syncImageColumns);
+    setMediaColumns(syncMediaColumns);
 
-    // Then run async detection for URLs without clear image extensions
+    // Then run async detection for URLs without clear media extensions
     const runAsyncDetection = async () => {
       setIsDetecting(true);
       try {
-        const asyncColumns = await detectImageColumnsAsync(columns, rows, 20);
-        setImageColumns(asyncColumns);
+        const asyncColumns = await detectMediaColumnsAsync(columns, rows, 20);
+        setMediaColumns(asyncColumns);
       } catch (error) {
         // Log error with context for debugging
         const errorMessage =
           error instanceof Error ? error.message : String(error);
         console.error(
-          '[TableImageGallery] Async image column detection failed:',
+          '[TableImageGallery] Async media column detection failed:',
           {
             columnsCount: columns.length,
             rowsCount: rows.length,
@@ -99,41 +99,41 @@ export function TableImageGallery({
     };
 
     runAsyncDetection();
-  }, [columns, rows, syncImageColumns]);
+  }, [columns, rows, syncMediaColumns]);
 
   // Reset selected column if it's no longer available
   const validSelectedColumn = useMemo(() => {
     if (
       selectedColumn &&
-      !imageColumns.some((c) => c.column === selectedColumn)
+      !mediaColumns.some((c) => c.column === selectedColumn)
     ) {
       return null;
     }
     return selectedColumn;
-  }, [imageColumns, selectedColumn]);
+  }, [mediaColumns, selectedColumn]);
 
-  // Build image items from rows with async URL validation
+  // Build media items from rows with async URL validation
   useEffect(() => {
-    if (imageColumns.length === 0) {
-      setImageItems([]);
+    if (mediaColumns.length === 0) {
+      setMediaItems([]);
       return;
     }
 
     const columnsToScan = validSelectedColumn
-      ? imageColumns.filter((c) => c.column === validSelectedColumn)
-      : imageColumns;
+      ? mediaColumns.filter((c) => c.column === validSelectedColumn)
+      : mediaColumns;
 
     // Build items with async validation for URLs
     const buildItems = async () => {
       setIsBuildingItems(true);
-      const items: ImageItem[] = [];
+      const items: MediaItem[] = [];
 
       // Process in batches to avoid overwhelming
       const promises: Promise<{
         rowIndex: number;
         column: string;
         rowData: Record<string, unknown>;
-        source: ImageSource;
+        source: MediaSource;
       } | null>[] = [];
 
       rows.forEach((row, rowIndex) => {
@@ -147,7 +147,7 @@ export function TableImageGallery({
           promises.push(
             (async () => {
               // Use async detection for accurate URL validation
-              const source = await detectImageSourceAsync(value, columnType);
+              const source = await detectMediaSourceAsync(value, columnType);
               if (source) {
                 return {
                   rowIndex,
@@ -179,7 +179,7 @@ export function TableImageGallery({
         // Log error with context for debugging
         const errorMessage =
           error instanceof Error ? error.message : String(error);
-        console.error('[TableImageGallery] Error building image items:', {
+        console.error('[TableImageGallery] Error building media items:', {
           columnsToScan: columnsToScan.map((c) => c.column),
           rowsCount: rows.length,
           error: errorMessage,
@@ -188,17 +188,17 @@ export function TableImageGallery({
         toast.error(
           t(
             'imageGallery.loadError',
-            'Failed to load some images. Please try refreshing.'
+            'Failed to load some media. Please try refreshing.'
           )
         );
       }
 
-      setImageItems(items);
+      setMediaItems(items);
       setIsBuildingItems(false);
     };
 
     buildItems();
-  }, [rows, columns, imageColumns, validSelectedColumn, t]);
+  }, [rows, columns, mediaColumns, validSelectedColumn, t]);
 
   // Handle export selected images
   const handleExportSelected = useCallback(() => {
@@ -215,7 +215,7 @@ export function TableImageGallery({
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <ImageGalleryToolbar
-        imageColumns={imageColumns}
+        imageColumns={mediaColumns}
         selectedColumn={selectedColumn}
         onColumnChange={setSelectedColumn}
         viewMode={viewMode}
@@ -227,13 +227,13 @@ export function TableImageGallery({
         onExportSelected={handleExportSelected}
         onRefresh={handleRefresh}
         isLoading={isLoading || isDetecting || isBuildingItems}
-        totalCount={imageItems.length}
+        totalCount={mediaItems.length}
       />
 
       {/* Gallery */}
       <div className="min-h-0 flex-1">
         <ImageGallery
-          images={imageItems}
+          images={mediaItems}
           thumbnailSize={thumbnailSize}
           isLoading={isLoading}
           selectedIds={selectedIds}

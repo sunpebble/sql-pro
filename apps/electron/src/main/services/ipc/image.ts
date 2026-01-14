@@ -1,8 +1,9 @@
 /**
- * IPC Handlers for Image Operations
+ * IPC Handlers for Image and Video Operations
  *
  * Provides IPC channels for:
  * - Getting image metadata using sharp
+ * - Getting video metadata using ffprobe
  * - Getting cache statistics
  * - Clearing image cache
  * - HEAD request preflight check
@@ -10,12 +11,19 @@
 
 import { ipcMain } from 'electron';
 import {
+  checkFileExists,
   checkImageUrl,
   clearImageCache,
   getCacheStats,
   getImageMetadata,
   validateImageUrl,
 } from '../image-proxy';
+import {
+  checkVideoFile,
+  checkVideoUrl,
+  getVideoMetadata,
+  validateVideoUrl,
+} from '../video-probe';
 import { createHandler } from './utils';
 
 // ============================================================================
@@ -28,6 +36,12 @@ export const IMAGE_IPC_CHANNELS = {
   CLEAR_CACHE: 'image:clear-cache',
   CHECK_URL: 'image:check-url',
   VALIDATE_URL: 'image:validate-url',
+  CHECK_FILE: 'image:check-file',
+  // Video channels
+  VIDEO_GET_METADATA: 'video:get-metadata',
+  VIDEO_CHECK_URL: 'video:check-url',
+  VIDEO_VALIDATE_URL: 'video:validate-url',
+  VIDEO_CHECK_FILE: 'video:check-file',
 } as const;
 
 // ============================================================================
@@ -80,6 +94,60 @@ export function setupImageHandlers(): void {
     IMAGE_IPC_CHANNELS.VALIDATE_URL,
     createHandler(async (request: { url: string }) => {
       const result = await validateImageUrl(request.url);
+      return result;
+    })
+  );
+
+  // Check if local file exists
+  ipcMain.handle(
+    IMAGE_IPC_CHANNELS.CHECK_FILE,
+    createHandler(async (request: { path: string }) => {
+      const result = await checkFileExists(request.path);
+      return result;
+    })
+  );
+
+  // ============================================================================
+  // Video Handlers
+  // ============================================================================
+
+  // Get video metadata using ffprobe
+  ipcMain.handle(
+    IMAGE_IPC_CHANNELS.VIDEO_GET_METADATA,
+    createHandler(async (request: { url: string }) => {
+      const metadata = await getVideoMetadata(request.url);
+
+      if (!metadata) {
+        throw new Error('Failed to extract video metadata');
+      }
+
+      return { metadata };
+    })
+  );
+
+  // Check if URL is a video using HEAD request
+  ipcMain.handle(
+    IMAGE_IPC_CHANNELS.VIDEO_CHECK_URL,
+    createHandler(async (request: { url: string }) => {
+      const result = await checkVideoUrl(request.url);
+      return result;
+    })
+  );
+
+  // Full video validation: HEAD + ffprobe
+  ipcMain.handle(
+    IMAGE_IPC_CHANNELS.VIDEO_VALIDATE_URL,
+    createHandler(async (request: { url: string }) => {
+      const result = await validateVideoUrl(request.url);
+      return result;
+    })
+  );
+
+  // Check if local file is a video
+  ipcMain.handle(
+    IMAGE_IPC_CHANNELS.VIDEO_CHECK_FILE,
+    createHandler(async (request: { path: string }) => {
+      const result = await checkVideoFile(request.path);
       return result;
     })
   );

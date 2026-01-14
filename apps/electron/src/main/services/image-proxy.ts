@@ -1,16 +1,19 @@
 /**
- * Image Proxy Service
+ * Media Proxy Service
  *
- * Provides a custom `sqlpro://` protocol handler for proxying remote images.
+ * Provides a custom `sqlpro://` protocol handler for proxying remote media (images and videos).
  * This solves CORS issues and enables clipboard operations for remote images.
  *
  * Features:
  * - LRU in-memory cache to avoid repeated downloads
  * - Sharp-based metadata extraction for detailed image info
- * - Proper MIME type handling
+ * - Proper MIME type handling for images and videos
+ * - Local file serving for file:// paths
  */
 
 import { Buffer } from 'node:buffer';
+import { access, readFile } from 'node:fs/promises';
+import { extname } from 'node:path';
 import { protocol } from 'electron';
 import sharp from 'sharp';
 
@@ -50,8 +53,11 @@ export interface ImageMetadata {
 /** Maximum number of cached images */
 const MAX_CACHE_ENTRIES = 100;
 
-/** Maximum total cache size in bytes (50MB) */
-const MAX_CACHE_SIZE = 50 * 1024 * 1024;
+/** Maximum total cache size in bytes (200MB for video support) */
+const MAX_CACHE_SIZE = 200 * 1024 * 1024;
+
+/** Maximum single file size to cache (150MB) */
+const MAX_SINGLE_FILE_SIZE = 150 * 1024 * 1024;
 
 /** Image cache using Map for LRU behavior (iteration order = insertion order) */
 const imageCache = new Map<string, CachedImage>();
@@ -76,6 +82,11 @@ function getCached(url: string): CachedImage | undefined {
  * Add an image to cache, evicting old entries if needed
  */
 function setCached(url: string, entry: CachedImage): void {
+  // Skip caching if single file is too large
+  if (entry.size > MAX_SINGLE_FILE_SIZE) {
+    return;
+  }
+
   // Remove if already exists (to update LRU order)
   const existing = imageCache.get(url);
   if (existing) {
@@ -135,12 +146,12 @@ export function getCacheStats(): {
 // ============================================================================
 
 /**
- * Detect MIME type from buffer magic bytes
+ * Detect MIME type from buffer magic bytes (images and videos)
  */
 function detectMimeType(buffer: Buffer): string {
   if (buffer.length < 4) return 'application/octet-stream';
 
-  // Check magic bytes
+  // Check image magic bytes
   if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
     return 'image/jpeg';
   }
@@ -166,15 +177,24 @@ function detectMimeType(buffer: Buffer): string {
     buffer[2] === 0x46 &&
     buffer[3] === 0x46
   ) {
-    // RIFF header - check for WebP
-    if (
-      buffer.length >= 12 &&
-      buffer[8] === 0x57 &&
-      buffer[9] === 0x45 &&
-      buffer[10] === 0x42 &&
-      buffer[11] === 0x50
-    ) {
-      return 'image/webp';
+    // RIFF header - check for WebP or AVI
+    if (buffer.length >= 12) {
+      if (
+        buffer[8] === 0x57 &&
+        buffer[9] === 0x45 &&
+        buffer[10] === 0x42 &&
+        buffer[11] === 0x50
+      ) {
+        return 'image/webp';
+      }
+      if (
+        buffer[8] === 0x41 &&
+        buffer[9] === 0x56 &&
+        buffer[10] === 0x49 &&
+        buffer[11] === 0x20
+      ) {
+        return 'video/x-msvideo';
+      }
     }
   }
   if (buffer[0] === 0x42 && buffer[1] === 0x4d) {
@@ -187,6 +207,27 @@ function detectMimeType(buffer: Buffer): string {
     buffer[3] === 0x00
   ) {
     return 'image/x-icon';
+  }
+
+  // Check video magic bytes
+  // MP4/MOV (ftyp box at offset 4)
+  if (
+    buffer.length >= 8 &&
+    buffer[4] === 0x66 &&
+    buffer[5] === 0x74 &&
+    buffer[6] === 0x79 &&
+    buffer[7] === 0x70
+  ) {
+    return 'video/mp4';
+  }
+  // WebM/MKV
+  if (
+    buffer[0] === 0x1a &&
+    buffer[1] === 0x45 &&
+    buffer[2] === 0xdf &&
+    buffer[3] === 0xa3
+  ) {
+    return 'video/webm';
   }
 
   return 'application/octet-stream';
@@ -222,9 +263,9 @@ async function extractMetadata(buffer: Buffer): Promise<ImageMetadata> {
 }
 
 /**
- * Fetch image from URL and process it
+ * Fetch media (image or video) from URL and process it
  */
-async function fetchAndProcessImage(
+async function fetchAndProcessMedia(
   url: string
 ): Promise<{ buffer: Buffer; mimeType: string; metadata: ImageMetadata }> {
   // Use session.fetch which uses Chromium's network stack with cookie support
@@ -237,7 +278,7 @@ async function fetchAndProcessImage(
       'User-Agent':
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       Accept:
-        'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'image/avif,image/webp,image/apng,image/svg+xml,image/*,video/*,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.9',
       'Cache-Control': 'no-cache',
       Pragma: 'no-cache',
@@ -253,12 +294,26 @@ async function fetchAndProcessImage(
 
   // Get MIME type from response or detect from buffer
   let mimeType = response.headers.get('content-type') ?? '';
-  if (!mimeType || !mimeType.startsWith('image/')) {
+  if (
+    !mimeType ||
+    (!mimeType.startsWith('image/') && !mimeType.startsWith('video/'))
+  ) {
     mimeType = detectMimeType(buffer);
   }
 
-  // Extract metadata using sharp
-  const metadata = await extractMetadata(buffer);
+  // Extract metadata using sharp (only for images)
+  let metadata: ImageMetadata;
+  if (mimeType.startsWith('image/')) {
+    metadata = await extractMetadata(buffer);
+  } else {
+    // For videos, just return basic metadata
+    metadata = {
+      width: 0,
+      height: 0,
+      format: mimeType.split('/')[1] ?? 'unknown',
+      size: buffer.length,
+    };
+  }
 
   return { buffer, mimeType, metadata };
 }
@@ -290,8 +345,73 @@ export function registerImageProxyScheme(): void {
  * Must be called after app.whenReady()
  */
 export function setupImageProxyHandler(): void {
+  // Extension to MIME type mapping for local files (images and videos)
+  const extToMime: Record<string, string> = {
+    // Image types
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.svg': 'image/svg+xml',
+    '.bmp': 'image/bmp',
+    '.ico': 'image/x-icon',
+    '.tiff': 'image/tiff',
+    '.tif': 'image/tiff',
+    '.avif': 'image/avif',
+    '.heic': 'image/heic',
+    '.heif': 'image/heif',
+    // Video types
+    '.mp4': 'video/mp4',
+    '.m4v': 'video/mp4',
+    '.webm': 'video/webm',
+    '.mov': 'video/quicktime',
+    '.avi': 'video/x-msvideo',
+    '.mkv': 'video/x-matroska',
+    '.ogv': 'video/ogg',
+    '.3gp': 'video/3gpp',
+  };
+
   protocol.handle('sqlpro', async (request) => {
     const url = new URL(request.url);
+
+    // Handle local file requests: sqlpro://file/<encoded-path>
+    if (url.host === 'file') {
+      try {
+        const encodedPath = url.pathname.slice(1); // Remove leading /
+        const filePath = decodeURIComponent(encodedPath);
+
+        if (!filePath) {
+          return new Response('Missing file path', {
+            status: 400,
+            headers: { 'content-type': 'text/plain' },
+          });
+        }
+
+        // Read the local file
+        const buffer = await readFile(filePath);
+        const ext = extname(filePath).toLowerCase();
+        const mimeType = extToMime[ext] || detectMimeType(buffer);
+
+        return new Response(buffer, {
+          status: 200,
+          headers: {
+            'content-type': mimeType,
+            'content-length': String(buffer.length),
+            'cache-control': 'private, max-age=3600',
+          },
+        });
+      } catch (error) {
+        console.error('[ImageProxy] Error reading local file:', error);
+        return new Response(
+          `Failed to read file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          {
+            status: 500,
+            headers: { 'content-type': 'text/plain' },
+          }
+        );
+      }
+    }
 
     // Handle image proxy requests: sqlpro://image/<encoded-url>
     if (url.host === 'image') {
@@ -313,7 +433,7 @@ export function setupImageProxyHandler(): void {
         if (!cached) {
           // Fetch and cache
           const { buffer, mimeType, metadata } =
-            await fetchAndProcessImage(originalUrl);
+            await fetchAndProcessMedia(originalUrl);
 
           cached = {
             buffer,
@@ -326,12 +446,39 @@ export function setupImageProxyHandler(): void {
           setCached(originalUrl, cached);
         }
 
-        // Return the cached image
+        // Handle Range requests for video streaming
+        const rangeHeader = request.headers.get('range');
+        if (rangeHeader && cached.mimeType.startsWith('video/')) {
+          const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
+          if (match) {
+            const start = Number.parseInt(match[1], 10);
+            const end = match[2] ? Number.parseInt(match[2], 10) : cached.size - 1;
+            const chunkSize = end - start + 1;
+
+            // Return partial content for Range request
+            return new Response(cached.buffer.subarray(start, end + 1), {
+              status: 206,
+              headers: {
+                'content-type': cached.mimeType,
+                'content-length': String(chunkSize),
+                'content-range': `bytes ${start}-${end}/${cached.size}`,
+                'accept-ranges': 'bytes',
+                'cache-control': 'private, max-age=3600',
+                'x-image-width': String(cached.metadata.width),
+                'x-image-height': String(cached.metadata.height),
+                'x-image-format': cached.metadata.format,
+              },
+            });
+          }
+        }
+
+        // Return the full media (for images or non-range video requests)
         return new Response(cached.buffer, {
           status: 200,
           headers: {
             'content-type': cached.mimeType,
             'content-length': String(cached.size),
+            'accept-ranges': 'bytes',
             'cache-control': 'private, max-age=3600',
             // Include metadata as custom headers for easy access
             'x-image-width': String(cached.metadata.width),
@@ -374,7 +521,7 @@ export async function getImageMetadata(
     }
 
     // Fetch and cache
-    const { buffer, mimeType, metadata } = await fetchAndProcessImage(url);
+    const { buffer, mimeType, metadata } = await fetchAndProcessMedia(url);
 
     setCached(url, {
       buffer,
@@ -406,6 +553,7 @@ export function getCachedImageBuffer(url: string): Buffer | null {
 /** Result of HEAD request preflight check */
 export interface ImageCheckResult {
   isImage: boolean;
+  isVideo?: boolean;
   mimeType?: string;
   contentLength?: number;
   error?: string;
@@ -421,8 +569,8 @@ const headCheckCache = new Map<
 const HEAD_CACHE_TTL = 5 * 60 * 1000;
 
 /**
- * Check if a URL points to an image using HEAD request.
- * This is a lightweight preflight check that doesn't download the full image.
+ * Check if a URL points to media (image or video) using HEAD request.
+ * This is a lightweight preflight check that doesn't download the full media.
  * Results are cached for 5 minutes.
  */
 export async function checkImageUrl(url: string): Promise<ImageCheckResult> {
@@ -439,7 +587,8 @@ export async function checkImageUrl(url: string): Promise<ImageCheckResult> {
   const browserHeaders = {
     'User-Agent':
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+    Accept:
+      'image/avif,image/webp,image/apng,image/svg+xml,image/*,video/*,*/*;q=0.8',
     'Accept-Language': 'en-US,en;q=0.9',
   };
 
@@ -452,6 +601,7 @@ export async function checkImageUrl(url: string): Promise<ImageCheckResult> {
     if (!response.ok) {
       const result: ImageCheckResult = {
         isImage: false,
+        isVideo: false,
         error: `HTTP ${response.status}`,
       };
       headCheckCache.set(url, { result, timestamp: Date.now() });
@@ -461,11 +611,13 @@ export async function checkImageUrl(url: string): Promise<ImageCheckResult> {
     const contentType = response.headers.get('content-type') ?? '';
     const contentLength = response.headers.get('content-length');
 
-    // Check if content type indicates an image
+    // Check if content type indicates an image or video
     const isImage = contentType.startsWith('image/');
+    const isVideo = contentType.startsWith('video/');
 
     const result: ImageCheckResult = {
       isImage,
+      isVideo,
       mimeType: contentType.split(';')[0].trim(),
       contentLength: contentLength
         ? Number.parseInt(contentLength, 10)
@@ -487,9 +639,11 @@ export async function checkImageUrl(url: string): Promise<ImageCheckResult> {
 
       const contentType = response.headers.get('content-type') ?? '';
       const isImage = contentType.startsWith('image/');
+      const isVideo = contentType.startsWith('video/');
 
       const result: ImageCheckResult = {
         isImage,
+        isVideo,
         mimeType: contentType.split(';')[0].trim(),
       };
 
@@ -498,6 +652,7 @@ export async function checkImageUrl(url: string): Promise<ImageCheckResult> {
     } catch {
       const result: ImageCheckResult = {
         isImage: false,
+        isVideo: false,
         error: error instanceof Error ? error.message : 'Request failed',
       };
       headCheckCache.set(url, { result, timestamp: Date.now() });
@@ -603,4 +758,58 @@ export async function validateImageUrl(
  */
 export function clearValidationCache(): void {
   validationCache.clear();
+}
+
+// ============================================================================
+// Local File Existence Check
+// ============================================================================
+
+/** Result of file existence check */
+export interface FileCheckResult {
+  exists: boolean;
+  error?: string;
+}
+
+/** Cache for file existence results */
+const fileCheckCache = new Map<
+  string,
+  { result: FileCheckResult; timestamp: number }
+>();
+
+/** File check cache TTL (30 seconds - shorter since files can change) */
+const FILE_CHECK_CACHE_TTL = 30 * 1000;
+
+/**
+ * Check if a local file exists.
+ * Results are cached for 30 seconds.
+ */
+export async function checkFileExists(
+  filePath: string
+): Promise<FileCheckResult> {
+  // Check cache first
+  const cached = fileCheckCache.get(filePath);
+  if (cached && Date.now() - cached.timestamp < FILE_CHECK_CACHE_TTL) {
+    return cached.result;
+  }
+
+  try {
+    await access(filePath);
+    const result: FileCheckResult = { exists: true };
+    fileCheckCache.set(filePath, { result, timestamp: Date.now() });
+    return result;
+  } catch (error) {
+    const result: FileCheckResult = {
+      exists: false,
+      error: error instanceof Error ? error.message : 'File not found',
+    };
+    fileCheckCache.set(filePath, { result, timestamp: Date.now() });
+    return result;
+  }
+}
+
+/**
+ * Clear the file check cache
+ */
+export function clearFileCheckCache(): void {
+  fileCheckCache.clear();
 }

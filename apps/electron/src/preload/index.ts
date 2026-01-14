@@ -190,8 +190,8 @@ import { IPC_CHANNELS } from '@shared/types';
 import { RENDERER_STORE_CHANNELS } from '@shared/types/renderer-store';
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 
-// Custom API for SQL Pro
-const sqlProAPI = {
+// Custom API for SQL Pro - exported for type inference
+export const sqlProAPI = {
   // Database operations
   db: {
     open: (request: OpenDatabaseRequest): Promise<OpenDatabaseResponse> =>
@@ -843,12 +843,13 @@ const sqlProAPI = {
     }> => ipcRenderer.invoke('image:get-cache-stats'),
     clearCache: (): Promise<{ success: boolean }> =>
       ipcRenderer.invoke('image:clear-cache'),
-    /** Check if URL is an image using HEAD request preflight */
+    /** Check if URL is media (image or video) using HEAD request preflight */
     checkUrl: (request: {
       url: string;
     }): Promise<{
       success: boolean;
       isImage: boolean;
+      isVideo?: boolean;
       mimeType?: string;
       contentLength?: number;
       error?: string;
@@ -866,6 +867,92 @@ const sqlProAPI = {
       size?: number;
       error?: string;
     }> => ipcRenderer.invoke('image:validate-url', request),
+    /** Check if local file exists */
+    checkFile: (request: {
+      path: string;
+    }): Promise<{
+      success: boolean;
+      exists: boolean;
+      error?: string;
+    }> => ipcRenderer.invoke('image:check-file', request),
+  },
+
+  // Video operations (ffprobe-based detection)
+  video: {
+    /** Get video metadata using ffprobe */
+    getMetadata: (request: {
+      url: string;
+    }): Promise<{
+      success: boolean;
+      metadata?: {
+        width: number;
+        height: number;
+        duration: number;
+        format: string;
+        codec: string;
+        bitrate?: number;
+        fps?: number;
+        size: number;
+      };
+      error?: string;
+    }> => ipcRenderer.invoke('video:get-metadata', request),
+    /** Check if URL is a video using HEAD request + magic bytes */
+    checkUrl: (request: {
+      url: string;
+    }): Promise<{
+      success: boolean;
+      isVideo: boolean;
+      mimeType?: string;
+      metadata?: {
+        width: number;
+        height: number;
+        duration: number;
+        format: string;
+        codec: string;
+        bitrate?: number;
+        fps?: number;
+        size: number;
+      };
+      error?: string;
+    }> => ipcRenderer.invoke('video:check-url', request),
+    /** Full video validation using ffprobe */
+    validateUrl: (request: {
+      url: string;
+    }): Promise<{
+      success: boolean;
+      isVideo: boolean;
+      mimeType?: string;
+      metadata?: {
+        width: number;
+        height: number;
+        duration: number;
+        format: string;
+        codec: string;
+        bitrate?: number;
+        fps?: number;
+        size: number;
+      };
+      error?: string;
+    }> => ipcRenderer.invoke('video:validate-url', request),
+    /** Check if local file is a video */
+    checkFile: (request: {
+      path: string;
+    }): Promise<{
+      success: boolean;
+      isVideo: boolean;
+      mimeType?: string;
+      metadata?: {
+        width: number;
+        height: number;
+        duration: number;
+        format: string;
+        codec: string;
+        bitrate?: number;
+        fps?: number;
+        size: number;
+      };
+      error?: string;
+    }> => ipcRenderer.invoke('video:check-file', request),
   },
 };
 

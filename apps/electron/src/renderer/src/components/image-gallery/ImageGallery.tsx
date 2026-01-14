@@ -1,24 +1,31 @@
 import type { ViewMode } from './ImageGalleryToolbar';
-import type { ImageSource } from '@/lib/image-utils';
+import type { MediaSource } from '@/lib/image-utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Copy, Download, ExternalLink, ImageOff } from 'lucide-react';
+import {
+  Copy,
+  Download,
+  ExternalLink,
+  Film,
+  ImageOff,
+  Play,
+} from 'lucide-react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { useImageLoader } from '@/hooks/useImageLoader';
+import { useMediaLoader } from '@/hooks/useMediaLoader';
 import { cn } from '@/lib/utils';
-import { ImagePreview } from './ImagePreview';
+import { MediaPreview } from './MediaPreview';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-export interface ImageItem {
-  /** Unique identifier for the image */
+export interface MediaItem {
+  /** Unique identifier for the media */
   id: string;
-  /** Image source info */
-  source: ImageSource;
+  /** Media source info */
+  source: MediaSource;
   /** Row index in the original data */
   rowIndex: number;
   /** Column name */
@@ -26,6 +33,9 @@ export interface ImageItem {
   /** Original row data for context */
   rowData: Record<string, unknown>;
 }
+
+/** @deprecated Use MediaItem instead */
+export type ImageItem = MediaItem;
 
 export interface ImageGalleryProps {
   /** Array of image items to display */
@@ -58,14 +68,19 @@ interface ImageThumbnailProps {
 
 const ImageThumbnail = memo(
   ({ item, size, isSelected, onClick, onSelect }: ImageThumbnailProps) => {
-    const { imgProps, isLoaded, isError, usingFallback } = useImageLoader(
-      item.source,
-      {
-        lazy: true,
-        enableFallback: true,
-        alt: `Row ${item.rowIndex + 1}, ${item.column}`,
-      }
-    );
+    const {
+      imgProps,
+      videoProps,
+      mediaKey,
+      isLoaded,
+      isError,
+      isVideo,
+      usingFallback,
+    } = useMediaLoader(item.source, {
+      lazy: true,
+      enableFallback: true,
+      alt: `Row ${item.rowIndex + 1}, ${item.column}`,
+    });
 
     return (
       <div
@@ -123,21 +138,43 @@ const ImageThumbnail = memo(
           </div>
         </div>
 
-        {/* Image */}
-        {imgProps.src && !isError ? (
+        {/* Media content */}
+        {(imgProps.src || videoProps.src) && !isError ? (
           <>
             {!isLoaded && (
               <div className="bg-muted absolute inset-0 animate-pulse" />
             )}
-            <img
-              {...imgProps}
-              className={cn(
-                'h-full w-full object-cover transition-opacity',
-                isLoaded ? 'opacity-100' : 'opacity-0'
-              )}
-              // Add crossorigin for fallback URLs to enable clipboard copy
-              crossOrigin={usingFallback ? 'anonymous' : undefined}
-            />
+            {isVideo ? (
+              <>
+                <video
+                  key={mediaKey}
+                  {...videoProps}
+                  className={cn(
+                    'h-full w-full object-cover transition-opacity',
+                    isLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                  controls={false}
+                  muted
+                  crossOrigin={usingFallback ? 'anonymous' : undefined}
+                />
+                {/* Video play icon overlay */}
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/50">
+                    <Play className="h-5 w-5 text-white" fill="white" />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <img
+                key={mediaKey}
+                {...imgProps}
+                className={cn(
+                  'h-full w-full object-cover transition-opacity',
+                  isLoaded ? 'opacity-100' : 'opacity-0'
+                )}
+                crossOrigin={usingFallback ? 'anonymous' : undefined}
+              />
+            )}
           </>
         ) : (
           <div className="bg-muted text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-1">
@@ -148,9 +185,12 @@ const ImageThumbnail = memo(
 
         {/* Row info overlay */}
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
-          <p className="truncate text-xs text-white">
-            Row {item.rowIndex + 1} · {item.column}
-          </p>
+          <div className="flex items-center gap-1">
+            {isVideo && <Film className="h-3 w-3 text-white" />}
+            <p className="truncate text-xs text-white">
+              Row {item.rowIndex + 1} · {item.column}
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -179,14 +219,19 @@ const ImageListItem = memo(
   }: ImageListItemProps) => {
     const { t } = useTranslation('common');
     const { copy } = useCopyToClipboard();
-    const { imgProps, isLoaded, isError, displayUrl } = useImageLoader(
-      item.source,
-      {
-        lazy: true,
-        enableFallback: true,
-        alt: `Row ${item.rowIndex + 1}, ${item.column}`,
-      }
-    );
+    const {
+      imgProps,
+      videoProps,
+      mediaKey,
+      isLoaded,
+      isError,
+      isVideo,
+      displayUrl,
+    } = useMediaLoader(item.source, {
+      lazy: true,
+      enableFallback: true,
+      alt: `Row ${item.rowIndex + 1}, ${item.column}`,
+    });
 
     // Copy URL to clipboard
     const handleCopyUrl = useCallback(
@@ -205,7 +250,7 @@ const ImageListItem = memo(
       [item.source, t, copy]
     );
 
-    // Download image
+    // Download media
     const handleDownload = useCallback(
       async (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -217,7 +262,8 @@ const ImageListItem = memo(
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `image_row${item.rowIndex + 1}_${item.column}.jpg`;
+          const ext = isVideo ? 'mp4' : 'jpg';
+          a.download = `media_row${item.rowIndex + 1}_${item.column}.${ext}`;
           a.click();
           URL.revokeObjectURL(url);
           toast.success(t('imageGallery.downloadStarted', 'Download started'));
@@ -225,7 +271,7 @@ const ImageListItem = memo(
           toast.error(t('imageGallery.downloadFailed', 'Download failed'));
         }
       },
-      [displayUrl, item, t]
+      [displayUrl, item, t, isVideo]
     );
 
     // Open in browser
@@ -242,16 +288,19 @@ const ImageListItem = memo(
     // Get display info
     const getSourceInfo = () => {
       if (!item.source) return { type: 'Unknown', detail: '' };
+      const mediaType = item.source.isVideo ? 'Video' : 'Image';
       switch (item.source.type) {
         case 'url':
-          return { type: 'URL', detail: item.source.url };
+          return { type: `URL ${mediaType}`, detail: item.source.url };
         case 'base64':
-          return { type: 'Base64', detail: 'Embedded data' };
+          return { type: `Base64 ${mediaType}`, detail: 'Embedded data' };
         case 'blob':
           return {
             type: item.source.mimeType.split('/')[1]?.toUpperCase() ?? 'BLOB',
             detail: `${(item.source.data.byteLength / 1024).toFixed(1)} KB`,
           };
+        case 'file':
+          return { type: `File ${mediaType}`, detail: item.source.path };
         default:
           return { type: 'Unknown', detail: '' };
       }
@@ -319,18 +368,40 @@ const ImageListItem = memo(
           className="bg-muted relative shrink-0 overflow-hidden rounded-md"
           style={{ width: itemHeight - 16, height: itemHeight - 16 }}
         >
-          {imgProps.src && !isError ? (
+          {(imgProps.src || videoProps.src) && !isError ? (
             <>
               {!isLoaded && (
                 <div className="bg-muted absolute inset-0 animate-pulse" />
               )}
-              <img
-                {...imgProps}
-                className={cn(
-                  'h-full w-full object-cover transition-opacity',
-                  isLoaded ? 'opacity-100' : 'opacity-0'
-                )}
-              />
+              {isVideo ? (
+                <>
+                  <video
+                    key={mediaKey}
+                    {...videoProps}
+                    className={cn(
+                      'h-full w-full object-cover transition-opacity',
+                      isLoaded ? 'opacity-100' : 'opacity-0'
+                    )}
+                    controls={false}
+                    muted
+                  />
+                  {/* Video play icon overlay */}
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black/50">
+                      <Play className="h-3 w-3 text-white" fill="white" />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <img
+                  key={mediaKey}
+                  {...imgProps}
+                  className={cn(
+                    'h-full w-full object-cover transition-opacity',
+                    isLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              )}
             </>
           ) : (
             <div className="text-muted-foreground flex h-full w-full items-center justify-center">
@@ -342,6 +413,7 @@ const ImageListItem = memo(
         {/* Info */}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
+            {isVideo && <Film className="text-muted-foreground h-4 w-4" />}
             <span className="text-sm font-medium">Row {item.rowIndex + 1}</span>
             <span className="bg-muted rounded px-1.5 py-0.5 text-xs font-medium">
               {item.column}
@@ -406,28 +478,10 @@ export function ImageGallery({
   const containerRef = useRef<HTMLDivElement>(null);
   const [previewItem, setPreviewItem] = useState<ImageItem | null>(null);
 
-  // Calculate grid layout
-  const gap = 12;
-  const containerWidth = containerRef.current?.clientWidth ?? 800;
-  const columnsCount = Math.max(
-    1,
-    Math.floor((containerWidth + gap) / (thumbnailSize + gap))
-  );
-  const rowsCount = Math.ceil(images.length / columnsCount);
-
   // Calculate list item height
   const listItemHeight = Math.max(80, thumbnailSize * 0.6);
 
-  // Virtual scrolling for grid rows
-  const gridRowVirtualizer = useVirtualizer({
-    count: rowsCount,
-    getScrollElement: () => containerRef.current,
-    estimateSize: () => thumbnailSize + gap,
-    overscan: 2,
-    enabled: viewMode === 'grid',
-  });
-
-  // Virtual scrolling for list items
+  // Virtual scrolling for list items only (grid uses CSS Grid for layout)
   const listVirtualizer = useVirtualizer({
     count: images.length,
     getScrollElement: () => containerRef.current,
@@ -521,44 +575,24 @@ export function ImageGallery({
     <>
       <div ref={containerRef} className="h-full overflow-auto">
         {viewMode === 'grid' ? (
-          // Grid View
-          <div className="p-4">
-            <div
-              style={{
-                height: `${gridRowVirtualizer.getTotalSize()}px`,
-                position: 'relative',
-              }}
-            >
-              {gridRowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const startIndex = virtualRow.index * columnsCount;
-                const rowImages = images.slice(
-                  startIndex,
-                  startIndex + columnsCount
-                );
-
-                return (
-                  <div
-                    key={virtualRow.index}
-                    className="absolute left-0 flex gap-3"
-                    style={{
-                      top: `${virtualRow.start}px`,
-                      height: thumbnailSize,
-                    }}
-                  >
-                    {rowImages.map((item) => (
-                      <ImageThumbnail
-                        key={item.id}
-                        item={item}
-                        size={thumbnailSize}
-                        isSelected={selectedIds.has(item.id)}
-                        onClick={() => setPreviewItem(item)}
-                        onSelect={(e) => handleSelect(item.id, e)}
-                      />
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
+          // Grid View - using CSS Grid for responsive layout without virtualization
+          // This avoids re-rendering issues when container width changes
+          <div
+            className="grid gap-3 p-4"
+            style={{
+              gridTemplateColumns: `repeat(auto-fill, ${thumbnailSize}px)`,
+            }}
+          >
+            {images.map((item) => (
+              <ImageThumbnail
+                key={item.id}
+                item={item}
+                size={thumbnailSize}
+                isSelected={selectedIds.has(item.id)}
+                onClick={() => setPreviewItem(item)}
+                onSelect={(e) => handleSelect(item.id, e)}
+              />
+            ))}
           </div>
         ) : (
           // List View
@@ -595,7 +629,7 @@ export function ImageGallery({
 
       {/* Preview Dialog */}
       {previewItem && (
-        <ImagePreview
+        <MediaPreview
           item={previewItem}
           onClose={() => setPreviewItem(null)}
           onPrev={() => handlePreviewNav('prev')}
