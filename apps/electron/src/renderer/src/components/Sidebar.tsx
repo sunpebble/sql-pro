@@ -1277,7 +1277,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(triggersKey)}
-                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[11px] font-medium tracking-wider uppercase"
+                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-xs font-medium tracking-wider uppercase"
               >
                 {triggersExpanded ? (
                   <ChevronDown className="h-3 w-3" />
@@ -1396,13 +1396,13 @@ function TableItem({
                 <Badge
                   key={tag}
                   variant="outline"
-                  className="h-4 px-1 text-[10px]"
+                  className="text-2xs h-4 px-1"
                 >
                   {tag}
                 </Badge>
               ))}
               {tags.length > 2 && (
-                <Badge variant="outline" className="h-4 px-1 text-[10px]">
+                <Badge variant="outline" className="text-2xs h-4 px-1">
                   +{tags.length - 2}
                 </Badge>
               )}
@@ -1411,7 +1411,7 @@ function TableItem({
           {table.rowCount !== undefined && (
             <span
               className={cn(
-                'shrink-0 text-[11px] tabular-nums',
+                'shrink-0 text-xs tabular-nums',
                 isSelected ? 'text-primary/60' : 'text-muted-foreground/60'
               )}
             >
@@ -1553,7 +1553,7 @@ function TriggerItem({ trigger }: TriggerItemProps) {
     <div className="text-foreground/90 hover:bg-accent/50 flex w-full items-center gap-1.5 rounded px-1.5 py-0.5 text-[13px] transition-colors">
       <Zap className="text-muted-foreground/70 h-3.5 w-3.5 shrink-0" />
       <span className="truncate">{trigger.name}</span>
-      <span className="text-muted-foreground/60 ml-auto text-[11px]">
+      <span className="text-muted-foreground/60 ml-auto text-xs">
         {trigger.timing} {trigger.event}
       </span>
     </div>
@@ -1609,7 +1609,7 @@ function FilterTagsPopover({
               <span className="text-xs">Filter</span>
             )}
             {!activeTagFilter && availableTags.length > 0 && (
-              <Badge variant="outline" className="h-4 px-1 text-[10px]">
+              <Badge variant="outline" className="text-2xs h-4 px-1">
                 {availableTags.length}
               </Badge>
             )}

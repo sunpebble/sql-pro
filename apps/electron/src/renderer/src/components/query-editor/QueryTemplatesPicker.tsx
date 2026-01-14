@@ -89,7 +89,7 @@ const TemplateCard = memo(
           <Badge
             variant="secondary"
             className={cn(
-              'shrink-0 text-[10px] font-medium',
+              'text-2xs shrink-0 font-medium',
               CATEGORY_COLORS[template.category]
             )}
           >

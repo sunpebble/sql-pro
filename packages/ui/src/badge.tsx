@@ -20,6 +20,18 @@ const badgeVariants = cva(
         ghost:
           'hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50',
         link: 'text-primary underline-offset-4 hover:underline',
+        // Semantic status variants
+        success:
+          'bg-success/10 [a]:hover:bg-success/20 focus-visible:ring-success/20 text-success',
+        warning:
+          'bg-warning/10 [a]:hover:bg-warning/20 focus-visible:ring-warning/20 text-warning',
+        info: 'bg-info/10 [a]:hover:bg-info/20 focus-visible:ring-info/20 text-info',
+        // Type category variants
+        numeric: 'bg-type-numeric-bg text-type-numeric',
+        date: 'bg-type-date-bg text-type-date',
+        boolean: 'bg-type-boolean-bg text-type-boolean',
+        text: 'bg-type-text-bg text-type-text',
+        unknown: 'bg-type-unknown-bg text-type-unknown',
       },
     },
     defaultVariants: {

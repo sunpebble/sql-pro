@@ -64,14 +64,22 @@ const COLOR_SCHEMES = [
   {
     value: 'default',
     label: 'Default',
-    colors: ['#3b82f6', '#10b981', '#f59e0b'],
+    colors: ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)'],
   },
-  { value: 'cool', label: 'Cool', colors: ['#06b6d4', '#3b82f6', '#8b5cf6'] },
-  { value: 'warm', label: 'Warm', colors: ['#f97316', '#ef4444', '#ec4899'] },
+  {
+    value: 'cool',
+    label: 'Cool',
+    colors: ['var(--chart-1)', 'var(--chart-4)', 'var(--chart-5)'],
+  },
+  {
+    value: 'warm',
+    label: 'Warm',
+    colors: ['var(--destructive)', 'var(--warning)', 'var(--chart-3)'],
+  },
   {
     value: 'mono',
     label: 'Monochrome',
-    colors: ['#374151', '#6b7280', '#9ca3af'],
+    colors: ['var(--foreground)', 'var(--muted-foreground)', 'var(--border)'],
   },
 ];
 
@@ -162,7 +170,7 @@ const ChartPreview = memo(({ config, data }: ChartPreviewProps) => {
                 minHeight: '4px',
               }}
             />
-            <span className="text-muted-foreground mt-1 max-w-full truncate text-[10px]">
+            <span className="text-muted-foreground text-2xs mt-1 max-w-full truncate">
               {d.label}
             </span>
           </div>

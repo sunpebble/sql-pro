@@ -252,7 +252,7 @@ export function SourceSelector({
                         />
                         <span className="truncate">{conn.filename}</span>
                         {conn.isReadOnly && (
-                          <span className="bg-muted text-muted-foreground shrink-0 rounded px-1 py-0.5 text-[10px]">
+                          <span className="bg-muted text-muted-foreground text-2xs shrink-0 rounded px-1 py-0.5">
                             R/O
                           </span>
                         )}
