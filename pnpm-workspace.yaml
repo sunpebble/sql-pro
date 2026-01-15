@@ -5,6 +5,4 @@ packages:
 nodeLinker: hoisted
 neverBuiltDependencies: []
 overrides:
-  path-key: 3.1.1
   vite: npm:rolldown-vite@latest
-  readdir-glob>minimatch: 5.1.6
