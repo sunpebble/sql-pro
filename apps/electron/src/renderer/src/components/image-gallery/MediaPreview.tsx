@@ -9,9 +9,14 @@ import {
   Film,
   ImageOff,
   Loader2,
+  LocateFixed,
+  Maximize2,
   Pause,
   Play,
+  RotateCcw,
   X,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +53,8 @@ export interface MediaPreviewProps {
   currentIndex: number;
   /** Total count of media items */
   totalCount: number;
+  /** Callback to locate the media in the data table */
+  onLocateInTable?: (rowIndex: number, column: string) => void;
 }
 
 /** Sharp metadata from main process */
@@ -62,6 +69,18 @@ interface SharpMetadata {
   isAnimated?: boolean;
   density?: number;
   pages?: number;
+}
+
+/** Video metadata from ffprobe */
+interface VideoMetadata {
+  width: number;
+  height: number;
+  duration: number;
+  format: string;
+  codec: string;
+  bitrate?: number;
+  fps?: number;
+  size: number;
 }
 
 // ============================================================================
@@ -109,6 +128,26 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
+function formatDuration(seconds: number): string {
+  if (seconds < 60) {
+    return `${seconds.toFixed(1)}s`;
+  }
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  if (mins < 60) {
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+  const hours = Math.floor(mins / 60);
+  const remainingMins = mins % 60;
+  return `${hours}:${remainingMins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function formatBitrate(bitrate: number): string {
+  if (bitrate < 1000) return `${bitrate} bps`;
+  if (bitrate < 1000000) return `${(bitrate / 1000).toFixed(0)} Kbps`;
+  return `${(bitrate / 1000000).toFixed(1)} Mbps`;
+}
+
 // ============================================================================
 // MediaPreview Component
 // ============================================================================
@@ -122,9 +161,12 @@ export function MediaPreview({
   hasNext,
   currentIndex,
   totalCount,
+  onLocateInTable,
 }: MediaPreviewProps) {
   const { t } = useTranslation('common');
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [loadError, setLoadError] = useState(false);
   const [mediaDimensions, setMediaDimensions] = useState<{
     width: number;
@@ -133,8 +175,17 @@ export function MediaPreview({
   const [sharpMetadata, setSharpMetadata] = useState<SharpMetadata | null>(
     null
   );
+  const [videoMetadata, setVideoMetadata] = useState<VideoMetadata | null>(
+    null
+  );
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Zoom and pan state
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const isVideo = item.source?.isVideo ?? false;
   const displayUrl = useMemo(
@@ -152,8 +203,150 @@ export function MediaPreview({
     setLoadError(false);
     setMediaDimensions(null);
     setSharpMetadata(null);
+    setVideoMetadata(null);
     setIsPlaying(false);
+    // Reset zoom and pan
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
   }
+
+  // Zoom controls
+  const MIN_SCALE = 0.1;
+  const MAX_SCALE = 10;
+  const ZOOM_STEP = 0.25;
+
+  const handleZoomIn = useCallback(() => {
+    setScale((s) => Math.min(MAX_SCALE, s + ZOOM_STEP));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setScale((s) => Math.max(MIN_SCALE, s - ZOOM_STEP));
+  }, []);
+
+  const handleResetZoom = useCallback(() => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  }, []);
+
+  const handleFitToScreen = useCallback(() => {
+    if (!mediaDimensions || !containerRef.current) return;
+    const container = containerRef.current;
+    const containerWidth = container.clientWidth - 80; // Account for nav buttons
+    const containerHeight = container.clientHeight - 40;
+    const scaleX = containerWidth / mediaDimensions.width;
+    const scaleY = containerHeight / mediaDimensions.height;
+    const fitScale = Math.min(scaleX, scaleY, 1);
+    setScale(fitScale);
+    setPosition({ x: 0, y: 0 });
+  }, [mediaDimensions]);
+
+  // Mouse wheel zoom with cursor-centered zooming
+  const handleWheel = useCallback(
+    (e: React.WheelEvent) => {
+      if (isVideo) return;
+      e.preventDefault();
+
+      const container = containerRef.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left - rect.width / 2;
+      const mouseY = e.clientY - rect.top - rect.height / 2;
+
+      const delta = e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
+      const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale + delta));
+      const scaleFactor = newScale / scale;
+
+      // Adjust position to zoom towards cursor
+      setPosition((pos) => ({
+        x: mouseX - (mouseX - pos.x) * scaleFactor,
+        y: mouseY - (mouseY - pos.y) * scaleFactor,
+      }));
+      setScale(newScale);
+    },
+    [isVideo, scale]
+  );
+
+  // Mouse drag for panning
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (isVideo) return;
+      // Allow dragging at any zoom level
+      e.preventDefault();
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+    },
+    [isVideo, position]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isDragging) return;
+
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+
+      // Apply boundary limits based on image size and scale
+      const container = containerRef.current;
+      if (container && mediaDimensions) {
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        const scaledWidth = mediaDimensions.width * scale;
+        const scaledHeight = mediaDimensions.height * scale;
+
+        // Allow some overflow but not too much
+        const maxOverflow = 100;
+        const maxX = Math.max(
+          maxOverflow,
+          (scaledWidth - containerWidth) / 2 + maxOverflow
+        );
+        const maxY = Math.max(
+          maxOverflow,
+          (scaledHeight - containerHeight) / 2 + maxOverflow
+        );
+
+        setPosition({
+          x: Math.max(-maxX, Math.min(maxX, newX)),
+          y: Math.max(-maxY, Math.min(maxY, newY)),
+        });
+      } else {
+        setPosition({ x: newX, y: newY });
+      }
+    },
+    [isDragging, dragStart, scale, mediaDimensions]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Double click to toggle zoom at cursor position
+  const handleDoubleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (isVideo) return;
+
+      const container = containerRef.current;
+      if (!container) return;
+
+      if (scale === 1) {
+        // Zoom in to 2x centered on cursor
+        const rect = container.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left - rect.width / 2;
+        const mouseY = e.clientY - rect.top - rect.height / 2;
+
+        setPosition({
+          x: -mouseX,
+          y: -mouseY,
+        });
+        setScale(2);
+      } else {
+        // Reset zoom
+        setScale(1);
+        setPosition({ x: 0, y: 0 });
+      }
+    },
+    [isVideo, scale]
+  );
 
   // Fetch sharp metadata for URL images (not videos)
   useEffect(() => {
@@ -186,6 +379,46 @@ export function MediaPreview({
     fetchMetadata();
   }, [item.source, isVideo]);
 
+  // Fetch video metadata using ffprobe
+  useEffect(() => {
+    if (!isVideo) {
+      setVideoMetadata(null);
+      return;
+    }
+
+    const fetchVideoMetadata = async () => {
+      setIsLoadingMetadata(true);
+      try {
+        let url: string | undefined;
+        if (item.source?.type === 'url') {
+          url = item.source.url;
+        } else if (item.source?.type === 'file') {
+          url = item.source.path;
+        }
+
+        if (!url) {
+          setIsLoadingMetadata(false);
+          return;
+        }
+
+        const result = await window.sqlPro.video.getMetadata({ url });
+        if (result.success && result.metadata) {
+          setVideoMetadata(result.metadata);
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.error('[MediaPreview] Failed to fetch video metadata:', {
+          error: errorMessage,
+        });
+      } finally {
+        setIsLoadingMetadata(false);
+      }
+    };
+
+    fetchVideoMetadata();
+  }, [item.source, isVideo]);
+
   // Video play/pause toggle
   const togglePlayPause = useCallback(() => {
     if (!videoRef.current) return;
@@ -210,12 +443,32 @@ export function MediaPreview({
       } else if (e.key === ' ' && isVideo) {
         e.preventDefault();
         togglePlayPause();
+      } else if ((e.key === '+' || e.key === '=') && !isVideo) {
+        e.preventDefault();
+        handleZoomIn();
+      } else if (e.key === '-' && !isVideo) {
+        e.preventDefault();
+        handleZoomOut();
+      } else if (e.key === '0' && !isVideo) {
+        e.preventDefault();
+        handleResetZoom();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hasPrev, hasNext, onPrev, onNext, onClose, isVideo, togglePlayPause]);
+  }, [
+    hasPrev,
+    hasNext,
+    onPrev,
+    onNext,
+    onClose,
+    isVideo,
+    togglePlayPause,
+    handleZoomIn,
+    handleZoomOut,
+    handleResetZoom,
+  ]);
 
   // Copy image to clipboard - convert to PNG if needed
   const handleCopyMedia = useCallback(async () => {
@@ -223,7 +476,7 @@ export function MediaPreview({
 
     if (isVideo) {
       toast.info(
-        t('imageGallery.videoCopyNotSupported', 'Video copy not supported')
+        t('mediaGallery.videoCopyNotSupported', 'Video copy not supported')
       );
       return;
     }
@@ -280,10 +533,10 @@ export function MediaPreview({
         ]);
       }
 
-      toast.success(t('imageGallery.imageCopied', 'Image copied to clipboard'));
+      toast.success(t('mediaGallery.imageCopied', 'Image copied to clipboard'));
     } catch (error) {
       console.error('Failed to copy image:', error);
-      toast.error(t('imageGallery.copyFailed', 'Failed to copy image'));
+      toast.error(t('mediaGallery.copyFailed', 'Failed to copy image'));
     }
   }, [displayUrl, t, isVideo]);
 
@@ -294,8 +547,8 @@ export function MediaPreview({
   const handleCopyUrl = useCallback(async () => {
     if (item.source?.type === 'url') {
       await copy(item.source.url, {
-        successMessage: t('imageGallery.urlCopied', 'URL copied to clipboard'),
-        errorMessage: t('imageGallery.copyUrlFailed', 'Failed to copy URL'),
+        successMessage: t('mediaGallery.urlCopied', 'URL copied to clipboard'),
+        errorMessage: t('mediaGallery.copyUrlFailed', 'Failed to copy URL'),
       });
     }
   }, [item.source, t, copy]);
@@ -306,6 +559,12 @@ export function MediaPreview({
       window.open(item.source.url, '_blank');
     }
   }, [item.source]);
+
+  // Locate in data table
+  const handleLocateInTable = useCallback(() => {
+    onLocateInTable?.(item.rowIndex, item.column);
+    onClose();
+  }, [item.rowIndex, item.column, onLocateInTable, onClose]);
 
   // Download/export media
   const handleDownload = useCallback(async () => {
@@ -329,9 +588,9 @@ export function MediaPreview({
       a.click();
       URL.revokeObjectURL(url);
 
-      toast.success(t('imageGallery.downloadStarted', 'Download started'));
+      toast.success(t('mediaGallery.downloadStarted', 'Download started'));
     } catch {
-      toast.error(t('imageGallery.downloadFailed', 'Download failed'));
+      toast.error(t('mediaGallery.downloadFailed', 'Download failed'));
     }
   }, [displayUrl, item, sharpMetadata, t, isVideo]);
 
@@ -359,6 +618,21 @@ export function MediaPreview({
 
   // Determine which metadata to display
   const displayMetadata = useMemo(() => {
+    // Video metadata from ffprobe
+    if (videoMetadata) {
+      return {
+        format: videoMetadata.format.toUpperCase(),
+        size: formatBytes(videoMetadata.size),
+        width: videoMetadata.width,
+        height: videoMetadata.height,
+        duration: videoMetadata.duration,
+        codec: videoMetadata.codec,
+        bitrate: videoMetadata.bitrate,
+        fps: videoMetadata.fps,
+        isVideo: true,
+      };
+    }
+    // Image metadata from sharp
     if (sharpMetadata) {
       return {
         format: sharpMetadata.format.toUpperCase(),
@@ -370,6 +644,7 @@ export function MediaPreview({
           : undefined,
         isAnimated: sharpMetadata.isAnimated,
         pages: sharpMetadata.pages,
+        isVideo: false,
       };
     }
     return {
@@ -377,37 +652,87 @@ export function MediaPreview({
       size: mediaInfo.size,
       width: mediaDimensions?.width,
       height: mediaDimensions?.height,
+      isVideo,
     };
-  }, [sharpMetadata, mediaInfo, mediaDimensions]);
+  }, [sharpMetadata, videoMetadata, mediaInfo, mediaDimensions, isVideo]);
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
-        className="flex h-[90vh] max-w-[90vw] flex-col gap-0 p-0"
+        className="top-10 flex h-[calc(100vh-80px)] w-[calc(100vw-80px)] max-w-[calc(100vw-80px)] -translate-y-0 flex-col gap-0 p-0 sm:max-w-[calc(100vw-80px)]"
         showCloseButton={false}
       >
         {/* Header */}
-        <DialogHeader className="border-b p-4">
+        <DialogHeader className="shrink-0 border-b px-4 py-3">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="min-w-0 flex-1">
               <DialogTitle className="flex items-center gap-2">
                 {isVideo && <Film className="h-4 w-4" />}
                 {isVideo
-                  ? t('imageGallery.videoPreview', 'Video Preview')
-                  : t('imageGallery.preview', 'Image Preview')}
+                  ? t('mediaGallery.videoPreview', 'Video Preview')
+                  : t('mediaGallery.preview', 'Image Preview')}
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="truncate">
                 Row {item.rowIndex + 1} · {item.column} · {currentIndex + 1} /{' '}
                 {totalCount}
               </DialogDescription>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-1">
+              {/* Zoom controls (images only) */}
+              {!isVideo && (
+                <>
+                  <button
+                    onClick={handleZoomOut}
+                    className="hover:bg-muted rounded-md p-2 transition-colors"
+                    title={t('mediaGallery.zoomOut', 'Zoom out (-)')}
+                  >
+                    <ZoomOut className="h-4 w-4" />
+                  </button>
+                  <span className="text-muted-foreground min-w-[4rem] text-center text-xs">
+                    {Math.round(scale * 100)}%
+                  </span>
+                  <button
+                    onClick={handleZoomIn}
+                    className="hover:bg-muted rounded-md p-2 transition-colors"
+                    title={t('mediaGallery.zoomIn', 'Zoom in (+)')}
+                  >
+                    <ZoomIn className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={handleResetZoom}
+                    className="hover:bg-muted rounded-md p-2 transition-colors"
+                    title={t('mediaGallery.resetZoom', 'Reset zoom (0)')}
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={handleFitToScreen}
+                    className="hover:bg-muted rounded-md p-2 transition-colors"
+                    title={t('mediaGallery.fitToScreen', 'Fit to screen')}
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </button>
+                  <div className="bg-border mx-1 h-4 w-px" />
+                </>
+              )}
+
+              {/* Locate in table button */}
+              {onLocateInTable && (
+                <button
+                  onClick={handleLocateInTable}
+                  className="hover:bg-muted rounded-md p-2 transition-colors"
+                  title={t('mediaGallery.locateInTable', 'Locate in table')}
+                >
+                  <LocateFixed className="h-4 w-4" />
+                </button>
+              )}
+
               {/* Copy button (images only) */}
               {!isVideo && (
                 <button
                   onClick={handleCopyMedia}
                   className="hover:bg-muted rounded-md p-2 transition-colors"
-                  title={t('imageGallery.copyImage', 'Copy image')}
+                  title={t('mediaGallery.copyImage', 'Copy image')}
                 >
                   <Copy className="h-4 w-4" />
                 </button>
@@ -418,7 +743,7 @@ export function MediaPreview({
                 <button
                   onClick={handleOpenExternal}
                   className="hover:bg-muted rounded-md p-2 transition-colors"
-                  title={t('imageGallery.openExternal', 'Open in browser')}
+                  title={t('mediaGallery.openExternal', 'Open in browser')}
                 >
                   <ExternalLink className="h-4 w-4" />
                 </button>
@@ -428,7 +753,7 @@ export function MediaPreview({
               <button
                 onClick={handleDownload}
                 className="hover:bg-muted rounded-md p-2 transition-colors"
-                title={t('imageGallery.download', 'Download')}
+                title={t('mediaGallery.download', 'Download')}
               >
                 <Download className="h-4 w-4" />
               </button>
@@ -446,7 +771,19 @@ export function MediaPreview({
         </DialogHeader>
 
         {/* Media Container */}
-        <div className="relative flex min-h-0 flex-1 items-center justify-center bg-black/5 p-4 dark:bg-white/5">
+        <div
+          ref={containerRef}
+          className={cn(
+            'relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black/5 dark:bg-white/5',
+            !isVideo && 'cursor-grab',
+            !isVideo && isDragging && 'cursor-grabbing'
+          )}
+          onWheel={handleWheel}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
           {/* Navigation buttons */}
           <button
             onClick={onPrev}
@@ -477,7 +814,7 @@ export function MediaPreview({
           {/* Media content */}
           {displayUrl && !loadError ? (
             isVideo ? (
-              <div className="relative">
+              <div className="relative flex h-full w-full items-center justify-center p-4">
                 <video
                   ref={videoRef}
                   src={displayUrl}
@@ -490,7 +827,7 @@ export function MediaPreview({
                   onPause={() => setIsPlaying(false)}
                 />
                 {/* Play/Pause overlay hint */}
-                <div className="pointer-events-none absolute right-2 bottom-12 flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-xs text-white opacity-50">
+                <div className="pointer-events-none absolute right-6 bottom-16 flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-xs text-white opacity-50">
                   {isPlaying ? (
                     <Pause className="h-3 w-3" />
                   ) : (
@@ -500,21 +837,32 @@ export function MediaPreview({
                 </div>
               </div>
             ) : (
-              <img
-                src={displayUrl}
-                alt={`Row ${item.rowIndex + 1}, ${item.column}`}
-                className="max-h-full max-w-full object-contain"
-                onError={() => setLoadError(true)}
-                onLoad={handleImageLoad}
-              />
+              <div
+                className="flex h-full w-full items-center justify-center"
+                onDoubleClick={handleDoubleClick}
+              >
+                <img
+                  ref={imageRef}
+                  src={displayUrl}
+                  alt={`Row ${item.rowIndex + 1}, ${item.column}`}
+                  className="max-h-full max-w-full object-contain select-none"
+                  style={{
+                    transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                    transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                  }}
+                  onError={() => setLoadError(true)}
+                  onLoad={handleImageLoad}
+                  draggable={false}
+                />
+              </div>
             )
           ) : (
             <div className="text-muted-foreground flex flex-col items-center gap-2">
               <ImageOff className="h-16 w-16" />
               <p>
                 {isVideo
-                  ? t('imageGallery.videoLoadError', 'Failed to load video')
-                  : t('imageGallery.loadError', 'Failed to load image')}
+                  ? t('mediaGallery.videoLoadError', 'Failed to load video')
+                  : t('mediaGallery.loadError', 'Failed to load image')}
               </p>
             </div>
           )}
@@ -528,13 +876,13 @@ export function MediaPreview({
             {isVideo && (
               <span className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium">
                 <Film className="h-3 w-3" />
-                {t('imageGallery.video', 'Video')}
+                {t('mediaGallery.video', 'Video')}
               </span>
             )}
 
             {/* Format badge */}
             <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-              {t('imageGallery.format', 'Format')}: {displayMetadata.format}
+              {t('mediaGallery.format', 'Format')}: {displayMetadata.format}
               {displayMetadata.isAnimated && (
                 <span className="text-muted-foreground ml-1">
                   ({displayMetadata.pages} frames)
@@ -545,7 +893,7 @@ export function MediaPreview({
             {/* Size badge */}
             {displayMetadata.size && (
               <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {t('imageGallery.size', 'Size')}: {displayMetadata.size}
+                {t('mediaGallery.size', 'Size')}: {displayMetadata.size}
               </span>
             )}
 
@@ -557,9 +905,38 @@ export function MediaPreview({
             )}
 
             {/* Color info badge (from sharp) */}
-            {displayMetadata.colorInfo && (
+            {'colorInfo' in displayMetadata && displayMetadata.colorInfo && (
               <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
                 {displayMetadata.colorInfo}
+              </span>
+            )}
+
+            {/* Video-specific metadata */}
+            {'duration' in displayMetadata &&
+              displayMetadata.duration !== undefined &&
+              displayMetadata.duration > 0 && (
+                <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
+                  {t('mediaGallery.duration', 'Duration')}:{' '}
+                  {formatDuration(displayMetadata.duration)}
+                </span>
+              )}
+
+            {'codec' in displayMetadata && displayMetadata.codec && (
+              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
+                {t('mediaGallery.codec', 'Codec')}: {displayMetadata.codec}
+              </span>
+            )}
+
+            {'bitrate' in displayMetadata && displayMetadata.bitrate && (
+              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
+                {t('mediaGallery.bitrate', 'Bitrate')}:{' '}
+                {formatBitrate(displayMetadata.bitrate)}
+              </span>
+            )}
+
+            {'fps' in displayMetadata && displayMetadata.fps && (
+              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
+                {t('mediaGallery.fps', 'FPS')}: {displayMetadata.fps.toFixed(2)}
               </span>
             )}
 
@@ -567,7 +944,7 @@ export function MediaPreview({
             {isLoadingMetadata && (
               <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
                 <Loader2 className="h-3 w-3 animate-spin" />
-                {t('imageGallery.loadingMetadata', 'Loading metadata...')}
+                {t('mediaGallery.loadingMetadata', 'Loading metadata...')}
               </span>
             )}
           </div>
@@ -581,7 +958,7 @@ export function MediaPreview({
               <button
                 onClick={handleCopyUrl}
                 className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
-                title={t('imageGallery.copyUrl', 'Copy URL')}
+                title={t('mediaGallery.copyUrl', 'Copy URL')}
               >
                 <Copy className="h-3.5 w-3.5" />
               </button>

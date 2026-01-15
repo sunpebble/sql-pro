@@ -39,6 +39,80 @@ export interface VideoCheckResult {
 }
 
 // ============================================================================
+// Video Metadata Cache
+// ============================================================================
+
+/** Cached video metadata entry */
+interface CachedVideoMetadata {
+  metadata: VideoMetadata;
+  cachedAt: number;
+}
+
+/** Video metadata cache TTL (10 minutes) */
+const VIDEO_METADATA_CACHE_TTL = 10 * 60 * 1000;
+
+/** Maximum cache entries */
+const MAX_VIDEO_CACHE_ENTRIES = 100;
+
+/** Video metadata cache (URL -> metadata) */
+const videoMetadataCache = new Map<string, CachedVideoMetadata>();
+
+/**
+ * Get cached video metadata if available and not expired
+ */
+function getCachedVideoMetadata(url: string): VideoMetadata | null {
+  const cached = videoMetadataCache.get(url);
+  if (cached && Date.now() - cached.cachedAt < VIDEO_METADATA_CACHE_TTL) {
+    // Move to end (most recently used) by re-inserting
+    videoMetadataCache.delete(url);
+    videoMetadataCache.set(url, cached);
+    return cached.metadata;
+  }
+  // Remove expired entry
+  if (cached) {
+    videoMetadataCache.delete(url);
+  }
+  return null;
+}
+
+/**
+ * Cache video metadata
+ */
+function setCachedVideoMetadata(url: string, metadata: VideoMetadata): void {
+  // Evict oldest entries if cache is full
+  while (videoMetadataCache.size >= MAX_VIDEO_CACHE_ENTRIES) {
+    const firstKey = videoMetadataCache.keys().next().value;
+    if (firstKey) {
+      videoMetadataCache.delete(firstKey);
+    }
+  }
+  videoMetadataCache.set(url, {
+    metadata,
+    cachedAt: Date.now(),
+  });
+}
+
+/**
+ * Clear the video metadata cache
+ */
+export function clearVideoMetadataCache(): void {
+  videoMetadataCache.clear();
+}
+
+/**
+ * Get video metadata cache statistics
+ */
+export function getVideoMetadataCacheStats(): {
+  entries: number;
+  maxEntries: number;
+} {
+  return {
+    entries: videoMetadataCache.size,
+    maxEntries: MAX_VIDEO_CACHE_ENTRIES,
+  };
+}
+
+// ============================================================================
 // FFprobe Path Resolution
 // ============================================================================
 
@@ -65,11 +139,21 @@ function getFfprobePath(): string {
 // ============================================================================
 
 /**
- * Extract video metadata using ffprobe
+ * Extract video metadata using ffprobe.
+ * For URL inputs, results are cached for 10 minutes.
  */
 export async function getVideoMetadata(
   input: string | Buffer
 ): Promise<VideoMetadata | null> {
+  // Check cache for URL inputs (not buffers)
+  const isUrl = typeof input === 'string';
+  if (isUrl) {
+    const cached = getCachedVideoMetadata(input);
+    if (cached) {
+      return cached;
+    }
+  }
+
   const ffprobe = getFfprobePath();
   let inputPath: string;
   let tempFile: string | null = null;
@@ -110,16 +194,25 @@ export async function getVideoMetadata(
       fps = den ? num / den : num;
     }
 
-    return {
+    const metadata: VideoMetadata = {
       width: videoStream.width || 0,
       height: videoStream.height || 0,
       duration: Number.parseFloat(format.duration) || 0,
       format: format.format_name?.split(',')[0] || 'unknown',
       codec: videoStream.codec_name || 'unknown',
-      bitrate: format.bit_rate ? Number.parseInt(format.bit_rate, 10) : undefined,
+      bitrate: format.bit_rate
+        ? Number.parseInt(format.bit_rate, 10)
+        : undefined,
       fps,
       size: format.size ? Number.parseInt(format.size, 10) : 0,
     };
+
+    // Cache the result for URL inputs
+    if (isUrl) {
+      setCachedVideoMetadata(input, metadata);
+    }
+
+    return metadata;
   } catch (error) {
     console.error('[VideoProbe] Error extracting metadata:', error);
     return null;
