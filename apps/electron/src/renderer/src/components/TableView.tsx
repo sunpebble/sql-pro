@@ -470,6 +470,19 @@ export function TableView({ tableOverride }: TableViewProps) {
     setNewRowId(null);
   }, []);
 
+  // Handle locate in table from image gallery
+  const handleLocateInTable = useCallback(
+    (rowIndex: number, _column: string) => {
+      // Switch to data view
+      setViewMode('data');
+      // Use setTimeout to ensure the DataTable is rendered before scrolling
+      setTimeout(() => {
+        dataTableRef.current?.scrollToRow(rowIndex);
+      }, 100);
+    },
+    []
+  );
+
   // Handle successful change application
   const handleChangesApplied = useCallback(() => {
     setShowDiffPreview(false);
@@ -777,6 +790,7 @@ export function TableView({ tableOverride }: TableViewProps) {
               rows={rows}
               isLoading={isLoading}
               onRefresh={refetch}
+              onLocateInTable={handleLocateInTable}
             />
           ) : isLoading ? (
             <SkeletonTable columns={columns.length || 5} rows={15} />

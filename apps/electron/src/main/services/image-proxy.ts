@@ -392,6 +392,31 @@ export function setupImageProxyHandler(): void {
         const buffer = await readFile(filePath);
         const ext = extname(filePath).toLowerCase();
         const mimeType = extToMime[ext] || detectMimeType(buffer);
+        const isVideo = mimeType.startsWith('video/');
+
+        // Handle Range requests for video streaming
+        const rangeHeader = request.headers.get('range');
+        if (rangeHeader && isVideo) {
+          const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
+          if (match) {
+            const start = Number.parseInt(match[1], 10);
+            const end = match[2]
+              ? Number.parseInt(match[2], 10)
+              : buffer.length - 1;
+            const chunkSize = end - start + 1;
+
+            return new Response(buffer.subarray(start, end + 1), {
+              status: 206,
+              headers: {
+                'content-type': mimeType,
+                'content-length': String(chunkSize),
+                'content-range': `bytes ${start}-${end}/${buffer.length}`,
+                'accept-ranges': 'bytes',
+                'cache-control': 'private, max-age=3600',
+              },
+            });
+          }
+        }
 
         return new Response(buffer, {
           status: 200,
@@ -399,6 +424,7 @@ export function setupImageProxyHandler(): void {
             'content-type': mimeType,
             'content-length': String(buffer.length),
             'cache-control': 'private, max-age=3600',
+            ...(isVideo ? { 'accept-ranges': 'bytes' } : {}),
           },
         });
       } catch (error) {
@@ -452,7 +478,9 @@ export function setupImageProxyHandler(): void {
           const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
           if (match) {
             const start = Number.parseInt(match[1], 10);
-            const end = match[2] ? Number.parseInt(match[2], 10) : cached.size - 1;
+            const end = match[2]
+              ? Number.parseInt(match[2], 10)
+              : cached.size - 1;
             const chunkSize = end - start + 1;
 
             // Return partial content for Range request

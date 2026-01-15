@@ -135,7 +135,7 @@ export interface DataTableProps {
 }
 
 export interface DataTableRef {
-  scrollToRow: (rowIndex: number) => void;
+  scrollToRow: (rowIndex: number, highlight?: boolean) => void;
   focus: () => void;
   resetAllColumnSizes: () => void;
   /** Release rows outside the current viewport buffer from memory */
@@ -575,11 +575,21 @@ export const DataTable = function DataTable({
 
   // Expose imperative methods
   useImperativeHandle(ref, () => ({
-    scrollToRow: (rowIndex: number) => {
+    scrollToRow: (rowIndex: number, highlight = true) => {
       const row = containerRef.current?.querySelector(
         `[data-row-index="${rowIndex}"]`
       );
-      row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (highlight) {
+          // Add highlight animation class
+          row.classList.add('row-highlight-animation');
+          // Remove the class after animation completes
+          setTimeout(() => {
+            row.classList.remove('row-highlight-animation');
+          }, 2000);
+        }
+      }
     },
     focus: () => {
       containerRef.current?.focus();

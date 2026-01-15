@@ -1,4 +1,4 @@
-import type { ImageColumnInfo } from '@/lib/image-utils';
+import type { MediaColumnInfo } from '@/lib/image-utils';
 import {
   Select,
   SelectContent,
@@ -24,9 +24,9 @@ import { cn } from '@/lib/utils';
 
 export type ViewMode = 'grid' | 'list';
 
-export interface ImageGalleryToolbarProps {
-  /** Available image columns */
-  imageColumns: ImageColumnInfo[];
+export interface MediaGalleryToolbarProps {
+  /** Available media columns */
+  mediaColumns: MediaColumnInfo[];
   /** Currently selected column (null = all columns) */
   selectedColumn: string | null;
   /** Callback when column selection changes */
@@ -43,26 +43,29 @@ export interface ImageGalleryToolbarProps {
   minThumbnailSize?: number;
   /** Max thumbnail size */
   maxThumbnailSize?: number;
-  /** Whether there are selected images */
+  /** Whether there are selected media items */
   hasSelection: boolean;
   /** Selected count */
   selectedCount: number;
-  /** Callback to export selected images */
+  /** Callback to export selected media */
   onExportSelected?: () => void;
-  /** Callback to refresh/rescan images */
+  /** Callback to refresh/rescan media */
   onRefresh?: () => void;
   /** Whether the gallery is loading */
   isLoading?: boolean;
-  /** Total image count */
+  /** Total media count */
   totalCount: number;
 }
+
+/** @deprecated Use MediaGalleryToolbarProps instead */
+export type ImageGalleryToolbarProps = MediaGalleryToolbarProps;
 
 // ============================================================================
 // Toolbar Component
 // ============================================================================
 
-export function ImageGalleryToolbar({
-  imageColumns,
+export function MediaGalleryToolbar({
+  mediaColumns,
   selectedColumn,
   onColumnChange,
   viewMode,
@@ -77,7 +80,7 @@ export function ImageGalleryToolbar({
   onRefresh,
   isLoading,
   totalCount,
-}: ImageGalleryToolbarProps) {
+}: MediaGalleryToolbarProps) {
   const { t } = useTranslation('common');
 
   const handleSizeDecrease = () => {
@@ -98,11 +101,11 @@ export function ImageGalleryToolbar({
           <div className="flex items-center gap-2">
             <ImageIcon className="text-muted-foreground h-4 w-4" />
             <span className="text-sm font-medium">
-              {t('imageGallery.title', 'Images')}
+              {t('mediaGallery.title', 'Media')}
             </span>
           </div>
 
-          {imageColumns.length > 1 && (
+          {mediaColumns.length > 1 && (
             <Select
               value={selectedColumn ?? 'all'}
               onValueChange={(value) =>
@@ -111,14 +114,14 @@ export function ImageGalleryToolbar({
             >
               <SelectTrigger className="h-8 w-[180px]">
                 <SelectValue
-                  placeholder={t('imageGallery.selectColumn', 'Select column')}
+                  placeholder={t('mediaGallery.selectColumn', 'Select column')}
                 />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">
-                  {t('imageGallery.allColumns', 'All columns')} ({totalCount})
+                  {t('mediaGallery.allColumns', 'All columns')} ({totalCount})
                 </SelectItem>
-                {imageColumns.map((col) => (
+                {mediaColumns.map((col) => (
                   <SelectItem key={col.column} value={col.column}>
                     {col.column}{' '}
                     <span className="text-muted-foreground ml-1 text-xs">
@@ -131,7 +134,7 @@ export function ImageGalleryToolbar({
           )}
 
           <span className="text-muted-foreground text-sm">
-            {totalCount} {t('imageGallery.imagesFound', 'images')}
+            {totalCount} {t('mediaGallery.mediaFound', 'media')}
           </span>
         </div>
 
@@ -145,7 +148,7 @@ export function ImageGalleryToolbar({
             >
               <Download className="h-4 w-4" />
               <span>
-                {t('imageGallery.exportSelected', 'Export')} ({selectedCount})
+                {t('mediaGallery.exportSelected', 'Export')} ({selectedCount})
               </span>
             </button>
           )}
@@ -160,7 +163,7 @@ export function ImageGalleryToolbar({
                 thumbnailSize <= minThumbnailSize &&
                   'cursor-not-allowed opacity-50'
               )}
-              title={t('imageGallery.decreaseSize', 'Decrease size')}
+              title={t('mediaGallery.decreaseSize', 'Decrease size')}
             >
               <Minus className="h-4 w-4" />
             </button>
@@ -175,7 +178,7 @@ export function ImageGalleryToolbar({
                 thumbnailSize >= maxThumbnailSize &&
                   'cursor-not-allowed opacity-50'
               )}
-              title={t('imageGallery.increaseSize', 'Increase size')}
+              title={t('mediaGallery.increaseSize', 'Increase size')}
             >
               <Plus className="h-4 w-4" />
             </button>
@@ -191,7 +194,7 @@ export function ImageGalleryToolbar({
                   ? 'bg-primary text-primary-foreground'
                   : 'hover:bg-muted'
               )}
-              title={t('imageGallery.gridView', 'Grid view')}
+              title={t('mediaGallery.gridView', 'Grid view')}
             >
               <Grid3X3 className="h-4 w-4" />
             </button>
@@ -203,7 +206,7 @@ export function ImageGalleryToolbar({
                   ? 'bg-primary text-primary-foreground'
                   : 'hover:bg-muted'
               )}
-              title={t('imageGallery.listView', 'List view')}
+              title={t('mediaGallery.listView', 'List view')}
             >
               <List className="h-4 w-4" />
             </button>
@@ -218,7 +221,7 @@ export function ImageGalleryToolbar({
                 'hover:bg-muted rounded-md p-1.5 transition-colors',
                 isLoading && 'animate-spin'
               )}
-              title={t('imageGallery.refresh', 'Refresh')}
+              title={t('mediaGallery.refresh', 'Refresh')}
             >
               <RefreshCw className="h-4 w-4" />
             </button>
@@ -228,3 +231,6 @@ export function ImageGalleryToolbar({
     </div>
   );
 }
+
+/** @deprecated Use MediaGalleryToolbar instead */
+export const ImageGalleryToolbar = MediaGalleryToolbar;

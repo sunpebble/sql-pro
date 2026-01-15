@@ -52,6 +52,8 @@ export interface ImageGalleryProps {
   onSelectionChange?: (ids: Set<string>) => void;
   /** View mode: grid or list */
   viewMode?: ViewMode;
+  /** Callback to locate the media in the data table */
+  onLocateInTable?: (rowIndex: number, column: string) => void;
 }
 
 // ============================================================================
@@ -240,10 +242,10 @@ const ImageListItem = memo(
         if (item.source?.type === 'url') {
           await copy(item.source.url, {
             successMessage: t(
-              'imageGallery.urlCopied',
+              'mediaGallery.urlCopied',
               'URL copied to clipboard'
             ),
-            errorMessage: t('imageGallery.copyUrlFailed', 'Failed to copy URL'),
+            errorMessage: t('mediaGallery.copyUrlFailed', 'Failed to copy URL'),
           });
         }
       },
@@ -266,9 +268,9 @@ const ImageListItem = memo(
           a.download = `media_row${item.rowIndex + 1}_${item.column}.${ext}`;
           a.click();
           URL.revokeObjectURL(url);
-          toast.success(t('imageGallery.downloadStarted', 'Download started'));
+          toast.success(t('mediaGallery.downloadStarted', 'Download started'));
         } catch {
-          toast.error(t('imageGallery.downloadFailed', 'Download failed'));
+          toast.error(t('mediaGallery.downloadFailed', 'Download failed'));
         }
       },
       [displayUrl, item, t, isVideo]
@@ -436,14 +438,14 @@ const ImageListItem = memo(
               <button
                 onClick={handleCopyUrl}
                 className="hover:bg-muted rounded-md p-1.5 transition-colors"
-                title={t('imageGallery.copyUrl', 'Copy URL')}
+                title={t('mediaGallery.copyUrl', 'Copy URL')}
               >
                 <Copy className="h-4 w-4" />
               </button>
               <button
                 onClick={handleOpenExternal}
                 className="hover:bg-muted rounded-md p-1.5 transition-colors"
-                title={t('imageGallery.openExternal', 'Open in browser')}
+                title={t('mediaGallery.openExternal', 'Open in browser')}
               >
                 <ExternalLink className="h-4 w-4" />
               </button>
@@ -452,7 +454,7 @@ const ImageListItem = memo(
           <button
             onClick={handleDownload}
             className="hover:bg-muted rounded-md p-1.5 transition-colors"
-            title={t('imageGallery.download', 'Download')}
+            title={t('mediaGallery.download', 'Download')}
           >
             <Download className="h-4 w-4" />
           </button>
@@ -473,6 +475,7 @@ export function ImageGallery({
   selectedIds = new Set(),
   onSelectionChange,
   viewMode = 'grid',
+  onLocateInTable,
 }: ImageGalleryProps) {
   const { t } = useTranslation('common');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -550,7 +553,7 @@ export function ImageGallery({
     return (
       <div className="bg-grid-dot text-muted-foreground flex h-full flex-col items-center justify-center gap-2">
         <ImageOff className="h-12 w-12" />
-        <p>{t('imageGallery.noImages', 'No images detected')}</p>
+        <p>{t('mediaGallery.noMedia', 'No media detected')}</p>
       </div>
     );
   }
@@ -638,6 +641,7 @@ export function ImageGallery({
           hasNext={previewIndex < images.length - 1}
           currentIndex={previewIndex}
           totalCount={images.length}
+          onLocateInTable={onLocateInTable}
         />
       )}
     </>

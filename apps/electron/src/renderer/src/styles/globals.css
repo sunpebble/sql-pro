@@ -501,6 +501,27 @@ textarea,
   }
 }
 
+/* Row highlight animation for locate in table feature */
+@keyframes row-highlight {
+  0% {
+    background-color: oklch(0.7 0.15 85 / 50%);
+  }
+  50% {
+    background-color: oklch(0.7 0.15 85 / 30%);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.row-highlight-animation {
+  animation: row-highlight 2s ease-out forwards;
+}
+
+.row-highlight-animation td {
+  background-color: inherit !important;
+}
+
 /* GPU compositing for data table scroll to reduce flickering */
 [data-slot='scroll-area-viewport'] {
   -webkit-transform: translateZ(0);

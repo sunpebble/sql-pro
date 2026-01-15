@@ -11,7 +11,7 @@ import {
   detectMediaSourceAsync,
 } from '@/lib/image-utils';
 import { ImageGallery } from './ImageGallery';
-import { ImageGalleryToolbar } from './ImageGalleryToolbar';
+import { MediaGalleryToolbar } from './ImageGalleryToolbar';
 
 // ============================================================================
 // Types
@@ -26,6 +26,8 @@ export interface TableImageGalleryProps {
   isLoading?: boolean;
   /** Callback to refetch data */
   onRefresh?: () => void;
+  /** Callback to locate the media in the data table */
+  onLocateInTable?: (rowIndex: number, column: string) => void;
 }
 
 // ============================================================================
@@ -41,6 +43,7 @@ export function TableImageGallery({
   rows,
   isLoading = false,
   onRefresh,
+  onLocateInTable,
 }: TableImageGalleryProps) {
   const { t } = useTranslation('common');
   // State for gallery settings
@@ -187,7 +190,7 @@ export function TableImageGallery({
         // Show user feedback for critical failure
         toast.error(
           t(
-            'imageGallery.loadError',
+            'mediaGallery.loadError',
             'Failed to load some media. Please try refreshing.'
           )
         );
@@ -214,8 +217,8 @@ export function TableImageGallery({
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <ImageGalleryToolbar
-        imageColumns={mediaColumns}
+      <MediaGalleryToolbar
+        mediaColumns={mediaColumns}
         selectedColumn={selectedColumn}
         onColumnChange={setSelectedColumn}
         viewMode={viewMode}
@@ -239,6 +242,7 @@ export function TableImageGallery({
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
           viewMode={viewMode}
+          onLocateInTable={onLocateInTable}
         />
       </div>
     </div>

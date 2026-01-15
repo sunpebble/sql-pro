@@ -1,4 +1,4 @@
 export * from './ImageGallery';
 export * from './ImageGalleryToolbar';
-export * from './ImagePreview';
+export * from './MediaPreview';
 export * from './TableImageGallery';
