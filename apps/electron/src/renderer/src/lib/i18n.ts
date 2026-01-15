@@ -52,14 +52,21 @@ i18n
 export default i18n;
 
 // Sync initial language to main process for native menu translations
-setTimeout(() => {
+// Use requestIdleCallback to avoid blocking the main thread during initial render
+const syncLanguage = () => {
   const lang = i18n.language?.split('-')[0] as 'en' | 'zh';
   window.sqlPro?.language
     ?.update({ language: lang === 'zh' ? 'zh' : 'en' })
     .catch(() => {
       // Ignore errors if API is not available
     });
-}, 100);
+};
+
+if (typeof requestIdleCallback !== 'undefined') {
+  requestIdleCallback(syncLanguage, { timeout: 1000 });
+} else {
+  setTimeout(syncLanguage, 100);
+}
 
 /**
  * Change the current language

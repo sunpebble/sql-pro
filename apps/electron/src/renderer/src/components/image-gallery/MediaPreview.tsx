@@ -223,6 +223,78 @@ export function MediaPreview({
   );
   const mediaInfo = useMemo(() => getMediaInfo(item.source), [item.source]);
 
+  // Ref to track current scale for wheel handler (avoids stale closure)
+  const scaleRef = useRef(scale);
+  const isVideoRef = useRef(isVideo);
+  useEffect(() => {
+    scaleRef.current = scale;
+  }, [scale]);
+  useEffect(() => {
+    isVideoRef.current = isVideo;
+  }, [isVideo]);
+
+  // Wheel handler ref callback - attaches event listener when element mounts
+  const wheelHandlerRef = useRef<((e: WheelEvent) => void) | null>(null);
+
+  // Create stable wheel handler
+  if (!wheelHandlerRef.current) {
+    wheelHandlerRef.current = (e: WheelEvent) => {
+      if (isVideoRef.current) return;
+      e.preventDefault();
+
+      const container = containerRef.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left - rect.width / 2;
+      const mouseY = e.clientY - rect.top - rect.height / 2;
+
+      const currentScale = scaleRef.current;
+      const delta = e.deltaY > 0 ? -0.25 : 0.25; // ZOOM_STEP
+      const newScale = Math.max(0.1, Math.min(10, currentScale + delta)); // MIN_SCALE, MAX_SCALE
+      const scaleFactor = newScale / currentScale;
+
+      setPosition((pos) => ({
+        x: mouseX - (mouseX - pos.x) * scaleFactor,
+        y: mouseY - (mouseY - pos.y) * scaleFactor,
+      }));
+      setScale(newScale);
+    };
+  }
+
+  // Ref callback to attach wheel listener when container mounts
+  const setContainerRef = useCallback((node: HTMLDivElement | null) => {
+    // Remove listener from old node
+    if (containerRef.current && wheelHandlerRef.current) {
+      containerRef.current.removeEventListener(
+        'wheel',
+        wheelHandlerRef.current
+      );
+    }
+
+    // Update ref
+    containerRef.current = node;
+
+    // Add listener to new node
+    if (node && wheelHandlerRef.current) {
+      node.addEventListener('wheel', wheelHandlerRef.current, {
+        passive: false,
+      });
+    }
+  }, []);
+
+  // Cleanup wheel listener on unmount
+  useEffect(() => {
+    return () => {
+      if (containerRef.current && wheelHandlerRef.current) {
+        containerRef.current.removeEventListener(
+          'wheel',
+          wheelHandlerRef.current
+        );
+      }
+    };
+  }, []);
+
   // Reset error state when item changes - derive from item.id
   const currentItemId = item.id;
   const [trackedItemId, setTrackedItemId] = useState(currentItemId);
@@ -268,33 +340,6 @@ export function MediaPreview({
     setScale(fitScale);
     setPosition({ x: 0, y: 0 });
   }, [mediaDimensions]);
-
-  // Mouse wheel zoom with cursor-centered zooming
-  const handleWheel = useCallback(
-    (e: WheelEvent) => {
-      if (isVideo) return;
-      e.preventDefault();
-
-      const container = containerRef.current;
-      if (!container) return;
-
-      const rect = container.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left - rect.width / 2;
-      const mouseY = e.clientY - rect.top - rect.height / 2;
-
-      const delta = e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
-      const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale + delta));
-      const scaleFactor = newScale / scale;
-
-      // Adjust position to zoom towards cursor
-      setPosition((pos) => ({
-        x: mouseX - (mouseX - pos.x) * scaleFactor,
-        y: mouseY - (mouseY - pos.y) * scaleFactor,
-      }));
-      setScale(newScale);
-    },
-    [isVideo, scale]
-  );
 
   // Mouse drag for panning
   const handleMouseDown = useCallback(
@@ -512,15 +557,6 @@ export function MediaPreview({
     handleZoomOut,
     handleResetZoom,
   ]);
-
-  // Add wheel event listener with passive: false to allow preventDefault
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container || isVideo) return;
-
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    return () => container.removeEventListener('wheel', handleWheel);
-  }, [handleWheel, isVideo]);
 
   // Copy image to clipboard - convert to PNG if needed
   const handleCopyMedia = useCallback(async () => {
@@ -892,7 +928,7 @@ export function MediaPreview({
 
         {/* Media Container */}
         <div
-          ref={containerRef}
+          ref={setContainerRef}
           className={cn(
             'relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black/5 dark:bg-white/5',
             !isVideo && 'cursor-grab',
