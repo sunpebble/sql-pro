@@ -8,7 +8,6 @@ import {
   AlertCircle,
   Grid3X3,
   LayoutList,
-  Loader2,
   RefreshCw,
   Search,
   Store,
@@ -26,6 +25,7 @@ import {
 import { cn } from '@/lib/utils';
 import { PluginCard } from './PluginCard';
 import { PluginDetailView } from './PluginDetailView';
+import { SkeletonPluginGrid } from './SkeletonPluginGrid';
 
 // ============ Types ============
 
@@ -392,12 +392,7 @@ export function PluginMarketplace({
             <ScrollArea className="flex-1">
               {/* Loading State */}
               {state.isLoading && (
-                <div className="flex flex-col items-center justify-center gap-3 py-16">
-                  <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
-                  <p className="text-muted-foreground text-sm">
-                    Loading marketplace...
-                  </p>
-                </div>
+                <SkeletonPluginGrid count={6} viewMode={viewMode} />
               )}
 
               {/* Offline State */}

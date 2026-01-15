@@ -24,6 +24,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useProStore } from '@/stores';
 import { ProBadge } from './ProBadge';
+import { SkeletonProActivation } from './SkeletonProActivation';
 
 /**
  * Feature IDs that map to translation keys
@@ -154,9 +155,7 @@ export function ProActivationDialog({
         </DialogHeader>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin" />
-          </div>
+          <SkeletonProActivation />
         ) : (
           <div className="grid gap-4 py-4">
             {/* Pro Status Section (shown when Pro is active) */}

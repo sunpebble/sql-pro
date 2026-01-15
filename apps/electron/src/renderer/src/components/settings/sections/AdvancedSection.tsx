@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { DEFAULT_MODELS, useAIStore, useDialogStore } from '@/stores';
 import { SettingGroup } from '../items/SettingGroup';
+import { SkeletonSettingsPanel } from './SkeletonSettingsPanel';
 
 interface AdvancedSectionProps {
   onOpenChange?: (open: boolean) => void;
@@ -209,9 +210,7 @@ function AISettingsPanel() {
   if (isLoading) {
     return (
       <SettingGroup title={t('ai.title')}>
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-4 w-4 animate-spin" />
-        </div>
+        <SkeletonSettingsPanel />
       </SettingGroup>
     );
   }

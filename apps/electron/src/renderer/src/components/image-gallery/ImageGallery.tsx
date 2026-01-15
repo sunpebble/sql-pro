@@ -16,6 +16,7 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useMediaLoader } from '@/hooks/useMediaLoader';
 import { cn } from '@/lib/utils';
 import { MediaPreview } from './MediaPreview';
+import { SkeletonMediaGrid } from './SkeletonMediaGrid';
 
 // ============================================================================
 // Types
@@ -560,18 +561,7 @@ export function ImageGallery({
 
   // Loading state
   if (isLoading) {
-    return (
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3 p-4">
-        {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'].map(
-          (id) => (
-            <div
-              key={`skeleton-${id}`}
-              className="bg-muted aspect-square animate-pulse rounded-lg"
-            />
-          )
-        )}
-      </div>
-    );
+    return <SkeletonMediaGrid count={12} size={thumbnailSize} />;
   }
 
   return (
