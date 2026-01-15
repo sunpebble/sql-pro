@@ -662,6 +662,32 @@ export function MediaPreview({
         className="top-10 flex h-[calc(100vh-80px)] w-[calc(100vw-80px)] max-w-[calc(100vw-80px)] -translate-y-0 flex-col gap-0 p-0 sm:max-w-[calc(100vw-80px)]"
         showCloseButton={false}
       >
+        {/* Navigation buttons - positioned relative to dialog for stable position */}
+        <button
+          onClick={onPrev}
+          disabled={!hasPrev}
+          className={cn(
+            'bg-background/90 absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all',
+            hasPrev
+              ? 'hover:bg-background hover:scale-110'
+              : 'cursor-not-allowed opacity-30'
+          )}
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+
+        <button
+          onClick={onNext}
+          disabled={!hasNext}
+          className={cn(
+            'bg-background/90 absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all',
+            hasNext
+              ? 'hover:bg-background hover:scale-110'
+              : 'cursor-not-allowed opacity-30'
+          )}
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
         {/* Header */}
         <DialogHeader className="shrink-0 border-b px-4 py-3">
           <div className="flex items-center justify-between">
@@ -784,33 +810,6 @@ export function MediaPreview({
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
         >
-          {/* Navigation buttons */}
-          <button
-            onClick={onPrev}
-            disabled={!hasPrev}
-            className={cn(
-              'bg-background/90 absolute left-4 z-10 rounded-full border p-2 shadow-md transition-all',
-              hasPrev
-                ? 'hover:bg-background hover:scale-110'
-                : 'cursor-not-allowed opacity-30'
-            )}
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-
-          <button
-            onClick={onNext}
-            disabled={!hasNext}
-            className={cn(
-              'bg-background/90 absolute right-4 z-10 rounded-full border p-2 shadow-md transition-all',
-              hasNext
-                ? 'hover:bg-background hover:scale-110'
-                : 'cursor-not-allowed opacity-30'
-            )}
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-
           {/* Media content */}
           {displayUrl && !loadError ? (
             isVideo ? (
