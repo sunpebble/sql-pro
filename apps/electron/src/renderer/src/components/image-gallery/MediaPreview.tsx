@@ -66,10 +66,23 @@ interface SharpMetadata {
   size: number;
   space?: string;
   channels?: number;
+  depth?: string;
   hasAlpha?: boolean;
   isAnimated?: boolean;
   density?: number;
   pages?: number;
+  // Extended metadata
+  orientation?: number;
+  chromaSubsampling?: string;
+  isProgressive?: boolean;
+  compression?: string;
+  resolutionUnit?: string;
+  iccProfile?: string;
+  // File info (for local files)
+  fileName?: string;
+  filePath?: string;
+  createdAt?: string;
+  modifiedAt?: string;
 }
 
 /** Video metadata from ffprobe */
@@ -147,6 +160,21 @@ function formatBitrate(bitrate: number): string {
   if (bitrate < 1000) return `${bitrate} bps`;
   if (bitrate < 1000000) return `${(bitrate / 1000).toFixed(0)} Kbps`;
   return `${(bitrate / 1000000).toFixed(1)} Mbps`;
+}
+
+function formatDateTime(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return isoString;
+  }
 }
 
 // ============================================================================
@@ -349,9 +377,15 @@ export function MediaPreview({
     [isVideo, scale]
   );
 
-  // Fetch sharp metadata for URL images (not videos)
+  // Fetch sharp metadata for images (not videos)
   useEffect(() => {
-    if (item.source?.type !== 'url' || isVideo) {
+    if (isVideo) {
+      setSharpMetadata(null);
+      return;
+    }
+
+    // Only fetch for URL and file sources
+    if (item.source?.type !== 'url' && item.source?.type !== 'file') {
       setSharpMetadata(null);
       return;
     }
@@ -359,19 +393,27 @@ export function MediaPreview({
     const fetchMetadata = async () => {
       setIsLoadingMetadata(true);
       try {
-        const result = await window.sqlPro.image.getMetadata({
-          url: item.source?.type === 'url' ? item.source.url : '',
-        });
-        if (result.success && result.metadata) {
-          setSharpMetadata(result.metadata);
+        if (item.source?.type === 'url') {
+          const result = await window.sqlPro.image.getMetadata({
+            url: item.source.url,
+          });
+          if (result.success && result.metadata) {
+            setSharpMetadata(result.metadata);
+          }
+        } else if (item.source?.type === 'file') {
+          const result = await window.sqlPro.image.getFileMetadata({
+            path: item.source.path,
+          });
+          if (result.success && result.metadata) {
+            setSharpMetadata(result.metadata);
+          }
         }
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
-        console.error(
-          `[MediaPreview] Failed to fetch metadata for URL: ${item.source?.type === 'url' ? item.source.url : 'unknown'}`,
-          { error: errorMessage }
-        );
+        console.error('[MediaPreview] Failed to fetch metadata:', {
+          error: errorMessage,
+        });
       } finally {
         setIsLoadingMetadata(false);
       }
@@ -667,11 +709,26 @@ export function MediaPreview({
         size: formatBytes(sharpMetadata.size),
         width: sharpMetadata.width,
         height: sharpMetadata.height,
-        colorInfo: sharpMetadata.space
-          ? `${sharpMetadata.space}${sharpMetadata.channels ? ` · ${sharpMetadata.channels}ch` : ''}${sharpMetadata.hasAlpha ? ' · α' : ''}`
-          : undefined,
+        // Color model info
+        colorModel: sharpMetadata.space?.toUpperCase(),
+        depth: sharpMetadata.depth,
+        channels: sharpMetadata.channels,
+        hasAlpha: sharpMetadata.hasAlpha,
+        // DPI info
+        density: sharpMetadata.density,
+        resolutionUnit: sharpMetadata.resolutionUnit,
+        // Format-specific
         isAnimated: sharpMetadata.isAnimated,
         pages: sharpMetadata.pages,
+        isProgressive: sharpMetadata.isProgressive,
+        chromaSubsampling: sharpMetadata.chromaSubsampling,
+        compression: sharpMetadata.compression,
+        // ICC profile
+        iccProfile: sharpMetadata.iccProfile,
+        // File info
+        fileName: sharpMetadata.fileName,
+        createdAt: sharpMetadata.createdAt,
+        modifiedAt: sharpMetadata.modifiedAt,
         isVideo: false,
       };
     }
@@ -896,89 +953,227 @@ export function MediaPreview({
         </div>
 
         {/* Footer with media info */}
-        <div className="flex flex-col gap-2 border-t px-4 py-3">
-          {/* Info badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Media type badge */}
-            {isVideo && (
-              <span className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium">
-                <Film className="h-3 w-3" />
-                {t('mediaGallery.video', 'Video')}
-              </span>
-            )}
+        <div className="flex flex-col gap-3 border-t px-4 py-3">
+          {/* File name (for local files) */}
+          {'fileName' in displayMetadata && displayMetadata.fileName && (
+            <div className="border-b pb-2">
+              <div className="text-muted-foreground text-xs">
+                {t('mediaGallery.fileName', 'File Name')}
+              </div>
+              <div className="text-sm font-medium">
+                {displayMetadata.fileName}
+              </div>
+            </div>
+          )}
 
-            {/* Format badge */}
-            <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-              {t('mediaGallery.format', 'Format')}: {displayMetadata.format}
-              {displayMetadata.isAnimated && (
-                <span className="text-muted-foreground ml-1">
-                  ({displayMetadata.pages} frames)
-                </span>
-              )}
-            </span>
+          {/* Main info grid */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {/* Document Type / Format */}
+            <div>
+              <div className="text-muted-foreground text-xs">
+                {t('mediaGallery.documentType', 'Document Type')}
+              </div>
+              <div className="font-medium">
+                {displayMetadata.format}
+                {displayMetadata.isVideo && ' video'}
+                {!displayMetadata.isVideo && ' image'}
+              </div>
+            </div>
 
-            {/* Size badge */}
+            {/* File Size */}
             {displayMetadata.size && (
-              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {t('mediaGallery.size', 'Size')}: {displayMetadata.size}
-              </span>
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.fileSize', 'File Size')}
+                </div>
+                <div className="font-medium">{displayMetadata.size}</div>
+              </div>
             )}
 
-            {/* Dimensions badge */}
+            {/* Image/Video Size (Dimensions) */}
             {displayMetadata.width && displayMetadata.height && (
-              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {displayMetadata.width} × {displayMetadata.height}
-              </span>
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {displayMetadata.isVideo
+                    ? t('mediaGallery.videoSize', 'Video Size')
+                    : t('mediaGallery.imageSize', 'Image Size')}
+                </div>
+                <div className="font-medium">
+                  {displayMetadata.width} × {displayMetadata.height} pixels
+                </div>
+              </div>
             )}
 
-            {/* Color info badge (from sharp) */}
-            {'colorInfo' in displayMetadata && displayMetadata.colorInfo && (
-              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {displayMetadata.colorInfo}
-              </span>
+            {/* DPI (for images) */}
+            {'density' in displayMetadata && displayMetadata.density && (
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.imageDPI', 'Image DPI')}
+                </div>
+                <div className="font-medium">
+                  {displayMetadata.density}{' '}
+                  {displayMetadata.resolutionUnit === 'cm'
+                    ? 'pixels/cm'
+                    : 'pixels/inch'}
+                </div>
+              </div>
             )}
 
-            {/* Video-specific metadata */}
+            {/* Color Model */}
+            {'colorModel' in displayMetadata && displayMetadata.colorModel && (
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.colorModel', 'Color Model')}
+                </div>
+                <div className="font-medium">
+                  {displayMetadata.colorModel}
+                  {displayMetadata.hasAlpha && '+Alpha'}
+                </div>
+              </div>
+            )}
+
+            {/* Bit Depth */}
+            {'depth' in displayMetadata && displayMetadata.depth && (
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.depth', 'Depth')}
+                </div>
+                <div className="font-medium">{displayMetadata.depth}</div>
+              </div>
+            )}
+
+            {/* ICC Profile */}
+            {'iccProfile' in displayMetadata && displayMetadata.iccProfile && (
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.colorProfile', 'Color Profile')}
+                </div>
+                <div className="font-medium">{displayMetadata.iccProfile}</div>
+              </div>
+            )}
+
+            {/* Progressive (JPEG) */}
+            {'isProgressive' in displayMetadata &&
+              displayMetadata.isProgressive !== undefined && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.progressive', 'Progressive')}
+                  </div>
+                  <div className="font-medium">
+                    {displayMetadata.isProgressive
+                      ? t('tableDetails.yes', 'Yes')
+                      : t('tableDetails.no', 'No')}
+                  </div>
+                </div>
+              )}
+
+            {/* Chroma Subsampling */}
+            {'chromaSubsampling' in displayMetadata &&
+              displayMetadata.chromaSubsampling && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.chromaSubsampling', 'Chroma Subsampling')}
+                  </div>
+                  <div className="font-medium">
+                    {displayMetadata.chromaSubsampling}
+                  </div>
+                </div>
+              )}
+
+            {/* Animation info */}
+            {'isAnimated' in displayMetadata && displayMetadata.isAnimated && (
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.frames', 'Frames')}
+                </div>
+                <div className="font-medium">{displayMetadata.pages}</div>
+              </div>
+            )}
+
+            {/* Video-specific: Duration */}
             {'duration' in displayMetadata &&
               displayMetadata.duration !== undefined &&
               displayMetadata.duration > 0 && (
-                <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                  {t('mediaGallery.duration', 'Duration')}:{' '}
-                  {formatDuration(displayMetadata.duration)}
-                </span>
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.duration', 'Duration')}
+                  </div>
+                  <div className="font-medium">
+                    {formatDuration(displayMetadata.duration)}
+                  </div>
+                </div>
               )}
 
+            {/* Video-specific: Codec */}
             {'codec' in displayMetadata && displayMetadata.codec && (
-              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {t('mediaGallery.codec', 'Codec')}: {displayMetadata.codec}
-              </span>
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.codec', 'Codec')}
+                </div>
+                <div className="font-medium">{displayMetadata.codec}</div>
+              </div>
             )}
 
+            {/* Video-specific: Bitrate */}
             {'bitrate' in displayMetadata && displayMetadata.bitrate && (
-              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {t('mediaGallery.bitrate', 'Bitrate')}:{' '}
-                {formatBitrate(displayMetadata.bitrate)}
-              </span>
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.bitrate', 'Bitrate')}
+                </div>
+                <div className="font-medium">
+                  {formatBitrate(displayMetadata.bitrate)}
+                </div>
+              </div>
             )}
 
+            {/* Video-specific: FPS */}
             {'fps' in displayMetadata && displayMetadata.fps && (
-              <span className="bg-muted inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                {t('mediaGallery.fps', 'FPS')}: {displayMetadata.fps.toFixed(2)}
-              </span>
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.fps', 'FPS')}
+                </div>
+                <div className="font-medium">
+                  {displayMetadata.fps.toFixed(2)}
+                </div>
+              </div>
             )}
 
-            {/* Loading indicator */}
-            {isLoadingMetadata && (
-              <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                {t('mediaGallery.loadingMetadata', 'Loading metadata...')}
-              </span>
+            {/* Creation Date (for local files) */}
+            {'createdAt' in displayMetadata && displayMetadata.createdAt && (
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.creationDate', 'Creation Date')}
+                </div>
+                <div className="font-medium">
+                  {formatDateTime(displayMetadata.createdAt)}
+                </div>
+              </div>
+            )}
+
+            {/* Modification Date (for local files) */}
+            {'modifiedAt' in displayMetadata && displayMetadata.modifiedAt && (
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.modificationDate', 'Modification Date')}
+                </div>
+                <div className="font-medium">
+                  {formatDateTime(displayMetadata.modifiedAt)}
+                </div>
+              </div>
             )}
           </div>
 
+          {/* Loading indicator */}
+          {isLoadingMetadata && (
+            <div className="text-muted-foreground flex items-center gap-1 text-xs">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              {t('mediaGallery.loadingMetadata', 'Loading metadata...')}
+            </div>
+          )}
+
           {/* URL with copy and open buttons */}
           {item.source?.type === 'url' && (
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-2 border-t pt-2">
               <button
                 onClick={handleOpenUrl}
                 className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"
@@ -1005,7 +1200,7 @@ export function MediaPreview({
 
           {/* File path with copy and reveal buttons */}
           {item.source?.type === 'file' && (
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-2 border-t pt-2">
               <button
                 onClick={handleShowInFolder}
                 className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"

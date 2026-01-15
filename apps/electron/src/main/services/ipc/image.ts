@@ -16,6 +16,7 @@ import {
   clearImageCache,
   getCacheStats,
   getImageMetadata,
+  getLocalFileMetadata,
   validateImageUrl,
 } from '../image-proxy';
 import {
@@ -32,6 +33,7 @@ import { createHandler } from './utils';
 
 export const IMAGE_IPC_CHANNELS = {
   GET_METADATA: 'image:get-metadata',
+  GET_FILE_METADATA: 'image:get-file-metadata',
   GET_CACHE_STATS: 'image:get-cache-stats',
   CLEAR_CACHE: 'image:clear-cache',
   CHECK_URL: 'image:check-url',
@@ -57,6 +59,20 @@ export function setupImageHandlers(): void {
 
       if (!metadata) {
         throw new Error('Failed to extract metadata');
+      }
+
+      return { metadata };
+    })
+  );
+
+  // Get local file metadata (includes file info like name, dates)
+  ipcMain.handle(
+    IMAGE_IPC_CHANNELS.GET_FILE_METADATA,
+    createHandler(async (request: { path: string }) => {
+      const metadata = await getLocalFileMetadata(request.path);
+
+      if (!metadata) {
+        throw new Error('Failed to extract file metadata');
       }
 
       return { metadata };

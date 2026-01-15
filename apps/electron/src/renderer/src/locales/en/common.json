@@ -260,7 +260,21 @@
     "showInFolder": "Show in folder",
     "copyPath": "Copy path",
     "pathCopied": "Path copied to clipboard",
-    "copyPathFailed": "Failed to copy path"
+    "copyPathFailed": "Failed to copy path",
+    "fileName": "File Name",
+    "documentType": "Document Type",
+    "fileSize": "File Size",
+    "imageSize": "Image Size",
+    "videoSize": "Video Size",
+    "imageDPI": "Image DPI",
+    "colorModel": "Color Model",
+    "depth": "Depth",
+    "colorProfile": "Color Profile",
+    "progressive": "Progressive",
+    "chromaSubsampling": "Chroma Subsampling",
+    "frames": "Frames",
+    "creationDate": "Creation Date",
+    "modificationDate": "Modification Date"
   },
   "row": {
     "copyRowAsSQL": "Copy Row as SQL INSERT",

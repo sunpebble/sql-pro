@@ -12,8 +12,8 @@
  */
 
 import { Buffer } from 'node:buffer';
-import { access, readFile } from 'node:fs/promises';
-import { extname } from 'node:path';
+import { access, readFile, stat } from 'node:fs/promises';
+import { basename, extname } from 'node:path';
 import { protocol } from 'electron';
 import sharp from 'sharp';
 
@@ -40,10 +40,37 @@ export interface ImageMetadata {
   size: number;
   space?: string;
   channels?: number;
+  depth?: string;
   hasAlpha?: boolean;
   isAnimated?: boolean;
   density?: number;
   pages?: number;
+  // Extended metadata
+  orientation?: number;
+  chromaSubsampling?: string;
+  isProgressive?: boolean;
+  compression?: string;
+  resolutionUnit?: string;
+  // EXIF data
+  exif?: {
+    make?: string;
+    model?: string;
+    software?: string;
+    dateTime?: string;
+    exposureTime?: string;
+    fNumber?: number;
+    iso?: number;
+    focalLength?: number;
+    gpsLatitude?: number;
+    gpsLongitude?: number;
+  };
+  // ICC profile
+  iccProfile?: string;
+  // File info (for local files)
+  fileName?: string;
+  filePath?: string;
+  createdAt?: string;
+  modifiedAt?: string;
 }
 
 // ============================================================================
@@ -234,11 +261,59 @@ function detectMimeType(buffer: Buffer): string {
 }
 
 /**
+ * Parse EXIF data from sharp metadata
+ */
+function parseExifData(
+  exifBuffer: Buffer | undefined
+): ImageMetadata['exif'] | undefined {
+  if (!exifBuffer) return undefined;
+
+  try {
+    // Sharp provides raw EXIF buffer, we need to parse it
+    // For now, return undefined - full EXIF parsing would require exif-reader
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Extract metadata from image buffer using sharp
  */
 async function extractMetadata(buffer: Buffer): Promise<ImageMetadata> {
   try {
     const metadata = await sharp(buffer).metadata();
+
+    // Get ICC profile name if available
+    let iccProfile: string | undefined;
+    if (metadata.icc) {
+      try {
+        // Try to extract profile description from ICC buffer
+        // ICC profile description is typically at offset 128 with length at 124
+        const descOffset = metadata.icc.indexOf('desc');
+        if (descOffset > 0 && descOffset + 20 < metadata.icc.length) {
+          // Simple extraction - look for readable ASCII after 'desc'
+          const slice = metadata.icc.subarray(
+            descOffset + 12,
+            descOffset + 100
+          );
+          const nullIndex = slice.indexOf(0);
+          if (nullIndex > 0) {
+            const profileName = slice.subarray(0, nullIndex).toString('ascii');
+            if (profileName && /^[\x20-\x7E]+$/.test(profileName)) {
+              iccProfile = profileName;
+            }
+          }
+        }
+        // Fallback: use space as profile indicator
+        if (!iccProfile && metadata.space) {
+          iccProfile = `${metadata.space.toUpperCase()} Profile`;
+        }
+      } catch {
+        // Ignore ICC parsing errors
+      }
+    }
+
     return {
       width: metadata.width ?? 0,
       height: metadata.height ?? 0,
@@ -246,10 +321,21 @@ async function extractMetadata(buffer: Buffer): Promise<ImageMetadata> {
       size: buffer.length,
       space: metadata.space,
       channels: metadata.channels,
+      depth: metadata.depth,
       hasAlpha: metadata.hasAlpha,
       isAnimated: (metadata.pages ?? 1) > 1,
       density: metadata.density,
       pages: metadata.pages,
+      // Extended metadata
+      orientation: metadata.orientation,
+      chromaSubsampling: metadata.chromaSubsampling,
+      isProgressive: metadata.isProgressive,
+      compression: metadata.compression,
+      resolutionUnit: metadata.resolutionUnit,
+      // EXIF data
+      exif: parseExifData(metadata.exif),
+      // ICC profile
+      iccProfile,
     };
   } catch {
     // If sharp fails, return basic metadata
@@ -562,6 +648,33 @@ export async function getImageMetadata(
     return metadata;
   } catch (error) {
     console.error('[ImageProxy] Error getting metadata:', error);
+    return null;
+  }
+}
+
+/**
+ * Get metadata for a local file.
+ * Includes file system information (name, dates) in addition to image metadata.
+ */
+export async function getLocalFileMetadata(
+  filePath: string
+): Promise<ImageMetadata | null> {
+  try {
+    // Get file stats
+    const fileStat = await stat(filePath);
+    const buffer = await readFile(filePath);
+    const metadata = await extractMetadata(buffer);
+
+    // Add file info
+    return {
+      ...metadata,
+      fileName: basename(filePath),
+      filePath,
+      createdAt: fileStat.birthtime.toISOString(),
+      modifiedAt: fileStat.mtime.toISOString(),
+    };
+  } catch (error) {
+    console.error('[ImageProxy] Error getting local file metadata:', error);
     return null;
   }
 }

@@ -260,7 +260,21 @@
     "showInFolder": "在文件夹中显示",
     "copyPath": "复制路径",
     "pathCopied": "路径已复制到剪切板",
-    "copyPathFailed": "复制路径失败"
+    "copyPathFailed": "复制路径失败",
+    "fileName": "文件名",
+    "documentType": "文档类型",
+    "fileSize": "文件大小",
+    "imageSize": "图片尺寸",
+    "videoSize": "视频尺寸",
+    "imageDPI": "图片 DPI",
+    "colorModel": "色彩模式",
+    "depth": "位深度",
+    "colorProfile": "色彩配置文件",
+    "progressive": "渐进式",
+    "chromaSubsampling": "色度子采样",
+    "frames": "帧数",
+    "creationDate": "创建日期",
+    "modificationDate": "修改日期"
   },
   "row": {
     "copyRowAsSQL": "复制行为 SQL INSERT",

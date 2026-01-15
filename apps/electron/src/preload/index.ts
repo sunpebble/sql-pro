@@ -841,13 +841,49 @@ export const sqlProAPI = {
         size: number;
         space?: string;
         channels?: number;
+        depth?: string;
         hasAlpha?: boolean;
         isAnimated?: boolean;
         density?: number;
         pages?: number;
+        orientation?: number;
+        chromaSubsampling?: string;
+        isProgressive?: boolean;
+        compression?: string;
+        resolutionUnit?: string;
+        iccProfile?: string;
       };
       error?: string;
     }> => ipcRenderer.invoke('image:get-metadata', request),
+    getFileMetadata: (request: {
+      path: string;
+    }): Promise<{
+      success: boolean;
+      metadata?: {
+        width: number;
+        height: number;
+        format: string;
+        size: number;
+        space?: string;
+        channels?: number;
+        depth?: string;
+        hasAlpha?: boolean;
+        isAnimated?: boolean;
+        density?: number;
+        pages?: number;
+        orientation?: number;
+        chromaSubsampling?: string;
+        isProgressive?: boolean;
+        compression?: string;
+        resolutionUnit?: string;
+        iccProfile?: string;
+        fileName?: string;
+        filePath?: string;
+        createdAt?: string;
+        modifiedAt?: string;
+      };
+      error?: string;
+    }> => ipcRenderer.invoke('image:get-file-metadata', request),
     getCacheStats: (): Promise<{
       success: boolean;
       stats: {
