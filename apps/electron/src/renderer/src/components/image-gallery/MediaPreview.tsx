@@ -271,7 +271,7 @@ export function MediaPreview({
 
   // Mouse wheel zoom with cursor-centered zooming
   const handleWheel = useCallback(
-    (e: React.WheelEvent) => {
+    (e: WheelEvent) => {
       if (isVideo) return;
       e.preventDefault();
 
@@ -512,6 +512,15 @@ export function MediaPreview({
     handleZoomOut,
     handleResetZoom,
   ]);
+
+  // Add wheel event listener with passive: false to allow preventDefault
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || isVideo) return;
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [handleWheel, isVideo]);
 
   // Copy image to clipboard - convert to PNG if needed
   const handleCopyMedia = useCallback(async () => {
@@ -889,7 +898,6 @@ export function MediaPreview({
             !isVideo && 'cursor-grab',
             !isVideo && isDragging && 'cursor-grabbing'
           )}
-          onWheel={handleWheel}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
