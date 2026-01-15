@@ -255,7 +255,12 @@
     "zoomIn": "放大 (+)",
     "zoomOut": "缩小 (-)",
     "resetZoom": "重置缩放 (0)",
-    "fitToScreen": "适应屏幕"
+    "fitToScreen": "适应屏幕",
+    "openUrl": "打开链接",
+    "showInFolder": "在文件夹中显示",
+    "copyPath": "复制路径",
+    "pathCopied": "路径已复制到剪切板",
+    "copyPathFailed": "复制路径失败"
   },
   "row": {
     "copyRowAsSQL": "复制行为 SQL INSERT",

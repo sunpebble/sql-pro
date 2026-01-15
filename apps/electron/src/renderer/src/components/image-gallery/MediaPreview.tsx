@@ -7,6 +7,7 @@ import {
   Download,
   ExternalLink,
   Film,
+  FolderOpen,
   ImageOff,
   Loader2,
   LocateFixed,
@@ -553,10 +554,37 @@ export function MediaPreview({
     }
   }, [item.source, t, copy]);
 
-  // Open media in external browser (for URLs)
+  // Copy file path to clipboard
+  const handleCopyFilePath = useCallback(async () => {
+    if (item.source?.type === 'file') {
+      await copy(item.source.path, {
+        successMessage: t(
+          'mediaGallery.pathCopied',
+          'Path copied to clipboard'
+        ),
+        errorMessage: t('mediaGallery.copyPathFailed', 'Failed to copy path'),
+      });
+    }
+  }, [item.source, t, copy]);
+
+  // Open URL in external browser
+  const handleOpenUrl = useCallback(async () => {
+    if (item.source?.type === 'url') {
+      await window.sqlPro.system.openExternal({ url: item.source.url });
+    }
+  }, [item.source]);
+
+  // Show file in folder (Finder/Explorer)
+  const handleShowInFolder = useCallback(async () => {
+    if (item.source?.type === 'file') {
+      await window.sqlPro.system.showItemInFolder({ path: item.source.path });
+    }
+  }, [item.source]);
+
+  // Open media in external browser (for URLs) - used by header button
   const handleOpenExternal = useCallback(() => {
     if (item.source?.type === 'url') {
-      window.open(item.source.url, '_blank');
+      window.sqlPro.system.openExternal({ url: item.source.url });
     }
   }, [item.source]);
 
@@ -948,16 +976,54 @@ export function MediaPreview({
             )}
           </div>
 
-          {/* URL with copy button */}
+          {/* URL with copy and open buttons */}
           {item.source?.type === 'url' && (
             <div className="flex items-start gap-2">
-              <code className="bg-muted/50 text-muted-foreground flex-1 rounded-md px-2 py-1.5 font-mono text-xs break-all">
+              <button
+                onClick={handleOpenUrl}
+                className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"
+                title={t('mediaGallery.openUrl', 'Open URL')}
+              >
                 {item.source.url}
-              </code>
+              </button>
+              <button
+                onClick={handleOpenUrl}
+                className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                title={t('mediaGallery.openUrl', 'Open URL')}
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </button>
               <button
                 onClick={handleCopyUrl}
                 className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
                 title={t('mediaGallery.copyUrl', 'Copy URL')}
+              >
+                <Copy className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* File path with copy and reveal buttons */}
+          {item.source?.type === 'file' && (
+            <div className="flex items-start gap-2">
+              <button
+                onClick={handleShowInFolder}
+                className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"
+                title={t('mediaGallery.showInFolder', 'Show in folder')}
+              >
+                {item.source.path}
+              </button>
+              <button
+                onClick={handleShowInFolder}
+                className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                title={t('mediaGallery.showInFolder', 'Show in folder')}
+              >
+                <FolderOpen className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={handleCopyFilePath}
+                className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                title={t('mediaGallery.copyPath', 'Copy path')}
               >
                 <Copy className="h-3.5 w-3.5" />
               </button>

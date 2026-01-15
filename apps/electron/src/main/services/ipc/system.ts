@@ -2,9 +2,11 @@ import type {
   CheckUnsavedChangesRequest,
   CloseWindowRequest,
   FocusWindowRequest,
+  OpenExternalRequest,
+  ShowItemInFolderRequest,
 } from '@shared/types';
 import { IPC_CHANNELS } from '@shared/types';
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, ipcMain, shell } from 'electron';
 import { sqlLogger } from '../sql-logger';
 import { windowManager } from '../window-manager';
 import { createHandler } from './utils';
@@ -104,4 +106,22 @@ export function setupSystemHandlers(): void {
       };
     }
   });
+
+  // System: Show item in folder (reveal in Finder/Explorer)
+  ipcMain.handle(
+    IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER,
+    createHandler(async (request: ShowItemInFolderRequest) => {
+      shell.showItemInFolder(request.path);
+      return { success: true };
+    })
+  );
+
+  // System: Open external URL
+  ipcMain.handle(
+    IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL,
+    createHandler(async (request: OpenExternalRequest) => {
+      await shell.openExternal(request.url);
+      return { success: true };
+    })
+  );
 }

@@ -1159,6 +1159,24 @@ export interface GetCurrentWindowResponse {
   error?: string;
 }
 
+export interface ShowItemInFolderRequest {
+  path: string;
+}
+
+export interface ShowItemInFolderResponse {
+  success: boolean;
+  error?: string;
+}
+
+export interface OpenExternalRequest {
+  url: string;
+}
+
+export interface OpenExternalResponse {
+  success: boolean;
+  error?: string;
+}
+
 // ============ AI Types ============
 
 export type AIModelProvider = 'openai' | 'anthropic' | 'local';
@@ -2759,6 +2777,8 @@ export const IPC_CHANNELS = {
   // System
   SYSTEM_FIND_CLAUDE_PATHS: 'ai:get-claude-code-paths',
   SYSTEM_FOCUS_WINDOW: 'window:focus',
+  SYSTEM_SHOW_ITEM_IN_FOLDER: 'system:show-item-in-folder',
+  SYSTEM_OPEN_EXTERNAL: 'system:open-external',
 
   // Unsaved changes
   CHECK_UNSAVED_CHANGES: 'unsaved-changes:check',

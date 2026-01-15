@@ -116,6 +116,8 @@ import type {
   MenuAction,
   OpenDatabaseRequest,
   OpenDatabaseResponse,
+  OpenExternalRequest,
+  OpenExternalResponse,
   OpenFileDialogRequest,
   OpenFileDialogResponse,
   ProActivateRequest,
@@ -141,6 +143,8 @@ import type {
   SetPreferencesRequest,
   SetPreferencesResponse,
   ShortcutsUpdatePayload,
+  ShowItemInFolderRequest,
+  ShowItemInFolderResponse,
   SqlLogEntry,
   TestConnectionRequest,
   TestConnectionResponse,
@@ -673,6 +677,18 @@ export const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.WINDOW_GET_ALL),
     getCurrent: (): Promise<GetCurrentWindowResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.WINDOW_GET_CURRENT),
+  },
+
+  // System operations
+  system: {
+    showItemInFolder: (
+      request: ShowItemInFolderRequest
+    ): Promise<ShowItemInFolderResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER, request),
+    openExternal: (
+      request: OpenExternalRequest
+    ): Promise<OpenExternalResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL, request),
   },
 
   // Auto-update operations

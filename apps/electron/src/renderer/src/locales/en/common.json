@@ -255,7 +255,12 @@
     "zoomIn": "Zoom in (+)",
     "zoomOut": "Zoom out (-)",
     "resetZoom": "Reset zoom (0)",
-    "fitToScreen": "Fit to screen"
+    "fitToScreen": "Fit to screen",
+    "openUrl": "Open URL",
+    "showInFolder": "Show in folder",
+    "copyPath": "Copy path",
+    "pathCopied": "Path copied to clipboard",
+    "copyPathFailed": "Failed to copy path"
   },
   "row": {
     "copyRowAsSQL": "Copy Row as SQL INSERT",
