@@ -1,5 +1,6 @@
 import type { MediaItem } from './ImageGallery';
 import type { MediaSource } from '@/lib/image-utils';
+import { Skeleton } from '@sqlpro/ui/skeleton';
 import {
   ChevronLeft,
   ChevronRight,
@@ -209,6 +210,7 @@ export function MediaPreview({
   );
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMediaLoaded, setIsMediaLoaded] = useState(false);
 
   // Zoom and pan state
   const [scale, setScale] = useState(1);
@@ -305,6 +307,7 @@ export function MediaPreview({
     setMediaDimensions(null);
     setSharpMetadata(null);
     setVideoMetadata(null);
+    setIsMediaLoaded(false);
     setIsPlaying(false);
     // Reset zoom and pan
     setScale(1);
@@ -716,6 +719,7 @@ export function MediaPreview({
         width: img.naturalWidth,
         height: img.naturalHeight,
       });
+      setIsMediaLoaded(true);
     },
     []
   );
@@ -727,6 +731,7 @@ export function MediaPreview({
         width: video.videoWidth,
         height: video.videoHeight,
       });
+      setIsMediaLoaded(true);
     },
     []
   );
@@ -943,10 +948,19 @@ export function MediaPreview({
           {displayUrl && !loadError ? (
             isVideo ? (
               <div className="relative flex h-full w-full items-center justify-center p-4">
+                {/* Video loading skeleton */}
+                {!isMediaLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Skeleton className="h-64 w-96 rounded-lg" />
+                  </div>
+                )}
                 <video
                   ref={videoRef}
                   src={displayUrl}
-                  className="max-h-full max-w-full object-contain"
+                  className={cn(
+                    'max-h-full max-w-full object-contain',
+                    !isMediaLoaded && 'invisible'
+                  )}
                   controls
                   autoPlay
                   onError={() => setLoadError(true)}
@@ -966,14 +980,21 @@ export function MediaPreview({
               </div>
             ) : (
               <div
-                className="flex h-full w-full items-center justify-center"
+                className="relative flex h-full w-full items-center justify-center"
                 onDoubleClick={handleDoubleClick}
               >
+                {/* Image loading skeleton */}
+                {!isMediaLoaded && (
+                  <Skeleton className="absolute h-64 w-96 rounded-lg" />
+                )}
                 <img
                   ref={imageRef}
                   src={displayUrl}
                   alt={`Row ${item.rowIndex + 1}, ${item.column}`}
-                  className="max-h-full max-w-full object-contain select-none"
+                  className={cn(
+                    'max-h-full max-w-full object-contain select-none',
+                    !isMediaLoaded && 'invisible'
+                  )}
                   style={{
                     transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
                     transition: isDragging ? 'none' : 'transform 0.1s ease-out',

@@ -73,6 +73,7 @@ import { QueryHistoryFilters } from './query-editor/QueryHistoryFilters';
 import { QueryPane } from './query-editor/QueryPane';
 import { QueryTabBar } from './query-editor/QueryTabBar';
 import { QueryTemplatesPicker } from './query-editor/QueryTemplatesPicker';
+import { SkeletonQueryResults } from './query-editor/SkeletonQueryResults';
 import { QueryResults } from './QueryResults';
 import { ResizablePanel } from './ResizablePanel';
 
@@ -541,9 +542,7 @@ export function QueryEditor() {
               {/* Results Area */}
               <div className="min-w-0 flex-1 overflow-hidden">
                 {tabIsExecuting ? (
-                  <div className="flex h-full items-center justify-center">
-                    <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
-                  </div>
+                  <SkeletonQueryResults columns={5} rows={10} />
                 ) : tabError ? (
                   <div className="flex h-full items-center justify-center p-4">
                     <div className="border-destructive/50 bg-destructive/10 flex max-w-md items-start gap-3 rounded-lg border p-4">

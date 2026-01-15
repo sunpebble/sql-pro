@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils';
 import { useConnectionStore } from '@/stores';
 import { FolderTree } from './FolderTree';
 import { ProfileForm } from './ProfileForm';
+import { SkeletonProfileList } from './SkeletonProfileList';
 
 export interface ProfileManagerProps {
   /** Callback when a profile is connected */
@@ -665,9 +666,7 @@ export function ProfileManager({
         {/* Profile list */}
         <div className={cn('flex-1 overflow-auto p-4', !compact && 'w-2/3')}>
           {isLoading ? (
-            <div className="text-muted-foreground flex h-full items-center justify-center">
-              Loading profiles...
-            </div>
+            <SkeletonProfileList count={6} />
           ) : error ? (
             <div className="text-destructive flex h-full items-center justify-center">
               {error}
