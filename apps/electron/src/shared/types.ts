@@ -2949,7 +2949,6 @@ export type ShortcutAction =
   // Navigation
   | 'nav.data-browser'
   | 'nav.query-editor'
-  | 'nav.query-builder'
   | 'nav.search-tables'
   | 'nav.schema-compare'
   | 'nav.er-diagram'
@@ -3049,7 +3048,6 @@ export function bindingToAccelerator(
 export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'nav.data-browser': { key: '1', modifiers: { cmd: true, ctrl: true } },
   'nav.query-editor': { key: '2', modifiers: { cmd: true, ctrl: true } },
-  'nav.query-builder': { key: '6', modifiers: { cmd: true, ctrl: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true, shift: true } },
   'nav.schema-compare': { key: '4', modifiers: { cmd: true, ctrl: true } },
   'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },

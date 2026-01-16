@@ -601,6 +601,10 @@
       "prioritySupport": "优先支持"
     }
   },
+  "queryView": {
+    "sqlEditor": "SQL 编辑器",
+    "queryBuilder": "查询构建器"
+  },
   "queryEditor": {
     "title": "SQL 查询",
     "executeHint": "Cmd/Ctrl+Enter 执行",

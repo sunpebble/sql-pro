@@ -14,8 +14,7 @@ import { CompareView } from './CompareView';
 import { DataTabBar } from './data-table';
 import { DiffPreview } from './DiffPreview';
 import { ERDiagram } from './er-diagram';
-import { QueryBuilder } from './query-builder';
-import { QueryEditor } from './QueryEditor';
+import { QueryView } from './QueryView';
 import { ResizablePanel } from './ResizablePanel';
 import { SchemaDetailsPanel } from './SchemaDetailsPanel';
 import { Sidebar } from './Sidebar';
@@ -186,11 +185,8 @@ export function DatabaseView() {
             </div>
           )}
 
-          {/* SQL Query View */}
-          {activeView === 'query' && <QueryEditor />}
-
-          {/* Query Builder View */}
-          {activeView === 'builder' && <QueryBuilder />}
+          {/* SQL Query View (includes Query Builder) */}
+          {activeView === 'query' && <QueryView />}
 
           {/* ER Diagram View */}
           {activeView === 'diagram' && <ERDiagram />}
@@ -220,7 +216,6 @@ export function DatabaseView() {
           const viewMap: Record<string, ViewType> = {
             browser: 'data',
             query: 'query',
-            builder: 'builder',
             diagram: 'diagram',
             compare: 'compare',
           };

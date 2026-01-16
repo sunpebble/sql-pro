@@ -602,6 +602,10 @@
       "prioritySupport": "Priority Support"
     }
   },
+  "queryView": {
+    "sqlEditor": "SQL Editor",
+    "queryBuilder": "Query Builder"
+  },
   "queryEditor": {
     "title": "SQL Query",
     "executeHint": "Cmd/Ctrl+Enter to execute",
