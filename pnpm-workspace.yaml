@@ -3,6 +3,8 @@ packages:
   - 'apps/*'
 
 nodeLinker: hoisted
+
 neverBuiltDependencies: []
+
 overrides:
   vite: npm:rolldown-vite@latest

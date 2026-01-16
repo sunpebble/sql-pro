@@ -25,7 +25,6 @@
     "format": "nx format:write",
     "lint": "nx run-many -t lint",
     "prepare": "husky",
-    "postinstall": "bash scripts/fix-sharp.sh || true",
     "test": "nx run @sqlpro/app:test",
     "test:coverage": "nx run @sqlpro/app:test:coverage",
     "test:run": "nx run @sqlpro/app:test:run",
