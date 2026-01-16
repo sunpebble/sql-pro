@@ -37,6 +37,7 @@ export function SkeletonProfileList({
         <div className="space-y-1">
           {widths.slice(0, Math.min(3, count)).map((width, i) => (
             <div
+              // eslint-disable-next-line react/no-array-index-key -- Static skeleton list, index is stable
               key={`skeleton-recent-${i}`}
               className="flex items-center gap-2 rounded-sm px-2 py-1.5"
               style={{ animationDelay: `${i * 50}ms` }}
@@ -55,6 +56,7 @@ export function SkeletonProfileList({
           <div className="space-y-1">
             {widths.slice(3).map((width, i) => (
               <div
+                // eslint-disable-next-line react/no-array-index-key -- Static skeleton list, index is stable
                 key={`skeleton-saved-${i}`}
                 className="flex items-center gap-2 rounded-sm px-2 py-1.5"
                 style={{ animationDelay: `${(i + 3) * 50}ms` }}

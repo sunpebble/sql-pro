@@ -52,6 +52,7 @@ function TooltipTrigger({
       <TooltipPrimitive.Trigger
         data-slot="tooltip-trigger"
         render={(triggerProps) =>
+          // eslint-disable-next-line react/no-clone-element -- Required for tooltip trigger composition with existing elements
           cloneElement(
             childElement,
             mergeProps(triggerProps, childElement.props)

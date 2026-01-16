@@ -99,7 +99,7 @@ export function BackupRestoreDialog({
       if (connection) {
         const filename =
           connection.path?.split('/').pop() ||
-          connection.connectionConfig?.database ||
+          connection.filename ||
           'database';
         // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on dialog open
         setBackupName(filename.replace(/\.[^/.]+$/, ''));
@@ -288,7 +288,9 @@ export function BackupRestoreDialog({
                 <Label>{t('backup.format', 'Format')}</Label>
                 <Select
                   value={backupFormat}
-                  onValueChange={(v) => v && setBackupFormat(v as BackupFormat)}
+                  onValueChange={(v: string) =>
+                    v && setBackupFormat(v as BackupFormat)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -352,7 +354,7 @@ export function BackupRestoreDialog({
                 </Label>
                 <Select
                   value={selectedBackup?.id || ''}
-                  onValueChange={(v) => {
+                  onValueChange={(v: string) => {
                     const backup = backups.find((b) => b.id === v);
                     setSelectedBackup(backup || null);
                   }}

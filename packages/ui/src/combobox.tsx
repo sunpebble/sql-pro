@@ -13,11 +13,8 @@ import {
 } from './input-group';
 import { cn } from './lib/utils';
 
-function Combobox({
-  loopFocus = true,
-  ...props
-}: ComboboxPrimitive.Root.Props) {
-  return <ComboboxPrimitive.Root loopFocus={loopFocus} {...props} />;
+function Combobox<Value>({ ...props }: ComboboxPrimitive.Root.Props<Value>) {
+  return <ComboboxPrimitive.Root {...props} />;
 }
 
 function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {

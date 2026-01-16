@@ -734,7 +734,9 @@ export function WelcomeScreen() {
   // Remove connection from list (T045-T049 - implementing here for context menu)
   const handleRemoveConnection = async (conn: RecentConnection) => {
     // Remove from recent connections list
-    const result = await sqlPro.app.removeRecentConnection(conn.path);
+    const result = await sqlPro.app.removeRecentConnection({
+      connectionId: conn.path,
+    });
 
     if (result.success) {
       // Also remove saved password

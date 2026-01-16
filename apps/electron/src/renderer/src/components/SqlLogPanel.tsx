@@ -229,7 +229,7 @@ export function SqlLogPanel() {
             {/* Level filter */}
             <Select
               value={filter.level || 'all'}
-              onValueChange={(value) =>
+              onValueChange={(value: string) =>
                 setFilter({
                   level: value === 'all' ? undefined : (value as SqlLogLevel),
                 })

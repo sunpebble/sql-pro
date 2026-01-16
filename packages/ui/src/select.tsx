@@ -6,8 +6,29 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from './lib/utils';
 
-function Select({ loopFocus = true, ...props }: SelectPrimitive.Root.Props) {
-  return <SelectPrimitive.Root loopFocus={loopFocus} {...props} />;
+// Simplified props interface that accepts a simpler onValueChange signature
+interface SelectProps<Value> extends Omit<
+  SelectPrimitive.Root.Props<Value>,
+  'onValueChange'
+> {
+  onValueChange?: (value: Value) => void;
+}
+
+function Select<Value>({ onValueChange, ...props }: SelectProps<Value>) {
+  return (
+    <SelectPrimitive.Root
+      onValueChange={
+        onValueChange
+          ? (value: Value | null) => {
+              if (value !== null) {
+                onValueChange(value);
+              }
+            }
+          : undefined
+      }
+      {...props}
+    />
+  );
 }
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {

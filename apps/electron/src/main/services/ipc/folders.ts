@@ -22,9 +22,12 @@ export function setupFoldersHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.FOLDERS_SAVE,
     createHandler(async (request: CreateFolderRequest) => {
+      // Support both formats: { name, parentId } and { folder: { name, parentId } }
+      const name = request.name || request.folder?.name || '';
+      const parentId = request.parentId || request.folder?.parentId;
       const result = saveFolder({
-        name: request.folder.name || '',
-        parentId: request.folder.parentId,
+        name,
+        parentId,
       });
       return result;
     })

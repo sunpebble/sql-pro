@@ -6,11 +6,18 @@ import { cn } from '@/lib/utils';
  * Skeleton card for plugin marketplace, pro features, etc.
  * Matches the PluginCard grid layout structure.
  */
-export function SkeletonCard({ className }: { className?: string }) {
+export function SkeletonCard({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <div
       className={cn('rounded-xl border p-4', className)}
       data-slot="skeleton-card"
+      style={style}
     >
       {/* Header with icon and title */}
       <div className="flex items-start gap-3 pb-2">
@@ -40,7 +47,13 @@ export function SkeletonCard({ className }: { className?: string }) {
  * Skeleton card for list layout (horizontal).
  * Matches the PluginCard list layout structure.
  */
-export function SkeletonCardList({ className }: { className?: string }) {
+export function SkeletonCardList({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <div
       className={cn(
@@ -48,6 +61,7 @@ export function SkeletonCardList({ className }: { className?: string }) {
         className
       )}
       data-slot="skeleton-card-list"
+      style={style}
     >
       {/* Icon */}
       <Skeleton className="size-10 shrink-0 rounded-lg" />
@@ -101,6 +115,7 @@ export function SkeletonText({
     <div className={cn('space-y-2', className)} data-slot="skeleton-text">
       {widths.map((width, i) => (
         <Skeleton
+          // eslint-disable-next-line react/no-array-index-key -- Static skeleton list, index is stable
           key={i}
           className="h-3"
           style={{ width, animationDelay: `${i * 50}ms` }}
@@ -135,6 +150,7 @@ export function SkeletonLicenseInfo({ className }: { className?: string }) {
       <div className="space-y-2 rounded-lg border p-3">
         {Array.from({ length: 5 }).map((_, i) => (
           <div
+            // eslint-disable-next-line react/no-array-index-key -- Static skeleton list, index is stable
             key={i}
             className="flex items-center gap-2 py-1"
             style={{ animationDelay: `${i * 50}ms` }}

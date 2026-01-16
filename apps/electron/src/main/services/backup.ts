@@ -9,6 +9,7 @@ import type {
   ListBackupsResponse,
   RestoreBackupRequest,
   RestoreBackupResponse,
+  TableInfo,
 } from '@shared/types';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -80,12 +81,12 @@ export async function createBackup(
 
     // Get schema for table count and row count estimation
     const schemaResult = databaseService.getSchema(request.connectionId);
-    if (!schemaResult.success || !schemaResult.schema) {
+    if (!schemaResult.success || !schemaResult.tables) {
       return { success: false, error: 'Failed to get database schema' };
     }
 
     const tables =
-      request.tables || schemaResult.schema.tables.map((t) => t.name);
+      request.tables || schemaResult.tables.map((t: TableInfo) => t.name);
     let totalRows = 0;
 
     if (request.format === 'sqlite') {
@@ -112,7 +113,7 @@ export async function createBackup(
           `SELECT COUNT(*) as count FROM "${tableName}"`
         );
         if (countResult.success && countResult.rows?.[0]) {
-          totalRows += (countResult.rows[0] as { count: number }).count;
+          totalRows += Number(countResult.rows[0][0]) || 0;
         }
       }
     } else {
@@ -136,7 +137,7 @@ export async function createBackup(
         );
 
         if (createResult.success && createResult.rows?.[0]) {
-          const createSql = (createResult.rows[0] as { sql: string }).sql;
+          const createSql = createResult.rows[0][0] as string | null;
           if (createSql) {
             sqlContent += `-- Table: ${tableName}\n`;
             sqlContent += `DROP TABLE IF EXISTS "${tableName}";\n`;
@@ -156,16 +157,13 @@ export async function createBackup(
             dataResult.rows &&
             dataResult.rows.length > 0
           ) {
-            const rows = dataResult.rows as Record<string, unknown>[];
-            totalRows += rows.length;
-
-            // Get column names from first row
-            const columns = Object.keys(rows[0]);
+            const columns = dataResult.columns;
+            totalRows += dataResult.rows.length;
 
             // Generate INSERT statements
-            for (const row of rows) {
-              const values = columns.map((col) => {
-                const value = row[col];
+            for (const row of dataResult.rows) {
+              const values = columns.map((col, idx) => {
+                const value = row[idx];
                 if (value === null) return 'NULL';
                 if (typeof value === 'number') return String(value);
                 if (typeof value === 'boolean') return value ? '1' : '0';
@@ -186,9 +184,10 @@ export async function createBackup(
         );
 
         if (indexResult.success && indexResult.rows) {
-          for (const idx of indexResult.rows as { sql: string }[]) {
-            if (idx.sql) {
-              sqlContent += `${idx.sql};\n`;
+          for (const idx of indexResult.rows) {
+            const sql = idx[0] as string | null;
+            if (sql) {
+              sqlContent += `${sql};\n`;
             }
           }
         }
@@ -202,9 +201,10 @@ export async function createBackup(
 
       if (triggerResult.success && triggerResult.rows) {
         sqlContent += '\n-- Triggers\n';
-        for (const trigger of triggerResult.rows as { sql: string }[]) {
-          if (trigger.sql) {
-            sqlContent += `${trigger.sql};\n`;
+        for (const trigger of triggerResult.rows) {
+          const sql = trigger[0] as string | null;
+          if (sql) {
+            sqlContent += `${sql};\n`;
           }
         }
       }

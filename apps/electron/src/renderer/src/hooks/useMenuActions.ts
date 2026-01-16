@@ -267,7 +267,7 @@ export function useMenuActions() {
         case 'documentation': {
           // Open documentation in browser
           sqlPro.shell
-            .openExternal('https://github.com/user/sql-pro#readme')
+            .openExternal({ url: 'https://github.com/user/sql-pro#readme' })
             .catch(console.error);
           break;
         }

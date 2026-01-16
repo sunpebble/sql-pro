@@ -209,7 +209,7 @@ export function ProfileForm({
         </label>
         <Select
           value={folderId ?? '__none__'}
-          onValueChange={(value) =>
+          onValueChange={(value: string) =>
             setFolderId(value === '__none__' ? undefined : (value ?? undefined))
           }
         >

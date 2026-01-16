@@ -546,6 +546,7 @@ function FullTableStats({
           <div className="space-y-1">
             {distribution.map((item, index) => (
               <div
+                // eslint-disable-next-line react/no-array-index-key -- Index needed as value may not be unique
                 key={`${String(item.value)}-${index}`}
                 className="group flex items-center gap-2 text-xs"
               >

@@ -225,7 +225,7 @@ export function SchemaComparisonPanel({
       }
 
       if (response.success && (response.result || response.comparison)) {
-        setComparisonResult(response.result || response.comparison);
+        setComparisonResult(response.result || response.comparison || null);
       } else {
         setComparisonError(response.error || 'Comparison failed');
       }

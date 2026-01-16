@@ -80,6 +80,7 @@ export function LicenseKeyInput({
   useEffect(() => {
     const newSegments = formatLicenseKey(value);
     // Only update if segments actually changed to avoid unnecessary re-renders
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync from external prop
     setSegments((prev) => {
       const hasChanged = newSegments.some((seg, i) => seg !== prev[i]);
       return hasChanged ? newSegments : prev;
@@ -198,6 +199,7 @@ export function LicenseKeyInput({
 
         {/* Segment inputs */}
         {segments.map((segment, index) => (
+          // eslint-disable-next-line react/no-array-index-key -- Fixed 4 segments, index is stable
           <div key={index} className="flex items-center gap-1.5">
             <Input
               ref={(el) => {

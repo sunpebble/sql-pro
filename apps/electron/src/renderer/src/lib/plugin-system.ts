@@ -133,8 +133,9 @@ class PluginManager {
 
     this.plugins.set(manifest.id, loadedPlugin);
 
-    // Persist to backend
-    await sqlPro.plugins.install(manifest, manifest.main);
+    // TODO: Persist to backend - API signature mismatch needs resolution
+    // The install API expects { source, sourceType } not manifest
+    // await sqlPro.plugins.install({ source: manifest.main, sourceType: 'directory' });
   }
 
   /**
@@ -171,7 +172,7 @@ class PluginManager {
     plugin.enabled = true;
 
     // Persist to backend
-    await sqlPro.plugins.enable(pluginId);
+    await sqlPro.plugins.enable({ pluginId });
   }
 
   /**
@@ -201,7 +202,7 @@ class PluginManager {
     plugin.enabled = false;
 
     // Persist to backend
-    await sqlPro.plugins.disable(pluginId);
+    await sqlPro.plugins.disable({ pluginId });
   }
 
   /**
@@ -212,7 +213,7 @@ class PluginManager {
     this.plugins.delete(pluginId);
 
     // Persist to backend
-    await sqlPro.plugins.uninstall(pluginId);
+    await sqlPro.plugins.uninstall({ pluginId });
   }
 
   /**

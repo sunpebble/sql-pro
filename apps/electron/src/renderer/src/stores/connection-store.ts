@@ -12,7 +12,6 @@ import type {
   TableSchema,
 } from '@/types/database';
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
 import { memoryCleanup } from '@/lib/memory-cleanup';
 import { schemaCache } from '@/lib/schema-cache';
 import {
@@ -165,15 +164,6 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
 
   // Connection Actions
   addConnection: (connection) => {
-    // Start watching the database file for external changes
-    if (connection.path && sqlPro.fileWatcher?.watch) {
-      sqlPro.fileWatcher
-        .watch(connection.id, connection.path)
-        .catch((err: unknown) => {
-          console.warn('Failed to start file watcher:', err);
-        });
-    }
-
     set((state) => {
       const newConnections = new Map(state.connections);
       newConnections.set(connection.id, connection);
@@ -199,12 +189,7 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
   },
 
   removeConnection: (id) => {
-    // Stop watching the database file
-    if (sqlPro.fileWatcher?.unwatch) {
-      sqlPro.fileWatcher.unwatch(id).catch((err: unknown) => {
-        console.warn('Failed to stop file watcher:', err);
-      });
-    }
+    // File watcher is automatically stopped in the main process when connection is closed
 
     set((state) => {
       const newConnections = new Map(state.connections);

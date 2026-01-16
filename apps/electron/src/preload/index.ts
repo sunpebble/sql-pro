@@ -56,6 +56,8 @@ import type {
   ExportComparisonReportResponse,
   ExportProfilesRequest,
   ExportProfilesResponse,
+  ExportQueryRequest,
+  ExportQueryResponse,
   ExportRequest,
   ExportResponse,
   ExportSchemaRequest,
@@ -106,6 +108,8 @@ import type {
   ImportBundleResponse,
   ImportProfilesRequest,
   ImportProfilesResponse,
+  ImportQueryRequest,
+  ImportQueryResponse,
   ImportSchemaRequest,
   ImportSchemaResponse,
   IsPasswordStorageAvailableResponse,
@@ -317,6 +321,10 @@ export const sqlProAPI = {
     },
     confirmQuit: (shouldQuit: boolean): Promise<{ success: boolean }> =>
       ipcRenderer.invoke('app:confirm-quit', { shouldQuit }),
+    removeRecentConnection: (request: {
+      connectionId: string;
+    }): Promise<{ success: boolean }> =>
+      ipcRenderer.invoke('app:remove-recent-connection', request),
   },
 
   // Unsaved changes operations
@@ -384,6 +392,10 @@ export const sqlProAPI = {
   // File utilities
   file: {
     getPathForFile: (file: File): string => webUtils.getPathForFile(file),
+    exists: (request: { path: string }): Promise<{ exists: boolean }> =>
+      ipcRenderer.invoke('file:exists', request),
+    write: (request: WriteFileRequest): Promise<WriteFileResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.FILE_WRITE, request),
   },
 
   // Query history operations
@@ -426,6 +438,10 @@ export const sqlProAPI = {
       ipcRenderer.on(IPC_CHANNELS.MENU_ACTION, handler);
       return () => ipcRenderer.off(IPC_CHANNELS.MENU_ACTION, handler);
     },
+    updateShortcuts: (
+      request: ShortcutsUpdatePayload
+    ): Promise<{ success: boolean }> =>
+      ipcRenderer.invoke(IPC_CHANNELS.SHORTCUTS_UPDATE, request),
   },
 
   // Keyboard shortcuts
@@ -717,6 +733,18 @@ export const sqlProAPI = {
       ipcRenderer.invoke(IPC_CHANNELS.UPDATE_CHECK, silent),
     download: (): Promise<{ success: boolean; error?: string }> =>
       ipcRenderer.invoke(IPC_CHANNELS.UPDATE_DOWNLOAD),
+    install: (): Promise<{ success: boolean; error?: string }> =>
+      ipcRenderer.invoke(IPC_CHANNELS.UPDATE_INSTALL),
+  },
+
+  // Alias for backwards compatibility
+  updates: {
+    check: (silent = true): Promise<{ success: boolean; error?: string }> =>
+      ipcRenderer.invoke(IPC_CHANNELS.UPDATE_CHECK, silent),
+    download: (): Promise<{ success: boolean; error?: string }> =>
+      ipcRenderer.invoke(IPC_CHANNELS.UPDATE_DOWNLOAD),
+    install: (): Promise<{ success: boolean; error?: string }> =>
+      ipcRenderer.invoke(IPC_CHANNELS.UPDATE_INSTALL),
   },
 
   // Schema snapshot operations
@@ -794,8 +822,8 @@ export const sqlProAPI = {
 
   // Plugin operations
   plugin: {
-    list: (request: ListPluginsRequest): Promise<ListPluginsResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_LIST, request),
+    list: (request?: ListPluginsRequest): Promise<ListPluginsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_LIST, request || {}),
     get: (request: GetPluginRequest): Promise<GetPluginResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_GET, request),
     install: (request: InstallPluginRequest): Promise<InstallPluginResponse> =>
@@ -811,9 +839,45 @@ export const sqlProAPI = {
     update: (request: UpdatePluginRequest): Promise<UpdatePluginResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_UPDATE, request),
     fetchMarketplace: (
-      request: FetchMarketplaceRequest
+      request?: FetchMarketplaceRequest
     ): Promise<FetchMarketplaceResponse> =>
-      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_FETCH_MARKETPLACE, request),
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_FETCH_MARKETPLACE, request || {}),
+    checkUpdates: (
+      request: CheckUpdatesRequest
+    ): Promise<CheckUpdatesResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_CHECK_UPDATES, request),
+    onEvent: (callback: (event: PluginEvent) => void): (() => void) => {
+      const handler = (
+        _event: Electron.IpcRendererEvent,
+        pluginEvent: PluginEvent
+      ) => callback(pluginEvent);
+      ipcRenderer.on(IPC_CHANNELS.PLUGIN_EVENT, handler);
+      return () => ipcRenderer.off(IPC_CHANNELS.PLUGIN_EVENT, handler);
+    },
+  },
+
+  // Alias for backwards compatibility
+  plugins: {
+    list: (request?: ListPluginsRequest): Promise<ListPluginsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_LIST, request || {}),
+    get: (request: GetPluginRequest): Promise<GetPluginResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_GET, request),
+    install: (request: InstallPluginRequest): Promise<InstallPluginResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_INSTALL, request),
+    uninstall: (
+      request: UninstallPluginRequest
+    ): Promise<UninstallPluginResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_UNINSTALL, request),
+    enable: (request: EnablePluginRequest): Promise<EnablePluginResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_ENABLE, request),
+    disable: (request: DisablePluginRequest): Promise<DisablePluginResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_DISABLE, request),
+    update: (request: UpdatePluginRequest): Promise<UpdatePluginResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_UPDATE, request),
+    fetchMarketplace: (
+      request?: FetchMarketplaceRequest
+    ): Promise<FetchMarketplaceResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.PLUGIN_FETCH_MARKETPLACE, request || {}),
     checkUpdates: (
       request: CheckUpdatesRequest
     ): Promise<CheckUpdatesResponse> =>
@@ -1025,6 +1089,104 @@ export const sqlProAPI = {
       };
       error?: string;
     }> => ipcRenderer.invoke('video:check-file', request),
+  },
+
+  // Shell operations
+  shell: {
+    openExternal: (
+      request: OpenExternalRequest
+    ): Promise<OpenExternalResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL, request),
+    showItemInFolder: (
+      request: ShowItemInFolderRequest
+    ): Promise<ShowItemInFolderResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER, request),
+  },
+
+  // Database operations (extended)
+  database: {
+    getDatabaseStats: (request: {
+      connectionId: string;
+    }): Promise<{
+      success: boolean;
+      stats?: {
+        pageSize: number;
+        pageCount: number;
+        totalSize: number;
+        freePages: number;
+        tables: { name: string; rowCount: number; size: number }[];
+      };
+      error?: string;
+    }> => ipcRenderer.invoke('database:get-stats', request),
+    vacuum: (request: {
+      connectionId: string;
+    }): Promise<{ success: boolean; error?: string }> =>
+      ipcRenderer.invoke('database:vacuum', request),
+    analyze: (request: {
+      connectionId: string;
+    }): Promise<{ success: boolean; error?: string }> =>
+      ipcRenderer.invoke('database:analyze', request),
+    // Aliases for schema and query to match component usage
+    getSchema: (connectionId: string): Promise<GetSchemaResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_GET_SCHEMA, { connectionId }),
+    query: (
+      connectionId: string,
+      sql: string,
+      params?: unknown[]
+    ): Promise<ExecuteQueryResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_EXECUTE_QUERY, {
+        connectionId,
+        sql,
+        params,
+      }),
+  },
+
+  // Sharing operations (query/schema export/import)
+  sharing: {
+    exportBundle: (
+      request: ExportBundleRequest
+    ): Promise<ExportBundleResponse> =>
+      ipcRenderer.invoke('sharing:export-bundle', request),
+    importBundle: (
+      request: ImportBundleRequest
+    ): Promise<ImportBundleResponse> =>
+      ipcRenderer.invoke('sharing:import-bundle', request),
+    exportQuery: (request: ExportQueryRequest): Promise<ExportQueryResponse> =>
+      ipcRenderer.invoke('sharing:export-query', request),
+    importQuery: (request: ImportQueryRequest): Promise<ImportQueryResponse> =>
+      ipcRenderer.invoke('sharing:import-query', request),
+    exportSchema: (
+      request: ExportSchemaRequest
+    ): Promise<ExportSchemaResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.SCHEMA_EXPORT, request),
+    importSchema: (
+      request: ImportSchemaRequest
+    ): Promise<ImportSchemaResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.SCHEMA_IMPORT, request),
+  },
+
+  // Data diff operations
+  dataDiff: {
+    generateSyncSQL: (
+      request: GenerateSyncSQLRequest
+    ): Promise<GenerateSyncSQLResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DATA_DIFF_GENERATE_SYNC_SQL, request),
+    compareTables: (
+      request: CompareTablesRequest
+    ): Promise<CompareTablesResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DATA_DIFF_COMPARE_TABLES, request),
+  },
+
+  // Schema comparison operations
+  schemaComparison: {
+    exportReport: (
+      request: ExportComparisonReportRequest
+    ): Promise<ExportComparisonReportResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.COMPARISON_EXPORT_REPORT, request),
+    generateMigration: (
+      request: GenerateMigrationSQLRequest
+    ): Promise<GenerateMigrationSQLResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.GENERATE_MIGRATION_SQL, request),
   },
 };
 

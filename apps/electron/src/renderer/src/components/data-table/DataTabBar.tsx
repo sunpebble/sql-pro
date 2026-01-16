@@ -7,7 +7,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@sqlpro/ui/context-menu';
-import { ScrollArea, ScrollBar } from '@sqlpro/ui/scroll-area';
+import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
@@ -273,7 +273,6 @@ export const DataTabBar = memo(
               />
             ))}
           </div>
-          <ScrollBar orientation="horizontal" className="h-1.5" />
         </ScrollArea>
         {onOpenSidebar && (
           <div className="flex shrink-0 items-center border-l">

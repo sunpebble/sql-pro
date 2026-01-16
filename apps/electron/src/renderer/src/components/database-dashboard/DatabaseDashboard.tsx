@@ -300,17 +300,22 @@ const TableSizeChart = memo(({ tables }: TableSizeChartProps) => {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value, name, item) => (
-                <div className="flex flex-col gap-1">
-                  <span className="font-medium">{item.payload?.fullName}</span>
-                  <span>{Number(value).toLocaleString()} rows</span>
-                  {item.payload?.size > 0 && (
-                    <span className="text-muted-foreground">
-                      {formatBytes(item.payload.size)}
-                    </span>
-                  )}
-                </div>
-              )}
+              formatter={(value, _name, item) => {
+                const payload = item.payload as
+                  | { fullName?: string; size?: number }
+                  | undefined;
+                return (
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium">{payload?.fullName}</span>
+                    <span>{Number(value).toLocaleString()} rows</span>
+                    {payload?.size && payload.size > 0 && (
+                      <span className="text-muted-foreground">
+                        {formatBytes(payload.size)}
+                      </span>
+                    )}
+                  </div>
+                );
+              }}
             />
           }
         />
@@ -431,7 +436,7 @@ export const DatabaseDashboard = memo(
       try {
         // Get schema information
         const schemaResult = await sqlPro.database.getSchema(connectionId);
-        if (!schemaResult.success || !schemaResult.schema) {
+        if (!schemaResult.success || !schemaResult.tables) {
           throw new Error(schemaResult.error || 'Failed to get schema');
         }
 
@@ -443,7 +448,7 @@ export const DatabaseDashboard = memo(
         let totalSizeBytes = 0;
 
         // Analyze each table
-        for (const table of schemaResult.schema.tables) {
+        for (const table of schemaResult.tables) {
           // Count rows
           const countResult = await sqlPro.database.query(
             connectionId,

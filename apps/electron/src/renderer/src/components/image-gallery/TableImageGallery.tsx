@@ -69,11 +69,13 @@ export function TableImageGallery({
   // Async detection with HEAD request for more accuracy
   useEffect(() => {
     if (columns.length === 0 || rows.length === 0) {
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset when data is empty
       setMediaColumns([]);
       return;
     }
 
     // Start with sync results for immediate display
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional immediate sync initialization before async
     setMediaColumns(syncMediaColumns);
 
     // Then run async detection for URLs without clear media extensions
@@ -118,6 +120,7 @@ export function TableImageGallery({
   // Build media items from rows with async URL validation
   useEffect(() => {
     if (mediaColumns.length === 0) {
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset when no media columns
       setMediaItems([]);
       return;
     }

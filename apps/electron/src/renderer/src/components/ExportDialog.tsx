@@ -281,7 +281,7 @@ export function ExportDialog({
             </Label>
             <Select
               value={selectedFormat}
-              onValueChange={(value) =>
+              onValueChange={(value: string) =>
                 setSelectedFormat(value as ExportFormat)
               }
             >
@@ -380,7 +380,7 @@ export function ExportDialog({
                   </Label>
                   <Select
                     value={delimiter}
-                    onValueChange={(v) => v && setDelimiter(v)}
+                    onValueChange={(v: string) => v && setDelimiter(v)}
                   >
                     <SelectTrigger id="delimiter" className="w-full">
                       <SelectValue placeholder="Select delimiter" />

@@ -5,9 +5,6 @@ node_modules
 *.tsbuildinfo
 dist
 out
-packages/*/dist
-apps/*/out
-apps/*/dist
 
 # IDE
 .idea
@@ -33,14 +30,7 @@ coverage
 # Misc
 *.bak
 *.tmp
+.nx
 
 packages/docs/.vitepress/cache
-.worktrees
-.auto-claude*
-.claude_settings.json
-.nx/cache
-.nx/workspace-data
-
-# Auto Claude data directory
-.auto-claude/
 packages/license-api/.dev.vars

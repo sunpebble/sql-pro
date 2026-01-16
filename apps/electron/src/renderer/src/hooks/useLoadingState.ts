@@ -233,9 +233,10 @@ export function useLoadingState(
 
   // Cleanup all timeouts on unmount
   useEffect(() => {
+    const refs = timeoutRefs.current;
     return () => {
-      timeoutRefs.current.forEach((timeoutId) => clearTimeout(timeoutId));
-      timeoutRefs.current.clear();
+      refs.forEach((timeoutId) => clearTimeout(timeoutId));
+      refs.clear();
     };
   }, []);
 

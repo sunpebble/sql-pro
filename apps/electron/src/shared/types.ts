@@ -856,6 +856,8 @@ export interface ConnectionProfile {
   tags?: string[];
   notes?: string;
   isSaved: boolean;
+  /** Whether to remember password for encrypted databases */
+  rememberPassword?: boolean;
   /** Database type (defaults to 'sqlite' for backward compatibility) */
   databaseType?: DatabaseType;
   /** Connection configuration for non-SQLite databases */
@@ -956,6 +958,7 @@ export interface GetProfilesResponse {
 
 export interface ExportProfilesRequest {
   profileIds?: string[];
+  folderIds?: string[];
   includePasswords?: boolean;
 }
 
@@ -966,7 +969,9 @@ export interface ExportProfilesResponse {
 }
 
 export interface ImportProfilesRequest {
-  data: string;
+  data?: string;
+  filePath?: string;
+  merge?: boolean;
   overwrite?: boolean;
 }
 
@@ -979,7 +984,9 @@ export interface ImportProfilesResponse {
 
 // Folder CRUD types
 export interface CreateFolderRequest {
-  folder: Omit<ProfileFolder, 'id' | 'createdAt'> & {
+  name: string;
+  parentId?: string;
+  folder?: Omit<ProfileFolder, 'id' | 'createdAt'> & {
     id?: string;
     createdAt?: string;
   };
@@ -1501,7 +1508,7 @@ export interface ProStatus {
   /** Alternative property name */
   activationDate?: string;
   expiresAt?: string;
-  features?: ProFeatureType[];
+  features?: ProFeature[] | ProFeatureType[];
 }
 
 export interface GetProFeaturesResponse {
@@ -1539,6 +1546,7 @@ export interface ProActivateRequest {
 
 export interface ProActivateResponse {
   success: boolean;
+  status?: ProStatus | null;
   error?: string;
 }
 
@@ -1859,6 +1867,8 @@ export interface CompareConnectionsRequest {
 export interface CompareConnectionsResponse {
   success: boolean;
   result?: SchemaComparisonResult;
+  /** Alias for result (backwards compatibility) */
+  comparison?: SchemaComparisonResult;
   error?: string;
 }
 
@@ -1867,11 +1877,15 @@ export interface CompareConnectionToSnapshotRequest {
   snapshotId: string;
   /** If true, connection is target, snapshot is source */
   reverseComparison?: boolean;
+  /** Alias for reverseComparison */
+  reverse?: boolean;
 }
 
 export interface CompareConnectionToSnapshotResponse {
   success: boolean;
   result?: SchemaComparisonResult;
+  /** Alias for result (backwards compatibility) */
+  comparison?: SchemaComparisonResult;
   error?: string;
 }
 
@@ -1885,6 +1899,8 @@ export interface CompareSnapshotsRequest {
 export interface CompareSnapshotsResponse {
   success: boolean;
   result?: SchemaComparisonResult;
+  /** Alias for result (backwards compatibility) */
+  comparison?: SchemaComparisonResult;
   error?: string;
 }
 
@@ -1944,9 +1960,13 @@ export interface RowDiff {
  */
 export interface DataComparisonPagination {
   /** Page number (0-based) */
-  page: number;
+  page?: number;
   /** Number of rows per page */
-  pageSize: number;
+  pageSize?: number;
+  /** Offset for pagination (alternative to page) */
+  offset?: number;
+  /** Limit for pagination (alternative to pageSize) */
+  limit?: number;
 }
 
 /**
@@ -2031,6 +2051,8 @@ export interface CompareTablesRequest {
 export interface CompareTablesResponse {
   success: boolean;
   result?: DataComparisonResult;
+  /** Alias for result (backwards compatibility) */
+  comparison?: DataComparisonResult;
   error?: string;
 }
 

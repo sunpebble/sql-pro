@@ -153,7 +153,7 @@ export function AISettingsDialog({
               <Label htmlFor="provider">AI Provider</Label>
               <Select
                 value={localProvider}
-                onValueChange={(value) =>
+                onValueChange={(value: string) =>
                   handleProviderChange(value as AIProvider)
                 }
               >

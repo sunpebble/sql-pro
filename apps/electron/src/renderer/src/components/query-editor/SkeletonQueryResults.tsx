@@ -1,5 +1,4 @@
 import { Skeleton } from '@sqlpro/ui/skeleton';
-import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { SkeletonTable } from '../data-table/Animations';
 

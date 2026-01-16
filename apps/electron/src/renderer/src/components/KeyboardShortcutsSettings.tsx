@@ -352,7 +352,7 @@ export const KeyboardShortcutsSettings = memo(
 
                 <Select
                   value={activePreset}
-                  onValueChange={(v) =>
+                  onValueChange={(v: string) =>
                     v && handlePresetChange(v as PresetName)
                   }
                 >

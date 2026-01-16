@@ -684,7 +684,7 @@ export async function syncShortcutsToMain(
 
     // Try Tauri API first, then fall back to Electron API
     if (sqlPro.menu?.updateShortcuts) {
-      await sqlPro.menu.updateShortcuts(acceleratorMap);
+      await sqlPro.menu.updateShortcuts({ shortcuts });
     } else if (window.sqlPro?.shortcuts?.update) {
       await window.sqlPro.shortcuts.update({ shortcuts });
     }

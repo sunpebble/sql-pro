@@ -174,7 +174,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
       if (response.result || response.comparison) {
         useDataDiffStore
           .getState()
-          .setComparisonResult(response.result || response.comparison);
+          .setComparisonResult(response.result || response.comparison || null);
       }
     } catch (error) {
       setComparisonError(
@@ -291,7 +291,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                   </label>
                   <Select
                     value={source?.connectionId ?? ''}
-                    onValueChange={(connectionId) => {
+                    onValueChange={(connectionId: string) => {
                       if (!connectionId) return;
                       const connection = connections.find(
                         (c) => c.id === connectionId
@@ -330,7 +330,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                   </label>
                   <Select
                     value={source?.tableName ?? ''}
-                    onValueChange={(tableName) => {
+                    onValueChange={(tableName: string) => {
                       if (!source || !tableName) return;
                       setSource({
                         ...source,
@@ -387,7 +387,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                   </label>
                   <Select
                     value={target?.connectionId ?? ''}
-                    onValueChange={(connectionId) => {
+                    onValueChange={(connectionId: string) => {
                       if (!connectionId) return;
                       const connection = connections.find(
                         (c) => c.id === connectionId
@@ -426,7 +426,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                   </label>
                   <Select
                     value={target?.tableName ?? ''}
-                    onValueChange={(tableName) => {
+                    onValueChange={(tableName: string) => {
                       if (!target || !tableName) return;
                       setTarget({
                         ...target,

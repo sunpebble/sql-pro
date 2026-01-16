@@ -113,7 +113,9 @@ export function BulkEditDialog({
               </Label>
               <Select
                 value={selectedColumn}
-                onValueChange={(value) => setSelectedColumn(value || '')}
+                onValueChange={(value: string) =>
+                  setSelectedColumn(value || '')
+                }
                 disabled={availableColumns.length === 0}
               >
                 <SelectTrigger id="column-select">

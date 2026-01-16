@@ -42,6 +42,7 @@ export function SkeletonProActivation({
         <div className="bg-muted/50 space-y-1 rounded-lg border p-3">
           {Array.from({ length: 5 }).map((_, i) => (
             <div
+              // eslint-disable-next-line react/no-array-index-key -- Static skeleton list, index is stable
               key={i}
               className="flex items-center gap-2 py-1"
               style={{ animationDelay: `${i * 50}ms` }}
