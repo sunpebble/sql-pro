@@ -9,7 +9,7 @@ import {
 } from '@sqlpro/ui/dropdown-menu';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath } from '@xyflow/react';
 import { Trash2 } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useQueryBuilderStore } from '@/stores/query-builder-store';
 
@@ -31,6 +31,8 @@ const JOIN_TYPE_LABELS: Record<JoinType, string> = {
 
 function QueryBuilderJoinEdgeComponent({
   id,
+  source,
+  target,
   sourceX,
   sourceY,
   targetX,
@@ -40,13 +42,23 @@ function QueryBuilderJoinEdgeComponent({
   data,
   selected,
 }: EdgeProps) {
-  const { updateJoinType, removeJoin } = useQueryBuilderStore();
+  const { updateJoinType, removeJoin, edges } = useQueryBuilderStore();
   const [isHovered, setIsHovered] = useState(false);
 
-  // Calculate a unique offset based on source/target Y positions
-  // This helps separate multiple edges between the same nodes
-  const yDiff = sourceY - targetY;
-  const baseOffset = Math.sign(yDiff) * Math.min(Math.abs(yDiff) * 0.3, 50);
+  // Find edges between the same pair of nodes and calculate index
+  const { edgeIndex, totalEdges } = useMemo(() => {
+    const sameNodeEdges = edges.filter(
+      (e) =>
+        (e.source === source && e.target === target) ||
+        (e.source === target && e.target === source)
+    );
+    const index = sameNodeEdges.findIndex((e) => e.id === id);
+    return { edgeIndex: index, totalEdges: sameNodeEdges.length };
+  }, [edges, id, source, target]);
+
+  // Calculate offset for multiple edges between same nodes
+  const edgeOffset =
+    totalEdges > 1 ? (edgeIndex - (totalEdges - 1) / 2) * 40 : 0;
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -55,12 +67,12 @@ function QueryBuilderJoinEdgeComponent({
     targetX,
     targetY,
     targetPosition,
-    // Add curvature based on Y difference to separate overlapping edges
-    curvature: 0.25 + Math.abs(yDiff) * 0.002,
+    // Adjust curvature based on edge index
+    curvature: 0.25 + edgeIndex * 0.15,
   });
 
-  // Offset label position based on Y difference to prevent overlap
-  const labelOffsetY = baseOffset * 0.5;
+  // Apply vertical offset to label position
+  const labelOffsetY = edgeOffset;
 
   const edgeData = data as QueryBuilderEdgeData | undefined;
   const joinType = edgeData?.joinType || 'INNER';
