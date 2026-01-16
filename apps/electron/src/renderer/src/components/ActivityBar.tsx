@@ -1,11 +1,11 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Code, GitCompare, GitFork, Table } from 'lucide-react';
+import { Blocks, Code, GitCompare, GitFork, Table } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { cn } from '@/lib/utils';
 
-export type ViewType = 'data' | 'query' | 'diagram' | 'compare';
+export type ViewType = 'data' | 'query' | 'builder' | 'diagram' | 'compare';
 
 interface ActivityBarItem {
   id: ViewType;
@@ -29,6 +29,13 @@ const ACTIVITY_BAR_ITEMS: ActivityBarItem[] = [
     labelKey: 'navigation.sqlQuery',
     shortcutAction: 'nav.query-editor',
     tourTarget: 'query-editor-tab',
+  },
+  {
+    id: 'builder',
+    icon: Blocks,
+    labelKey: 'navigation.queryBuilder',
+    shortcutAction: 'nav.query-builder',
+    tourTarget: 'query-builder-tab',
   },
   {
     id: 'diagram',

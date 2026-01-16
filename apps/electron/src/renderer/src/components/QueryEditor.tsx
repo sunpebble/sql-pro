@@ -32,13 +32,8 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import * as React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DataAnalysisPanel, NLToSQLDialog } from '@/components/ai';
 import { SettingsDialog } from '@/components/SettingsDialog';

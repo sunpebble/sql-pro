@@ -74,6 +74,18 @@ interface DialogState {
   openChangesPanel: () => void;
   closeChangesPanel: () => void;
   toggleChangesPanel: () => void;
+
+  // Backup/Restore dialog
+  backupDialogOpen: boolean;
+  openBackupDialog: () => void;
+  closeBackupDialog: () => void;
+
+  // Database Dashboard dialog
+  dashboardOpen: boolean;
+  dashboardConnectionId: string | null;
+  dashboardDatabaseName: string | null;
+  openDashboard: (connectionId: string, databaseName?: string) => void;
+  closeDashboard: () => void;
 }
 
 export const useDialogStore = create<DialogState>((set) => ({
@@ -153,4 +165,26 @@ export const useDialogStore = create<DialogState>((set) => ({
   closeChangesPanel: () => set({ changesPanelOpen: false }),
   toggleChangesPanel: () =>
     set((state) => ({ changesPanelOpen: !state.changesPanelOpen })),
+
+  // Backup/Restore dialog
+  backupDialogOpen: false,
+  openBackupDialog: () => set({ backupDialogOpen: true }),
+  closeBackupDialog: () => set({ backupDialogOpen: false }),
+
+  // Database Dashboard dialog
+  dashboardOpen: false,
+  dashboardConnectionId: null,
+  dashboardDatabaseName: null,
+  openDashboard: (connectionId, databaseName) =>
+    set({
+      dashboardOpen: true,
+      dashboardConnectionId: connectionId,
+      dashboardDatabaseName: databaseName || null,
+    }),
+  closeDashboard: () =>
+    set({
+      dashboardOpen: false,
+      dashboardConnectionId: null,
+      dashboardDatabaseName: null,
+    }),
 }));

@@ -45,6 +45,7 @@ export type {
 } from './keyboard-shortcuts-store';
 export { useOnboardingStore } from './onboarding-store';
 export { ALL_PRO_FEATURES, useProStore } from './pro-store';
+export { useQueryBuilderStore } from './query-builder-store';
 export { useQueryHistoryStore } from './query-history-store';
 export type {
   QueryHistoryDateRange,

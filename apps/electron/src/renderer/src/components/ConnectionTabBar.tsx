@@ -35,6 +35,8 @@ import {
 } from '@sqlpro/ui/tooltip';
 import {
   AlertCircle,
+  Archive,
+  BarChart3,
   CheckCircle,
   Circle,
   KeyRound,
@@ -116,6 +118,8 @@ const ConnectionTab = memo(
       (s) => s.openConnectionSettings
     );
     const openChangePassword = useDialogStore((s) => s.openChangePassword);
+    const openBackupDialog = useDialogStore((s) => s.openBackupDialog);
+    const openDashboard = useDialogStore((s) => s.openDashboard);
 
     // Refresh state
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -181,6 +185,16 @@ const ConnectionTab = memo(
         isEncrypted: connection.isEncrypted,
       });
     }, [connection, openChangePassword]);
+
+    // Handle backup
+    const handleBackup = useCallback(() => {
+      openBackupDialog();
+    }, [openBackupDialog]);
+
+    // Handle dashboard
+    const handleDashboard = useCallback(() => {
+      openDashboard(connection.id, connection.filename);
+    }, [connection.id, connection.filename, openDashboard]);
 
     // Set up drag and drop for this tab with activation constraint
     const {
@@ -346,6 +360,14 @@ const ConnectionTab = memo(
               className={cn('mr-2 h-4 w-4', isRefreshing && 'animate-spin')}
             />
             {t('connection.refreshSchema')}
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleBackup}>
+            <Archive className="mr-2 h-4 w-4" />
+            {t('backup.title', 'Backup & Restore')}
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleDashboard}>
+            <BarChart3 className="mr-2 h-4 w-4" />
+            {t('dashboard.title', 'Database Dashboard')}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuSub>

@@ -33,9 +33,13 @@ import type {
   CompareSnapshotsResponse,
   CompareTablesRequest,
   CompareTablesResponse,
+  CreateBackupRequest,
+  CreateBackupResponse,
   CreateFolderRequest,
   CreateFolderResponse,
   CreateWindowResponse,
+  DeleteBackupRequest,
+  DeleteBackupResponse,
   DeleteFolderRequest,
   DeleteFolderResponse,
   DeleteProfileRequest,
@@ -105,6 +109,8 @@ import type {
   ImportSchemaRequest,
   ImportSchemaResponse,
   IsPasswordStorageAvailableResponse,
+  ListBackupsRequest,
+  ListBackupsResponse,
   MemoryPressureChangeEvent,
   MemoryStatsUpdateEvent,
   MemorySubscribeRequest,
@@ -128,6 +134,8 @@ import type {
   RemoveConnectionResponse,
   RemovePasswordRequest,
   RemovePasswordResponse,
+  RestoreBackupRequest,
+  RestoreBackupResponse,
   SaveAISettingsRequest,
   SaveAISettingsResponse,
   SaveFileDialogRequest,
@@ -278,6 +286,18 @@ export const sqlProAPI = {
   export: {
     data: (request: ExportRequest): Promise<ExportResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.EXPORT_DATA, request),
+  },
+
+  // Backup operations
+  backup: {
+    create: (request: CreateBackupRequest): Promise<CreateBackupResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.BACKUP_CREATE, request),
+    restore: (request: RestoreBackupRequest): Promise<RestoreBackupResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.BACKUP_RESTORE, request),
+    list: (request: ListBackupsRequest): Promise<ListBackupsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.BACKUP_LIST, request),
+    delete: (request: DeleteBackupRequest): Promise<DeleteBackupResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.BACKUP_DELETE, request),
   },
 
   // App operations

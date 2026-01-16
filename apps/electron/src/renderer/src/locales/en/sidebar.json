@@ -60,6 +60,7 @@
     "copyName": "Copy Name",
     "copyCreateStatement": "Copy CREATE Statement",
     "exportSchema": "Export Schema",
+    "generateMockData": "Generate Mock Data",
     "truncateTable": "Truncate Table",
     "dropTable": "Drop Table",
     "dropView": "Drop View"

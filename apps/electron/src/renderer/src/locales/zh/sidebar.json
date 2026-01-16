@@ -60,6 +60,7 @@
     "copyName": "复制名称",
     "copyCreateStatement": "复制 CREATE 语句",
     "exportSchema": "导出结构",
+    "generateMockData": "生成模拟数据",
     "truncateTable": "清空表",
     "dropTable": "删除表",
     "dropView": "删除视图"

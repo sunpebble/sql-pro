@@ -1,6 +1,7 @@
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
 import { setupAIHandlers } from './ai';
+import { setupBackupHandlers } from './backup';
 import { setupDatabaseHandlers } from './database';
 import { setupDialogHandlers } from './dialog';
 import { setupExportHandlers } from './export';
@@ -47,6 +48,7 @@ export function setupIpcHandlers(): void {
   setupMemoryHandlers();
   setupPgNotifyHandlers();
   setupImageHandlers();
+  setupBackupHandlers();
 }
 
 export function cleanupIpcHandlers(): void {

@@ -645,6 +645,101 @@ export interface ExportResponse {
   error?: string;
 }
 
+// ============ Backup/Restore Types ============
+
+/** Supported backup formats */
+export type BackupFormat = 'sqlite' | 'sql';
+
+/** Backup metadata */
+export interface BackupMetadata {
+  id: string;
+  name: string;
+  createdAt: string;
+  databaseType: DatabaseType;
+  databaseName: string;
+  format: BackupFormat;
+  filePath: string;
+  fileSize: number;
+  tableCount: number;
+  totalRows: number;
+  description?: string;
+}
+
+/** Request to create a backup */
+export interface CreateBackupRequest {
+  connectionId: string;
+  /** Backup name (used for filename) */
+  name: string;
+  /** Output directory (if not specified, uses default backup directory) */
+  outputDir?: string;
+  /** Backup format: 'sqlite' for file copy, 'sql' for SQL dump */
+  format: BackupFormat;
+  /** Optional description */
+  description?: string;
+  /** Specific tables to backup (all tables if not specified) */
+  tables?: string[];
+  /** Include schema only (no data) */
+  schemaOnly?: boolean;
+}
+
+/** Response from creating a backup */
+export interface CreateBackupResponse {
+  success: boolean;
+  backup?: BackupMetadata;
+  error?: string;
+}
+
+/** Request to restore from a backup */
+export interface RestoreBackupRequest {
+  /** Path to backup file */
+  backupPath: string;
+  /** Target connection ID (for SQL restore to existing connection) */
+  connectionId?: string;
+  /** For SQLite: path to restore the database file */
+  targetPath?: string;
+  /** Drop existing tables before restore */
+  dropExisting?: boolean;
+  /** Specific tables to restore (all tables if not specified) */
+  tables?: string[];
+}
+
+/** Response from restoring a backup */
+export interface RestoreBackupResponse {
+  success: boolean;
+  tablesRestored?: number;
+  rowsRestored?: number;
+  error?: string;
+  /** New connection ID if a new database was created */
+  connectionId?: string;
+}
+
+/** Request to list backups */
+export interface ListBackupsRequest {
+  /** Filter by database type */
+  databaseType?: DatabaseType;
+  /** Filter by database name */
+  databaseName?: string;
+}
+
+/** Response from listing backups */
+export interface ListBackupsResponse {
+  success: boolean;
+  backups?: BackupMetadata[];
+  error?: string;
+}
+
+/** Request to delete a backup */
+export interface DeleteBackupRequest {
+  /** Backup ID or file path */
+  backupId: string;
+}
+
+/** Response from deleting a backup */
+export interface DeleteBackupResponse {
+  success: boolean;
+  error?: string;
+}
+
 // ============ Preferences Types ============
 
 export interface RecentConnection {
@@ -2819,6 +2914,12 @@ export const IPC_CHANNELS = {
   PG_NOTIFY_UNSUBSCRIBE: 'pg-notify:unsubscribe',
   PG_NOTIFY_GET_SUBSCRIPTIONS: 'pg-notify:get-subscriptions',
   PG_NOTIFY_EVENT: 'pg-notify:event',
+
+  // Backup/Restore
+  BACKUP_CREATE: 'backup:create',
+  BACKUP_RESTORE: 'backup:restore',
+  BACKUP_LIST: 'backup:list',
+  BACKUP_DELETE: 'backup:delete',
 } as const;
 
 // ============ Keyboard Shortcuts Types ============
@@ -2848,6 +2949,7 @@ export type ShortcutAction =
   // Navigation
   | 'nav.data-browser'
   | 'nav.query-editor'
+  | 'nav.query-builder'
   | 'nav.search-tables'
   | 'nav.schema-compare'
   | 'nav.er-diagram'
@@ -2947,6 +3049,7 @@ export function bindingToAccelerator(
 export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'nav.data-browser': { key: '1', modifiers: { cmd: true, ctrl: true } },
   'nav.query-editor': { key: '2', modifiers: { cmd: true, ctrl: true } },
+  'nav.query-builder': { key: '6', modifiers: { cmd: true, ctrl: true } },
   'nav.search-tables': { key: 'p', modifiers: { cmd: true, shift: true } },
   'nav.schema-compare': { key: '4', modifiers: { cmd: true, ctrl: true } },
   'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },

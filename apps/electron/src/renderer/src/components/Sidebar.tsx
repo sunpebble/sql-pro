@@ -51,6 +51,7 @@ import {
   Code,
   Copy,
   Database,
+  Dices,
   Eye,
   FileDown,
   FileSearch,
@@ -79,6 +80,7 @@ import {
   useTableFont,
   useTableOrganizationStore,
 } from '@/stores';
+import { MockDataGeneratorDialog } from './mock-data-generator';
 import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
 interface SidebarProps {
@@ -145,6 +147,10 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
 
   // Schema export dialog state
   const [showSchemaExport, setShowSchemaExport] = useState(false);
+
+  // Mock data generator dialog state
+  const [showMockDataGenerator, setShowMockDataGenerator] = useState(false);
+  const [mockDataTable, setMockDataTable] = useState<TableSchema | null>(null);
 
   // Font settings for sidebar
   const tableFont = useTableFont();
@@ -354,6 +360,12 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   // Show schema export dialog
   const handleExportSchema = useCallback(() => {
     setShowSchemaExport(true);
+  }, []);
+
+  // Show mock data generator dialog
+  const handleGenerateMockData = useCallback((table: TableSchema) => {
+    setMockDataTable(table);
+    setShowMockDataGenerator(true);
   }, []);
 
   // Show truncate confirmation dialog
@@ -913,6 +925,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                   onExportSchema={handleExportSchema}
                   onTruncateTable={handleTruncateTableRequest}
                   onDropTable={handleDropTableRequest}
+                  onGenerateMockData={handleGenerateMockData}
                   connectionPath={connection?.path || ''}
                   availableTags={availableTags}
                   getTableMetadata={getTableMetadata}
@@ -1049,6 +1062,13 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
           databaseName={connection?.filename || connection?.path || ''}
         />
       )}
+
+      {/* Mock Data Generator Dialog */}
+      <MockDataGeneratorDialog
+        open={showMockDataGenerator}
+        onOpenChange={setShowMockDataGenerator}
+        initialTable={mockDataTable || undefined}
+      />
     </div>
   );
 }
@@ -1075,6 +1095,7 @@ interface SchemaSectionProps {
   onExportSchema: () => void;
   onTruncateTable: (table: TableSchema) => void;
   onDropTable: (table: TableSchema) => void;
+  onGenerateMockData: (table: TableSchema) => void;
   // Tag and organization props
   connectionPath: string;
   availableTags: string[];
@@ -1107,6 +1128,7 @@ function SchemaSection({
   onExportSchema,
   onTruncateTable,
   onDropTable,
+  onGenerateMockData,
   connectionPath,
   availableTags,
   getTableMetadata,
@@ -1192,6 +1214,7 @@ function SchemaSection({
                         onExportSchema={onExportSchema}
                         onTruncateTable={() => onTruncateTable(table)}
                         onDropTable={() => onDropTable(table)}
+                        onGenerateMockData={() => onGenerateMockData(table)}
                         tableKey={tableKey}
                         tags={metadata.tags}
                         isPinned={metadata.pinned}
@@ -1254,6 +1277,7 @@ function SchemaSection({
                         onExportSchema={onExportSchema}
                         onTruncateTable={() => onTruncateTable(view)}
                         onDropTable={() => onDropTable(view)}
+                        onGenerateMockData={() => onGenerateMockData(view)}
                         isView
                         tableKey={tableKey}
                         tags={metadata.tags}
@@ -1318,6 +1342,7 @@ interface TableItemProps {
   onExportSchema: () => void;
   onTruncateTable: () => void;
   onDropTable: () => void;
+  onGenerateMockData: () => void;
   isView?: boolean;
   // Tag and organization props
   tableKey: string;
@@ -1340,6 +1365,7 @@ function TableItem({
   onExportSchema,
   onTruncateTable,
   onDropTable,
+  onGenerateMockData,
   isView,
   tags,
   isPinned,
@@ -1527,6 +1553,14 @@ function TableItem({
           <FileDown className="size-4" />
           {t('contextMenu.exportSchema', { defaultValue: 'Export Schema' })}
         </ContextMenuItem>
+        {!isView && (
+          <ContextMenuItem onClick={onGenerateMockData}>
+            <Dices className="size-4" />
+            {t('contextMenu.generateMockData', {
+              defaultValue: 'Generate Mock Data',
+            })}
+          </ContextMenuItem>
+        )}
         {!isView && (
           <ContextMenuItem onClick={onTruncateTable}>
             <Trash2 className="size-4" />
