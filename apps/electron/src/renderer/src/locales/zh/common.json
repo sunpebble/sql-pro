@@ -732,9 +732,21 @@
     "clear": "清空查询",
     "run": "运行查询",
     "copySQL": "复制 SQL",
-    "openInEditor": "在编辑器中打开",
+    "openInEditor": "在查询编辑器中打开",
     "generatedSQL": "生成的 SQL",
-    "noTablesAdded": "添加表以开始构建查询"
+    "noTablesAdded": "添加表以开始构建查询",
+    "getStarted": "开始使用",
+    "getStartedHint": "点击工具栏中的「添加表」将表添加到查询中。在表之间拖拽列以创建 JOIN 连接。",
+    "sqlPreview": "SQL 预览",
+    "selectedColumns": "已选列",
+    "removeTable": "移除表",
+    "selectAll": "全选",
+    "deselectAll": "取消全选",
+    "rows": "行",
+    "sqlCopied": "SQL 已复制到剪贴板",
+    "noConnection": "无数据库连接",
+    "generatedQuery": "生成的查询",
+    "openedInEditor": "已在查询编辑器中打开"
   },
   "mockData": {
     "title": "模拟数据生成器",

@@ -733,9 +733,21 @@
     "clear": "Clear query",
     "run": "Run Query",
     "copySQL": "Copy SQL",
-    "openInEditor": "Open in Editor",
+    "openInEditor": "Open in Query Editor",
     "generatedSQL": "Generated SQL",
-    "noTablesAdded": "Add tables to start building your query"
+    "noTablesAdded": "Add tables to start building your query",
+    "getStarted": "Get Started",
+    "getStartedHint": "Click \"Add Table\" in the toolbar to add tables to your query. Drag columns between tables to create JOINs.",
+    "sqlPreview": "SQL Preview",
+    "selectedColumns": "Selected Columns",
+    "removeTable": "Remove table",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "rows": "rows",
+    "sqlCopied": "SQL copied to clipboard",
+    "noConnection": "No database connection",
+    "generatedQuery": "Generated Query",
+    "openedInEditor": "Opened in query editor"
   },
   "mockData": {
     "title": "Mock Data Generator",
