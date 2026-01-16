@@ -99,7 +99,7 @@ function QueryBuilderJoinEdgeComponent({
             )}
           >
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
