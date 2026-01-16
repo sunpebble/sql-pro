@@ -9,7 +9,7 @@ import {
 } from '@sqlpro/ui/dropdown-menu';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath } from '@xyflow/react';
 import { Trash2 } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useQueryBuilderStore } from '@/stores/query-builder-store';
 
@@ -29,10 +29,25 @@ const JOIN_TYPE_LABELS: Record<JoinType, string> = {
   CROSS: 'CROSS JOIN',
 };
 
+// Short labels for compact display
+const JOIN_TYPE_SHORT: Record<JoinType, string> = {
+  INNER: 'I',
+  LEFT: 'L',
+  RIGHT: 'R',
+  FULL: 'F',
+  CROSS: 'X',
+};
+
+const JOIN_TYPE_BG: Record<JoinType, string> = {
+  INNER: 'bg-green-500',
+  LEFT: 'bg-blue-500',
+  RIGHT: 'bg-purple-500',
+  FULL: 'bg-orange-500',
+  CROSS: 'bg-gray-500',
+};
+
 function QueryBuilderJoinEdgeComponent({
   id,
-  source,
-  target,
   sourceX,
   sourceY,
   targetX,
@@ -42,34 +57,23 @@ function QueryBuilderJoinEdgeComponent({
   data,
   selected,
 }: EdgeProps) {
-  const { updateJoinType, removeJoin, edges } = useQueryBuilderStore();
+  const { updateJoinType, removeJoin } = useQueryBuilderStore();
   const [isHovered, setIsHovered] = useState(false);
+  const [isPinned, setIsPinned] = useState(false); // Pinned state for click-to-top
 
-  // Find edges between the same pair of nodes and calculate index
-  const { edgeIndex, totalEdges } = useMemo(() => {
-    const sameNodeEdges = edges.filter(
-      (e) =>
-        (e.source === source && e.target === target) ||
-        (e.source === target && e.target === source)
-    );
-    const index = sameNodeEdges.findIndex((e) => e.id === id);
-    return { edgeIndex: index, totalEdges: sameNodeEdges.length };
-  }, [edges, id, source, target]);
-
-  // Calculate offset for multiple edges between same nodes
-  // Spread edges out with increasing curvature
-  const curvatureOffset = totalEdges > 1 ? (edgeIndex + 1) * 0.2 : 0;
-
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
     targetX,
     targetY,
     targetPosition,
-    // Increase curvature progressively for each additional edge
-    curvature: 0.25 + curvatureOffset,
   });
+
+  // Label position at the midpoint of the bezier curve
+  // For bezier curves, the midpoint (t=0.5) is approximately at the center
+  const finalLabelX = (sourceX + targetX) / 2;
+  const finalLabelY = (sourceY + targetY) / 2;
 
   const edgeData = data as QueryBuilderEdgeData | undefined;
   const joinType = edgeData?.joinType || 'INNER';
@@ -103,28 +107,49 @@ function QueryBuilderJoinEdgeComponent({
         <div
           style={{
             position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            transform: `translate(-50%, -50%) translate(${finalLabelX}px,${finalLabelY}px)`,
             pointerEvents: 'all',
+            zIndex: isPinned ? 10000 : isHovered ? 5000 : 1,
+            isolation: 'isolate', // Create new stacking context
           }}
           className="nodrag nopan"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsPinned(true);
+          }}
         >
           <div
             className={cn(
-              'bg-background flex items-center gap-1 rounded-md border px-2 py-1 shadow-sm',
+              'bg-background flex items-center rounded border px-1 py-0.5 shadow-sm',
               'transition-all duration-150',
               (selected || isHovered) && 'ring-primary ring-2'
             )}
           >
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 px-2 font-mono text-xs"
+                  className="h-auto gap-1 px-1 py-0 font-mono text-[10px]"
                 >
-                  {JOIN_TYPE_LABELS[joinType]}
+                  {/* Color dot */}
+                  <span
+                    className={cn(
+                      'h-1.5 w-1.5 shrink-0 rounded-full',
+                      JOIN_TYPE_BG[joinType]
+                    )}
+                  />
+                  {/* Short type + column info */}
+                  <span className="font-semibold">
+                    {JOIN_TYPE_SHORT[joinType]}
+                  </span>
+                  {edgeData?.sourceColumn && edgeData?.targetColumn && (
+                    <span className="text-muted-foreground">
+                      {edgeData.sourceColumn}={edgeData.targetColumn}
+                    </span>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center">
@@ -164,13 +189,6 @@ function QueryBuilderJoinEdgeComponent({
               </Button>
             )}
           </div>
-
-          {/* Column info */}
-          {edgeData?.sourceColumn && edgeData?.targetColumn && (
-            <div className="text-muted-foreground mt-1 text-center text-[10px]">
-              {edgeData.sourceColumn} = {edgeData.targetColumn}
-            </div>
-          )}
         </div>
       </EdgeLabelRenderer>
     </>
