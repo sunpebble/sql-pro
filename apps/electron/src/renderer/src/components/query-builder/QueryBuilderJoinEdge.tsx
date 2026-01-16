@@ -43,6 +43,11 @@ function QueryBuilderJoinEdgeComponent({
   const { updateJoinType, removeJoin } = useQueryBuilderStore();
   const [isHovered, setIsHovered] = useState(false);
 
+  // Calculate a unique offset based on source/target Y positions
+  // This helps separate multiple edges between the same nodes
+  const yDiff = sourceY - targetY;
+  const baseOffset = Math.sign(yDiff) * Math.min(Math.abs(yDiff) * 0.3, 50);
+
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -50,7 +55,12 @@ function QueryBuilderJoinEdgeComponent({
     targetX,
     targetY,
     targetPosition,
+    // Add curvature based on Y difference to separate overlapping edges
+    curvature: 0.25 + Math.abs(yDiff) * 0.002,
   });
+
+  // Offset label position based on Y difference to prevent overlap
+  const labelOffsetY = baseOffset * 0.5;
 
   const edgeData = data as QueryBuilderEdgeData | undefined;
   const joinType = edgeData?.joinType || 'INNER';
@@ -84,7 +94,7 @@ function QueryBuilderJoinEdgeComponent({
         <div
           style={{
             position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY + labelOffsetY}px)`,
             pointerEvents: 'all',
           }}
           className="nodrag nopan"
