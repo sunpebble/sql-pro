@@ -124,6 +124,7 @@ export const useQueryBuilderStore = create<QueryBuilderStore>()(
           id: `${table.name}-${Date.now()}`,
           type: 'queryBuilderTable',
           position,
+          dragHandle: '.drag-handle',
           data: {
             table,
             alias,

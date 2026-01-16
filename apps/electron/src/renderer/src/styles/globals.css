@@ -485,6 +485,28 @@ textarea,
   --xy-controls-button-background-color-default: var(--card);
 }
 
+/* Query Builder node styles */
+.react-flow__node {
+  overflow: visible !important;
+}
+
+/* Ensure handles are visible outside node boundaries */
+.react-flow__handle {
+  z-index: 10;
+}
+
+/* Connection line while dragging */
+.react-flow__connection-path {
+  stroke: var(--primary) !important;
+  stroke-width: 2px !important;
+}
+
+/* Edge (connection) line styles */
+.react-flow__edge-path {
+  stroke: var(--muted-foreground);
+  stroke-width: 2px;
+}
+
 /* Fix Radix ScrollArea horizontal scrolling issue */
 /* Radix adds display:table inline style to inner div which prevents horizontal scroll */
 [data-radix-scroll-area-viewport] > div {

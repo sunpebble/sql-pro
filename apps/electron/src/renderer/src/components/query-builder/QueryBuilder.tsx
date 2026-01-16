@@ -243,6 +243,7 @@ export function QueryBuilder() {
               minZoom={0.1}
               maxZoom={2}
               proOptions={{ hideAttribution: true }}
+              nodeDragThreshold={5}
               connectionLineStyle={{
                 stroke: 'hsl(var(--primary))',
                 strokeWidth: 2,

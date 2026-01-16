@@ -3,7 +3,7 @@ import { Button } from '@sqlpro/ui/button';
 import { Checkbox } from '@sqlpro/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Handle, Position } from '@xyflow/react';
-import { GripVertical, Key, Link2, Table, X } from 'lucide-react';
+import { Key, Link2, Table, X } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -52,20 +52,15 @@ function QueryBuilderTableNodeComponent({
   return (
     <div
       className={cn(
-        'bg-card text-card-foreground relative min-w-56 rounded-lg border shadow-md',
+        'bg-card text-card-foreground relative overflow-visible rounded-lg border shadow-md',
         'dark:border-zinc-700 dark:bg-zinc-900',
         selected && 'ring-primary ring-2'
       )}
     >
-      {/* Drag handle */}
-      <div className="absolute top-0 bottom-0 left-0 flex cursor-grab items-center px-1">
-        <GripVertical className="text-muted-foreground h-4 w-4" />
-      </div>
-
-      {/* Header */}
+      {/* Header - draggable area */}
       <div
         className={cn(
-          'flex items-center gap-2 rounded-t-lg border-b px-3 py-2 pl-6',
+          'drag-handle flex cursor-grab items-center gap-2 rounded-t-lg border-b px-3 py-2',
           'bg-muted/50 dark:bg-zinc-800/50'
         )}
       >
@@ -102,7 +97,7 @@ function QueryBuilderTableNodeComponent({
       {/* Select All Row */}
       <div
         className={cn(
-          'flex items-center gap-2 border-b px-3 py-1.5',
+          'flex items-center gap-2 border-b py-1.5 pr-5 pl-6',
           'hover:bg-accent/50 cursor-pointer'
         )}
         onClick={handleToggleAll}
@@ -124,7 +119,7 @@ function QueryBuilderTableNodeComponent({
       </div>
 
       {/* Columns */}
-      <div className="max-h-64 overflow-y-auto py-1">
+      <div className="overflow-visible py-1">
         {table.columns.map((column) => {
           const isPK = pkColumns.has(column.name);
           const isFK = fkColumns.has(column.name);
@@ -134,12 +129,24 @@ function QueryBuilderTableNodeComponent({
             <div
               key={column.name}
               className={cn(
-                'relative flex items-center gap-2 px-3 py-1 text-sm',
+                'group relative flex items-center gap-2 overflow-visible py-1 pr-5 pl-6 text-sm',
                 'hover:bg-accent/50 cursor-pointer',
                 isSelected && 'bg-primary/10'
               )}
               onClick={() => handleToggleColumn(column.name)}
             >
+              {/* Target handle (left side) - for receiving JOINs */}
+              <Handle
+                type="target"
+                position={Position.Left}
+                id={`${column.name}-target`}
+                className={cn(
+                  '!absolute !-left-[24px] h-3! w-3! border-2!',
+                  'border-primary! bg-background!',
+                  'hover:bg-primary! transition-all hover:scale-125!'
+                )}
+              />
+
               {/* Checkbox */}
               <Checkbox
                 checked={isSelected}
@@ -148,7 +155,7 @@ function QueryBuilderTableNodeComponent({
               />
 
               {/* PK/FK indicators */}
-              <div className="flex w-6 shrink-0 items-center gap-0.5">
+              <div className="flex w-5 shrink-0 items-center justify-center gap-0.5">
                 {isPK && (
                   <Tooltip>
                     <TooltipTrigger>
@@ -190,21 +197,9 @@ function QueryBuilderTableNodeComponent({
                 position={Position.Right}
                 id={`${column.name}-source`}
                 className={cn(
-                  'h-2.5! w-2.5! border-2!',
+                  '!absolute !-right-[20px] h-3! w-3! border-2!',
                   'border-primary! bg-background!',
-                  'hover:bg-primary! transition-transform hover:scale-125'
-                )}
-              />
-
-              {/* Target handle (left side) - for receiving JOINs */}
-              <Handle
-                type="target"
-                position={Position.Left}
-                id={`${column.name}-target`}
-                className={cn(
-                  'h-2.5! w-2.5! border-2!',
-                  'border-primary! bg-background!',
-                  'hover:bg-primary! transition-transform hover:scale-125'
+                  'hover:bg-primary! transition-all hover:scale-125!'
                 )}
               />
             </div>
