@@ -57,8 +57,8 @@ function QueryBuilderJoinEdgeComponent({
   }, [edges, id, source, target]);
 
   // Calculate offset for multiple edges between same nodes
-  const edgeOffset =
-    totalEdges > 1 ? (edgeIndex - (totalEdges - 1) / 2) * 40 : 0;
+  // Spread edges out with increasing curvature
+  const curvatureOffset = totalEdges > 1 ? (edgeIndex + 1) * 0.2 : 0;
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -67,12 +67,9 @@ function QueryBuilderJoinEdgeComponent({
     targetX,
     targetY,
     targetPosition,
-    // Adjust curvature based on edge index
-    curvature: 0.25 + edgeIndex * 0.15,
+    // Increase curvature progressively for each additional edge
+    curvature: 0.25 + curvatureOffset,
   });
-
-  // Apply vertical offset to label position
-  const labelOffsetY = edgeOffset;
 
   const edgeData = data as QueryBuilderEdgeData | undefined;
   const joinType = edgeData?.joinType || 'INNER';
@@ -106,7 +103,7 @@ function QueryBuilderJoinEdgeComponent({
         <div
           style={{
             position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY + labelOffsetY}px)`,
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             pointerEvents: 'all',
           }}
           className="nodrag nopan"
