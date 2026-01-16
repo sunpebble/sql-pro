@@ -6,7 +6,9 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from './lib/utils';
 
-const Select = SelectPrimitive.Root;
+function Select({ loopFocus = true, ...props }: SelectPrimitive.Root.Props) {
+  return <SelectPrimitive.Root loopFocus={loopFocus} {...props} />;
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
