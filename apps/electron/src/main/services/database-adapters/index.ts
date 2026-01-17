@@ -10,5 +10,6 @@ export {
   postgresqlAdapter,
   supabaseAdapter,
 } from './postgresql-adapter';
+export { QdrantAdapter, qdrantAdapter } from './qdrant-adapter';
 export { SQLiteAdapter, sqliteAdapter } from './sqlite-adapter';
 export * from './types';

@@ -30,6 +30,7 @@ const DEFAULT_PORTS: Record<DatabaseType, number> = {
   mysql: 3306,
   postgresql: 5432,
   supabase: 5432,
+  qdrant: 6333,
 };
 
 const DATABASE_LABELS: Record<DatabaseType, string> = {
@@ -37,6 +38,7 @@ const DATABASE_LABELS: Record<DatabaseType, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
   supabase: 'Supabase',
+  qdrant: 'Qdrant',
 };
 
 /**
@@ -119,6 +121,7 @@ export function ServerConnectionDialog({
 }: ServerConnectionDialogProps) {
   const { t } = useTranslation('dialog');
   const isSupabase = databaseType === 'supabase';
+  const isQdrant = databaseType === 'qdrant';
   const isEditMode = mode === 'edit';
 
   // Form state
@@ -134,6 +137,12 @@ export function ServerConnectionDialog({
   // Supabase-specific
   const [supabaseUrl, setSupabaseUrl] = useState('');
   const [supabaseKey, setSupabaseKey] = useState('');
+
+  // Qdrant-specific
+  const [qdrantHost, setQdrantHost] = useState('localhost');
+  const [qdrantPort, setQdrantPort] = useState('6333');
+  const [qdrantApiKey, setQdrantApiKey] = useState('');
+  const [qdrantUseTLS, setQdrantUseTLS] = useState(false);
 
   // Test connection state
   const [isTesting, setIsTesting] = useState(false);
@@ -164,6 +173,14 @@ export function ServerConnectionDialog({
         setReadOnly(initialConfig.readOnly || false);
         setSupabaseUrl(initialConfig.supabaseUrl || '');
         setSupabaseKey(initialConfig.supabaseKey || '');
+        // Qdrant-specific
+        setQdrantHost(initialConfig.qdrantHost || 'localhost');
+        setQdrantPort(
+          initialConfig.qdrantPort?.toString() ||
+            DEFAULT_PORTS.qdrant.toString()
+        );
+        setQdrantApiKey(initialConfig.qdrantApiKey || '');
+        setQdrantUseTLS(initialConfig.qdrantUseTLS || false);
       } else {
         // Reset for new connection
         setHost('');
@@ -176,6 +193,11 @@ export function ServerConnectionDialog({
         setReadOnly(false);
         setSupabaseUrl('');
         setSupabaseKey('');
+        // Qdrant-specific - reset to defaults
+        setQdrantHost('localhost');
+        setQdrantPort(DEFAULT_PORTS.qdrant.toString());
+        setQdrantApiKey('');
+        setQdrantUseTLS(false);
       }
       setTestResult(null);
       /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
@@ -189,11 +211,22 @@ export function ServerConnectionDialog({
       type: databaseType,
       name:
         displayName ||
-        (isSupabase ? supabaseUrl : `${host}:${port}/${database}`),
+        (isSupabase
+          ? supabaseUrl
+          : isQdrant
+            ? `${qdrantHost}:${qdrantPort}`
+            : `${host}:${port}/${database}`),
       readOnly,
     };
 
-    if (isSupabase) {
+    if (isQdrant) {
+      config.qdrantHost = qdrantHost;
+      config.qdrantPort = Number.parseInt(qdrantPort, 10);
+      if (qdrantApiKey) {
+        config.qdrantApiKey = qdrantApiKey;
+      }
+      config.qdrantUseTLS = qdrantUseTLS;
+    } else if (isSupabase) {
       config.supabaseUrl = supabaseUrl;
       config.supabaseKey = supabaseKey;
       config.ssl = true;
@@ -223,7 +256,9 @@ export function ServerConnectionDialog({
 
   const isFormValid = isSupabase
     ? supabaseUrl && supabaseKey
-    : host && database;
+    : isQdrant
+      ? qdrantHost
+      : host && database;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -254,8 +289,8 @@ export function ServerConnectionDialog({
 
           <ScrollArea className="h-[50vh] overflow-x-hidden">
             <div className="space-y-4 px-1 pr-5">
-              {/* Quick import from connection string (for non-Supabase) */}
-              {!isSupabase && !isEditMode && (
+              {/* Quick import from connection string (for MySQL/PostgreSQL only) */}
+              {!isSupabase && !isQdrant && !isEditMode && (
                 <div className="space-y-2">
                   <Label htmlFor="connectionString">
                     {t('connection.importFromUrl')}{' '}
@@ -301,7 +336,77 @@ export function ServerConnectionDialog({
                 />
               </div>
 
-              {isSupabase ? (
+              {isQdrant ? (
+                <>
+                  {/* Qdrant Host */}
+                  <div className="space-y-2">
+                    <Label htmlFor="qdrantHost">
+                      {t('connection.host')}{' '}
+                      <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="qdrantHost"
+                      placeholder="localhost"
+                      value={qdrantHost}
+                      onChange={(e) => setQdrantHost(e.target.value)}
+                      required
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      Qdrant server hostname (e.g., localhost or
+                      cloud.qdrant.io)
+                    </p>
+                  </div>
+
+                  {/* Qdrant Port */}
+                  <div className="space-y-2">
+                    <Label htmlFor="qdrantPort">{t('connection.port')}</Label>
+                    <Input
+                      id="qdrantPort"
+                      type="number"
+                      placeholder="6333"
+                      value={qdrantPort}
+                      onChange={(e) => setQdrantPort(e.target.value)}
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      REST API port (default: 6333)
+                    </p>
+                  </div>
+
+                  {/* Qdrant API Key */}
+                  <div className="space-y-2">
+                    <Label htmlFor="qdrantApiKey">
+                      API Key{' '}
+                      <span className="text-muted-foreground text-xs">
+                        (optional)
+                      </span>
+                    </Label>
+                    <Input
+                      id="qdrantApiKey"
+                      type="password"
+                      placeholder="Your API key"
+                      value={qdrantApiKey}
+                      onChange={(e) => setQdrantApiKey(e.target.value)}
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      Required for Qdrant Cloud or secured instances
+                    </p>
+                  </div>
+
+                  {/* Use TLS */}
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="qdrantUseTLS"
+                      checked={qdrantUseTLS}
+                      onCheckedChange={(checked) =>
+                        setQdrantUseTLS(checked === true)
+                      }
+                    />
+                    <Label htmlFor="qdrantUseTLS" className="font-normal">
+                      Use TLS (HTTPS)
+                    </Label>
+                  </div>
+                </>
+              ) : isSupabase ? (
                 <>
                   {/* Supabase URL */}
                   <div className="space-y-2">
@@ -551,13 +656,22 @@ export function ServerConnectionDialog({
                       type: databaseType,
                       name:
                         displayName ||
-                        (isSupabase
-                          ? supabaseUrl
-                          : `${host}:${port}/${database}`),
+                        (isQdrant
+                          ? `${qdrantHost}:${qdrantPort}`
+                          : isSupabase
+                            ? supabaseUrl
+                            : `${host}:${port}/${database}`),
                       readOnly,
                     };
 
-                    if (isSupabase) {
+                    if (isQdrant) {
+                      config.qdrantHost = qdrantHost;
+                      config.qdrantPort = Number.parseInt(qdrantPort, 10);
+                      if (qdrantApiKey) {
+                        config.qdrantApiKey = qdrantApiKey;
+                      }
+                      config.qdrantUseTLS = qdrantUseTLS;
+                    } else if (isSupabase) {
                       config.supabaseUrl = supabaseUrl;
                       config.supabaseKey = supabaseKey;
                       config.ssl = true;

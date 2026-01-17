@@ -82,7 +82,12 @@ export interface EnhancedErrorInfo {
 /**
  * Supported database types
  */
-export type DatabaseType = 'sqlite' | 'mysql' | 'postgresql' | 'supabase';
+export type DatabaseType =
+  | 'sqlite'
+  | 'mysql'
+  | 'postgresql'
+  | 'supabase'
+  | 'qdrant';
 
 /**
  * Connection configuration for different database types
@@ -118,6 +123,14 @@ export interface DatabaseConnectionConfig {
       };
   /** Read-only mode */
   readOnly?: boolean;
+  /** Qdrant-specific: host (e.g., 'localhost' or 'cloud.qdrant.io') */
+  qdrantHost?: string;
+  /** Qdrant-specific: REST API port (default 6333) */
+  qdrantPort?: number;
+  /** Qdrant-specific: API key for authentication */
+  qdrantApiKey?: string;
+  /** Qdrant-specific: Use HTTPS */
+  qdrantUseTLS?: boolean;
 }
 
 export interface OpenDatabaseRequest {

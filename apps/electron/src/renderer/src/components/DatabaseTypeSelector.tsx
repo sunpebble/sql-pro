@@ -5,7 +5,7 @@
 
 import type { DatabaseType } from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
-import { Cloud, Database, Server } from 'lucide-react';
+import { Box, Cloud, Database, Server } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   Dialog,
@@ -42,6 +42,11 @@ const DATABASE_TYPES: DatabaseTypeOption[] = [
     type: 'supabase',
     icon: Cloud,
     color: 'text-green-500',
+  },
+  {
+    type: 'qdrant',
+    icon: Box,
+    color: 'text-purple-500',
   },
 ];
 
