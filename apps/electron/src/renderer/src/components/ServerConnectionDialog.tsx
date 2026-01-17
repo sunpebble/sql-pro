@@ -150,6 +150,21 @@ export function ServerConnectionDialog({
     null
   );
 
+  // Local submitting state to prevent interaction gap
+  // (parent's isConnecting state update is async)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Combine local and parent state for UI blocking
+  const isBlocked = isSubmitting || isConnecting;
+
+  // Reset isSubmitting when isConnecting becomes true (parent received the call)
+  // or when dialog closes
+  useEffect(() => {
+    if (isConnecting || !open) {
+      setIsSubmitting(false);
+    }
+  }, [isConnecting, open]);
+
   // Reset form when dialog opens or database type changes
 
   useEffect(() => {
@@ -207,6 +222,9 @@ export function ServerConnectionDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Immediately block UI to prevent interaction gap
+    setIsSubmitting(true);
+
     const config: DatabaseConnectionConfig = {
       type: databaseType,
       name:
@@ -261,8 +279,20 @@ export function ServerConnectionDialog({
       : host && database;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-md">
+    <Dialog
+      open={open}
+      onOpenChange={(newOpen) => {
+        // Prevent closing dialog while connecting
+        if (!newOpen && isBlocked) {
+          return;
+        }
+        onOpenChange(newOpen);
+      }}
+    >
+      <DialogContent
+        className="flex max-h-[90vh] flex-col sm:max-w-md"
+        showCloseButton={!isBlocked}
+      >
         <form
           onSubmit={handleSubmit}
           className="flex flex-1 flex-col overflow-hidden"
@@ -709,7 +739,7 @@ export function ServerConnectionDialog({
                       setIsTesting(false);
                     }
                   }}
-                  disabled={!isFormValid || isTesting || isConnecting}
+                  disabled={!isFormValid || isTesting || isBlocked}
                 >
                   {isTesting ? (
                     <>
@@ -727,12 +757,12 @@ export function ServerConnectionDialog({
                     type="button"
                     variant="outline"
                     onClick={() => onOpenChange(false)}
-                    disabled={isConnecting}
+                    disabled={isBlocked}
                   >
                     {t('connection.cancel')}
                   </Button>
-                  <Button type="submit" disabled={!isFormValid || isConnecting}>
-                    {isConnecting
+                  <Button type="submit" disabled={!isFormValid || isBlocked}>
+                    {isBlocked
                       ? t('connection.connecting')
                       : isEditMode
                         ? t('connection.saveAndConnect')
