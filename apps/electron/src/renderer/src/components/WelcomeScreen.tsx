@@ -20,6 +20,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
   AlertCircle,
   BookmarkPlus,
+  Box,
   Clock,
   Cloud,
   Database,
@@ -90,6 +91,8 @@ function getDatabaseIcon(type?: DatabaseType) {
       return { Icon: Server, color: 'text-indigo-500', label: 'PostgreSQL' };
     case 'supabase':
       return { Icon: Cloud, color: 'text-green-500', label: 'Supabase' };
+    case 'qdrant':
+      return { Icon: Box, color: 'text-purple-500', label: 'Qdrant' };
     case 'sqlite':
     default:
       return { Icon: Database, color: 'text-blue-500', label: 'SQLite' };

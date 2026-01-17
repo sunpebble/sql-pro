@@ -42,6 +42,7 @@
     "@ffprobe-installer/ffprobe": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",
     "@monaco-editor/react": "^4.7.0",
+    "@qdrant/js-client-rest": "^1.16.2",
     "@radix-ui/react-label": "^2.1.8",
     "@sqlpro/ui": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
