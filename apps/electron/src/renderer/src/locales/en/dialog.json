@@ -17,6 +17,10 @@
     "supabase": {
       "name": "Supabase",
       "description": "Supabase PostgreSQL"
+    },
+    "qdrant": {
+      "name": "Qdrant",
+      "description": "Vector Database"
     }
   },
   "connection": {
