@@ -1444,6 +1444,15 @@ export interface AIProviderSettings {
   model?: string;
 }
 
+export interface EmbeddingSettings {
+  enabled: boolean;
+  provider: 'openai' | 'custom';
+  model: string;
+  baseUrl?: string;
+  apiKey?: string; // Optional, falls back to main provider key
+  dimensions?: number;
+}
+
 export interface AISettings {
   /** Current active provider */
   provider: AIProvider;
@@ -1455,6 +1464,8 @@ export interface AISettings {
   };
   /** Claude Code executable path */
   claudeCodePath?: string;
+  /** Embedding settings for vector search */
+  embedding?: EmbeddingSettings;
 }
 
 /**
