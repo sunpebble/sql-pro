@@ -331,6 +331,26 @@
   .cursor-pointer * {
     cursor: inherit !important;
   }
+
+  /* Disabled state cursor for all interactive elements */
+  a[disabled],
+  button:disabled,
+  button[disabled],
+  [role='button'][aria-disabled='true'],
+  [role='tab'][aria-disabled='true'],
+  [role='menuitem'][aria-disabled='true'],
+  [role='option'][aria-disabled='true'],
+  [role='checkbox'][aria-disabled='true'],
+  [role='radio'][aria-disabled='true'],
+  [role='switch'][aria-disabled='true'],
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  [data-disabled],
+  .disabled {
+    cursor: not-allowed !important;
+    pointer-events: auto !important; /* Allow cursor to show even when disabled */
+  }
 }
 
 /* Font size inheritance - use CSS variables set by useApplyFont */
