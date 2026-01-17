@@ -9,7 +9,7 @@ import {
   ImageOff,
   Play,
 } from 'lucide-react';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
@@ -65,12 +65,22 @@ interface ImageThumbnailProps {
   item: ImageItem;
   size: number;
   isSelected: boolean;
+  isFocused?: boolean;
+  dataIndex?: number;
   onClick: () => void;
   onSelect: (e: React.MouseEvent) => void;
 }
 
 const ImageThumbnail = memo(
-  ({ item, size, isSelected, onClick, onSelect }: ImageThumbnailProps) => {
+  ({
+    item,
+    size,
+    isSelected,
+    isFocused,
+    dataIndex,
+    onClick,
+    onSelect,
+  }: ImageThumbnailProps) => {
     const {
       imgProps,
       videoProps,
@@ -91,18 +101,15 @@ const ImageThumbnail = memo(
           'group hover:border-primary relative cursor-pointer overflow-hidden rounded-lg border transition-all',
           isSelected
             ? 'border-primary ring-primary/50 ring-2'
-            : 'border-border hover:shadow-md'
+            : isFocused
+              ? 'border-primary ring-primary/30 ring-2'
+              : 'border-border hover:shadow-md'
         )}
         style={{ width: size, height: size }}
         onClick={onClick}
         role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onClick();
-          }
-        }}
+        tabIndex={-1}
+        data-index={dataIndex}
       >
         {/* Selection checkbox */}
         <div
@@ -208,6 +215,8 @@ interface ImageListItemProps {
   item: ImageItem;
   thumbnailSize: number;
   isSelected: boolean;
+  isFocused?: boolean;
+  dataIndex?: number;
   onClick: () => void;
   onSelect: (e: React.MouseEvent) => void;
 }
@@ -217,6 +226,8 @@ const ImageListItem = memo(
     item,
     thumbnailSize,
     isSelected,
+    isFocused,
+    dataIndex,
     onClick,
     onSelect,
   }: ImageListItemProps) => {
@@ -316,18 +327,14 @@ const ImageListItem = memo(
       <div
         className={cn(
           'group hover:bg-muted/50 flex cursor-pointer items-center gap-4 border-b px-4 transition-colors',
-          isSelected && 'bg-primary/5'
+          isSelected && 'bg-primary/5',
+          isFocused && 'ring-primary/30 ring-2 ring-inset'
         )}
         style={{ height: itemHeight }}
         onClick={onClick}
         role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onClick();
-          }
-        }}
+        tabIndex={-1}
+        data-index={dataIndex}
       >
         {/* Selection checkbox */}
         <div
@@ -480,7 +487,9 @@ export function ImageGallery({
 }: ImageGalleryProps) {
   const { t } = useTranslation('common');
   const containerRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
   const [previewItem, setPreviewItem] = useState<ImageItem | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
   // Calculate list item height
   const listItemHeight = Math.max(80, thumbnailSize * 0.6);
@@ -549,6 +558,107 @@ export function ImageGallery({
     [images, previewIndex]
   );
 
+  // Preview navigation by offset (for grid up/down)
+  const handlePreviewNavByOffset = useCallback(
+    (offset: number) => {
+      if (previewIndex === -1) return;
+
+      const newIndex = Math.max(
+        0,
+        Math.min(images.length - 1, previewIndex + offset)
+      );
+      if (newIndex !== previewIndex) {
+        setPreviewItem(images[newIndex]);
+      }
+    },
+    [images, previewIndex]
+  );
+
+  // Calculate columns per row for grid navigation
+  const columnsPerRow = useMemo(() => {
+    if (viewMode !== 'grid' || !containerRef.current) return 1;
+    const containerWidth = containerRef.current.clientWidth - 32; // 32px for padding
+    return Math.max(1, Math.floor(containerWidth / (thumbnailSize + 12))); // 12px for gap
+  }, [viewMode, thumbnailSize]);
+
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (images.length === 0 || previewItem) return;
+
+      let newIndex = focusedIndex;
+
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          newIndex = Math.min(images.length - 1, focusedIndex + 1);
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          newIndex = Math.max(0, focusedIndex - 1);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          if (viewMode === 'grid') {
+            newIndex = Math.min(
+              images.length - 1,
+              focusedIndex + columnsPerRow
+            );
+          } else {
+            newIndex = Math.min(images.length - 1, focusedIndex + 1);
+          }
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          if (viewMode === 'grid') {
+            newIndex = Math.max(0, focusedIndex - columnsPerRow);
+          } else {
+            newIndex = Math.max(0, focusedIndex - 1);
+          }
+          break;
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          if (focusedIndex >= 0 && focusedIndex < images.length) {
+            setPreviewItem(images[focusedIndex]);
+          }
+          return;
+        case 'Home':
+          e.preventDefault();
+          newIndex = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          newIndex = images.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      if (newIndex !== focusedIndex) {
+        setFocusedIndex(newIndex);
+      }
+    },
+    [images, focusedIndex, viewMode, columnsPerRow, previewItem]
+  );
+
+  // Scroll focused item into view
+  useEffect(() => {
+    if (focusedIndex < 0 || !containerRef.current) return;
+
+    const focusedElement = containerRef.current.querySelector(
+      `[data-index="${focusedIndex}"]`
+    );
+    if (focusedElement) {
+      focusedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, [focusedIndex]);
+
+  // Reset focused index when images change
+  useEffect(() => {
+    setFocusedIndex(-1);
+  }, [images]);
+
   // Empty state
   if (!isLoading && images.length === 0) {
     return (
@@ -566,22 +676,35 @@ export function ImageGallery({
 
   return (
     <>
-      <div ref={containerRef} className="h-full overflow-auto">
+      <div
+        ref={containerRef}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onFocus={() => {
+          if (focusedIndex === -1 && images.length > 0) {
+            setFocusedIndex(0);
+          }
+        }}
+        className="h-full overflow-auto outline-none"
+      >
         {viewMode === 'grid' ? (
           // Grid View - using CSS Grid for responsive layout without virtualization
           // This avoids re-rendering issues when container width changes
           <div
+            ref={galleryRef}
             className="grid gap-3 p-4"
             style={{
               gridTemplateColumns: `repeat(auto-fill, ${thumbnailSize}px)`,
             }}
           >
-            {images.map((item) => (
+            {images.map((item, index) => (
               <ImageThumbnail
                 key={item.id}
                 item={item}
                 size={thumbnailSize}
                 isSelected={selectedIds.has(item.id)}
+                isFocused={focusedIndex === index}
+                dataIndex={index}
                 onClick={() => setPreviewItem(item)}
                 onSelect={(e) => handleSelect(item.id, e)}
               />
@@ -610,6 +733,8 @@ export function ImageGallery({
                     item={item}
                     thumbnailSize={thumbnailSize}
                     isSelected={selectedIds.has(item.id)}
+                    isFocused={focusedIndex === virtualItem.index}
+                    dataIndex={virtualItem.index}
                     onClick={() => setPreviewItem(item)}
                     onSelect={(e) => handleSelect(item.id, e)}
                   />
@@ -632,6 +757,9 @@ export function ImageGallery({
           currentIndex={previewIndex}
           totalCount={images.length}
           onLocateInTable={onLocateInTable}
+          onNavigateByOffset={handlePreviewNavByOffset}
+          columnsPerRow={columnsPerRow}
+          viewMode={viewMode}
         />
       )}
     </>

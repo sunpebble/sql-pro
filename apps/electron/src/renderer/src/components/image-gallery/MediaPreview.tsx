@@ -1,6 +1,7 @@
 import type { MediaItem } from './ImageGallery';
 import type { MediaSource } from '@/lib/image-utils';
 import { Skeleton } from '@sqlpro/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
   ChevronLeft,
   ChevronRight,
@@ -57,6 +58,12 @@ export interface MediaPreviewProps {
   totalCount: number;
   /** Callback to locate the media in the data table */
   onLocateInTable?: (rowIndex: number, column: string) => void;
+  /** Navigate by offset (for grid up/down navigation) */
+  onNavigateByOffset?: (offset: number) => void;
+  /** Number of columns per row in grid view */
+  columnsPerRow?: number;
+  /** Current view mode */
+  viewMode?: 'grid' | 'list';
 }
 
 /** Sharp metadata from main process */
@@ -192,11 +199,15 @@ export function MediaPreview({
   currentIndex,
   totalCount,
   onLocateInTable,
+  onNavigateByOffset,
+  columnsPerRow = 1,
+  viewMode = 'grid',
 }: MediaPreviewProps) {
   const { t } = useTranslation('common');
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [loadError, setLoadError] = useState(false);
   const [mediaDimensions, setMediaDimensions] = useState<{
     width: number;
@@ -525,14 +536,35 @@ export function MediaPreview({
     }
   }, []);
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' && hasPrev) {
-        onPrev();
-      } else if (e.key === 'ArrowRight' && hasNext) {
-        onNext();
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      // Prevent arrow keys from moving focus to other elements
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.key === 'ArrowLeft' && hasPrev) {
+          onPrev();
+        } else if (e.key === 'ArrowRight' && hasNext) {
+          onNext();
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (viewMode === 'grid' && onNavigateByOffset && columnsPerRow > 1) {
+          // In grid mode, up/down navigates by row
+          const offset = e.key === 'ArrowUp' ? -columnsPerRow : columnsPerRow;
+          onNavigateByOffset(offset);
+        } else {
+          // In list mode or single column, up/down is same as left/right
+          if (e.key === 'ArrowUp' && hasPrev) {
+            onPrev();
+          } else if (e.key === 'ArrowDown' && hasNext) {
+            onNext();
+          }
+        }
       } else if (e.key === 'Escape') {
+        e.preventDefault();
         onClose();
       } else if (e.key === ' ' && isVideo) {
         e.preventDefault();
@@ -547,22 +579,32 @@ export function MediaPreview({
         e.preventDefault();
         handleResetZoom();
       }
-    };
+    },
+    [
+      hasPrev,
+      hasNext,
+      onPrev,
+      onNext,
+      onClose,
+      isVideo,
+      togglePlayPause,
+      handleZoomIn,
+      handleZoomOut,
+      handleResetZoom,
+      viewMode,
+      onNavigateByOffset,
+      columnsPerRow,
+    ]
+  );
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [
-    hasPrev,
-    hasNext,
-    onPrev,
-    onNext,
-    onClose,
-    isVideo,
-    togglePlayPause,
-    handleZoomIn,
-    handleZoomOut,
-    handleResetZoom,
-  ]);
+  // Focus the dialog container on mount to capture keyboard events
+  useEffect(() => {
+    // Small delay to ensure dialog is fully rendered
+    const timer = setTimeout(() => {
+      dialogRef.current?.focus();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Copy image to clipboard - convert to PNG if needed
   const handleCopyMedia = useCallback(async () => {
@@ -800,498 +842,580 @@ export function MediaPreview({
         className="top-10 flex h-[calc(100vh-80px)] w-[calc(100vw-80px)] max-w-[calc(100vw-80px)] -translate-y-0 flex-col gap-0 p-0 sm:max-w-[calc(100vw-80px)]"
         showCloseButton={false}
       >
-        {/* Navigation buttons - positioned relative to dialog for stable position */}
-        <button
-          onClick={onPrev}
-          disabled={!hasPrev}
-          className={cn(
-            'bg-background/90 absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all',
-            hasPrev
-              ? 'hover:bg-background hover:scale-110'
-              : 'cursor-not-allowed opacity-30'
-          )}
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
-
-        <button
-          onClick={onNext}
-          disabled={!hasNext}
-          className={cn(
-            'bg-background/90 absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all',
-            hasNext
-              ? 'hover:bg-background hover:scale-110'
-              : 'cursor-not-allowed opacity-30'
-          )}
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
-        {/* Header */}
-        <DialogHeader className="shrink-0 border-b px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="min-w-0 flex-1">
-              <DialogTitle className="flex items-center gap-2">
-                {isVideo && <Film className="h-4 w-4" />}
-                {isVideo
-                  ? t('mediaGallery.videoPreview', 'Video Preview')
-                  : t('mediaGallery.preview', 'Image Preview')}
-              </DialogTitle>
-              <DialogDescription className="truncate">
-                Row {item.rowIndex + 1} · {item.column} · {currentIndex + 1} /{' '}
-                {totalCount}
-              </DialogDescription>
-            </div>
-            <div className="flex shrink-0 items-center gap-1">
-              {/* Zoom controls (images only) */}
-              {!isVideo && (
-                <>
-                  <button
-                    onClick={handleZoomOut}
-                    className="hover:bg-muted rounded-md p-2 transition-colors"
-                    title={t('mediaGallery.zoomOut', 'Zoom out (-)')}
-                  >
-                    <ZoomOut className="h-4 w-4" />
-                  </button>
-                  <span className="text-muted-foreground min-w-[4rem] text-center text-xs">
-                    {Math.round(scale * 100)}%
-                  </span>
-                  <button
-                    onClick={handleZoomIn}
-                    className="hover:bg-muted rounded-md p-2 transition-colors"
-                    title={t('mediaGallery.zoomIn', 'Zoom in (+)')}
-                  >
-                    <ZoomIn className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={handleResetZoom}
-                    className="hover:bg-muted rounded-md p-2 transition-colors"
-                    title={t('mediaGallery.resetZoom', 'Reset zoom (0)')}
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={handleFitToScreen}
-                    className="hover:bg-muted rounded-md p-2 transition-colors"
-                    title={t('mediaGallery.fitToScreen', 'Fit to screen')}
-                  >
-                    <Maximize2 className="h-4 w-4" />
-                  </button>
-                  <div className="bg-border mx-1 h-4 w-px" />
-                </>
-              )}
-
-              {/* Locate in table button */}
-              {onLocateInTable && (
-                <button
-                  onClick={handleLocateInTable}
-                  className="hover:bg-muted rounded-md p-2 transition-colors"
-                  title={t('mediaGallery.locateInTable', 'Locate in table')}
-                >
-                  <LocateFixed className="h-4 w-4" />
-                </button>
-              )}
-
-              {/* Copy button (images only) */}
-              {!isVideo && (
-                <button
-                  onClick={handleCopyMedia}
-                  className="hover:bg-muted rounded-md p-2 transition-colors"
-                  title={t('mediaGallery.copyImage', 'Copy image')}
-                >
-                  <Copy className="h-4 w-4" />
-                </button>
-              )}
-
-              {/* Open external (for URLs) */}
-              {item.source?.type === 'url' && (
-                <button
-                  onClick={handleOpenExternal}
-                  className="hover:bg-muted rounded-md p-2 transition-colors"
-                  title={t('mediaGallery.openExternal', 'Open in browser')}
-                >
-                  <ExternalLink className="h-4 w-4" />
-                </button>
-              )}
-
-              {/* Download button */}
-              <button
-                onClick={handleDownload}
-                className="hover:bg-muted rounded-md p-2 transition-colors"
-                title={t('mediaGallery.download', 'Download')}
-              >
-                <Download className="h-4 w-4" />
-              </button>
-
-              {/* Close button */}
-              <button
-                onClick={onClose}
-                className="hover:bg-muted rounded-md p-2 transition-colors"
-                title={t('common.close', 'Close')}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </DialogHeader>
-
-        {/* Media Container */}
+        {/* Focus trap container for keyboard navigation */}
         <div
-          ref={setContainerRef}
-          className={cn(
-            'relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black/5 dark:bg-white/5',
-            !isVideo && 'cursor-grab',
-            !isVideo && isDragging && 'cursor-grabbing'
-          )}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
+          ref={dialogRef}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          className="flex h-full w-full flex-col outline-none"
         >
-          {/* Media content */}
-          {displayUrl && !loadError ? (
-            isVideo ? (
-              <div className="relative flex h-full w-full items-center justify-center p-4">
-                {/* Video loading skeleton */}
-                {!isMediaLoaded && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Skeleton className="h-64 w-96 rounded-lg" />
-                  </div>
-                )}
-                <video
-                  ref={videoRef}
-                  src={displayUrl}
-                  className={cn(
-                    'max-h-full max-w-full object-contain',
-                    !isMediaLoaded && 'invisible'
-                  )}
-                  controls
-                  autoPlay
-                  onError={() => setLoadError(true)}
-                  onLoadedMetadata={handleVideoLoadedMetadata}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                />
-                {/* Play/Pause overlay hint */}
-                <div className="pointer-events-none absolute right-6 bottom-16 flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-xs text-white opacity-50">
-                  {isPlaying ? (
-                    <Pause className="h-3 w-3" />
-                  ) : (
-                    <Play className="h-3 w-3" />
-                  )}
-                  <span>Space</span>
-                </div>
+          {/* Navigation buttons - positioned relative to dialog for stable position */}
+          <button
+            onClick={onPrev}
+            disabled={!hasPrev}
+            tabIndex={-1}
+            className={cn(
+              'bg-background/90 absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all focus:outline-none',
+              hasPrev
+                ? 'hover:bg-background hover:scale-110'
+                : 'cursor-not-allowed opacity-30'
+            )}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+
+          <button
+            onClick={onNext}
+            disabled={!hasNext}
+            tabIndex={-1}
+            className={cn(
+              'bg-background/90 absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all focus:outline-none',
+              hasNext
+                ? 'hover:bg-background hover:scale-110'
+                : 'cursor-not-allowed opacity-30'
+            )}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          {/* Header */}
+          <DialogHeader className="shrink-0 border-b px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="min-w-0 flex-1">
+                <DialogTitle className="flex items-center gap-2">
+                  {isVideo && <Film className="h-4 w-4" />}
+                  {isVideo
+                    ? t('mediaGallery.videoPreview', 'Video Preview')
+                    : t('mediaGallery.preview', 'Image Preview')}
+                </DialogTitle>
+                <DialogDescription className="truncate">
+                  Row {item.rowIndex + 1} · {item.column} · {currentIndex + 1} /{' '}
+                  {totalCount}
+                </DialogDescription>
               </div>
+              <div className="flex shrink-0 items-center gap-1">
+                {/* Zoom controls (images only) */}
+                {!isVideo && (
+                  <>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <button
+                          onClick={handleZoomOut}
+                          tabIndex={-1}
+                          className="hover:bg-muted rounded-md p-2 transition-colors"
+                        >
+                          <ZoomOut className="h-4 w-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t('mediaGallery.zoomOut', 'Zoom out (-)')}
+                      </TooltipContent>
+                    </Tooltip>
+                    <span className="text-muted-foreground min-w-[4rem] text-center text-xs">
+                      {Math.round(scale * 100)}%
+                    </span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <button
+                          onClick={handleZoomIn}
+                          tabIndex={-1}
+                          className="hover:bg-muted rounded-md p-2 transition-colors"
+                        >
+                          <ZoomIn className="h-4 w-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t('mediaGallery.zoomIn', 'Zoom in (+)')}
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <button
+                          onClick={handleResetZoom}
+                          tabIndex={-1}
+                          className="hover:bg-muted rounded-md p-2 transition-colors"
+                        >
+                          <RotateCcw className="h-4 w-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t('mediaGallery.resetZoom', 'Reset zoom (0)')}
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <button
+                          onClick={handleFitToScreen}
+                          tabIndex={-1}
+                          className="hover:bg-muted rounded-md p-2 transition-colors"
+                        >
+                          <Maximize2 className="h-4 w-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t('mediaGallery.fitToScreen', 'Fit to screen')}
+                      </TooltipContent>
+                    </Tooltip>
+                    <div className="bg-border mx-1 h-4 w-px" />
+                  </>
+                )}
+
+                {/* Locate in table button */}
+                {onLocateInTable && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <button
+                        onClick={handleLocateInTable}
+                        tabIndex={-1}
+                        className="hover:bg-muted rounded-md p-2 transition-colors"
+                      >
+                        <LocateFixed className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {t('mediaGallery.locateInTable', 'Locate in table')}
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+
+                {/* Copy button (images only) */}
+                {!isVideo && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <button
+                        onClick={handleCopyMedia}
+                        tabIndex={-1}
+                        className="hover:bg-muted rounded-md p-2 transition-colors"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {t('mediaGallery.copyImage', 'Copy image')}
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+
+                {/* Open external (for URLs) */}
+                {item.source?.type === 'url' && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <button
+                        onClick={handleOpenExternal}
+                        tabIndex={-1}
+                        className="hover:bg-muted rounded-md p-2 transition-colors"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {t('mediaGallery.openExternal', 'Open in browser')}
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+
+                {/* Download button */}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button
+                      onClick={handleDownload}
+                      tabIndex={-1}
+                      className="hover:bg-muted rounded-md p-2 transition-colors"
+                    >
+                      <Download className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {t('mediaGallery.download', 'Download')}
+                  </TooltipContent>
+                </Tooltip>
+
+                {/* Close button */}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button
+                      onClick={onClose}
+                      tabIndex={-1}
+                      className="hover:bg-muted rounded-md p-2 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t('common.close', 'Close')}</TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+          </DialogHeader>
+
+          {/* Media Container */}
+          <div
+            ref={setContainerRef}
+            className={cn(
+              'relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black/5 dark:bg-white/5',
+              !isVideo && 'cursor-grab',
+              !isVideo && isDragging && 'cursor-grabbing'
+            )}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            {/* Media content */}
+            {displayUrl && !loadError ? (
+              isVideo ? (
+                <div className="relative flex h-full w-full items-center justify-center p-4">
+                  {/* Video loading skeleton */}
+                  {!isMediaLoaded && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Skeleton className="h-64 w-96 rounded-lg" />
+                    </div>
+                  )}
+                  <video
+                    ref={videoRef}
+                    src={displayUrl}
+                    className={cn(
+                      'max-h-full max-w-full object-contain',
+                      !isMediaLoaded && 'invisible'
+                    )}
+                    controls
+                    autoPlay
+                    onError={() => setLoadError(true)}
+                    onLoadedMetadata={handleVideoLoadedMetadata}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                  />
+                  {/* Play/Pause overlay hint */}
+                  <div className="pointer-events-none absolute right-6 bottom-16 flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-xs text-white opacity-50">
+                    {isPlaying ? (
+                      <Pause className="h-3 w-3" />
+                    ) : (
+                      <Play className="h-3 w-3" />
+                    )}
+                    <span>Space</span>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className="relative flex h-full w-full items-center justify-center"
+                  onDoubleClick={handleDoubleClick}
+                >
+                  {/* Image loading skeleton */}
+                  {!isMediaLoaded && (
+                    <Skeleton className="absolute h-64 w-96 rounded-lg" />
+                  )}
+                  <img
+                    ref={imageRef}
+                    src={displayUrl}
+                    alt={`Row ${item.rowIndex + 1}, ${item.column}`}
+                    className={cn(
+                      'max-h-full max-w-full object-contain select-none',
+                      !isMediaLoaded && 'invisible'
+                    )}
+                    style={{
+                      transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                      transition: isDragging
+                        ? 'none'
+                        : 'transform 0.1s ease-out',
+                    }}
+                    onError={() => setLoadError(true)}
+                    onLoad={handleImageLoad}
+                    draggable={false}
+                  />
+                </div>
+              )
             ) : (
-              <div
-                className="relative flex h-full w-full items-center justify-center"
-                onDoubleClick={handleDoubleClick}
-              >
-                {/* Image loading skeleton */}
-                {!isMediaLoaded && (
-                  <Skeleton className="absolute h-64 w-96 rounded-lg" />
-                )}
-                <img
-                  ref={imageRef}
-                  src={displayUrl}
-                  alt={`Row ${item.rowIndex + 1}, ${item.column}`}
-                  className={cn(
-                    'max-h-full max-w-full object-contain select-none',
-                    !isMediaLoaded && 'invisible'
-                  )}
-                  style={{
-                    transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-                    transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-                  }}
-                  onError={() => setLoadError(true)}
-                  onLoad={handleImageLoad}
-                  draggable={false}
-                />
-              </div>
-            )
-          ) : (
-            <div className="text-muted-foreground flex flex-col items-center gap-2">
-              <ImageOff className="h-16 w-16" />
-              <p>
-                {isVideo
-                  ? t('mediaGallery.videoLoadError', 'Failed to load video')
-                  : t('mediaGallery.loadError', 'Failed to load image')}
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Footer with media info */}
-        <div className="flex flex-col gap-3 border-t px-4 py-3">
-          {/* File name (for local files) */}
-          {'fileName' in displayMetadata && displayMetadata.fileName && (
-            <div className="border-b pb-2">
-              <div className="text-muted-foreground text-xs">
-                {t('mediaGallery.fileName', 'File Name')}
-              </div>
-              <div className="text-sm font-medium">
-                {displayMetadata.fileName}
-              </div>
-            </div>
-          )}
-
-          {/* Main info grid */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {/* Document Type / Format */}
-            <div>
-              <div className="text-muted-foreground text-xs">
-                {t('mediaGallery.documentType', 'Document Type')}
-              </div>
-              <div className="font-medium">
-                {displayMetadata.format}
-                {displayMetadata.isVideo && ' video'}
-                {!displayMetadata.isVideo && ' image'}
-              </div>
-            </div>
-
-            {/* File Size */}
-            {displayMetadata.size && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.fileSize', 'File Size')}
-                </div>
-                <div className="font-medium">{displayMetadata.size}</div>
-              </div>
-            )}
-
-            {/* Image/Video Size (Dimensions) */}
-            {displayMetadata.width && displayMetadata.height && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {displayMetadata.isVideo
-                    ? t('mediaGallery.videoSize', 'Video Size')
-                    : t('mediaGallery.imageSize', 'Image Size')}
-                </div>
-                <div className="font-medium">
-                  {displayMetadata.width} × {displayMetadata.height} pixels
-                </div>
-              </div>
-            )}
-
-            {/* DPI (for images) */}
-            {'density' in displayMetadata && displayMetadata.density && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.imageDPI', 'Image DPI')}
-                </div>
-                <div className="font-medium">
-                  {displayMetadata.density}{' '}
-                  {displayMetadata.resolutionUnit === 'cm'
-                    ? 'pixels/cm'
-                    : 'pixels/inch'}
-                </div>
-              </div>
-            )}
-
-            {/* Color Model */}
-            {'colorModel' in displayMetadata && displayMetadata.colorModel && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.colorModel', 'Color Model')}
-                </div>
-                <div className="font-medium">
-                  {displayMetadata.colorModel}
-                  {displayMetadata.hasAlpha && '+Alpha'}
-                </div>
-              </div>
-            )}
-
-            {/* Bit Depth */}
-            {'depth' in displayMetadata && displayMetadata.depth && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.depth', 'Depth')}
-                </div>
-                <div className="font-medium">{displayMetadata.depth}</div>
-              </div>
-            )}
-
-            {/* ICC Profile */}
-            {'iccProfile' in displayMetadata && displayMetadata.iccProfile && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.colorProfile', 'Color Profile')}
-                </div>
-                <div className="font-medium">{displayMetadata.iccProfile}</div>
-              </div>
-            )}
-
-            {/* Progressive (JPEG) */}
-            {'isProgressive' in displayMetadata &&
-              displayMetadata.isProgressive !== undefined && (
-                <div>
-                  <div className="text-muted-foreground text-xs">
-                    {t('mediaGallery.progressive', 'Progressive')}
-                  </div>
-                  <div className="font-medium">
-                    {displayMetadata.isProgressive
-                      ? t('tableDetails.yes', 'Yes')
-                      : t('tableDetails.no', 'No')}
-                  </div>
-                </div>
-              )}
-
-            {/* Chroma Subsampling */}
-            {'chromaSubsampling' in displayMetadata &&
-              displayMetadata.chromaSubsampling && (
-                <div>
-                  <div className="text-muted-foreground text-xs">
-                    {t('mediaGallery.chromaSubsampling', 'Chroma Subsampling')}
-                  </div>
-                  <div className="font-medium">
-                    {displayMetadata.chromaSubsampling}
-                  </div>
-                </div>
-              )}
-
-            {/* Animation info */}
-            {'isAnimated' in displayMetadata && displayMetadata.isAnimated && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.frames', 'Frames')}
-                </div>
-                <div className="font-medium">{displayMetadata.pages}</div>
-              </div>
-            )}
-
-            {/* Video-specific: Duration */}
-            {'duration' in displayMetadata &&
-              displayMetadata.duration !== undefined &&
-              displayMetadata.duration > 0 && (
-                <div>
-                  <div className="text-muted-foreground text-xs">
-                    {t('mediaGallery.duration', 'Duration')}
-                  </div>
-                  <div className="font-medium">
-                    {formatDuration(displayMetadata.duration)}
-                  </div>
-                </div>
-              )}
-
-            {/* Video-specific: Codec */}
-            {'codec' in displayMetadata && displayMetadata.codec && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.codec', 'Codec')}
-                </div>
-                <div className="font-medium">{displayMetadata.codec}</div>
-              </div>
-            )}
-
-            {/* Video-specific: Bitrate */}
-            {'bitrate' in displayMetadata && displayMetadata.bitrate && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.bitrate', 'Bitrate')}
-                </div>
-                <div className="font-medium">
-                  {formatBitrate(displayMetadata.bitrate)}
-                </div>
-              </div>
-            )}
-
-            {/* Video-specific: FPS */}
-            {'fps' in displayMetadata && displayMetadata.fps && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.fps', 'FPS')}
-                </div>
-                <div className="font-medium">
-                  {displayMetadata.fps.toFixed(2)}
-                </div>
-              </div>
-            )}
-
-            {/* Creation Date (for local files) */}
-            {'createdAt' in displayMetadata && displayMetadata.createdAt && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.creationDate', 'Creation Date')}
-                </div>
-                <div className="font-medium">
-                  {formatDateTime(displayMetadata.createdAt)}
-                </div>
-              </div>
-            )}
-
-            {/* Modification Date (for local files) */}
-            {'modifiedAt' in displayMetadata && displayMetadata.modifiedAt && (
-              <div>
-                <div className="text-muted-foreground text-xs">
-                  {t('mediaGallery.modificationDate', 'Modification Date')}
-                </div>
-                <div className="font-medium">
-                  {formatDateTime(displayMetadata.modifiedAt)}
-                </div>
+              <div className="text-muted-foreground flex flex-col items-center gap-2">
+                <ImageOff className="h-16 w-16" />
+                <p>
+                  {isVideo
+                    ? t('mediaGallery.videoLoadError', 'Failed to load video')
+                    : t('mediaGallery.loadError', 'Failed to load image')}
+                </p>
               </div>
             )}
           </div>
 
-          {/* Loading indicator */}
-          {isLoadingMetadata && (
-            <div className="text-muted-foreground flex items-center gap-1 text-xs">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              {t('mediaGallery.loadingMetadata', 'Loading metadata...')}
-            </div>
-          )}
+          {/* Footer with media info */}
+          <div className="flex flex-col gap-3 border-t px-4 py-3">
+            {/* File name (for local files) */}
+            {'fileName' in displayMetadata && displayMetadata.fileName && (
+              <div className="border-b pb-2">
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.fileName', 'File Name')}
+                </div>
+                <div className="text-sm font-medium">
+                  {displayMetadata.fileName}
+                </div>
+              </div>
+            )}
 
-          {/* URL with copy and open buttons */}
-          {item.source?.type === 'url' && (
-            <div className="flex items-start gap-2 border-t pt-2">
-              <button
-                onClick={handleOpenUrl}
-                className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"
-                title={t('mediaGallery.openUrl', 'Open URL')}
-              >
-                {item.source.url}
-              </button>
-              <button
-                onClick={handleOpenUrl}
-                className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
-                title={t('mediaGallery.openUrl', 'Open URL')}
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={handleCopyUrl}
-                className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
-                title={t('mediaGallery.copyUrl', 'Copy URL')}
-              >
-                <Copy className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          )}
+            {/* Main info grid */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+              {/* Document Type / Format */}
+              <div>
+                <div className="text-muted-foreground text-xs">
+                  {t('mediaGallery.documentType', 'Document Type')}
+                </div>
+                <div className="font-medium">
+                  {displayMetadata.format}
+                  {displayMetadata.isVideo && ' video'}
+                  {!displayMetadata.isVideo && ' image'}
+                </div>
+              </div>
 
-          {/* File path with copy and reveal buttons */}
-          {item.source?.type === 'file' && (
-            <div className="flex items-start gap-2 border-t pt-2">
-              <button
-                onClick={handleShowInFolder}
-                className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"
-                title={t('mediaGallery.showInFolder', 'Show in folder')}
-              >
-                {item.source.path}
-              </button>
-              <button
-                onClick={handleShowInFolder}
-                className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
-                title={t('mediaGallery.showInFolder', 'Show in folder')}
-              >
-                <FolderOpen className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={handleCopyFilePath}
-                className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
-                title={t('mediaGallery.copyPath', 'Copy path')}
-              >
-                <Copy className="h-3.5 w-3.5" />
-              </button>
+              {/* File Size */}
+              {displayMetadata.size && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.fileSize', 'File Size')}
+                  </div>
+                  <div className="font-medium">{displayMetadata.size}</div>
+                </div>
+              )}
+
+              {/* Image/Video Size (Dimensions) */}
+              {displayMetadata.width && displayMetadata.height && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {displayMetadata.isVideo
+                      ? t('mediaGallery.videoSize', 'Video Size')
+                      : t('mediaGallery.imageSize', 'Image Size')}
+                  </div>
+                  <div className="font-medium">
+                    {displayMetadata.width} × {displayMetadata.height} pixels
+                  </div>
+                </div>
+              )}
+
+              {/* DPI (for images) */}
+              {'density' in displayMetadata && displayMetadata.density && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.imageDPI', 'Image DPI')}
+                  </div>
+                  <div className="font-medium">
+                    {displayMetadata.density}{' '}
+                    {displayMetadata.resolutionUnit === 'cm'
+                      ? 'pixels/cm'
+                      : 'pixels/inch'}
+                  </div>
+                </div>
+              )}
+
+              {/* Color Model */}
+              {'colorModel' in displayMetadata &&
+                displayMetadata.colorModel && (
+                  <div>
+                    <div className="text-muted-foreground text-xs">
+                      {t('mediaGallery.colorModel', 'Color Model')}
+                    </div>
+                    <div className="font-medium">
+                      {displayMetadata.colorModel}
+                      {displayMetadata.hasAlpha && '+Alpha'}
+                    </div>
+                  </div>
+                )}
+
+              {/* Bit Depth */}
+              {'depth' in displayMetadata && displayMetadata.depth && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.depth', 'Depth')}
+                  </div>
+                  <div className="font-medium">{displayMetadata.depth}</div>
+                </div>
+              )}
+
+              {/* ICC Profile */}
+              {'iccProfile' in displayMetadata &&
+                displayMetadata.iccProfile && (
+                  <div>
+                    <div className="text-muted-foreground text-xs">
+                      {t('mediaGallery.colorProfile', 'Color Profile')}
+                    </div>
+                    <div className="font-medium">
+                      {displayMetadata.iccProfile}
+                    </div>
+                  </div>
+                )}
+
+              {/* Progressive (JPEG) */}
+              {'isProgressive' in displayMetadata &&
+                displayMetadata.isProgressive !== undefined && (
+                  <div>
+                    <div className="text-muted-foreground text-xs">
+                      {t('mediaGallery.progressive', 'Progressive')}
+                    </div>
+                    <div className="font-medium">
+                      {displayMetadata.isProgressive
+                        ? t('tableDetails.yes', 'Yes')
+                        : t('tableDetails.no', 'No')}
+                    </div>
+                  </div>
+                )}
+
+              {/* Chroma Subsampling */}
+              {'chromaSubsampling' in displayMetadata &&
+                displayMetadata.chromaSubsampling && (
+                  <div>
+                    <div className="text-muted-foreground text-xs">
+                      {t(
+                        'mediaGallery.chromaSubsampling',
+                        'Chroma Subsampling'
+                      )}
+                    </div>
+                    <div className="font-medium">
+                      {displayMetadata.chromaSubsampling}
+                    </div>
+                  </div>
+                )}
+
+              {/* Animation info */}
+              {'isAnimated' in displayMetadata &&
+                displayMetadata.isAnimated && (
+                  <div>
+                    <div className="text-muted-foreground text-xs">
+                      {t('mediaGallery.frames', 'Frames')}
+                    </div>
+                    <div className="font-medium">{displayMetadata.pages}</div>
+                  </div>
+                )}
+
+              {/* Video-specific: Duration */}
+              {'duration' in displayMetadata &&
+                displayMetadata.duration !== undefined &&
+                displayMetadata.duration > 0 && (
+                  <div>
+                    <div className="text-muted-foreground text-xs">
+                      {t('mediaGallery.duration', 'Duration')}
+                    </div>
+                    <div className="font-medium">
+                      {formatDuration(displayMetadata.duration)}
+                    </div>
+                  </div>
+                )}
+
+              {/* Video-specific: Codec */}
+              {'codec' in displayMetadata && displayMetadata.codec && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.codec', 'Codec')}
+                  </div>
+                  <div className="font-medium">{displayMetadata.codec}</div>
+                </div>
+              )}
+
+              {/* Video-specific: Bitrate */}
+              {'bitrate' in displayMetadata && displayMetadata.bitrate && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.bitrate', 'Bitrate')}
+                  </div>
+                  <div className="font-medium">
+                    {formatBitrate(displayMetadata.bitrate)}
+                  </div>
+                </div>
+              )}
+
+              {/* Video-specific: FPS */}
+              {'fps' in displayMetadata && displayMetadata.fps && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.fps', 'FPS')}
+                  </div>
+                  <div className="font-medium">
+                    {displayMetadata.fps.toFixed(2)}
+                  </div>
+                </div>
+              )}
+
+              {/* Creation Date (for local files) */}
+              {'createdAt' in displayMetadata && displayMetadata.createdAt && (
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t('mediaGallery.creationDate', 'Creation Date')}
+                  </div>
+                  <div className="font-medium">
+                    {formatDateTime(displayMetadata.createdAt)}
+                  </div>
+                </div>
+              )}
+
+              {/* Modification Date (for local files) */}
+              {'modifiedAt' in displayMetadata &&
+                displayMetadata.modifiedAt && (
+                  <div>
+                    <div className="text-muted-foreground text-xs">
+                      {t('mediaGallery.modificationDate', 'Modification Date')}
+                    </div>
+                    <div className="font-medium">
+                      {formatDateTime(displayMetadata.modifiedAt)}
+                    </div>
+                  </div>
+                )}
             </div>
-          )}
+
+            {/* Loading indicator */}
+            {isLoadingMetadata && (
+              <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                {t('mediaGallery.loadingMetadata', 'Loading metadata...')}
+              </div>
+            )}
+
+            {/* URL with copy and open buttons */}
+            {item.source?.type === 'url' && (
+              <div className="flex items-start gap-2 border-t pt-2">
+                <button
+                  onClick={handleOpenUrl}
+                  className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"
+                  title={t('mediaGallery.openUrl', 'Open URL')}
+                >
+                  {item.source.url}
+                </button>
+                <button
+                  onClick={handleOpenUrl}
+                  className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                  title={t('mediaGallery.openUrl', 'Open URL')}
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={handleCopyUrl}
+                  className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                  title={t('mediaGallery.copyUrl', 'Copy URL')}
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* File path with copy and reveal buttons */}
+            {item.source?.type === 'file' && (
+              <div className="flex items-start gap-2 border-t pt-2">
+                <button
+                  onClick={handleShowInFolder}
+                  className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono text-xs break-all transition-colors"
+                  title={t('mediaGallery.showInFolder', 'Show in folder')}
+                >
+                  {item.source.path}
+                </button>
+                <button
+                  onClick={handleShowInFolder}
+                  className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                  title={t('mediaGallery.showInFolder', 'Show in folder')}
+                >
+                  <FolderOpen className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={handleCopyFilePath}
+                  className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                  title={t('mediaGallery.copyPath', 'Copy path')}
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

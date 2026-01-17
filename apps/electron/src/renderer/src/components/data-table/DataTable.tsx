@@ -271,6 +271,12 @@ export const DataTable = function DataTable({
     ? `${editingCell.rowId}:${editingCell.columnId}`
     : null;
 
+  // Track focused row index for auto-scrolling
+  const focusedRowIndex = useMemo(() => {
+    if (!focusedCell) return -1;
+    return rows.findIndex((r) => r.id === focusedCell.rowId);
+  }, [focusedCell, rows]);
+
   // Initialize drag selection for row multi-select
   const { handleMouseDown: handleDragStart, isInDragRange } = useDragSelection({
     table,
@@ -498,6 +504,45 @@ export const DataTable = function DataTable({
     prevVisibleRangeRef.current = newRange;
     return newRange;
   }, [virtualItems]);
+
+  // Auto-scroll to focused row when navigating via keyboard
+  useEffect(() => {
+    if (focusedRowIndex < 0 || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const rowElement = container.querySelector(
+      `tr[data-row-index="${focusedRowIndex}"]`
+    ) as HTMLElement | null;
+
+    if (!rowElement) {
+      // Row not rendered yet (virtualized), use scrollToIndex
+      if (shouldVirtualize) {
+        rowVirtualizer.scrollToIndex(focusedRowIndex, { align: 'auto' });
+      }
+      return;
+    }
+
+    // Get actual header height from DOM
+    const thead = container.querySelector('thead');
+    const headerHeight = thead?.getBoundingClientRect().height ?? 0;
+
+    // Calculate if row is visible considering sticky header
+    const containerRect = container.getBoundingClientRect();
+    const rowRect = rowElement.getBoundingClientRect();
+
+    // Visible area starts after the sticky header
+    const visibleTop = containerRect.top + headerHeight;
+    const visibleBottom = containerRect.bottom;
+
+    // Check if row is above visible area (hidden by header)
+    if (rowRect.top < visibleTop) {
+      container.scrollTop -= visibleTop - rowRect.top;
+    }
+    // Check if row is below visible area
+    else if (rowRect.bottom > visibleBottom) {
+      container.scrollTop += rowRect.bottom - visibleBottom;
+    }
+  }, [focusedRowIndex, rowVirtualizer, shouldVirtualize]);
 
   // Use virtual data management for memory-efficient row handling
   const virtualData = useVirtualData({

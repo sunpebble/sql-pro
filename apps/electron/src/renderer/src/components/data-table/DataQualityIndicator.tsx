@@ -1,8 +1,18 @@
 import type { ColumnSchema } from '@/types/database';
+import { Badge } from '@sqlpro/ui/badge';
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from '@sqlpro/ui/popover';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Separator } from '@sqlpro/ui/separator';
 import { AlertCircle, CheckCircle, Info, XCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface DataQualityIndicatorProps {
@@ -157,141 +167,115 @@ function analyzeDataQuality(
  */
 export const DataQualityIndicator = memo(
   ({ columns, data, className }: DataQualityIndicatorProps) => {
+    const { t } = useTranslation('table');
     const quality = useMemo(
       () => analyzeDataQuality(columns, data),
       [columns, data]
     );
 
-    // Determine icon and color based on grade
-    const {
-      icon: Icon,
-      colorClass,
-      bgClass,
-    } = useMemo(() => {
+    // Determine icon and badge variant based on grade
+    const { icon: Icon, badgeVariant } = useMemo(() => {
       switch (quality.grade) {
         case 'A':
-          return {
-            icon: CheckCircle,
-            colorClass: 'text-green-600 dark:text-green-400',
-            bgClass: 'bg-green-500/10',
-          };
+          return { icon: CheckCircle, badgeVariant: 'success' as const };
         case 'B':
-          return {
-            icon: CheckCircle,
-            colorClass: 'text-blue-600 dark:text-blue-400',
-            bgClass: 'bg-blue-500/10',
-          };
+          return { icon: CheckCircle, badgeVariant: 'info' as const };
         case 'C':
-          return {
-            icon: Info,
-            colorClass: 'text-amber-600 dark:text-amber-400',
-            bgClass: 'bg-amber-500/10',
-          };
+          return { icon: Info, badgeVariant: 'warning' as const };
         case 'D':
-          return {
-            icon: AlertCircle,
-            colorClass: 'text-orange-600 dark:text-orange-400',
-            bgClass: 'bg-orange-500/10',
-          };
+          return { icon: AlertCircle, badgeVariant: 'warning' as const };
         case 'F':
         default:
-          return {
-            icon: XCircle,
-            colorClass: 'text-red-600 dark:text-red-400',
-            bgClass: 'bg-red-500/10',
-          };
+          return { icon: XCircle, badgeVariant: 'destructive' as const };
       }
     }, [quality.grade]);
 
     return (
-      <Tooltip>
-        <TooltipTrigger>
-          <div
-            className={cn(
-              'flex items-center gap-1.5 rounded-md px-2 py-1',
-              'hover:bg-muted transition-colors',
-              bgClass,
-              className
-            )}
+      <Popover>
+        <PopoverTrigger>
+          <Badge
+            variant={badgeVariant}
+            className={cn('cursor-pointer gap-1.5', className)}
           >
-            <Icon className={cn('h-3.5 w-3.5', colorClass)} />
-            <span className={cn('text-xs font-medium', colorClass)}>
-              {quality.grade}
-            </span>
-            <span className="text-muted-foreground text-2xs">
-              ({quality.score}%)
-            </span>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="w-64 p-0">
-          <div className="border-b p-2">
+            <Icon data-icon="inline-start" />
+            {quality.grade}
+            <span className="opacity-70">({quality.score}%)</span>
+          </Badge>
+        </PopoverTrigger>
+        <PopoverContent side="bottom" className="w-64 gap-0 p-0">
+          <PopoverHeader className="p-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Data Quality</span>
-              <span className={cn('text-lg font-bold', colorClass)}>
+              <PopoverTitle>{t('quality.title')}</PopoverTitle>
+              <Badge variant={badgeVariant} className="text-base font-bold">
                 {quality.grade}
-              </span>
+              </Badge>
             </div>
-            <div className="text-muted-foreground mt-0.5 text-xs">
-              Score: {quality.score}/100 • {quality.totalRows} rows •{' '}
-              {quality.totalColumns} columns
-            </div>
-          </div>
+            <PopoverDescription className="text-xs">
+              {t('quality.score', { score: quality.score })} •{' '}
+              {t('quality.summary', {
+                rows: quality.totalRows,
+                columns: quality.totalColumns,
+              })}
+            </PopoverDescription>
+          </PopoverHeader>
+
+          <Separator />
 
           {quality.issues.length > 0 ? (
-            <ScrollArea className="h-48">
+            <ScrollArea className="max-h-48">
               <div className="divide-y">
                 {quality.issues.slice(0, 5).map((issue) => (
                   <div
                     key={`${issue.column}-${issue.type}`}
-                    className="px-2 py-1.5 text-xs"
+                    className="px-3 py-2 text-xs"
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       {issue.severity === 'error' && (
-                        <XCircle className="h-3 w-3 text-red-500" />
+                        <XCircle className="text-destructive h-3.5 w-3.5 shrink-0" />
                       )}
                       {issue.severity === 'warning' && (
-                        <AlertCircle className="h-3 w-3 text-amber-500" />
+                        <AlertCircle className="text-warning h-3.5 w-3.5 shrink-0" />
                       )}
                       {issue.severity === 'info' && (
-                        <Info className="h-3 w-3 text-blue-500" />
+                        <Info className="text-info h-3.5 w-3.5 shrink-0" />
                       )}
                       <span className="font-medium">{issue.column}</span>
                     </div>
-                    <div className="text-muted-foreground ml-4">
-                      {issue.type === 'null' && (
-                        <>
-                          {issue.count} null values (
-                          {issue.percentage.toFixed(1)}%)
-                        </>
-                      )}
-                      {issue.type === 'empty' && (
-                        <>
-                          {issue.count} empty strings (
-                          {issue.percentage.toFixed(1)}
-                          %)
-                        </>
-                      )}
-                      {issue.type === 'duplicate' && (
-                        <>{issue.count} duplicate values</>
-                      )}
+                    <div className="text-muted-foreground mt-0.5 ml-5">
+                      {issue.type === 'null' &&
+                        t('quality.issues.nullValues', {
+                          count: issue.count,
+                          percentage: issue.percentage.toFixed(1),
+                        })}
+                      {issue.type === 'empty' &&
+                        t('quality.issues.emptyStrings', {
+                          count: issue.count,
+                          percentage: issue.percentage.toFixed(1),
+                        })}
+                      {issue.type === 'duplicate' &&
+                        t('quality.issues.duplicateValues', {
+                          count: issue.count,
+                        })}
                     </div>
                   </div>
                 ))}
               </div>
               {quality.issues.length > 5 && (
-                <div className="text-muted-foreground text-2xs border-t px-2 py-1">
-                  +{quality.issues.length - 5} more issues
+                <div className="text-muted-foreground border-t px-3 py-2 text-xs">
+                  {t('quality.moreIssues', {
+                    count: quality.issues.length - 5,
+                  })}
                 </div>
               )}
             </ScrollArea>
           ) : (
-            <div className="text-muted-foreground p-3 text-center text-xs">
-              <CheckCircle className="mx-auto mb-1 h-5 w-5 text-green-500" />
-              No quality issues detected
+            <div className="text-muted-foreground flex flex-col items-center gap-1 p-4 text-center text-xs">
+              <CheckCircle className="text-success h-5 w-5" />
+              {t('quality.noIssues')}
             </div>
           )}
-        </TooltipContent>
-      </Tooltip>
+        </PopoverContent>
+      </Popover>
     );
   }
 );

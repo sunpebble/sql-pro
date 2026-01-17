@@ -60,5 +60,17 @@
     "json": "JSON",
     "sql": "SQL 插入语句",
     "excel": "Excel"
+  },
+  "quality": {
+    "title": "数据质量",
+    "score": "评分：{{score}}/100",
+    "summary": "{{rows}} 行 • {{columns}} 列",
+    "noIssues": "未检测到质量问题",
+    "moreIssues": "还有 {{count}} 个问题",
+    "issues": {
+      "nullValues": "{{count}} 个空值 ({{percentage}}%)",
+      "emptyStrings": "{{count}} 个空字符串 ({{percentage}}%)",
+      "duplicateValues": "{{count}} 个重复值"
+    }
   }
 }

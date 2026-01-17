@@ -60,5 +60,17 @@
     "json": "JSON",
     "sql": "SQL Insert",
     "excel": "Excel"
+  },
+  "quality": {
+    "title": "Data Quality",
+    "score": "Score: {{score}}/100",
+    "summary": "{{rows}} rows • {{columns}} columns",
+    "noIssues": "No quality issues detected",
+    "moreIssues": "+{{count}} more issues",
+    "issues": {
+      "nullValues": "{{count}} null values ({{percentage}}%)",
+      "emptyStrings": "{{count}} empty strings ({{percentage}}%)",
+      "duplicateValues": "{{count}} duplicate values"
+    }
   }
 }
