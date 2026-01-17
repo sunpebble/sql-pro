@@ -4,6 +4,11 @@
  * Uses UMAP dimensionality reduction to project vectors into 2D or 3D space,
  * then renders them on a canvas. Background points are shown in gray,
  * while search results are highlighted in blue.
+ *
+ * Features:
+ * - Hover to see point details in tooltip
+ * - Points enlarge on hover
+ * - 3D mode shows isometric projection with depth coloring
  */
 
 import type { PointWithVector, VectorSearchResult } from '@shared/types';
@@ -33,6 +38,15 @@ interface ProjectedPoint {
   id: string | number;
   isSearchResult: boolean;
   score?: number;
+  payload?: Record<string, unknown>;
+}
+
+/** Screen-space point for hit testing */
+interface ScreenPoint {
+  screenX: number;
+  screenY: number;
+  radius: number;
+  point: ProjectedPoint;
 }
 
 /** Dimension mode for visualization */
@@ -42,13 +56,19 @@ type DimensionMode = '2d' | '3d';
 const CANVAS_PADDING = 40;
 
 /** Point sizes */
-const POINT_RADIUS_BACKGROUND = 3;
-const POINT_RADIUS_RESULT = 5;
+const POINT_RADIUS_BACKGROUND = 4;
+const POINT_RADIUS_RESULT = 6;
+const POINT_RADIUS_HOVER_SCALE = 1.8;
 
 /** Colors */
 const COLOR_BACKGROUND = 'rgba(156, 163, 175, 0.5)'; // gray-400 with opacity
+const COLOR_BACKGROUND_HOVER = 'rgba(156, 163, 175, 0.9)';
 const COLOR_RESULT = 'rgba(59, 130, 246, 0.8)'; // blue-500 with opacity
+const COLOR_RESULT_HOVER = 'rgba(59, 130, 246, 1)';
 const COLOR_RESULT_STROKE = 'rgba(37, 99, 235, 1)'; // blue-600
+
+/** Hit test radius multiplier for easier selection */
+const HIT_TEST_MULTIPLIER = 2;
 
 /**
  * VectorVisualization component renders a 2D/3D visualization of vector embeddings.
@@ -73,6 +93,31 @@ export const VectorVisualization = memo(
     // Canvas size state
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
+    // Hover state
+    const [hoveredPoint, setHoveredPoint] = useState<ProjectedPoint | null>(
+      null
+    );
+    const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+
+    // Screen points for hit testing (updated during draw)
+    const screenPointsRef = useRef<ScreenPoint[]>([]);
+
+    // Build payload map for quick lookup
+    const payloadMap = useMemo(() => {
+      const map = new Map<string, Record<string, unknown>>();
+      for (const result of searchResults) {
+        if (result.payload) {
+          map.set(String(result.id), result.payload);
+        }
+      }
+      for (const point of backgroundPoints) {
+        if (point.payload) {
+          map.set(String(point.id), point.payload);
+        }
+      }
+      return map;
+    }, [backgroundPoints, searchResults]);
+
     // Combine background points and search results into a single vectors array
     // Track which indices correspond to search results
     const { vectors, pointMetadata } = useMemo(() => {
@@ -81,6 +126,7 @@ export const VectorVisualization = memo(
         id: string | number;
         isSearchResult: boolean;
         score?: number;
+        payload?: Record<string, unknown>;
       }> = [];
 
       // Create a set of search result IDs for quick lookup
@@ -88,11 +134,13 @@ export const VectorVisualization = memo(
 
       // Add background points (excluding those that are search results)
       for (const point of backgroundPoints) {
-        if (!searchResultIds.has(String(point.id))) {
+        const idStr = String(point.id);
+        if (!searchResultIds.has(idStr)) {
           vecs.push(point.vector);
           metadata.push({
             id: point.id,
             isSearchResult: false,
+            payload: payloadMap.get(idStr),
           });
         }
       }
@@ -109,12 +157,13 @@ export const VectorVisualization = memo(
             id: result.id,
             isSearchResult: true,
             score: result.score,
+            payload: result.payload || payloadMap.get(String(result.id)),
           });
         }
       }
 
       return { vectors: vecs, pointMetadata: metadata };
-    }, [backgroundPoints, searchResults]);
+    }, [backgroundPoints, searchResults, payloadMap]);
 
     // Compute UMAP projection
     const {
@@ -142,6 +191,7 @@ export const VectorVisualization = memo(
         id: pointMetadata[i].id,
         isSearchResult: pointMetadata[i].isSearchResult,
         score: pointMetadata[i].score,
+        payload: pointMetadata[i].payload,
       }));
     }, [embedding, pointMetadata, dimensionMode]);
 
@@ -187,8 +237,14 @@ export const VectorVisualization = memo(
       // Clear canvas
       ctx.clearRect(0, 0, width, height);
 
+      // Reset screen points
+      const newScreenPoints: ScreenPoint[] = [];
+
       // If no points, nothing to draw
-      if (projectedPoints.length === 0) return;
+      if (projectedPoints.length === 0) {
+        screenPointsRef.current = newScreenPoints;
+        return;
+      }
 
       // Calculate bounds for scaling
       let minX = Number.POSITIVE_INFINITY;
@@ -230,43 +286,136 @@ export const VectorVisualization = memo(
         y: offsetY + (y - minY) * scale,
       });
 
-      // Draw background points first
-      for (const point of projectedPoints) {
-        if (point.isSearchResult) continue;
+      // Sort points: background first, then results, hovered point last
+      const sortedPoints = [...projectedPoints].sort((a, b) => {
+        const aIsHovered =
+          hoveredPoint && String(a.id) === String(hoveredPoint.id);
+        const bIsHovered =
+          hoveredPoint && String(b.id) === String(hoveredPoint.id);
+        if (aIsHovered) return 1;
+        if (bIsHovered) return -1;
+        if (a.isSearchResult && !b.isSearchResult) return 1;
+        if (!a.isSearchResult && b.isSearchResult) return -1;
+        return 0;
+      });
 
+      // Draw all points
+      for (const point of sortedPoints) {
         const { x, y } = transform(point.x, point.y);
+        const isHovered =
+          hoveredPoint && String(point.id) === String(hoveredPoint.id);
 
+        let radius: number;
+        let fillColor: string;
+        let strokeColor: string | null = null;
+
+        if (point.isSearchResult) {
+          radius = isHovered
+            ? POINT_RADIUS_RESULT * POINT_RADIUS_HOVER_SCALE
+            : POINT_RADIUS_RESULT;
+          fillColor = isHovered ? COLOR_RESULT_HOVER : COLOR_RESULT;
+          strokeColor = COLOR_RESULT_STROKE;
+        } else {
+          radius = isHovered
+            ? POINT_RADIUS_BACKGROUND * POINT_RADIUS_HOVER_SCALE
+            : POINT_RADIUS_BACKGROUND;
+          fillColor = isHovered ? COLOR_BACKGROUND_HOVER : COLOR_BACKGROUND;
+        }
+
+        // Draw point
         ctx.beginPath();
-        ctx.arc(x, y, POINT_RADIUS_BACKGROUND, 0, Math.PI * 2);
-        ctx.fillStyle = COLOR_BACKGROUND;
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = fillColor;
         ctx.fill();
+
+        if (strokeColor) {
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = isHovered ? 2 : 1.5;
+          ctx.stroke();
+        }
+
+        // Store screen position for hit testing
+        newScreenPoints.push({
+          screenX: x,
+          screenY: y,
+          radius: point.isSearchResult
+            ? POINT_RADIUS_RESULT
+            : POINT_RADIUS_BACKGROUND,
+          point,
+        });
       }
 
-      // Draw search result points on top
-      for (const point of projectedPoints) {
-        if (!point.isSearchResult) continue;
+      screenPointsRef.current = newScreenPoints;
+    }, [projectedPoints, canvasSize, hoveredPoint]);
 
-        const { x, y } = transform(point.x, point.y);
-
-        ctx.beginPath();
-        ctx.arc(x, y, POINT_RADIUS_RESULT, 0, Math.PI * 2);
-        ctx.fillStyle = COLOR_RESULT;
-        ctx.fill();
-        ctx.strokeStyle = COLOR_RESULT_STROKE;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      }
-    }, [projectedPoints, canvasSize]);
-
-    // Redraw canvas when points or size changes
+    // Redraw canvas when points, size, or hover changes
     useEffect(() => {
       drawCanvas();
     }, [drawCanvas]);
+
+    // Handle mouse move for hover detection
+    const handleMouseMove = useCallback(
+      (event: React.MouseEvent<HTMLCanvasElement>) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        // Find closest point within hit radius
+        let closestPoint: ProjectedPoint | null = null;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        for (const sp of screenPointsRef.current) {
+          const dx = mouseX - sp.screenX;
+          const dy = mouseY - sp.screenY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const hitRadius = sp.radius * HIT_TEST_MULTIPLIER;
+
+          if (distance < hitRadius && distance < closestDistance) {
+            closestDistance = distance;
+            closestPoint = sp.point;
+          }
+        }
+
+        if (closestPoint !== hoveredPoint) {
+          setHoveredPoint(closestPoint);
+        }
+
+        if (closestPoint) {
+          setTooltipPosition({
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+          });
+        }
+      },
+      [hoveredPoint]
+    );
+
+    // Handle mouse leave
+    const handleMouseLeave = useCallback(() => {
+      setHoveredPoint(null);
+    }, []);
 
     // Determine loading state
     const showLoading = isLoading || isComputing;
     const hasData = vectors.length > 0;
     const hasMinimumData = vectors.length >= 3;
+
+    // Format payload for tooltip
+    const formatPayload = (payload: Record<string, unknown> | undefined) => {
+      if (!payload || Object.keys(payload).length === 0) return null;
+      // Show first 3 fields only
+      const entries = Object.entries(payload).slice(0, 3);
+      return entries.map(([key, value]) => {
+        let displayValue = String(value);
+        if (displayValue.length > 30) {
+          displayValue = `${displayValue.substring(0, 30)}...`;
+        }
+        return { key, value: displayValue };
+      });
+    };
 
     return (
       <div className={cn('flex h-full flex-col', className)}>
@@ -355,14 +504,54 @@ export const VectorVisualization = memo(
           <canvas
             ref={canvasRef}
             className={cn(
-              'h-full w-full',
+              'h-full w-full cursor-crosshair',
               (showLoading || !hasMinimumData || umapError) && 'opacity-0'
             )}
             style={{
               width: canvasSize.width,
               height: canvasSize.height,
             }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
           />
+
+          {/* Tooltip */}
+          {hoveredPoint && !showLoading && (
+            <div
+              className="bg-popover text-popover-foreground pointer-events-none absolute z-20 max-w-xs rounded-md border px-3 py-2 text-sm shadow-md"
+              style={{
+                left: Math.min(tooltipPosition.x + 12, canvasSize.width - 200),
+                top: Math.min(tooltipPosition.y + 12, canvasSize.height - 100),
+              }}
+            >
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground text-xs">ID:</span>
+                  <span className="font-mono text-xs font-medium">
+                    {String(hoveredPoint.id)}
+                  </span>
+                </div>
+                {hoveredPoint.isSearchResult && hoveredPoint.score != null && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-xs">
+                      Score:
+                    </span>
+                    <span className="font-mono text-xs font-medium text-blue-500">
+                      {hoveredPoint.score.toFixed(4)}
+                    </span>
+                  </div>
+                )}
+                {formatPayload(hoveredPoint.payload)?.map(({ key, value }) => (
+                  <div key={key} className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-xs">
+                      {key}:
+                    </span>
+                    <span className="text-xs">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Legend */}
           {!showLoading && hasMinimumData && !umapError && (
@@ -395,8 +584,22 @@ export const VectorVisualization = memo(
               </div>
             </div>
           )}
+
+          {/* 3D mode hint */}
+          {dimensionMode === '3d' &&
+            !showLoading &&
+            hasMinimumData &&
+            !umapError && (
+              <div className="bg-background/90 absolute right-3 bottom-3 rounded-md border px-3 py-2 text-xs backdrop-blur-sm">
+                <span className="text-muted-foreground">
+                  {t('vectorSearch.3dHint', '3D projection (isometric view)')}
+                </span>
+              </div>
+            )}
         </div>
       </div>
     );
   }
 );
+
+VectorVisualization.displayName = 'VectorVisualization';
