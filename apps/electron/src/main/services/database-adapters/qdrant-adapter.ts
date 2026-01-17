@@ -795,6 +795,71 @@ export class QdrantAdapter implements DatabaseAdapter {
     }
   }
 
+  async searchSimilar(
+    connectionId: string,
+    collection: string,
+    pointId: string | number,
+    limit: number,
+    filter?: { must?: Array<Record<string, unknown>> }
+  ): Promise<
+    | {
+        success: true;
+        results: Array<{
+          id: string | number;
+          score: number;
+          payload: Record<string, unknown>;
+        }>;
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      // First, get the vector for the specified point
+      const pointResult = await connection.client.retrieve(collection, {
+        ids: [pointId],
+        with_vector: true,
+        with_payload: false,
+      });
+
+      if (pointResult.length === 0) {
+        return { success: false, error: `Point ${pointId} not found` };
+      }
+
+      const sourceVector = pointResult[0].vector as number[];
+      if (!sourceVector || !Array.isArray(sourceVector)) {
+        return { success: false, error: 'Point does not have a vector' };
+      }
+
+      // Search for similar points, excluding the source point
+      const searchResult = await connection.client.search(collection, {
+        vector: sourceVector,
+        limit: limit + 1, // Get one extra to filter out the source
+        filter,
+        with_payload: true,
+        with_vector: false,
+      });
+
+      // Filter out the source point and limit results
+      const results = searchResult
+        .filter((point) => String(point.id) !== String(pointId))
+        .slice(0, limit)
+        .map((point) => ({
+          id: point.id,
+          score: point.score,
+          payload: (point.payload as Record<string, unknown>) || {},
+        }));
+
+      return { success: true, results };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
   getPendingChanges(
     _connectionId: string
   ):
