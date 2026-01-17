@@ -479,9 +479,9 @@ export function EditableDataGrid({
                   <span className="truncate">{col.name}</span>
                   {sort?.column === col.name &&
                     (sort.direction === 'asc' ? (
-                      <ArrowUp className="h-3 w-3 shrink-0" />
+                      <ArrowUp className="text-primary h-3 w-3 shrink-0" />
                     ) : (
-                      <ArrowDown className="h-3 w-3 shrink-0" />
+                      <ArrowDown className="text-primary h-3 w-3 shrink-0" />
                     ))}
                 </button>
 
