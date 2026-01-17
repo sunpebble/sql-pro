@@ -2,6 +2,7 @@ import type { ColumnSchema, PendingChange, SortState } from '@/types/database';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowDown, ArrowUp, Key, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { getColumnTypeCategory } from '@/lib/filter-utils';
 import { cn } from '@/lib/utils';
@@ -391,8 +392,10 @@ export function EditableDataGrid({
     const text = value === null ? '' : String(value);
     try {
       await navigator.clipboard.writeText(text);
+      toast.success('Copied to clipboard');
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
+      toast.error('Failed to copy');
     }
   }, [focusedCell, displayRows, columns]);
 

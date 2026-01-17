@@ -92,7 +92,7 @@ export function SkeletonRow({ columns, className, style }: SkeletonRowProps) {
           key={`skeleton-col-${i}`}
           className="flex-1 px-2"
           style={{
-            animationDelay: `${i * 50}ms`,
+            animationDelay: `${i * 15}ms`,
           }}
         >
           <div
@@ -145,7 +145,7 @@ export function SkeletonTable({
           className="animate-in fade-in duration-300"
           style={
             {
-              animationDelay: `${i * 30}ms`,
+              animationDelay: `${i * 10}ms`,
             } as React.CSSProperties
           }
         />
