@@ -30,6 +30,7 @@ const DEFAULT_PORTS: Record<DatabaseType, number> = {
   mysql: 3306,
   postgresql: 5432,
   supabase: 5432,
+  qdrant: 6333,
 };
 
 const DATABASE_LABELS: Record<DatabaseType, string> = {
@@ -37,6 +38,7 @@ const DATABASE_LABELS: Record<DatabaseType, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
   supabase: 'Supabase',
+  qdrant: 'Qdrant',
 };
 
 /**
