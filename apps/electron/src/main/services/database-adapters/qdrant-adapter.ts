@@ -633,7 +633,110 @@ export class QdrantAdapter implements DatabaseAdapter {
   ):
     | { success: true; appliedCount: number }
     | { success: false; error: string } {
-    return { success: false, error: NOT_IMPLEMENTED_ERROR };
+    return {
+      success: false,
+      error: 'Use applyChangesAsync for Qdrant connections',
+    };
+  }
+
+  async applyChangesAsync(
+    connectionId: string,
+    changes: PendingChangeInfo[]
+  ): Promise<
+    { success: true; appliedCount: number } | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      let appliedCount = 0;
+
+      for (const change of changes) {
+        const collectionName = change.table;
+
+        switch (change.type) {
+          case 'insert': {
+            if (!change.newValues) continue;
+
+            const { __vector, __id, ...payload } = change.newValues as Record<
+              string,
+              unknown
+            >;
+
+            // Parse vector if provided as string
+            let vector: number[] | undefined;
+            if (__vector && typeof __vector === 'string') {
+              try {
+                vector = JSON.parse(__vector);
+              } catch {
+                return {
+                  success: false,
+                  error:
+                    'Invalid vector format. Expected JSON array of numbers.',
+                };
+              }
+            } else if (Array.isArray(__vector)) {
+              vector = __vector as number[];
+            }
+
+            if (!vector || !Array.isArray(vector)) {
+              return {
+                success: false,
+                error:
+                  'Vector is required for insert. Provide __vector as array of numbers.',
+              };
+            }
+
+            // Generate ID if not provided
+            const pointId = __id ? String(__id) : crypto.randomUUID();
+
+            await connection.client.upsert(collectionName, {
+              wait: true,
+              points: [{ id: pointId, vector, payload }],
+            });
+            appliedCount++;
+            break;
+          }
+
+          case 'update': {
+            if (!change.newValues) continue;
+
+            const pointId = String(change.rowId);
+            const {
+              __vector: _v,
+              __id: _i,
+              ...payload
+            } = change.newValues as Record<string, unknown>;
+
+            // Update payload only (vector updates would require full upsert)
+            await connection.client.setPayload(collectionName, {
+              wait: true,
+              points: [pointId],
+              payload,
+            });
+            appliedCount++;
+            break;
+          }
+
+          case 'delete': {
+            const pointId = String(change.rowId);
+            await connection.client.delete(collectionName, {
+              wait: true,
+              points: [pointId],
+            });
+            appliedCount++;
+            break;
+          }
+        }
+      }
+
+      return { success: true, appliedCount };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
   }
 
   getPendingChanges(
