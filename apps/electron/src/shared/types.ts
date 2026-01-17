@@ -133,6 +133,87 @@ export interface DatabaseConnectionConfig {
   qdrantUseTLS?: boolean;
 }
 
+// ============ Qdrant Vector Search Types ============
+
+/** Filter condition for Qdrant vector search */
+export interface QdrantSearchFilter {
+  must?: QdrantFilterCondition[];
+  should?: QdrantFilterCondition[];
+  must_not?: QdrantFilterCondition[];
+}
+
+export interface QdrantFilterCondition {
+  key: string;
+  match?: { value: string | number | boolean };
+  range?: { gt?: number; gte?: number; lt?: number; lte?: number };
+}
+
+/** Vector search request parameters */
+export interface VectorSearchRequest {
+  connectionId: string;
+  collection: string;
+  vector: number[];
+  limit: number;
+  scoreThreshold?: number;
+  filter?: QdrantSearchFilter;
+  withPayload?: boolean;
+  withVector?: boolean;
+}
+
+/** Vector search result */
+export interface VectorSearchResult {
+  id: string | number;
+  score: number;
+  payload: Record<string, unknown>;
+  vector?: number[];
+}
+
+export type VectorSearchResponse =
+  | {
+      success: true;
+      results: VectorSearchResult[];
+    }
+  | {
+      success: false;
+      error: string;
+    };
+
+/** Search similar points request */
+export interface SearchSimilarRequest {
+  connectionId: string;
+  collection: string;
+  pointId: string | number;
+  limit: number;
+  filter?: QdrantSearchFilter;
+}
+
+export type SearchSimilarResponse = VectorSearchResponse;
+
+/** Get points with vectors request (for visualization) */
+export interface GetPointsWithVectorsRequest {
+  connectionId: string;
+  collection: string;
+  limit: number;
+  ids?: (string | number)[];
+}
+
+export interface PointWithVector {
+  id: string | number;
+  vector: number[];
+  payload: Record<string, unknown>;
+}
+
+export type GetPointsWithVectorsResponse =
+  | {
+      success: true;
+      points: PointWithVector[];
+      vectorDimension: number;
+    }
+  | {
+      success: false;
+      error: string;
+    };
+
 export interface OpenDatabaseRequest {
   /** Legacy support: file path for SQLite */
   path?: string;
