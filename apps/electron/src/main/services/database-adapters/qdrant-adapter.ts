@@ -9,6 +9,7 @@
  */
 
 import type {
+  ColumnInfo,
   DatabaseConnectionConfig,
   GetColumnDistributionResponse,
   GetTableDataResponse,
@@ -282,7 +283,116 @@ export class QdrantAdapter implements DatabaseAdapter {
   ):
     | { success: true; structure: TableInfo }
     | { success: false; error: string } {
-    return { success: false, error: NOT_IMPLEMENTED_ERROR };
+    return {
+      success: false,
+      error: 'Use getTableStructureAsync for Qdrant connections',
+    };
+  }
+
+  async getTableStructureAsync(
+    connectionId: string,
+    tableName: string,
+    _schema?: string
+  ): Promise<
+    { success: true; structure: TableInfo } | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      // Get collection info
+      const collectionInfo = await connection.client.getCollection(tableName);
+
+      // Get sample points to infer payload schema
+      const samplePoints = await connection.client.scroll(tableName, {
+        limit: 100,
+        with_payload: true,
+        with_vector: false,
+      });
+
+      // Infer columns from payload
+      const payloadFields = new Map<string, string>();
+
+      for (const point of samplePoints.points) {
+        if (point.payload) {
+          for (const [key, value] of Object.entries(point.payload)) {
+            if (!payloadFields.has(key)) {
+              payloadFields.set(key, this.inferType(value));
+            }
+          }
+        }
+      }
+
+      // Get vector size - handle both simple and named vector configurations
+      const vectorConfig = collectionInfo.config.params.vectors;
+      let vectorSize = '?';
+      if (typeof vectorConfig === 'object' && vectorConfig !== null) {
+        if ('size' in vectorConfig) {
+          vectorSize = String(vectorConfig.size);
+        }
+      }
+
+      // Build columns array
+      const columns: ColumnInfo[] = [
+        {
+          name: '__id',
+          type: 'TEXT',
+          nullable: false,
+          isPrimaryKey: true,
+          defaultValue: null,
+        },
+        {
+          name: '__vector',
+          type: `VECTOR[${vectorSize}]`,
+          nullable: false,
+          isPrimaryKey: false,
+          defaultValue: null,
+        },
+      ];
+
+      // Add payload columns
+      for (const [name, type] of payloadFields) {
+        columns.push({
+          name,
+          type,
+          nullable: true,
+          isPrimaryKey: false,
+          defaultValue: null,
+        });
+      }
+
+      const structure: TableInfo = {
+        name: tableName,
+        type: 'table',
+        schema: 'default',
+        rowCount: collectionInfo.points_count || 0,
+        columns,
+        primaryKey: ['__id'],
+        indexes: [],
+        foreignKeys: [],
+        triggers: [],
+        sql: '',
+      };
+
+      return { success: true, structure };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
+  private inferType(value: unknown): string {
+    if (value === null || value === undefined) return 'TEXT';
+    if (typeof value === 'number') {
+      return Number.isInteger(value) ? 'INTEGER' : 'FLOAT';
+    }
+    if (typeof value === 'boolean') return 'BOOLEAN';
+    if (typeof value === 'string') return 'TEXT';
+    if (Array.isArray(value)) return 'ARRAY';
+    if (typeof value === 'object') return 'JSON';
+    return 'TEXT';
   }
 
   getColumnDistribution(
