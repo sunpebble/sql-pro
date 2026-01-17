@@ -8,7 +8,7 @@ import { cloneElement, isValidElement } from 'react';
 import { cn } from './lib/utils';
 
 function TooltipProvider({
-  delay = 0,
+  delay = 300,
   ...props
 }: TooltipPrimitive.Provider.Props) {
   return (
