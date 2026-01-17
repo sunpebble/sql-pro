@@ -819,9 +819,18 @@ export class QdrantAdapter implements DatabaseAdapter {
     }
 
     try {
+      // Parse point ID - try as integer first, then use as string (UUID)
+      let parsedPointId: string | number = pointId;
+      if (typeof pointId === 'string') {
+        const numId = Number.parseInt(pointId, 10);
+        if (!Number.isNaN(numId) && String(numId) === pointId) {
+          parsedPointId = numId;
+        }
+      }
+
       // First, get the vector for the specified point
       const pointResult = await connection.client.retrieve(collection, {
-        ids: [pointId],
+        ids: [parsedPointId],
         with_vector: true,
         with_payload: false,
       });
@@ -846,7 +855,7 @@ export class QdrantAdapter implements DatabaseAdapter {
 
       // Filter out the source point and limit results
       const results = searchResult
-        .filter((point) => String(point.id) !== String(pointId))
+        .filter((point) => String(point.id) !== String(parsedPointId))
         .slice(0, limit)
         .map((point) => ({
           id: point.id,
