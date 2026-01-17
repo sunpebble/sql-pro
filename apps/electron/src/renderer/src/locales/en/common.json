@@ -173,7 +173,8 @@
     "erDiagram": "ER Diagram",
     "compare": "Compare",
     "schemaCompare": "Schema Compare",
-    "dataDiff": "Data Diff"
+    "dataDiff": "Data Diff",
+    "vectorSearch": "Vector Search"
   },
   "database": {
     "selectTable": "Select a table from the sidebar to view its data"

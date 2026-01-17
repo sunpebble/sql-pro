@@ -173,7 +173,8 @@
     "erDiagram": "ER 图",
     "compare": "对比",
     "schemaCompare": "结构对比",
-    "dataDiff": "数据对比"
+    "dataDiff": "数据对比",
+    "vectorSearch": "向量搜索"
   },
   "database": {
     "selectTable": "从侧边栏选择表以查看数据"

@@ -1,18 +1,25 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Code, GitCompare, GitFork, Table } from 'lucide-react';
+import { Code, GitCompare, GitFork, Search, Table } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { cn } from '@/lib/utils';
 
-export type ViewType = 'data' | 'query' | 'diagram' | 'compare';
+export type ViewType =
+  | 'data'
+  | 'query'
+  | 'diagram'
+  | 'compare'
+  | 'vectorSearch';
 
 interface ActivityBarItem {
   id: ViewType;
   icon: React.ElementType;
   labelKey: string;
-  shortcutAction: ShortcutAction;
+  shortcutAction?: ShortcutAction;
   tourTarget: string;
+  /** If true, this item requires special conditions to be visible */
+  conditional?: boolean;
 }
 
 const ACTIVITY_BAR_ITEMS: ActivityBarItem[] = [
@@ -44,6 +51,13 @@ const ACTIVITY_BAR_ITEMS: ActivityBarItem[] = [
     shortcutAction: 'nav.schema-compare',
     tourTarget: 'compare-tab',
   },
+  {
+    id: 'vectorSearch',
+    icon: Search,
+    labelKey: 'navigation.vectorSearch',
+    tourTarget: 'vector-search-tab',
+    conditional: true,
+  },
 ];
 
 interface ActivityBarProps {
@@ -51,6 +65,8 @@ interface ActivityBarProps {
   onViewChange: (view: ViewType) => void;
   /** Optional badge counts for each view */
   badges?: Partial<Record<ViewType, number>>;
+  /** Set of view IDs that should be visible (conditional items only shown if included) */
+  visibleViews?: Set<ViewType>;
 }
 
 /**
@@ -61,12 +77,21 @@ export function ActivityBar({
   activeView,
   onViewChange,
   badges,
+  visibleViews,
 }: ActivityBarProps) {
   const { t } = useTranslation('common');
 
+  // Filter items based on visibility settings
+  const visibleItems = ACTIVITY_BAR_ITEMS.filter((item) => {
+    // Non-conditional items are always visible
+    if (!item.conditional) return true;
+    // Conditional items only shown if explicitly included in visibleViews
+    return visibleViews?.has(item.id);
+  });
+
   return (
     <div className="bg-muted/30 flex h-full w-12 shrink-0 flex-col border-r">
-      {ACTIVITY_BAR_ITEMS.map((item) => {
+      {visibleItems.map((item) => {
         const Icon = item.icon;
         const isActive = activeView === item.id;
         const badgeCount = badges?.[item.id];
@@ -95,7 +120,9 @@ export function ActivityBar({
             </TooltipTrigger>
             <TooltipContent side="right" className="flex items-center gap-2">
               <span>{t(item.labelKey)}</span>
-              <ShortcutKbd action={item.shortcutAction} />
+              {item.shortcutAction && (
+                <ShortcutKbd action={item.shortcutAction} />
+              )}
             </TooltipContent>
           </Tooltip>
         );
