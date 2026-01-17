@@ -273,7 +273,146 @@ export class QdrantAdapter implements DatabaseAdapter {
     _filters?: Array<{ column: string; operator: string; value: string }>,
     _schema?: string
   ): GetTableDataResponse {
-    return { success: false, error: NOT_IMPLEMENTED_ERROR };
+    return {
+      success: false,
+      error: 'Use getTableDataAsync for Qdrant connections',
+    };
+  }
+
+  async getTableDataAsync(
+    connectionId: string,
+    table: string,
+    page: number,
+    pageSize: number,
+    _sortColumn?: string,
+    _sortDirection?: 'asc' | 'desc',
+    filters?: Array<{ column: string; operator: string; value: string }>,
+    _schema?: string
+  ): Promise<GetTableDataResponse> {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      // Get collection info for total count and vector size
+      const collectionInfo = await connection.client.getCollection(table);
+      const totalRows = collectionInfo.points_count || 0;
+
+      // Get vector size for display
+      const vectorConfig = collectionInfo.config.params.vectors;
+      let vectorSize = '?';
+      if (
+        typeof vectorConfig === 'object' &&
+        vectorConfig !== null &&
+        'size' in vectorConfig
+      ) {
+        vectorSize = String(vectorConfig.size);
+      }
+
+      // Build filter if provided
+      const qdrantFilter = this.buildQdrantFilter(filters);
+
+      // Calculate offset for pagination
+      const offset = (page - 1) * pageSize;
+
+      // Use scroll with offset
+      const result = await connection.client.scroll(table, {
+        limit: pageSize,
+        offset: offset > 0 ? offset : undefined,
+        with_payload: true,
+        with_vector: false,
+        filter: qdrantFilter,
+      });
+
+      // Get structure for columns
+      const structureResult = await this.getTableStructureAsync(
+        connectionId,
+        table
+      );
+      if (!structureResult.success) {
+        return { success: false, error: structureResult.error };
+      }
+
+      // Transform points to rows
+      const rows = result.points.map((point) => {
+        const row: Record<string, unknown> = {
+          __id: String(point.id),
+          __vector: `[${vectorSize} dims]`,
+        };
+
+        if (point.payload) {
+          for (const [key, value] of Object.entries(point.payload)) {
+            row[key] = value;
+          }
+        }
+
+        return row;
+      });
+
+      return {
+        success: true,
+        columns: structureResult.structure.columns,
+        rows,
+        totalRows,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
+  // Filter building helpers for Qdrant
+  private buildQdrantFilter(
+    filters?: Array<{ column: string; operator: string; value: string }>
+  ): Record<string, unknown> | undefined {
+    if (!filters || filters.length === 0) return undefined;
+
+    const must: Array<Record<string, unknown>> = [];
+
+    for (const filter of filters) {
+      if (filter.column.startsWith('__')) continue; // Skip special columns
+
+      const condition = this.buildFilterCondition(filter);
+      if (condition) must.push(condition);
+    }
+
+    return must.length > 0 ? { must } : undefined;
+  }
+
+  private buildFilterCondition(filter: {
+    column: string;
+    operator: string;
+    value: string;
+  }): Record<string, unknown> | null {
+    const parsedValue = this.parseFilterValue(filter.value);
+
+    switch (filter.operator) {
+      case '=':
+      case 'equals':
+        return { key: filter.column, match: { value: parsedValue } };
+      case '>':
+        return { key: filter.column, range: { gt: Number(filter.value) } };
+      case '>=':
+        return { key: filter.column, range: { gte: Number(filter.value) } };
+      case '<':
+        return { key: filter.column, range: { lt: Number(filter.value) } };
+      case '<=':
+        return { key: filter.column, range: { lte: Number(filter.value) } };
+      case 'contains':
+      case 'like':
+        return { key: filter.column, match: { text: filter.value } };
+      default:
+        return null;
+    }
+  }
+
+  private parseFilterValue(value: string): unknown {
+    const num = Number(value);
+    if (!Number.isNaN(num)) return num;
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+    return value;
   }
 
   getTableStructure(
