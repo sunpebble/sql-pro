@@ -24,7 +24,7 @@ import type {
 } from './types';
 import { MySQLAdapter } from './mysql-adapter';
 import { PostgreSQLAdapter } from './postgresql-adapter';
-import { QdrantAdapter } from './qdrant-adapter';
+import { qdrantAdapter } from './qdrant-adapter';
 import { SQLiteAdapter } from './sqlite-adapter';
 
 /**
@@ -49,7 +49,8 @@ class DatabaseManager {
     this.adapters.set('mysql', new MySQLAdapter());
     this.adapters.set('postgresql', new PostgreSQLAdapter('postgresql'));
     this.adapters.set('supabase', new PostgreSQLAdapter('supabase'));
-    this.adapters.set('qdrant', new QdrantAdapter());
+    // Use the singleton qdrantAdapter to ensure IPC handlers use the same instance
+    this.adapters.set('qdrant', qdrantAdapter);
   }
 
   /**
