@@ -14,6 +14,7 @@ import type {
   GetColumnDistributionResponse,
   GetTableDataResponse,
   PendingChangeInfo,
+  QdrantSearchFilter,
   QueryPlanNode,
   QueryPlanStats,
   SchemaInfo,
@@ -750,7 +751,7 @@ export class QdrantAdapter implements DatabaseAdapter {
       vector: number[];
       limit: number;
       scoreThreshold?: number;
-      filter?: { must?: Array<Record<string, unknown>> };
+      filter?: QdrantSearchFilter;
       withPayload?: boolean;
       withVector?: boolean;
     }
@@ -800,7 +801,7 @@ export class QdrantAdapter implements DatabaseAdapter {
     collection: string,
     pointId: string | number,
     limit: number,
-    filter?: { must?: Array<Record<string, unknown>> }
+    filter?: QdrantSearchFilter
   ): Promise<
     | {
         success: true;

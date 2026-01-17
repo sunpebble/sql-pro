@@ -2774,6 +2774,11 @@ export const IPC_CHANNELS = {
   DB_CHANGE_PASSWORD: 'db:change-password',
   DB_FILE_CHANGED: 'db:file-changed',
 
+  // Vector Search (Qdrant)
+  DB_VECTOR_SEARCH: 'db:vector-search',
+  DB_SEARCH_SIMILAR: 'db:search-similar',
+  DB_GET_POINTS_WITH_VECTORS: 'db:get-points-with-vectors',
+
   // Dialog
   DIALOG_OPEN_FILE: 'dialog:open-file',
   DIALOG_SAVE_FILE: 'dialog:save-file',

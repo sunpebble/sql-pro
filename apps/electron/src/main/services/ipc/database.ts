@@ -5,18 +5,22 @@ import type {
   CloseDatabaseRequest,
   ExecuteQueryRequest,
   GetColumnDistributionRequest,
+  GetPointsWithVectorsRequest,
   GetSchemaListRequest,
   GetSchemaRequest,
   GetTableDataRequest,
   GetTableDetailsRequest,
   GetTableRowRangeRequest,
   OpenDatabaseRequest,
+  SearchSimilarRequest,
   TestConnectionRequest,
   ValidateChangesRequest,
+  VectorSearchRequest,
 } from '@shared/types';
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
 import { databaseManager, databaseService } from '../database';
+import { qdrantAdapter } from '../database-adapters';
 import { fileWatcherService } from '../file-watcher';
 import { pgNotifyService } from '../pg-notify-service';
 import { addRecentConnection } from '../store';
@@ -572,6 +576,54 @@ export function setupDatabaseHandlers(): void {
         request.column,
         request.schema,
         request.limit
+      );
+    }
+  );
+
+  // Qdrant Vector Search: Search by vector
+  ipcMain.handle(
+    IPC_CHANNELS.DB_VECTOR_SEARCH,
+    async (_event, request: VectorSearchRequest) => {
+      return qdrantAdapter.vectorSearch(
+        request.connectionId,
+        request.collection,
+        {
+          vector: request.vector,
+          limit: request.limit,
+          scoreThreshold: request.scoreThreshold,
+          filter: request.filter,
+          withPayload: request.withPayload,
+          withVector: request.withVector,
+        }
+      );
+    }
+  );
+
+  // Qdrant Vector Search: Search similar points by ID
+  ipcMain.handle(
+    IPC_CHANNELS.DB_SEARCH_SIMILAR,
+    async (_event, request: SearchSimilarRequest) => {
+      return qdrantAdapter.searchSimilar(
+        request.connectionId,
+        request.collection,
+        request.pointId,
+        request.limit,
+        request.filter
+      );
+    }
+  );
+
+  // Qdrant Vector Search: Get points with vectors (for visualization)
+  ipcMain.handle(
+    IPC_CHANNELS.DB_GET_POINTS_WITH_VECTORS,
+    async (_event, request: GetPointsWithVectorsRequest) => {
+      return qdrantAdapter.getPointsWithVectors(
+        request.connectionId,
+        request.collection,
+        {
+          limit: request.limit,
+          ids: request.ids,
+        }
       );
     }
   );
