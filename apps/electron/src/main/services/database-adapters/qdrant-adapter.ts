@@ -213,7 +213,53 @@ export class QdrantAdapter implements DatabaseAdapter {
         views: TableInfo[];
       }
     | { success: false; error: string } {
-    return { success: false, error: NOT_IMPLEMENTED_ERROR };
+    return {
+      success: false,
+      error: 'Use getSchemaAsync for Qdrant connections',
+    };
+  }
+
+  async getSchemaAsync(connectionId: string): Promise<
+    | {
+        success: true;
+        schemas: SchemaInfo[];
+        tables: TableInfo[];
+        views: TableInfo[];
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      const result = await connection.client.getCollections();
+
+      // Map collections to tables
+      const tables: TableInfo[] = result.collections.map((collection) => ({
+        name: collection.name,
+        type: 'table' as const,
+        schema: 'default',
+        rowCount: 0, // Will be populated on demand
+        columns: [], // Will be populated by getTableStructure
+        primaryKey: [], // Qdrant uses point IDs, not traditional primary keys
+        indexes: [],
+        foreignKeys: [],
+        triggers: [],
+        sql: '', // Not applicable for Qdrant collections
+      }));
+
+      return {
+        success: true,
+        schemas: [{ name: 'default', tables, views: [] }],
+        tables,
+        views: [],
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
   }
 
   getTableData(
