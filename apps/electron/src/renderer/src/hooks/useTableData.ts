@@ -5,7 +5,7 @@ import type {
   TableRow,
 } from '@/lib/collections';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { sqlPro } from '@/lib/api';
 import {
   addPendingChange,
@@ -291,11 +291,27 @@ export function useTableData(options: UseTableDataOptions): UseTableDataResult {
     dataQuery.refetch({ cancelRefetch: true });
   }, [dataQuery]);
 
+  // Keep track of the last known totalRows to prevent UI flicker during loading
+  // This ensures pagination controls remain stable while fetching new data
+  const lastTotalRowsRef = useRef<number>(0);
+  const totalRows = dataQuery.data?.totalRows ?? 0;
+
+  // Update the ref when we have actual data (not during initial load)
+  if (totalRows > 0 || !dataQuery.isFetching) {
+    lastTotalRowsRef.current = totalRows;
+  }
+
+  // Use the last known value during fetching to prevent width changes
+  const stableTotalRows =
+    dataQuery.isFetching && lastTotalRowsRef.current > 0
+      ? lastTotalRowsRef.current
+      : totalRows;
+
   return {
     rows: displayRows,
     columns: dataQuery.data?.columns || [],
-    totalRows: dataQuery.data?.totalRows || 0,
-    totalPages: Math.ceil((dataQuery.data?.totalRows || 0) / pageSize),
+    totalRows: stableTotalRows,
+    totalPages: Math.max(1, Math.ceil(stableTotalRows / pageSize)),
     isLoading: dataQuery.isLoading,
     isFetching: dataQuery.isFetching,
     error: dataQuery.error,
