@@ -860,6 +860,84 @@ export class QdrantAdapter implements DatabaseAdapter {
     }
   }
 
+  async getPointsWithVectors(
+    connectionId: string,
+    collection: string,
+    options: {
+      limit: number;
+      ids?: (string | number)[];
+    }
+  ): Promise<
+    | {
+        success: true;
+        points: Array<{
+          id: string | number;
+          vector: number[];
+          payload: Record<string, unknown>;
+        }>;
+        vectorDimension: number;
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      // Get collection info for vector dimension
+      const collectionInfo = await connection.client.getCollection(collection);
+      const vectorConfig = collectionInfo.config.params.vectors;
+      let vectorDimension = 0;
+      if (
+        typeof vectorConfig === 'object' &&
+        vectorConfig !== null &&
+        'size' in vectorConfig
+      ) {
+        vectorDimension = vectorConfig.size as number;
+      }
+
+      let points: Array<{
+        id: string | number;
+        vector: number[];
+        payload: Record<string, unknown>;
+      }>;
+
+      if (options.ids && options.ids.length > 0) {
+        // Retrieve specific points by ID
+        const result = await connection.client.retrieve(collection, {
+          ids: options.ids,
+          with_vector: true,
+          with_payload: true,
+        });
+
+        points = result.map((point) => ({
+          id: point.id,
+          vector: point.vector as number[],
+          payload: (point.payload as Record<string, unknown>) || {},
+        }));
+      } else {
+        // Random sample using scroll
+        const result = await connection.client.scroll(collection, {
+          limit: options.limit,
+          with_vector: true,
+          with_payload: true,
+        });
+
+        points = result.points.map((point) => ({
+          id: point.id,
+          vector: point.vector as number[],
+          payload: (point.payload as Record<string, unknown>) || {},
+        }));
+      }
+
+      return { success: true, points, vectorDimension };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
   getPendingChanges(
     _connectionId: string
   ):
