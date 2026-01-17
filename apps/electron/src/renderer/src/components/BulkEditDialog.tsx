@@ -1,6 +1,13 @@
 import type { ColumnSchema } from '@/types/database';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@sqlpro/ui/empty';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
 import {
@@ -10,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@sqlpro/ui/select';
-import { Edit3, X } from 'lucide-react';
+import { Edit3, MousePointerClick, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import {
   Dialog,
@@ -197,9 +204,17 @@ export function BulkEditDialog({
               })}
             </div>
           ) : (
-            <div className="text-muted-foreground rounded-lg border border-dashed py-8 text-center text-sm">
-              Select a column above to start editing
-            </div>
+            <Empty className="border py-10">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <MousePointerClick />
+                </EmptyMedia>
+                <EmptyTitle className="text-base">No fields added</EmptyTitle>
+                <EmptyDescription>
+                  Select a column above to start editing
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           )}
 
           {/* Summary */}
