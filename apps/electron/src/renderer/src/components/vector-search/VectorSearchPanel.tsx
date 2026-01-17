@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { Textarea } from '@sqlpro/ui/textarea';
 import {
+  AlertCircle,
   FileText,
   Hash,
   Loader2,
@@ -28,7 +29,9 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useVectorSearch } from '@/hooks/useVectorSearch';
 import { cn } from '@/lib/utils';
+import { VectorVisualization } from './VectorVisualization';
 
 // Search mode types
 type SearchMode = 'text' | 'vector' | 'similar';
@@ -95,11 +98,7 @@ ResultCard.displayName = 'ResultCard';
  * - Similar: Find similar points by point ID
  */
 export const VectorSearchPanel = memo(
-  ({
-    collection,
-    connectionId: _connectionId,
-    className,
-  }: VectorSearchPanelProps) => {
+  ({ collection, connectionId, className }: VectorSearchPanelProps) => {
     const { t } = useTranslation('common');
 
     // Search mode state
@@ -119,9 +118,17 @@ export const VectorSearchPanel = memo(
     const [topK, setTopK] = useState(10);
     const [scoreThreshold, setScoreThreshold] = useState(0);
 
-    // Search state
-    const [isSearching, setIsSearching] = useState(false);
-    const [results, setResults] = useState<VectorSearchResult[]>([]);
+    // Use the vector search hook
+    const {
+      results,
+      isSearching,
+      error: searchError,
+      searchByText,
+      searchByVector,
+      searchSimilar,
+      backgroundPoints,
+      isLoadingBackground,
+    } = useVectorSearch(connectionId ?? null, collection);
 
     // Validate vector JSON input
     const validateVectorInput = useCallback(
@@ -166,29 +173,33 @@ export const VectorSearchPanel = memo(
 
     // Handle search
     const handleSearch = useCallback(async () => {
-      setIsSearching(true);
-
-      // Placeholder: simulate search delay
-      // Real implementation will use useVectorSearch hook (Task 9)
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Generate placeholder results
-      const placeholderResults: VectorSearchResult[] = Array.from(
-        { length: Math.min(topK, 5) },
-        (_, i) => ({
-          id: `point-${i + 1}`,
-          score: 1 - i * 0.1,
-          payload: {
-            title: `Result ${i + 1}`,
-            description: `Sample result from ${collection}`,
-            metadata: { index: i },
-          },
-        })
-      );
-
-      setResults(placeholderResults);
-      setIsSearching(false);
-    }, [topK, collection]);
+      switch (searchMode) {
+        case 'text':
+          await searchByText(textQuery, topK, scoreThreshold || undefined);
+          break;
+        case 'vector': {
+          const vector = validateVectorInput(vectorInput);
+          if (vector) {
+            await searchByVector(vector, topK, scoreThreshold || undefined);
+          }
+          break;
+        }
+        case 'similar':
+          await searchSimilar(pointId, topK);
+          break;
+      }
+    }, [
+      searchMode,
+      textQuery,
+      vectorInput,
+      pointId,
+      topK,
+      scoreThreshold,
+      searchByText,
+      searchByVector,
+      searchSimilar,
+      validateVectorInput,
+    ]);
 
     // Check if search can be performed
     const canSearch = useCallback(() => {
@@ -384,7 +395,14 @@ export const VectorSearchPanel = memo(
                   </div>
 
                   <ScrollArea className="flex-1">
-                    {results.length === 0 ? (
+                    {/* Error display */}
+                    {searchError && (
+                      <div className="flex items-center gap-2 border-b border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400">
+                        <AlertCircle className="h-4 w-4 shrink-0" />
+                        <span>{searchError}</span>
+                      </div>
+                    )}
+                    {results.length === 0 && !searchError ? (
                       <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2 p-8">
                         <Search className="h-10 w-10 opacity-20" />
                         <p className="text-sm">
@@ -413,33 +431,18 @@ export const VectorSearchPanel = memo(
 
           <ResizableHandle withHandle />
 
-          {/* Right panel: Visualization placeholder */}
+          {/* Right panel: Visualization */}
           <ResizablePanel defaultSize={40} minSize={25}>
-            <div className="flex h-full flex-col">
-              <div className="bg-muted/30 flex shrink-0 items-center justify-between border-b px-4 py-2">
-                <span className="text-muted-foreground text-sm">
-                  {t('vectorSearch.visualization', 'Visualization')}
-                </span>
-              </div>
-              <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center gap-2 p-8">
-                <Waypoints className="h-10 w-10 opacity-20" />
-                <p className="text-center text-sm">
-                  {t(
-                    'vectorSearch.visualizationPlaceholder',
-                    'Vector visualization will be displayed here'
-                  )}
-                </p>
-                <p className="text-center text-xs opacity-60">
-                  {t(
-                    'vectorSearch.visualizationHint',
-                    'Coming in a future update'
-                  )}
-                </p>
-              </div>
-            </div>
+            <VectorVisualization
+              backgroundPoints={backgroundPoints}
+              searchResults={results}
+              isLoading={isLoadingBackground}
+            />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     );
   }
 );
+
+VectorSearchPanel.displayName = 'VectorSearchPanel';
