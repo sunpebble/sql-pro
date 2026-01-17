@@ -3,6 +3,7 @@ import type {
   AIProviderSettings,
   AISettings,
   AISettingsUpdate,
+  EmbeddingSettings,
 } from '@shared/types';
 import { DEFAULT_AI_BASE_URLS } from '@shared/types';
 import { create } from 'zustand';
@@ -25,6 +26,9 @@ interface AIState {
   availableClaudeCodePaths: string[];
   isLoadingClaudeCodePaths: boolean;
 
+  // Embedding settings
+  embedding: EmbeddingSettings;
+
   // Loading states
   isLoading: boolean;
   isSaving: boolean;
@@ -42,6 +46,7 @@ interface AIState {
   setModel: (model: string) => void;
   setBaseUrl: (baseUrl: string) => void;
   setClaudeCodePath: (path: string) => void;
+  setEmbedding: (embedding: Partial<EmbeddingSettings>) => void;
   clearSettings: () => void;
   getEffectiveBaseUrl: () => string;
 
@@ -69,6 +74,13 @@ const DEFAULT_PROVIDER_SETTINGS: Record<AIProvider, AIProviderSettings> = {
   custom: { apiKey: '', baseUrl: '', model: '' },
 };
 
+const DEFAULT_EMBEDDING_SETTINGS: EmbeddingSettings = {
+  enabled: false,
+  provider: 'openai',
+  model: 'text-embedding-3-small',
+  dimensions: 1536,
+};
+
 export const useAIStore = create<AIState>((set, get) => ({
   provider: 'anthropic',
   providerSettings: {
@@ -79,6 +91,7 @@ export const useAIStore = create<AIState>((set, get) => ({
   claudeCodePath: '',
   availableClaudeCodePaths: [],
   isLoadingClaudeCodePaths: false,
+  embedding: { ...DEFAULT_EMBEDDING_SETTINGS },
   isLoading: false,
   isSaving: false,
 
@@ -139,10 +152,25 @@ export const useAIStore = create<AIState>((set, get) => ({
           },
         };
 
+        // Load embedding settings
+        const embedding: EmbeddingSettings = {
+          enabled:
+            settings.embedding?.enabled ?? DEFAULT_EMBEDDING_SETTINGS.enabled,
+          provider:
+            settings.embedding?.provider ?? DEFAULT_EMBEDDING_SETTINGS.provider,
+          model: settings.embedding?.model ?? DEFAULT_EMBEDDING_SETTINGS.model,
+          baseUrl: settings.embedding?.baseUrl,
+          apiKey: settings.embedding?.apiKey,
+          dimensions:
+            settings.embedding?.dimensions ??
+            DEFAULT_EMBEDDING_SETTINGS.dimensions,
+        };
+
         set({
           provider: settings.provider ?? 'anthropic',
           providerSettings,
           claudeCodePath: settings.claudeCodePath || '',
+          embedding,
         });
       }
     } catch (error) {
@@ -201,6 +229,7 @@ export const useAIStore = create<AIState>((set, get) => ({
       provider: settings.provider ?? state.provider,
       providerSettings: newProviderSettings,
       claudeCodePath: settings.claudeCodePath ?? state.claudeCodePath,
+      embedding: state.embedding,
     };
 
     set({ isSaving: true });
@@ -213,6 +242,7 @@ export const useAIStore = create<AIState>((set, get) => ({
           provider: newSettings.provider,
           providerSettings: newProviderSettings,
           claudeCodePath: newSettings.claudeCodePath || '',
+          embedding: newSettings.embedding,
         });
         return true;
       }
@@ -262,6 +292,16 @@ export const useAIStore = create<AIState>((set, get) => ({
 
   setClaudeCodePath: (claudeCodePath) => set({ claudeCodePath }),
 
+  setEmbedding: (embedding) => {
+    const state = get();
+    set({
+      embedding: {
+        ...state.embedding,
+        ...embedding,
+      },
+    });
+  },
+
   clearSettings: () =>
     set({
       provider: 'anthropic',
@@ -271,6 +311,7 @@ export const useAIStore = create<AIState>((set, get) => ({
         custom: { ...DEFAULT_PROVIDER_SETTINGS.custom },
       },
       claudeCodePath: '',
+      embedding: { ...DEFAULT_EMBEDDING_SETTINGS },
     }),
 
   getEffectiveBaseUrl: () => {

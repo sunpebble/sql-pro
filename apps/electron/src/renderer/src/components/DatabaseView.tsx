@@ -1,5 +1,5 @@
 import type { ViewType } from './ActivityBar';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tour } from '@/components/onboarding';
 import {
@@ -19,9 +19,10 @@ import { ResizablePanel } from './ResizablePanel';
 import { SchemaDetailsPanel } from './SchemaDetailsPanel';
 import { Sidebar } from './Sidebar';
 import { TableView } from './TableView';
+import { VectorSearchPanel } from './vector-search';
 
 export function DatabaseView() {
-  const { selectedTable, activeConnectionId, setSelectedTable } =
+  const { selectedTable, activeConnectionId, setSelectedTable, getConnection } =
     useConnectionStore();
   const { hasChanges } = useChangesStore();
   const {
@@ -40,6 +41,10 @@ export function DatabaseView() {
 
   const [activeView, setActiveView] = useState<ViewType>('data');
   const { t } = useTranslation('common');
+
+  // Get the current connection to check database type
+  const connection = getConnection();
+  const isQdrant = connection?.databaseType === 'qdrant';
 
   // Get the active data tab for current connection
   const activeDataTab = activeConnectionId
@@ -99,6 +104,16 @@ export function DatabaseView() {
     badges.data = dataTabs.length;
   }
 
+  // Compute visible views for activity bar (conditional items)
+  const visibleViews = useMemo(() => {
+    const views = new Set<ViewType>();
+    // Show vector search only for Qdrant connections
+    if (isQdrant) {
+      views.add('vectorSearch');
+    }
+    return views;
+  }, [isQdrant]);
+
   return (
     <div className="flex h-full flex-col">
       {/* Hidden button for keyboard shortcut to toggle sidebar */}
@@ -116,6 +131,7 @@ export function DatabaseView() {
           activeView={activeView}
           onViewChange={setActiveView}
           badges={badges}
+          visibleViews={visibleViews}
         />
 
         {/* Sidebar - Resizable */}
@@ -193,6 +209,14 @@ export function DatabaseView() {
 
           {/* Schema Compare View */}
           {activeView === 'compare' && <CompareView />}
+
+          {/* Vector Search View (Qdrant only) */}
+          {activeView === 'vectorSearch' && isQdrant && (
+            <VectorSearchPanel
+              collection={displayTable?.name || ''}
+              connectionId={activeConnectionId || undefined}
+            />
+          )}
         </div>
 
         {/* Changes Panel - Resizable */}

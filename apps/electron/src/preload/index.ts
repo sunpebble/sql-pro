@@ -81,6 +81,8 @@ import type {
   GetMemoryStatsResponse,
   GetPasswordRequest,
   GetPasswordResponse,
+  GetPointsWithVectorsRequest,
+  GetPointsWithVectorsResponse,
   GetPreferencesResponse,
   GetProfilesRequest,
   GetProfilesResponse,
@@ -152,6 +154,8 @@ import type {
   SaveQueryHistoryResponse,
   SaveSchemaSnapshotRequest,
   SaveSchemaSnapshotResponse,
+  SearchSimilarRequest,
+  SearchSimilarResponse,
   SetPreferencesRequest,
   SetPreferencesResponse,
   ShortcutsUpdatePayload,
@@ -168,6 +172,8 @@ import type {
   UpdateProfileResponse,
   ValidateChangesRequest,
   ValidateChangesResponse,
+  VectorSearchRequest,
+  VectorSearchResponse,
   WriteFileRequest,
   WriteFileResponse,
 } from '@shared/types';
@@ -260,6 +266,19 @@ export const sqlProAPI = {
       request: GetColumnDistributionRequest
     ): Promise<GetColumnDistributionResponse> =>
       ipcRenderer.invoke('table:get-column-distribution', request),
+    // Qdrant Vector Search operations
+    vectorSearch: (
+      request: VectorSearchRequest
+    ): Promise<VectorSearchResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_VECTOR_SEARCH, request),
+    searchSimilar: (
+      request: SearchSimilarRequest
+    ): Promise<SearchSimilarResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_SEARCH_SIMILAR, request),
+    getPointsWithVectors: (
+      request: GetPointsWithVectorsRequest
+    ): Promise<GetPointsWithVectorsResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_GET_POINTS_WITH_VECTORS, request),
     onFileChanged: (
       callback: (event: FileChangeEvent) => void
     ): (() => void) => {

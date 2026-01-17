@@ -32,7 +32,7 @@ i18n
     },
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'sidebar', 'table', 'dialog', 'settings', 'error'],
+    ns: ['common', 'sidebar', 'table', 'dialog', 'settings', 'error', 'qdrant'],
 
     interpolation: {
       escapeValue: false, // React already escapes values

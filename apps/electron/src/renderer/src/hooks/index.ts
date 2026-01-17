@@ -25,5 +25,7 @@ export * from './usePgNotify';
 export * from './useResizableColumns';
 export * from './useTableData';
 export * from './useTableNavigation';
+export * from './useUMAP';
+export * from './useVectorSearch';
 export * from './useVimKeyHandler';
 export * from './useVirtualData';

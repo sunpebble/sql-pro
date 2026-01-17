@@ -14,6 +14,7 @@ import type {
   GetColumnDistributionResponse,
   GetTableDataResponse,
   PendingChangeInfo,
+  QdrantSearchFilter,
   QueryPlanNode,
   QueryPlanStats,
   SchemaInfo,
@@ -733,6 +734,205 @@ export class QdrantAdapter implements DatabaseAdapter {
       }
 
       return { success: true, appliedCount };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
+  // ============================================
+  // Vector Search Methods
+  // ============================================
+
+  async vectorSearch(
+    connectionId: string,
+    collection: string,
+    params: {
+      vector: number[];
+      limit: number;
+      scoreThreshold?: number;
+      filter?: QdrantSearchFilter;
+      withPayload?: boolean;
+      withVector?: boolean;
+    }
+  ): Promise<
+    | {
+        success: true;
+        results: Array<{
+          id: string | number;
+          score: number;
+          payload: Record<string, unknown>;
+          vector?: number[];
+        }>;
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      const searchResult = await connection.client.search(collection, {
+        vector: params.vector,
+        limit: params.limit,
+        score_threshold: params.scoreThreshold,
+        filter: params.filter,
+        with_payload: params.withPayload ?? true,
+        with_vector: params.withVector ?? false,
+      });
+
+      const results = searchResult.map((point) => ({
+        id: point.id,
+        score: point.score,
+        payload: (point.payload as Record<string, unknown>) || {},
+        vector: point.vector as number[] | undefined,
+      }));
+
+      return { success: true, results };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
+  async searchSimilar(
+    connectionId: string,
+    collection: string,
+    pointId: string | number,
+    limit: number,
+    filter?: QdrantSearchFilter
+  ): Promise<
+    | {
+        success: true;
+        results: Array<{
+          id: string | number;
+          score: number;
+          payload: Record<string, unknown>;
+        }>;
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      // First, get the vector for the specified point
+      const pointResult = await connection.client.retrieve(collection, {
+        ids: [pointId],
+        with_vector: true,
+        with_payload: false,
+      });
+
+      if (pointResult.length === 0) {
+        return { success: false, error: `Point ${pointId} not found` };
+      }
+
+      const sourceVector = pointResult[0].vector as number[];
+      if (!sourceVector || !Array.isArray(sourceVector)) {
+        return { success: false, error: 'Point does not have a vector' };
+      }
+
+      // Search for similar points, excluding the source point
+      const searchResult = await connection.client.search(collection, {
+        vector: sourceVector,
+        limit: limit + 1, // Get one extra to filter out the source
+        filter,
+        with_payload: true,
+        with_vector: false,
+      });
+
+      // Filter out the source point and limit results
+      const results = searchResult
+        .filter((point) => String(point.id) !== String(pointId))
+        .slice(0, limit)
+        .map((point) => ({
+          id: point.id,
+          score: point.score,
+          payload: (point.payload as Record<string, unknown>) || {},
+        }));
+
+      return { success: true, results };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
+  async getPointsWithVectors(
+    connectionId: string,
+    collection: string,
+    options: {
+      limit: number;
+      ids?: (string | number)[];
+    }
+  ): Promise<
+    | {
+        success: true;
+        points: Array<{
+          id: string | number;
+          vector: number[];
+          payload: Record<string, unknown>;
+        }>;
+        vectorDimension: number;
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      // Get collection info for vector dimension
+      const collectionInfo = await connection.client.getCollection(collection);
+      const vectorConfig = collectionInfo.config.params.vectors;
+      let vectorDimension = 0;
+      if (
+        typeof vectorConfig === 'object' &&
+        vectorConfig !== null &&
+        'size' in vectorConfig
+      ) {
+        vectorDimension = vectorConfig.size as number;
+      }
+
+      let points: Array<{
+        id: string | number;
+        vector: number[];
+        payload: Record<string, unknown>;
+      }>;
+
+      if (options.ids && options.ids.length > 0) {
+        // Retrieve specific points by ID
+        const result = await connection.client.retrieve(collection, {
+          ids: options.ids,
+          with_vector: true,
+          with_payload: true,
+        });
+
+        points = result.map((point) => ({
+          id: point.id,
+          vector: point.vector as number[],
+          payload: (point.payload as Record<string, unknown>) || {},
+        }));
+      } else {
+        // Random sample using scroll
+        const result = await connection.client.scroll(collection, {
+          limit: options.limit,
+          with_vector: true,
+          with_payload: true,
+        });
+
+        points = result.points.map((point) => ({
+          id: point.id,
+          vector: point.vector as number[],
+          payload: (point.payload as Record<string, unknown>) || {},
+        }));
+      }
+
+      return { success: true, points, vectorDimension };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return { success: false, error: message };
