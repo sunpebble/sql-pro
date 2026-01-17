@@ -739,6 +739,62 @@ export class QdrantAdapter implements DatabaseAdapter {
     }
   }
 
+  // ============================================
+  // Vector Search Methods
+  // ============================================
+
+  async vectorSearch(
+    connectionId: string,
+    collection: string,
+    params: {
+      vector: number[];
+      limit: number;
+      scoreThreshold?: number;
+      filter?: { must?: Array<Record<string, unknown>> };
+      withPayload?: boolean;
+      withVector?: boolean;
+    }
+  ): Promise<
+    | {
+        success: true;
+        results: Array<{
+          id: string | number;
+          score: number;
+          payload: Record<string, unknown>;
+          vector?: number[];
+        }>;
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    try {
+      const searchResult = await connection.client.search(collection, {
+        vector: params.vector,
+        limit: params.limit,
+        score_threshold: params.scoreThreshold,
+        filter: params.filter,
+        with_payload: params.withPayload ?? true,
+        with_vector: params.withVector ?? false,
+      });
+
+      const results = searchResult.map((point) => ({
+        id: point.id,
+        score: point.score,
+        payload: (point.payload as Record<string, unknown>) || {},
+        vector: point.vector as number[] | undefined,
+      }));
+
+      return { success: true, results };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
   getPendingChanges(
     _connectionId: string
   ):
