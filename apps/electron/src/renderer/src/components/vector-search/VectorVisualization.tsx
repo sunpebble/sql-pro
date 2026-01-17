@@ -8,12 +8,12 @@
  * Features:
  * - Hover to see point details in tooltip
  * - Points enlarge on hover
- * - 3D mode shows isometric projection with depth coloring
+ * - 3D mode: drag to rotate, scroll to zoom
  */
 
 import type { PointWithVector, VectorSearchResult } from '@shared/types';
 import { ToggleGroup, ToggleGroupItem } from '@sqlpro/ui/toggle-group';
-import { Box, Loader2, Square } from 'lucide-react';
+import { Box, Loader2, RotateCcw, Square } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUMAP } from '@/hooks/useUMAP';
@@ -47,6 +47,7 @@ interface ScreenPoint {
   screenY: number;
   radius: number;
   point: ProjectedPoint;
+  depth: number; // For 3D z-ordering
 }
 
 /** Dimension mode for visualization */
@@ -69,6 +70,39 @@ const COLOR_RESULT_STROKE = 'rgba(37, 99, 235, 1)'; // blue-600
 
 /** Hit test radius multiplier for easier selection */
 const HIT_TEST_MULTIPLIER = 2;
+
+/** 3D interaction constants */
+const ROTATION_SENSITIVITY = 0.01;
+const ZOOM_SENSITIVITY = 0.001;
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 3;
+const DEFAULT_ROTATION_X = -0.3;
+const DEFAULT_ROTATION_Y = 0.5;
+
+/**
+ * Apply 3D rotation transformation to a point
+ */
+function rotate3D(
+  x: number,
+  y: number,
+  z: number,
+  rotationX: number,
+  rotationY: number
+): { x: number; y: number; z: number } {
+  // Rotate around Y axis
+  const cosY = Math.cos(rotationY);
+  const sinY = Math.sin(rotationY);
+  const x1 = x * cosY - z * sinY;
+  const z1 = x * sinY + z * cosY;
+
+  // Rotate around X axis
+  const cosX = Math.cos(rotationX);
+  const sinX = Math.sin(rotationX);
+  const y1 = y * cosX - z1 * sinX;
+  const z2 = y * sinX + z1 * cosX;
+
+  return { x: x1, y: y1, z: z2 };
+}
 
 /**
  * VectorVisualization component renders a 2D/3D visualization of vector embeddings.
@@ -99,8 +133,22 @@ export const VectorVisualization = memo(
     );
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
+    // 3D interaction state
+    const [rotationX, setRotationX] = useState(DEFAULT_ROTATION_X);
+    const [rotationY, setRotationY] = useState(DEFAULT_ROTATION_Y);
+    const [zoom, setZoom] = useState(1);
+    const [isDragging, setIsDragging] = useState(false);
+    const lastMousePosRef = useRef({ x: 0, y: 0 });
+
     // Screen points for hit testing (updated during draw)
     const screenPointsRef = useRef<ScreenPoint[]>([]);
+
+    // Reset 3D view
+    const reset3DView = useCallback(() => {
+      setRotationX(DEFAULT_ROTATION_X);
+      setRotationY(DEFAULT_ROTATION_Y);
+      setZoom(1);
+    }, []);
 
     // Build payload map for quick lookup
     const payloadMap = useMemo(() => {
@@ -246,17 +294,23 @@ export const VectorVisualization = memo(
         return;
       }
 
-      // Calculate bounds for scaling
+      // Calculate bounds for scaling (before rotation for 3D)
       let minX = Number.POSITIVE_INFINITY;
       let maxX = Number.NEGATIVE_INFINITY;
       let minY = Number.POSITIVE_INFINITY;
       let maxY = Number.NEGATIVE_INFINITY;
+      let minZ = Number.POSITIVE_INFINITY;
+      let maxZ = Number.NEGATIVE_INFINITY;
 
       for (const point of projectedPoints) {
         minX = Math.min(minX, point.x);
         maxX = Math.max(maxX, point.x);
         minY = Math.min(minY, point.y);
         maxY = Math.max(maxY, point.y);
+        if (point.z !== undefined) {
+          minZ = Math.min(minZ, point.z);
+          maxZ = Math.max(maxZ, point.z);
+        }
       }
 
       // Add small margin if all points have same coordinate
@@ -268,40 +322,79 @@ export const VectorVisualization = memo(
         minY -= 1;
         maxY += 1;
       }
+      if (maxZ === minZ) {
+        minZ -= 1;
+        maxZ += 1;
+      }
+
+      // Normalize coordinates to [-1, 1] range
+      const rangeX = maxX - minX;
+      const rangeY = maxY - minY;
+      const rangeZ = maxZ - minZ;
+      const centerX = (maxX + minX) / 2;
+      const centerY = (maxY + minY) / 2;
+      const centerZ = (maxZ + minZ) / 2;
+      const maxRange = Math.max(rangeX, rangeY, rangeZ || 1);
+
+      // Transform points with 3D rotation if in 3D mode
+      const transformedPoints = projectedPoints.map((point) => {
+        // Normalize to [-1, 1]
+        let nx = ((point.x - centerX) / maxRange) * 2;
+        let ny = ((point.y - centerY) / maxRange) * 2;
+        let nz =
+          point.z !== undefined ? ((point.z - centerZ) / maxRange) * 2 : 0;
+
+        // Apply 3D rotation if in 3D mode
+        if (dimensionMode === '3d') {
+          const rotated = rotate3D(nx, ny, nz, rotationX, rotationY);
+          nx = rotated.x;
+          ny = rotated.y;
+          nz = rotated.z;
+        }
+
+        return { ...point, nx, ny, nz };
+      });
 
       // Calculate scale to fit canvas with padding
       const drawWidth = width - CANVAS_PADDING * 2;
       const drawHeight = height - CANVAS_PADDING * 2;
-      const scaleX = drawWidth / (maxX - minX);
-      const scaleY = drawHeight / (maxY - minY);
-      const scale = Math.min(scaleX, scaleY);
+      const baseScale = Math.min(drawWidth, drawHeight) / 2;
+      const scale = baseScale * zoom;
 
-      // Calculate offset to center the visualization
-      const offsetX = CANVAS_PADDING + (drawWidth - (maxX - minX) * scale) / 2;
-      const offsetY = CANVAS_PADDING + (drawHeight - (maxY - minY) * scale) / 2;
+      // Calculate center offset
+      const offsetX = width / 2;
+      const offsetY = height / 2;
 
-      // Transform function to map data coordinates to canvas coordinates
-      const transform = (x: number, y: number) => ({
-        x: offsetX + (x - minX) * scale,
-        y: offsetY + (y - minY) * scale,
+      // Transform function to map normalized coordinates to canvas coordinates
+      const transform = (nx: number, ny: number) => ({
+        x: offsetX + nx * scale,
+        y: offsetY + ny * scale,
       });
 
-      // Sort points: background first, then results, hovered point last
-      const sortedPoints = [...projectedPoints].sort((a, b) => {
+      // Sort points by z-depth (back to front) for proper rendering
+      const sortedPoints = [...transformedPoints].sort((a, b) => {
+        // First sort by depth (z) - lower z renders first (back)
+        if (dimensionMode === '3d') {
+          if (a.nz !== b.nz) {
+            return a.nz - b.nz;
+          }
+        }
+        // Then by type (background first)
+        if (a.isSearchResult && !b.isSearchResult) return 1;
+        if (!a.isSearchResult && b.isSearchResult) return -1;
+        // Finally by hover state
         const aIsHovered =
           hoveredPoint && String(a.id) === String(hoveredPoint.id);
         const bIsHovered =
           hoveredPoint && String(b.id) === String(hoveredPoint.id);
         if (aIsHovered) return 1;
         if (bIsHovered) return -1;
-        if (a.isSearchResult && !b.isSearchResult) return 1;
-        if (!a.isSearchResult && b.isSearchResult) return -1;
         return 0;
       });
 
       // Draw all points
       for (const point of sortedPoints) {
-        const { x, y } = transform(point.x, point.y);
+        const { x, y } = transform(point.nx, point.ny);
         const isHovered =
           hoveredPoint && String(point.id) === String(hoveredPoint.id);
 
@@ -309,17 +402,36 @@ export const VectorVisualization = memo(
         let fillColor: string;
         let strokeColor: string | null = null;
 
+        // In 3D mode, adjust size based on depth
+        let depthScale = 1;
+        if (dimensionMode === '3d') {
+          // Points closer (higher z) appear larger
+          depthScale = 0.7 + 0.3 * ((point.nz + 1) / 2);
+        }
+
         if (point.isSearchResult) {
-          radius = isHovered
-            ? POINT_RADIUS_RESULT * POINT_RADIUS_HOVER_SCALE
-            : POINT_RADIUS_RESULT;
+          radius =
+            (isHovered
+              ? POINT_RADIUS_RESULT * POINT_RADIUS_HOVER_SCALE
+              : POINT_RADIUS_RESULT) * depthScale;
           fillColor = isHovered ? COLOR_RESULT_HOVER : COLOR_RESULT;
           strokeColor = COLOR_RESULT_STROKE;
         } else {
-          radius = isHovered
-            ? POINT_RADIUS_BACKGROUND * POINT_RADIUS_HOVER_SCALE
-            : POINT_RADIUS_BACKGROUND;
+          radius =
+            (isHovered
+              ? POINT_RADIUS_BACKGROUND * POINT_RADIUS_HOVER_SCALE
+              : POINT_RADIUS_BACKGROUND) * depthScale;
           fillColor = isHovered ? COLOR_BACKGROUND_HOVER : COLOR_BACKGROUND;
+        }
+
+        // In 3D mode, adjust opacity based on depth
+        if (dimensionMode === '3d' && !isHovered) {
+          const depthOpacity = 0.3 + 0.7 * ((point.nz + 1) / 2);
+          if (point.isSearchResult) {
+            fillColor = `rgba(59, 130, 246, ${0.8 * depthOpacity})`;
+          } else {
+            fillColor = `rgba(156, 163, 175, ${0.5 * depthOpacity})`;
+          }
         }
 
         // Draw point
@@ -342,18 +454,27 @@ export const VectorVisualization = memo(
             ? POINT_RADIUS_RESULT
             : POINT_RADIUS_BACKGROUND,
           point,
+          depth: point.nz,
         });
       }
 
       screenPointsRef.current = newScreenPoints;
-    }, [projectedPoints, canvasSize, hoveredPoint]);
+    }, [
+      projectedPoints,
+      canvasSize,
+      hoveredPoint,
+      dimensionMode,
+      rotationX,
+      rotationY,
+      zoom,
+    ]);
 
     // Redraw canvas when points, size, or hover changes
     useEffect(() => {
       drawCanvas();
     }, [drawCanvas]);
 
-    // Handle mouse move for hover detection
+    // Handle mouse move for hover detection and rotation
     const handleMouseMove = useCallback(
       (event: React.MouseEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
@@ -363,9 +484,22 @@ export const VectorVisualization = memo(
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
 
-        // Find closest point within hit radius
+        // Handle rotation in 3D mode when dragging
+        if (isDragging && dimensionMode === '3d') {
+          const deltaX = mouseX - lastMousePosRef.current.x;
+          const deltaY = mouseY - lastMousePosRef.current.y;
+
+          setRotationY((prev) => prev + deltaX * ROTATION_SENSITIVITY);
+          setRotationX((prev) => prev + deltaY * ROTATION_SENSITIVITY);
+
+          lastMousePosRef.current = { x: mouseX, y: mouseY };
+          return;
+        }
+
+        // Find closest point within hit radius (prefer front points in 3D)
         let closestPoint: ProjectedPoint | null = null;
         let closestDistance = Number.POSITIVE_INFINITY;
+        let closestDepth = Number.NEGATIVE_INFINITY;
 
         for (const sp of screenPointsRef.current) {
           const dx = mouseX - sp.screenX;
@@ -373,9 +507,21 @@ export const VectorVisualization = memo(
           const distance = Math.sqrt(dx * dx + dy * dy);
           const hitRadius = sp.radius * HIT_TEST_MULTIPLIER;
 
-          if (distance < hitRadius && distance < closestDistance) {
-            closestDistance = distance;
-            closestPoint = sp.point;
+          if (distance < hitRadius) {
+            // In 3D mode, prefer points that are in front (higher z/depth)
+            if (dimensionMode === '3d') {
+              if (
+                sp.depth > closestDepth ||
+                (sp.depth === closestDepth && distance < closestDistance)
+              ) {
+                closestDistance = distance;
+                closestDepth = sp.depth;
+                closestPoint = sp.point;
+              }
+            } else if (distance < closestDistance) {
+              closestDistance = distance;
+              closestPoint = sp.point;
+            }
           }
         }
 
@@ -390,13 +536,50 @@ export const VectorVisualization = memo(
           });
         }
       },
-      [hoveredPoint]
+      [hoveredPoint, isDragging, dimensionMode]
     );
+
+    // Handle mouse down for rotation start
+    const handleMouseDown = useCallback(
+      (event: React.MouseEvent<HTMLCanvasElement>) => {
+        if (dimensionMode === '3d') {
+          setIsDragging(true);
+          const rect = canvasRef.current?.getBoundingClientRect();
+          if (rect) {
+            lastMousePosRef.current = {
+              x: event.clientX - rect.left,
+              y: event.clientY - rect.top,
+            };
+          }
+        }
+      },
+      [dimensionMode]
+    );
+
+    // Handle mouse up for rotation end
+    const handleMouseUp = useCallback(() => {
+      setIsDragging(false);
+    }, []);
 
     // Handle mouse leave
     const handleMouseLeave = useCallback(() => {
       setHoveredPoint(null);
+      setIsDragging(false);
     }, []);
+
+    // Handle wheel for zoom
+    const handleWheel = useCallback(
+      (event: React.WheelEvent<HTMLCanvasElement>) => {
+        if (dimensionMode === '3d') {
+          event.preventDefault();
+          const delta = -event.deltaY * ZOOM_SENSITIVITY;
+          setZoom((prev) =>
+            Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, prev + delta))
+          );
+        }
+      },
+      [dimensionMode]
+    );
 
     // Determine loading state
     const showLoading = isLoading || isComputing;
@@ -424,24 +607,41 @@ export const VectorVisualization = memo(
           <span className="text-muted-foreground text-sm">
             {t('vectorSearch.visualization', 'Visualization')}
           </span>
-          <ToggleGroup
-            value={[dimensionMode]}
-            onValueChange={(values) => {
-              const newValue = values[values.length - 1] as DimensionMode;
-              if (newValue) setDimensionMode(newValue);
-            }}
-            variant="outline"
-            size="sm"
-          >
-            <ToggleGroupItem value="2d" aria-label="2D visualization">
-              <Square className="mr-1 h-3 w-3" />
-              2D
-            </ToggleGroupItem>
-            <ToggleGroupItem value="3d" aria-label="3D visualization">
-              <Box className="mr-1 h-3 w-3" />
-              3D
-            </ToggleGroupItem>
-          </ToggleGroup>
+          <div className="flex items-center gap-2">
+            {dimensionMode === '3d' && (
+              <button
+                type="button"
+                onClick={reset3DView}
+                className="text-muted-foreground hover:text-foreground flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors"
+                title={t('vectorSearch.reset3D', 'Reset view')}
+              >
+                <RotateCcw className="h-3 w-3" />
+              </button>
+            )}
+            <ToggleGroup
+              value={[dimensionMode]}
+              onValueChange={(values) => {
+                const newValue = values[values.length - 1] as DimensionMode;
+                if (newValue) {
+                  setDimensionMode(newValue);
+                  if (newValue === '3d') {
+                    reset3DView();
+                  }
+                }
+              }}
+              variant="outline"
+              size="sm"
+            >
+              <ToggleGroupItem value="2d" aria-label="2D visualization">
+                <Square className="mr-1 h-3 w-3" />
+                2D
+              </ToggleGroupItem>
+              <ToggleGroupItem value="3d" aria-label="3D visualization">
+                <Box className="mr-1 h-3 w-3" />
+                3D
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
         </div>
 
         {/* Canvas container */}
@@ -504,7 +704,12 @@ export const VectorVisualization = memo(
           <canvas
             ref={canvasRef}
             className={cn(
-              'h-full w-full cursor-crosshair',
+              'h-full w-full',
+              dimensionMode === '3d'
+                ? isDragging
+                  ? 'cursor-grabbing'
+                  : 'cursor-grab'
+                : 'cursor-crosshair',
               (showLoading || !hasMinimumData || umapError) && 'opacity-0'
             )}
             style={{
@@ -512,11 +717,14 @@ export const VectorVisualization = memo(
               height: canvasSize.height,
             }}
             onMouseMove={handleMouseMove}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
+            onWheel={handleWheel}
           />
 
           {/* Tooltip */}
-          {hoveredPoint && !showLoading && (
+          {hoveredPoint && !showLoading && !isDragging && (
             <div
               className="bg-popover text-popover-foreground pointer-events-none absolute z-20 max-w-xs rounded-md border px-3 py-2 text-sm shadow-md"
               style={{
@@ -592,7 +800,10 @@ export const VectorVisualization = memo(
             !umapError && (
               <div className="bg-background/90 absolute right-3 bottom-3 rounded-md border px-3 py-2 text-xs backdrop-blur-sm">
                 <span className="text-muted-foreground">
-                  {t('vectorSearch.3dHint', '3D projection (isometric view)')}
+                  {t(
+                    'vectorSearch.3dControls',
+                    'Drag to rotate • Scroll to zoom'
+                  )}
                 </span>
               </div>
             )}
