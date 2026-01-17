@@ -65,7 +65,8 @@ export function useVectorSearch(
   const [isLoadingBackground, setIsLoadingBackground] = useState(false);
   const [vectorDimension, setVectorDimension] = useState(0);
 
-  const { provider, providerSettings, getEffectiveBaseUrl } = useAIStore();
+  const { provider, providerSettings, getEffectiveBaseUrl, embedding } =
+    useAIStore();
 
   // Load background points for visualization when connection/collection changes
   useEffect(() => {
@@ -111,41 +112,47 @@ export function useVectorSearch(
   }, [connectionId, collection]);
 
   /**
-   * Embed text using the configured AI provider.
+   * Embed text using the configured embedding settings.
    * Uses OpenAI-compatible embedding endpoint.
    */
   const embedText = useCallback(
     async (text: string): Promise<number[] | null> => {
-      const settings = providerSettings[provider];
-      const baseUrl = getEffectiveBaseUrl();
+      // Use embedding-specific settings, falling back to main provider settings
+      const embeddingApiKey =
+        embedding.apiKey || providerSettings[provider]?.apiKey;
+      const embeddingBaseUrl =
+        embedding.baseUrl ||
+        (embedding.provider === 'openai'
+          ? 'https://api.openai.com'
+          : getEffectiveBaseUrl());
 
-      if (!settings?.apiKey) {
+      if (!embeddingApiKey) {
         setError(
-          'AI API key not configured. Please configure in Settings > AI.'
+          'Embedding API key not configured. Please configure in Settings > AI > Embedding.'
         );
         return null;
       }
 
       try {
-        // Build embedding URL based on provider
+        // Build embedding URL based on embedding provider settings
         // OpenAI and compatible providers use /v1/embeddings
         let embeddingUrl: string;
-        if (provider === 'openai' && !baseUrl.includes('/v1')) {
-          embeddingUrl = `${baseUrl}/v1/embeddings`;
-        } else if (baseUrl.endsWith('/v1')) {
-          embeddingUrl = `${baseUrl}/embeddings`;
+        if (!embeddingBaseUrl.includes('/v1')) {
+          embeddingUrl = `${embeddingBaseUrl}/v1/embeddings`;
+        } else if (embeddingBaseUrl.endsWith('/v1')) {
+          embeddingUrl = `${embeddingBaseUrl}/embeddings`;
         } else {
-          embeddingUrl = `${baseUrl}/v1/embeddings`;
+          embeddingUrl = `${embeddingBaseUrl}/v1/embeddings`;
         }
 
         const response = await fetch(embeddingUrl, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${settings.apiKey}`,
+            Authorization: `Bearer ${embeddingApiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'text-embedding-3-small', // Default OpenAI embedding model
+            model: embedding.model,
             input: text,
           }),
         });
@@ -158,20 +165,20 @@ export function useVectorSearch(
         }
 
         const data = await response.json();
-        const embedding = data.data?.[0]?.embedding;
+        const embeddingVector = data.data?.[0]?.embedding;
 
-        if (!embedding || !Array.isArray(embedding)) {
+        if (!embeddingVector || !Array.isArray(embeddingVector)) {
           throw new Error('Invalid embedding response format');
         }
 
-        return embedding;
+        return embeddingVector;
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         setError(`Embedding failed: ${message}`);
         return null;
       }
     },
-    [provider, providerSettings, getEffectiveBaseUrl]
+    [provider, providerSettings, getEffectiveBaseUrl, embedding]
   );
 
   /**

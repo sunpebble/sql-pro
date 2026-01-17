@@ -115,6 +115,8 @@ const PayloadCell = memo(
   }
 );
 
+PayloadCell.displayName = 'PayloadCell';
+
 /**
  * SearchResultsTable displays vector search results in a table format.
  *
