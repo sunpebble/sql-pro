@@ -25,15 +25,14 @@ import { useConnectionStore, useDataTabsStore } from '@/stores';
  * - Ctrl + Tab: Switch to next tab
  * - Ctrl + Shift + Tab: Switch to previous tab
  * - Cmd/Ctrl + 1-9: Switch to tab by index
- * - Cmd + W: Close current tab
  * - Cmd + Alt + T: Close other tabs
+ * Note: Cmd + W is handled globally in useCommands.ts
  */
 function useTabKeyboardNavigation(
   tabs: DataTab[],
   activeTabId: string | null,
   connectionId: string | null,
   setActiveTab: (connectionId: string, tabId: string) => void,
-  closeTab: (connectionId: string, tabId: string) => void,
   closeOtherTabs: (connectionId: string, tabId: string) => void
 ) {
   useEffect(() => {
@@ -60,13 +59,6 @@ function useTabKeyboardNavigation(
       }
 
       const isMod = e.metaKey || e.ctrlKey;
-
-      // Cmd/Ctrl + W: Close current tab
-      if (isMod && (e.key === 'w' || e.code === 'KeyW') && activeTabId) {
-        e.preventDefault();
-        closeTab(connectionId, activeTabId);
-        return;
-      }
 
       // Cmd/Ctrl + Alt + T: Close other tabs
       // Use e.code because Alt+T produces special character on macOS
@@ -104,7 +96,7 @@ function useTabKeyboardNavigation(
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [tabs, activeTabId, connectionId, setActiveTab, closeTab, closeOtherTabs]);
+  }, [tabs, activeTabId, connectionId, setActiveTab, closeOtherTabs]);
 }
 
 interface DataTabBarProps {
@@ -241,7 +233,6 @@ export const DataTabBar = memo(
       activeTabId,
       activeConnectionId,
       setActiveTab,
-      closeTab,
       closeOtherTabs
     );
 

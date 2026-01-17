@@ -164,6 +164,19 @@ export function createApplicationMenu(): void {
             windowManager.createWindow();
           },
         },
+        {
+          // Hidden menu item for Cmd+N when no windows are open
+          label: t('newWindow'),
+          accelerator: 'CmdOrCtrl+N',
+          visible: false,
+          click: () => {
+            // Only create window if no windows exist
+            // When windows exist, the renderer handles Cmd+N for add-row
+            if (BrowserWindow.getAllWindows().length === 0) {
+              windowManager.createWindow();
+            }
+          },
+        },
         { type: 'separator' },
         {
           label: t('openDatabase'),

@@ -18,6 +18,8 @@ import { useOnboardingStore } from '@/stores';
 interface FeatureShowcaseProps {
   /** Callback to start the welcome tour */
   onStartTour?: () => void;
+  /** Whether the component is disabled (e.g., during connection loading) */
+  disabled?: boolean;
 }
 
 interface FeatureKey {
@@ -52,7 +54,10 @@ const featureKeys: FeatureKey[] = [
   },
 ];
 
-export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
+export function FeatureShowcase({
+  onStartTour,
+  disabled,
+}: FeatureShowcaseProps) {
   const { hasCompletedTour } = useOnboardingStore();
   const { t } = useTranslation('common');
 
@@ -61,7 +66,9 @@ export function FeatureShowcase({ onStartTour }: FeatureShowcaseProps) {
   };
 
   return (
-    <div className="flex h-full flex-col justify-center">
+    <div
+      className={`flex h-full flex-col justify-center transition-opacity ${disabled ? 'pointer-events-none opacity-50' : ''}`}
+    >
       <div data-tour-target="feature-showcase">
         {/* Header */}
         <div className="mb-3 flex items-center justify-between">

@@ -103,6 +103,7 @@ export function WelcomeScreen() {
   const {
     recentConnections,
     isConnecting,
+    isLoadingSchema,
     error,
     folders,
     connections,
@@ -933,7 +934,10 @@ export function WelcomeScreen() {
         {/* Left Column - Feature Showcase */}
         <div className="flex w-1/2 items-center justify-center border-r p-8">
           <div className="h-full w-full max-w-md">
-            <FeatureShowcase onStartTour={handleStartWelcomeTour} />
+            <FeatureShowcase
+              onStartTour={handleStartWelcomeTour}
+              disabled={isConnecting || isLoadingSchema || connections.size > 0}
+            />
           </div>
         </div>
 

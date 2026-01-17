@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
 import { invalidateTableData } from '@/lib/query-refresh';
+import { router } from '@/routes';
 import {
   formatShortcutBinding,
   matchesBinding,
@@ -34,6 +35,7 @@ import {
   useCommandPaletteStore,
   useConnectionStore,
   useConnectionSwitcherStore,
+  useDataTabsStore,
   useKeyboardShortcutsStore,
   useOnboardingStore,
   useSettingsStore,
@@ -77,6 +79,9 @@ export function useCommands() {
   const onboardingStoreRef = useRef<ReturnType<
     typeof useOnboardingStore.getState
   > | null>(null);
+  const dataTabsStoreRef = useRef<ReturnType<
+    typeof useDataTabsStore.getState
+  > | null>(null);
 
   // Keep refs up to date - initialize on mount and subscribe to updates
   useEffect(() => {
@@ -88,6 +93,7 @@ export function useCommands() {
     settingsStoreRef.current = useSettingsStore.getState();
     shortcutsStoreRef.current = useKeyboardShortcutsStore.getState();
     onboardingStoreRef.current = useOnboardingStore.getState();
+    dataTabsStoreRef.current = useDataTabsStore.getState();
 
     // Subscribe to future updates
     const unsubTheme = useThemeStore.subscribe((s) => {
@@ -111,6 +117,9 @@ export function useCommands() {
     const unsubOnboarding = useOnboardingStore.subscribe((s) => {
       onboardingStoreRef.current = s;
     });
+    const unsubDataTabs = useDataTabsStore.subscribe((s) => {
+      dataTabsStoreRef.current = s;
+    });
 
     return () => {
       unsubTheme();
@@ -120,6 +129,7 @@ export function useCommands() {
       unsubSettings();
       unsubShortcuts();
       unsubOnboarding();
+      unsubDataTabs();
     };
   }, []);
 
@@ -328,10 +338,17 @@ export function useCommands() {
         return;
       }
 
-      // Add row shortcut
+      // Add row shortcut (Cmd+N)
+      // When no connection exists, create a new window instead
       const addRowBinding = getShortcut('action.add-row');
       if (matchesBinding(e, addRowBinding)) {
         e.preventDefault();
+        const connectionStore = connectionStoreRef.current;
+        if (!connectionStore?.activeConnectionId) {
+          // No connection, create new window
+          sqlPro.window.create().catch(console.error);
+          return;
+        }
         const addRowButton = document.querySelector<HTMLButtonElement>(
           'button[data-action="add-row"]'
         );
@@ -445,14 +462,57 @@ export function useCommands() {
         return;
       }
 
-      // Close Database shortcut
+      // Close Database shortcut (Cmd+W)
+      // Priority: close active data tab first, then close connection if no tabs
       const closeDatabaseBinding = getShortcut('action.close-database');
       if (matchesBinding(e, closeDatabaseBinding)) {
         e.preventDefault();
-        const closeDbButton = document.querySelector<HTMLButtonElement>(
-          'button[data-action="close-database"]'
-        );
-        closeDbButton?.click();
+
+        const connectionStore = connectionStoreRef.current;
+        const dataTabsStore = dataTabsStoreRef.current;
+        const changesStore = changesStoreRef.current;
+        const tableDataStore = tableDataStoreRef.current;
+
+        if (
+          !connectionStore ||
+          !dataTabsStore ||
+          !changesStore ||
+          !tableDataStore
+        )
+          return;
+
+        const {
+          activeConnectionId,
+          connection,
+          connections,
+          removeConnection,
+          setSelectedTable,
+        } = connectionStore;
+        if (!activeConnectionId || !connection) return;
+
+        // Get tabs for current connection
+        const tabs = dataTabsStore.getTabsForConnection(activeConnectionId);
+        const activeTab = dataTabsStore.getActiveTab(activeConnectionId);
+
+        if (tabs.length > 0 && activeTab) {
+          // Close the active tab
+          dataTabsStore.closeTab(activeConnectionId, activeTab.id);
+        } else {
+          // No tabs left, close the connection
+          const hasOtherConnections = connections.size > 1;
+
+          sqlPro.db.close({ connectionId: connection.id }).then(() => {
+            removeConnection(activeConnectionId);
+            setSelectedTable(null);
+            changesStore.clearChangesForConnection(activeConnectionId);
+            tableDataStore.resetConnection(activeConnectionId);
+
+            // Only navigate to welcome page if no other connections
+            if (!hasOtherConnections) {
+              router.navigate({ to: '/' });
+            }
+          });
+        }
         return;
       }
 

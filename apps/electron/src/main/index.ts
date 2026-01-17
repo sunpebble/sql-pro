@@ -22,6 +22,18 @@ import { pluginService } from './services/plugin/PluginService';
 import { checkForUpdatesOnStartup, initAutoUpdater } from './services/updater';
 import { windowManager } from './services/window-manager';
 
+// Handle EIO errors that occur when stdout/stderr is closed during app exit.
+// This happens when async operations (like image proxy requests) try to log
+// after the process streams are already closed.
+process.on('uncaughtException', (error) => {
+  // Silently ignore EIO errors during shutdown - these are expected
+  if (error.message === 'write EIO') {
+    return;
+  }
+  // Re-throw other errors to preserve default behavior
+  throw error;
+});
+
 // Inline utilities to avoid @electron-toolkit/utils initialization issues
 // Use getter to defer app.isPackaged access until after app ready
 const is = {

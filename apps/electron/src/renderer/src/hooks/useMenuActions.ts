@@ -75,16 +75,24 @@ export function useMenuActions() {
           const {
             connection,
             activeConnectionId,
+            connections,
             removeConnection,
             setSelectedTable,
           } = connectionStore;
           if (connection && activeConnectionId) {
+            // Check if there are other connections before closing
+            const hasOtherConnections = connections.size > 1;
+
             sqlPro.db.close({ connectionId: connection.id }).then(() => {
               removeConnection(activeConnectionId);
               setSelectedTable(null);
               changesStore.clearChangesForConnection(activeConnectionId);
               tableDataStore.resetConnection(activeConnectionId);
-              navigate({ to: '/' });
+
+              // Only navigate to welcome page if no other connections
+              if (!hasOtherConnections) {
+                navigate({ to: '/' });
+              }
             });
           }
           break;
