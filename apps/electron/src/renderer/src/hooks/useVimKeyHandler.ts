@@ -70,11 +70,21 @@ export function useVimKeyHandler(options: UseVimKeyHandlerOptions = {}) {
    * Handle a key press and return the vim command if recognized
    */
   const handleKey = useCallback(
-    (key: string, shiftKey = false, ctrlKey = false): VimKeyResult => {
+    (
+      key: string,
+      shiftKey = false,
+      ctrlKey = false,
+      metaKey = false
+    ): VimKeyResult => {
       // Clear any existing timeout
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
+      }
+
+      // Ignore keys with Command/Meta modifier (reserved for system shortcuts)
+      if (metaKey) {
+        return { command: null, handled: false };
       }
 
       // Handle Ctrl key combinations first

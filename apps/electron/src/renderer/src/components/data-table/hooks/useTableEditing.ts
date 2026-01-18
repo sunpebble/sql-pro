@@ -336,7 +336,12 @@ export function useTableEditing({
 
       // Handle vim keys when appVimMode is enabled
       if (appVimMode) {
-        const { command, handled } = handleVimKey(e.key, e.shiftKey, e.ctrlKey);
+        const { command, handled } = handleVimKey(
+          e.key,
+          e.shiftKey,
+          e.ctrlKey,
+          e.metaKey
+        );
 
         if (handled) {
           e.preventDefault();
