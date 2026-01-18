@@ -124,6 +124,7 @@ export function ServerConnectionDialog({
   const { t } = useTranslation('dialog');
   const isSupabase = databaseType === 'supabase';
   const isQdrant = databaseType === 'qdrant';
+  const isTurso = databaseType === 'turso';
   const isEditMode = mode === 'edit';
 
   // Form state
@@ -145,6 +146,12 @@ export function ServerConnectionDialog({
   const [qdrantPort, setQdrantPort] = useState('6333');
   const [qdrantApiKey, setQdrantApiKey] = useState('');
   const [qdrantUseTLS, setQdrantUseTLS] = useState(false);
+
+  // Turso-specific
+  const [tursoAuthToken, setTursoAuthToken] = useState('');
+  const [tursoOrganization, setTursoOrganization] = useState('');
+  const [tursoDatabase, setTursoDatabase] = useState('');
+  const [tursoBranch, setTursoBranch] = useState('');
 
   // Test connection state
   const [isTesting, setIsTesting] = useState(false);
@@ -198,6 +205,11 @@ export function ServerConnectionDialog({
         );
         setQdrantApiKey(initialConfig.qdrantApiKey || '');
         setQdrantUseTLS(initialConfig.qdrantUseTLS || false);
+        // Turso-specific
+        setTursoAuthToken(initialConfig.tursoAuthToken || '');
+        setTursoOrganization(initialConfig.tursoOrganization || '');
+        setTursoDatabase(initialConfig.tursoDatabase || '');
+        setTursoBranch(initialConfig.tursoBranch || '');
       } else {
         // Reset for new connection
         setHost('');
@@ -215,6 +227,11 @@ export function ServerConnectionDialog({
         setQdrantPort(DEFAULT_PORTS.qdrant.toString());
         setQdrantApiKey('');
         setQdrantUseTLS(false);
+        // Turso-specific - reset to defaults
+        setTursoAuthToken('');
+        setTursoOrganization('');
+        setTursoDatabase('');
+        setTursoBranch('');
       }
       setTestResult(null);
       /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
@@ -235,11 +252,20 @@ export function ServerConnectionDialog({
           ? supabaseUrl
           : isQdrant
             ? `${qdrantHost}:${qdrantPort}`
-            : `${host}:${port}/${database}`),
+            : isTurso
+              ? `${tursoDatabase}@${tursoOrganization}`
+              : `${host}:${port}/${database}`),
       readOnly,
     };
 
-    if (isQdrant) {
+    if (isTurso) {
+      config.tursoAuthToken = tursoAuthToken;
+      config.tursoOrganization = tursoOrganization;
+      config.tursoDatabase = tursoDatabase;
+      if (tursoBranch) {
+        config.tursoBranch = tursoBranch;
+      }
+    } else if (isQdrant) {
       config.qdrantHost = qdrantHost;
       config.qdrantPort = Number.parseInt(qdrantPort, 10);
       if (qdrantApiKey) {
@@ -278,7 +304,9 @@ export function ServerConnectionDialog({
     ? supabaseUrl && supabaseKey
     : isQdrant
       ? qdrantHost
-      : host && database;
+      : isTurso
+        ? tursoAuthToken && tursoOrganization && tursoDatabase
+        : host && database;
 
   return (
     <Dialog
@@ -436,6 +464,84 @@ export function ServerConnectionDialog({
                     <Label htmlFor="qdrantUseTLS" className="font-normal">
                       Use TLS (HTTPS)
                     </Label>
+                  </div>
+                </>
+              ) : isTurso ? (
+                <>
+                  {/* Turso Auth Token */}
+                  <div className="space-y-2">
+                    <Label htmlFor="tursoAuthToken">
+                      {t('connection.turso.authToken')}{' '}
+                      <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="tursoAuthToken"
+                      type="password"
+                      placeholder={t('connection.turso.authTokenPlaceholder')}
+                      value={tursoAuthToken}
+                      onChange={(e) => setTursoAuthToken(e.target.value)}
+                      required
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      {t('connection.turso.authTokenHint')}
+                    </p>
+                  </div>
+
+                  {/* Turso Organization */}
+                  <div className="space-y-2">
+                    <Label htmlFor="tursoOrganization">
+                      {t('connection.turso.organization')}{' '}
+                      <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="tursoOrganization"
+                      placeholder={t(
+                        'connection.turso.organizationPlaceholder'
+                      )}
+                      value={tursoOrganization}
+                      onChange={(e) => setTursoOrganization(e.target.value)}
+                      required
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      {t('connection.turso.organizationHint')}
+                    </p>
+                  </div>
+
+                  {/* Turso Database */}
+                  <div className="space-y-2">
+                    <Label htmlFor="tursoDatabase">
+                      {t('connection.turso.database')}{' '}
+                      <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="tursoDatabase"
+                      placeholder={t('connection.turso.databasePlaceholder')}
+                      value={tursoDatabase}
+                      onChange={(e) => setTursoDatabase(e.target.value)}
+                      required
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      {t('connection.turso.databaseHint')}
+                    </p>
+                  </div>
+
+                  {/* Turso Branch (optional) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="tursoBranch">
+                      {t('connection.turso.branch')}{' '}
+                      <span className="text-muted-foreground text-xs">
+                        ({t('connection.optional')})
+                      </span>
+                    </Label>
+                    <Input
+                      id="tursoBranch"
+                      placeholder={t('connection.turso.branchPlaceholder')}
+                      value={tursoBranch}
+                      onChange={(e) => setTursoBranch(e.target.value)}
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      {t('connection.turso.branchHint')}
+                    </p>
                   </div>
                 </>
               ) : isSupabase ? (
@@ -692,11 +798,20 @@ export function ServerConnectionDialog({
                           ? `${qdrantHost}:${qdrantPort}`
                           : isSupabase
                             ? supabaseUrl
-                            : `${host}:${port}/${database}`),
+                            : isTurso
+                              ? `${tursoDatabase}@${tursoOrganization}`
+                              : `${host}:${port}/${database}`),
                       readOnly,
                     };
 
-                    if (isQdrant) {
+                    if (isTurso) {
+                      config.tursoAuthToken = tursoAuthToken;
+                      config.tursoOrganization = tursoOrganization;
+                      config.tursoDatabase = tursoDatabase;
+                      if (tursoBranch) {
+                        config.tursoBranch = tursoBranch;
+                      }
+                    } else if (isQdrant) {
                       config.qdrantHost = qdrantHost;
                       config.qdrantPort = Number.parseInt(qdrantPort, 10);
                       if (qdrantApiKey) {
