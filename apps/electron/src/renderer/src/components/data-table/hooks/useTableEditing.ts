@@ -234,6 +234,48 @@ export function useTableEditing({
     [focusedCell, table]
   );
 
+  // Jump by a number of rows (for Ctrl+D/U half-page navigation)
+  const jumpByRows = useCallback(
+    (rowCount: number): CellPosition | null => {
+      if (!focusedCell) return null;
+
+      const rows = table.getRowModel().rows;
+      const columns = table.getVisibleLeafColumns();
+
+      const currentRowIndex = rows.findIndex((r) => r.id === focusedCell.rowId);
+      const currentColIndex = columns.findIndex(
+        (c) => c.id === focusedCell.columnId
+      );
+
+      if (currentRowIndex === -1 || currentColIndex === -1) return null;
+
+      // Calculate target row index
+      let targetRowIndex = currentRowIndex + rowCount;
+      targetRowIndex = Math.max(0, Math.min(rows.length - 1, targetRowIndex));
+
+      // Skip group rows
+      const direction = rowCount > 0 ? 1 : -1;
+      while (
+        targetRowIndex >= 0 &&
+        targetRowIndex < rows.length &&
+        rows[targetRowIndex].getIsGrouped?.()
+      ) {
+        targetRowIndex += direction;
+      }
+
+      // Clamp again after skipping
+      targetRowIndex = Math.max(0, Math.min(rows.length - 1, targetRowIndex));
+
+      const targetRow = rows[targetRowIndex];
+      const targetCol = columns[currentColIndex];
+
+      if (!targetRow || !targetCol) return null;
+
+      return { rowId: targetRow.id, columnId: targetCol.id };
+    },
+    [focusedCell, table]
+  );
+
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -294,7 +336,7 @@ export function useTableEditing({
 
       // Handle vim keys when appVimMode is enabled
       if (appVimMode) {
-        const { command, handled } = handleVimKey(e.key, e.shiftKey);
+        const { command, handled } = handleVimKey(e.key, e.shiftKey, e.ctrlKey);
 
         if (handled) {
           e.preventDefault();
@@ -338,6 +380,18 @@ export function useTableEditing({
             case 'jump-end': {
               const endCell = jumpToPosition('end');
               if (endCell) setFocusedCell(endCell);
+              break;
+            }
+            case 'page-down': {
+              // Jump down by ~half page (15 rows)
+              const pageDownCell = jumpByRows(15);
+              if (pageDownCell) setFocusedCell(pageDownCell);
+              break;
+            }
+            case 'page-up': {
+              // Jump up by ~half page (15 rows)
+              const pageUpCell = jumpByRows(-15);
+              if (pageUpCell) setFocusedCell(pageUpCell);
               break;
             }
             case 'enter-edit': {
@@ -434,6 +488,7 @@ export function useTableEditing({
       appVimMode,
       getAdjacentCell,
       jumpToPosition,
+      jumpByRows,
       handleVimKey,
       resetSequence,
       startEditing,

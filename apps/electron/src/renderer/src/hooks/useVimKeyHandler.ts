@@ -13,6 +13,8 @@ export type VimCommand =
   | 'jump-bottom' // G
   | 'jump-start' // 0
   | 'jump-end' // $
+  | 'page-down' // Ctrl+D (half page down)
+  | 'page-up' // Ctrl+U (half page up)
   // Actions
   | 'enter-edit' // i or Enter
   | 'exit-mode' // Escape
@@ -68,11 +70,23 @@ export function useVimKeyHandler(options: UseVimKeyHandlerOptions = {}) {
    * Handle a key press and return the vim command if recognized
    */
   const handleKey = useCallback(
-    (key: string, shiftKey = false): VimKeyResult => {
+    (key: string, shiftKey = false, ctrlKey = false): VimKeyResult => {
       // Clear any existing timeout
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
+      }
+
+      // Handle Ctrl key combinations first
+      if (ctrlKey) {
+        switch (key.toLowerCase()) {
+          case 'd':
+            return { command: 'page-down', handled: true };
+          case 'u':
+            return { command: 'page-up', handled: true };
+          default:
+            return { command: null, handled: false };
+        }
       }
 
       // Check for sequence completion (gg)
