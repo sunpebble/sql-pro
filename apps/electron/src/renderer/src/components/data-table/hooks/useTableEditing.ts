@@ -317,6 +317,8 @@ export function useTableEditing({
           e.preventDefault();
           stopEditing();
           resetSequence();
+          // Refocus the container so keyboard navigation continues to work
+          containerRef.current?.focus();
         }
         return;
       }
