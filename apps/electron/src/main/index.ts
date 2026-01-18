@@ -19,6 +19,7 @@ import {
   registerShortcutsHandler,
 } from './services/menu';
 import { pluginService } from './services/plugin/PluginService';
+import { removeRecentConnection } from './services/store';
 import { checkForUpdatesOnStartup, initAutoUpdater } from './services/updater';
 import { windowManager } from './services/window-manager';
 
@@ -281,3 +282,11 @@ ipcMain.handle('app:confirm-quit', async (_event, { shouldQuit }) => {
   }
   return { success: true };
 });
+
+// Handle removing a recent connection from the list
+ipcMain.handle(
+  'app:remove-recent-connection',
+  async (_event, { connectionId }: { connectionId: string }) => {
+    return removeRecentConnection(connectionId);
+  }
+);
