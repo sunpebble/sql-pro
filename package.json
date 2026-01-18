@@ -30,6 +30,11 @@
     "test:run": "nx run @sqlpro/app:test:run",
     "typecheck": "nx run @sqlpro/app:typecheck"
   },
+  "dependencies": {
+    "@types/react-resizable": "^3.0.8",
+    "framer-motion": "^12.26.2",
+    "react-resizable": "^3.1.3"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^7.0.1",
     "@commitlint/cli": "^20.3.1",
@@ -49,11 +54,5 @@
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^5.9.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@img/sharp-darwin-arm64": "0.34.5",
-      "@img/sharp-libvips-darwin-arm64": "1.2.4"
-    }
   }
 }

@@ -1,5 +1,6 @@
 import type { Row } from '@tanstack/react-table';
 import type { VirtualItem } from '@tanstack/react-virtual';
+import type { Variants } from 'framer-motion';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema, PendingChange } from '@/types/database';
 import { Checkbox } from '@sqlpro/ui/checkbox';
@@ -10,12 +11,38 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@sqlpro/ui/context-menu';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ClipboardCopy, Copy, FileText, Trash2 } from 'lucide-react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { GroupRow } from './GroupRow';
 import { TableCell } from './TableCell';
+
+// Row animation variants for framer-motion
+const rowVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: -8,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 500,
+      damping: 30,
+      mass: 0.8,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: -20,
+    transition: {
+      duration: 0.15,
+    },
+  },
+};
 
 interface DataRowProps {
   row: Row<TableRowData>;
@@ -58,6 +85,8 @@ interface DataRowProps {
   onDeleteRow?: (rowId: string) => void;
   /** Translation function */
   t: (key: string, options?: Record<string, unknown>) => string;
+  /** Enable row animations with framer-motion */
+  enableAnimation?: boolean;
 }
 
 // Custom comparison function for DataRow to avoid unnecessary re-renders
@@ -77,6 +106,7 @@ function areDataRowPropsEqual(
   if (prevProps.editable !== nextProps.editable) return false;
   if (prevProps.enableSelection !== nextProps.enableSelection) return false;
   if (prevProps.isInDragRange !== nextProps.isInDragRange) return false;
+  if (prevProps.enableAnimation !== nextProps.enableAnimation) return false;
 
   // Check focused and editing cell keys - these determine which cells need focus/edit styling
   if (prevProps.focusedCellKey !== nextProps.focusedCellKey) return false;
@@ -153,6 +183,7 @@ const DataRow = memo(
     onCopyRow,
     onDeleteRow,
     t,
+    enableAnimation = false,
   }: DataRowProps) => {
     // Use stable dataIndex for even/odd styling (not virtual index)
     const isEven = dataIndex % 2 === 0;
@@ -234,22 +265,39 @@ const DataRow = memo(
           })
         : t('row.copyRowAsSQL', { defaultValue: 'Copy Row as SQL INSERT' });
 
+    // Build row className
+    const rowClassName = cn(
+      'border-border h-6 border-b',
+      isEven ? 'bg-background' : 'bg-muted/20',
+      isDeleted && 'bg-destructive/10 line-through opacity-50',
+      isNewRow && 'bg-green-500/10',
+      isSelected && 'bg-primary/10',
+      isInDragRange && !isSelected && 'bg-primary/5'
+    );
+
+    // Render the tr element - either animated or static
+    const RowElement = enableAnimation ? motion.tr : 'tr';
+    const animationProps = enableAnimation
+      ? {
+          variants: rowVariants,
+          initial: 'hidden',
+          animate: 'visible',
+          exit: 'exit',
+          layout: true,
+          transition: { delay: dataIndex * 0.02 }, // Stagger effect
+        }
+      : {};
+
     return (
       <ContextMenu onOpenChange={handleContextMenuOpenChange}>
         <ContextMenuTrigger
           onContextMenu={handleRowContextMenu}
           render={
-            <tr
-              className={cn(
-                'border-border h-6 border-b',
-                isEven ? 'bg-background' : 'bg-muted/20',
-                isDeleted && 'bg-destructive/10 line-through opacity-50',
-                isNewRow && 'bg-green-500/10',
-                isSelected && 'bg-primary/10',
-                isInDragRange && !isSelected && 'bg-primary/5'
-              )}
+            <RowElement
+              className={rowClassName}
               data-row-id={row.id}
               data-row-index={dataIndex}
+              {...animationProps}
             />
           }
         >
@@ -381,6 +429,8 @@ interface TableBodyProps {
   onCopyRow?: (rowId: string) => void;
   /** Handler to delete row */
   onDeleteRow?: (rowId: string) => void;
+  /** Enable row animations with framer-motion (auto-disabled with virtualization) */
+  enableRowAnimation?: boolean;
 }
 
 export const TableBody = memo(
@@ -409,8 +459,13 @@ export const TableBody = memo(
     onCopyRowAsSQL,
     onCopyRow,
     onDeleteRow,
+    enableRowAnimation = false,
   }: TableBodyProps) => {
     const { t } = useTranslation('common');
+
+    // Only enable animation when virtualization is disabled and animation is requested
+    // Virtualization unmounts rows dynamically which conflicts with AnimatePresence
+    const shouldAnimate = enableRowAnimation && disableVirtualization;
 
     // Calculate pinned offsets
     // Selection column width: checkbox (16px) + padding (12px * 2) + border (1px) ≈ 41px
@@ -517,67 +572,134 @@ export const TableBody = memo(
           </tr>
         )}
 
-        {/* Render rows */}
-        {rowsToRender.map(({ index: dataIndex, row }) => {
-          if (!row) return null;
+        {/* Render rows - with optional AnimatePresence wrapper */}
+        {shouldAnimate ? (
+          <AnimatePresence mode="popLayout">
+            {rowsToRender.map(({ index: dataIndex, row }) => {
+              if (!row) return null;
 
-          const isGroupRow = row.getIsGrouped?.() ?? false;
-          const rowData = row.original as TableRowData;
-          const rowId = rowData.__rowId ?? row.id;
-          const isDeleted = rowData.__deleted ?? false;
-          const isNewRow = rowData.__isNew ?? false;
+              const isGroupRow = row.getIsGrouped?.() ?? false;
+              const rowData = row.original as TableRowData;
+              const rowId = rowData.__rowId ?? row.id;
+              const isDeleted = rowData.__deleted ?? false;
+              const isNewRow = rowData.__isNew ?? false;
 
-          // Get change for this row
-          const change = changes?.get(rowId);
+              // Get change for this row
+              const change = changes?.get(rowId);
 
-          if (isGroupRow) {
+              if (isGroupRow) {
+                return (
+                  <GroupRow
+                    key={`group-${rowId}`}
+                    row={row}
+                    isExpanded={row.getIsExpanded()}
+                  />
+                );
+              }
+
+              // Use pre-computed row IDs for faster comparison
+              const rowFocusedCellKey =
+                focusedRowId === row.id ? focusedCellKey : null;
+              const rowEditingCellKey =
+                editingRowId === row.id ? editingCellKey : null;
+
+              return (
+                <DataRow
+                  key={rowId}
+                  row={row}
+                  dataIndex={dataIndex}
+                  isDeleted={isDeleted}
+                  isNewRow={isNewRow}
+                  isSelected={row.getIsSelected()}
+                  change={change}
+                  editable={editable}
+                  onCellClick={onCellClick}
+                  onCellDoubleClick={onCellDoubleClick}
+                  onCellSave={onCellSave}
+                  stopEditing={stopEditing}
+                  isCellFocused={isCellFocused}
+                  isCellEditing={isCellEditing}
+                  focusedCellKey={rowFocusedCellKey}
+                  editingCellKey={rowEditingCellKey}
+                  pinnedColumns={pinnedColumns}
+                  pinnedOffsets={pinnedOffsets}
+                  enableSelection={enableSelection}
+                  onDragStart={onDragStart}
+                  isInDragRange={dragRangeByIndex?.get(dataIndex) ?? false}
+                  onToggleSelected={getToggleHandler(row)}
+                  selectedRowCount={selectedRowCount}
+                  onCopyRowAsSQL={onCopyRowAsSQL}
+                  onCopyRow={onCopyRow}
+                  onDeleteRow={onDeleteRow}
+                  t={t}
+                  enableAnimation={shouldAnimate}
+                />
+              );
+            })}
+          </AnimatePresence>
+        ) : (
+          rowsToRender.map(({ index: dataIndex, row }) => {
+            if (!row) return null;
+
+            const isGroupRow = row.getIsGrouped?.() ?? false;
+            const rowData = row.original as TableRowData;
+            const rowId = rowData.__rowId ?? row.id;
+            const isDeleted = rowData.__deleted ?? false;
+            const isNewRow = rowData.__isNew ?? false;
+
+            // Get change for this row
+            const change = changes?.get(rowId);
+
+            if (isGroupRow) {
+              return (
+                <GroupRow
+                  key={`group-${rowId}`}
+                  row={row}
+                  isExpanded={row.getIsExpanded()}
+                />
+              );
+            }
+
+            // Use pre-computed row IDs for faster comparison
+            const rowFocusedCellKey =
+              focusedRowId === row.id ? focusedCellKey : null;
+            const rowEditingCellKey =
+              editingRowId === row.id ? editingCellKey : null;
+
             return (
-              <GroupRow
-                key={`group-${rowId}`}
+              <DataRow
+                key={rowId}
                 row={row}
-                isExpanded={row.getIsExpanded()}
+                dataIndex={dataIndex}
+                isDeleted={isDeleted}
+                isNewRow={isNewRow}
+                isSelected={row.getIsSelected()}
+                change={change}
+                editable={editable}
+                onCellClick={onCellClick}
+                onCellDoubleClick={onCellDoubleClick}
+                onCellSave={onCellSave}
+                stopEditing={stopEditing}
+                isCellFocused={isCellFocused}
+                isCellEditing={isCellEditing}
+                focusedCellKey={rowFocusedCellKey}
+                editingCellKey={rowEditingCellKey}
+                pinnedColumns={pinnedColumns}
+                pinnedOffsets={pinnedOffsets}
+                enableSelection={enableSelection}
+                onDragStart={onDragStart}
+                isInDragRange={dragRangeByIndex?.get(dataIndex) ?? false}
+                onToggleSelected={getToggleHandler(row)}
+                selectedRowCount={selectedRowCount}
+                onCopyRowAsSQL={onCopyRowAsSQL}
+                onCopyRow={onCopyRow}
+                onDeleteRow={onDeleteRow}
+                t={t}
+                enableAnimation={false}
               />
             );
-          }
-
-          // Use pre-computed row IDs for faster comparison
-          const rowFocusedCellKey =
-            focusedRowId === row.id ? focusedCellKey : null;
-          const rowEditingCellKey =
-            editingRowId === row.id ? editingCellKey : null;
-
-          return (
-            <DataRow
-              key={rowId}
-              row={row}
-              dataIndex={dataIndex}
-              isDeleted={isDeleted}
-              isNewRow={isNewRow}
-              isSelected={row.getIsSelected()}
-              change={change}
-              editable={editable}
-              onCellClick={onCellClick}
-              onCellDoubleClick={onCellDoubleClick}
-              onCellSave={onCellSave}
-              stopEditing={stopEditing}
-              isCellFocused={isCellFocused}
-              isCellEditing={isCellEditing}
-              focusedCellKey={rowFocusedCellKey}
-              editingCellKey={rowEditingCellKey}
-              pinnedColumns={pinnedColumns}
-              pinnedOffsets={pinnedOffsets}
-              enableSelection={enableSelection}
-              onDragStart={onDragStart}
-              isInDragRange={dragRangeByIndex?.get(dataIndex) ?? false}
-              onToggleSelected={getToggleHandler(row)}
-              selectedRowCount={selectedRowCount}
-              onCopyRowAsSQL={onCopyRowAsSQL}
-              onCopyRow={onCopyRow}
-              onDeleteRow={onDeleteRow}
-              t={t}
-            />
-          );
-        })}
+          })
+        )}
 
         {/* Bottom spacer - GPU accelerated for smooth scrolling */}
         {bottomSpacerHeight > 0 && (

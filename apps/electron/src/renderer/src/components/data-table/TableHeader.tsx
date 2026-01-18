@@ -136,12 +136,12 @@ const HeaderCell = memo(
 
     const hasActiveFilter = Boolean(existingFilter);
 
-    // Calculate pinned styles
-    const pinnedStyles: React.CSSProperties = {
-      width: header.getSize(),
-    };
+    // Calculate pinned styles - only set width for pinned columns
+    // Non-pinned columns should use colgroup for width control
+    const pinnedStyles: React.CSSProperties = {};
 
     if (isPinned) {
+      pinnedStyles.width = header.getSize();
       pinnedStyles.position = 'sticky';
       pinnedStyles.left = pinnedOffset ?? 0;
       pinnedStyles.zIndex = 20;
@@ -284,13 +284,15 @@ const HeaderCell = memo(
           <div
             className={cn(
               // Visual bar is 2px wide, but the hit area extends 4px on each side
-              'absolute top-0 -right-1 z-20 h-full w-1 cursor-col-resize select-none',
-              // Use pseudo-element for larger hit area
-              'before:absolute before:inset-y-0 before:-right-2 before:-left-2 before:content-[""]',
-              // Visual indicator
-              'hover:bg-primary/50 active:bg-primary/70 bg-transparent',
-              'transition-colors duration-75',
-              isResizing && 'bg-primary/70'
+              'absolute top-0 -right-0.5 z-20 h-full w-1 cursor-col-resize select-none',
+              // Use pseudo-element for larger hit area - also needs cursor
+              'before:absolute before:inset-y-0 before:-right-2 before:-left-2 before:cursor-col-resize before:content-[""]',
+              // Default visible indicator - subtle border color
+              'bg-border/50',
+              // Visual indicator on hover/active
+              'hover:bg-primary/60 active:bg-primary/80 hover:w-1.5',
+              'transition-all duration-75',
+              isResizing && 'bg-primary/80 w-1.5'
             )}
             style={{
               touchAction: 'none',

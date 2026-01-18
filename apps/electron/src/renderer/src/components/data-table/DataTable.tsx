@@ -26,6 +26,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
 } from 'react';
@@ -132,6 +133,13 @@ export interface DataTableProps {
    * Whether more data is currently being loaded
    */
   isLoadingMore?: boolean;
+
+  /**
+   * Enable row animations with framer-motion.
+   * Only effective when virtualization is disabled (small datasets).
+   * @default false
+   */
+  enableRowAnimation?: boolean;
 }
 
 export interface DataTableRef {
@@ -180,6 +188,7 @@ export const DataTable = function DataTable({
   hasMore = false,
   isLoadingMore = false,
   tableName,
+  enableRowAnimation = false,
 }: DataTableProps & { ref?: React.RefObject<DataTableRef | null> }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tableFont = useTableFont();
@@ -220,7 +229,6 @@ export const DataTable = function DataTable({
   const columnSizingInfo = table.getState().columnSizingInfo;
 
   // Pre-compute column sizes as a Map for O(1) lookup
-  // This avoids creating CSS variables which trigger style recalculation on the entire table
   const columnSizes = useMemo(() => {
     const headers = table.getFlatHeaders();
     const sizes = new Map<string, number>();
@@ -230,6 +238,30 @@ export const DataTable = function DataTable({
     return sizes;
     // eslint-disable-next-line react-hooks/exhaustive-deps -- columnSizing/columnSizingInfo intentionally trigger recalculation
   }, [columnSizing, columnSizingInfo, table]);
+
+  // Ref to table element for direct DOM updates during resize
+  const tableRef = useRef<HTMLTableElement>(null);
+
+  // Use useLayoutEffect to directly update CSS variables on the table element
+  // This bypasses React's render cycle for immediate visual feedback during column resize
+  useLayoutEffect(() => {
+    const tableEl = tableRef.current;
+    if (!tableEl) return;
+
+    // Directly update CSS variables on the DOM element
+    for (const [columnId, size] of columnSizes) {
+      tableEl.style.setProperty(`--col-${columnId}`, `${size}px`);
+    }
+  }, [columnSizes]);
+
+  // Create CSS variables for column widths - used for initial render
+  const columnWidthStyles = useMemo(() => {
+    const styles: Record<string, string> = {};
+    for (const [columnId, size] of columnSizes) {
+      styles[`--col-${columnId}`] = `${size}px`;
+    }
+    return styles;
+  }, [columnSizes]);
 
   // Get rows from table
   const { rows } = table.getRowModel();
@@ -443,9 +475,9 @@ export const DataTable = function DataTable({
   // Row height for virtualization (compact VS Code style)
   const ROW_HEIGHT = 24;
 
-  // Disable virtualization for paginated mode (reasonable page sizes)
-  // This avoids virtualizer overhead for small-medium datasets
-  const shouldVirtualize = rows.length > 500;
+  // Disable virtualization for paginated mode (only for very small datasets)
+  // Virtualization helps with column resize performance even for moderate datasets
+  const shouldVirtualize = rows.length > 50;
 
   // Calculate dynamic overscan based on data size for better performance
   // Lower overscan reduces DOM nodes and style recalculations during scroll
@@ -722,29 +754,30 @@ export const DataTable = function DataTable({
       onFocus={handleContainerFocus}
     >
       <table
+        ref={tableRef}
         className="bg-background w-max min-w-full border-separate border-spacing-0"
-        style={{
-          minWidth: table.getTotalSize(),
-          fontFamily: tableFont.family || undefined,
-          fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
-        }}
+        style={
+          {
+            tableLayout: 'fixed',
+            minWidth: table.getTotalSize(),
+            fontFamily: tableFont.family || undefined,
+            fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
+            ...columnWidthStyles,
+          } as React.CSSProperties
+        }
       >
-        {/* Column group for width control - apply sizes directly to avoid CSS variable overhead */}
+        {/* Column group for width control - uses CSS variables for instant updates */}
         <colgroup>
           {/* Selection column - auto width based on content */}
-          {enableSelection && <col />}
-          {table.getVisibleLeafColumns().map((column) => {
-            const size = columnSizes.get(column.id) ?? 150;
-            return (
-              <col
-                key={column.id}
-                style={{
-                  width: size,
-                  minWidth: size,
-                }}
-              />
-            );
-          })}
+          {enableSelection && <col style={{ width: 41 }} />}
+          {table.getVisibleLeafColumns().map((column) => (
+            <col
+              key={column.id}
+              style={{
+                width: `var(--col-${column.id}, 150px)`,
+              }}
+            />
+          ))}
         </colgroup>
         {/* Fixed header */}
         <TableHeader
@@ -793,6 +826,7 @@ export const DataTable = function DataTable({
           onCopyRowAsSQL={handleCopyRowAsSQL}
           onCopyRow={handleCopyRow}
           onDeleteRow={handleDeleteRow}
+          enableRowAnimation={enableRowAnimation}
         />
       </table>
 

@@ -21,7 +21,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 // Row data type with internal metadata
 export interface TableRowData extends Record<string, unknown> {
@@ -101,6 +101,48 @@ export function useTableCore({
 
   // Column sizing state - start empty to use auto layout
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
+
+  // Throttled column sizing update to reduce re-renders during resize
+  const lastUpdateRef = useRef<number>(0);
+  const pendingUpdateRef = useRef<ColumnSizingState | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+
+  const throttledSetColumnSizing = useCallback(
+    (
+      updater:
+        | ColumnSizingState
+        | ((old: ColumnSizingState) => ColumnSizingState)
+    ) => {
+      const now = performance.now();
+      const timeSinceLastUpdate = now - lastUpdateRef.current;
+
+      // Get the new value
+      const newValue =
+        typeof updater === 'function' ? updater(columnSizing) : updater;
+
+      // If enough time has passed, update immediately
+      if (timeSinceLastUpdate >= 16) {
+        // ~60fps
+        lastUpdateRef.current = now;
+        setColumnSizing(newValue);
+        pendingUpdateRef.current = null;
+      } else {
+        // Otherwise, schedule an update for the next frame
+        pendingUpdateRef.current = newValue;
+        if (rafIdRef.current === null) {
+          rafIdRef.current = requestAnimationFrame(() => {
+            if (pendingUpdateRef.current !== null) {
+              lastUpdateRef.current = performance.now();
+              setColumnSizing(pendingUpdateRef.current);
+              pendingUpdateRef.current = null;
+            }
+            rafIdRef.current = null;
+          });
+        }
+      }
+    },
+    [columnSizing]
+  );
 
   // Column sizing info state for tracking resize in progress
   const [columnSizingInfo, setColumnSizingInfo] =
@@ -195,7 +237,7 @@ export function useTableCore({
     },
     onExpandedChange: setExpanded,
     onSortingChange: handleSortingChange,
-    onColumnSizingChange: setColumnSizing,
+    onColumnSizingChange: throttledSetColumnSizing,
     onColumnSizingInfoChange: setColumnSizingInfo,
     onColumnPinningChange: (updater) => {
       const newPinning =

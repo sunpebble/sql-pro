@@ -2,7 +2,6 @@ import type { MediaItem } from './ImageGallery';
 import type { ViewMode } from './ImageGalleryToolbar';
 import type { MediaColumnInfo, MediaSource } from '@/lib/image-utils';
 import type { ColumnSchema } from '@/types/database';
-import { Buffer } from 'node:buffer';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -246,7 +245,7 @@ export function TableImageGallery({
             : `${basePath}-${i + 1}.png`;
 
         try {
-          let content: string | Buffer;
+          let content: Uint8Array;
           const source = item.source;
 
           if (!source) {
@@ -254,16 +253,20 @@ export function TableImageGallery({
           }
 
           if (source.type === 'blob') {
-            content = Buffer.from(source.data);
+            content = new Uint8Array(source.data);
           } else if (source.type === 'base64') {
-            // Extract base64 data from data URL
+            // Extract base64 data from data URL and decode to Uint8Array
             const base64Data = source.dataUrl.split(',')[1];
-            content = Buffer.from(base64Data, 'base64');
+            const binaryString = atob(base64Data);
+            content = new Uint8Array(binaryString.length);
+            for (let j = 0; j < binaryString.length; j++) {
+              content[j] = binaryString.charCodeAt(j);
+            }
           } else if (source.type === 'url') {
             // Fetch the image from URL
             const response = await fetch(source.url);
             const arrayBuffer = await response.arrayBuffer();
-            content = Buffer.from(arrayBuffer);
+            content = new Uint8Array(arrayBuffer);
           } else if (source.type === 'file') {
             // File path - would need backend to read
             toast.warning(

@@ -1,4 +1,3 @@
-import type { Buffer } from 'node:buffer';
 // Shared types for IPC communication between main and renderer
 // These types define the contract for all database operations
 
@@ -687,8 +686,8 @@ export interface SaveFileDialogResponse {
 export interface WriteFileRequest {
   /** Path to the file to write */
   filePath: string;
-  /** File content - string for text files, Buffer for binary files */
-  content: string | Buffer;
+  /** File content - string for text files, Uint8Array for binary files */
+  content: string | Uint8Array;
   /** Text encoding (e.g., 'utf8', 'utf16le'). Only used when content is string. Defaults to 'utf8' */
   encoding?: BufferEncoding;
   /** Whether to use atomic write pattern (write to temp file, then rename). Defaults to true */
