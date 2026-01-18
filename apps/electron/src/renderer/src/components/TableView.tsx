@@ -120,6 +120,18 @@ export function TableView({ tableOverride }: TableViewProps) {
   const [viewMode, setViewMode] = useState<'data' | 'images'>('data');
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
 
+  // Focus the data table when switching back to data view
+  useEffect(() => {
+    if (viewMode === 'data') {
+      // Use a small delay to ensure the table is rendered
+      const timer = setTimeout(() => {
+        dataTableRef.current?.focus();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [viewMode]);
+
   // Setters that update the store
   const setPage = useCallback(
     (newPage: number) => {
