@@ -277,6 +277,9 @@ export const DataTable = function DataTable({
     return rows.findIndex((r) => r.id === focusedCell.rowId);
   }, [focusedCell, rows]);
 
+  // Track focused column id for horizontal auto-scrolling
+  const focusedColumnId = focusedCell?.columnId ?? null;
+
   // Initialize drag selection for row multi-select
   const { handleMouseDown: handleDragStart, isInDragRange } = useDragSelection({
     table,
@@ -505,9 +508,10 @@ export const DataTable = function DataTable({
     return newRange;
   }, [virtualItems]);
 
-  // Auto-scroll to focused row when navigating via keyboard
+  // Auto-scroll to focused cell when navigating via keyboard
   useEffect(() => {
-    if (focusedRowIndex < 0 || !containerRef.current) return;
+    if (focusedRowIndex < 0 || !focusedColumnId || !containerRef.current)
+      return;
 
     const container = containerRef.current;
     const rowElement = container.querySelector(
@@ -522,27 +526,83 @@ export const DataTable = function DataTable({
       return;
     }
 
+    // Find the focused cell within the row
+    const cellElement = rowElement.querySelector(
+      `td[data-column-id="${focusedColumnId}"]`
+    ) as HTMLElement | null;
+
     // Get actual header height from DOM
     const thead = container.querySelector('thead');
     const headerHeight = thead?.getBoundingClientRect().height ?? 0;
 
-    // Calculate if row is visible considering sticky header
+    // Calculate container bounds
     const containerRect = container.getBoundingClientRect();
     const rowRect = rowElement.getBoundingClientRect();
 
-    // Visible area starts after the sticky header
+    // Visible area for vertical scrolling (accounts for sticky header)
     const visibleTop = containerRect.top + headerHeight;
     const visibleBottom = containerRect.bottom;
 
-    // Check if row is above visible area (hidden by header)
+    // Vertical scrolling
     if (rowRect.top < visibleTop) {
       container.scrollTop -= visibleTop - rowRect.top;
-    }
-    // Check if row is below visible area
-    else if (rowRect.bottom > visibleBottom) {
+    } else if (rowRect.bottom > visibleBottom) {
       container.scrollTop += rowRect.bottom - visibleBottom;
     }
-  }, [focusedRowIndex, rowVirtualizer, shouldVirtualize]);
+
+    // Horizontal scrolling
+    if (cellElement) {
+      const cellRect = cellElement.getBoundingClientRect();
+
+      // Calculate the width of sticky elements on the left (selection column + pinned columns)
+      let stickyLeftWidth = 0;
+
+      // Check for selection column (sticky left-0)
+      if (enableSelection) {
+        const selectionCell = rowElement.querySelector(
+          'td.sticky'
+        ) as HTMLElement | null;
+        if (selectionCell) {
+          stickyLeftWidth = selectionCell.getBoundingClientRect().width;
+        }
+      }
+
+      // Add pinned columns width
+      if (pinnedColumns.length > 0) {
+        const lastPinnedCell = rowElement.querySelector(
+          `td[data-column-id="${pinnedColumns[pinnedColumns.length - 1]}"]`
+        ) as HTMLElement | null;
+        if (lastPinnedCell) {
+          const lastPinnedRect = lastPinnedCell.getBoundingClientRect();
+          stickyLeftWidth = Math.max(
+            stickyLeftWidth,
+            lastPinnedRect.right - containerRect.left
+          );
+        }
+      }
+
+      // Visible horizontal area (accounts for sticky columns on the left)
+      const visibleLeft = containerRect.left + stickyLeftWidth;
+      const visibleRight = containerRect.right;
+      const scrollPadding = 4;
+
+      // Check if cell is hidden by sticky columns on the left
+      if (cellRect.left < visibleLeft + scrollPadding) {
+        container.scrollLeft -= visibleLeft - cellRect.left + scrollPadding;
+      }
+      // Check if cell is to the right of visible area
+      else if (cellRect.right > visibleRight - scrollPadding) {
+        container.scrollLeft += cellRect.right - visibleRight + scrollPadding;
+      }
+    }
+  }, [
+    focusedRowIndex,
+    focusedColumnId,
+    enableSelection,
+    pinnedColumns,
+    rowVirtualizer,
+    shouldVirtualize,
+  ]);
 
   // Use virtual data management for memory-efficient row handling
   const virtualData = useVirtualData({
