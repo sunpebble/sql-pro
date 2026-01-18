@@ -28,6 +28,7 @@ import {
   getMaxMachinesForPlan,
   isValidLicenseKeyFormat,
 } from './license';
+import { sendLicenseEmail } from './email';
 import {
   constructWebhookEvent,
   createCheckoutSession,
@@ -355,8 +356,19 @@ app.post('/api/webhooks/stripe', async (c) => {
           max_machines: maxMachines,
         });
 
-        console.warn('Created license for:', email);
-        // TODO: Send email with license key
+        console.log('Created license for:', email);
+
+        // Send email with license key
+        const emailResult = await sendLicenseEmail(c.env, {
+          email,
+          licenseKey,
+          plan,
+        });
+
+        if (!emailResult.success) {
+          console.error('Failed to send license email:', emailResult.error);
+        }
+
         break;
       }
 
