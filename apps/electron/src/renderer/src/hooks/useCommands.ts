@@ -355,8 +355,7 @@ export function useCommands() {
         return;
       }
 
-      // Focus data table shortcut (Escape - when not in edit mode)
-      // This is handled specially: only trigger if not editing and sidebar is focused
+      // Focus data table shortcut (Escape - when sidebar is focused)
       const focusDataTableBinding = getShortcut('view.focus-data-table');
       if (matchesBinding(e, focusDataTableBinding)) {
         // Only handle if sidebar is currently focused
@@ -368,9 +367,9 @@ export function useCommands() {
           sidebar?.contains(document.activeElement)
         ) {
           e.preventDefault();
-          // Find and focus the data table's scroll area
+          // Find and focus the data table
           const dataTable = document.querySelector<HTMLElement>(
-            '[data-slot="scroll-area"]'
+            '[data-component="data-table"]'
           );
           dataTable?.focus();
           return;

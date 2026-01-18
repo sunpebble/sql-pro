@@ -711,6 +711,7 @@ export const DataTable = function DataTable({
   return (
     <ScrollArea
       viewportRef={containerRef}
+      data-component="data-table"
       className={cn(
         'bg-background rounded-md outline-none',
         'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2',
