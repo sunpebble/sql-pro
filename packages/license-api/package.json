@@ -12,11 +12,11 @@
     "@libsql/client": "^0.17.0",
     "hono": "^4.11.4",
     "nanoid": "^5.1.6",
-    "stripe": "^20.1.2"
+    "stripe": "^20.2.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260115.0",
+    "@cloudflare/workers-types": "^4.20260118.0",
     "typescript": "^5.9.3",
-    "wrangler": "^4.59.1"
+    "wrangler": "^4.59.2"
   }
 }
