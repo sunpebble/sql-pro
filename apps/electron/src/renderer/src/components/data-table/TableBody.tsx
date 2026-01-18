@@ -1,5 +1,4 @@
 import type { Row } from '@tanstack/react-table';
-import type { VirtualItem } from '@tanstack/react-virtual';
 import type { Variants } from 'framer-motion';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema, PendingChange } from '@/types/database';
@@ -389,9 +388,6 @@ const DataRow = memo(
 
 interface TableBodyProps {
   rows: Row<TableRowData>[];
-  // Row virtualization props
-  virtualRowItems: VirtualItem[];
-  totalRowSize: number;
   // Editing props
   editable?: boolean;
   onCellClick?: (rowId: string, columnId: string) => void;
@@ -416,8 +412,6 @@ interface TableBodyProps {
   onDragStart?: (e: React.MouseEvent, rowIndex: number) => void;
   /** Check if row is in drag selection range */
   isInDragRange?: (rowIndex: number) => boolean;
-  /** Disable virtualization - render all rows without spacers */
-  disableVirtualization?: boolean;
   // Context menu props
   /** Table name for SQL generation */
   tableName?: string;
@@ -429,15 +423,13 @@ interface TableBodyProps {
   onCopyRow?: (rowId: string) => void;
   /** Handler to delete row */
   onDeleteRow?: (rowId: string) => void;
-  /** Enable row animations with framer-motion (auto-disabled with virtualization) */
+  /** Enable row animations with framer-motion */
   enableRowAnimation?: boolean;
 }
 
 export const TableBody = memo(
   ({
     rows,
-    virtualRowItems,
-    totalRowSize,
     editable = false,
     onCellClick,
     onCellDoubleClick,
@@ -453,7 +445,6 @@ export const TableBody = memo(
     enableSelection = false,
     onDragStart,
     isInDragRange,
-    disableVirtualization = false,
     tableName: _tableName,
     columns: _columns,
     onCopyRowAsSQL,
@@ -463,9 +454,8 @@ export const TableBody = memo(
   }: TableBodyProps) => {
     const { t } = useTranslation('common');
 
-    // Only enable animation when virtualization is disabled and animation is requested
-    // Virtualization unmounts rows dynamically which conflicts with AnimatePresence
-    const shouldAnimate = enableRowAnimation && disableVirtualization;
+    // Enable animation when requested
+    const shouldAnimate = enableRowAnimation;
 
     // Calculate pinned offsets
     // Selection column width: checkbox (16px) + padding (12px * 2) + border (1px) ≈ 41px
@@ -510,16 +500,11 @@ export const TableBody = memo(
       return colonIndex > 0 ? editingCellKey.slice(0, colonIndex) : null;
     }, [editingCellKey]);
 
-    // Memoize rows to render to avoid creating new array on each render
-    const rowsToRender = useMemo(() => {
-      if (disableVirtualization) {
-        return rows.map((row, index) => ({ index, row }));
-      }
-      return virtualRowItems.map((virtualItem) => ({
-        index: virtualItem.index,
-        row: rows[virtualItem.index],
-      }));
-    }, [disableVirtualization, rows, virtualRowItems]);
+    // Map rows to render with their indices
+    const rowsToRender = useMemo(
+      () => rows.map((row, index) => ({ index, row })),
+      [rows]
+    );
 
     // Pre-compute drag range to avoid function calls in render loop
     // This improves performance during scroll by not calling isInDragRange for each row
@@ -532,21 +517,6 @@ export const TableBody = memo(
       return result;
     }, [rowsToRender, isInDragRange]);
 
-    // Pre-compute top spacer height
-    const topSpacerHeight = useMemo(() => {
-      if (disableVirtualization || virtualRowItems.length === 0) return 0;
-      return virtualRowItems[0].start;
-    }, [disableVirtualization, virtualRowItems]);
-
-    // Pre-compute bottom spacer height
-    const bottomSpacerHeight = useMemo(() => {
-      if (disableVirtualization || virtualRowItems.length === 0) return 0;
-      return Math.max(
-        0,
-        totalRowSize - virtualRowItems[virtualRowItems.length - 1].end
-      );
-    }, [disableVirtualization, virtualRowItems, totalRowSize]);
-
     // Compute selected row count for context menu label
     const selectedRowCount = useMemo(() => {
       return rows.filter((row) => row.getIsSelected()).length;
@@ -554,24 +524,6 @@ export const TableBody = memo(
 
     return (
       <tbody>
-        {/* Top spacer - GPU accelerated for smooth scrolling */}
-        {topSpacerHeight > 0 && (
-          <tr aria-hidden="true">
-            <td
-              colSpan={1000}
-              style={{
-                height: topSpacerHeight,
-                padding: 0,
-                border: 'none',
-                background: 'transparent',
-                // GPU layer promotion prevents layout thrashing
-                transform: 'translateZ(0)',
-                willChange: 'height',
-              }}
-            />
-          </tr>
-        )}
-
         {/* Render rows - with optional AnimatePresence wrapper */}
         {shouldAnimate ? (
           <AnimatePresence mode="popLayout">
@@ -699,24 +651,6 @@ export const TableBody = memo(
               />
             );
           })
-        )}
-
-        {/* Bottom spacer - GPU accelerated for smooth scrolling */}
-        {bottomSpacerHeight > 0 && (
-          <tr aria-hidden="true">
-            <td
-              colSpan={1000}
-              style={{
-                height: bottomSpacerHeight,
-                padding: 0,
-                border: 'none',
-                background: 'transparent',
-                // GPU layer promotion prevents layout thrashing
-                transform: 'translateZ(0)',
-                willChange: 'height',
-              }}
-            />
-          </tr>
         )}
       </tbody>
     );

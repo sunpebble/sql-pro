@@ -1,4 +1,3 @@
-import type { VirtualizerOptions } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type {
   VirtualDataConfig,
@@ -20,7 +19,6 @@ import {
   EmptyTitle,
 } from '@sqlpro/ui/empty';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { useVirtualizer } from '@tanstack/react-virtual';
 import { Filter, Inbox, SearchX } from 'lucide-react';
 import {
   useCallback,
@@ -225,19 +223,10 @@ export const DataTable = function DataTable({
   // columnSizing and columnSizingInfo are intentionally included as dependencies even though
   // they're derived from table.getState(). The table object is stable between renders, but we
   // need to recalculate column sizes when the sizing state changes.
-  const columnSizing = table.getState().columnSizing;
   const columnSizingInfo = table.getState().columnSizingInfo;
 
-  // Pre-compute column sizes as a Map for O(1) lookup
-  const columnSizes = useMemo(() => {
-    const headers = table.getFlatHeaders();
-    const sizes = new Map<string, number>();
-    for (const header of headers) {
-      sizes.set(header.id, header.getSize());
-    }
-    return sizes;
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- columnSizing/columnSizingInfo intentionally trigger recalculation
-  }, [columnSizing, columnSizingInfo, table]);
+  // Use ref to store column sizes - updates don't trigger re-renders
+  const columnSizesRef = useRef<Map<string, number>>(new Map());
 
   // Ref to table element for direct DOM updates during resize
   const tableRef = useRef<HTMLTableElement>(null);
@@ -245,23 +234,23 @@ export const DataTable = function DataTable({
   // Use useLayoutEffect to directly update CSS variables on the table element
   // This bypasses React's render cycle for immediate visual feedback during column resize
   useLayoutEffect(() => {
+    const headers = table.getFlatHeaders();
     const tableEl = tableRef.current;
     if (!tableEl) return;
 
-    // Directly update CSS variables on the DOM element
-    for (const [columnId, size] of columnSizes) {
-      tableEl.style.setProperty(`--col-${columnId}`, `${size}px`);
+    // Update ref and DOM directly
+    for (const header of headers) {
+      const size = header.getSize();
+      columnSizesRef.current.set(header.id, size);
+      tableEl.style.setProperty(`--col-${header.id}`, `${size}px`);
     }
-  }, [columnSizes]);
+  });
 
-  // Create CSS variables for column widths - used for initial render
-  const columnWidthStyles = useMemo(() => {
-    const styles: Record<string, string> = {};
-    for (const [columnId, size] of columnSizes) {
-      styles[`--col-${columnId}`] = `${size}px`;
-    }
-    return styles;
-  }, [columnSizes]);
+  // Stable callback that reads from ref - doesn't change between renders
+  const getColumnSize = useCallback(
+    (columnId: string) => columnSizesRef.current.get(columnId) ?? 150,
+    []
+  );
 
   // Get rows from table
   const { rows } = table.getRowModel();
@@ -472,73 +461,10 @@ export const DataTable = function DataTable({
     [rows, onRowDelete]
   );
 
-  // Row height for virtualization (compact VS Code style)
-  const ROW_HEIGHT = 24;
-
-  // Disable virtualization for paginated mode (only for very small datasets)
-  // Virtualization helps with column resize performance even for moderate datasets
-  const shouldVirtualize = rows.length > 50;
-
-  // Calculate dynamic overscan based on data size for better performance
-  // Lower overscan reduces DOM nodes and style recalculations during scroll
-  const rowOverscan = useMemo(() => {
-    if (!shouldVirtualize) return 0;
-    if (rows.length > 100000) return 10;
-    if (rows.length > 50000) return 15;
-    if (rows.length > 20000) return 20;
-    if (rows.length > 5000) return 25;
-    // For moderate datasets, use moderate overscan
-    return 30;
-  }, [rows.length, shouldVirtualize]);
-
-  // Stable callbacks for virtualizers - defined outside useVirtualizer to avoid recreating on each render
-  const getRowKey = useCallback(
-    (index: number) => {
-      const row = rows[index];
-      if (!row) return index;
-      const rowData = row.original as TableRowData;
-      return rowData.__rowId ?? row.id;
-    },
-    [rows]
-  );
-
-  // Setup row virtualization with optimized configuration
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => containerRef.current,
-    estimateSize: () => ROW_HEIGHT,
-    overscan: rowOverscan,
-    getItemKey: getRowKey,
-    // Enable smooth scrolling mode - reduces re-renders during scroll
-    isScrollingResetDelay: 150,
-  } satisfies Partial<VirtualizerOptions<HTMLDivElement, Element>>);
-
-  // Get the virtual items for visible range calculation
-  const virtualItems = rowVirtualizer.getVirtualItems();
-
-  // Track previous visible range to avoid unnecessary updates
-  const prevVisibleRangeRef = useRef({ startIndex: 0, endIndex: 0 });
-
-  // Calculate visible range from virtual items - only update when range actually changes
+  // Calculate visible range for all rows (no virtualization)
   const visibleRange = useMemo(() => {
-    if (virtualItems.length === 0) {
-      return prevVisibleRangeRef.current;
-    }
-    const newStart = virtualItems[0].index;
-    const newEnd = virtualItems[virtualItems.length - 1].index;
-
-    // Only create new object if range actually changed
-    if (
-      newStart === prevVisibleRangeRef.current.startIndex &&
-      newEnd === prevVisibleRangeRef.current.endIndex
-    ) {
-      return prevVisibleRangeRef.current;
-    }
-
-    const newRange = { startIndex: newStart, endIndex: newEnd };
-    prevVisibleRangeRef.current = newRange;
-    return newRange;
-  }, [virtualItems]);
+    return { startIndex: 0, endIndex: rows.length - 1 };
+  }, [rows.length]);
 
   // Auto-scroll to focused cell when navigating via keyboard
   useEffect(() => {
@@ -551,10 +477,6 @@ export const DataTable = function DataTable({
     ) as HTMLElement | null;
 
     if (!rowElement) {
-      // Row not rendered yet (virtualized), use scrollToIndex
-      if (shouldVirtualize) {
-        rowVirtualizer.scrollToIndex(focusedRowIndex, { align: 'auto' });
-      }
       return;
     }
 
@@ -627,14 +549,7 @@ export const DataTable = function DataTable({
         container.scrollLeft += cellRect.right - visibleRight + scrollPadding;
       }
     }
-  }, [
-    focusedRowIndex,
-    focusedColumnId,
-    enableSelection,
-    pinnedColumns,
-    rowVirtualizer,
-    shouldVirtualize,
-  ]);
+  }, [focusedRowIndex, focusedColumnId, enableSelection, pinnedColumns]);
 
   // Use virtual data management for memory-efficient row handling
   const virtualData = useVirtualData({
@@ -756,15 +671,12 @@ export const DataTable = function DataTable({
       <table
         ref={tableRef}
         className="bg-background w-max min-w-full border-separate border-spacing-0"
-        style={
-          {
-            tableLayout: 'fixed',
-            minWidth: table.getTotalSize(),
-            fontFamily: tableFont.family || undefined,
-            fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
-            ...columnWidthStyles,
-          } as React.CSSProperties
-        }
+        style={{
+          tableLayout: 'fixed',
+          minWidth: table.getTotalSize(),
+          fontFamily: tableFont.family || undefined,
+          fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
+        }}
       >
         {/* Column group for width control - uses CSS variables for instant updates */}
         <colgroup>
@@ -798,11 +710,9 @@ export const DataTable = function DataTable({
           enableSelection={enableSelection}
         />
 
-        {/* Virtualized table body */}
+        {/* Table body - no virtualization */}
         <TableBody
           rows={rows}
-          virtualRowItems={virtualItems}
-          totalRowSize={rowVirtualizer.getTotalSize()}
           editable={editable}
           onCellClick={handleCellClick}
           onCellDoubleClick={handleCellDoubleClick}
@@ -814,12 +724,10 @@ export const DataTable = function DataTable({
           editingCellKey={editingCellKey}
           changes={changes}
           pinnedColumns={pinnedColumns}
-          getColumnSize={(columnId) => columnSizes.get(columnId) ?? 150}
+          getColumnSize={getColumnSize}
           enableSelection={enableSelection}
           onDragStart={handleDragStart}
           isInDragRange={isInDragRange}
-          // Disable virtualization for paginated mode with reasonable page sizes
-          disableVirtualization={!shouldVirtualize}
           // Context menu props for SQL INSERT generation
           tableName={tableName}
           columns={columns}
