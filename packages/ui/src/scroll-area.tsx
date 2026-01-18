@@ -7,6 +7,8 @@ interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
   viewportRef?: React.RefObject<HTMLDivElement | null>;
   /** Scroll orientation: 'vertical', 'horizontal', or 'both' (default) */
   orientation?: 'vertical' | 'horizontal' | 'both';
+  /** Tab index for keyboard focus - applied to viewport for proper focus handling */
+  tabIndex?: number;
 }
 
 function ScrollArea({
@@ -14,6 +16,7 @@ function ScrollArea({
   children,
   viewportRef,
   orientation = 'both',
+  tabIndex,
   ...props
 }: ScrollAreaProps) {
   // Compute overflow style based on orientation
@@ -37,6 +40,7 @@ function ScrollArea({
     >
       <ScrollAreaPrimitive.Viewport
         ref={viewportRef}
+        tabIndex={tabIndex}
         data-slot="scroll-area-viewport"
         className="focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
         style={overflowStyle}

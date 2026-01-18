@@ -367,11 +367,11 @@ export function useCommands() {
           sidebar?.contains(document.activeElement)
         ) {
           e.preventDefault();
-          // Find and focus the data table
-          const dataTable = document.querySelector<HTMLElement>(
-            '[data-component="data-table"]'
+          // Find and focus the data table viewport
+          const dataTableViewport = document.querySelector<HTMLElement>(
+            '[data-component="data-table"] [data-slot="scroll-area-viewport"]'
           );
-          dataTable?.focus();
+          dataTableViewport?.focus();
           return;
         }
       }
