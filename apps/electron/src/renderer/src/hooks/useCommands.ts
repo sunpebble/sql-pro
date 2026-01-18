@@ -344,6 +344,39 @@ export function useCommands() {
         return;
       }
 
+      // Focus sidebar shortcut (Cmd+0)
+      const focusSidebarBinding = getShortcut('view.focus-sidebar');
+      if (matchesBinding(e, focusSidebarBinding)) {
+        e.preventDefault();
+        const sidebar = document.querySelector<HTMLElement>(
+          '[data-tour-target="sidebar"]'
+        );
+        sidebar?.focus();
+        return;
+      }
+
+      // Focus data table shortcut (Escape - when not in edit mode)
+      // This is handled specially: only trigger if not editing and sidebar is focused
+      const focusDataTableBinding = getShortcut('view.focus-data-table');
+      if (matchesBinding(e, focusDataTableBinding)) {
+        // Only handle if sidebar is currently focused
+        const sidebar = document.querySelector<HTMLElement>(
+          '[data-tour-target="sidebar"]'
+        );
+        if (
+          document.activeElement === sidebar ||
+          sidebar?.contains(document.activeElement)
+        ) {
+          e.preventDefault();
+          // Find and focus the data table's scroll area
+          const dataTable = document.querySelector<HTMLElement>(
+            '[data-slot="scroll-area"]'
+          );
+          dataTable?.focus();
+          return;
+        }
+      }
+
       // Save changes shortcut
       const saveChangesBinding = getShortcut('action.save-changes');
       if (matchesBinding(e, saveChangesBinding)) {

@@ -150,6 +150,20 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
     category: 'view',
     scope: 'global',
   },
+  {
+    id: 'view.focus-sidebar',
+    label: 'Focus Sidebar',
+    description: 'Focus the tables list in the sidebar',
+    category: 'view',
+    scope: 'global',
+  },
+  {
+    id: 'view.focus-data-table',
+    label: 'Focus Data Table',
+    description: 'Focus the data table view',
+    category: 'view',
+    scope: 'global',
+  },
   // Actions
   {
     id: 'action.command-palette',
@@ -291,6 +305,14 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
     key: '2',
     modifiers: { cmd: true, alt: true },
   },
+  'view.focus-sidebar': {
+    key: '0',
+    modifiers: { cmd: true },
+  },
+  'view.focus-data-table': {
+    key: 'Escape',
+    modifiers: {},
+  },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
@@ -306,7 +328,7 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
-  'onboarding.skip': { key: 'Escape', modifiers: {} },
+  'onboarding.skip': null,
   'onboarding.next': { key: 'Enter', modifiers: {} },
 };
 
@@ -339,6 +361,14 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
     key: '2',
     modifiers: { cmd: true, alt: true },
   },
+  'view.focus-sidebar': {
+    key: '0',
+    modifiers: { cmd: true },
+  },
+  'view.focus-data-table': {
+    key: 'Escape',
+    modifiers: {},
+  },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
@@ -354,7 +384,7 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
-  'onboarding.skip': { key: 'Escape', modifiers: {} },
+  'onboarding.skip': null,
   'onboarding.next': { key: 'Enter', modifiers: {} },
 };
 

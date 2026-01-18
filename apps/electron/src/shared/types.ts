@@ -3091,6 +3091,8 @@ export type ShortcutAction =
   | 'view.toggle-schema-details'
   | 'view.data-view'
   | 'view.gallery-view'
+  | 'view.focus-sidebar'
+  | 'view.focus-data-table'
   // Actions
   | 'action.command-palette'
   | 'action.refresh-schema'
@@ -3199,6 +3201,14 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'view.gallery-view': {
     key: '2',
     modifiers: { cmd: true, alt: true },
+  },
+  'view.focus-sidebar': {
+    key: '0',
+    modifiers: { cmd: true },
+  },
+  'view.focus-data-table': {
+    key: 'Escape',
+    modifiers: {},
   },
   'action.command-palette': { key: 'k', modifiers: { cmd: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
