@@ -91,7 +91,7 @@ export function FeatureShowcase({
           {featureKeys.map((feature) => (
             <div
               key={feature.key}
-              className="bg-card/50 hover:bg-card flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-colors"
+              className="bg-card/50 hover:bg-card hover:border-primary/20 flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-sm"
             >
               {feature.icon}
               <span className="text-xs leading-tight font-medium">
@@ -108,7 +108,7 @@ export function FeatureShowcase({
         {!hasCompletedTour && (
           <button
             onClick={onStartTour}
-            className="hover:bg-accent group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed bg-transparent p-3 transition-colors"
+            className="hover:bg-primary/5 hover:border-primary/30 group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed bg-transparent p-3 transition-all duration-200 hover:scale-[1.01]"
           >
             <PlayCircle className="text-primary h-4 w-4" />
             <span className="text-primary text-xs group-hover:underline">

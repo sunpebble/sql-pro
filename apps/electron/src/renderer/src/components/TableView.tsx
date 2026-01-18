@@ -711,12 +711,16 @@ export function TableView({ tableOverride }: TableViewProps) {
                     size="sm"
                     className="rounded-r-none border-r"
                     onClick={() => setViewMode('data')}
+                    data-action="view-data"
                   >
                     <Table2 className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   {t('table.dataView', { defaultValue: 'Data view' })}
+                  {' ('}
+                  <ShortcutKbd action="view.data-view" />
+                  {')'}
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
@@ -726,12 +730,16 @@ export function TableView({ tableOverride }: TableViewProps) {
                     size="sm"
                     className="rounded-l-none"
                     onClick={() => setViewMode('images')}
+                    data-action="view-gallery"
                   >
                     <ImageIcon className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   {t('table.imageGallery', { defaultValue: 'Image gallery' })}
+                  {' ('}
+                  <ShortcutKbd action="view.gallery-view" />
+                  {')'}
                 </TooltipContent>
               </Tooltip>
             </div>

@@ -239,7 +239,13 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+      <table className="w-full text-sm" style={{ tableLayout: 'fixed' }}>
+        <colgroup>
+          <col style={{ width: '30%' }} />
+          <col style={{ width: '35%' }} />
+          <col style={{ width: '15%' }} />
+          <col style={{ width: '20%' }} />
+        </colgroup>
         <thead>
           <tr className="text-muted-foreground border-b text-left">
             <th className="pr-3 pb-2 font-medium whitespace-nowrap">
@@ -262,11 +268,17 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
               primaryKey.includes(column.name) || column.isPrimaryKey;
             return (
               <tr key={column.name} className="border-b last:border-0">
-                <td className="py-1.5 pr-3 font-mono text-xs whitespace-nowrap">
+                <td
+                  className="truncate py-1.5 pr-3 font-mono text-xs"
+                  title={column.name}
+                >
                   {column.name}
                 </td>
-                <td className="py-1.5 pr-3 whitespace-nowrap">
-                  <span className="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">
+                <td className="py-1.5 pr-3">
+                  <span
+                    className="bg-muted inline-block max-w-full truncate rounded px-1.5 py-0.5 font-mono text-xs"
+                    title={column.type}
+                  >
                     {column.type}
                   </span>
                 </td>

@@ -316,6 +316,34 @@ export function useCommands() {
         return;
       }
 
+      // Data view shortcut (only works in Data Browser view)
+      const dataViewBinding = getShortcut('view.data-view');
+      if (
+        matchesBinding(e, dataViewBinding) &&
+        (dataTab || dataTabStateActive)
+      ) {
+        e.preventDefault();
+        const dataViewButton = document.querySelector<HTMLButtonElement>(
+          'button[data-action="view-data"]'
+        );
+        dataViewButton?.click();
+        return;
+      }
+
+      // Gallery view shortcut (only works in Data Browser view)
+      const galleryViewBinding = getShortcut('view.gallery-view');
+      if (
+        matchesBinding(e, galleryViewBinding) &&
+        (dataTab || dataTabStateActive)
+      ) {
+        e.preventDefault();
+        const galleryViewButton = document.querySelector<HTMLButtonElement>(
+          'button[data-action="view-gallery"]'
+        );
+        galleryViewButton?.click();
+        return;
+      }
+
       // Save changes shortcut
       const saveChangesBinding = getShortcut('action.save-changes');
       if (matchesBinding(e, saveChangesBinding)) {

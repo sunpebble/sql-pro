@@ -136,6 +136,20 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
     category: 'view',
     scope: 'global',
   },
+  {
+    id: 'view.data-view',
+    label: 'Data View',
+    description: 'Switch to data table view',
+    category: 'view',
+    scope: 'global',
+  },
+  {
+    id: 'view.gallery-view',
+    label: 'Gallery View',
+    description: 'Switch to image gallery view',
+    category: 'view',
+    scope: 'global',
+  },
   // Actions
   {
     id: 'action.command-palette',
@@ -269,6 +283,14 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
     key: 'i',
     modifiers: { cmd: true },
   },
+  'view.data-view': {
+    key: '1',
+    modifiers: { cmd: true, alt: true },
+  },
+  'view.gallery-view': {
+    key: '2',
+    modifiers: { cmd: true, alt: true },
+  },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
@@ -308,6 +330,14 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'view.toggle-schema-details': {
     key: 'i',
     modifiers: { cmd: true },
+  },
+  'view.data-view': {
+    key: '1',
+    modifiers: { cmd: true, alt: true },
+  },
+  'view.gallery-view': {
+    key: '2',
+    modifiers: { cmd: true, alt: true },
   },
   'action.command-palette': { key: 'p', modifiers: { cmd: true, shift: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },

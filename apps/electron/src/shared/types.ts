@@ -3089,6 +3089,8 @@ export type ShortcutAction =
   // View
   | 'view.toggle-history'
   | 'view.toggle-schema-details'
+  | 'view.data-view'
+  | 'view.gallery-view'
   // Actions
   | 'action.command-palette'
   | 'action.refresh-schema'
@@ -3189,6 +3191,14 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'view.toggle-schema-details': {
     key: 'i',
     modifiers: { cmd: true },
+  },
+  'view.data-view': {
+    key: '1',
+    modifiers: { cmd: true, alt: true },
+  },
+  'view.gallery-view': {
+    key: '2',
+    modifiers: { cmd: true, alt: true },
   },
   'action.command-palette': { key: 'k', modifiers: { cmd: true } },
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },

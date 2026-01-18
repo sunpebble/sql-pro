@@ -101,6 +101,7 @@ export function ActivityBar({
             <TooltipTrigger>
               <button
                 data-tab={item.id}
+                data-active={isActive ? '' : undefined}
                 data-tour-target={item.tourTarget}
                 onClick={() => onViewChange(item.id)}
                 className={cn(
