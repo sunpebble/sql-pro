@@ -848,7 +848,6 @@ export function TableView({ tableOverride }: TableViewProps) {
               hasActiveSearch={searchTerm.length > 0}
               onClearFilters={handleFiltersClear}
               onClearSearch={() => setSearchTerm('')}
-              enableRowAnimation
             />
           )}
         </div>

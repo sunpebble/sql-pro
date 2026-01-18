@@ -131,13 +131,6 @@ export interface DataTableProps {
    * Whether more data is currently being loaded
    */
   isLoadingMore?: boolean;
-
-  /**
-   * Enable row animations with framer-motion.
-   * Only effective when virtualization is disabled (small datasets).
-   * @default false
-   */
-  enableRowAnimation?: boolean;
 }
 
 export interface DataTableRef {
@@ -186,7 +179,6 @@ export const DataTable = function DataTable({
   hasMore = false,
   isLoadingMore = false,
   tableName,
-  enableRowAnimation = false,
 }: DataTableProps & { ref?: React.RefObject<DataTableRef | null> }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tableFont = useTableFont();
@@ -734,7 +726,6 @@ export const DataTable = function DataTable({
           onCopyRowAsSQL={handleCopyRowAsSQL}
           onCopyRow={handleCopyRow}
           onDeleteRow={handleDeleteRow}
-          enableRowAnimation={enableRowAnimation}
         />
       </table>
 
