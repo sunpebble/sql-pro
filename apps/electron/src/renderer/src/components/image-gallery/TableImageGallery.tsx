@@ -2,6 +2,7 @@ import type { MediaItem } from './ImageGallery';
 import type { ViewMode } from './ImageGalleryToolbar';
 import type { MediaColumnInfo, MediaSource } from '@/lib/image-utils';
 import type { ColumnSchema } from '@/types/database';
+import { Buffer } from 'node:buffer';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -207,9 +208,112 @@ export function TableImageGallery({
   }, [rows, columns, mediaColumns, validSelectedColumn, t]);
 
   // Handle export selected images
-  const handleExportSelected = useCallback(() => {
-    // TODO: Implement batch export via IPC - placeholder for future implementation
-  }, []);
+  const handleExportSelected = useCallback(async () => {
+    if (selectedIds.size === 0) {
+      toast.warning(t('mediaGallery.noSelection', 'No images selected'));
+      return;
+    }
+
+    // Get selected items
+    const selectedItems = mediaItems.filter((item) => selectedIds.has(item.id));
+    if (selectedItems.length === 0) return;
+
+    try {
+      // Ask user where to save
+      const result = await window.sqlPro.dialog.saveFile({
+        title: t('mediaGallery.exportTitle', 'Export Selected Images'),
+        defaultPath: `images-export-${Date.now()}`,
+        filters: [
+          { name: 'PNG Images', extensions: ['png'] },
+          { name: 'JPEG Images', extensions: ['jpg', 'jpeg'] },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+
+      if (!result.success || !result.filePath || result.canceled) {
+        return;
+      }
+
+      const basePath = result.filePath.replace(/\.[^.]+$/, ''); // Remove extension
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (let i = 0; i < selectedItems.length; i++) {
+        const item = selectedItems[i];
+        const fileName =
+          selectedItems.length === 1
+            ? result.filePath
+            : `${basePath}-${i + 1}.png`;
+
+        try {
+          let content: string | Buffer;
+          const source = item.source;
+
+          if (!source) {
+            continue;
+          }
+
+          if (source.type === 'blob') {
+            content = Buffer.from(source.data);
+          } else if (source.type === 'base64') {
+            // Extract base64 data from data URL
+            const base64Data = source.dataUrl.split(',')[1];
+            content = Buffer.from(base64Data, 'base64');
+          } else if (source.type === 'url') {
+            // Fetch the image from URL
+            const response = await fetch(source.url);
+            const arrayBuffer = await response.arrayBuffer();
+            content = Buffer.from(arrayBuffer);
+          } else if (source.type === 'file') {
+            // File path - would need backend to read
+            toast.warning(
+              t(
+                'mediaGallery.fileExportNotSupported',
+                'File path export not yet supported'
+              )
+            );
+            continue;
+          } else {
+            continue;
+          }
+
+          const writeResult = await window.sqlPro.dialog.writeFile({
+            filePath: fileName,
+            content,
+          });
+
+          if (writeResult.success) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        } catch (error) {
+          console.error('Failed to export image:', error);
+          errorCount++;
+        }
+      }
+
+      if (successCount > 0) {
+        toast.success(
+          t(
+            'mediaGallery.exportSuccess',
+            `Exported ${successCount} image(s) successfully`
+          )
+        );
+      }
+      if (errorCount > 0) {
+        toast.error(
+          t(
+            'mediaGallery.exportPartialError',
+            `Failed to export ${errorCount} image(s)`
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error(t('mediaGallery.exportError', 'Failed to export images'));
+    }
+  }, [selectedIds, mediaItems, t]);
 
   // Handle refresh
   const handleRefresh = useCallback(() => {

@@ -11,6 +11,7 @@ import {
 } from '@sqlpro/ui/select';
 import { FileCode, FileDown, FileJson, FileText, Loader2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -131,7 +132,10 @@ export function ExportReportDialog({
       onOpenChange(false);
     } catch (error) {
       console.error('Export failed:', error);
-      // TODO: Show error toast/notification
+      toast.error('Failed to export report', {
+        description:
+          error instanceof Error ? error.message : 'Unknown error occurred',
+      });
     } finally {
       setIsExporting(false);
     }

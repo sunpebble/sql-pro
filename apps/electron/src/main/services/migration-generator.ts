@@ -656,6 +656,7 @@ class MigrationGeneratorService {
 
   /**
    * Generate CREATE TRIGGER statement.
+   * Note: If original SQL is not available, generates a placeholder that requires manual completion.
    */
   private generateCreateTrigger(trigger: TriggerInfo): string {
     // If we have the original SQL, use it
@@ -663,8 +664,14 @@ class MigrationGeneratorService {
       return trigger.sql;
     }
 
-    // Otherwise construct it (basic form - may not capture all trigger logic)
-    return `CREATE TRIGGER ${trigger.name} ${trigger.timing} ${trigger.event} ON ${trigger.tableName} BEGIN /* TODO: Add trigger body */ END`;
+    // Otherwise construct a placeholder (original trigger body could not be retrieved)
+    // This can happen when metadata extraction doesn't capture the full trigger definition
+    return `-- WARNING: Original trigger body could not be retrieved. Manual completion required.
+CREATE TRIGGER ${trigger.name} ${trigger.timing} ${trigger.event} ON ${trigger.tableName}
+BEGIN
+  -- Add trigger body here
+  SELECT 1;
+END`;
   }
 
   /**

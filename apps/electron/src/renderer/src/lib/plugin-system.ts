@@ -114,10 +114,16 @@ class PluginManager {
 
   /**
    * Load a plugin from a manifest and module
+   * @param manifest Plugin manifest
+   * @param pluginModule Plugin module with activate/deactivate functions
+   * @param sourcePath Optional path for persistence (archive, directory, or URL)
+   * @param sourceType Type of source (defaults to 'directory')
    */
   async loadPlugin(
     manifest: PluginManifest,
-    pluginModule: Plugin
+    pluginModule: Plugin,
+    sourcePath?: string,
+    sourceType: 'archive' | 'directory' | 'url' = 'directory'
   ): Promise<void> {
     if (this.plugins.has(manifest.id)) {
       throw new Error(`Plugin ${manifest.id} is already loaded`);
@@ -133,9 +139,15 @@ class PluginManager {
 
     this.plugins.set(manifest.id, loadedPlugin);
 
-    // TODO: Persist to backend - API signature mismatch needs resolution
-    // The install API expects { source, sourceType } not manifest
-    // await sqlPro.plugins.install({ source: manifest.main, sourceType: 'directory' });
+    // Persist to backend if source path is provided
+    if (sourcePath) {
+      try {
+        await sqlPro.plugins.install({ source: sourcePath, sourceType });
+      } catch (error) {
+        console.warn('Failed to persist plugin to backend:', error);
+        // Continue without persistence - plugin will work for this session
+      }
+    }
   }
 
   /**

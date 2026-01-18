@@ -262,7 +262,7 @@ describe('plugin Sandboxing and Security', () => {
 
       // Plugin should load but not have access to process
       // In fallback mode, process might be accessible but that's documented limitation
-      expect(result.success || !result.success).toBe(true); // Always true, just documenting
+      expect(typeof result.success).toBe('boolean');
     });
 
     it('should prevent plugin from using eval or Function constructor', async () => {
@@ -879,7 +879,10 @@ describe('plugin Sandboxing and Security', () => {
         // - Limited sandbox security
 
         // This is acceptable for development but not for production
-        expect(true).toBe(true); // Document this limitation
+        // Verify we're actually in fallback mode
+        expect(isAvailable).toBe(false);
+      } else {
+        expect(isAvailable).toBe(true);
       }
     });
   });
