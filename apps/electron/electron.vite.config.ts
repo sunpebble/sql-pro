@@ -33,6 +33,13 @@ export default defineConfig({
           'lazy-val',
           'semver',
         ],
+        // sharp and its native modules must be externalized (not bundled)
+        // because they contain native .node files
+        include: [
+          'sharp',
+          '@img/sharp-darwin-arm64',
+          '@img/sharp-libvips-darwin-arm64',
+        ],
       },
     },
     resolve: {

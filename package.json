@@ -35,7 +35,6 @@
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@eslint-react/eslint-plugin": "^2.7.2",
-    "@img/sharp-libvips-darwin-arm64": "^1.2.4",
     "@nx/js": "^22.3.3",
     "@nx/vite": "^22.3.3",
     "@nx/workspace": "^22.3.3",
@@ -50,5 +49,11 @@
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@img/sharp-darwin-arm64": "0.34.5",
+      "@img/sharp-libvips-darwin-arm64": "1.2.4"
+    }
   }
 }

@@ -7,4 +7,6 @@ nodeLinker: hoisted
 neverBuiltDependencies: []
 
 overrides:
+  '@img/sharp-darwin-arm64': 0.34.5
+  '@img/sharp-libvips-darwin-arm64': 1.2.4
   vite: npm:rolldown-vite@latest
