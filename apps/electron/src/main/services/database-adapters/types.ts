@@ -437,6 +437,7 @@ export const DEFAULT_PORTS: Record<DatabaseType, number> = {
   postgresql: 5432,
   supabase: 5432, // Supabase uses PostgreSQL
   qdrant: 6333, // Qdrant REST API default port
+  turso: 0, // Not applicable - uses HTTPS URLs
 };
 
 /**
@@ -448,4 +449,5 @@ export const DATABASE_TYPE_NAMES: Record<DatabaseType, string> = {
   postgresql: 'PostgreSQL',
   supabase: 'Supabase',
   qdrant: 'Qdrant',
+  turso: 'Turso',
 };
