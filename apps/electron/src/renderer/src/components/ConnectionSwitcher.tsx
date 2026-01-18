@@ -54,6 +54,8 @@ export function ConnectionSwitcher({
   const activeConnectionId = useConnectionStore((s) => s.activeConnectionId);
   const setActiveConnection = useConnectionStore((s) => s.setActiveConnection);
   const recentConnections = useConnectionStore((s) => s.recentConnections);
+  const isConnecting = useConnectionStore((s) => s.isConnecting);
+  const isLoadingSchema = useConnectionStore((s) => s.isLoadingSchema);
 
   // Get UI font settings
   const uiFont = useUIFont();
@@ -119,9 +121,15 @@ export function ConnectionSwitcher({
     return { openItems, recentItems };
   }, [filteredItems]);
 
+  // Whether connection actions should be disabled
+  const isLoading = isConnecting || isLoadingSchema;
+
   // Handle connection select
   const handleSelect = useCallback(
     (item: ConnectionItem) => {
+      // Prevent opening new connections while loading
+      if (isLoading && !item.isOpen) return;
+
       close();
       if (item.isOpen) {
         // Switch to already open connection
@@ -131,7 +139,7 @@ export function ConnectionSwitcher({
         onOpenRecentConnection?.(item.recentConnection);
       }
     },
-    [close, setActiveConnection, onOpenRecentConnection]
+    [close, setActiveConnection, onOpenRecentConnection, isLoading]
   );
 
   // Handle dialog open state change
@@ -261,9 +269,11 @@ export function ConnectionSwitcher({
                       key={item.id}
                       value={item.id}
                       onSelect={() => handleSelect(item)}
+                      disabled={isLoading}
                       className={cn(
                         'gap-3',
-                        actualIndex === selectedIndex && 'bg-accent'
+                        actualIndex === selectedIndex && 'bg-accent',
+                        isLoading && 'cursor-not-allowed opacity-50'
                       )}
                     >
                       <Clock className="text-muted-foreground h-4 w-4 shrink-0" />

@@ -56,7 +56,12 @@ export function ProfileManager({
     deleteFolder,
     setProfiles,
     setFolders,
+    isConnecting,
+    isLoadingSchema,
   } = useConnectionStore();
+
+  // Whether connection actions should be disabled
+  const isConnectionLoading = isConnecting || isLoadingSchema;
 
   // Local state
   const [searchQuery, setSearchQuery] = useState('');
@@ -194,11 +199,14 @@ export function ProfileManager({
   // Handle profile connection
   const handleConnectProfile = useCallback(
     async (profile: ConnectionProfile) => {
+      // Prevent connecting while another connection is loading
+      if (isConnectionLoading) return;
+
       if (onConnect) {
         onConnect(profile);
       }
     },
-    [onConnect]
+    [onConnect, isConnectionLoading]
   );
 
   // Handle profile edit
@@ -863,6 +871,7 @@ export function ProfileManager({
                   <Button
                     className="w-full"
                     onClick={() => handleConnectProfile(selectedProfile)}
+                    disabled={isConnectionLoading}
                   >
                     Connect
                   </Button>
