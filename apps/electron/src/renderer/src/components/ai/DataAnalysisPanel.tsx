@@ -153,9 +153,9 @@ export const DataAnalysisPanel = memo(
 
             {/* Summary */}
             {summary && (
-              <div className="bg-primary/5 border-primary/20 rounded-lg border p-4">
+              <div className="bg-gold/5 border-gold/20 rounded-lg border p-4">
                 <div className="mb-2 flex items-center gap-2">
-                  <Info className="text-primary h-4 w-4" />
+                  <Info className="text-gold h-4 w-4" />
                   <span className="text-sm font-medium">Summary</span>
                 </div>
                 <p className="text-muted-foreground text-sm">{summary}</p>

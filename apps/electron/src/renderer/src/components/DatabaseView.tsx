@@ -1,4 +1,5 @@
 import type { ViewType } from './ActivityBar';
+import { Code, GitCompare, GitFork, Search, Table } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tour } from '@/components/onboarding';
@@ -11,8 +12,10 @@ import {
 } from '@/stores';
 import { ActivityBar } from './ActivityBar';
 import { CompareView } from './CompareView';
+import { ContentHeader } from './ContentHeader';
 import { DataTabBar } from './data-table';
 import { DiffPreview } from './DiffPreview';
+import { EmptyView } from './EmptyView';
 import { ERDiagram } from './er-diagram';
 import { QueryView } from './QueryView';
 import { ResizablePanel } from './ResizablePanel';
@@ -20,6 +23,18 @@ import { SchemaDetailsPanel } from './SchemaDetailsPanel';
 import { Sidebar } from './Sidebar';
 import { TableView } from './TableView';
 import { VectorSearchPanel } from './vector-search';
+
+// View configuration for consistent titles and icons
+const VIEW_CONFIG: Record<
+  ViewType,
+  { titleKey: string; icon: React.ElementType }
+> = {
+  data: { titleKey: 'navigation.dataBrowser', icon: Table },
+  query: { titleKey: 'navigation.query', icon: Code },
+  diagram: { titleKey: 'navigation.erDiagram', icon: GitFork },
+  compare: { titleKey: 'navigation.compare', icon: GitCompare },
+  vectorSearch: { titleKey: 'navigation.vectorSearch', icon: Search },
+};
 
 export function DatabaseView() {
   const { selectedTable, activeConnectionId, setSelectedTable, getConnection } =
@@ -40,6 +55,7 @@ export function DatabaseView() {
     useDialogStore();
 
   const [activeView, setActiveView] = useState<ViewType>('data');
+  const [queryMode, setQueryMode] = useState<'editor' | 'builder'>('editor');
   const { t } = useTranslation('common');
 
   // Get the current connection to check database type
@@ -114,6 +130,14 @@ export function DatabaseView() {
     return views;
   }, [isQdrant]);
 
+  // Get current view title
+  const viewConfig = VIEW_CONFIG[activeView];
+  const viewTitle = t(viewConfig.titleKey);
+  const viewSubtitle =
+    activeView === 'data' && displayTable
+      ? `${displayTable.schema ? `${displayTable.schema}.` : ''}${displayTable.name}`
+      : undefined;
+
   return (
     <div className="flex h-full flex-col">
       {/* Hidden button for keyboard shortcut to toggle sidebar */}
@@ -126,7 +150,7 @@ export function DatabaseView() {
 
       {/* Main Content with Activity Bar */}
       <div className="flex min-h-0 flex-1 overflow-hidden">
-        {/* Activity Bar - VSCode style */}
+        {/* Activity Bar - Glass gold style */}
         <ActivityBar
           activeView={activeView}
           onViewChange={setActiveView}
@@ -150,8 +174,26 @@ export function DatabaseView() {
           </ResizablePanel>
         )}
 
-        {/* Content Area - Flat conditional rendering */}
+        {/* Content Area with unified header */}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          {/* Unified Content Header */}
+          <ContentHeader
+            activeView={activeView}
+            title={viewTitle}
+            subtitle={viewSubtitle}
+            sidebarCollapsed={sidebarCollapsed}
+            onToggleSidebar={toggleSidebar}
+            schemaDetailsOpen={showSchemaDetails}
+            onToggleSchemaDetails={() =>
+              setShowSchemaDetails(!showSchemaDetails)
+            }
+            showSchemaDetailsToggle={activeView === 'data' && !!displayTable}
+            queryMode={activeView === 'query' ? queryMode : undefined}
+            onQueryModeChange={
+              activeView === 'query' ? setQueryMode : undefined
+            }
+          />
+
           {/* Data Browser View */}
           {activeView === 'data' && (
             <div className="flex h-full min-h-0 flex-1 flex-col">
@@ -171,14 +213,26 @@ export function DatabaseView() {
                   ) : displayTable ? (
                     <TableView />
                   ) : (
-                    <div className="bg-grid-dot text-muted-foreground flex h-full flex-1 items-center justify-center">
-                      <p>
-                        {t('database.selectTable', {
-                          defaultValue:
-                            'Select a table from the sidebar to view its data',
-                        })}
-                      </p>
-                    </div>
+                    <EmptyView
+                      icon={Table}
+                      title={t('database.noTableSelected', {
+                        defaultValue: 'No Table Selected',
+                      })}
+                      description={t('database.selectTable', {
+                        defaultValue:
+                          'Select a table from the sidebar to view its data',
+                      })}
+                      action={
+                        sidebarCollapsed
+                          ? {
+                              label: t('sidebar.show', {
+                                defaultValue: 'Show Sidebar',
+                              }),
+                              onClick: toggleSidebar,
+                            }
+                          : undefined
+                      }
+                    />
                   )}
                 </div>
 
@@ -202,7 +256,7 @@ export function DatabaseView() {
           )}
 
           {/* SQL Query View (includes Query Builder) */}
-          {activeView === 'query' && <QueryView />}
+          {activeView === 'query' && <QueryView mode={queryMode} />}
 
           {/* ER Diagram View */}
           {activeView === 'diagram' && <ERDiagram />}

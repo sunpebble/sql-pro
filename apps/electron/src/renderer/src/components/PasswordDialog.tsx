@@ -3,6 +3,7 @@ import { Button } from '@sqlpro/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Info, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -21,6 +22,7 @@ export function PasswordDialog({
   filename,
   dbPath,
 }: PasswordDialogProps) {
+  const { t } = useTranslation('common');
   const [password, setPassword] = useState('');
   const [rememberPassword, setRememberPassword] = useState(false);
   const [isStorageAvailable, setIsStorageAvailable] = useState(false);
@@ -63,14 +65,14 @@ export function PasswordDialog({
         <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
         <Dialog.Content className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border p-6 shadow-lg">
           <div className="flex flex-col items-center text-center">
-            <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-              <Lock className="text-primary h-6 w-6" />
+            <div className="bg-gold/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+              <Lock className="text-gold h-6 w-6" />
             </div>
             <Dialog.Title className="text-lg font-semibold">
-              Encrypted Database
+              {t('passwordDialog.title')}
             </Dialog.Title>
             <Dialog.Description className="text-muted-foreground mt-2 text-sm">
-              Enter the password to open{' '}
+              {t('passwordDialog.description')}{' '}
               <span className="font-medium">{filename}</span>
             </Dialog.Description>
           </div>
@@ -80,7 +82,7 @@ export function PasswordDialog({
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
+              placeholder={t('passwordDialog.placeholder')}
               autoFocus
               className={cn(
                 'border-input bg-background w-full rounded-md border px-3 py-2 text-sm',
@@ -104,14 +106,14 @@ export function PasswordDialog({
                   disabled={!isStorageAvailable}
                   className="border-input h-4 w-4 rounded"
                 />
-                <span>Remember password</span>
+                <span>{t('passwordDialog.rememberPassword')}</span>
                 {!isStorageAvailable && (
                   <Tooltip>
                     <TooltipTrigger>
                       <Info className="text-muted-foreground h-3.5 w-3.5" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Secure storage is not available on this system</p>
+                      <p>{t('passwordDialog.storageUnavailable')}</p>
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -124,7 +126,7 @@ export function PasswordDialog({
                   onClick={handleForgetPassword}
                   className="text-muted-foreground hover:text-foreground text-xs hover:underline"
                 >
-                  Forget saved password
+                  {t('passwordDialog.forgetPassword')}
                 </button>
               )}
             </div>
@@ -136,14 +138,14 @@ export function PasswordDialog({
                 className="flex-1"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t('actions.cancel')}
               </Button>
               <Button
                 type="submit"
                 className="flex-1"
                 disabled={!password.trim()}
               >
-                Open
+                {t('passwordDialog.open')}
               </Button>
             </div>
           </form>

@@ -149,10 +149,10 @@ const TabItem = memo(
                   role="tab"
                   aria-selected={isActive}
                   className={cn(
-                    'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-2 text-sm transition-colors',
+                    'group border-gold/10 relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-2 text-sm transition-colors',
                     isActive
-                      ? 'bg-background text-foreground'
-                      : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
+                      ? 'bg-background text-gold shadow-[inset_0_-2px_0_0_var(--color-gold)]'
+                      : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-[rgba(212,175,55,0.05)]'
                   )}
                   onClick={onSelect}
                 >

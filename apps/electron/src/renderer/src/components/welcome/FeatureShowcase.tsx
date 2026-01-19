@@ -1,3 +1,4 @@
+import { DecoFrame, DecoLine, GoldButton } from '@sqlpro/ui';
 import { Button } from '@sqlpro/ui/button';
 import {
   ArrowLeftRight,
@@ -27,29 +28,42 @@ interface FeatureKey {
   key: string;
 }
 
+// Using gold-tinted monochromatic icons for cohesive Data Sanctum aesthetic
 const featureKeys: FeatureKey[] = [
   {
-    icon: <Database className="h-5 w-5 text-blue-500" />,
+    icon: <Database className="text-gold h-5 w-5" />,
     key: 'schemaBrowser',
   },
-  { icon: <Edit className="h-5 w-5 text-green-500" />, key: 'inlineEditing' },
-  { icon: <Code className="h-5 w-5 text-purple-500" />, key: 'sqlEditor' },
-  { icon: <GitFork className="h-5 w-5 text-orange-500" />, key: 'erDiagram' },
   {
-    icon: <GitCompare className="h-5 w-5 text-cyan-500" />,
+    icon: <Edit className="text-gold h-5 w-5" />,
+    key: 'inlineEditing',
+  },
+  {
+    icon: <Code className="text-gold h-5 w-5" />,
+    key: 'sqlEditor',
+  },
+  {
+    icon: <GitFork className="text-gold h-5 w-5" />,
+    key: 'erDiagram',
+  },
+  {
+    icon: <GitCompare className="text-gold h-5 w-5" />,
     key: 'schemaCompare',
   },
   {
-    icon: <ArrowLeftRight className="h-5 w-5 text-pink-500" />,
+    icon: <ArrowLeftRight className="text-gold h-5 w-5" />,
     key: 'dataDiff',
   },
   {
-    icon: <Command className="h-5 w-5 text-yellow-500" />,
+    icon: <Command className="text-gold h-5 w-5" />,
     key: 'commandPalette',
   },
-  { icon: <Keyboard className="h-5 w-5 text-lime-500" />, key: 'vimMode' },
   {
-    icon: <Settings className="h-5 w-5 text-slate-500" />,
+    icon: <Keyboard className="text-gold h-5 w-5" />,
+    key: 'vimMode',
+  },
+  {
+    icon: <Settings className="text-gold h-5 w-5" />,
     key: 'customizable',
   },
 ];
@@ -70,15 +84,18 @@ export function FeatureShowcase({
       className={`flex h-full flex-col justify-center transition-opacity ${disabled ? 'pointer-events-none opacity-50' : ''}`}
     >
       <div data-tour-target="feature-showcase">
-        {/* Header */}
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold">
-            {t('features.title', { defaultValue: 'Features' })}
-          </h2>
+        {/* Header with decorative line */}
+        <div className="animate-fade-in-up stagger-1 mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <DecoLine length="w-8" />
+            <h2 className="text-gold text-sm font-medium tracking-widest uppercase">
+              {t('features.title', { defaultValue: 'Features' })}
+            </h2>
+          </div>
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground h-auto px-2 py-1 text-xs"
+            className="text-muted-foreground hover:text-gold h-auto px-2 py-1 text-xs"
             onClick={handleOpenDocs}
           >
             <BookOpen className="mr-1 h-3 w-3" />
@@ -86,12 +103,16 @@ export function FeatureShowcase({
           </Button>
         </div>
 
-        {/* Feature Grid */}
-        <div className="grid grid-cols-3 gap-2">
-          {featureKeys.map((feature) => (
-            <div
+        {/* Feature Grid - Art Deco inspired cards with staggered animation */}
+        <div className="grid grid-cols-3 gap-2.5">
+          {featureKeys.map((feature, index) => (
+            <DecoFrame
               key={feature.key}
-              className="bg-card/50 hover:bg-card hover:border-primary/20 flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-sm"
+              size="sm"
+              variant="gold"
+              animated
+              className="animate-fade-in-up group hover:border-gold flex flex-col items-center gap-1.5 rounded-lg border border-transparent bg-[rgba(212,175,55,0.08)] p-3.5 text-center transition-all duration-300 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(212,175,55,0.35)]"
+              style={{ animationDelay: `${150 + index * 50}ms` }}
             >
               {feature.icon}
               <span className="text-xs leading-tight font-medium">
@@ -100,21 +121,20 @@ export function FeatureShowcase({
               <span className="text-muted-foreground text-2xs line-clamp-2 leading-tight">
                 {t(`features.${feature.key}.desc`)}
               </span>
-            </div>
+            </DecoFrame>
           ))}
         </div>
 
-        {/* Tour CTA */}
+        {/* Tour CTA - Gold themed with animation */}
         {!hasCompletedTour && (
-          <button
+          <GoldButton
+            variant="outline"
             onClick={onStartTour}
-            className="hover:bg-primary/5 hover:border-primary/30 group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed bg-transparent p-3 transition-all duration-200 hover:scale-[1.01]"
+            className="animate-fade-in-up stagger-6 vault-frame mt-5 w-full border-dashed"
           >
-            <PlayCircle className="text-primary h-4 w-4" />
-            <span className="text-primary text-xs group-hover:underline">
-              {t('features.takeTour', { defaultValue: 'Take the quick tour' })}
-            </span>
-          </button>
+            <PlayCircle className="h-4 w-4" />
+            {t('features.takeTour', { defaultValue: 'Take the quick tour' })}
+          </GoldButton>
         )}
       </div>
     </div>

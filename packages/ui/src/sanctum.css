@@ -1,0 +1,252 @@
+/**
+ * Data Sanctum Design System - CSS Utilities
+ *
+ * Include this file in your app's global styles to enable
+ * branded component animations and effects.
+ *
+ * Usage:
+ *   @import '@sqlpro/ui/sanctum.css';
+ *   or
+ *   import '@sqlpro/ui/sanctum.css';
+ */
+
+/* ═══════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════ */
+
+@keyframes shimmer {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes gold-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 30px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 8px 50px rgba(212, 175, 55, 0.5),
+      0 0 100px rgba(212, 175, 55, 0.15);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes rotate-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes corner-reveal {
+  from {
+    opacity: 0;
+    width: 40px;
+    height: 40px;
+  }
+  to {
+    opacity: 1;
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* ═══════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+   ═══════════════════════════════════════ */
+
+:root {
+  /* Gold Palette */
+  --gold-bright: #d4af37;
+  --gold-muted: #c9a962;
+  --gold-dark: #9a7b2d;
+  --gold-glow: rgba(212, 175, 55, 0.35);
+  --gold-subtle: rgba(212, 175, 55, 0.08);
+
+  /* Void (Dark) Palette */
+  --void-absolute: #020202;
+  --void-deep: #060606;
+  --void-base: #0b0b0b;
+  --void-elevated: #141414;
+
+  /* Ivory (Light) Palette */
+  --ivory: #f8f6f1;
+  --ivory-dim: rgba(248, 246, 241, 0.85);
+  --ivory-muted: rgba(248, 246, 241, 0.6);
+  --ivory-ghost: rgba(248, 246, 241, 0.25);
+  --ivory-whisper: rgba(248, 246, 241, 0.08);
+
+  /* Accent Colors */
+  --burgundy: #8b2942;
+  --burgundy-glow: rgba(139, 41, 66, 0.4);
+
+  /* Gradients */
+  --gradient-gold: linear-gradient(
+    135deg,
+    #d4af37 0%,
+    #e8d59e 25%,
+    #c9a962 50%,
+    #e8d59e 75%,
+    #d4af37 100%
+  );
+
+  /* Timing Functions */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --ease-dramatic: cubic-bezier(0.6, 0.01, 0.05, 0.95);
+
+  /* Durations */
+  --duration-instant: 100ms;
+  --duration-swift: 200ms;
+  --duration-smooth: 400ms;
+  --duration-theatrical: 800ms;
+
+  /* Shadows */
+  --shadow-subtle: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 16px 64px rgba(0, 0, 0, 0.5);
+  --shadow-dramatic:
+    0 32px 128px rgba(0, 0, 0, 0.6), 0 0 1px rgba(212, 175, 55, 0.2);
+  --shadow-gold-glow: 0 0 40px rgba(212, 175, 55, 0.35);
+}
+
+/* ═══════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════ */
+
+/* Animation utilities */
+.animate-shimmer {
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+.animate-gold-pulse {
+  animation: gold-pulse 3.5s ease-in-out infinite;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s var(--ease-out-quint) forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease forwards;
+  opacity: 0;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.8s var(--ease-dramatic) forwards;
+  opacity: 0;
+}
+
+.animate-float {
+  animation: float-gentle 6s var(--ease-in-out-sine) infinite;
+}
+
+/* Stagger delay utilities */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
+.delay-600 {
+  animation-delay: 0.6s;
+}
+
+/* Gold glow effects */
+.glow-gold {
+  box-shadow: var(--shadow-gold-glow);
+}
+
+.glow-gold-intense {
+  box-shadow:
+    0 8px 50px rgba(212, 175, 55, 0.5),
+    0 0 80px rgba(212, 175, 55, 0.15);
+}
+
+/* Text gradient */
+.text-gradient-gold {
+  background: var(--gradient-gold);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-shimmer,
+  .animate-gold-pulse,
+  .animate-float,
+  .text-gradient-gold {
+    animation: none;
+  }
+}

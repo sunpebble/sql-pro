@@ -146,33 +146,32 @@ export function AppearanceSection() {
       {/* Theme Section */}
       <SettingGroup title={t('appearance.theme')}>
         <div className="grid grid-cols-3 gap-2">
-          <Button
-            variant={theme === 'light' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setTheme('light')}
-            className="justify-start"
-          >
-            <Sun className="mr-2 h-4 w-4" />
-            {t('appearance.light')}
-          </Button>
-          <Button
-            variant={theme === 'dark' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setTheme('dark')}
-            className="justify-start"
-          >
-            <Moon className="mr-2 h-4 w-4" />
-            {t('appearance.dark')}
-          </Button>
-          <Button
-            variant={theme === 'system' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setTheme('system')}
-            className="justify-start"
-          >
-            <Monitor className="mr-2 h-4 w-4" />
-            {t('appearance.system')}
-          </Button>
+          {(['light', 'dark', 'system'] as const).map((themeOption) => {
+            const isActive = theme === themeOption;
+            const Icon =
+              themeOption === 'light'
+                ? Sun
+                : themeOption === 'dark'
+                  ? Moon
+                  : Monitor;
+            const label = t(`appearance.${themeOption}`);
+            return (
+              <Button
+                key={themeOption}
+                variant="outline"
+                size="sm"
+                onClick={() => setTheme(themeOption)}
+                className={`justify-start ${
+                  isActive
+                    ? 'border-gold bg-gold/15 text-gold hover:bg-gold/25'
+                    : 'hover:border-gold/50 hover:text-gold'
+                }`}
+              >
+                <Icon className="mr-2 h-4 w-4" />
+                {label}
+              </Button>
+            );
+          })}
         </div>
       </SettingGroup>
 
@@ -184,10 +183,7 @@ export function AppearanceSection() {
             variant="ghost"
             size="sm"
             onClick={() => setSyncAll(!fonts.syncAll)}
-            className={cn(
-              'h-7 gap-1.5 text-xs',
-              fonts.syncAll && 'text-primary'
-            )}
+            className={cn('h-7 gap-1.5 text-xs', fonts.syncAll && 'text-gold')}
           >
             {fonts.syncAll ? (
               <Link className="h-3.5 w-3.5" />
@@ -242,16 +238,24 @@ export function AppearanceSection() {
       {/* Tab Size Section */}
       <SettingGroup title={t('tabSize.title')}>
         <div className="flex gap-2">
-          {[2, 4, 8].map((size) => (
-            <Button
-              key={size}
-              variant={tabSize === size ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTabSize(size)}
-            >
-              {size}
-            </Button>
-          ))}
+          {[2, 4, 8].map((size) => {
+            const isActive = tabSize === size;
+            return (
+              <Button
+                key={size}
+                variant="outline"
+                size="sm"
+                onClick={() => setTabSize(size)}
+                className={
+                  isActive
+                    ? 'border-gold bg-gold/15 text-gold hover:bg-gold/25'
+                    : 'hover:border-gold/50 hover:text-gold'
+                }
+              >
+                {size}
+              </Button>
+            );
+          })}
         </div>
       </SettingGroup>
     </div>
@@ -300,7 +304,7 @@ function FontSettingsRow({
     <div
       className={cn(
         'rounded-lg border p-3 transition-colors',
-        synced && 'border-primary/20 bg-primary/5'
+        synced && 'border-gold/20 bg-gold/5'
       )}
     >
       <div className="mb-2 flex items-center justify-between">

@@ -263,8 +263,8 @@ export function LicenseActivationDialog({
             className={cn(
               'relative cursor-pointer transition-all',
               selectedPlan === plan.id
-                ? 'ring-primary ring-2'
-                : 'hover:border-primary/50'
+                ? 'ring-gold ring-2'
+                : 'hover:border-gold/50'
             )}
             onClick={() => setSelectedPlan(plan.id)}
           >
@@ -392,7 +392,7 @@ export function LicenseActivationDialog({
         {t('pro.cantFindKey')}{' '}
         <a
           href="mailto:support@sqlpro.dev"
-          className="text-primary hover:underline"
+          className="text-gold hover:underline"
         >
           {t('pro.contactSupport')}
         </a>

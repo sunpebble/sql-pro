@@ -1,9 +1,14 @@
 {
+  "show": "Show Sidebar",
+  "hide": "Hide Sidebar",
   "connection": {
     "title": "Connections",
     "new": "New Connection",
     "recent": "Recent Connections",
     "noConnections": "No connections yet",
+    "noConnectionsFound": "No connections found",
+    "searchConnections": "Search connections...",
+    "openConnections": "Open Connections",
     "connect": "Connect",
     "disconnect": "Disconnect",
     "delete": "Delete Connection",
@@ -69,7 +74,29 @@
     "title": "No Tables Yet",
     "description": "Create your first table to get started",
     "openSqlEditor": "Open SQL Editor",
-    "copySample": "Copy Sample CREATE TABLE"
+    "copySample": "Copy Sample CREATE TABLE",
+    "databaseEmpty": "This database is empty. Create your first table using the SQL Query Editor or paste a CREATE TABLE statement.",
+    "openSqlQueryEditor": "Open SQL Query Editor",
+    "copySampleSql": "Copy Sample SQL"
+  },
+  "noResults": {
+    "title": "No results",
+    "noTablesMatch": "No tables match your search",
+    "noTablesWithTag": "No tables with this tag",
+    "noTablesFound": "No tables found"
+  },
+  "dialog": {
+    "cancel": "Cancel",
+    "truncateTable": "Truncate Table",
+    "truncateConfirm": "Are you sure you want to delete all rows from",
+    "truncateWarning": "This action cannot be undone.",
+    "truncate": "Truncate",
+    "dropTable": "Drop Table",
+    "dropView": "Drop View",
+    "dropConfirm": "Are you sure you want to drop",
+    "dropWarning": "This will permanently delete the",
+    "andCannotBeUndone": "and cannot be undone.",
+    "drop": "Drop"
   },
   "folders": {
     "title": "Folders",

@@ -230,8 +230,8 @@ export const BulkOperationsPanel = memo(
                           className={cn(
                             'flex flex-col items-center gap-2 rounded-lg border p-4 transition-colors',
                             exportFormat === format
-                              ? 'border-primary bg-primary/5'
-                              : 'hover:border-primary/50'
+                              ? 'border-gold bg-gold/5'
+                              : 'hover:border-gold/50'
                           )}
                         >
                           <Icon className="h-8 w-8" />
@@ -308,15 +308,13 @@ export const BulkOperationsPanel = memo(
                 onDrop={handleDrop}
                 className={cn(
                   'flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 transition-colors',
-                  importFile
-                    ? 'border-primary bg-primary/5'
-                    : 'hover:border-primary/50'
+                  importFile ? 'border-gold bg-gold/5' : 'hover:border-gold/50'
                 )}
               >
                 {importFile ? (
                   <>
-                    <div className="bg-primary/10 rounded-full p-3">
-                      <FileSpreadsheet className="text-primary h-8 w-8" />
+                    <div className="bg-gold/10 rounded-full p-3">
+                      <FileSpreadsheet className="text-gold h-8 w-8" />
                     </div>
                     <div className="text-center">
                       <p className="font-medium">{importFile.name}</p>

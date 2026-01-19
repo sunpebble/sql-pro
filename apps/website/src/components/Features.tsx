@@ -1,3 +1,12 @@
+import {
+  GoldDivider,
+  GradientText,
+  SanctumCard,
+  SanctumCardDescription,
+  SanctumCardHeader,
+  SanctumCardTitle,
+  SectionNumber,
+} from '@sqlpro/ui';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Features.css';
@@ -165,38 +174,50 @@ export default function Features() {
     >
       <div className="container">
         <header className="features-header">
+          <SectionNumber>01 · Features</SectionNumber>
           <h2 id="features-title" className="features-title">
             {t('features.title')}
-            <span className="gradient-text">
+            <GradientText as="span" variant="gold">
               {t('features.titleHighlight')}
-            </span>
+            </GradientText>
           </h2>
           <p className="features-subtitle">{t('features.subtitle')}</p>
         </header>
 
+        <GoldDivider diamond />
+
         <div className="features-grid" role="list">
           {featureKeys.map((feature, index) => (
-            <article
+            <div
               key={feature.key}
               ref={(el) => {
                 cardsRef.current[index] = el;
               }}
               data-index={index}
-              className={`card feature-card ${visibleCards.has(index) ? 'visible' : ''}`}
+              className={`feature-card-wrapper ${visibleCards.has(index) ? 'visible' : ''}`}
               style={{ transitionDelay: `${index * 100}ms` }}
-              role="listitem"
-              aria-label={t(`a11y.featureCard`, {
-                title: t(`features.${feature.key}.title`),
-              })}
             >
-              <div className="feature-icon">{icons[feature.icon]}</div>
-              <h3 className="feature-title">
-                {t(`features.${feature.key}.title`)}
-              </h3>
-              <p className="feature-description">
-                {t(`features.${feature.key}.description`)}
-              </p>
-            </article>
+              <SanctumCard
+                decorated
+                interactive
+                size="default"
+                className="feature-card"
+                role="listitem"
+                aria-label={t(`a11y.featureCard`, {
+                  title: t(`features.${feature.key}.title`),
+                })}
+              >
+                <div className="feature-icon">{icons[feature.icon]}</div>
+                <SanctumCardHeader>
+                  <SanctumCardTitle>
+                    {t(`features.${feature.key}.title`)}
+                  </SanctumCardTitle>
+                  <SanctumCardDescription>
+                    {t(`features.${feature.key}.description`)}
+                  </SanctumCardDescription>
+                </SanctumCardHeader>
+              </SanctumCard>
+            </div>
           ))}
         </div>
       </div>

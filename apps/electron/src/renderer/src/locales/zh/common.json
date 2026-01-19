@@ -83,7 +83,10 @@
     "saveFailed": "保存失败",
     "openInQueryEditor": "在查询编辑器中打开",
     "generatedSql": "生成的 SQL:",
-    "tip": "💡 提示：执行前请仔细检查 SQL，特别是包含 DROP 语句时。建议先备份数据库。"
+    "tip": "💡 提示：执行前请仔细检查 SQL，特别是包含 DROP 语句时。建议先备份数据库。",
+    "sqlCopied": "SQL 已复制到剪贴板",
+    "sqlCopyFailed": "复制 SQL 失败",
+    "saveSuccess": "迁移文件已保存"
   },
   "diffFilter": {
     "onlyDifferences": "仅差异",
@@ -118,10 +121,32 @@
     "create": "创建",
     "rename": "重命名"
   },
+  "about": {
+    "title": "SQL Pro",
+    "subtitle": "数据圣殿 · 专业数据库管理器",
+    "version": "版本",
+    "platform": "平台",
+    "builtWith": "基于",
+    "copyright": "© 2025 SQL Pro. 保留所有权利。",
+    "tagline": "精雕细琢"
+  },
+  "passwordDialog": {
+    "title": "加密数据库",
+    "description": "输入密码以打开",
+    "placeholder": "输入密码",
+    "rememberPassword": "记住密码",
+    "storageUnavailable": "此系统不支持安全存储",
+    "forgetPassword": "忘记已保存的密码",
+    "open": "打开"
+  },
   "app": {
     "name": "SQL Pro",
     "loading": "加载中...",
     "error": "发生错误"
+  },
+  "clipboard": {
+    "copied": "已复制到剪贴板",
+    "copyFailed": "复制到剪贴板失败"
   },
   "actions": {
     "save": "保存",
@@ -176,8 +201,23 @@
     "dataDiff": "数据对比",
     "vectorSearch": "向量搜索"
   },
+  "pendingChanges": {
+    "title": "待处理的更改",
+    "tables_one": "{{count}} 个表",
+    "tables_other": "{{count}} 个表",
+    "changes_one": "{{count}} 项更改",
+    "changes_other": "{{count}} 项更改",
+    "showDiffView": "显示差异视图",
+    "previewSqlStatements": "预览 SQL 语句",
+    "sqlPreview": "SQL 预览",
+    "copied": "已复制！",
+    "copy": "复制",
+    "copySqlToClipboard": "复制 SQL 到剪贴板",
+    "revertAllChanges": "撤销此表的所有更改"
+  },
   "database": {
-    "selectTable": "从侧边栏选择表以查看数据"
+    "selectTable": "从侧边栏选择表以查看数据",
+    "noTableSelected": "未选择表"
   },
   "table": {
     "quickFilters": "快速筛选",
@@ -209,7 +249,12 @@
     "nextPage": "下一页",
     "lastPage": "最后一页",
     "dataView": "数据视图",
-    "mediaGallery": "媒体库"
+    "mediaGallery": "媒体库",
+    "rowsSelected": "已选择 {{count}} 行",
+    "rowsSelected_plural": "已选择 {{count}} 行",
+    "clearSelection": "清除选择",
+    "editSelected": "编辑",
+    "deleteSelected": "删除"
   },
   "mediaGallery": {
     "title": "媒体",
@@ -351,6 +396,7 @@
   },
   "toolbar": {
     "unsavedChanges": "{{count}} 个未保存的更改",
+    "unsavedChanges_plural": "{{count}} 个未保存的更改",
     "commands": "命令",
     "openCommandPalette": "打开命令面板",
     "help": "帮助",
@@ -605,6 +651,18 @@
   "queryView": {
     "sqlEditor": "SQL 编辑器",
     "queryBuilder": "查询构建器"
+  },
+  "queryTabs": {
+    "closeTab": "关闭标签页",
+    "newQueryTab": "新建查询标签页",
+    "closeSplitView": "关闭分屏",
+    "splitEditor": "分屏编辑器",
+    "splitRight": "向右分屏",
+    "splitDown": "向下分屏",
+    "rename": "重命名",
+    "duplicate": "复制",
+    "close": "关闭",
+    "closeOthers": "关闭其他"
   },
   "queryEditor": {
     "title": "SQL 查询",

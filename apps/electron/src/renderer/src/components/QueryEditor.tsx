@@ -749,7 +749,7 @@ export function QueryEditor() {
                             >
                               <div className="pt-0.5">
                                 {isSelected ? (
-                                  <CheckSquare className="text-primary h-4 w-4" />
+                                  <CheckSquare className="text-gold h-4 w-4" />
                                 ) : (
                                   <Square className="text-muted-foreground h-4 w-4" />
                                 )}

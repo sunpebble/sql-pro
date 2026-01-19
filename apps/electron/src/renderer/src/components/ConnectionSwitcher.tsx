@@ -10,6 +10,7 @@ import {
 } from '@sqlpro/ui/command';
 import { Check, Clock, Database, KeyRound } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import {
@@ -38,6 +39,8 @@ interface ConnectionItem {
 export function ConnectionSwitcher({
   onOpenRecentConnection,
 }: ConnectionSwitcherProps) {
+  const { t } = useTranslation('sidebar');
+
   // Store selectors
   const isOpen = useConnectionSwitcherStore((s) => s.isOpen);
   const search = useConnectionSwitcherStore((s) => s.search);
@@ -219,16 +222,16 @@ export function ConnectionSwitcher({
           shouldFilter={false}
         >
           <CommandInput
-            placeholder="Search connections..."
+            placeholder={t('connection.searchConnections')}
             value={search}
             onValueChange={setSearch}
           />
           <CommandList className="max-h-75">
-            <CommandEmpty>No connections found</CommandEmpty>
+            <CommandEmpty>{t('connection.noConnectionsFound')}</CommandEmpty>
 
             {/* Open connections */}
             {groupedItems.openItems.length > 0 && (
-              <CommandGroup heading="Open Connections">
+              <CommandGroup heading={t('connection.openConnections')}>
                 {groupedItems.openItems.map((item, index) => (
                   <CommandItem
                     key={item.id}
@@ -250,9 +253,7 @@ export function ConnectionSwitcher({
                       {item.isEncrypted && (
                         <KeyRound className="h-3 w-3 text-green-500" />
                       )}
-                      {item.isActive && (
-                        <Check className="text-primary h-4 w-4" />
-                      )}
+                      {item.isActive && <Check className="text-gold h-4 w-4" />}
                     </div>
                   </CommandItem>
                 ))}
@@ -261,7 +262,7 @@ export function ConnectionSwitcher({
 
             {/* Recent connections */}
             {groupedItems.recentItems.length > 0 && (
-              <CommandGroup heading="Recent Connections">
+              <CommandGroup heading={t('connection.recent')}>
                 {groupedItems.recentItems.map((item, index) => {
                   const actualIndex = groupedItems.openItems.length + index;
                   return (

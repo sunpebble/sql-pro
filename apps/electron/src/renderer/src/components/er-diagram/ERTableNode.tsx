@@ -20,7 +20,7 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
       className={cn(
         'bg-card text-card-foreground relative min-w-50 rounded-lg border shadow-sm',
         'dark:border-zinc-700 dark:bg-zinc-900',
-        selected && 'ring-primary ring-2'
+        selected && 'ring-gold ring-2'
       )}
     >
       {/* Header */}

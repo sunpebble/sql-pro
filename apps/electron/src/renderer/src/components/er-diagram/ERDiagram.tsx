@@ -7,8 +7,11 @@ import {
   useEdgesState,
   useNodesState,
 } from '@xyflow/react';
+import { Database, GitFork } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { EmptyView } from '@/components/EmptyView';
 import { useConnectionStore } from '@/stores';
 import { useDiagramStore } from '@/stores/diagram-store';
 import { ERControls } from './ERControls';
@@ -188,23 +191,34 @@ export function ERDiagram() {
     [schema, setSelectedTable]
   );
 
+  const { t } = useTranslation('common');
+
   // Get initial viewport
   const defaultViewport = storedViewport || { x: 0, y: 0, zoom: 1 };
 
   if (!schema) {
     return (
-      <div className="text-muted-foreground flex h-full items-center justify-center">
-        No schema loaded
-      </div>
+      <EmptyView
+        icon={Database}
+        title={t('diagram.noSchema', { defaultValue: 'No Schema Loaded' })}
+        description={t('diagram.noSchemaDescription', {
+          defaultValue:
+            'Connect to a database to view its entity relationship diagram',
+        })}
+      />
     );
   }
 
   // Check rawNodes instead of nodes state to avoid race conditions
   if (rawNodes.length === 0) {
     return (
-      <div className="text-muted-foreground flex h-full items-center justify-center">
-        No tables in database
-      </div>
+      <EmptyView
+        icon={GitFork}
+        title={t('diagram.noTables', { defaultValue: 'No Tables Found' })}
+        description={t('diagram.noTablesDescription', {
+          defaultValue: 'This database has no tables to display in the diagram',
+        })}
+      />
     );
   }
 

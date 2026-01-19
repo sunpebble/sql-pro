@@ -559,7 +559,7 @@ export function PluginDetailView({
                             className={cn(
                               'size-2 rounded-full transition-colors',
                               index === currentScreenshotIndex
-                                ? 'bg-primary'
+                                ? 'bg-gold'
                                 : 'bg-background/60 hover:bg-background/80'
                             )}
                             onClick={() => setCurrentScreenshotIndex(index)}
@@ -746,10 +746,11 @@ export function PluginDetailView({
                 {/* Update Button */}
                 {hasUpdate && onUpdate && (
                   <Button
-                    variant="default"
+                    variant="outline"
                     size="sm"
                     onClick={handleUpdate}
                     disabled={isLoading}
+                    className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
                   >
                     {isLoading ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -789,9 +790,10 @@ export function PluginDetailView({
                 </Badge>
               ) : (
                 <Button
-                  variant="default"
+                  variant="outline"
                   onClick={handleInstall}
                   disabled={isLoading}
+                  className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
                 >
                   {isLoading ? (
                     <>

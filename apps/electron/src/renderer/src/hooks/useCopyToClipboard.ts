@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 export interface CopyOptions {
@@ -42,6 +43,7 @@ export interface UseCopyToClipboardResult {
  * ```
  */
 export function useCopyToClipboard(): UseCopyToClipboardResult {
+  const { t } = useTranslation('common');
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -56,8 +58,8 @@ export function useCopyToClipboard(): UseCopyToClipboardResult {
   const copy = useCallback(
     async (text: string, options: CopyOptions = {}): Promise<boolean> => {
       const {
-        successMessage = 'Copied to clipboard',
-        errorMessage = 'Failed to copy to clipboard',
+        successMessage = t('clipboard.copied'),
+        errorMessage = t('clipboard.copyFailed'),
         resetDelay = 2000,
         showToast = true,
       } = options;
@@ -93,7 +95,7 @@ export function useCopyToClipboard(): UseCopyToClipboardResult {
         return false;
       }
     },
-    []
+    [t]
   );
 
   return {

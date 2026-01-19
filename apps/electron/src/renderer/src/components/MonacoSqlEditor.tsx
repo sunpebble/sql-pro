@@ -664,8 +664,8 @@ export function MonacoSqlEditor({
         onDoubleClick={handleDoubleClick}
         className={cn(
           'h-1.5 cursor-ns-resize transition-colors',
-          'hover:bg-primary/20 bg-transparent',
-          isResizing && 'bg-primary/30'
+          'hover:bg-gold/20 bg-transparent',
+          isResizing && 'bg-gold/30'
         )}
         title="Drag to resize, double-click to restore default"
       >

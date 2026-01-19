@@ -221,7 +221,7 @@ export function LicenseKeyInput({
               disabled={disabled}
               className={cn(
                 'h-10 w-16 text-center font-mono text-sm tracking-wider',
-                focusedIndex === index && 'ring-primary ring-2',
+                focusedIndex === index && 'ring-gold ring-2',
                 segment.length === SEGMENT_LENGTH &&
                   'border-green-500/50 bg-green-500/5'
               )}

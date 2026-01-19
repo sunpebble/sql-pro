@@ -414,10 +414,11 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   {/* Action Buttons */}
                   <div className="flex flex-wrap gap-2">
                     <Button
-                      variant="default"
+                      variant="outline"
                       size="sm"
                       onClick={handleCopyToClipboard}
                       disabled={!syncSQL.sql}
+                      className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
                     >
                       {copied ? (
                         <>

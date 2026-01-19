@@ -183,8 +183,8 @@ const PlanNode = memo(function PlanNode({
         ) : (
           <span className="w-5" />
         )}
-        <div className="bg-primary/10 rounded p-1">
-          <Icon className="text-primary h-4 w-4" />
+        <div className="bg-gold/10 rounded p-1">
+          <Icon className="text-gold h-4 w-4" />
         </div>
         <div className="flex-1">
           <p className="font-mono text-sm">{node.detail}</p>

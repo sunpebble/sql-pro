@@ -432,9 +432,10 @@ export function MockDataGeneratorDialog({
           </Button>
 
           <Button
-            variant="default"
+            variant="outline"
             onClick={handleExecuteSQL}
             disabled={!generatedSQL || isGenerating}
+            className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
           >
             <Play className="mr-2 h-4 w-4" />
             {t('mockData.insertData', 'Insert Data')}

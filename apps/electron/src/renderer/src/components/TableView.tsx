@@ -527,11 +527,10 @@ export function TableView({ tableOverride }: TableViewProps) {
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         {/* Selection Toolbar */}
         {selectedRowIds.length > 0 && (
-          <div className="bg-primary/5 border-primary/20 flex items-center justify-between gap-4 border-b px-4 py-2">
+          <div className="bg-gold/5 border-gold/20 flex items-center justify-between gap-4 border-b px-4 py-2">
             <div className="flex items-center gap-3">
-              <span className="text-primary text-sm font-medium">
-                {selectedRowIds.length} row
-                {selectedRowIds.length > 1 ? 's' : ''} selected
+              <span className="text-gold text-sm font-medium">
+                {t('table.rowsSelected', { count: selectedRowIds.length })}
               </span>
               <Button
                 variant="ghost"
@@ -540,7 +539,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 className="h-7 text-xs"
               >
                 <X className="mr-1 h-3 w-3" />
-                Clear selection
+                {t('table.clearSelection')}
               </Button>
             </div>
             <div className="flex items-center gap-2">
@@ -551,7 +550,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 className="h-7 gap-1"
               >
                 <Edit3 className="h-3.5 w-3.5" />
-                Edit{' '}
+                {t('table.editSelected')}{' '}
                 {selectedRowIds.length > 1 ? `(${selectedRowIds.length})` : ''}
               </Button>
               <Button
@@ -561,7 +560,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 className="h-7 gap-1"
               >
                 <Trash2 className="h-3.5 w-3.5" />
-                Delete{' '}
+                {t('table.deleteSelected')}{' '}
                 {selectedRowIds.length > 1 ? `(${selectedRowIds.length})` : ''}
               </Button>
             </div>
@@ -571,7 +570,7 @@ export function TableView({ tableOverride }: TableViewProps) {
         {/* Subtle refresh progress bar - skeleton animation */}
         {isFetching && !isLoading && (
           <div className="bg-muted/30 absolute top-0 right-0 left-0 h-0.5 overflow-hidden">
-            <div className="bg-primary/40 h-full w-1/3 animate-[shimmer_1.5s_ease-in-out_infinite]" />
+            <div className="bg-gold/40 h-full w-1/3 animate-[shimmer_1.5s_ease-in-out_infinite]" />
           </div>
         )}
 
@@ -594,7 +593,7 @@ export function TableView({ tableOverride }: TableViewProps) {
               )}
             </span>
             {searchStats.isSearching && (
-              <span className="bg-primary/10 text-primary shrink-0 rounded px-1.5 py-0.5 text-xs font-medium">
+              <span className="bg-gold/10 text-gold shrink-0 rounded px-1.5 py-0.5 text-xs font-medium">
                 {t('table.filtered', { defaultValue: 'Filtered' })}
               </span>
             )}

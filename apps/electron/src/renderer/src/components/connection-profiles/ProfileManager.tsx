@@ -631,7 +631,12 @@ export function ProfileManager({
             {t('profiles.title', { defaultValue: 'Connection Profiles' })}
           </h2>
           <div className="flex items-center gap-2">
-            <Button size="sm" variant="default" onClick={handleAddConnection}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleAddConnection}
+              className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
+            >
               <Plus className="size-4" />
               {t('profiles.addConnection', { defaultValue: 'Add Connection' })}
             </Button>

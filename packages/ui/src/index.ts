@@ -1,3 +1,7 @@
+// ═══════════════════════════════════════
+// DATA SANCTUM DESIGN SYSTEM
+// ═══════════════════════════════════════
+
 // UI Components
 export * from './accordion';
 
@@ -5,7 +9,13 @@ export * from './alert';
 export * from './alert-dialog';
 export * from './aspect-ratio';
 export * from './avatar';
+
+// ═══════════════════════════════════════
+// SHADCN/UI BASE COMPONENTS
+// ═══════════════════════════════════════
+
 export * from './badge';
+
 export * from './breadcrumb';
 export * from './button';
 export * from './button-group';
@@ -18,11 +28,14 @@ export * from './collapsible';
 export * from './combobox';
 export * from './command';
 export * from './context-menu';
+export * from './decorations';
 export * from './drawer';
 export * from './dropdown-menu';
 export * from './empty';
 export * from './field';
 export * from './form';
+// Branded Components
+export * from './gold-button';
 export * from './hover-card';
 export * from './input';
 export * from './input-group';
@@ -39,6 +52,7 @@ export * from './progress';
 export * from './radio-group';
 export * from './resizable';
 export * from './resizable-table';
+export * from './sanctum-card';
 export * from './scroll-area';
 export * from './select';
 export * from './separator';
@@ -50,6 +64,9 @@ export * from './switch';
 export * from './table';
 export * from './tabs';
 export * from './textarea';
+// Theme & Design Tokens
+export * from './theme';
 export * from './toggle';
 export * from './toggle-group';
 export * from './tooltip';
+export * from './typography';

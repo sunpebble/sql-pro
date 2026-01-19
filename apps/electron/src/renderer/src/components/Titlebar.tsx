@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@sqlpro/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Monitor, Moon, Settings, Sun } from 'lucide-react';
+import { Database, Monitor, Moon, Settings, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useConnectionStore, useDialogStore, useThemeStore } from '@/stores';
 import { ConnectionTabBar } from './ConnectionTabBar';
@@ -48,36 +48,46 @@ export function Titlebar() {
 
   return (
     <div
-      className="titlebar border-border/30 flex h-10 shrink-0 items-center border-b"
+      className="command-bar titlebar flex h-12 shrink-0 items-center"
       data-tauri-drag-region
     >
       {/* macOS traffic light padding - approximately 84px on macOS */}
       <div className="w-[84px] shrink-0" data-tauri-drag-region />
 
-      {/* Connection Tabs - flexible width, also draggable in empty space */}
+      {/* Connection Tabs or App Logo - flexible width, also draggable in empty space */}
       {connection ? (
         <ConnectionTabBar className="h-full min-w-0 flex-1 border-b-0" />
       ) : (
-        // Empty draggable space with centered app name when no connection
+        // Centered app branding when no connection
         <div
-          className="text-muted-foreground/60 flex min-w-0 flex-1 items-center justify-center text-sm font-medium"
+          className="flex min-w-0 flex-1 items-center justify-center"
           data-tauri-drag-region
         >
-          SQL Pro
+          <Database className="text-gold mr-2 h-4 w-4 shrink-0" />
+          <span className="text-gold text-sm font-medium tracking-wide">
+            SQL Pro
+          </span>
         </div>
       )}
 
       {/* Right side controls - non-draggable */}
-      <div className="titlebar-no-drag flex shrink-0 items-center gap-1 px-2">
+      <div className="titlebar-no-drag flex shrink-0 items-center gap-1 px-3">
         {/* Toolbar controls (changes indicator, layout, commands, help) */}
         {connection && <Toolbar />}
+
+        {/* Separator */}
+        <div className="bg-gold/20 mx-1 h-4 w-px" />
 
         {/* Theme Switcher */}
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger>
               <DropdownMenuTrigger>
-                <Button variant="ghost" size="icon" className="h-7 w-7">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:text-gold h-8 w-8 hover:bg-[rgba(212,175,55,0.1)]"
+                >
                   {getThemeIcon()}
                 </Button>
               </DropdownMenuTrigger>
@@ -97,7 +107,7 @@ export function Titlebar() {
               <Sun className="mr-2 h-4 w-4" />
               {t('theme.light', { defaultValue: 'Light' })}
               {theme === 'light' && (
-                <span className="text-primary ml-auto">✓</span>
+                <span className="text-gold ml-auto">✓</span>
               )}
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -106,9 +116,7 @@ export function Titlebar() {
             >
               <Moon className="mr-2 h-4 w-4" />
               {t('theme.dark', { defaultValue: 'Dark' })}
-              {theme === 'dark' && (
-                <span className="text-primary ml-auto">✓</span>
-              )}
+              {theme === 'dark' && <span className="text-gold ml-auto">✓</span>}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -118,7 +126,7 @@ export function Titlebar() {
               <Monitor className="mr-2 h-4 w-4" />
               {t('theme.system', { defaultValue: 'System' })}
               {theme === 'system' && (
-                <span className="text-primary ml-auto">✓</span>
+                <span className="text-gold ml-auto">✓</span>
               )}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -130,7 +138,7 @@ export function Titlebar() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="hover:text-gold h-8 w-8 hover:bg-[rgba(212,175,55,0.1)]"
               onClick={openSettings}
               data-action="open-settings"
             >

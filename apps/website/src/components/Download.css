@@ -1,46 +1,119 @@
+/* =========================================
+   Download Section - Data Sanctum
+   Ceremonial call-to-action
+   ========================================= */
+
 .download {
-  padding: var(--section-padding) 0;
+  padding: var(--section-gap) 0;
   position: relative;
   overflow: hidden;
 }
 
+/* Decorative top line */
+.download::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  max-width: 400px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ivory-ghost) 25%,
+    var(--gold-muted) 50%,
+    var(--ivory-ghost) 75%,
+    transparent
+  );
+}
+
+/* Diamond accent */
+.download::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: var(--gold-muted);
+}
+
+/* Central glow */
 .download-glow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
+  width: 700px;
+  height: 700px;
   background: radial-gradient(
     circle,
-    rgba(59, 130, 246, 0.15) 0%,
-    transparent 70%
+    rgba(212, 175, 55, 0.08) 0%,
+    transparent 60%
   );
   pointer-events: none;
 }
 
+/* === CONTENT === */
+
 .download-content {
   position: relative;
   text-align: center;
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
+/* Decorative line above */
+.download-content::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: var(--gold-muted);
+  margin: 0 auto 32px;
+}
+
 .download-title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 500;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
 }
 
 .download-subtitle {
-  font-size: 1.125rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 40px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--ivory-muted);
+  margin-bottom: 48px;
+  line-height: 1.8;
 }
 
+/* === MAIN DOWNLOAD BUTTON === */
+
 .download-main {
-  padding: 20px 40px;
-  font-size: 18px;
+  padding: 20px 48px;
+  font-size: 14px;
+  background: linear-gradient(
+    135deg,
+    var(--gold-muted) 0%,
+    var(--gold-bright) 50%,
+    var(--gold-muted) 100%
+  );
+  color: var(--void-absolute);
+  border: none;
+  font-weight: 700;
+  min-width: 280px;
+  position: relative;
+  animation: btn-glow 4s ease-in-out infinite;
+}
+
+.download-main:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 60px var(--gold-glow);
 }
 
 .download-main span {
@@ -51,45 +124,86 @@
 }
 
 .download-main small {
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 11px;
+  font-weight: 500;
   opacity: 0.7;
-  margin-top: 2px;
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.05em;
 }
 
 .btn-lg {
-  gap: 16px;
+  gap: 18px;
 }
+
+/* === OTHER PLATFORMS === */
 
 .download-other {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  margin-top: 32px;
+  gap: 28px;
+  margin-top: 40px;
   flex-wrap: wrap;
 }
 
 .download-other > span {
-  color: var(--color-text-muted);
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ivory-ghost);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
 }
 
 .download-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  color: var(--color-text-secondary);
+  gap: 10px;
+  padding: 12px 20px;
+  color: var(--ivory-muted);
   text-decoration: none;
-  font-size: 14px;
-  border-radius: 8px;
-  transition: all var(--transition-normal);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--ivory-whisper);
+  transition: all 0.3s var(--ease-out-quint);
+  position: relative;
+}
+
+/* Corner accents on hover */
+.download-link::before,
+.download-link::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.download-link::before {
+  top: -3px;
+  left: -3px;
+  border-top: 1px solid var(--gold-muted);
+  border-left: 1px solid var(--gold-muted);
+}
+
+.download-link::after {
+  bottom: -3px;
+  right: -3px;
+  border-bottom: 1px solid var(--gold-muted);
+  border-right: 1px solid var(--gold-muted);
 }
 
 .download-link:hover {
-  color: var(--color-text);
-  background: var(--color-surface);
+  color: var(--gold-muted);
+  border-color: var(--gold-muted);
+  background: var(--gold-subtle);
+}
+
+.download-link:hover::before,
+.download-link:hover::after {
+  opacity: 1;
 }
 
 .download-link svg {
@@ -97,26 +211,34 @@
   height: 18px;
 }
 
+/* === NOTE === */
+
 .download-note {
-  margin-top: 40px;
-  font-size: 14px;
-  color: var(--color-text-muted);
+  margin-top: 48px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ivory-ghost);
 }
 
 .download-note a {
-  color: var(--color-primary);
+  color: var(--gold-muted);
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: color 0.2s;
+  border-bottom: 1px solid transparent;
 }
 
 .download-note a:hover {
-  color: var(--color-accent);
-  text-decoration: underline;
+  color: var(--gold-bright);
+  border-bottom-color: var(--gold-bright);
 }
 
-@media (max-width: 480px) {
+/* === RESPONSIVE === */
+
+@media (max-width: 640px) {
   .download-main {
     width: 100%;
+    max-width: 320px;
+    padding: 18px 32px;
     justify-content: center;
   }
 
@@ -127,6 +249,12 @@
 
   .download-other {
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+  }
+
+  .download-link {
+    width: 100%;
+    max-width: 240px;
+    justify-content: center;
   }
 }

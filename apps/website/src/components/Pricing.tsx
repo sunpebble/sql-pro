@@ -1,3 +1,15 @@
+import {
+  GoldButton,
+  GoldDivider,
+  GradientText,
+  SanctumCard,
+  SanctumCardContent,
+  SanctumCardDescription,
+  SanctumCardFooter,
+  SanctumCardHeader,
+  SanctumCardTitle,
+  SectionNumber,
+} from '@sqlpro/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckoutModal from './CheckoutModal';
@@ -78,68 +90,85 @@ export default function Pricing() {
     <section className="pricing" id="pricing" aria-labelledby="pricing-title">
       <div className="container">
         <header className="pricing-header">
+          <SectionNumber>03 · Pricing</SectionNumber>
           <h2 id="pricing-title" className="pricing-title">
             {t('pricing.title')}{' '}
-            <span className="gradient-text">{t('pricing.titleHighlight')}</span>
+            <GradientText as="span" variant="gold">
+              {t('pricing.titleHighlight')}
+            </GradientText>
           </h2>
           <p className="pricing-subtitle">{t('pricing.subtitle')}</p>
         </header>
 
+        <GoldDivider diamond />
+
         <div className="pricing-grid" role="list">
           {plans.map((plan) => (
-            <article
+            <SanctumCard
               key={plan}
-              className={`card pricing-card ${plan === 'yearly' ? 'pricing-card-featured' : ''}`}
+              decorated
+              interactive
+              size="default"
+              className={`pricing-card ${plan === 'yearly' ? 'pricing-card-featured' : ''}`}
               role="listitem"
             >
               {plan === 'yearly' && (
                 <div className="pricing-badge">{t('pricing.popular')}</div>
               )}
               <div className="pricing-icon">{planIcons[plan]}</div>
-              <h3 className="pricing-plan-title">
-                {t(`pricing.plans.${plan}.title`)}
-              </h3>
-              <div className="pricing-price">
-                <span className="pricing-amount">
-                  {t(`pricing.plans.${plan}.price`)}
-                </span>
-                <span className="pricing-period">
-                  {t(`pricing.plans.${plan}.period`)}
-                </span>
-              </div>
-              <p className="pricing-description">
-                {t(`pricing.plans.${plan}.description`)}
-              </p>
-              <ul className="pricing-features">
-                {(
-                  t(`pricing.plans.${plan}.features`, {
-                    returnObjects: true,
-                  }) as string[]
-                ).map((feature, index) => (
-                  <li key={index}>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      aria-hidden="true"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={() => handleSelectPlan(plan)}
-                className={`btn ${plan === 'yearly' ? 'btn-primary' : 'btn-secondary'} pricing-cta`}
-              >
-                {t('pricing.cta')}
-              </button>
-            </article>
+              <SanctumCardHeader>
+                <SanctumCardTitle className="pricing-plan-title">
+                  {t(`pricing.plans.${plan}.title`)}
+                </SanctumCardTitle>
+                <div className="pricing-price">
+                  <span className="pricing-amount">
+                    {t(`pricing.plans.${plan}.price`)}
+                  </span>
+                  <span className="pricing-period">
+                    {t(`pricing.plans.${plan}.period`)}
+                  </span>
+                </div>
+                <SanctumCardDescription>
+                  {t(`pricing.plans.${plan}.description`)}
+                </SanctumCardDescription>
+              </SanctumCardHeader>
+
+              <SanctumCardContent>
+                <ul className="pricing-features">
+                  {(
+                    t(`pricing.plans.${plan}.features`, {
+                      returnObjects: true,
+                    }) as string[]
+                  ).map((feature, index) => (
+                    <li key={index}>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        aria-hidden="true"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </SanctumCardContent>
+
+              <SanctumCardFooter>
+                <GoldButton
+                  variant={plan === 'yearly' ? 'default' : 'outline'}
+                  corners
+                  onClick={() => handleSelectPlan(plan)}
+                  className="pricing-cta"
+                >
+                  {t('pricing.cta')}
+                </GoldButton>
+              </SanctumCardFooter>
+            </SanctumCard>
           ))}
         </div>
 

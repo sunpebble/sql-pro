@@ -136,7 +136,7 @@ function FolderNode({
             <div
               className={cn(
                 'hover:bg-accent flex items-center gap-1 rounded-sm px-2 py-1.5 text-sm transition-colors',
-                isDragOver && 'bg-accent/50 ring-primary ring-1'
+                isDragOver && 'bg-accent/50 ring-gold ring-1'
               )}
               style={{ paddingLeft: `${level * 12 + 8}px` }}
               onDragOver={handleDragOver}
@@ -417,7 +417,7 @@ export function FolderTree({
       <div
         className={cn(
           'space-y-1',
-          isDragOverRoot && 'bg-accent/50 ring-primary rounded-sm ring-1'
+          isDragOverRoot && 'bg-accent/50 ring-gold rounded-sm ring-1'
         )}
         onDragOver={handleRootDragOver}
         onDragLeave={handleRootDragLeave}

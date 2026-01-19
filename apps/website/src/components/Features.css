@@ -1,41 +1,124 @@
+/* =========================================
+   Features Section - Data Sanctum
+   Art Deco architectural elegance
+   ========================================= */
+
 .features {
-  padding: var(--section-padding) 0;
+  padding: var(--section-gap) 0;
   position: relative;
+  overflow: hidden;
 }
+
+/* Geometric divider at top */
+.features::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  max-width: 600px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ivory-ghost) 20%,
+    var(--gold-muted) 50%,
+    var(--ivory-ghost) 80%,
+    transparent
+  );
+}
+
+/* Diamond accent at top center */
+.features::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: var(--gold-muted);
+}
+
+/* === HEADER === */
 
 .features-header {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: 100px;
+  position: relative;
+}
+
+/* Decorative line above title */
+.features-header::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: var(--gold-muted);
+  margin: 0 auto 32px;
 }
 
 .features-title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 500;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+.features-title .gradient-text {
+  display: inline;
 }
 
 .features-subtitle {
-  font-size: 1.125rem;
-  color: var(--color-text-secondary);
-  max-width: 500px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--ivory-muted);
+  max-width: 520px;
   margin: 0 auto;
+  line-height: 1.8;
 }
+
+/* === GRID LAYOUT === */
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 32px;
+  position: relative;
 }
 
+/* Background decorative frame */
+.features-grid::before {
+  content: '';
+  position: absolute;
+  inset: -60px;
+  border: 1px solid var(--ivory-whisper);
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* === FEATURE CARDS === */
+
 .feature-card {
+  background: linear-gradient(
+    165deg,
+    rgba(20, 20, 20, 0.85),
+    rgba(11, 11, 11, 0.95)
+  );
+  border: 1px solid var(--ivory-whisper);
+  padding: 44px 36px;
+  position: relative;
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(50px);
   transition:
-    opacity 0.6s ease,
-    transform 0.6s ease,
-    background 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    opacity 0.8s var(--ease-out-quint),
+    transform 0.8s var(--ease-out-quint),
+    background var(--duration-smooth),
+    border-color var(--duration-smooth),
+    box-shadow var(--duration-smooth);
 }
 
 .feature-card.visible {
@@ -43,47 +126,207 @@
   transform: translateY(0);
 }
 
+/* Inner decorative frame */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  border: 1px solid var(--ivory-whisper);
+  opacity: 0;
+  transition: all var(--duration-smooth) var(--ease-out-quint);
+  pointer-events: none;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+  border-color: rgba(212, 175, 55, 0.2);
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+}
+
+.feature-card:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* === ICON === */
+
 .feature-icon {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.2),
-    rgba(34, 211, 238, 0.1)
-  );
-  border-radius: 12px;
-  margin-bottom: 20px;
-  color: var(--color-primary);
-  transition: transform var(--transition-normal);
+  background: transparent;
+  border: 1px solid var(--ivory-ghost);
+  margin-bottom: 28px;
+  color: var(--gold-muted);
+  position: relative;
+  transition: all var(--duration-smooth) var(--ease-out-quint);
+}
+
+/* Diamond accent in corner */
+.feature-icon::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 6px;
+  height: 6px;
+  background: var(--gold-muted);
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: all var(--duration-swift);
 }
 
 .feature-card:hover .feature-icon {
-  transform: scale(1.1) rotate(5deg);
+  border-color: var(--gold-muted);
+  background: var(--gold-subtle);
 }
 
+.feature-card:hover .feature-icon::before {
+  opacity: 1;
+}
+
+.feature-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 1.2;
+}
+
+/* === TYPOGRAPHY === */
+
 .feature-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  margin-bottom: 14px;
+  color: var(--ivory);
+  letter-spacing: -0.01em;
 }
 
 .feature-description {
+  font-family: var(--font-body);
   font-size: 0.95rem;
-  color: var(--color-text-secondary);
-  line-height: 1.7;
+  color: var(--ivory-muted);
+  line-height: 1.8;
 }
 
-@media (max-width: 900px) {
+/* === ALTERNATING CARD STYLES === */
+
+/* First row - standard */
+.feature-card:nth-child(1),
+.feature-card:nth-child(3) {
+  margin-top: 40px;
+}
+
+/* Middle cards - elevated */
+.feature-card:nth-child(2),
+.feature-card:nth-child(5) {
+  margin-top: 0;
+}
+
+/* Third row */
+.feature-card:nth-child(4),
+.feature-card:nth-child(6),
+.feature-card:nth-child(7) {
+  margin-top: 0;
+}
+
+/* === INDEX NUMBERS === */
+
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--ivory-ghost);
+}
+
+.feature-card:nth-child(1)::after {
+  content: '01';
+}
+.feature-card:nth-child(2)::after {
+  content: '02';
+}
+.feature-card:nth-child(3)::after {
+  content: '03';
+}
+.feature-card:nth-child(4)::after {
+  content: '04';
+}
+.feature-card:nth-child(5)::after {
+  content: '05';
+}
+.feature-card:nth-child(6)::after {
+  content: '06';
+}
+.feature-card:nth-child(7)::after {
+  content: '07';
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 1100px) {
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+
+  .feature-card:nth-child(1),
+  .feature-card:nth-child(3),
+  .feature-card:nth-child(5),
+  .feature-card:nth-child(7) {
+    margin-top: 0;
+  }
+
+  .feature-card:nth-child(2),
+  .feature-card:nth-child(4),
+  .feature-card:nth-child(6) {
+    margin-top: 30px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
+  .features {
+    padding: 100px 0;
+  }
+
+  .features::before {
+    width: 80%;
+  }
+
+  .features-header {
+    margin-bottom: 80px;
+  }
+
   .features-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .features-grid::before {
+    display: none;
+  }
+
+  .feature-card {
+    padding: 36px 28px;
+  }
+
+  .feature-card:nth-child(n) {
+    margin-top: 0;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px);
   }
 }

@@ -21,6 +21,7 @@ import {
 } from '@sqlpro/ui/tooltip';
 import { Columns2, Copy, FileCode, Plus, Rows2, X } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useConnectionStore, useQueryTabsStore } from '@/stores';
 
@@ -52,6 +53,7 @@ const TabItem = memo(
     onRename,
     tabsCount,
   }: TabItemProps) => {
+    const { t } = useTranslation('common');
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(tab.title);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -102,10 +104,10 @@ const TabItem = memo(
             role="tab"
             aria-selected={isActive}
             className={cn(
-              'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1 border-r px-2 text-sm transition-colors',
+              'group border-gold/10 relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1 border-r px-2 text-sm transition-colors',
               isActive
-                ? 'bg-background text-foreground'
-                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
+                ? 'bg-background text-gold shadow-[inset_0_-2px_0_0_var(--color-gold)]'
+                : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-[rgba(212,175,55,0.05)]'
             )}
             onClick={onSelect}
             onDoubleClick={handleDoubleClick}
@@ -126,7 +128,7 @@ const TabItem = memo(
               <span className="flex-1 truncate">{tab.title}</span>
             )}
             {tab.isDirty && (
-              <span className="text-primary h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
+              <span className="text-gold h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
             )}
             <TooltipProvider delay={300}>
               <Tooltip>
@@ -142,22 +144,26 @@ const TabItem = memo(
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="text-xs">
-                  Close tab
+                  {t('queryTabs.closeTab')}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem onClick={onRename}>Rename</ContextMenuItem>
+          <ContextMenuItem onClick={onRename}>
+            {t('queryTabs.rename')}
+          </ContextMenuItem>
           <ContextMenuItem onClick={onDuplicate}>
             <Copy className="mr-2 h-4 w-4" />
-            Duplicate
+            {t('queryTabs.duplicate')}
           </ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem onClick={onClose}>Close</ContextMenuItem>
+          <ContextMenuItem onClick={onClose}>
+            {t('queryTabs.close')}
+          </ContextMenuItem>
           <ContextMenuItem onClick={onCloseOthers} disabled={tabsCount <= 1}>
-            Close Others
+            {t('queryTabs.closeOthers')}
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
@@ -166,6 +172,7 @@ const TabItem = memo(
 );
 
 export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
+  const { t } = useTranslation('common');
   const { activeConnectionId } = useConnectionStore();
   const {
     tabsByConnection,
@@ -251,7 +258,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" className="text-xs">
-              New query tab
+              {t('queryTabs.newQueryTab')}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -271,7 +278,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="text-xs">
-                Close split view
+                {t('queryTabs.closeSplitView')}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -291,18 +298,18 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="text-xs">
-                  Split editor
+                  {t('queryTabs.splitEditor')}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={handleSplitHorizontal}>
                 <Columns2 className="mr-2 h-4 w-4" />
-                Split Right
+                {t('queryTabs.splitRight')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleSplitVertical}>
                 <Rows2 className="mr-2 h-4 w-4" />
-                Split Down
+                {t('queryTabs.splitDown')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -1,6 +1,7 @@
 'use client';
 
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import { DecoFrame } from '@sqlpro/ui';
 import { Button } from '@sqlpro/ui/button';
 
 import { XIcon } from 'lucide-react';
@@ -54,46 +55,62 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  decorated = false,
   style,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
+  /** Enable Data Sanctum decorative corners */
+  decorated?: boolean;
 }) {
   const uiFont = useUIFont();
+
+  const content = (
+    <DialogPrimitive.Popup
+      data-slot="dialog-content"
+      className={cn(
+        'bg-background data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-xl p-6 text-sm ring-1 duration-100 outline-none sm:max-w-md',
+        // Data Sanctum decorated style
+        decorated && 'ring-gold/30 dark:ring-gold/20 rounded-none',
+        className
+      )}
+      style={{
+        fontFamily: getFontFamilyCSS(uiFont.family),
+        fontSize: `${uiFont.size}px`,
+        ...style,
+      }}
+      {...props}
+    >
+      {decorated && (
+        <DecoFrame
+          size="lg"
+          variant="gold"
+          className="pointer-events-none absolute inset-0 rounded-none opacity-40"
+        />
+      )}
+      {children}
+      {showCloseButton && (
+        <DialogPrimitive.Close
+          data-slot="dialog-close"
+          render={
+            <Button
+              variant="ghost"
+              className="absolute top-4 right-4"
+              size="icon-sm"
+            />
+          }
+        >
+          <XIcon />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      )}
+    </DialogPrimitive.Popup>
+  );
 
   return (
     <DialogPortal>
       <DialogOverlay />
-      <DialogPrimitive.Popup
-        data-slot="dialog-content"
-        className={cn(
-          'bg-background data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-xl p-6 text-sm ring-1 duration-100 outline-none sm:max-w-md',
-          className
-        )}
-        style={{
-          fontFamily: getFontFamilyCSS(uiFont.family),
-          fontSize: `${uiFont.size}px`,
-          ...style,
-        }}
-        {...props}
-      >
-        {children}
-        {showCloseButton && (
-          <DialogPrimitive.Close
-            data-slot="dialog-close"
-            render={
-              <Button
-                variant="ghost"
-                className="absolute top-4 right-4"
-                size="icon-sm"
-              />
-            }
-          >
-            <XIcon />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
-        )}
-      </DialogPrimitive.Popup>
+      {content}
     </DialogPortal>
   );
 }

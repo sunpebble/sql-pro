@@ -232,7 +232,7 @@ export const QuickFilterTags = memo(
                     className={cn(
                       'inline-flex h-6 items-center gap-1 rounded-md border px-2 text-xs font-medium transition-all duration-150',
                       isActive
-                        ? 'bg-primary text-primary-foreground shadow-sm'
+                        ? 'bg-gold text-background shadow-sm'
                         : 'bg-background hover:bg-muted',
                       suggestion.type === 'null' && !isActive && 'border-dashed'
                     )}

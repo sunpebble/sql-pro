@@ -124,7 +124,7 @@ function QueryBuilderJoinEdgeComponent({
             className={cn(
               'bg-background flex items-center rounded border px-1 py-0.5 shadow-sm',
               'transition-all duration-150',
-              (selected || isHovered) && 'ring-primary ring-2'
+              (selected || isHovered) && 'ring-gold ring-2'
             )}
           >
             <DropdownMenu>

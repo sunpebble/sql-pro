@@ -1,4 +1,4 @@
-import { Button } from '@sqlpro/ui/button';
+import { DecoFrame, GoldButton } from '@sqlpro/ui';
 import { Crown } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,28 +20,30 @@ export function ProSection() {
         className={cn(
           'rounded-lg border p-4 transition-colors',
           isPro
-            ? 'border-amber-500/20 bg-linear-to-r from-amber-500/10 to-yellow-500/10'
+            ? 'border-gold/30 bg-gradient-to-r from-[rgba(212,175,55,0.08)] to-[rgba(201,169,98,0.08)]'
             : 'border-border'
         )}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div
+            <DecoFrame
+              size="sm"
+              variant="gold"
               className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-full',
-                isPro ? 'bg-amber-500/20' : 'bg-muted'
+                'flex h-10 w-10 items-center justify-center',
+                !isPro && 'opacity-50'
               )}
             >
               <Crown
                 className={cn(
                   'h-5 w-5',
-                  isPro ? 'text-amber-500' : 'text-muted-foreground'
+                  isPro ? 'text-gold' : 'text-muted-foreground'
                 )}
               />
-            </div>
+            </DecoFrame>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-medium">
+                <span className={cn('font-medium', isPro && 'text-gold')}>
                   {isPro ? t('pro.active') : t('pro.free')}
                 </span>
                 {isPro && <ProBadge size="sm" />}
@@ -58,18 +60,13 @@ export function ProSection() {
               </p>
             </div>
           </div>
-          <Button
+          <GoldButton
             variant={isPro ? 'outline' : 'default'}
             size="sm"
             onClick={() => setProDialogOpen(true)}
-            className={
-              isPro
-                ? ''
-                : 'bg-linear-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600'
-            }
           >
             {isPro ? t('pro.manage') : t('pro.upgrade')}
-          </Button>
+          </GoldButton>
         </div>
       </div>
 

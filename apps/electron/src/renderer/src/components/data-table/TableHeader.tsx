@@ -174,7 +174,7 @@ const HeaderCell = memo(
 
               {/* Grouping indicator with count */}
               {isGrouped && (
-                <span className="text-primary flex shrink-0 items-center gap-0.5">
+                <span className="text-gold flex shrink-0 items-center gap-0.5">
                   <Layers className="h-3 w-3" />
                   {groupCount !== undefined && (
                     <span className="text-xs">({groupCount})</span>
@@ -219,7 +219,7 @@ const HeaderCell = memo(
                 'mr-1 flex h-5 w-5 items-center justify-center rounded opacity-0',
                 'transition-opacity group-hover:opacity-100',
                 'hover:bg-accent',
-                isPinned && 'text-primary opacity-100'
+                isPinned && 'text-gold opacity-100'
               )}
               onClick={handlePinClick}
               title={isPinned ? 'Unpin column' : 'Pin column'}
@@ -239,7 +239,7 @@ const HeaderCell = memo(
                 'mr-1 flex h-5 w-5 items-center justify-center rounded opacity-0',
                 'transition-opacity group-hover:opacity-100',
                 'hover:bg-accent',
-                isGrouped && 'text-primary opacity-100'
+                isGrouped && 'text-gold opacity-100'
               )}
               onClick={handleGroupClick}
               title={isGrouped ? 'Remove grouping' : 'Group by this column'}
@@ -264,7 +264,7 @@ const HeaderCell = memo(
                   'flex h-5 w-5 items-center justify-center rounded opacity-0',
                   'transition-opacity group-hover:opacity-100',
                   'hover:bg-accent',
-                  hasActiveFilter && 'text-primary opacity-100'
+                  hasActiveFilter && 'text-gold opacity-100'
                 )}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -290,9 +290,9 @@ const HeaderCell = memo(
               // Default visible indicator - subtle border color
               'bg-border/50',
               // Visual indicator on hover/active
-              'hover:bg-primary/60 active:bg-primary/80 hover:w-1.5',
+              'hover:bg-gold/60 active:bg-gold/80 hover:w-1.5',
               'transition-all duration-75',
-              isResizing && 'bg-primary/80 w-1.5'
+              isResizing && 'bg-gold/80 w-1.5'
             )}
             style={{
               touchAction: 'none',

@@ -468,11 +468,11 @@ export function BackupRestoreDialog({
                       className="hover:bg-muted/50 flex items-center justify-between p-3"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="bg-primary/10 rounded-lg p-2">
+                        <div className="bg-gold/10 rounded-lg p-2">
                           {backup.format === 'sql' ? (
-                            <FileCode className="text-primary h-4 w-4" />
+                            <FileCode className="text-gold h-4 w-4" />
                           ) : (
-                            <HardDrive className="text-primary h-4 w-4" />
+                            <HardDrive className="text-gold h-4 w-4" />
                           )}
                         </div>
                         <div>

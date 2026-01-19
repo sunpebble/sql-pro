@@ -1,4 +1,5 @@
 import type { SettingsSection } from './settings/SettingsNav';
+import { GradientText } from '@sqlpro/ui';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,14 +45,21 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
-        <DialogHeader className="shrink-0 border-b px-6 pt-6 pb-4">
-          <DialogTitle>{t('settings.title', { ns: 'dialog' })}</DialogTitle>
+      <DialogContent
+        className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl"
+        decorated
+      >
+        <DialogHeader className="border-gold/20 shrink-0 border-b px-6 pt-6 pb-4">
+          <DialogTitle className="text-lg tracking-wide">
+            <GradientText variant="gold">
+              {t('settings.title', { ns: 'dialog' })}
+            </GradientText>
+          </DialogTitle>
         </DialogHeader>
 
         <div className="flex min-h-0 flex-1">
           {/* Left Navigation */}
-          <div className="shrink-0 py-4 pl-4">
+          <div className="border-gold/10 shrink-0 border-r py-4 pl-4">
             <SettingsNav
               activeSection={activeSection}
               onSectionChange={setActiveSection}

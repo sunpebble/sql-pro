@@ -1,9 +1,14 @@
 {
+  "show": "显示侧边栏",
+  "hide": "隐藏侧边栏",
   "connection": {
     "title": "连接",
     "new": "新建连接",
     "recent": "最近连接",
     "noConnections": "暂无连接",
+    "noConnectionsFound": "未找到连接",
+    "searchConnections": "搜索连接...",
+    "openConnections": "已打开的连接",
     "connect": "连接",
     "disconnect": "断开连接",
     "delete": "删除连接",
@@ -69,7 +74,29 @@
     "title": "暂无表",
     "description": "创建您的第一个表开始使用",
     "openSqlEditor": "打开 SQL 编辑器",
-    "copySample": "复制示例 CREATE TABLE"
+    "copySample": "复制示例 CREATE TABLE",
+    "databaseEmpty": "数据库为空。使用 SQL 查询编辑器创建第一个表或粘贴 CREATE TABLE 语句。",
+    "openSqlQueryEditor": "打开 SQL 查询编辑器",
+    "copySampleSql": "复制示例 SQL"
+  },
+  "noResults": {
+    "title": "无结果",
+    "noTablesMatch": "没有匹配的表",
+    "noTablesWithTag": "没有带此标签的表",
+    "noTablesFound": "未找到表"
+  },
+  "dialog": {
+    "cancel": "取消",
+    "truncateTable": "清空表",
+    "truncateConfirm": "确定要删除所有行吗？表名：",
+    "truncateWarning": "此操作无法撤销。",
+    "truncate": "清空",
+    "dropTable": "删除表",
+    "dropView": "删除视图",
+    "dropConfirm": "确定要删除吗？",
+    "dropWarning": "这将永久删除此",
+    "andCannotBeUndone": "且无法撤销。",
+    "drop": "删除"
   },
   "folders": {
     "title": "文件夹",

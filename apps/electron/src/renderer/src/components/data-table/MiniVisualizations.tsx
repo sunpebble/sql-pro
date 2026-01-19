@@ -76,7 +76,7 @@ export const MiniBar = memo(
     const percentage = max > 0 ? Math.min((value / max) * 100, 100) : 0;
 
     const colorClasses = {
-      default: 'bg-primary',
+      default: 'bg-gold',
       success: 'bg-green-500',
       warning: 'bg-amber-500',
       danger: 'bg-red-500',
@@ -168,7 +168,7 @@ export const DataDistribution = memo(
             values={visualization.data}
             width={40}
             height={12}
-            color="hsl(var(--primary))"
+            color="var(--color-gold)"
           />
         </div>
       );

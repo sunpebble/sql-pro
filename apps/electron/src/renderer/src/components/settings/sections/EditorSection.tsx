@@ -44,7 +44,7 @@ export function EditorSection() {
         <SettingGroup title={t('shortcuts.title')}>
           <button
             onClick={() => setShortcutsDialogOpen(true)}
-            className="hover:border-primary hover:bg-muted flex w-full items-center justify-between rounded-lg border p-3 transition-colors"
+            className="hover:border-gold hover:bg-muted flex w-full items-center justify-between rounded-lg border p-3 transition-colors"
           >
             <div className="flex items-center gap-3">
               <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-full">
@@ -92,15 +92,15 @@ function VimModeToggle({
       className={cn(
         'flex flex-col items-start rounded-lg border p-3 text-left transition-colors',
         enabled
-          ? 'border-primary bg-primary/5'
-          : 'border-border hover:border-primary/50 hover:bg-muted/50'
+          ? 'border-gold bg-gold/10'
+          : 'border-border hover:border-gold/50 hover:bg-muted/50'
       )}
     >
       <div className="flex items-center gap-2">
         <span
           className={cn(
             'font-mono text-xs font-bold uppercase',
-            enabled ? 'text-green-600' : 'text-muted-foreground'
+            enabled ? 'text-gold' : 'text-muted-foreground'
           )}
         >
           {enabled ? 'VIM' : 'OFF'}

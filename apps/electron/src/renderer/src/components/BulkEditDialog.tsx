@@ -219,7 +219,7 @@ export function BulkEditDialog({
 
           {/* Summary */}
           {editFields.length > 0 && (
-            <div className="bg-primary/5 border-primary/20 rounded-lg border p-3 text-sm">
+            <div className="bg-gold/5 border-gold/20 rounded-lg border p-3 text-sm">
               <p>
                 <span className="font-medium">{editFields.length}</span> field
                 {editFields.length > 1 ? 's' : ''} will be updated on{' '}

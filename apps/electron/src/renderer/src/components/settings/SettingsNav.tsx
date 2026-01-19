@@ -36,7 +36,7 @@ export function SettingsNav({
   const { t } = useTranslation('settings');
 
   return (
-    <nav className="flex w-[160px] shrink-0 flex-col gap-1 border-r pr-3">
+    <nav className="flex w-[160px] shrink-0 flex-col gap-1 pr-3">
       {NAV_ITEMS.map((item) => {
         const Icon = item.icon;
         const isActive = activeSection === item.id;
@@ -48,13 +48,11 @@ export function SettingsNav({
             className={cn(
               'flex items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors',
               isActive
-                ? 'bg-primary/10 text-primary font-medium'
-                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                ? 'text-gold bg-[rgba(212,175,55,0.1)] font-medium'
+                : 'text-muted-foreground hover:text-gold hover:bg-[rgba(212,175,55,0.05)]'
             )}
           >
-            <Icon
-              className={cn('h-4 w-4 shrink-0', isActive && 'text-primary')}
-            />
+            <Icon className={cn('h-4 w-4 shrink-0', isActive && 'text-gold')} />
             <span className="truncate">{t(item.labelKey)}</span>
           </button>
         );

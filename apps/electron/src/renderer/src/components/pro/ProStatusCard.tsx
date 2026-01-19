@@ -1,10 +1,11 @@
 /**
  * Pro Status Card Component
  * Displays the current Pro license status with management options
+ * Uses Data Sanctum gold color system
  */
 
+import { DecoFrame, GoldButton, GradientText } from '@sqlpro/ui';
 import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
 import {
   Card,
   CardContent,
@@ -86,20 +87,24 @@ export function ProStatusCard({
     <Card
       className={cn(
         'relative overflow-hidden',
-        'border-amber-500/30 bg-gradient-to-br from-amber-500/5 to-yellow-500/5',
+        'border-gold/30 bg-gradient-to-br from-[rgba(212,175,55,0.05)] to-[rgba(201,169,98,0.05)]',
         className
       )}
     >
       {/* Decorative gradient */}
-      <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-amber-500/20 to-yellow-500/20 blur-2xl" />
+      <div className="from-gold-bright/20 to-gold/20 absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br blur-2xl" />
 
       <CardHeader className="relative pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-yellow-500">
-              <Crown className="h-4 w-4 text-white" />
-            </div>
-            <span>{t('pro.proLicense')}</span>
+            <DecoFrame
+              size="sm"
+              variant="gold"
+              className="flex h-8 w-8 items-center justify-center"
+            >
+              <Crown className="text-gold h-4 w-4" />
+            </DecoFrame>
+            <GradientText variant="gold">{t('pro.proLicense')}</GradientText>
           </CardTitle>
           <Badge variant={STATUS_VARIANTS[license.status] || 'outline'}>
             {license.status === 'active' && <Check className="mr-1 h-3 w-3" />}
@@ -130,12 +135,12 @@ export function ProStatusCard({
 
       <CardContent className="relative space-y-3 pt-0">
         {/* Plan info */}
-        <div className="flex items-center justify-between rounded-lg bg-white/50 p-3 dark:bg-white/5">
+        <div className="flex items-center justify-between rounded-lg bg-[rgba(212,175,55,0.05)] p-3 dark:bg-[rgba(212,175,55,0.08)]">
           <div>
             <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               {t('pro.currentPlan')}
             </p>
-            <p className="text-lg font-semibold">
+            <p className="text-gold text-lg font-semibold">
               {t(`pro.plans.${license.plan}`, { defaultValue: license.plan })}
             </p>
           </div>
@@ -147,7 +152,7 @@ export function ProStatusCard({
               <p
                 className={cn(
                   'flex items-center gap-1.5 text-sm font-medium',
-                  isExpiringSoon && 'text-amber-600 dark:text-amber-400'
+                  isExpiringSoon && 'text-gold-bright'
                 )}
               >
                 <Calendar className="h-3.5 w-3.5" />
@@ -156,10 +161,7 @@ export function ProStatusCard({
             </div>
           )}
           {isLifetime && (
-            <Badge
-              variant="outline"
-              className="border-amber-500/50 text-amber-600"
-            >
+            <Badge variant="outline" className="border-gold/50 text-gold">
               {t('pro.forever')}
             </Badge>
           )}
@@ -167,8 +169,8 @@ export function ProStatusCard({
 
         {/* Expiring soon warning */}
         {isExpiringSoon && (
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
-            <p className="text-sm text-amber-700 dark:text-amber-300">
+          <div className="border-gold/30 rounded-lg border bg-[rgba(212,175,55,0.1)] p-3">
+            <p className="text-gold-dark dark:text-gold-bright text-sm">
               {t('pro.renewsInDays', {
                 days: daysUntilExpiry,
                 count: daysUntilExpiry,
@@ -179,7 +181,7 @@ export function ProStatusCard({
       </CardContent>
 
       <CardFooter className="relative flex gap-2 pt-0">
-        <Button
+        <GoldButton
           variant="outline"
           className="flex-1"
           onClick={onManageSubscription}
@@ -192,20 +194,20 @@ export function ProStatusCard({
           )}
           {t('pro.manageSubscription', { defaultValue: 'Manage Subscription' })}
           <ExternalLink className="ml-1.5 h-3 w-3 opacity-50" />
-        </Button>
+        </GoldButton>
       </CardFooter>
 
       {/* Deactivate option */}
       {onDeactivate && (
-        <div className="border-t px-6 py-3">
-          <Button
+        <div className="border-gold/10 border-t px-6 py-3">
+          <GoldButton
             variant="ghost"
             size="sm"
             className="text-muted-foreground hover:text-destructive w-full text-xs"
             onClick={onDeactivate}
           >
             {t('pro.deactivateDevice')}
-          </Button>
+          </GoldButton>
         </div>
       )}
     </Card>

@@ -125,7 +125,7 @@ export function UpdateCheckDialog() {
           <div className="space-y-2">
             <div className="bg-muted h-2 overflow-hidden rounded-full">
               <div
-                className="bg-primary h-full transition-all duration-300"
+                className="bg-gold h-full transition-all duration-300"
                 style={{ width: `${downloadProgress}%` }}
               />
             </div>

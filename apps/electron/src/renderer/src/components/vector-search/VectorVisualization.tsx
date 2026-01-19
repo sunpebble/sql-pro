@@ -658,7 +658,7 @@ export const VectorVisualization = memo(
               {isComputing && progress !== null && (
                 <div className="bg-muted h-1.5 w-32 overflow-hidden rounded-full">
                   <div
-                    className="bg-primary h-full transition-all duration-200"
+                    className="bg-gold h-full transition-all duration-200"
                     style={{ width: `${Math.round(progress * 100)}%` }}
                   />
                 </div>

@@ -298,7 +298,7 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
                 </td>
                 <td className="py-1.5 whitespace-nowrap">
                   {isPK && (
-                    <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-xs font-medium">
+                    <span className="bg-gold/10 text-gold rounded px-1.5 py-0.5 text-xs font-medium">
                       PK
                     </span>
                   )}

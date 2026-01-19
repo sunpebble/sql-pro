@@ -271,7 +271,7 @@ export function WelcomeTour({
               key={stepItem.id}
               className={cn(
                 'h-1 flex-1 rounded-full transition-colors',
-                index <= currentStep ? 'bg-primary' : 'bg-muted'
+                index <= currentStep ? 'bg-gold' : 'bg-muted'
               )}
             />
           ))}

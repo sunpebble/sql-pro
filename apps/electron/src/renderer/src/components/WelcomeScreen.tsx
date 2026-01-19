@@ -7,6 +7,7 @@ import type {
 } from '@shared/types';
 import type { ProfileFormData } from './connection-profiles/ProfileForm';
 import type { ConnectionSettings } from './ConnectionSettingsDialog';
+import { DecoFrame, GoldButton, GradientText } from '@sqlpro/ui';
 import { Button } from '@sqlpro/ui/button';
 import {
   DropdownMenu,
@@ -907,9 +908,33 @@ export function WelcomeScreen() {
   );
 
   return (
-    <div className="bg-grid-dot relative flex h-full flex-col overflow-hidden">
+    <div className="bg-hex-pattern relative flex h-full flex-col overflow-hidden">
+      {/* Noise texture overlay for depth */}
+      <div className="noise-overlay" />
+
+      {/* Animated spotlight effects */}
+      <div
+        className="spotlight animate-float absolute -top-40 left-1/4"
+        style={{ animationDelay: '0s' }}
+      />
+      <div
+        className="spotlight animate-float absolute right-1/4 -bottom-40"
+        style={{ animationDelay: '2s' }}
+      />
+
+      {/* Ambient gold glow overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background: `
+            radial-gradient(ellipse 60% 40% at 50% 10%, var(--gold-glow), transparent 50%),
+            radial-gradient(ellipse 40% 50% at 90% 60%, oklch(0.78 0.12 85 / 5%), transparent 40%)
+          `,
+        }}
+      />
+
       {/* Top Right Controls */}
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+      <div className="animate-fade-in-up stagger-1 absolute top-4 right-4 z-10 flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger>
             <Button
@@ -932,7 +957,7 @@ export function WelcomeScreen() {
       {/* Main Content - Two Column Layout */}
       <div className="flex flex-1 items-stretch overflow-hidden">
         {/* Left Column - Feature Showcase */}
-        <div className="flex w-1/2 items-center justify-center border-r p-8">
+        <div className="animate-slide-in-left border-gold/10 flex w-1/2 items-center justify-center border-r p-8">
           <div className="h-full w-full max-w-md">
             <FeatureShowcase
               onStartTour={handleStartWelcomeTour}
@@ -942,17 +967,30 @@ export function WelcomeScreen() {
         </div>
 
         {/* Right Column - Connection Area */}
-        <div className="flex w-1/2 items-center justify-center p-8">
-          <div className="flex w-full max-w-sm flex-col space-y-6">
-            {/* Logo & Title */}
-            <div className="shrink-0 text-center">
-              <div className="bg-primary/10 mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl">
-                <Database className="text-primary h-7 w-7" />
-              </div>
-              <h1 className="text-xl font-semibold tracking-tight">
-                {t('app.name')}
+        <div className="animate-slide-in-right relative flex w-1/2 items-center justify-center p-8">
+          {/* Decorative corner frames with animation */}
+          <div className="border-deco pointer-events-none absolute inset-8 opacity-30" />
+
+          <div className="relative z-10 flex w-full max-w-sm flex-col space-y-6">
+            {/* Logo & Title with staggered animation */}
+            <div className="animate-fade-in-up stagger-1 shrink-0 text-center">
+              <DecoFrame
+                size="default"
+                variant="gold"
+                animated
+                className="vault-frame animate-breathe-glow mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl"
+              >
+                <Database
+                  className="h-8 w-8"
+                  style={{ color: 'var(--gold-muted)' }}
+                />
+              </DecoFrame>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                <GradientText variant="gold" speed="slow">
+                  {t('app.name')}
+                </GradientText>
               </h1>
-              <p className="text-muted-foreground mt-0.5 text-sm">
+              <p className="text-muted-foreground mt-1 text-sm">
                 {t('welcome.subtitle', {
                   defaultValue: 'Professional Database Manager',
                 })}
@@ -961,17 +999,18 @@ export function WelcomeScreen() {
 
             {/* Error Message */}
             {error && (
-              <div className="border-destructive/50 bg-destructive/10 text-destructive flex items-center gap-2 rounded-lg border p-3 text-sm">
+              <div className="animate-fade-in-up border-destructive/50 bg-destructive/10 text-destructive flex items-center gap-2 rounded-lg border p-3 text-sm">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            {/* Connection Buttons */}
-            <div className="shrink-0 space-y-3">
-              <Button
-                className="w-full"
+            {/* Connection Buttons with staggered animation */}
+            <div className="animate-fade-in-up stagger-2 shrink-0 space-y-3">
+              <GoldButton
+                variant={isConnecting ? 'outline' : 'default'}
                 size="lg"
+                className="vault-frame w-full transition-all hover:scale-[1.02]"
                 onClick={handleOpenDatabase}
                 disabled={isConnecting}
                 data-action="open-database"
@@ -982,11 +1021,11 @@ export function WelcomeScreen() {
                   : t('welcome.openSqlite', {
                       defaultValue: 'Open SQLite Database',
                     })}
-              </Button>
-              <Button
-                className="w-full"
-                size="lg"
+              </GoldButton>
+              <GoldButton
                 variant="outline"
+                size="lg"
+                className="w-full"
                 onClick={() => setDbTypeSelectorOpen(true)}
                 disabled={isConnecting}
                 data-action="connect-server"
@@ -995,141 +1034,146 @@ export function WelcomeScreen() {
                 {t('welcome.connectServer', {
                   defaultValue: 'Connect to Server',
                 })}
-              </Button>
+              </GoldButton>
               <p className="text-muted-foreground text-center text-xs">
                 {t('welcome.supportsDb', {
-                  defaultValue: 'Supports MySQL, PostgreSQL, and Supabase',
+                  defaultValue:
+                    'Supports MySQL, PostgreSQL, Supabase, and Turso',
                 })}
               </p>
             </div>
 
-            {/* Recent Connections / Profile Manager */}
-            {showProfiles ? (
-              <div className="bg-card max-h-64 overflow-hidden rounded-lg border">
-                <ProfileManager
-                  onConnect={handleConnectFromProfile}
-                  compact={true}
-                />
-              </div>
-            ) : (
-              recentConnections.length > 0 && (
-                <div
-                  className="flex flex-col space-y-2"
-                  data-tour-target="recent-connections"
-                >
-                  <div className="flex shrink-0 items-center justify-between px-1">
-                    <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                      {t('welcome.recentConnections', {
-                        defaultValue: 'Recent Connections',
-                      })}
-                    </span>
-                    <Clock className="text-muted-foreground h-3.5 w-3.5" />
-                  </div>
-                  <ScrollArea className="h-48">
-                    <div className="space-y-0.5 pr-2">
-                      {recentConnections.map((conn) => (
-                        <div
-                          key={conn.path}
-                          className="group flex items-center gap-1"
-                        >
-                          <Button
-                            variant="ghost"
-                            className="h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
-                            onClick={() => handleRecentClick(conn)}
-                            disabled={isConnecting}
+            {/* Recent Connections / Profile Manager with staggered animation */}
+            <div className="animate-fade-in-up stagger-3">
+              {showProfiles ? (
+                <div className="glass-gold max-h-64 overflow-hidden rounded-lg">
+                  <ProfileManager
+                    onConnect={handleConnectFromProfile}
+                    compact={true}
+                  />
+                </div>
+              ) : (
+                recentConnections.length > 0 && (
+                  <div
+                    className="flex flex-col space-y-2"
+                    data-tour-target="recent-connections"
+                  >
+                    <div className="flex shrink-0 items-center justify-between px-1">
+                      <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        {t('welcome.recentConnections', {
+                          defaultValue: 'Recent Connections',
+                        })}
+                      </span>
+                      <Clock className="text-muted-foreground h-3.5 w-3.5" />
+                    </div>
+                    <ScrollArea className="h-48">
+                      <div className="space-y-0.5 pr-2">
+                        {recentConnections.map((conn) => (
+                          <div
+                            key={conn.path}
+                            className="group flex items-center gap-1"
                           >
-                            {(() => {
-                              const { Icon, color, label } = getDatabaseIcon(
-                                conn.databaseType
-                              );
-                              return (
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    <Icon
-                                      className={cn(
-                                        'mr-2 h-4 w-4 shrink-0',
-                                        color
-                                      )}
+                            <Button
+                              variant="ghost"
+                              className="h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
+                              onClick={() => handleRecentClick(conn)}
+                              disabled={isConnecting}
+                            >
+                              {(() => {
+                                const { Icon, color, label } = getDatabaseIcon(
+                                  conn.databaseType
+                                );
+                                return (
+                                  <Tooltip>
+                                    <TooltipTrigger>
+                                      <Icon
+                                        className={cn(
+                                          'mr-2 h-4 w-4 shrink-0',
+                                          color
+                                        )}
+                                      />
+                                    </TooltipTrigger>
+                                    <TooltipContent>{label}</TooltipContent>
+                                  </Tooltip>
+                                );
+                              })()}
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="truncate text-sm font-medium">
+                                    {conn.displayName || conn.filename}
+                                  </span>
+                                  <div className="flex shrink-0 items-center gap-1">
+                                    {conn.readOnly && (
+                                      <Tooltip>
+                                        <TooltipTrigger>
+                                          <Eye className="text-muted-foreground h-3 w-3" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          {t('welcome.readOnly')}
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    )}
+                                    <HasSavedPasswordIndicator
+                                      path={conn.path}
                                     />
-                                  </TooltipTrigger>
-                                  <TooltipContent>{label}</TooltipContent>
-                                </Tooltip>
-                              );
-                            })()}
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-2">
-                                <span className="truncate text-sm font-medium">
-                                  {conn.displayName || conn.filename}
-                                </span>
-                                <div className="flex shrink-0 items-center gap-1">
-                                  {conn.readOnly && (
-                                    <Tooltip>
-                                      <TooltipTrigger>
-                                        <Eye className="text-muted-foreground h-3 w-3" />
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        {t('welcome.readOnly')}
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  )}
-                                  <HasSavedPasswordIndicator path={conn.path} />
+                                  </div>
+                                </div>
+                                <div className="text-muted-foreground truncate font-mono text-xs">
+                                  {conn.path}
                                 </div>
                               </div>
-                              <div className="text-muted-foreground truncate font-mono text-xs">
-                                {conn.path}
-                              </div>
-                            </div>
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100"
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100"
+                                >
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="end"
+                                side="bottom"
+                                className="w-auto"
                               >
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              side="bottom"
-                              className="w-auto"
-                            >
-                              <DropdownMenuItem
-                                onClick={() => handleEditConnection(conn)}
-                                className="whitespace-nowrap"
-                              >
-                                <Pencil className="mr-2 h-4 w-4" />
-                                <span>{t('actions.edit')}</span>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleSaveAsProfile(conn)}
-                                className="whitespace-nowrap"
-                              >
-                                <BookmarkPlus className="mr-2 h-4 w-4" />
-                                <span>
-                                  {t('welcome.saveAsProfile', {
-                                    defaultValue: 'Save as Profile',
-                                  })}
-                                </span>
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={() => handleRemoveConnection(conn)}
-                                className="text-destructive focus:text-destructive whitespace-nowrap"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                <span>{t('actions.remove')}</span>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </div>
-              )
-            )}
+                                <DropdownMenuItem
+                                  onClick={() => handleEditConnection(conn)}
+                                  className="whitespace-nowrap"
+                                >
+                                  <Pencil className="mr-2 h-4 w-4" />
+                                  <span>{t('actions.edit')}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleSaveAsProfile(conn)}
+                                  className="whitespace-nowrap"
+                                >
+                                  <BookmarkPlus className="mr-2 h-4 w-4" />
+                                  <span>
+                                    {t('welcome.saveAsProfile', {
+                                      defaultValue: 'Save as Profile',
+                                    })}
+                                  </span>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => handleRemoveConnection(conn)}
+                                  className="text-destructive focus:text-destructive whitespace-nowrap"
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  <span>{t('actions.remove')}</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </div>
+                )
+              )}
+            </div>
           </div>
         </div>
       </div>

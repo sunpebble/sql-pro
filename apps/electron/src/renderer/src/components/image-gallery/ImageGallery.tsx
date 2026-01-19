@@ -98,11 +98,11 @@ const ImageThumbnail = memo(
     return (
       <div
         className={cn(
-          'group hover:border-primary relative cursor-pointer overflow-hidden rounded-lg border transition-all',
+          'group hover:border-gold relative cursor-pointer overflow-hidden rounded-lg border transition-all',
           isSelected
-            ? 'border-primary ring-primary/50 ring-2'
+            ? 'border-gold ring-gold/50 ring-2'
             : isFocused
-              ? 'border-primary ring-primary/30 ring-2'
+              ? 'border-gold ring-gold/30 ring-2'
               : 'border-border hover:shadow-md'
         )}
         style={{ width: size, height: size }}
@@ -126,7 +126,7 @@ const ImageThumbnail = memo(
             className={cn(
               'flex h-5 w-5 items-center justify-center rounded border',
               isSelected
-                ? 'border-primary bg-primary text-primary-foreground'
+                ? 'border-gold bg-gold text-background'
                 : 'border-white/80 bg-black/30 text-white'
             )}
           >
@@ -327,8 +327,8 @@ const ImageListItem = memo(
       <div
         className={cn(
           'group hover:bg-muted/50 flex cursor-pointer items-center gap-4 border-b px-4 transition-colors',
-          isSelected && 'bg-primary/5',
-          isFocused && 'ring-primary/30 ring-2 ring-inset'
+          isSelected && 'bg-gold/5',
+          isFocused && 'ring-gold/30 ring-2 ring-inset'
         )}
         style={{ height: itemHeight }}
         onClick={onClick}
@@ -351,7 +351,7 @@ const ImageListItem = memo(
             className={cn(
               'flex h-5 w-5 items-center justify-center rounded border',
               isSelected
-                ? 'border-primary bg-primary text-primary-foreground'
+                ? 'border-gold bg-gold text-background'
                 : 'border-border bg-background'
             )}
           >

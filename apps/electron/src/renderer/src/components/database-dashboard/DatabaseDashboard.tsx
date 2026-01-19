@@ -166,7 +166,7 @@ const StatCard = memo(
     value,
     subValue,
     icon: Icon,
-    color = 'text-primary',
+    color = 'text-gold',
   }: StatCardProps) => {
     return (
       <div className="bg-muted/50 rounded-lg p-4">

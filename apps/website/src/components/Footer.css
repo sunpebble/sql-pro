@@ -1,88 +1,158 @@
+/* =========================================
+   Footer - Data Sanctum
+   Refined, architectural closure
+   ========================================= */
+
 .footer {
-  padding: 60px 0 40px;
-  border-top: 1px solid var(--color-border);
-  background: rgba(0, 0, 0, 0.2);
+  padding: 80px 0 48px;
+  border-top: 1px solid var(--ivory-whisper);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+  position: relative;
 }
+
+/* Diamond accent at top */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: var(--gold-muted);
+}
+
+/* === TOP SECTION === */
 
 .footer-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 32px;
+  gap: 40px;
 }
 
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 1.25rem;
-  font-weight: 600;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--ivory);
 }
 
 .footer-brand img {
-  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.25));
 }
+
+/* === NAVIGATION LINKS === */
 
 .footer-links {
   display: flex;
-  gap: 32px;
+  gap: 36px;
   flex-wrap: wrap;
 }
 
 .footer-links a {
-  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ivory-muted);
   text-decoration: none;
-  font-size: 14px;
-  transition: color var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.footer-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gold-muted);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-quint);
 }
 
 .footer-links a:hover {
-  color: var(--color-text);
+  color: var(--gold-muted);
 }
+
+.footer-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* === DIVIDER === */
 
 .footer-divider {
   height: 1px;
-  background: var(--color-border);
-  margin: 32px 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--ivory-whisper) 20%,
+    var(--ivory-whisper) 80%,
+    transparent 100%
+  );
+  margin: 40px 0;
 }
+
+/* === BOTTOM SECTION === */
 
 .footer-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
 }
 
 .footer-copyright {
-  font-size: 14px;
-  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ivory-ghost);
+  letter-spacing: 0.1em;
 }
 
 .footer-tech {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--color-text-muted);
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ivory-ghost);
+  letter-spacing: 0.05em;
 }
 
 .footer-tech a {
-  color: var(--color-text-secondary);
+  color: var(--ivory-muted);
   text-decoration: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: var(--color-surface);
-  transition: all var(--transition-fast);
+  padding: 6px 12px;
+  border: 1px solid var(--ivory-whisper);
+  transition: all 0.3s var(--ease-out-quint);
 }
 
 .footer-tech a:hover {
-  color: var(--color-text);
-  background: var(--color-surface-hover);
+  color: var(--gold-muted);
+  border-color: var(--gold-muted);
+  background: var(--gold-subtle);
 }
 
+/* === RESPONSIVE === */
+
 @media (max-width: 768px) {
+  .footer {
+    padding: 60px 0 40px;
+  }
+
   .footer-top {
     flex-direction: column;
     text-align: center;
@@ -90,10 +160,17 @@
 
   .footer-links {
     justify-content: center;
+    gap: 24px;
   }
 
   .footer-bottom {
     flex-direction: column;
     text-align: center;
+    gap: 16px;
+  }
+
+  .footer-tech {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

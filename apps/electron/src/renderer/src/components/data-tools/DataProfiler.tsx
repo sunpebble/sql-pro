@@ -94,7 +94,7 @@ const StatCard = memo(
     value,
     subValue,
     icon: Icon,
-    color = 'text-primary',
+    color = 'text-gold',
   }: StatCardProps) => {
     return (
       <div className="bg-muted/50 rounded-lg p-4">
@@ -135,8 +135,8 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
     <button
       onClick={onClick}
       className={cn(
-        'hover:border-primary/50 w-full rounded-lg border p-3 text-left transition-colors',
-        isSelected && 'border-primary bg-primary/5'
+        'hover:border-gold/50 w-full rounded-lg border p-3 text-left transition-colors',
+        isSelected && 'border-gold bg-gold/5'
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -182,10 +182,10 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="bg-primary/10 rounded-lg p-2">
+        <div className="bg-gold/10 rounded-lg p-2">
           {(() => {
             const Icon = getTypeIcon(column.type);
-            return <Icon className="text-primary h-6 w-6" />;
+            return <Icon className="text-gold h-6 w-6" />;
           })()}
         </div>
         <div>

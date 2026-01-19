@@ -207,8 +207,8 @@ function DialogFormContent({
   return (
     <>
       <div className="flex flex-col items-center text-center">
-        <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-          <Settings className="text-primary h-6 w-6" />
+        <div className="bg-gold/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+          <Settings className="text-gold h-6 w-6" />
         </div>
         <Dialog.Title className="text-lg font-semibold">
           {dialogTitle}

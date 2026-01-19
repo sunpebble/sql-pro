@@ -1,5 +1,6 @@
 import type { SplitPane } from '@/stores';
 import type { DatabaseSchema } from '@/types/database';
+import { GoldButton } from '@sqlpro/ui';
 import { Button } from '@sqlpro/ui/button';
 import { AlertCircle, Clock, Loader2, Play, X, Zap } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
@@ -156,7 +157,7 @@ export const QueryPane = memo(
       <div
         className={cn(
           'flex h-full min-w-0 flex-col',
-          isActive && 'ring-primary/50 ring-2 ring-inset'
+          isActive && 'ring-gold/50 ring-2 ring-inset'
         )}
         onClick={onActivate}
       >
@@ -186,9 +187,9 @@ export const QueryPane = memo(
             >
               <Zap className="h-3.5 w-3.5" />
             </Button>
-            <Button
+            <GoldButton
               size="sm"
-              className="h-7 gap-1 px-2"
+              className="h-7 gap-1 px-3"
               onClick={handleExecute}
               disabled={tab.isExecuting || !tab.query.trim()}
             >
@@ -198,7 +199,7 @@ export const QueryPane = memo(
                 <Play className="h-3.5 w-3.5" />
               )}
               Run
-            </Button>
+            </GoldButton>
             {showCloseButton && onClose && (
               <Button
                 variant="ghost"

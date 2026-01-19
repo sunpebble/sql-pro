@@ -17,18 +17,25 @@ export function GeneralSection() {
       {/* Language Section */}
       <SettingGroup title={t('general.language')}>
         <div className="grid grid-cols-2 gap-2">
-          {(Object.keys(LANGUAGES) as LanguageCode[]).map((code) => (
-            <Button
-              key={code}
-              variant={i18n.language?.startsWith(code) ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => changeLanguage(code)}
-              className="justify-start"
-            >
-              <Globe className="mr-2 h-4 w-4" />
-              {LANGUAGES[code].nativeName}
-            </Button>
-          ))}
+          {(Object.keys(LANGUAGES) as LanguageCode[]).map((code) => {
+            const isActive = i18n.language?.startsWith(code);
+            return (
+              <Button
+                key={code}
+                variant="outline"
+                size="sm"
+                onClick={() => changeLanguage(code)}
+                className={`justify-start ${
+                  isActive
+                    ? 'border-gold bg-gold/15 text-gold hover:bg-gold/25'
+                    : 'hover:border-gold/50 hover:text-gold'
+                }`}
+              >
+                <Globe className="mr-2 h-4 w-4" />
+                {LANGUAGES[code].nativeName}
+              </Button>
+            );
+          })}
         </div>
       </SettingGroup>
 
@@ -41,6 +48,7 @@ export function GeneralSection() {
           <Switch
             checked={restoreSession}
             onCheckedChange={setRestoreSession}
+            className="data-checked:bg-gold"
           />
         </SettingItem>
       </SettingGroup>

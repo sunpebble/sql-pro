@@ -37,7 +37,7 @@ export function AnimatedLoader({
         <div className={cn('absolute inset-0', sizes.icon)}>
           <svg className="animate-spin" viewBox="0 0 50 50">
             <circle
-              className="stroke-primary/20"
+              className="stroke-gold/20"
               strokeWidth="4"
               fill="none"
               r="20"
@@ -45,7 +45,7 @@ export function AnimatedLoader({
               cy="25"
             />
             <circle
-              className="stroke-primary"
+              className="stroke-gold"
               strokeWidth="4"
               fill="none"
               r="20"
@@ -58,7 +58,7 @@ export function AnimatedLoader({
           </svg>
         </div>
         {/* Pulsing center icon */}
-        <Database className={cn('text-primary animate-pulse', sizes.icon)} />
+        <Database className={cn('text-gold animate-pulse', sizes.icon)} />
       </div>
       <span className={cn('text-muted-foreground animate-pulse', sizes.text)}>
         {text}
@@ -227,7 +227,7 @@ export function PulseHighlight({
     <div className={cn('relative', active && 'animate-highlight', className)}>
       {children}
       {active && (
-        <div className="bg-primary/10 pointer-events-none absolute inset-0 animate-ping rounded" />
+        <div className="bg-gold/10 pointer-events-none absolute inset-0 animate-ping rounded" />
       )}
     </div>
   );

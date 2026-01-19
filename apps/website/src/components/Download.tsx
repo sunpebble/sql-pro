@@ -1,3 +1,10 @@
+import {
+  DecoFrame,
+  GoldButton,
+  GoldDivider,
+  GradientText,
+  SectionNumber,
+} from '@sqlpro/ui';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Download.css';
@@ -88,28 +95,45 @@ export default function Download() {
       <div className="container">
         <div className="download-glow" aria-hidden="true" />
 
-        <div className="download-content">
+        <DecoFrame
+          size="lg"
+          variant="gold"
+          fullCorners
+          animated
+          className="download-content"
+        >
+          <SectionNumber>04 · Download</SectionNumber>
+
           <h2 id="download-title" className="download-title">
             {t('download.title')}{' '}
-            <span className="gradient-text">
+            <GradientText as="span" variant="gold">
               {t('download.titleHighlight')}
-            </span>
+            </GradientText>
           </h2>
           <p className="download-subtitle">{t('download.subtitle')}</p>
 
-          <a
-            href="https://github.com/kunish-homelab/sql-pro/releases/latest"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary btn-lg btn-download download-main"
-            aria-describedby="download-arch"
+          <GoldDivider diamond />
+
+          <GoldButton
+            variant="pulse"
+            size="lg"
+            corners
+            render={
+              <a
+                href="https://github.com/anthropics/sql-pro/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-describedby="download-arch"
+              />
+            }
+            className="download-main"
           >
             {platformIcons[platform]}
             <span>
               {t('download.downloadFor', { platform: platformName })}
               <small id="download-arch">{platformArch}</small>
             </span>
-          </a>
+          </GoldButton>
 
           <nav
             className="download-other"
@@ -117,17 +141,22 @@ export default function Download() {
           >
             <span>{t('download.otherPlatforms')}</span>
             {otherPlatforms.map((p) => (
-              <a
+              <GoldButton
                 key={p}
-                href="https://github.com/kunish-homelab/sql-pro/releases/latest"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="download-link"
-                title={t(`download.arch.${p}`)}
+                variant="ghost"
+                size="sm"
+                render={
+                  <a
+                    href="https://github.com/anthropics/sql-pro/releases/latest"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={t(`download.arch.${p}`)}
+                  />
+                }
               >
                 {platformIcons[p]}
                 {t(`download.platforms.${p}`)}
-              </a>
+              </GoldButton>
             ))}
           </nav>
 
@@ -141,7 +170,7 @@ export default function Download() {
               {t('download.buildGuideLink')}
             </a>
           </p>
-        </div>
+        </DecoFrame>
       </div>
     </section>
   );

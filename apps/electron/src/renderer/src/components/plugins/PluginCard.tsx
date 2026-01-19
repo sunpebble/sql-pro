@@ -376,10 +376,11 @@ export function PluginCard({
           )}
           {variant === 'marketplace' && !isInstalled && onInstall && (
             <Button
-              variant="default"
+              variant="outline"
               size="sm"
               onClick={handleInstall}
               disabled={isLoading}
+              className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
             >
               <Download className="size-4" />
               Install
@@ -521,10 +522,11 @@ export function PluginCard({
           )}
           {variant === 'marketplace' && !isInstalled && onInstall && (
             <Button
-              variant="default"
+              variant="outline"
               size="sm"
               onClick={handleInstall}
               disabled={isLoading}
+              className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
             >
               <Download className="size-4" />
               Install

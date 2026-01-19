@@ -294,7 +294,7 @@ export const ColumnStats = memo(
                         'flex items-center gap-1.5 rounded px-2 py-1 text-xs',
                         'whitespace-nowrap transition-all duration-150',
                         isSelected
-                          ? 'bg-primary text-primary-foreground shadow-sm'
+                          ? 'bg-gold text-background shadow-sm'
                           : 'hover:bg-muted bg-background border'
                       )}
                     >
@@ -306,7 +306,7 @@ export const ColumnStats = memo(
                           className={cn(
                             'rounded px-1 text-[9px]',
                             isSelected
-                              ? 'bg-primary-foreground/20'
+                              ? 'bg-background/20'
                               : nullPercentage > 50
                                 ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
                                 : 'bg-muted'

@@ -252,7 +252,7 @@ export function SchemaComparisonPanel({
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <GitCompare className="text-primary h-6 w-6" />
+              <GitCompare className="text-gold h-6 w-6" />
               <div>
                 <h1 className="text-2xl font-semibold">
                   {t('compare.schemaComparison')}
@@ -369,9 +369,10 @@ export function SchemaComparisonPanel({
           <div className="flex justify-center">
             <Button
               size="lg"
+              variant="outline"
               onClick={handleCompare}
               disabled={!canCompare}
-              className="min-w-50"
+              className="border-gold bg-gold/15 text-gold hover:bg-gold/25 min-w-50"
               title="Compare schemas (⌘↵)"
             >
               {isComparing ? (

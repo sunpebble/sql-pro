@@ -294,9 +294,9 @@ export function ColumnFilterPopover({
           {/* Action buttons */}
           <div className="flex items-center gap-2 pt-1">
             <Button
-              variant="default"
+              variant="outline"
               size="sm"
-              className="flex-1"
+              className="border-gold bg-gold/15 text-gold hover:bg-gold/25 flex-1"
               onClick={handleApply}
             >
               {t('filter.apply')}

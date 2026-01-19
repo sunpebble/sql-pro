@@ -1,4 +1,4 @@
-import { Button } from '@sqlpro/ui/button';
+import { DecoFrame, GoldButton, GradientText } from '@sqlpro/ui';
 import { Database, PlayCircle, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -49,11 +49,18 @@ export function WelcomeDialog({
       >
         <DialogHeader className="text-center sm:text-center">
           {/* App Logo */}
-          <div className="from-primary/20 to-primary/5 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br">
-            <Database className="text-primary h-8 w-8" />
-          </div>
+          <DecoFrame
+            size="default"
+            variant="gold"
+            animated
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
+          >
+            <Database className="text-gold h-8 w-8" />
+          </DecoFrame>
           <DialogTitle className="text-xl">
-            {t('welcomeDialog.title')}
+            <GradientText variant="gold">
+              {t('welcomeDialog.title')}
+            </GradientText>
           </DialogTitle>
           <DialogDescription
             id="welcome-dialog-description"
@@ -64,18 +71,19 @@ export function WelcomeDialog({
         </DialogHeader>
 
         <DialogFooter className="mt-4 flex-col gap-2 sm:flex-col">
-          <Button onClick={handleTakeTour} className="w-full" size="lg">
+          <GoldButton
+            variant="default"
+            size="lg"
+            onClick={handleTakeTour}
+            className="w-full"
+          >
             <PlayCircle className="mr-2 h-4 w-4" />
             {t('welcomeDialog.takeTour')}
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={handleSkip}
-            className="text-muted-foreground w-full"
-          >
+          </GoldButton>
+          <GoldButton variant="ghost" onClick={handleSkip} className="w-full">
             <X className="mr-2 h-4 w-4" />
             {t('welcomeDialog.skipForNow')}
-          </Button>
+          </GoldButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

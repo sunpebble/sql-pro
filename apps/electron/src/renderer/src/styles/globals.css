@@ -6,6 +6,7 @@
 @source '../../../../../../packages/ui/src';
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(:not(.dark) *));
 
 :root {
   --background: oklch(1 0 0);
@@ -21,12 +22,12 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.93 0.03 255);
-  --accent-foreground: oklch(0.35 0.15 255);
+  --accent: oklch(0.93 0.03 85);
+  --accent-foreground: oklch(0.35 0.1 85);
   --destructive: oklch(0.58 0.22 27);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.55 0.2 255);
+  --ring: oklch(0.72 0.11 85);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -62,6 +63,11 @@
   --type-text-bg: oklch(0.75 0.15 85 / 10%);
   --type-unknown: oklch(0.45 0 0);
   --type-unknown-bg: oklch(0.55 0 0 / 10%);
+
+  /* Gold brand colors - Data Sanctum theme */
+  --gold: oklch(0.72 0.11 85); /* #C9A962 equivalent - primary gold */
+  --gold-bright: oklch(0.76 0.14 85); /* #D4AF37 equivalent - brighter gold */
+  --gold-dark: oklch(0.58 0.12 85); /* #9A7B2D equivalent - darker gold */
 }
 
 .dark {
@@ -78,12 +84,12 @@
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.3 0.08 255);
-  --accent-foreground: oklch(0.8 0.15 255);
+  --accent: oklch(0.3 0.06 85);
+  --accent-foreground: oklch(0.8 0.1 85);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.65 0.2 255);
+  --ring: oklch(0.75 0.12 85);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -110,6 +116,11 @@
   --type-boolean: oklch(0.7 0.17 142);
   --type-text: oklch(0.75 0.15 85);
   --type-unknown: oklch(0.65 0 0);
+
+  /* Gold brand colors - Data Sanctum theme (dark mode) */
+  --gold: oklch(0.75 0.12 85); /* Slightly brighter for dark mode */
+  --gold-bright: oklch(0.78 0.14 85);
+  --gold-dark: oklch(0.62 0.12 85);
 }
 
 @theme inline {
@@ -165,6 +176,11 @@
   --color-type-text-bg: var(--type-text-bg);
   --color-type-unknown: var(--type-unknown);
   --color-type-unknown-bg: var(--type-unknown-bg);
+
+  /* Gold brand colors */
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-dark: var(--gold-dark);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -470,6 +486,117 @@ textarea,
   -webkit-app-region: no-drag;
 }
 
+/* ============================================
+ * DATA SANCTUM BRANDING
+ * Gold accent theme for distinctive identity
+ * ============================================ */
+
+:root {
+  /* Gold accent palette */
+  --gold-bright: oklch(0.78 0.12 85);
+  --gold-muted: oklch(0.72 0.1 85);
+  --gold-dark: oklch(0.58 0.12 85);
+  --gold-glow: oklch(0.78 0.12 85 / 35%);
+  --gold-subtle: oklch(0.78 0.12 85 / 8%);
+
+  /* Branded text gradient */
+  --gradient-gold: linear-gradient(
+    135deg,
+    oklch(0.78 0.12 85) 0%,
+    oklch(0.88 0.08 85) 50%,
+    oklch(0.72 0.1 85) 100%
+  );
+}
+
+.dark {
+  --gold-bright: oklch(0.82 0.14 85);
+  --gold-muted: oklch(0.75 0.12 85);
+  --gold-dark: oklch(0.62 0.1 85);
+  --gold-glow: oklch(0.82 0.14 85 / 40%);
+  --gold-subtle: oklch(0.82 0.14 85 / 10%);
+}
+
+/* Gold gradient text utility */
+.text-gradient-gold {
+  background: var(--gradient-gold);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-gold 4s ease-in-out infinite;
+}
+
+@keyframes shimmer-gold {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 200% center;
+  }
+}
+
+/* Gold glow effects */
+.glow-gold {
+  box-shadow: 0 0 40px var(--gold-glow);
+}
+
+.glow-gold-pulse {
+  animation: pulse-gold 3s ease-in-out infinite;
+}
+
+@keyframes pulse-gold {
+  0%,
+  100% {
+    box-shadow: 0 4px 30px var(--gold-glow);
+  }
+  50% {
+    box-shadow:
+      0 8px 50px var(--gold-glow),
+      0 0 80px oklch(0.78 0.12 85 / 15%);
+  }
+}
+
+/* Geometric hexagon background */
+.bg-hex-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpath d='M30 0L60 15v22L30 52 0 37V15z' fill='none' stroke='%23d4af3712' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 60px 52px;
+}
+
+.dark .bg-hex-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpath d='M30 0L60 15v22L30 52 0 37V15z' fill='none' stroke='%23d4af3718' stroke-width='0.5'/%3E%3C/svg%3E");
+}
+
+/* Art Deco decorative border */
+.border-deco {
+  position: relative;
+}
+
+.border-deco::before,
+.border-deco::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--gold-muted);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.border-deco::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.border-deco::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
 /* Grid background patterns */
 .bg-grid-dot {
   background-image: radial-gradient(
@@ -656,4 +783,346 @@ th {
 /* Light mode vibrancy - very subtle white overlay */
 :root:not(.dark) [data-vibrancy] {
   background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ============================================
+ * LAYOUT ANIMATIONS
+ * Staggered reveal, entrance, and micro-interactions
+ * ============================================ */
+
+/* Fade in up animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Staggered delays for children */
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+.stagger-6 {
+  animation-delay: 0.6s;
+}
+
+/* Scale in animation */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Slide in from left */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Slide in from right */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Breathing glow animation */
+@keyframes breathe-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px var(--gold-glow),
+      inset 0 0 10px transparent;
+  }
+  50% {
+    box-shadow:
+      0 0 40px var(--gold-glow),
+      0 0 60px oklch(0.78 0.12 85 / 20%),
+      inset 0 0 20px oklch(0.78 0.12 85 / 5%);
+  }
+}
+
+.animate-breathe-glow {
+  animation: breathe-glow 4s ease-in-out infinite;
+}
+
+/* Rotate border animation (for decorative frames) */
+@keyframes rotate-border {
+  from {
+    --gradient-angle: 0deg;
+  }
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+/* ============================================
+ * GLASSMORPHISM EFFECTS
+ * Modern glass-like UI elements
+ * ============================================ */
+
+.glass {
+  background: oklch(1 0 0 / 60%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid oklch(1 0 0 / 20%);
+}
+
+.dark .glass {
+  background: oklch(0.15 0 0 / 70%);
+  border: 1px solid oklch(1 0 0 / 10%);
+}
+
+.glass-gold {
+  background: linear-gradient(
+    135deg,
+    oklch(0.78 0.12 85 / 8%) 0%,
+    oklch(0.72 0.1 85 / 4%) 100%
+  );
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid oklch(0.78 0.12 85 / 25%);
+}
+
+.dark .glass-gold {
+  background: linear-gradient(
+    135deg,
+    oklch(0.78 0.12 85 / 12%) 0%,
+    oklch(0.72 0.1 85 / 6%) 100%
+  );
+  border: 1px solid oklch(0.78 0.12 85 / 20%);
+}
+
+/* ============================================
+ * FLOATING DOCK STYLES
+ * Bottom-centered navigation dock
+ * ============================================ */
+
+.floating-dock {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 6px 12px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.floating-dock-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  transition: all 0.2s ease-out;
+}
+
+.floating-dock-item:hover {
+  transform: translateY(-4px) scale(1.1);
+  background: oklch(0.78 0.12 85 / 15%);
+}
+
+.floating-dock-item.active {
+  background: linear-gradient(
+    135deg,
+    oklch(0.78 0.12 85 / 25%) 0%,
+    oklch(0.72 0.1 85 / 15%) 100%
+  );
+  box-shadow: 0 0 20px oklch(0.78 0.12 85 / 30%);
+}
+
+.floating-dock-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.floating-dock-item:hover .floating-dock-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================
+ * COMMAND BAR STYLES
+ * Floating titlebar with glass effect
+ * ============================================ */
+
+.command-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid oklch(0.78 0.12 85 / 10%);
+  background: linear-gradient(
+    to right,
+    oklch(0.78 0.12 85 / 3%) 0%,
+    transparent 20%,
+    transparent 80%,
+    oklch(0.78 0.12 85 / 3%) 100%
+  );
+}
+
+.dark .command-bar {
+  background: linear-gradient(
+    to right,
+    oklch(0.78 0.12 85 / 5%) 0%,
+    transparent 20%,
+    transparent 80%,
+    oklch(0.78 0.12 85 / 5%) 100%
+  );
+}
+
+/* ============================================
+ * WELCOME SCREEN SPECIAL EFFECTS
+ * Immersive entry experience
+ * ============================================ */
+
+/* Radial gradient spotlight effect */
+.spotlight {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    oklch(0.78 0.12 85 / 15%) 0%,
+    oklch(0.78 0.12 85 / 5%) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.dark .spotlight {
+  background: radial-gradient(
+    circle,
+    oklch(0.78 0.12 85 / 20%) 0%,
+    oklch(0.78 0.12 85 / 8%) 40%,
+    transparent 70%
+  );
+}
+
+/* Noise texture overlay for depth */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.dark .noise-overlay {
+  opacity: 0.05;
+}
+
+/* Vault door decorative frame */
+.vault-frame {
+  position: relative;
+}
+
+.vault-frame::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    oklch(0.78 0.12 85 / 60%) 0%,
+    oklch(0.78 0.12 85 / 20%) 25%,
+    oklch(0.78 0.12 85 / 10%) 50%,
+    oklch(0.78 0.12 85 / 20%) 75%,
+    oklch(0.78 0.12 85 / 60%) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }

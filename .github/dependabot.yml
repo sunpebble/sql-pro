@@ -8,6 +8,10 @@ updates:
       interval: daily
       time: '09:00'
       timezone: Asia/Shanghai
+    groups:
+      all:
+        patterns:
+          - '*'
 
   # Check for GitHub Actions updates daily
   - package-ecosystem: github-actions

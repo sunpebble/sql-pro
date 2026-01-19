@@ -54,7 +54,7 @@ function QueryBuilderTableNodeComponent({
       className={cn(
         'bg-card text-card-foreground relative overflow-visible rounded-lg border shadow-md',
         'dark:border-zinc-700 dark:bg-zinc-900',
-        selected && 'ring-primary ring-2'
+        selected && 'ring-gold ring-2'
       )}
     >
       {/* Header - draggable area */}
@@ -64,7 +64,7 @@ function QueryBuilderTableNodeComponent({
           'bg-muted/50 dark:bg-zinc-800/50'
         )}
       >
-        <Table className="text-primary h-4 w-4 shrink-0" />
+        <Table className="text-gold h-4 w-4 shrink-0" />
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="text-foreground truncate font-medium">
             {table.name}
@@ -131,7 +131,7 @@ function QueryBuilderTableNodeComponent({
               className={cn(
                 'group relative flex items-center gap-2 overflow-visible py-1 pr-5 pl-6 text-sm',
                 'hover:bg-accent/50 cursor-pointer',
-                isSelected && 'bg-primary/10'
+                isSelected && 'bg-gold/10'
               )}
               onClick={() => handleToggleColumn(column.name)}
             >
@@ -142,8 +142,8 @@ function QueryBuilderTableNodeComponent({
                 id={`${column.name}-target`}
                 className={cn(
                   '!absolute !-left-[24px] h-3! w-3! border-2!',
-                  'border-primary! bg-background!',
-                  'hover:bg-primary! transition-all hover:scale-125!'
+                  'border-gold! bg-background!',
+                  'hover:bg-gold! transition-all hover:scale-125!'
                 )}
               />
 
@@ -198,8 +198,8 @@ function QueryBuilderTableNodeComponent({
                 id={`${column.name}-source`}
                 className={cn(
                   '!absolute !-right-[20px] h-3! w-3! border-2!',
-                  'border-primary! bg-background!',
-                  'hover:bg-primary! transition-all hover:scale-125!'
+                  'border-gold! bg-background!',
+                  'hover:bg-gold! transition-all hover:scale-125!'
                 )}
               />
             </div>

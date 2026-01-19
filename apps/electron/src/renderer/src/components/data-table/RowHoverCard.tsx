@@ -128,7 +128,7 @@ export const RowHoverCard = memo(
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground text-xs">Row ID:</span>
-                <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 font-mono text-xs">
+                <span className="bg-gold/10 text-gold rounded px-1.5 py-0.5 font-mono text-xs">
                   {String(rowId)}
                 </span>
               </div>

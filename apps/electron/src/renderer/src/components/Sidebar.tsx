@@ -751,13 +751,13 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   return (
     <div
       ref={containerRef}
-      className="bg-muted/30 bg-grid-dot flex h-full w-full flex-col overflow-hidden border-r outline-none"
+      className="glass-gold bg-grid-dot flex h-full w-full flex-col overflow-hidden outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       data-tour-target="sidebar"
     >
       {/* Search - matches DataTabBar height */}
-      <div className="mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
+      <div className="border-gold/10 mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
         <div className="relative flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
           <input
@@ -774,13 +774,13 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
-            className="placeholder:text-muted-foreground focus:ring-ring h-6 w-full rounded-sm bg-transparent pr-2 pl-6 text-sm focus:ring-1 focus:outline-none"
+            className="placeholder:text-muted-foreground focus:ring-gold/50 h-6 w-full rounded-sm bg-transparent pr-2 pl-6 text-sm focus:ring-1 focus:outline-none"
           />
         </div>
       </div>
 
       {/* Sort and Filter Controls */}
-      <ScrollArea className="h-8 w-full shrink-0 border-b">
+      <ScrollArea className="border-gold/10 h-8 w-full shrink-0 border-b">
         <div className="flex h-full min-w-0 items-center gap-1 px-1.5">
           {/* Sort Dropdown */}
           <DropdownMenu>
@@ -945,31 +945,30 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                     <EmptyMedia variant="icon">
                       <Database className="size-5" />
                     </EmptyMedia>
-                    <EmptyTitle>No tables yet</EmptyTitle>
+                    <EmptyTitle>{t('empty.title')}</EmptyTitle>
                     <EmptyDescription>
-                      This database is empty. Create your first table using the
-                      SQL Query Editor or paste a CREATE TABLE statement.
+                      {t('empty.databaseEmpty')}
                     </EmptyDescription>
                   </EmptyHeader>
                   <EmptyContent>
                     <div className="flex flex-col gap-2 sm:flex-row">
                       <Button
-                        variant="default"
+                        variant="outline"
                         size="sm"
                         onClick={handleOpenSqlTab}
-                        className="w-full sm:w-auto"
+                        className="border-gold bg-gold/15 text-gold hover:bg-gold/25 w-full sm:w-auto"
                       >
                         <Code className="mr-2 size-4" />
-                        Open SQL Query Editor
+                        {t('empty.openSqlQueryEditor')}
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={handleCopySampleSQL}
-                        className="w-full sm:w-auto"
+                        className="hover:border-gold/50 hover:text-gold w-full sm:w-auto"
                       >
                         <Copy className="mr-2 size-4" />
-                        Copy Sample SQL
+                        {t('empty.copySampleSql')}
                       </Button>
                     </div>
                   </EmptyContent>
@@ -983,13 +982,13 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                     <EmptyMedia variant="icon">
                       <Search className="size-5" />
                     </EmptyMedia>
-                    <EmptyTitle>No results</EmptyTitle>
+                    <EmptyTitle>{t('noResults.title')}</EmptyTitle>
                     <EmptyDescription>
                       {searchQuery
-                        ? 'No tables match your search'
+                        ? t('noResults.noTablesMatch')
                         : activeTagFilter
-                          ? 'No tables with this tag'
-                          : 'No tables found'}
+                          ? t('noResults.noTablesWithTag')
+                          : t('noResults.noTablesFound')}
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
@@ -1006,20 +1005,20 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Truncate Table</AlertDialogTitle>
+            <AlertDialogTitle>{t('dialog.truncateTable')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete all rows from{' '}
+              {t('dialog.truncateConfirm')}{' '}
               <span className="font-semibold">{tableToTruncate?.name}</span>?
-              This action cannot be undone.
+              {t('dialog.truncateWarning')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmTruncate}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Truncate
+              {t('dialog.truncate')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1033,23 +1032,27 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Drop {tableToDrop?.type === 'view' ? 'View' : 'Table'}
+              {tableToDrop?.type === 'view'
+                ? t('dialog.dropView')
+                : t('dialog.dropTable')}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to drop{' '}
-              <span className="font-semibold">{tableToDrop?.name}</span>? This
-              will permanently delete the{' '}
-              {tableToDrop?.type === 'view' ? 'view' : 'table'} and cannot be
-              undone.
+              {t('dialog.dropConfirm')}{' '}
+              <span className="font-semibold">{tableToDrop?.name}</span>?{' '}
+              {t('dialog.dropWarning')}
+              {tableToDrop?.type === 'view'
+                ? t('schema.views').toLowerCase()
+                : t('schema.tables').toLowerCase()}{' '}
+              {t('dialog.andCannotBeUndone')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmDrop}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Drop
+              {t('dialog.drop')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1394,24 +1397,24 @@ function TableItem({
           className={cn(
             'flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 transition-colors',
             isSelected
-              ? 'bg-primary/15 text-primary font-medium'
+              ? 'bg-gold/15 text-gold font-medium'
               : 'hover:bg-accent/50 text-foreground/90',
-            isFocused && !isSelected && 'ring-primary/50 ring-1 ring-inset'
+            isFocused && !isSelected && 'ring-gold/50 ring-1 ring-inset'
           )}
         >
-          {isPinned && <Pin className="text-primary h-3 w-3 shrink-0" />}
+          {isPinned && <Pin className="text-gold h-3 w-3 shrink-0" />}
           {isView ? (
             <Eye
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
+                isSelected ? 'text-gold/70' : 'text-muted-foreground/70'
               )}
             />
           ) : (
             <Table
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
+                isSelected ? 'text-gold/70' : 'text-muted-foreground/70'
               )}
             />
           )}
@@ -1440,7 +1443,7 @@ function TableItem({
             <span
               className={cn(
                 'shrink-0 text-xs tabular-nums',
-                isSelected ? 'text-primary/60' : 'text-muted-foreground/60'
+                isSelected ? 'text-gold/60' : 'text-muted-foreground/60'
               )}
             >
               {table.rowCount.toLocaleString()}
@@ -1659,7 +1662,7 @@ function FilterTagsPopover({
             className={cn(
               'flex-1 px-3 py-2 text-xs font-medium transition-colors',
               activeTab === 'filter'
-                ? 'border-primary text-foreground border-b-2'
+                ? 'border-gold text-foreground border-b-2'
                 : 'text-muted-foreground hover:text-foreground'
             )}
             onClick={() => setActiveTab('filter')}
@@ -1670,7 +1673,7 @@ function FilterTagsPopover({
             className={cn(
               'flex-1 px-3 py-2 text-xs font-medium transition-colors',
               activeTab === 'manage'
-                ? 'border-primary text-foreground border-b-2'
+                ? 'border-gold text-foreground border-b-2'
                 : 'text-muted-foreground hover:text-foreground'
             )}
             onClick={() => setActiveTab('manage')}

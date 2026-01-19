@@ -299,8 +299,8 @@ export const ChartBuilder = memo(
                         className={cn(
                           'flex flex-col items-center gap-1 rounded-lg border p-3 transition-colors',
                           config.type === type
-                            ? 'border-primary bg-primary/5'
-                            : 'hover:border-primary/50'
+                            ? 'border-gold bg-gold/5'
+                            : 'hover:border-gold/50'
                         )}
                       >
                         <Icon className="h-5 w-5" />
@@ -407,8 +407,8 @@ export const ChartBuilder = memo(
                         className={cn(
                           'flex flex-col items-center gap-1 rounded-lg border p-2 transition-colors',
                           config.colorScheme === scheme.value
-                            ? 'border-primary bg-primary/5'
-                            : 'hover:border-primary/50'
+                            ? 'border-gold bg-gold/5'
+                            : 'hover:border-gold/50'
                         )}
                       >
                         <div className="flex gap-0.5">

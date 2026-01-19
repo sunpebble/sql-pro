@@ -479,9 +479,9 @@ export function EditableDataGrid({
                   <span className="truncate">{col.name}</span>
                   {sort?.column === col.name &&
                     (sort.direction === 'asc' ? (
-                      <ArrowUp className="text-primary h-3 w-3 shrink-0" />
+                      <ArrowUp className="text-gold h-3 w-3 shrink-0" />
                     ) : (
-                      <ArrowDown className="text-primary h-3 w-3 shrink-0" />
+                      <ArrowDown className="text-gold h-3 w-3 shrink-0" />
                     ))}
                 </button>
 
@@ -553,9 +553,7 @@ export function EditableDataGrid({
                       key={col.name}
                       className={cn(
                         'flex items-center border-r px-2',
-                        isFocused &&
-                          !isEditing &&
-                          'ring-primary ring-2 ring-inset'
+                        isFocused && !isEditing && 'ring-gold ring-2 ring-inset'
                       )}
                       style={{
                         width: columnWidths[idx],

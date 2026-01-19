@@ -1,4 +1,6 @@
+import { DecoFrame, GoldDivider, GradientText } from '@sqlpro/ui';
 import { Database } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -10,8 +12,10 @@ import { useDialogStore } from '@/stores';
 
 /**
  * About dialog showing application information
+ * Uses Data Sanctum design language for brand consistency
  */
 export function AboutDialog() {
+  const { t } = useTranslation('common');
   const { aboutOpen, closeAbout } = useDialogStore();
 
   return (
@@ -19,31 +23,61 @@ export function AboutDialog() {
       open={aboutOpen}
       onOpenChange={(open: boolean) => !open && closeAbout()}
     >
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md" decorated>
         <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700">
-            <Database className="h-8 w-8 text-white" />
-          </div>
-          <DialogTitle className="text-xl">SQL Pro</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Professional SQLite Database Manager
+          {/* Logo with decorative frame */}
+          <DecoFrame
+            size="default"
+            variant="gold"
+            animated
+            className="mx-auto mb-4 flex h-20 w-20 items-center justify-center"
+          >
+            <Database className="text-gold h-10 w-10" />
+          </DecoFrame>
+
+          <DialogTitle className="text-2xl tracking-wide">
+            <GradientText variant="gold" speed="slow">
+              SQL Pro
+            </GradientText>
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+            {t('about.subtitle')}
           </DialogDescription>
         </DialogHeader>
 
+        <GoldDivider className="my-4" />
+
         <div className="space-y-4 text-center">
-          <div className="space-y-1">
-            <p className="text-muted-foreground text-sm">Version</p>
-            <p className="font-mono text-sm">1.0.0</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <p className="text-muted-foreground text-xs tracking-wider uppercase">
+                {t('about.version')}
+              </p>
+              <p className="text-gold font-mono text-sm">1.9.0</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-muted-foreground text-xs tracking-wider uppercase">
+                {t('about.platform')}
+              </p>
+              <p className="font-mono text-sm">Electron</p>
+            </div>
           </div>
 
           <div className="space-y-1">
-            <p className="text-muted-foreground text-sm">Built with</p>
-            <p className="text-sm">Tauri + React + TypeScript</p>
+            <p className="text-muted-foreground text-xs tracking-wider uppercase">
+              {t('about.builtWith')}
+            </p>
+            <p className="text-sm">Electron · React · TypeScript · libSQL</p>
           </div>
 
-          <div className="border-t pt-4">
+          <GoldDivider className="my-4" />
+
+          <div className="space-y-2">
             <p className="text-muted-foreground text-xs">
-              © 2025 SQL Pro. All rights reserved.
+              {t('about.copyright')}
+            </p>
+            <p className="text-gold/60 text-xs tracking-widest uppercase">
+              {t('about.tagline')}
             </p>
           </div>
         </div>

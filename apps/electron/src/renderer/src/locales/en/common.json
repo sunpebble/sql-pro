@@ -83,7 +83,10 @@
     "saveFailed": "Save Failed",
     "openInQueryEditor": "Open in Query Editor",
     "generatedSql": "Generated SQL:",
-    "tip": "💡 Tip: Review the SQL carefully before executing, especially if DROP statements are included. Consider backing up your database first."
+    "tip": "💡 Tip: Review the SQL carefully before executing, especially if DROP statements are included. Consider backing up your database first.",
+    "sqlCopied": "SQL copied to clipboard",
+    "sqlCopyFailed": "Failed to copy SQL",
+    "saveSuccess": "Migration file saved"
   },
   "diffFilter": {
     "onlyDifferences": "Only Differences",
@@ -118,10 +121,32 @@
     "create": "Create",
     "rename": "Rename"
   },
+  "about": {
+    "title": "SQL Pro",
+    "subtitle": "Data Sanctum · Professional Database Manager",
+    "version": "Version",
+    "platform": "Platform",
+    "builtWith": "Built with",
+    "copyright": "© 2025 SQL Pro. All rights reserved.",
+    "tagline": "Crafted with precision"
+  },
+  "passwordDialog": {
+    "title": "Encrypted Database",
+    "description": "Enter the password to open",
+    "placeholder": "Enter password",
+    "rememberPassword": "Remember password",
+    "storageUnavailable": "Secure storage is not available on this system",
+    "forgetPassword": "Forget saved password",
+    "open": "Open"
+  },
   "app": {
     "name": "SQL Pro",
     "loading": "Loading...",
     "error": "An error occurred"
+  },
+  "clipboard": {
+    "copied": "Copied to clipboard",
+    "copyFailed": "Failed to copy to clipboard"
   },
   "actions": {
     "save": "Save",
@@ -176,8 +201,23 @@
     "dataDiff": "Data Diff",
     "vectorSearch": "Vector Search"
   },
+  "pendingChanges": {
+    "title": "Pending Changes",
+    "tables_one": "{{count}} table",
+    "tables_other": "{{count}} tables",
+    "changes_one": "{{count}} change",
+    "changes_other": "{{count}} changes",
+    "showDiffView": "Show diff view",
+    "previewSqlStatements": "Preview SQL statements",
+    "sqlPreview": "SQL Preview",
+    "copied": "Copied!",
+    "copy": "Copy",
+    "copySqlToClipboard": "Copy SQL to clipboard",
+    "revertAllChanges": "Revert all changes for this table"
+  },
   "database": {
-    "selectTable": "Select a table from the sidebar to view its data"
+    "selectTable": "Select a table from the sidebar to view its data",
+    "noTableSelected": "No Table Selected"
   },
   "table": {
     "quickFilters": "Quick Filters",
@@ -209,7 +249,12 @@
     "nextPage": "Next page",
     "lastPage": "Last page",
     "dataView": "Data view",
-    "mediaGallery": "Media gallery"
+    "mediaGallery": "Media gallery",
+    "rowsSelected": "{{count}} row selected",
+    "rowsSelected_plural": "{{count}} rows selected",
+    "clearSelection": "Clear selection",
+    "editSelected": "Edit",
+    "deleteSelected": "Delete"
   },
   "mediaGallery": {
     "title": "Media",
@@ -606,6 +651,18 @@
   "queryView": {
     "sqlEditor": "SQL Editor",
     "queryBuilder": "Query Builder"
+  },
+  "queryTabs": {
+    "closeTab": "Close tab",
+    "newQueryTab": "New query tab",
+    "closeSplitView": "Close split view",
+    "splitEditor": "Split editor",
+    "splitRight": "Split Right",
+    "splitDown": "Split Down",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "close": "Close",
+    "closeOthers": "Close Others"
   },
   "queryEditor": {
     "title": "SQL Query",

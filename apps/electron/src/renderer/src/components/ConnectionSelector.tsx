@@ -378,7 +378,7 @@ export function ConnectionSelector({
                     </Tooltip>
                   )}
                   {conn.id === activeConnectionId && (
-                    <Check className="text-primary h-4 w-4" />
+                    <Check className="text-gold h-4 w-4" />
                   )}
                   <Button
                     variant="ghost"

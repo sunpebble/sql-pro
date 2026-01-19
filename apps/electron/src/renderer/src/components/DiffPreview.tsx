@@ -21,6 +21,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { usePendingChanges } from '@/hooks/usePendingChanges';
@@ -45,6 +46,7 @@ interface TableGroup {
 }
 
 export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
+  const { t } = useTranslation('common');
   const { connection } = useConnectionStore();
 
   const {
@@ -200,11 +202,10 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
         <div className="flex items-center gap-2">
           <Database className="text-muted-foreground h-5 w-5" />
           <div>
-            <h2 className="font-semibold">Pending Changes</h2>
+            <h2 className="font-semibold">{t('pendingChanges.title')}</h2>
             <p className="text-muted-foreground text-xs">
-              {tableGroups.length}{' '}
-              {tableGroups.length === 1 ? 'table' : 'tables'} • {changes.length}{' '}
-              {changes.length === 1 ? 'change' : 'changes'}
+              {t('pendingChanges.tables', { count: tableGroups.length })} •{' '}
+              {t('pendingChanges.changes', { count: changes.length })}
             </p>
           </div>
         </div>
