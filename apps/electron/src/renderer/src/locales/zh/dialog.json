@@ -21,6 +21,10 @@
     "qdrant": {
       "name": "Qdrant",
       "description": "向量数据库"
+    },
+    "turso": {
+      "name": "Turso",
+      "description": "边缘 SQLite 数据库"
     }
   },
   "connection": {
@@ -63,6 +67,21 @@
       "ssl": "使用 SSL",
       "sslMode": "SSL 模式",
       "timeout": "连接超时（秒）"
+    },
+    "optional": "可选",
+    "turso": {
+      "authToken": "API 令牌",
+      "authTokenPlaceholder": "您的 Turso API 令牌",
+      "authTokenHint": "从 Turso 控制台 → 设置 → API 令牌获取",
+      "organization": "组织",
+      "organizationPlaceholder": "your-org-slug",
+      "organizationHint": "您的组织标识（如个人或团队名称）",
+      "database": "数据库",
+      "databasePlaceholder": "my-database",
+      "databaseHint": "组织中的数据库名称",
+      "branch": "分支",
+      "branchPlaceholder": "main",
+      "branchHint": "数据库分支（留空使用主分支）"
     }
   },
   "settings": {

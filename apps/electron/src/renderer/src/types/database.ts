@@ -9,7 +9,13 @@ export interface DatabaseConnection {
   error?: string;
   connectedAt?: Date;
   /** Database type */
-  databaseType?: 'sqlite' | 'mysql' | 'postgresql' | 'supabase' | 'qdrant';
+  databaseType?:
+    | 'sqlite'
+    | 'mysql'
+    | 'postgresql'
+    | 'supabase'
+    | 'qdrant'
+    | 'turso';
 }
 
 // Column information

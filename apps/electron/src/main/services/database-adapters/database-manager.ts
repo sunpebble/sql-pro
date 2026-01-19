@@ -26,6 +26,7 @@ import { MySQLAdapter } from './mysql-adapter';
 import { PostgreSQLAdapter } from './postgresql-adapter';
 import { qdrantAdapter } from './qdrant-adapter';
 import { SQLiteAdapter } from './sqlite-adapter';
+import { TursoAdapter } from './turso-adapter';
 
 /**
  * Connection metadata stored by the manager
@@ -51,6 +52,7 @@ class DatabaseManager {
     this.adapters.set('supabase', new PostgreSQLAdapter('supabase'));
     // Use the singleton qdrantAdapter to ensure IPC handlers use the same instance
     this.adapters.set('qdrant', qdrantAdapter);
+    this.adapters.set('turso', new TursoAdapter());
   }
 
   /**

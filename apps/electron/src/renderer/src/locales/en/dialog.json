@@ -21,6 +21,10 @@
     "qdrant": {
       "name": "Qdrant",
       "description": "Vector Database"
+    },
+    "turso": {
+      "name": "Turso",
+      "description": "Edge SQLite Database"
     }
   },
   "connection": {
@@ -63,6 +67,21 @@
       "ssl": "Use SSL",
       "sslMode": "SSL Mode",
       "timeout": "Connection Timeout (seconds)"
+    },
+    "optional": "optional",
+    "turso": {
+      "authToken": "API Token",
+      "authTokenPlaceholder": "Your Turso API token",
+      "authTokenHint": "Get your token from Turso Dashboard → Settings → API Tokens",
+      "organization": "Organization",
+      "organizationPlaceholder": "your-org-slug",
+      "organizationHint": "Your organization slug (e.g., personal or team name)",
+      "database": "Database",
+      "databasePlaceholder": "my-database",
+      "databaseHint": "The database name in your organization",
+      "branch": "Branch",
+      "branchPlaceholder": "main",
+      "branchHint": "Database branch (leave empty for main branch)"
     }
   },
   "settings": {

@@ -86,7 +86,8 @@ export type DatabaseType =
   | 'mysql'
   | 'postgresql'
   | 'supabase'
-  | 'qdrant';
+  | 'qdrant'
+  | 'turso';
 
 /**
  * Connection configuration for different database types
@@ -130,6 +131,14 @@ export interface DatabaseConnectionConfig {
   qdrantApiKey?: string;
   /** Qdrant-specific: Use HTTPS */
   qdrantUseTLS?: boolean;
+  /** Turso-specific: organization slug */
+  tursoOrganization?: string;
+  /** Turso-specific: auth token */
+  tursoAuthToken?: string;
+  /** Turso-specific: selected database name */
+  tursoDatabase?: string;
+  /** Turso-specific: selected branch name (default: 'main') */
+  tursoBranch?: string;
 }
 
 // ============ Qdrant Vector Search Types ============
@@ -3232,3 +3241,56 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'onboarding.skip': { key: 'Escape', modifiers: {} },
   'onboarding.next': { key: 'Enter', modifiers: {} },
 };
+
+// ============ Turso Types ============
+
+/** Turso database info from Platform API */
+export interface TursoDatabaseInfo {
+  name: string;
+  dbId: string;
+  hostname: string;
+  group: string;
+  primaryRegion: string;
+  regions: string[];
+  version: string;
+}
+
+/** Turso branch info from Platform API */
+export interface TursoBranchInfo {
+  name: string;
+  createdAt: string;
+}
+
+/** Turso organization info from Platform API */
+export interface TursoOrganizationInfo {
+  slug: string;
+  name: string;
+  type: 'personal' | 'team';
+}
+
+/** Request to list Turso databases */
+export interface ListTursoDatabasesRequest {
+  authToken: string;
+  organization: string;
+}
+
+/** Response from listing Turso databases */
+export interface ListTursoDatabasesResponse {
+  success: boolean;
+  databases?: TursoDatabaseInfo[];
+  error?: string;
+}
+
+/** Request to list Turso branches */
+export interface ListTursoBranchesRequest {
+  authToken: string;
+  organization: string;
+  database: string;
+}
+
+/** Response from listing Turso branches */
+export interface ListTursoBranchesResponse {
+  success: boolean;
+  branches?: TursoBranchInfo[];
+  error?: string;
+}

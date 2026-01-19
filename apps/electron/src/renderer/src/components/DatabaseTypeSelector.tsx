@@ -44,6 +44,11 @@ const DATABASE_TYPES: DatabaseTypeOption[] = [
     color: 'text-green-500',
   },
   {
+    type: 'turso',
+    icon: Cloud,
+    color: 'text-cyan-500',
+  },
+  {
     type: 'qdrant',
     icon: Box,
     color: 'text-purple-500',
