@@ -118,7 +118,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/coverage-v8": "^4.0.17",
-    "electron": "39.2.7",
+    "electron": "40.0.0",
     "electron-builder": "^26.4.0",
     "electron-vite": "^5.0.0",
     "happy-dom": "^20.3.1",
