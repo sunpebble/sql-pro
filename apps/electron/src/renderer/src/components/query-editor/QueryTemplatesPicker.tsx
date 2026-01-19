@@ -29,6 +29,7 @@ import {
   X,
 } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -68,6 +69,7 @@ interface TemplateCardProps {
 
 const TemplateCard = memo(
   ({ template, onSelect, onDuplicate, onDelete }: TemplateCardProps) => {
+    const { t } = useTranslation('common');
     return (
       <div
         className={cn(
@@ -145,7 +147,9 @@ const TemplateCard = memo(
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Delete template</TooltipContent>
+                <TooltipContent>
+                  {t('queryTemplates.deleteTemplate')}
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
@@ -266,6 +270,7 @@ function NewTemplateDialog({
 
 export const QueryTemplatesPicker = memo(
   ({ open, onOpenChange, onSelect }: QueryTemplatesPickerProps) => {
+    const { t } = useTranslation('common');
     const {
       searchQuery,
       selectedCategory,
@@ -371,9 +376,11 @@ export const QueryTemplatesPicker = memo(
                 {filteredTemplates.length === 0 ? (
                   <div className="text-muted-foreground flex flex-col items-center justify-center py-16">
                     <FileText className="mb-3 h-12 w-12 opacity-40" />
-                    <p className="font-medium">No templates found</p>
+                    <p className="font-medium">
+                      {t('queryTemplates.noTemplatesFound')}
+                    </p>
                     <p className="text-sm opacity-70">
-                      Try adjusting your search or category
+                      {t('queryTemplates.tryAdjustingSearch')}
                     </p>
                   </div>
                 ) : (

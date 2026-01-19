@@ -1,4 +1,12 @@
 {
+  "common": {
+    "close": "关闭",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "loading": "加载中...",
+    "error": "错误"
+  },
   "theme": {
     "light": "浅色",
     "dark": "深色",
@@ -119,7 +127,8 @@
     "folderNamePlaceholder": "输入文件夹名称",
     "creatingSubfolderIn": "正在创建子文件夹：{{name}}",
     "create": "创建",
-    "rename": "重命名"
+    "rename": "重命名",
+    "noFolder": "无文件夹（根级别）"
   },
   "about": {
     "title": "SQL Pro",
@@ -253,6 +262,12 @@
     "rowsSelected": "已选择 {{count}} 行",
     "rowsSelected_plural": "已选择 {{count}} 行",
     "clearSelection": "清除选择",
+    "bulkEdit": {
+      "noFieldsAdded": "未添加字段",
+      "selectColumnToStart": "选择上方的列开始编辑",
+      "fieldsWillBeUpdated_one": "将在 {{rows}} 行中更新 {{count}} 个字段",
+      "fieldsWillBeUpdated_other": "将在 {{rows}} 行中更新 {{count}} 个字段"
+    },
     "editSelected": "编辑",
     "deleteSelected": "删除"
   },
@@ -662,7 +677,13 @@
     "rename": "重命名",
     "duplicate": "复制",
     "close": "关闭",
-    "closeOthers": "关闭其他"
+    "closeOthers": "关闭其他",
+    "noTabSelected": "未选择查询标签页"
+  },
+  "queryTemplates": {
+    "deleteTemplate": "删除模板",
+    "noTemplatesFound": "未找到模板",
+    "tryAdjustingSearch": "尝试调整搜索条件或分类"
   },
   "queryEditor": {
     "title": "SQL 查询",

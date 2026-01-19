@@ -4,6 +4,7 @@ import { GoldButton } from '@sqlpro/ui';
 import { Button } from '@sqlpro/ui/button';
 import { AlertCircle, Clock, Loader2, Play, X, Zap } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 import { generateSuggestions } from '@/lib/query-plan-analyzer';
 import { cn } from '@/lib/utils';
@@ -32,6 +33,7 @@ export const QueryPane = memo(
     onClose,
     showCloseButton = false,
   }: QueryPaneProps) => {
+    const { t } = useTranslation('common');
     const {
       tabsByConnection,
       updateTabQuery,
@@ -148,7 +150,7 @@ export const QueryPane = memo(
     if (!tab) {
       return (
         <div className="text-muted-foreground flex h-full items-center justify-center">
-          <p>No query tab selected</p>
+          <p>{t('queryTabs.noTabSelected')}</p>
         </div>
       );
     }

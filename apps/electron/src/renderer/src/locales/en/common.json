@@ -1,4 +1,12 @@
 {
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "error": "Error"
+  },
   "theme": {
     "light": "Light",
     "dark": "Dark",
@@ -119,7 +127,8 @@
     "folderNamePlaceholder": "Enter folder name",
     "creatingSubfolderIn": "Creating subfolder in: {{name}}",
     "create": "Create",
-    "rename": "Rename"
+    "rename": "Rename",
+    "noFolder": "No folder (root level)"
   },
   "about": {
     "title": "SQL Pro",
@@ -253,6 +262,12 @@
     "rowsSelected": "{{count}} row selected",
     "rowsSelected_plural": "{{count}} rows selected",
     "clearSelection": "Clear selection",
+    "bulkEdit": {
+      "noFieldsAdded": "No fields added",
+      "selectColumnToStart": "Select a column above to start editing",
+      "fieldsWillBeUpdated_one": "{{count}} field will be updated across {{rows}} rows",
+      "fieldsWillBeUpdated_other": "{{count}} fields will be updated across {{rows}} rows"
+    },
     "editSelected": "Edit",
     "deleteSelected": "Delete"
   },
@@ -662,7 +677,13 @@
     "rename": "Rename",
     "duplicate": "Duplicate",
     "close": "Close",
-    "closeOthers": "Close Others"
+    "closeOthers": "Close Others",
+    "noTabSelected": "No query tab selected"
+  },
+  "queryTemplates": {
+    "deleteTemplate": "Delete template",
+    "noTemplatesFound": "No templates found",
+    "tryAdjustingSearch": "Try adjusting your search or category"
   },
   "queryEditor": {
     "title": "SQL Query",

@@ -19,6 +19,7 @@ import {
 } from '@sqlpro/ui/select';
 import { Edit3, MousePointerClick, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogClose,
@@ -50,6 +51,7 @@ export function BulkEditDialog({
   selectedRowCount,
   onApply,
 }: BulkEditDialogProps) {
+  const { t } = useTranslation('common');
   const [editFields, setEditFields] = useState<BulkEditField[]>([]);
   const [selectedColumn, setSelectedColumn] = useState<string>('');
 
@@ -209,9 +211,11 @@ export function BulkEditDialog({
                 <EmptyMedia variant="icon">
                   <MousePointerClick />
                 </EmptyMedia>
-                <EmptyTitle className="text-base">No fields added</EmptyTitle>
+                <EmptyTitle className="text-base">
+                  {t('table.bulkEdit.noFieldsAdded')}
+                </EmptyTitle>
                 <EmptyDescription>
-                  Select a column above to start editing
+                  {t('table.bulkEdit.selectColumnToStart')}
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>

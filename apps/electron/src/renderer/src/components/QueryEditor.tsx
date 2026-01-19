@@ -5,6 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@sqlpro/ui/dropdown-menu';
+import { GoldButton } from '@sqlpro/ui/gold-button';
 import { Input } from '@sqlpro/ui/input';
 import {
   ResizableHandle,
@@ -471,7 +472,7 @@ export function QueryEditor() {
             <Zap className="h-4 w-4" />
             {t('queryEditor.analyze')}
           </Button>
-          <Button
+          <GoldButton
             size="sm"
             onClick={handleExecute}
             disabled={tabIsExecuting || !tabQuery.trim()}
@@ -484,7 +485,7 @@ export function QueryEditor() {
               <Play className="h-4 w-4" />
             )}
             {t('queryEditor.execute')}
-          </Button>
+          </GoldButton>
         </div>
       </div>
 

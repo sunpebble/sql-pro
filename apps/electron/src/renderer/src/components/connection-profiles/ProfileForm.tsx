@@ -11,6 +11,7 @@ import { Textarea } from '@sqlpro/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Info } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -55,6 +56,7 @@ export function ProfileForm({
   onSubmit,
   onCancel,
 }: ProfileFormProps) {
+  const { t } = useTranslation('common');
   // Initialize form state from props
   const [displayName, setDisplayName] = useState(
     initialValues?.displayName ?? filename
@@ -214,14 +216,14 @@ export function ProfileForm({
           }
         >
           <SelectTrigger id="folder" className="w-full">
-            <SelectValue placeholder="No folder (root level)">
+            <SelectValue placeholder={t('profiles.noFolder')}>
               {folderId
                 ? getFolderPath(folders.find((f) => f.id === folderId)!)
-                : 'No folder (root level)'}
+                : t('profiles.noFolder')}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__none__">No folder (root level)</SelectItem>
+            <SelectItem value="__none__">{t('profiles.noFolder')}</SelectItem>
             {rootFolders.map((folder) => (
               <SelectItem key={folder.id} value={folder.id}>
                 {getFolderPath(folder)}

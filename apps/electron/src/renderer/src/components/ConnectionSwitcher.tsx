@@ -321,7 +321,7 @@ export function ConnectionSwitcher({
               <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">
                 Esc
               </kbd>
-              <span>Close</span>
+              <span>{t('common.close', { ns: 'common' })}</span>
             </span>
           </div>
         </Command>

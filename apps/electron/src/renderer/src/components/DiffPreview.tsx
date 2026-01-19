@@ -258,7 +258,9 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left">
-            {showSqlPreview ? 'Show diff view' : 'Preview SQL statements'}
+            {showSqlPreview
+              ? t('pendingChanges.showDiffView')
+              : t('pendingChanges.previewSqlStatements')}
           </TooltipContent>
         </Tooltip>
       </div>
@@ -268,7 +270,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
         <div className="flex flex-1 flex-col overflow-hidden">
           <div className="flex items-center justify-between border-b px-4 py-2">
             <span className="text-muted-foreground text-xs font-medium">
-              SQL Preview
+              {t('pendingChanges.sqlPreview')}
             </span>
             <Tooltip>
               <TooltipTrigger>
@@ -279,10 +281,16 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
                   onClick={copyToClipboard}
                 >
                   <Copy className="h-3.5 w-3.5" />
-                  <span className="text-xs">{copied ? 'Copied!' : 'Copy'}</span>
+                  <span className="text-xs">
+                    {copied
+                      ? t('pendingChanges.copied')
+                      : t('pendingChanges.copy')}
+                  </span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="left">Copy SQL to clipboard</TooltipContent>
+              <TooltipContent side="left">
+                {t('pendingChanges.copySqlToClipboard')}
+              </TooltipContent>
             </Tooltip>
           </div>
           <ScrollArea className="flex-1">
