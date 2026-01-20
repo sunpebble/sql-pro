@@ -43,6 +43,8 @@ asarUnpack:
   - '**/node_modules/sharp/**/*'
   - '**/node_modules/@img/**/*'
   - '**/node_modules/better-sqlite3-multiple-ciphers/**/*'
+  - '**/node_modules/@ffmpeg-installer/**/*'
+  - '**/node_modules/@ffprobe-installer/**/*'
 
 # Generate required update metadata files
 generateUpdatesFilesForAllChannels: true
@@ -53,12 +55,15 @@ mac:
   category: public.app-category.developer-tools
   entitlementsInherit: build/entitlements.mac.plist
   notarize: false
-  # Set identity to null to completely disable code signing for local builds
-  # For production builds, remove this line or set a valid signing identity
-  identity: null
+  # Use ad-hoc signing for local builds (sign with "-")
+  # For production builds, set a valid signing identity
+  identity: '-'
 
 dmg:
   artifactName: ${productName}-${version}.${ext}
+  # Use ULFO for better compatibility
+  format: ULFO
+  writeUpdateInfo: false
 
 # Windows Configuration
 win:
