@@ -433,9 +433,14 @@ export const isMac = (): boolean =>
 
 /**
  * Format a shortcut binding for display
+ * @param binding The shortcut binding to format
+ * @param notSetFallback Text to display when binding is null (defaults to empty string for i18n compatibility)
  */
-export function formatShortcutBinding(binding: ShortcutBinding | null): string {
-  if (!binding) return 'Not set';
+export function formatShortcutBinding(
+  binding: ShortcutBinding | null,
+  notSetFallback = ''
+): string {
+  if (!binding) return notSetFallback;
 
   const mac = isMac();
   const parts: string[] = [];

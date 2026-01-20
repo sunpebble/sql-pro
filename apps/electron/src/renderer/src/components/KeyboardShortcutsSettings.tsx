@@ -188,7 +188,7 @@ const ShortcutEditor = memo(
                   !binding && 'text-muted-foreground italic'
                 )}
               >
-                {formatShortcutBinding(binding)}
+                {formatShortcutBinding(binding, t('shortcuts.notSet'))}
               </button>
               {binding && (
                 <Button

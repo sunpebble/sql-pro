@@ -2315,5 +2315,16 @@
   },
   "quit": {
     "cancel": "取消"
+  },
+  "folder": {
+    "newSubfolder": "新建子文件夹"
+  },
+  "stats": {
+    "count": "计数",
+    "sum": "求和",
+    "average": "平均值",
+    "min": "最小值",
+    "max": "最大值",
+    "numericValues": "({{count}} 个数值)"
   }
 }

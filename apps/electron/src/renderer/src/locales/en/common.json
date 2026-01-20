@@ -2318,5 +2318,13 @@
   },
   "folder": {
     "newSubfolder": "New Subfolder"
+  },
+  "stats": {
+    "count": "Count",
+    "sum": "Sum",
+    "average": "Average",
+    "min": "Min",
+    "max": "Max",
+    "numericValues": "({{count}} numeric values)"
   }
 }

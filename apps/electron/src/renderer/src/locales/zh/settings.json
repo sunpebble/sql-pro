@@ -88,6 +88,7 @@
     "reset": "重置全部",
     "done": "完成",
     "pressKeys": "请按键...",
+    "notSet": "未设置",
     "clickToChange": "点击任意快捷键进行修改。按 Escape 清除。",
     "conflictsWith": "与以下快捷键冲突：",
     "customize": "点击自定义快捷键",

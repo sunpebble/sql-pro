@@ -88,6 +88,7 @@
     "reset": "Reset All",
     "done": "Done",
     "pressKeys": "Press keys...",
+    "notSet": "Not set",
     "clickToChange": "Click on any shortcut to change it. Press Escape to clear.",
     "conflictsWith": "Conflicts with:",
     "customize": "Click to customize shortcuts",

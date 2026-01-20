@@ -1,5 +1,6 @@
 import type { ColumnSchema } from '@/types/database';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface SelectionStatsProps {
@@ -111,6 +112,7 @@ export function SelectionStats({
   columns,
   className,
 }: SelectionStatsProps) {
+  const { t } = useTranslation('common');
   const stats = useMemo(
     () => calculateQuickStats(selectedRows, columns),
     [selectedRows, columns]
@@ -130,7 +132,7 @@ export function SelectionStats({
     >
       {/* Count - always show */}
       <div className="flex items-center gap-1.5">
-        <span className="text-muted-foreground">Count:</span>
+        <span className="text-muted-foreground">{t('stats.count')}:</span>
         <span className="font-medium">{stats.count}</span>
       </div>
 
@@ -140,28 +142,28 @@ export function SelectionStats({
           <div className="bg-border h-3 w-px" />
 
           <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Sum:</span>
+            <span className="text-muted-foreground">{t('stats.sum')}:</span>
             <span className="font-mono font-medium">
               {formatNumber(stats.sum!)}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Average:</span>
+            <span className="text-muted-foreground">{t('stats.average')}:</span>
             <span className="font-mono font-medium">
               {formatNumber(stats.average!)}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Min:</span>
+            <span className="text-muted-foreground">{t('stats.min')}:</span>
             <span className="font-mono font-medium">
               {formatNumber(stats.min!)}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Max:</span>
+            <span className="text-muted-foreground">{t('stats.max')}:</span>
             <span className="font-mono font-medium">
               {formatNumber(stats.max!)}
             </span>
@@ -171,7 +173,7 @@ export function SelectionStats({
             <>
               <div className="bg-border h-3 w-px" />
               <div className="text-muted-foreground">
-                ({stats.numericCount} numeric values)
+                {t('stats.numericValues', { count: stats.numericCount })}
               </div>
             </>
           )}
