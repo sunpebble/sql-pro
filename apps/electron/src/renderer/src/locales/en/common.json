@@ -431,7 +431,9 @@
   "sidebar": {
     "title": "Sidebar",
     "mobileSidebarDesc": "Displays the mobile sidebar.",
-    "toggleSidebar": "Toggle Sidebar"
+    "toggleSidebar": "Toggle Sidebar",
+    "show": "Show Sidebar",
+    "hide": "Hide Sidebar"
   },
   "theme": {
     "light": "Light",
@@ -2279,5 +2281,23 @@
     "failedToRefreshSchema": "Failed to refresh schema",
     "dataRefreshed": "Data refreshed",
     "failedToRefreshData": "Failed to refresh data"
+  },
+  "contextMenu": {
+    "unpin": "Unpin",
+    "pinToTop": "Pin to Top",
+    "tags": "Tags",
+    "addTag": "Add Tag",
+    "copyName": "Copy Name",
+    "exportSchema": "Export Schema",
+    "truncateTable": "Truncate Table",
+    "dropView": "Drop View",
+    "dropTable": "Drop Table"
+  },
+  "diagram": {
+    "noSchema": "No Schema Loaded",
+    "noTables": "This database has no tables to display in the diagram"
+  },
+  "quit": {
+    "cancel": "Cancel"
   }
 }
