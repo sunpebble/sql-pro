@@ -197,7 +197,8 @@
     "baseUrlHint": "Leave empty to use default API endpoint, or set a custom URL for proxy/compatible endpoints",
     "failedToFetchModels": "Failed to fetch models",
     "modelsFetchError": "Failed to fetch models, using defaults",
-    "inputModel": "Enter model name..."
+    "inputModel": "Enter model name...",
+    "custom": "Custom"
   },
   "developer": {
     "title": "Developer",

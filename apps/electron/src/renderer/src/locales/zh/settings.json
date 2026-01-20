@@ -197,7 +197,8 @@
     "baseUrlHint": "留空使用默认 API 地址，或设置自定义代理/兼容地址",
     "failedToFetchModels": "获取模型列表失败",
     "modelsFetchError": "获取模型列表失败，使用默认值",
-    "inputModel": "输入模型名称..."
+    "inputModel": "输入模型名称...",
+    "custom": "自定义"
   },
   "developer": {
     "title": "开发者",
