@@ -149,7 +149,7 @@ export function QueryBundleExportDialog({
     } catch (err) {
       setExportResult({
         success: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
+        error: err instanceof Error ? err.message : t('common.unknownError'),
       });
     } finally {
       setIsExporting(false);

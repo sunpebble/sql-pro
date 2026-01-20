@@ -166,7 +166,7 @@ function AISettingsPanel() {
       } catch (error) {
         if (!cancelled) {
           console.error('Failed to fetch models:', error);
-          setModelsError('Failed to fetch models');
+          setModelsError(t('ai.failedToFetchModels'));
           setDynamicModels(DEFAULT_MODELS[provider]);
         }
       } finally {

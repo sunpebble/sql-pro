@@ -166,7 +166,8 @@
     "saveAll": "保存所有更改",
     "discardAll": "放弃所有更改",
     "saving": "正在保存...",
-    "cancel": "取消"
+    "cancel": "取消",
+    "failedToSave": "保存更改失败"
   },
   "openDatabase": "打开数据库",
   "saveFile": "保存文件"

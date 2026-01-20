@@ -73,7 +73,7 @@ export function AppQuitDialog({
       onOpenChange(false);
     } catch (err) {
       // Keep dialog open and show error
-      setError(err instanceof Error ? err.message : 'Failed to save changes');
+      setError(err instanceof Error ? err.message : t('quit.failedToSave'));
     } finally {
       setIsLoading(false);
     }

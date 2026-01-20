@@ -653,7 +653,7 @@ function DiffTable({ change }: { change: PendingChange }) {
       // Check NOT NULL constraint
       if (columnSchema && !columnSchema.nullable) {
         if (val === '' || val.toLowerCase() === 'null') {
-          return 'This field cannot be NULL';
+          return t('editableCell.fieldCannotBeEmpty');
         }
       }
 
@@ -668,7 +668,7 @@ function DiffTable({ change }: { change: PendingChange }) {
       if (type.includes('int')) {
         const parsed = Number.parseInt(val, 10);
         if (Number.isNaN(parsed)) {
-          return 'Must be a valid integer';
+          return t('editableCell.mustBeValidInteger');
         }
       } else if (
         type.includes('real') ||
@@ -679,11 +679,11 @@ function DiffTable({ change }: { change: PendingChange }) {
       ) {
         const parsed = Number.parseFloat(val);
         if (Number.isNaN(parsed)) {
-          return 'Must be a valid number';
+          return t('editableCell.mustBeValidNumber');
         }
       } else if (type.includes('bool')) {
         if (!['true', 'false', '1', '0'].includes(val.toLowerCase())) {
-          return 'Must be true or false';
+          return t('editableCell.mustBeValidBoolean');
         }
       }
 
@@ -856,7 +856,7 @@ function DiffTable({ change }: { change: PendingChange }) {
                         onClick={() =>
                           isEditable && startEditing(field, newValue)
                         }
-                        title={isEditable ? 'Click to edit' : undefined}
+                        title={isEditable ? t('common.clickToEdit') : undefined}
                       >
                         {formatValue(newValue)}
                       </span>

@@ -180,7 +180,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
       }
     } catch (error) {
       setComparisonError(
-        error instanceof Error ? error.message : 'An unexpected error occurred'
+        error instanceof Error ? error.message : t('common.unexpectedError')
       );
     } finally {
       setIsComparing(false);

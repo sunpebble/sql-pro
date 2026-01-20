@@ -97,7 +97,7 @@ export const QueryPane = memo(
         }
       } catch (err) {
         const errorMessage =
-          err instanceof Error ? err.message : 'Unknown error';
+          err instanceof Error ? err.message : t('common.unknownError');
         updateTabError(connectionId, tab.id, errorMessage);
       } finally {
         setTabExecuting(connectionId, tab.id, false);

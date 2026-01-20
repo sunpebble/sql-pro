@@ -183,7 +183,7 @@ function QueryBuilderTableNodeComponent({
                   isPK && 'font-medium',
                   !column.nullable && 'underline decoration-dotted'
                 )}
-                title={`${column.name}${!column.nullable ? ' (NOT NULL)' : ''}`}
+                title={`${column.name}${!column.nullable ? ` (${t('dataTable.notNull')})` : ''}`}
               >
                 {column.name}
               </span>

@@ -4,6 +4,7 @@ import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema } from '@/types/database';
 import { flexRender } from '@tanstack/react-table';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 // Memoized cell display component for better performance
@@ -100,6 +101,7 @@ export const TableCell = memo(
     pinnedOffset,
     isLastPinned,
   }: TableCellProps) => {
+    const { t } = useTranslation('common');
     const [editValue, setEditValue] = useState('');
     const [validationError, setValidationError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -155,7 +157,7 @@ export const TableCell = memo(
       (val: string): string | null => {
         if (columnSchema && !columnSchema.nullable) {
           if (val === '' || val.toLowerCase() === 'null') {
-            return 'This field cannot be empty';
+            return t('editableCell.fieldCannotBeEmpty');
           }
         }
         const type = columnType.toLowerCase();
@@ -165,7 +167,7 @@ export const TableCell = memo(
           val.toLowerCase() !== 'null'
         ) {
           if (Number.isNaN(Number.parseInt(val, 10)))
-            return 'Must be a valid integer';
+            return t('editableCell.mustBeValidInteger');
         } else if (
           (type.includes('real') ||
             type.includes('float') ||
@@ -174,7 +176,7 @@ export const TableCell = memo(
           val.toLowerCase() !== 'null'
         ) {
           if (Number.isNaN(Number.parseFloat(val)))
-            return 'Must be a valid number';
+            return t('editableCell.mustBeValidNumber');
         }
         return null;
       },

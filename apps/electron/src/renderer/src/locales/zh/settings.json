@@ -193,7 +193,10 @@
     "claudeCodePath": "Claude Code 路径",
     "apiKeyPlaceholder": "输入您的 API 密钥",
     "selectPath": "选择路径...",
-    "baseUrlHint": "留空使用默认 API 地址，或设置自定义代理/兼容地址"
+    "baseUrlHint": "留空使用默认 API 地址，或设置自定义代理/兼容地址",
+    "failedToFetchModels": "获取模型列表失败",
+    "modelsFetchError": "获取模型列表失败，使用默认值",
+    "inputModel": "输入模型名称..."
   },
   "developer": {
     "title": "开发者",

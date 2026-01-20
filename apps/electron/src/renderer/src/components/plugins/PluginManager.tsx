@@ -471,12 +471,19 @@ export function PluginManager({
       {!isLoading && (plugins || []).length > 0 && (
         <div className="text-muted-foreground flex items-center justify-between border-t px-4 py-2 text-xs">
           <span>
-            {filteredPlugins.length} of {(plugins || []).length} plugins
-            {searchQuery && ` matching "${searchQuery}"`}
-            {filterState !== 'all' && ` • ${filterState}`}
+            {t('plugins.statusBar.showing', {
+              count: filteredPlugins.length,
+              total: (plugins || []).length,
+            })}
+            {searchQuery &&
+              ` ${t('plugins.statusBar.matching', { query: searchQuery })}`}
+            {filterState !== 'all' && ` • ${t(`plugins.${filterState}`)}`}
           </span>
           <span>
-            {stateCounts.enabled} enabled, {stateCounts.disabled} disabled
+            {t('plugins.statusBar.summary', {
+              enabled: stateCounts.enabled,
+              disabled: stateCounts.disabled,
+            })}
           </span>
         </div>
       )}

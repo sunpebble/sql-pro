@@ -166,7 +166,8 @@
     "saveAll": "Save All Changes",
     "discardAll": "Discard All Changes",
     "saving": "Saving...",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "failedToSave": "Failed to save changes"
   },
   "openDatabase": "Open Database",
   "saveFile": "Save File"

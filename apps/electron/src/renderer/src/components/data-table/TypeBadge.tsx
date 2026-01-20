@@ -1,6 +1,7 @@
 import type { ColumnTypeCategory } from '@/lib/filter-utils';
 import { Calendar, Database, Hash, HelpCircle, Type } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface TypeBadgeProps {
@@ -14,6 +15,7 @@ interface TypeBadgeProps {
  */
 export const TypeBadge = memo(
   ({ type, typeCategory, className }: TypeBadgeProps) => {
+    const { t } = useTranslation('common');
     // Select icon based on type category
     const Icon = (() => {
       switch (typeCategory) {
@@ -55,7 +57,7 @@ export const TypeBadge = memo(
           colorClasses,
           className
         )}
-        title={`Data type: ${type}`}
+        title={t('common.dataType', { type })}
       >
         <Icon className="h-2.5 w-2.5" />
         <span>{type}</span>

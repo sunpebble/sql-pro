@@ -3,6 +3,7 @@ import type { RefObject } from 'react';
 import type { TableRowData } from './useTableCore';
 import type { ColumnSchema } from '@/types/database';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { useSettingsStore } from '@/stores';
 
@@ -48,6 +49,7 @@ export function useTableEditing({
   onRowDelete,
   onRowInsert,
 }: UseTableEditingOptions): UseTableEditingReturn {
+  const { t } = useTranslation('common');
   const [focusedCell, setFocusedCell] = useState<CellPosition | null>(null);
   const [editingCell, setEditingCell] = useState<CellPosition | null>(null);
 
@@ -535,7 +537,7 @@ export function useTableEditing({
       // Check NOT NULL constraint
       if (!column.nullable) {
         if (value === '' || value.toLowerCase() === 'null') {
-          return 'This field cannot be empty';
+          return t('editableCell.fieldCannotBeEmpty');
         }
       }
 
@@ -545,7 +547,7 @@ export function useTableEditing({
         if (value !== '' && value.toLowerCase() !== 'null') {
           const parsed = Number.parseInt(value, 10);
           if (Number.isNaN(parsed)) {
-            return 'Must be a valid integer';
+            return t('editableCell.mustBeValidInteger');
           }
         }
       } else if (
@@ -556,7 +558,7 @@ export function useTableEditing({
         if (value !== '' && value.toLowerCase() !== 'null') {
           const parsed = Number.parseFloat(value);
           if (Number.isNaN(parsed)) {
-            return 'Must be a valid number';
+            return t('editableCell.mustBeValidNumber');
           }
         }
       }

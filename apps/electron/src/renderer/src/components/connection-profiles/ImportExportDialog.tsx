@@ -87,7 +87,7 @@ export function ImportExportDialog({
     } catch (err) {
       setExportResult({
         success: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
+        error: err instanceof Error ? err.message : t('common.unknownError'),
       });
     } finally {
       setIsProcessing(false);
@@ -114,7 +114,7 @@ export function ImportExportDialog({
     } catch (err) {
       setImportResult({
         success: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
+        error: err instanceof Error ? err.message : t('common.unknownError'),
       });
     } finally {
       setIsProcessing(false);

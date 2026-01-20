@@ -97,7 +97,7 @@ export function ChangePasswordDialog({
       }
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
+        err instanceof Error ? err.message : t('common.unexpectedError')
       );
     } finally {
       setIsLoading(false);

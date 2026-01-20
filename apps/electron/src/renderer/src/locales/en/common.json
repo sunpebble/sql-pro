@@ -9,7 +9,29 @@
     "copy": "Copy",
     "copied": "Copied!",
     "unknownError": "Unknown error",
-    "unexpectedError": "An unexpected error occurred"
+    "unexpectedError": "An unexpected error occurred",
+    "null": "NULL",
+    "notNull": "NOT NULL",
+    "clickToEdit": "Click to edit",
+    "localhost": "localhost",
+    "dataType": "Data type: {{type}}",
+    "removeFilterOn": "Remove filter on {{column}}",
+    "sortBy": "Sort by {{column}}",
+    "sortAscending": "ascending",
+    "sortDescending": "descending",
+    "currentlySorted": ", currently {{direction}}",
+    "licenseKeySegment": "License key segment {{index}}"
+  },
+  "ai": {
+    "notConfigured": "AI is not configured. Please set up your API key in settings.",
+    "notConfiguredClaudeCode": "AI is not configured. Please ensure Claude Code is installed and ANTHROPIC_API_KEY is set.",
+    "noSqlGenerated": "No SQL generated",
+    "failedToGenerateSql": "Failed to generate SQL",
+    "noOptimizationResult": "No optimization result",
+    "failedToOptimizeQuery": "Failed to optimize query",
+    "noAnalysisResult": "No analysis result",
+    "failedToAnalyzeData": "Failed to analyze data",
+    "failedToStartStream": "Failed to start stream"
   },
   "importExport": {
     "exportProfiles": "Export Profiles",
@@ -309,6 +331,7 @@
     "fieldCannotBeEmpty": "This field cannot be empty",
     "mustBeValidInteger": "Must be a valid integer",
     "mustBeValidNumber": "Must be a valid number",
+    "mustBeValidBoolean": "Must be true or false",
     "originalValue": "Original: {{value}}"
   },
   "dataTable": {
@@ -1212,7 +1235,12 @@
     "failedToFetchPlugins": "Failed to fetch plugins",
     "failedToFetchMarketplace": "Failed to fetch marketplace data",
     "failedToInstallPlugin": "Failed to install plugin",
-    "offlineError": "You appear to be offline. Please check your internet connection."
+    "offlineError": "You appear to be offline. Please check your internet connection.",
+    "statusBar": {
+      "showing": "{{count}} of {{total}} plugins",
+      "matching": "matching \"{{query}}\"",
+      "summary": "{{enabled}} enabled, {{disabled}} disabled"
+    }
   },
   "queryTabs": {
     "closeTab": "Close tab",

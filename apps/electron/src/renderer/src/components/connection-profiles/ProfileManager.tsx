@@ -162,7 +162,7 @@ export function ProfileManager({
         setError(foldersResult.error || t('profiles.failedToLoadFolders'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : t('common.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -254,7 +254,7 @@ export function ProfileManager({
           }
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
     [addProfile, missingDbPaths, keychainAvailable]
@@ -291,7 +291,7 @@ export function ProfileManager({
         setError(result.error || t('profiles.failedToDeleteProfile'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : t('common.unknownError'));
     } finally {
       setPendingDeleteProfileId(null);
     }
@@ -324,7 +324,7 @@ export function ProfileManager({
           setError(result.error || t('profiles.failedToUpdateProfile'));
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
     [editingProfile, updateProfile]
@@ -420,7 +420,7 @@ export function ProfileManager({
         setError(result.error || t('profiles.failedToDeleteFolder'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : t('common.unknownError'));
     } finally {
       setPendingDeleteFolderId(null);
     }
@@ -552,7 +552,7 @@ export function ProfileManager({
           setError(result.error || t('profiles.failedToMoveProfile'));
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
     [profiles, updateProfile]
@@ -622,7 +622,7 @@ export function ProfileManager({
           setError(result.error || t('profiles.failedToSaveProfile'));
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
     [pendingNewConnection, addProfile]

@@ -9,7 +9,29 @@
     "copy": "复制",
     "copied": "已复制!",
     "unknownError": "未知错误",
-    "unexpectedError": "发生了意外错误"
+    "unexpectedError": "发生了意外错误",
+    "null": "NULL",
+    "notNull": "NOT NULL",
+    "clickToEdit": "点击编辑",
+    "localhost": "localhost",
+    "dataType": "数据类型: {{type}}",
+    "removeFilterOn": "移除 {{column}} 的筛选",
+    "sortBy": "按 {{column}} 排序",
+    "sortAscending": "升序",
+    "sortDescending": "降序",
+    "currentlySorted": ", 当前{{direction}}",
+    "licenseKeySegment": "许可证密钥段 {{index}}"
+  },
+  "ai": {
+    "notConfigured": "AI 未配置。请在设置中设置您的 API 密钥。",
+    "notConfiguredClaudeCode": "AI 未配置。请确保已安装 Claude Code 并设置 ANTHROPIC_API_KEY。",
+    "noSqlGenerated": "未生成 SQL",
+    "failedToGenerateSql": "生成 SQL 失败",
+    "noOptimizationResult": "未获取优化结果",
+    "failedToOptimizeQuery": "优化查询失败",
+    "noAnalysisResult": "未获取分析结果",
+    "failedToAnalyzeData": "分析数据失败",
+    "failedToStartStream": "启动流失败"
   },
   "importExport": {
     "exportProfiles": "导出配置文件",
@@ -160,6 +182,7 @@
     "fieldCannotBeEmpty": "此字段不能为空",
     "mustBeValidInteger": "必须是有效的整数",
     "mustBeValidNumber": "必须是有效的数字",
+    "mustBeValidBoolean": "必须是 true 或 false",
     "originalValue": "原始值：{{value}}"
   },
   "dataTable": {
@@ -1063,7 +1086,12 @@
     "failedToFetchPlugins": "获取插件失败",
     "failedToFetchMarketplace": "获取市场数据失败",
     "failedToInstallPlugin": "安装插件失败",
-    "offlineError": "您似乎处于离线状态。请检查您的网络连接。"
+    "offlineError": "您似乎处于离线状态。请检查您的网络连接。",
+    "statusBar": {
+      "showing": "{{count}} / {{total}} 个插件",
+      "matching": "匹配 \"{{query}}\"",
+      "summary": "{{enabled}} 个已启用，{{disabled}} 个已禁用"
+    }
   },
   "queryTabs": {
     "closeTab": "关闭标签页",

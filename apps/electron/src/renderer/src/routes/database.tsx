@@ -335,7 +335,9 @@ export function DatabasePage() {
             }
           }
         } catch (err) {
-          setError(err instanceof Error ? err.message : 'Unknown error');
+          setError(
+            err instanceof Error ? err.message : t('database.unknownError')
+          );
         } finally {
           setIsConnecting(false);
         }

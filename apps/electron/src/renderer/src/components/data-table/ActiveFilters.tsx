@@ -2,6 +2,7 @@ import type { UIFilterState } from '@/lib/filter-utils';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { generateCompactFilterLabel } from '@/lib/filter-utils';
 
 export interface ActiveFiltersProps {
@@ -23,6 +24,7 @@ export function ActiveFilters({
   onFilterRemove,
   onFiltersClear,
 }: ActiveFiltersProps) {
+  const { t } = useTranslation('common');
   // Don't render anything if there are no filters
   if (filters.length === 0) {
     return null;
@@ -31,7 +33,7 @@ export function ActiveFilters({
   return (
     <div className="flex flex-wrap items-center gap-2 border-b px-4 py-2">
       <span className="text-muted-foreground text-xs font-medium">
-        Filters:
+        {t('filter.title')}
       </span>
       {filters.map((filter) => {
         const label = generateCompactFilterLabel(
@@ -48,7 +50,7 @@ export function ActiveFilters({
               type="button"
               className="hover:bg-muted ml-1 rounded-full p-0.5 transition-colors"
               onClick={() => onFilterRemove(filter.column)}
-              title={`Remove filter on ${filter.column}`}
+              title={t('common.removeFilterOn', { column: filter.column })}
             >
               <X className="h-3 w-3" />
             </button>
@@ -62,7 +64,7 @@ export function ActiveFilters({
           className="h-6 px-2 text-xs"
           onClick={onFiltersClear}
         >
-          Clear All
+          {t('actions.clear')}
         </Button>
       )}
     </div>

@@ -349,7 +349,7 @@ export function WelcomeScreen() {
           setPendingSettings(null);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : t('common.unknownError'));
       } finally {
         setIsConnecting(false);
       }
@@ -549,7 +549,9 @@ export function WelcomeScreen() {
             }
           }
         } catch (err) {
-          setError(err instanceof Error ? err.message : 'Unknown error');
+          setError(
+            err instanceof Error ? err.message : t('common.unknownError')
+          );
         } finally {
           setIsConnecting(false);
         }
@@ -723,7 +725,7 @@ export function WelcomeScreen() {
           setEditingConnection(null);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : t('common.unknownError'));
       } finally {
         setIsConnecting(false);
       }
@@ -899,7 +901,7 @@ export function WelcomeScreen() {
           setServerConnectionOpen(false);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : t('common.unknownError'));
       } finally {
         setIsConnecting(false);
       }

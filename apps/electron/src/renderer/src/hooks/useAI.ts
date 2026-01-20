@@ -6,6 +6,7 @@ import type {
 } from '@shared/types';
 import OpenAI from 'openai';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAIStore } from '@/stores/ai-store';
 
 // Access the IPC API exposed by preload
@@ -143,6 +144,7 @@ interface UseNLToSQLOptions {
 }
 
 export function useNLToSQL({ schema, onSuccess, onError }: UseNLToSQLOptions) {
+  const { t } = useTranslation('common');
   const { apiKey, provider, model, baseUrl, isConfigured } = useAIStore();
   const [generatedSQL, setGeneratedSQL] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -151,8 +153,7 @@ export function useNLToSQL({ schema, onSuccess, onError }: UseNLToSQLOptions) {
   const generateSQL = useCallback(
     async (prompt: string) => {
       if (!isConfigured) {
-        const err =
-          'AI is not configured. Please set up your API key in settings.';
+        const err = t('ai.notConfigured');
         setError(err);
         onError?.(err);
         return null;
@@ -211,10 +212,10 @@ export function useNLToSQL({ schema, onSuccess, onError }: UseNLToSQLOptions) {
           return cleanSQL;
         }
 
-        throw new Error('No SQL generated');
+        throw new Error(t('ai.noSqlGenerated'));
       } catch (err) {
         const errorMsg =
-          err instanceof Error ? err.message : 'Failed to generate SQL';
+          err instanceof Error ? err.message : t('ai.failedToGenerateSql');
         setError(errorMsg);
         onError?.(errorMsg);
         return null;
@@ -222,7 +223,17 @@ export function useNLToSQL({ schema, onSuccess, onError }: UseNLToSQLOptions) {
         setIsGenerating(false);
       }
     },
-    [apiKey, provider, model, baseUrl, schema, isConfigured, onSuccess, onError]
+    [
+      t,
+      apiKey,
+      provider,
+      model,
+      baseUrl,
+      schema,
+      isConfigured,
+      onSuccess,
+      onError,
+    ]
   );
 
   return {
@@ -249,6 +260,7 @@ export function useQueryOptimizer({
   onSuccess,
   onError,
 }: UseQueryOptimizerOptions) {
+  const { t } = useTranslation('common');
   const { apiKey, provider, model, baseUrl, isConfigured } = useAIStore();
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -261,8 +273,7 @@ export function useQueryOptimizer({
   const optimizeQuery = useCallback(
     async (query: string, queryPlan?: string) => {
       if (!isConfigured) {
-        const err =
-          'AI is not configured. Please set up your API key in settings.';
+        const err = t('ai.notConfigured');
         setError(err);
         onError?.(err);
         return null;
@@ -334,10 +345,10 @@ export function useQueryOptimizer({
           return optimizationResult;
         }
 
-        throw new Error('No optimization result');
+        throw new Error(t('ai.noOptimizationResult'));
       } catch (err) {
         const errorMsg =
-          err instanceof Error ? err.message : 'Failed to optimize query';
+          err instanceof Error ? err.message : t('ai.failedToOptimizeQuery');
         setError(errorMsg);
         onError?.(errorMsg);
         return null;
@@ -345,7 +356,17 @@ export function useQueryOptimizer({
         setIsOptimizing(false);
       }
     },
-    [apiKey, provider, model, baseUrl, schema, isConfigured, onSuccess, onError]
+    [
+      t,
+      apiKey,
+      provider,
+      model,
+      baseUrl,
+      schema,
+      isConfigured,
+      onSuccess,
+      onError,
+    ]
   );
 
   return {
@@ -366,6 +387,7 @@ export function useDataAnalysis({
   onSuccess,
   onError,
 }: UseDataAnalysisOptions = {}) {
+  const { t } = useTranslation('common');
   const { apiKey, provider, model, baseUrl, isConfigured } = useAIStore();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -378,8 +400,7 @@ export function useDataAnalysis({
       rows: Record<string, unknown>[]
     ) => {
       if (!isConfigured) {
-        const err =
-          'AI is not configured. Please set up your API key in settings.';
+        const err = t('ai.notConfigured');
         setError(err);
         onError?.(err);
         return null;
@@ -452,10 +473,10 @@ export function useDataAnalysis({
           return { insights: analysisInsights, summary: analysisSummary };
         }
 
-        throw new Error('No analysis result');
+        throw new Error(t('ai.noAnalysisResult'));
       } catch (err) {
         const errorMsg =
-          err instanceof Error ? err.message : 'Failed to analyze data';
+          err instanceof Error ? err.message : t('ai.failedToAnalyzeData');
         setError(errorMsg);
         onError?.(errorMsg);
         return null;
@@ -463,7 +484,7 @@ export function useDataAnalysis({
         setIsAnalyzing(false);
       }
     },
-    [apiKey, provider, model, baseUrl, isConfigured, onSuccess, onError]
+    [t, apiKey, provider, model, baseUrl, isConfigured, onSuccess, onError]
   );
 
   return {
@@ -500,6 +521,7 @@ export function useStreamingAI({
   onComplete,
   onError,
 }: UseStreamingAIOptions) {
+  const { t } = useTranslation('common');
   const { apiKey, provider, model, baseUrl, isConfigured } = useAIStore();
   const [content, setContent] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState(false);
@@ -551,8 +573,7 @@ export function useStreamingAI({
   const stream = useCallback(
     async (messages: Array<{ role: string; content: string }>) => {
       if (!isConfigured) {
-        const err =
-          'AI is not configured. Please set up your API key in settings.';
+        const err = t('ai.notConfigured');
         setError(err);
         onError?.(err);
         return;
@@ -591,12 +612,12 @@ export function useStreamingAI({
       } catch (err) {
         setIsStreaming(false);
         const errorMsg =
-          err instanceof Error ? err.message : 'Failed to start stream';
+          err instanceof Error ? err.message : t('ai.failedToStartStream');
         setError(errorMsg);
         onError?.(errorMsg);
       }
     },
-    [apiKey, provider, model, baseUrl, system, isConfigured, onError]
+    [t, apiKey, provider, model, baseUrl, system, isConfigured, onError]
   );
 
   const cancel = useCallback(async () => {
@@ -692,6 +713,7 @@ export function useAgentNLToSQL({
   onComplete,
   onError,
 }: UseAgentNLToSQLOptions) {
+  const { t } = useTranslation('common');
   const { isConfigured } = useAIStore();
   const [generatedSQL, setGeneratedSQL] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -747,8 +769,7 @@ export function useAgentNLToSQL({
   const generateSQL = useCallback(
     async (prompt: string) => {
       if (!isConfigured) {
-        const err =
-          'AI is not configured. Please ensure Claude Code is installed and ANTHROPIC_API_KEY is set.';
+        const err = t('ai.notConfiguredClaudeCode');
         setError(err);
         onError?.(err);
         return;
@@ -790,17 +811,17 @@ Rules:
         });
 
         if (!result.success) {
-          throw new Error(result.error || 'Failed to generate SQL');
+          throw new Error(result.error || t('ai.failedToGenerateSql'));
         }
       } catch (err) {
         setIsGenerating(false);
         const errorMsg =
-          err instanceof Error ? err.message : 'Failed to generate SQL';
+          err instanceof Error ? err.message : t('ai.failedToGenerateSql');
         setError(errorMsg);
         onError?.(errorMsg);
       }
     },
-    [schema, isConfigured, onError]
+    [t, schema, isConfigured, onError]
   );
 
   const cancel = useCallback(async () => {
