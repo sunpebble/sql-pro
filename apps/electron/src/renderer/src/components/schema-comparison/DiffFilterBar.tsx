@@ -218,6 +218,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
         <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
         <Input
           type="text"
+          data-testid="diff-filter-search"
           placeholder={t('diffFilter.searchPlaceholder')}
           value={filters.searchText}
           onChange={handleSearchChange}

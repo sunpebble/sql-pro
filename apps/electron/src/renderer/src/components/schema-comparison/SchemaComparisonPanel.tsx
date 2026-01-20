@@ -141,7 +141,7 @@ export function SchemaComparisonPanel({
               e.preventDefault();
               // Find and focus the search input in DiffFilterBar
               const searchInput = document.querySelector(
-                'input[placeholder="Search by name..."]'
+                'input[data-testid="diff-filter-search"]'
               ) as HTMLInputElement;
               if (searchInput) {
                 searchInput.focus();
