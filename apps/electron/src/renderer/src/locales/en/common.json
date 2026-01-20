@@ -4,6 +4,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
+    "rename": "Rename",
+    "optional": "optional",
     "loading": "Loading...",
     "error": "Error",
     "copy": "Copy",
@@ -645,7 +647,21 @@
     "failedToCreateFolderWithError": "Failed to create folder: {{error}}",
     "failedToRenameFolderWithError": "Failed to rename folder: {{error}}",
     "folderNameEmpty": "Folder name cannot be empty",
-    "folderNameTooLong": "Folder name must be 100 characters or less"
+    "folderNameTooLong": "Folder name must be 100 characters or less",
+    "connect": "Connect",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "folder": "Folder",
+    "tags": "Tags",
+    "notes": "Notes",
+    "folderHint": "Organize profiles into folders for better management",
+    "tagsHint": "Separate tags with commas for categorization and search",
+    "notesCounter": "{{current}}/{{max}} characters",
+    "validation": {
+      "displayNameEmpty": "Display name cannot be empty",
+      "displayNameTooLong": "Display name cannot exceed {{max}} characters",
+      "notesTooLong": "Notes cannot exceed {{max}} characters"
+    }
   },
   "about": {
     "title": "SQL Pro",
@@ -2299,5 +2315,8 @@
   },
   "quit": {
     "cancel": "Cancel"
+  },
+  "folder": {
+    "newSubfolder": "New Subfolder"
   }
 }

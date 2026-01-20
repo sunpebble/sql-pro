@@ -4,6 +4,8 @@
     "cancel": "取消",
     "save": "保存",
     "delete": "删除",
+    "rename": "重命名",
+    "optional": "可选",
     "loading": "加载中...",
     "error": "错误",
     "copy": "复制",
@@ -492,7 +494,21 @@
     "failedToCreateFolderWithError": "创建文件夹失败：{{error}}",
     "failedToRenameFolderWithError": "重命名文件夹失败：{{error}}",
     "folderNameEmpty": "文件夹名称不能为空",
-    "folderNameTooLong": "文件夹名称不能超过 100 个字符"
+    "folderNameTooLong": "文件夹名称不能超过 100 个字符",
+    "connect": "连接",
+    "edit": "编辑",
+    "duplicate": "复制",
+    "folder": "文件夹",
+    "tags": "标签",
+    "notes": "备注",
+    "folderHint": "将配置文件整理到文件夹中以便管理",
+    "tagsHint": "用逗号分隔标签以便分类和搜索",
+    "notesCounter": "{{current}}/{{max}} 个字符",
+    "validation": {
+      "displayNameEmpty": "显示名称不能为空",
+      "displayNameTooLong": "显示名称不能超过 {{max}} 个字符",
+      "notesTooLong": "备注不能超过 {{max}} 个字符"
+    }
   },
   "about": {
     "title": "SQL Pro",
