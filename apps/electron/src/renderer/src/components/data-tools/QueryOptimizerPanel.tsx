@@ -4,6 +4,7 @@ import type { ErrorInfo, ReactNode } from 'react';
 import type {
   ExecutionPlanFlowEdge,
   ExecutionPlanFlowNode,
+  Suggestion,
 } from '@/lib/query-plan-analyzer';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
@@ -110,13 +111,6 @@ class DiagramErrorBoundary extends Component<
 const nodeTypes = {
   executionPlan: ExecutionPlanNodeComponent,
 };
-
-interface Suggestion {
-  type: 'index' | 'rewrite' | 'warning';
-  title: string;
-  description: string;
-  impact: 'high' | 'medium' | 'low';
-}
 
 type ViewMode = 'tree' | 'diagram';
 
@@ -252,11 +246,15 @@ export const QueryOptimizerPanel = memo(
         setStats(result.stats);
         setSuggestions(result.suggestions);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Analysis failed');
+        setError(
+          err instanceof Error
+            ? err.message
+            : t('queryOptimizer.analysisFailed')
+        );
       } finally {
         setIsAnalyzing(false);
       }
-    }, [onAnalyze, query]);
+    }, [t, onAnalyze, query]);
 
     // Build tree structure from flat plan
     const buildTree = (nodes: QueryPlanNode[]) => {
@@ -573,7 +571,7 @@ export const QueryOptimizerPanel = memo(
                 <div className="space-y-2">
                   {suggestions.map((suggestion) => (
                     <div
-                      key={`${suggestion.type}-${suggestion.title}`}
+                      key={`${suggestion.type}-${suggestion.titleKey}`}
                       className={cn(
                         'flex items-start gap-3 rounded-lg border p-3',
                         suggestion.type === 'warning' &&
@@ -594,7 +592,9 @@ export const QueryOptimizerPanel = memo(
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium">{suggestion.title}</p>
+                          <p className="font-medium">
+                            {t(suggestion.titleKey, suggestion.params)}
+                          </p>
                           <Badge
                             variant={
                               suggestion.impact === 'high'
@@ -611,7 +611,7 @@ export const QueryOptimizerPanel = memo(
                           </Badge>
                         </div>
                         <p className="text-muted-foreground text-sm">
-                          {suggestion.description}
+                          {t(suggestion.descriptionKey, suggestion.params)}
                         </p>
                       </div>
                     </div>

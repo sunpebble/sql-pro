@@ -440,13 +440,13 @@ export function ProfileManager({
 
       const trimmedName = folderName.trim();
       if (!trimmedName) {
-        setError('Folder name cannot be empty');
+        setError(t('profiles.folderNameEmpty'));
         return;
       }
 
       // Validate folder name length
       if (trimmedName.length > 100) {
-        setError('Folder name must be 100 characters or less');
+        setError(t('profiles.folderNameTooLong'));
         return;
       }
 

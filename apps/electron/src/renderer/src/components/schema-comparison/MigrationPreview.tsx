@@ -91,7 +91,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             error:
               err instanceof Error
                 ? err.message
-                : 'Failed to generate migration SQL',
+                : t('migration.failedToGenerate'),
           });
         }
       } finally {

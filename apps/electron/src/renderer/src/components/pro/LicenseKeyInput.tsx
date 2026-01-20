@@ -6,6 +6,7 @@
 import { Input } from '@sqlpro/ui/input';
 import { Check, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface LicenseKeyInputProps {
@@ -186,6 +187,7 @@ export function LicenseKeyInput({
 
   const isComplete = isValidFormat(segments);
   const hasContent = segments.some((s) => s.length > 0);
+  const { t } = useTranslation('common');
 
   return (
     <div className={cn('space-y-2', className)}>
@@ -225,8 +227,8 @@ export function LicenseKeyInput({
                 segment.length === SEGMENT_LENGTH &&
                   'border-green-500/50 bg-green-500/5'
               )}
-              placeholder="XXXX"
-              aria-label={`License key segment ${index + 1}`}
+              placeholder={t('license.segmentPlaceholder')}
+              aria-label={t('license.segmentAriaLabel', { index: index + 1 })}
             />
             {index < SEGMENT_COUNT - 1 && (
               <span className="text-muted-foreground">-</span>
@@ -254,9 +256,7 @@ export function LicenseKeyInput({
       </div>
 
       {/* Helper text */}
-      <p className="text-muted-foreground text-xs">
-        Format: SQLPRO-XXXX-XXXX-XXXX-XXXX
-      </p>
+      <p className="text-muted-foreground text-xs">{t('license.formatHint')}</p>
     </div>
   );
 }

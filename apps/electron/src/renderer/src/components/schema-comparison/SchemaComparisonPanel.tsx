@@ -181,7 +181,7 @@ export function SchemaComparisonPanel({
       if (source.type === 'connection' && target.type === 'connection') {
         // Compare two connections
         if (!source.connectionId || !target.connectionId) {
-          throw new Error('Connection IDs are required');
+          throw new Error(t('compare.connectionIdsRequired'));
         }
 
         response = await sqlPro.comparison.compareConnections({
@@ -191,7 +191,7 @@ export function SchemaComparisonPanel({
       } else if (source.type === 'connection' && target.type === 'snapshot') {
         // Compare connection to snapshot
         if (!source.connectionId || !target.snapshotId) {
-          throw new Error('Connection ID and snapshot ID are required');
+          throw new Error(t('compare.connectionAndSnapshotRequired'));
         }
 
         response = await sqlPro.comparison.compareConnectionToSnapshot({
@@ -202,7 +202,7 @@ export function SchemaComparisonPanel({
       } else if (source.type === 'snapshot' && target.type === 'connection') {
         // Compare snapshot to connection (reverse)
         if (!source.snapshotId || !target.connectionId) {
-          throw new Error('Snapshot ID and connection ID are required');
+          throw new Error(t('compare.snapshotAndConnectionRequired'));
         }
 
         response = await sqlPro.comparison.compareConnectionToSnapshot({
@@ -213,7 +213,7 @@ export function SchemaComparisonPanel({
       } else if (source.type === 'snapshot' && target.type === 'snapshot') {
         // Compare two snapshots
         if (!source.snapshotId || !target.snapshotId) {
-          throw new Error('Snapshot IDs are required');
+          throw new Error(t('compare.snapshotIdsRequired'));
         }
 
         response = await sqlPro.comparison.compareSnapshots({
@@ -221,7 +221,7 @@ export function SchemaComparisonPanel({
           targetSnapshotId: target.snapshotId,
         });
       } else {
-        throw new Error('Invalid comparison configuration');
+        throw new Error(t('compare.invalidComparisonConfig'));
       }
 
       if (response.success && (response.result || response.comparison)) {
@@ -236,7 +236,14 @@ export function SchemaComparisonPanel({
     } finally {
       setIsComparing(false);
     }
-  }, [source, target, setIsComparing, setComparisonResult, setComparisonError]);
+  }, [
+    source,
+    target,
+    setIsComparing,
+    setComparisonResult,
+    setComparisonError,
+    t,
+  ]);
 
   // Store handleCompare in ref for keyboard shortcuts
   useEffect(() => {

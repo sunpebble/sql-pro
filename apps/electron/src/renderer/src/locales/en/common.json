@@ -31,7 +31,63 @@
     "failedToOptimizeQuery": "Failed to optimize query",
     "noAnalysisResult": "No analysis result",
     "failedToAnalyzeData": "Failed to analyze data",
-    "failedToStartStream": "Failed to start stream"
+    "failedToStartStream": "Failed to start stream",
+    "streamError": "Stream error",
+    "model": "Model",
+    "apiKeyPlaceholder": "Enter your API key",
+    "modelsFetchError": "Failed to fetch models, using defaults",
+    "inputModel": "Enter model name...",
+    "searchModels": "Search models...",
+    "noModelFound": "No model found.",
+    "claudeCodePath": "Claude Code Path",
+    "inputPath": "Enter Claude Code path...",
+    "searchPaths": "Search paths...",
+    "noPathFound": "No path found.",
+    "loadingInfo": "Loading Claude Code info...",
+    "version": "Version",
+    "pathNotFound": "Claude Code not found at this path"
+  },
+  "export": {
+    "noDataToExport": "No data to export",
+    "noColumnsSelected": "No columns selected for export",
+    "failed": "Export failed",
+    "failedToWriteFile": "Failed to write file",
+    "filters": {
+      "json": "JSON Files",
+      "csv": "CSV Files",
+      "sql": "SQL Files",
+      "xlsx": "Excel Files",
+      "markdown": "Markdown Files",
+      "html": "HTML Files",
+      "txt": "Text Files"
+    },
+    "titles": {
+      "json": "Export to JSON",
+      "csv": "Export to CSV",
+      "sql": "Export to SQL",
+      "xlsx": "Export to Excel",
+      "markdown": "Export to Markdown",
+      "html": "Export to HTML",
+      "txt": "Export to Text"
+    }
+  },
+  "dataGrid": {
+    "noDataToDisplay": "No data to display",
+    "sortBy": "Sort by {{column}}{{currentSort}}",
+    "currentlyAscending": ", currently ascending",
+    "currentlyDescending": ", currently descending"
+  },
+  "license": {
+    "segmentPlaceholder": "XXXX",
+    "segmentAriaLabel": "License key segment {{index}}",
+    "formatHint": "Format: SQLPRO-XXXX-XXXX-XXXX-XXXX"
+  },
+  "pgNotify": {
+    "subscriptionFailed": "Subscription failed"
+  },
+  "umap": {
+    "needMinVectors": "Need at least {{min}} vectors for UMAP (got {{count}})",
+    "workerError": "Worker error"
   },
   "importExport": {
     "exportProfiles": "Export Profiles",
@@ -165,7 +221,10 @@
     "sqlFiles": "SQL Files",
     "allFiles": "All Files",
     "failedToSave": "Failed to save file",
-    "failedToCompareTables": "Failed to compare tables"
+    "failedToCompareTables": "Failed to compare tables",
+    "selectBothTables": "Please select both source and target tables to compare",
+    "sourceRequired": "Source connection and table are required",
+    "targetRequired": "Target connection and table are required"
   },
   "schemaComparison": {
     "saveMigrationSQL": "Save Migration SQL",
@@ -206,7 +265,8 @@
     "saveToFile": "Save to File",
     "openInQueryEditor": "Open in Query Editor",
     "generatedSQL": "Generated SQL:",
-    "tip": "Tip: Review the SQL carefully before executing, especially if DELETE statements are included. Consider backing up your database first."
+    "tip": "Tip: Review the SQL carefully before executing, especially if DELETE statements are included. Consider backing up your database first.",
+    "failedToGenerate": "Failed to generate sync SQL"
   },
   "dataProfiler": {
     "title": "Data Profiler",
@@ -449,7 +509,12 @@
     "select": "Select...",
     "unknown": "Unknown",
     "tableCount": "{{count}} table",
-    "tableCount_plural": "{{count}} tables"
+    "tableCount_plural": "{{count}} tables",
+    "connectionIdsRequired": "Connection IDs are required",
+    "connectionAndSnapshotRequired": "Connection ID and snapshot ID are required",
+    "snapshotAndConnectionRequired": "Snapshot ID and connection ID are required",
+    "snapshotIdsRequired": "Snapshot IDs are required",
+    "invalidComparisonConfig": "Invalid comparison configuration"
   },
   "exportReport": {
     "title": "Export Comparison Report",
@@ -474,7 +539,8 @@
     "exportButton": "Export Report",
     "htmlDescription": "Styled web page with visual indicators",
     "jsonDescription": "Raw data for programmatic use",
-    "markdownDescription": "Documentation-friendly format"
+    "markdownDescription": "Documentation-friendly format",
+    "invalidFormat": "Invalid format selected"
   },
   "migration": {
     "title": "Migration SQL",
@@ -498,7 +564,8 @@
     "tip": "💡 Tip: Review the SQL carefully before executing, especially if DROP statements are included. Consider backing up your database first.",
     "sqlCopied": "SQL copied to clipboard",
     "sqlCopyFailed": "Failed to copy SQL",
-    "saveSuccess": "Migration file saved"
+    "saveSuccess": "Migration file saved",
+    "failedToGenerate": "Failed to generate migration SQL"
   },
   "diffFilter": {
     "onlyDifferences": "Only Differences",
@@ -574,7 +641,9 @@
     "failedToSaveProfile": "Failed to save profile",
     "failedToOpenFileDialog": "Failed to open file dialog",
     "failedToCreateFolderWithError": "Failed to create folder: {{error}}",
-    "failedToRenameFolderWithError": "Failed to rename folder: {{error}}"
+    "failedToRenameFolderWithError": "Failed to rename folder: {{error}}",
+    "folderNameEmpty": "Folder name cannot be empty",
+    "folderNameTooLong": "Folder name must be 100 characters or less"
   },
   "about": {
     "title": "SQL Pro",
@@ -668,7 +737,18 @@
     "computing": "Computing projection...",
     "loading": "Loading vectors...",
     "backgroundPoints": "Background points",
-    "searchResults": "Search results"
+    "searchResults": "Search results",
+    "noConnection": "No connection",
+    "searchTextEmpty": "Search text is empty",
+    "vectorEmptyOrInvalid": "Vector is empty or invalid",
+    "pointIdRequired": "Point ID is required",
+    "embeddingApiKeyNotConfigured": "Embedding API key not configured. Please configure in Settings > AI > Embedding.",
+    "invalidEmbeddingResponse": "Invalid embedding response format",
+    "embeddingFailed": "Embedding failed: {{message}}",
+    "inputMustBeArray": "Input must be a JSON array",
+    "vectorCannotBeEmpty": "Vector cannot be empty",
+    "allElementsMustBeNumbers": "All elements must be numbers",
+    "invalidJsonFormat": "Invalid JSON format"
   },
   "pendingChanges": {
     "title": "Pending Changes",
@@ -682,7 +762,8 @@
     "copied": "Copied!",
     "copy": "Copy",
     "copySqlToClipboard": "Copy SQL to clipboard",
-    "revertAllChanges": "Revert all changes for this table"
+    "revertAllChanges": "Revert all changes for this table",
+    "validationFailed": "Validation failed"
   },
   "diff": {
     "field": "Field",
@@ -715,6 +796,81 @@
   "query": {
     "queryFailed": "Query failed",
     "failedToAnalyzeQuery": "Failed to analyze query"
+  },
+  "queryOptimizer": {
+    "analysisFailed": "Analysis failed"
+  },
+  "queryPlan": {
+    "labels": {
+      "table": "Table",
+      "index": "Index",
+      "cost": "Cost",
+      "rows": "Rows"
+    },
+    "warnings": {
+      "fullScan": {
+        "title": "Full Table Scan",
+        "description": "This operation scans all rows in the table. Consider adding an index to improve performance."
+      },
+      "tempBtree": {
+        "title": "Temporary B-Tree",
+        "description": "A temporary structure is used for sorting. Consider adding an index on the ORDER BY columns."
+      },
+      "subquery": {
+        "title": "Subquery Detected",
+        "description": "Subqueries can be expensive. Consider rewriting as a JOIN for better performance."
+      },
+      "missingIndex": {
+        "title": "Missing Index",
+        "description": "No index is available for this operation. Adding an index could significantly improve performance."
+      },
+      "default": {
+        "title": "Performance Warning",
+        "description": "This operation may have performance implications."
+      }
+    },
+    "suggestions": {
+      "fullTableScan": {
+        "title": "Full table scan on \"{{tableName}}\"",
+        "description": "Consider adding an index on the columns used in WHERE or JOIN clauses for table \"{{tableName}}\" to improve query performance."
+      },
+      "noIndexesUsed": {
+        "title": "No indexes used",
+        "description": "This query does not use any indexes. If the query filters or joins on specific columns, consider adding appropriate indexes."
+      },
+      "multipleTables": {
+        "title": "Multiple tables accessed",
+        "description": "This query accesses {{count}} tables. Ensure all join columns are indexed and consider breaking complex queries into smaller parts."
+      },
+      "subqueryDetected": {
+        "title": "Subquery detected",
+        "description": "Consider rewriting subqueries as JOINs for potentially better performance."
+      },
+      "tempBtree": {
+        "title": "Temporary B-tree for sorting",
+        "description": "The query uses a temporary B-tree for sorting. Consider adding an index on the ORDER BY columns to avoid this overhead."
+      },
+      "sortingNotCovered": {
+        "title": "Sorting not covered by index",
+        "description": "The ORDER BY clause requires a temporary structure. Adding an index that covers the sort columns could improve performance."
+      },
+      "compoundQuery": {
+        "title": "Compound query detected",
+        "description": "UNION/EXCEPT/INTERSECT operations can be expensive. Consider if a single query with appropriate WHERE clauses could achieve the same result."
+      },
+      "highScanRatio": {
+        "title": "High scan-to-return ratio",
+        "description": "The query examined {{examined}} rows but only returned {{returned}}. This indicates the query could benefit from more selective indexes."
+      },
+      "queryOptimized": {
+        "title": "Query looks optimized",
+        "description": "The query uses {{indexCount}} index(es) and executes quickly. No obvious optimizations needed."
+      }
+    }
+  },
+  "tableData": {
+    "connectionAndTableRequired": "Connection ID and table are required",
+    "failedToFetch": "Failed to fetch table data"
   },
   "table": {
     "quickFilters": "Quick Filters",
@@ -862,7 +1018,10 @@
     "modificationDate": "Modification Date",
     "noSelection": "No images selected",
     "exportTitle": "Export Selected Images",
-    "exportError": "Failed to export images"
+    "exportError": "Failed to export images",
+    "failedToGetCanvasContext": "Failed to get canvas context",
+    "failedToConvertToPng": "Failed to convert to PNG",
+    "failedToLoadImageForConversion": "Failed to load image for conversion"
   },
   "row": {
     "copyRowAsSQL": "Copy Row as SQL INSERT",
@@ -952,7 +1111,9 @@
     "idxAbbr": "{{count}} idx",
     "fkAbbr": "{{count}} fk",
     "trgAbbr": "{{count}} trg",
-    "none": "None"
+    "none": "None",
+    "search": "Search tables...",
+    "searchVim": "Search tables (/ to focus)"
   },
   "toolbar": {
     "unsavedChanges": "{{count}} unsaved change",
@@ -1703,7 +1864,8 @@
     "tablesCountPlural": "{{count}} tables",
     "statementCount": "{{count}} SQL statement",
     "statementsCountPlural": "{{count}} SQL statements",
-    "appVersion": "App Version"
+    "appVersion": "App Version",
+    "failedToLoadSchema": "Failed to load schema"
   },
   "pluginDetail": {
     "description": "Description",

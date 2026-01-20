@@ -4,8 +4,12 @@ import dagre from 'dagre';
 
 export interface Suggestion {
   type: 'index' | 'rewrite' | 'warning';
-  title: string;
-  description: string;
+  /** i18n key for the title, e.g., 'queryPlan.suggestions.fullTableScan.title' */
+  titleKey: string;
+  /** i18n key for the description, e.g., 'queryPlan.suggestions.fullTableScan.description' */
+  descriptionKey: string;
+  /** Interpolation parameters for the i18n keys */
+  params?: Record<string, string | number>;
   impact: 'high' | 'medium' | 'low';
 }
 
@@ -30,41 +34,37 @@ export interface ExecutionPlanNodeData {
 }
 
 /**
- * Gets a human-readable description for each warning type
+ * Gets i18n keys for warning messages based on warning type
  */
 export function getWarningMessage(warningType: WarningType): {
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
 } {
   switch (warningType) {
     case 'full-scan':
       return {
-        title: 'Full Table Scan',
-        description:
-          'This operation scans all rows in the table. Consider adding an index to improve performance.',
+        titleKey: 'queryPlan.warnings.fullScan.title',
+        descriptionKey: 'queryPlan.warnings.fullScan.description',
       };
     case 'temp-btree':
       return {
-        title: 'Temporary B-Tree',
-        description:
-          'A temporary structure is used for sorting. Consider adding an index on the ORDER BY columns.',
+        titleKey: 'queryPlan.warnings.tempBtree.title',
+        descriptionKey: 'queryPlan.warnings.tempBtree.description',
       };
     case 'subquery':
       return {
-        title: 'Subquery Detected',
-        description:
-          'Subqueries can be expensive. Consider rewriting as a JOIN for better performance.',
+        titleKey: 'queryPlan.warnings.subquery.title',
+        descriptionKey: 'queryPlan.warnings.subquery.description',
       };
     case 'missing-index':
       return {
-        title: 'Missing Index',
-        description:
-          'No index is available for this operation. Adding an index could significantly improve performance.',
+        titleKey: 'queryPlan.warnings.missingIndex.title',
+        descriptionKey: 'queryPlan.warnings.missingIndex.description',
       };
     default:
       return {
-        title: 'Performance Warning',
-        description: 'This operation may have performance implications.',
+        titleKey: 'queryPlan.warnings.default.title',
+        descriptionKey: 'queryPlan.warnings.default.description',
       };
   }
 }
@@ -102,8 +102,9 @@ export function generateSuggestions(
 
     suggestions.push({
       type: 'index',
-      title: `Full table scan on "${tableName}"`,
-      description: `Consider adding an index on the columns used in WHERE or JOIN clauses for table "${tableName}" to improve query performance.`,
+      titleKey: 'queryPlan.suggestions.fullTableScan.title',
+      descriptionKey: 'queryPlan.suggestions.fullTableScan.description',
+      params: { tableName },
       impact: 'high',
     });
   }
@@ -112,9 +113,8 @@ export function generateSuggestions(
   if ((stats.indexesUsed?.length ?? 0) === 0 && plan.length > 0) {
     suggestions.push({
       type: 'warning',
-      title: 'No indexes used',
-      description:
-        'This query does not use any indexes. If the query filters or joins on specific columns, consider adding appropriate indexes.',
+      titleKey: 'queryPlan.suggestions.noIndexesUsed.title',
+      descriptionKey: 'queryPlan.suggestions.noIndexesUsed.description',
       impact: 'medium',
     });
   }
@@ -123,8 +123,9 @@ export function generateSuggestions(
   if ((stats.tablesAccessed?.length ?? 0) > 2) {
     suggestions.push({
       type: 'rewrite',
-      title: 'Multiple tables accessed',
-      description: `This query accesses ${stats.tablesAccessed?.length ?? 0} tables. Ensure all join columns are indexed and consider breaking complex queries into smaller parts.`,
+      titleKey: 'queryPlan.suggestions.multipleTables.title',
+      descriptionKey: 'queryPlan.suggestions.multipleTables.description',
+      params: { count: stats.tablesAccessed?.length ?? 0 },
       impact: 'medium',
     });
   }
@@ -139,9 +140,8 @@ export function generateSuggestions(
   if (hasSubquery) {
     suggestions.push({
       type: 'rewrite',
-      title: 'Subquery detected',
-      description:
-        'Consider rewriting subqueries as JOINs for potentially better performance.',
+      titleKey: 'queryPlan.suggestions.subqueryDetected.title',
+      descriptionKey: 'queryPlan.suggestions.subqueryDetected.description',
       impact: 'medium',
     });
   }
@@ -154,9 +154,8 @@ export function generateSuggestions(
   if (hasTempBTree) {
     suggestions.push({
       type: 'index',
-      title: 'Temporary B-tree for sorting',
-      description:
-        'The query uses a temporary B-tree for sorting. Consider adding an index on the ORDER BY columns to avoid this overhead.',
+      titleKey: 'queryPlan.suggestions.tempBtree.title',
+      descriptionKey: 'queryPlan.suggestions.tempBtree.description',
       impact: 'medium',
     });
   }
@@ -169,9 +168,8 @@ export function generateSuggestions(
   if (hasTempOrderBy) {
     suggestions.push({
       type: 'index',
-      title: 'Sorting not covered by index',
-      description:
-        'The ORDER BY clause requires a temporary structure. Adding an index that covers the sort columns could improve performance.',
+      titleKey: 'queryPlan.suggestions.sortingNotCovered.title',
+      descriptionKey: 'queryPlan.suggestions.sortingNotCovered.description',
       impact: 'low',
     });
   }
@@ -184,9 +182,8 @@ export function generateSuggestions(
   if (hasCompound) {
     suggestions.push({
       type: 'rewrite',
-      title: 'Compound query detected',
-      description:
-        'UNION/EXCEPT/INTERSECT operations can be expensive. Consider if a single query with appropriate WHERE clauses could achieve the same result.',
+      titleKey: 'queryPlan.suggestions.compoundQuery.title',
+      descriptionKey: 'queryPlan.suggestions.compoundQuery.description',
       impact: 'low',
     });
   }
@@ -198,8 +195,12 @@ export function generateSuggestions(
   ) {
     suggestions.push({
       type: 'warning',
-      title: 'High scan-to-return ratio',
-      description: `The query examined ${stats.rowsExamined} rows but only returned ${stats.rowsReturned}. This indicates the query could benefit from more selective indexes.`,
+      titleKey: 'queryPlan.suggestions.highScanRatio.title',
+      descriptionKey: 'queryPlan.suggestions.highScanRatio.description',
+      params: {
+        examined: stats.rowsExamined ?? 0,
+        returned: stats.rowsReturned ?? 0,
+      },
       impact: 'high',
     });
   }
@@ -212,8 +213,9 @@ export function generateSuggestions(
   ) {
     suggestions.push({
       type: 'rewrite',
-      title: 'Query looks optimized',
-      description: `The query uses ${stats.indexesUsed?.length ?? 0} index(es) and executes quickly. No obvious optimizations needed.`,
+      titleKey: 'queryPlan.suggestions.queryOptimized.title',
+      descriptionKey: 'queryPlan.suggestions.queryOptimized.description',
+      params: { indexCount: stats.indexesUsed?.length ?? 0 },
       impact: 'low',
     });
   }

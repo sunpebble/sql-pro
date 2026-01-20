@@ -7,6 +7,7 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDebouncedCallback } from './useDebounce';
 
 export interface PgNotifyEvent {
@@ -97,6 +98,7 @@ export function usePgNotify(
   channel: string,
   options: UsePgNotifyOptions = {}
 ): UsePgNotifyResult {
+  const { t } = useTranslation('common');
   const {
     enabled = true,
     onNotification,
@@ -196,7 +198,9 @@ export function usePgNotify(
           setIsSubscribed(false);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Subscription failed');
+        setError(
+          err instanceof Error ? err.message : t('pgNotify.subscriptionFailed')
+        );
         setIsSubscribed(false);
       }
     };
@@ -220,7 +224,7 @@ export function usePgNotify(
       setIsSubscribed(false);
       setSubscriptionId(null);
     };
-  }, [connectionId, channel, enabled, autoRefreshTable, scheduleRefresh]);
+  }, [t, connectionId, channel, enabled, autoRefreshTable, scheduleRefresh]);
 
   return {
     isSubscribed,

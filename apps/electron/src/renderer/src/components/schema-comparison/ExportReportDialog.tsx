@@ -90,7 +90,7 @@ export function ExportReportDialog({
         (opt) => opt.value === selectedFormat
       );
       if (!formatOption) {
-        throw new Error('Invalid format selected');
+        throw new Error(t('exportReport.invalidFormat'));
       }
 
       // Generate a default filename
@@ -143,7 +143,7 @@ export function ExportReportDialog({
     } finally {
       setIsExporting(false);
     }
-  }, [comparisonResult, selectedFormat, includeMigrationSQL, onOpenChange]);
+  }, [comparisonResult, selectedFormat, includeMigrationSQL, onOpenChange, t]);
 
   const selectedFormatInfo = FORMAT_OPTIONS.find(
     (opt) => opt.value === selectedFormat

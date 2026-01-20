@@ -1,5 +1,6 @@
 import type { ExportFormat, ExportResponse } from '@shared/types';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 
 export interface ExportDataOptions {
@@ -60,6 +61,7 @@ const FORMAT_FILTERS: Record<
  * Handles save dialog interaction and IPC communication with the main process.
  */
 export function useExport(): UseExportResult {
+  const { t } = useTranslation('common');
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [lastExportResult, setLastExportResult] =
@@ -85,13 +87,13 @@ export function useExport(): UseExportResult {
 
       // Validate inputs
       if (rows.length === 0) {
-        const emptyError = new Error('No data to export');
+        const emptyError = new Error(t('export.noDataToExport'));
         setError(emptyError);
         return null;
       }
 
       if (columns.length === 0) {
-        const noColumnsError = new Error('No columns selected for export');
+        const noColumnsError = new Error(t('export.noColumnsSelected'));
         setError(noColumnsError);
         return null;
       }
@@ -137,7 +139,7 @@ export function useExport(): UseExportResult {
 
         const result = exportResult as ExportResponse;
         if (!result.success) {
-          throw new Error(result.error || 'Export failed');
+          throw new Error(result.error || t('export.failed'));
         }
 
         setLastExportResult(result);
@@ -150,7 +152,7 @@ export function useExport(): UseExportResult {
         setIsExporting(false);
       }
     },
-    []
+    [t]
   );
 
   return {

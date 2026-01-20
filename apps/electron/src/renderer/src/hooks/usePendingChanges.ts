@@ -1,6 +1,7 @@
 import type { PendingChangeInfo } from '@shared/types';
 import type { PendingChange } from '@/lib/collections';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 import {
   clearPendingChanges,
@@ -43,6 +44,7 @@ export interface UsePendingChangesResult {
 export function usePendingChanges(
   options: UsePendingChangesOptions
 ): UsePendingChangesResult {
+  const { t } = useTranslation('common');
   const { connectionId, schema = 'main', table } = options;
 
   const [isValidating, setIsValidating] = useState(false);
@@ -101,7 +103,7 @@ export function usePendingChanges(
       });
 
       if (!response.success) {
-        throw new Error(response.error || 'Validation failed');
+        throw new Error(response.error || t('pendingChanges.validationFailed'));
       }
 
       const errors = new Map<string, string>();
@@ -113,7 +115,7 @@ export function usePendingChanges(
           allValid = false;
           errors.set(
             result.changeId ?? '',
-            result.error || 'Validation failed'
+            result.error || t('pendingChanges.validationFailed')
           );
         }
 
@@ -134,7 +136,7 @@ export function usePendingChanges(
     } finally {
       setIsValidating(false);
     }
-  }, [connectionId, changes]);
+  }, [t, connectionId, changes]);
 
   const applyChanges = useCallback(async (): Promise<boolean> => {
     // Get current changes directly to avoid stale closure

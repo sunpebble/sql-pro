@@ -633,7 +633,7 @@ export function MediaPreview({
               canvas.height = img.naturalHeight;
               const ctx = canvas.getContext('2d');
               if (!ctx) {
-                reject(new Error('Failed to get canvas context'));
+                reject(new Error(t('mediaGallery.failedToGetCanvasContext')));
                 return;
               }
               ctx.drawImage(img, 0, 0);
@@ -641,7 +641,7 @@ export function MediaPreview({
               canvas.toBlob(async (pngBlob) => {
                 URL.revokeObjectURL(blobUrl);
                 if (!pngBlob) {
-                  reject(new Error('Failed to convert to PNG'));
+                  reject(new Error(t('mediaGallery.failedToConvertToPng')));
                   return;
                 }
                 try {
@@ -659,7 +659,7 @@ export function MediaPreview({
           };
           img.onerror = () => {
             URL.revokeObjectURL(blobUrl);
-            reject(new Error('Failed to load image for conversion'));
+            reject(new Error(t('mediaGallery.failedToLoadImageForConversion')));
           };
           img.src = blobUrl;
         });

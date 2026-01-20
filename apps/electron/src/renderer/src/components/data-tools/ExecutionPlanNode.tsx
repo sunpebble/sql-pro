@@ -10,6 +10,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getWarningMessage } from '@/lib/query-plan-analyzer';
 import { cn } from '@/lib/utils';
 
@@ -62,6 +63,7 @@ function ExecutionPlanNodeComponent({
   data,
   selected,
 }: ExecutionPlanNodeProps) {
+  const { t } = useTranslation('common');
   const {
     operation,
     detail,
@@ -114,9 +116,11 @@ function ExecutionPlanNodeComponent({
             </TooltipTrigger>
             <TooltipContent side="right">
               <div className="space-y-1">
-                <div className="font-semibold">{warningMessage.title}</div>
+                <div className="font-semibold">
+                  {t(warningMessage.titleKey)}
+                </div>
                 <div className="text-xs opacity-90">
-                  {warningMessage.description}
+                  {t(warningMessage.descriptionKey)}
                 </div>
               </div>
             </TooltipContent>
@@ -131,13 +135,17 @@ function ExecutionPlanNodeComponent({
           <div className="flex items-center gap-2 text-sm">
             {tableName && (
               <div className="flex items-center gap-1">
-                <span className="text-muted-foreground">Table:</span>
+                <span className="text-muted-foreground">
+                  {t('queryPlan.labels.table')}:
+                </span>
                 <span className="font-mono font-medium">{tableName}</span>
               </div>
             )}
             {indexName && (
               <div className="flex items-center gap-1">
-                <span className="text-muted-foreground">Index:</span>
+                <span className="text-muted-foreground">
+                  {t('queryPlan.labels.index')}:
+                </span>
                 <span className="font-mono font-medium">{indexName}</span>
               </div>
             )}
@@ -157,13 +165,17 @@ function ExecutionPlanNodeComponent({
           <div className="flex gap-3 border-t pt-2 text-xs">
             {estimatedCost !== undefined && (
               <div className="flex items-center gap-1">
-                <span className="text-muted-foreground">Cost:</span>
+                <span className="text-muted-foreground">
+                  {t('queryPlan.labels.cost')}:
+                </span>
                 <span className="font-medium">{estimatedCost}</span>
               </div>
             )}
             {estimatedRows !== undefined && (
               <div className="flex items-center gap-1">
-                <span className="text-muted-foreground">Rows:</span>
+                <span className="text-muted-foreground">
+                  {t('queryPlan.labels.rows')}:
+                </span>
                 <span className="font-medium">~{estimatedRows}</span>
               </div>
             )}

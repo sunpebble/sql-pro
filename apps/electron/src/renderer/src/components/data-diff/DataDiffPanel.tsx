@@ -132,19 +132,17 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
 
   const handleCompare = useCallback(async () => {
     if (!source || !target) {
-      setComparisonError(
-        'Please select both source and target tables to compare'
-      );
+      setComparisonError(t('dataDiff.selectBothTables'));
       return;
     }
 
     if (!source.connectionId || !source.tableName) {
-      setComparisonError('Source connection and table are required');
+      setComparisonError(t('dataDiff.sourceRequired'));
       return;
     }
 
     if (!target.connectionId || !target.tableName) {
-      setComparisonError('Target connection and table are required');
+      setComparisonError(t('dataDiff.targetRequired'));
       return;
     }
 

@@ -11,6 +11,7 @@
 
 import type { PointWithVector, VectorSearchResult } from '@shared/types';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 import { useAIStore } from '@/stores/ai-store';
 
@@ -56,6 +57,7 @@ export function useVectorSearch(
   connectionId: string | null,
   collection: string
 ): UseVectorSearchReturn {
+  const { t } = useTranslation('common');
   const [results, setResults] = useState<VectorSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,9 +129,7 @@ export function useVectorSearch(
           : getEffectiveBaseUrl());
 
       if (!embeddingApiKey) {
-        setError(
-          'Embedding API key not configured. Please configure in Settings > AI > Embedding.'
-        );
+        setError(t('vectorSearch.embeddingApiKeyNotConfigured'));
         return null;
       }
 
@@ -168,17 +168,17 @@ export function useVectorSearch(
         const embeddingVector = data.data?.[0]?.embedding;
 
         if (!embeddingVector || !Array.isArray(embeddingVector)) {
-          throw new Error('Invalid embedding response format');
+          throw new Error(t('vectorSearch.invalidEmbeddingResponse'));
         }
 
         return embeddingVector;
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
-        setError(`Embedding failed: ${message}`);
+        setError(t('vectorSearch.embeddingFailed', { message }));
         return null;
       }
     },
-    [provider, providerSettings, getEffectiveBaseUrl, embedding]
+    [t, provider, providerSettings, getEffectiveBaseUrl, embedding]
   );
 
   /**
@@ -187,12 +187,12 @@ export function useVectorSearch(
   const searchByText = useCallback(
     async (text: string, limit: number, threshold?: number) => {
       if (!connectionId) {
-        setError('No connection');
+        setError(t('vectorSearch.noConnection'));
         return;
       }
 
       if (!text.trim()) {
-        setError('Search text is empty');
+        setError(t('vectorSearch.searchTextEmpty'));
         return;
       }
 
@@ -231,7 +231,7 @@ export function useVectorSearch(
         setIsSearching(false);
       }
     },
-    [connectionId, collection, embedText]
+    [t, connectionId, collection, embedText]
   );
 
   /**
@@ -240,12 +240,12 @@ export function useVectorSearch(
   const searchByVector = useCallback(
     async (vector: number[], limit: number, threshold?: number) => {
       if (!connectionId) {
-        setError('No connection');
+        setError(t('vectorSearch.noConnection'));
         return;
       }
 
       if (!Array.isArray(vector) || vector.length === 0) {
-        setError('Vector is empty or invalid');
+        setError(t('vectorSearch.vectorEmptyOrInvalid'));
         return;
       }
 
@@ -277,7 +277,7 @@ export function useVectorSearch(
         setIsSearching(false);
       }
     },
-    [connectionId, collection]
+    [t, connectionId, collection]
   );
 
   /**
@@ -286,12 +286,12 @@ export function useVectorSearch(
   const searchSimilar = useCallback(
     async (pointId: string | number, limit: number) => {
       if (!connectionId) {
-        setError('No connection');
+        setError(t('vectorSearch.noConnection'));
         return;
       }
 
       if (pointId === '' || pointId === null || pointId === undefined) {
-        setError('Point ID is required');
+        setError(t('vectorSearch.pointIdRequired'));
         return;
       }
 
@@ -320,7 +320,7 @@ export function useVectorSearch(
         setIsSearching(false);
       }
     },
-    [connectionId, collection]
+    [t, connectionId, collection]
   );
 
   /**

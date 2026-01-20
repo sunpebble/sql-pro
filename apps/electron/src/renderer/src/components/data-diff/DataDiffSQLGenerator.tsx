@@ -98,7 +98,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
             error:
               err instanceof Error
                 ? err.message
-                : 'Failed to generate sync SQL',
+                : t('dataDiffSQL.failedToGenerate'),
           });
         }
       } finally {

@@ -557,9 +557,9 @@ export function useStreamingAI({
           break;
         case 'error':
           setIsStreaming(false);
-          setError(chunk.error || 'Stream error');
+          setError(chunk.error || t('ai.streamError'));
           requestIdRef.current = null;
-          onError?.(chunk.error || 'Stream error');
+          onError?.(chunk.error || t('ai.streamError'));
           break;
       }
     });
@@ -568,7 +568,7 @@ export function useStreamingAI({
     return () => {
       unsubscribe();
     };
-  }, [onChunk, onComplete, onError]);
+  }, [t, onChunk, onComplete, onError]);
 
   const stream = useCallback(
     async (messages: Array<{ role: string; content: string }>) => {

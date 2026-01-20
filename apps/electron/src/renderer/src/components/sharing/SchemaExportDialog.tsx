@@ -101,7 +101,7 @@ export function SchemaExportDialog({
         setSelectedTables(allTables);
         return result.schemas;
       }
-      throw new Error('Failed to load schema');
+      throw new Error(t('sharing.failedToLoadSchema'));
     },
     { retries: 2, retryDelay: 500 }
   );

@@ -2,6 +2,7 @@ import type { ColumnSchema, SortState } from '@/types/database';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowDown, ArrowUp, Key } from 'lucide-react';
 import { memo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { cn } from '@/lib/utils';
 import { ColumnResizeHandle } from './ColumnResizeHandle';
@@ -52,6 +53,7 @@ interface DataGridProps {
 }
 
 export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
+  const { t } = useTranslation('common');
   const parentRef = useRef<HTMLDivElement>(null);
 
   const rowVirtualizer = useVirtualizer({
@@ -78,7 +80,7 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
   if (columns.length === 0) {
     return (
       <div className="bg-grid-dot text-muted-foreground flex h-full items-center justify-center">
-        No data to display
+        {t('dataGrid.noDataToDisplay')}
       </div>
     );
   }
@@ -116,7 +118,17 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
               <button
                 onClick={() => onSort(col.name)}
                 className="hover:text-foreground flex flex-1 items-center gap-1 text-left text-sm font-medium"
-                aria-label={`Sort by ${col.name}${sort?.column === col.name ? `, currently ${sort.direction === 'asc' ? 'ascending' : 'descending'}` : ''}`}
+                aria-label={t('dataGrid.sortBy', {
+                  column: col.name,
+                  currentSort:
+                    sort?.column === col.name
+                      ? t(
+                          sort.direction === 'asc'
+                            ? 'dataGrid.currentlyAscending'
+                            : 'dataGrid.currentlyDescending'
+                        )
+                      : '',
+                })}
               >
                 {col.isPrimaryKey && <Key className="h-3 w-3 text-amber-500" />}
                 <span className="truncate">{col.name}</span>

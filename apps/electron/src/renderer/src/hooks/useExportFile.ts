@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 
 // ============ Types ============
@@ -109,26 +110,32 @@ const FORMAT_EXTENSIONS: Record<ExportFileFormat, string> = {
   txt: 'txt',
 };
 
-/** Default file filters for each format */
-const FORMAT_FILTERS: Record<ExportFileFormat, FileFilter[]> = {
-  json: [{ name: 'JSON Files', extensions: ['json'] }],
-  csv: [{ name: 'CSV Files', extensions: ['csv'] }],
-  sql: [{ name: 'SQL Files', extensions: ['sql'] }],
-  xlsx: [{ name: 'Excel Files', extensions: ['xlsx'] }],
-  markdown: [{ name: 'Markdown Files', extensions: ['md', 'markdown'] }],
-  html: [{ name: 'HTML Files', extensions: ['html', 'htm'] }],
-  txt: [{ name: 'Text Files', extensions: ['txt'] }],
+/** Default file filters for each format - i18n keys for names */
+const FORMAT_FILTER_KEYS: Record<
+  ExportFileFormat,
+  { nameKey: string; extensions: string[] }
+> = {
+  json: { nameKey: 'export.filters.json', extensions: ['json'] },
+  csv: { nameKey: 'export.filters.csv', extensions: ['csv'] },
+  sql: { nameKey: 'export.filters.sql', extensions: ['sql'] },
+  xlsx: { nameKey: 'export.filters.xlsx', extensions: ['xlsx'] },
+  markdown: {
+    nameKey: 'export.filters.markdown',
+    extensions: ['md', 'markdown'],
+  },
+  html: { nameKey: 'export.filters.html', extensions: ['html', 'htm'] },
+  txt: { nameKey: 'export.filters.txt', extensions: ['txt'] },
 };
 
-/** Default dialog titles for each format */
-const FORMAT_TITLES: Record<ExportFileFormat, string> = {
-  json: 'Export to JSON',
-  csv: 'Export to CSV',
-  sql: 'Export to SQL',
-  xlsx: 'Export to Excel',
-  markdown: 'Export to Markdown',
-  html: 'Export to HTML',
-  txt: 'Export to Text',
+/** Default dialog title i18n keys for each format */
+const FORMAT_TITLE_KEYS: Record<ExportFileFormat, string> = {
+  json: 'export.titles.json',
+  csv: 'export.titles.csv',
+  sql: 'export.titles.sql',
+  xlsx: 'export.titles.xlsx',
+  markdown: 'export.titles.markdown',
+  html: 'export.titles.html',
+  txt: 'export.titles.txt',
 };
 
 // ============ Default Serializers ============
@@ -243,6 +250,7 @@ function defaultSerializer<T>(data: T, format: ExportFileFormat): string {
  * ```
  */
 export function useExportFile(): UseExportFileResult {
+  const { t } = useTranslation('common');
   const [status, setStatus] = useState<ExportStatus>('idle');
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<Error | null>(null);
@@ -282,8 +290,14 @@ export function useExportFile(): UseExportFileResult {
       try {
         // Determine file extension and filters
         const extension = FORMAT_EXTENSIONS[format];
-        const fileFilters = filters || FORMAT_FILTERS[format];
-        const title = dialogTitle || FORMAT_TITLES[format];
+        const filterConfig = FORMAT_FILTER_KEYS[format];
+        const fileFilters = filters || [
+          {
+            name: t(filterConfig.nameKey),
+            extensions: filterConfig.extensions,
+          },
+        ];
+        const title = dialogTitle || t(FORMAT_TITLE_KEYS[format]);
         const defaultFilename = filename || `export.${extension}`;
 
         // Show save file dialog
@@ -326,7 +340,7 @@ export function useExportFile(): UseExportFileResult {
         });
 
         if (!writeResult.success) {
-          throw new Error(writeResult.error || 'Failed to write file');
+          throw new Error(writeResult.error || t('export.failedToWriteFile'));
         }
 
         // Success
@@ -346,7 +360,7 @@ export function useExportFile(): UseExportFileResult {
         return { success: false, error: exportError.message };
       }
     },
-    []
+    [t]
   );
 
   return {
@@ -370,10 +384,13 @@ export function getFormatExtension(format: ExportFileFormat): string {
 }
 
 /**
- * Get the default file filters for a format
+ * Get the file filter configuration for a format (with i18n key)
  */
-export function getFormatFilters(format: ExportFileFormat): FileFilter[] {
-  return FORMAT_FILTERS[format];
+export function getFormatFilterConfig(format: ExportFileFormat): {
+  nameKey: string;
+  extensions: string[];
+} {
+  return FORMAT_FILTER_KEYS[format];
 }
 
 /**

@@ -31,7 +31,63 @@
     "failedToOptimizeQuery": "优化查询失败",
     "noAnalysisResult": "未获取分析结果",
     "failedToAnalyzeData": "分析数据失败",
-    "failedToStartStream": "启动流失败"
+    "failedToStartStream": "启动流失败",
+    "streamError": "流错误",
+    "model": "模型",
+    "apiKeyPlaceholder": "请输入您的 API 密钥",
+    "modelsFetchError": "获取模型列表失败，使用默认值",
+    "inputModel": "输入模型名称...",
+    "searchModels": "搜索模型...",
+    "noModelFound": "未找到模型。",
+    "claudeCodePath": "Claude Code 路径",
+    "inputPath": "输入 Claude Code 路径...",
+    "searchPaths": "搜索路径...",
+    "noPathFound": "未找到路径。",
+    "loadingInfo": "正在加载 Claude Code 信息...",
+    "version": "版本",
+    "pathNotFound": "在此路径未找到 Claude Code"
+  },
+  "export": {
+    "noDataToExport": "没有数据可导出",
+    "noColumnsSelected": "未选择要导出的列",
+    "failed": "导出失败",
+    "failedToWriteFile": "写入文件失败",
+    "filters": {
+      "json": "JSON 文件",
+      "csv": "CSV 文件",
+      "sql": "SQL 文件",
+      "xlsx": "Excel 文件",
+      "markdown": "Markdown 文件",
+      "html": "HTML 文件",
+      "txt": "文本文件"
+    },
+    "titles": {
+      "json": "导出为 JSON",
+      "csv": "导出为 CSV",
+      "sql": "导出为 SQL",
+      "xlsx": "导出为 Excel",
+      "markdown": "导出为 Markdown",
+      "html": "导出为 HTML",
+      "txt": "导出为文本"
+    }
+  },
+  "dataGrid": {
+    "noDataToDisplay": "暂无数据",
+    "sortBy": "按 {{column}} 排序{{currentSort}}",
+    "currentlyAscending": "，当前升序",
+    "currentlyDescending": "，当前降序"
+  },
+  "license": {
+    "segmentPlaceholder": "XXXX",
+    "segmentAriaLabel": "许可证密钥第 {{index}} 段",
+    "formatHint": "格式：SQLPRO-XXXX-XXXX-XXXX-XXXX"
+  },
+  "pgNotify": {
+    "subscriptionFailed": "订阅失败"
+  },
+  "umap": {
+    "needMinVectors": "UMAP 至少需要 {{min}} 个向量（当前有 {{count}} 个）",
+    "workerError": "Worker 错误"
   },
   "importExport": {
     "exportProfiles": "导出配置文件",
@@ -300,7 +356,12 @@
     "select": "选择...",
     "unknown": "未知",
     "tableCount": "{{count}} 个表",
-    "tableCount_plural": "{{count}} 个表"
+    "tableCount_plural": "{{count}} 个表",
+    "connectionIdsRequired": "需要连接 ID",
+    "connectionAndSnapshotRequired": "需要连接 ID 和快照 ID",
+    "snapshotAndConnectionRequired": "需要快照 ID 和连接 ID",
+    "snapshotIdsRequired": "需要快照 ID",
+    "invalidComparisonConfig": "无效的对比配置"
   },
   "exportReport": {
     "title": "导出对比报告",
@@ -325,7 +386,8 @@
     "exportButton": "导出报告",
     "htmlDescription": "带有可视化指示器的网页样式",
     "jsonDescription": "用于程序化处理的原始数据",
-    "markdownDescription": "适合文档的格式"
+    "markdownDescription": "适合文档的格式",
+    "invalidFormat": "选择的格式无效"
   },
   "migration": {
     "title": "迁移 SQL",
@@ -349,7 +411,8 @@
     "tip": "💡 提示：执行前请仔细检查 SQL，特别是包含 DROP 语句时。建议先备份数据库。",
     "sqlCopied": "SQL 已复制到剪贴板",
     "sqlCopyFailed": "复制 SQL 失败",
-    "saveSuccess": "迁移文件已保存"
+    "saveSuccess": "迁移文件已保存",
+    "failedToGenerate": "生成迁移 SQL 失败"
   },
   "diffFilter": {
     "onlyDifferences": "仅差异",
@@ -425,7 +488,9 @@
     "failedToSaveProfile": "保存配置文件失败",
     "failedToOpenFileDialog": "打开文件对话框失败",
     "failedToCreateFolderWithError": "创建文件夹失败：{{error}}",
-    "failedToRenameFolderWithError": "重命名文件夹失败：{{error}}"
+    "failedToRenameFolderWithError": "重命名文件夹失败：{{error}}",
+    "folderNameEmpty": "文件夹名称不能为空",
+    "folderNameTooLong": "文件夹名称不能超过 100 个字符"
   },
   "about": {
     "title": "SQL Pro",
@@ -519,7 +584,18 @@
     "computing": "正在计算投影...",
     "loading": "正在加载向量...",
     "backgroundPoints": "背景点",
-    "searchResults": "搜索结果"
+    "searchResults": "搜索结果",
+    "noConnection": "无连接",
+    "searchTextEmpty": "搜索文本为空",
+    "vectorEmptyOrInvalid": "向量为空或无效",
+    "pointIdRequired": "需要点 ID",
+    "embeddingApiKeyNotConfigured": "Embedding API 密钥未配置。请在 设置 > AI > Embedding 中配置。",
+    "invalidEmbeddingResponse": "无效的 embedding 响应格式",
+    "embeddingFailed": "Embedding 失败：{{message}}",
+    "inputMustBeArray": "输入必须是 JSON 数组",
+    "vectorCannotBeEmpty": "向量不能为空",
+    "allElementsMustBeNumbers": "所有元素必须是数字",
+    "invalidJsonFormat": "无效的 JSON 格式"
   },
   "pendingChanges": {
     "title": "待处理的更改",
@@ -533,7 +609,8 @@
     "copied": "已复制！",
     "copy": "复制",
     "copySqlToClipboard": "复制 SQL 到剪贴板",
-    "revertAllChanges": "撤销此表的所有更改"
+    "revertAllChanges": "撤销此表的所有更改",
+    "validationFailed": "验证失败"
   },
   "diff": {
     "field": "字段",
@@ -566,6 +643,81 @@
   "query": {
     "queryFailed": "查询失败",
     "failedToAnalyzeQuery": "分析查询失败"
+  },
+  "queryOptimizer": {
+    "analysisFailed": "分析失败"
+  },
+  "queryPlan": {
+    "labels": {
+      "table": "表",
+      "index": "索引",
+      "cost": "成本",
+      "rows": "行数"
+    },
+    "warnings": {
+      "fullScan": {
+        "title": "全表扫描",
+        "description": "此操作扫描表中的所有行。考虑添加索引以提高性能。"
+      },
+      "tempBtree": {
+        "title": "临时 B-Tree",
+        "description": "正在使用临时结构进行排序。考虑在 ORDER BY 列上添加索引。"
+      },
+      "subquery": {
+        "title": "检测到子查询",
+        "description": "子查询可能代价较高。考虑改写为 JOIN 以获得更好的性能。"
+      },
+      "missingIndex": {
+        "title": "缺少索引",
+        "description": "此操作没有可用的索引。添加索引可以显著提高性能。"
+      },
+      "default": {
+        "title": "性能警告",
+        "description": "此操作可能存在性能问题。"
+      }
+    },
+    "suggestions": {
+      "fullTableScan": {
+        "title": "表 \"{{tableName}}\" 的全表扫描",
+        "description": "考虑在表 \"{{tableName}}\" 的 WHERE 或 JOIN 子句中使用的列上添加索引以提高查询性能。"
+      },
+      "noIndexesUsed": {
+        "title": "未使用索引",
+        "description": "此查询未使用任何索引。如果查询在特定列上进行过滤或连接，请考虑添加适当的索引。"
+      },
+      "multipleTables": {
+        "title": "访问多个表",
+        "description": "此查询访问了 {{count}} 个表。确保所有连接列都有索引，并考虑将复杂查询分解为较小的部分。"
+      },
+      "subqueryDetected": {
+        "title": "检测到子查询",
+        "description": "考虑将子查询改写为 JOIN 以获得更好的性能。"
+      },
+      "tempBtree": {
+        "title": "使用临时 B-tree 排序",
+        "description": "查询使用临时 B-tree 进行排序。考虑在 ORDER BY 列上添加索引以避免此开销。"
+      },
+      "sortingNotCovered": {
+        "title": "排序未被索引覆盖",
+        "description": "ORDER BY 子句需要临时结构。添加覆盖排序列的索引可以提高性能。"
+      },
+      "compoundQuery": {
+        "title": "检测到复合查询",
+        "description": "UNION/EXCEPT/INTERSECT 操作可能代价较高。考虑是否可以用带有适当 WHERE 子句的单个查询达到相同效果。"
+      },
+      "highScanRatio": {
+        "title": "扫描与返回比例过高",
+        "description": "查询扫描了 {{examined}} 行但只返回了 {{returned}} 行。这表明查询可能受益于更有选择性的索引。"
+      },
+      "queryOptimized": {
+        "title": "查询已优化",
+        "description": "查询使用了 {{indexCount}} 个索引并且执行迅速。无明显优化空间。"
+      }
+    }
+  },
+  "tableData": {
+    "connectionAndTableRequired": "需要连接 ID 和表名",
+    "failedToFetch": "获取表数据失败"
   },
   "table": {
     "quickFilters": "快速筛选",
@@ -713,7 +865,10 @@
     "modificationDate": "修改日期",
     "noSelection": "未选择图片",
     "exportTitle": "导出所选图片",
-    "exportError": "导出图片失败"
+    "exportError": "导出图片失败",
+    "failedToGetCanvasContext": "无法获取画布上下文",
+    "failedToConvertToPng": "无法转换为 PNG",
+    "failedToLoadImageForConversion": "无法加载图片进行转换"
   },
   "row": {
     "copyRowAsSQL": "复制行为 SQL INSERT",
@@ -803,7 +958,9 @@
     "idxAbbr": "{{count}} 索引",
     "fkAbbr": "{{count}} 外键",
     "trgAbbr": "{{count}} 触发器",
-    "none": "无"
+    "none": "无",
+    "search": "搜索表...",
+    "searchVim": "搜索表（按 / 聚焦）"
   },
   "toolbar": {
     "unsavedChanges": "{{count}} 个未保存的更改",
@@ -1149,7 +1306,10 @@
     "sqlFiles": "SQL 文件",
     "allFiles": "所有文件",
     "failedToSave": "保存文件失败",
-    "failedToCompareTables": "对比表失败"
+    "failedToCompareTables": "对比表失败",
+    "selectBothTables": "请选择源表和目标表进行对比",
+    "sourceRequired": "需要源连接和表",
+    "targetRequired": "需要目标连接和表"
   },
   "schemaComparison": {
     "saveMigrationSQL": "保存迁移 SQL",
@@ -1190,7 +1350,8 @@
     "saveToFile": "保存到文件",
     "openInQueryEditor": "在查询编辑器中打开",
     "generatedSQL": "生成的 SQL：",
-    "tip": "提示：在执行前请仔细检查 SQL，特别是包含 DELETE 语句时。建议先备份数据库。"
+    "tip": "提示：在执行前请仔细检查 SQL，特别是包含 DELETE 语句时。建议先备份数据库。",
+    "failedToGenerate": "生成同步 SQL 失败"
   },
   "dataProfiler": {
     "title": "数据分析器",
@@ -1703,7 +1864,8 @@
     "tablesCountPlural": "{{count}} 个表",
     "statementCount": "{{count}} 条 SQL 语句",
     "statementsCountPlural": "{{count}} 条 SQL 语句",
-    "appVersion": "应用版本"
+    "appVersion": "应用版本",
+    "failedToLoadSchema": "加载结构失败"
   },
   "pluginDetail": {
     "description": "描述",

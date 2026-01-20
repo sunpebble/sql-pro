@@ -546,7 +546,7 @@ export function QueryEditor() {
                       <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                       <div>
                         <p className="text-destructive font-medium">
-                          Query Error
+                          {t('queryEditor.queryError')}
                         </p>
                         <p className="text-destructive/80 mt-1 text-sm">
                           {tabError}

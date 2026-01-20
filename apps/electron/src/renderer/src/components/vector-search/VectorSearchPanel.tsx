@@ -141,25 +141,25 @@ export const VectorSearchPanel = memo(
         try {
           const parsed = JSON.parse(input);
           if (!Array.isArray(parsed)) {
-            setVectorError('Input must be a JSON array');
+            setVectorError(t('vectorSearch.inputMustBeArray'));
             return null;
           }
           if (parsed.length === 0) {
-            setVectorError('Vector cannot be empty');
+            setVectorError(t('vectorSearch.vectorCannotBeEmpty'));
             return null;
           }
           if (!parsed.every((v) => typeof v === 'number')) {
-            setVectorError('All elements must be numbers');
+            setVectorError(t('vectorSearch.allElementsMustBeNumbers'));
             return null;
           }
           setVectorError(null);
           return parsed;
         } catch {
-          setVectorError('Invalid JSON format');
+          setVectorError(t('vectorSearch.invalidJsonFormat'));
           return null;
         }
       },
-      []
+      [t]
     );
 
     // Handle vector input change

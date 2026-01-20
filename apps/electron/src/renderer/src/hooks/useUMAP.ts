@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface UMAPResponse {
   type: 'result' | 'error' | 'progress';
@@ -59,6 +60,7 @@ export function useUMAP(
   vectors: number[][],
   options: UMAPOptions = {}
 ): UMAPResult {
+  const { t } = useTranslation('common');
   const {
     nComponents = 2,
     nNeighbors = 15,
@@ -80,7 +82,10 @@ export function useUMAP(
       setIsComputing(false);
       setError(
         vectors.length < MIN_VECTORS && vectors.length > 0
-          ? `Need at least ${MIN_VECTORS} vectors for UMAP (got ${vectors.length})`
+          ? t('umap.needMinVectors', {
+              min: MIN_VECTORS,
+              count: vectors.length,
+            })
           : null
       );
       setProgress(null);
@@ -130,7 +135,7 @@ export function useUMAP(
 
     // Handle worker errors
     worker.onerror = (event) => {
-      setError(event.message || 'Worker error');
+      setError(event.message || t('umap.workerError'));
       setIsComputing(false);
       setEmbedding(null);
     };
@@ -150,7 +155,7 @@ export function useUMAP(
         workerRef.current = null;
       }
     };
-  }, [vectors, nComponents, nNeighbors, minDist, enabled]);
+  }, [t, vectors, nComponents, nNeighbors, minDist, enabled]);
 
   return {
     embedding,

@@ -6,6 +6,7 @@ import type {
 } from '@/lib/collections';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 import {
   addPendingChange,
@@ -58,6 +59,7 @@ export interface UseTableDataResult {
  * Provides optimistic updates via local pending changes collection.
  */
 export function useTableData(options: UseTableDataOptions): UseTableDataResult {
+  const { t } = useTranslation('common');
   const {
     connectionId,
     schema = 'main', // Default to 'main' for SQLite
@@ -97,7 +99,7 @@ export function useTableData(options: UseTableDataOptions): UseTableDataResult {
     ],
     queryFn: async () => {
       if (!connectionId || !table) {
-        throw new Error('Connection ID and table are required');
+        throw new Error(t('tableData.connectionAndTableRequired'));
       }
 
       const response = await sqlPro.db.getTableData({
@@ -112,7 +114,7 @@ export function useTableData(options: UseTableDataOptions): UseTableDataResult {
       });
 
       if (!response.success) {
-        throw new Error(response.error || 'Failed to fetch table data');
+        throw new Error(response.error || t('tableData.failedToFetch'));
       }
 
       // Transform rows to include __rowId for identification

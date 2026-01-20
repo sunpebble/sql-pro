@@ -344,7 +344,7 @@ export const TableCell = memo(
         data-column-id={columnId}
         title={
           hasChange && oldValue !== undefined
-            ? `Original: ${oldValue}`
+            ? t('dataTable.originalValue', { value: oldValue })
             : undefined
         }
       >
