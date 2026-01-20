@@ -21,6 +21,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 export interface FolderTreeProps {
@@ -99,6 +100,7 @@ function FolderNode({
   allFolders,
   allProfiles,
 }: FolderNodeProps) {
+  const { t } = useTranslation('common');
   const isExpanded = expandedFolderIds.has(folder.id);
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -227,18 +229,18 @@ function FolderNode({
         <ContextMenuContent>
           <ContextMenuItem onClick={() => onCreateFolder(folder.id)}>
             <FolderPlus className="size-4" />
-            New Subfolder
+            {t('folder.newSubfolder')}
           </ContextMenuItem>
           <ContextMenuItem onClick={() => onRenameFolder(folder.id)}>
             <Pencil className="size-4" />
-            Rename
+            {t('common.rename')}
           </ContextMenuItem>
           <ContextMenuItem
             variant="destructive"
             onClick={() => onDeleteFolder(folder.id)}
           >
             <Trash2 className="size-4" />
-            Delete
+            {t('common.delete')}
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
@@ -269,6 +271,7 @@ function ProfileNode({
   onDuplicate,
   onDragStart,
 }: ProfileNodeProps) {
+  const { t } = useTranslation('common');
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('profileId', profile.id);
@@ -312,21 +315,21 @@ function ProfileNode({
 
       <ContextMenuContent>
         <ContextMenuItem onClick={() => onConnect(profile)}>
-          Connect
+          {t('profiles.connect')}
         </ContextMenuItem>
         <ContextMenuItem onClick={() => onEdit(profile)}>
           <Pencil className="size-4" />
-          Edit
+          {t('profiles.edit')}
         </ContextMenuItem>
         <ContextMenuItem onClick={() => onDuplicate(profile)}>
-          Duplicate
+          {t('profiles.duplicate')}
         </ContextMenuItem>
         <ContextMenuItem
           variant="destructive"
           onClick={() => onDelete(profile.id)}
         >
           <Trash2 className="size-4" />
-          Delete
+          {t('common.delete')}
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

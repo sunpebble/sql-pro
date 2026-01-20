@@ -244,7 +244,7 @@ function AISettingsPanel() {
               OpenAI
             </SelectItem>
             <SelectItem value="custom" className="text-xs">
-              Custom
+              {t('ai.custom')}
             </SelectItem>
           </SelectContent>
         </Select>

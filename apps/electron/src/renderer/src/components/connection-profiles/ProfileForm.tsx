@@ -92,17 +92,19 @@ export function ProfileForm({
   const validateDisplayName = (value: string): string | null => {
     const trimmed = value.trim();
     if (trimmed.length === 0) {
-      return 'Display name cannot be empty';
+      return t('profiles.validation.displayNameEmpty');
     }
     if (trimmed.length > MAX_DISPLAY_NAME_LENGTH) {
-      return `Display name cannot exceed ${MAX_DISPLAY_NAME_LENGTH} characters`;
+      return t('profiles.validation.displayNameTooLong', {
+        max: MAX_DISPLAY_NAME_LENGTH,
+      });
     }
     return null;
   };
 
   const validateNotes = (value: string): string | null => {
     if (value.length > MAX_NOTES_LENGTH) {
-      return `Notes cannot exceed ${MAX_NOTES_LENGTH} characters`;
+      return t('profiles.validation.notesTooLong', { max: MAX_NOTES_LENGTH });
     }
     return null;
   };
@@ -214,7 +216,10 @@ export function ProfileForm({
       {/* Folder Selection */}
       <div className="space-y-2">
         <label htmlFor="folder" className="text-sm font-medium">
-          Folder <span className="text-muted-foreground">(optional)</span>
+          {t('profiles.folder')}{' '}
+          <span className="text-muted-foreground">
+            ({t('common.optional')})
+          </span>
         </label>
         <Select
           value={folderId ?? '__none__'}
@@ -246,14 +251,17 @@ export function ProfileForm({
           </SelectContent>
         </Select>
         <p className="text-muted-foreground text-xs">
-          Organize profiles into folders for better management
+          {t('profiles.folderHint')}
         </p>
       </div>
 
       {/* Tags */}
       <div className="space-y-2">
         <label htmlFor="tags" className="text-sm font-medium">
-          Tags <span className="text-muted-foreground">(optional)</span>
+          {t('profiles.tags')}{' '}
+          <span className="text-muted-foreground">
+            ({t('common.optional')})
+          </span>
         </label>
         <input
           id="tags"
@@ -269,14 +277,17 @@ export function ProfileForm({
           )}
         />
         <p className="text-muted-foreground text-xs">
-          Separate tags with commas for categorization and search
+          {t('profiles.tagsHint')}
         </p>
       </div>
 
       {/* Notes */}
       <div className="space-y-2">
         <label htmlFor="notes" className="text-sm font-medium">
-          Notes <span className="text-muted-foreground">(optional)</span>
+          {t('profiles.notes')}{' '}
+          <span className="text-muted-foreground">
+            ({t('common.optional')})
+          </span>
         </label>
         <Textarea
           id="notes"
@@ -290,7 +301,10 @@ export function ProfileForm({
           <p className="text-destructive text-xs">{validationErrors.notes}</p>
         )}
         <p className="text-muted-foreground text-xs">
-          {notes.length}/{MAX_NOTES_LENGTH} characters
+          {t('profiles.notesCounter', {
+            current: notes.length,
+            max: MAX_NOTES_LENGTH,
+          })}
         </p>
       </div>
 
@@ -357,7 +371,7 @@ export function ProfileForm({
       {/* Action Buttons */}
       <div className="flex justify-end gap-3 pt-2">
         <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" disabled={!isValid}>
           {submitLabel}

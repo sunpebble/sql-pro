@@ -4,6 +4,8 @@
     "cancel": "取消",
     "save": "保存",
     "delete": "删除",
+    "rename": "重命名",
+    "optional": "可选",
     "loading": "加载中...",
     "error": "错误",
     "copy": "复制",
@@ -278,7 +280,9 @@
   "sidebar": {
     "title": "侧边栏",
     "mobileSidebarDesc": "显示移动端侧边栏。",
-    "toggleSidebar": "切换侧边栏"
+    "toggleSidebar": "切换侧边栏",
+    "show": "显示侧边栏",
+    "hide": "隐藏侧边栏"
   },
   "theme": {
     "light": "浅色",
@@ -490,7 +494,24 @@
     "failedToCreateFolderWithError": "创建文件夹失败：{{error}}",
     "failedToRenameFolderWithError": "重命名文件夹失败：{{error}}",
     "folderNameEmpty": "文件夹名称不能为空",
-    "folderNameTooLong": "文件夹名称不能超过 100 个字符"
+    "folderNameTooLong": "文件夹名称不能超过 100 个字符",
+    "connect": "连接",
+    "edit": "编辑",
+    "duplicate": "复制",
+    "folder": "文件夹",
+    "tags": "标签",
+    "notes": "备注",
+    "folderHint": "将配置文件整理到文件夹中以便管理",
+    "tagsHint": "用逗号分隔标签以便分类和搜索",
+    "notesCounter": "{{current}}/{{max}} 个字符",
+    "validation": {
+      "displayNameEmpty": "显示名称不能为空",
+      "displayNameTooLong": "显示名称不能超过 {{max}} 个字符",
+      "notesTooLong": "备注不能超过 {{max}} 个字符"
+    },
+    "recentConnections": "最近连接",
+    "savedProfiles": "已保存的配置文件",
+    "databaseFileNotFound": "在此位置未找到数据库文件"
   },
   "about": {
     "title": "SQL Pro",
@@ -644,7 +665,17 @@
     "removeChange": "撤销更改"
   },
   "diffPreview": {
-    "validationError": "验证错误"
+    "validationError": "验证错误",
+    "insert": "插入",
+    "update": "更新",
+    "delete": "删除",
+    "sql": "SQL",
+    "discard": "放弃",
+    "applying": "应用中...",
+    "validating": "验证中...",
+    "apply": "应用",
+    "new": "新增",
+    "noChangesDetected": "未检测到更改"
   },
   "database": {
     "selectTable": "从侧边栏选择表以查看数据",
@@ -2199,7 +2230,10 @@
     "lastOpened": "上次打开",
     "yes": "是",
     "editProfile": "编辑配置文件",
-    "addConnectionToProfiles": "添加连接到配置文件"
+    "addConnectionToProfiles": "添加连接到配置文件",
+    "tags": "标签",
+    "notes": "备注",
+    "properties": "属性"
   },
   "profileForm": {
     "displayName": "显示名称",
@@ -2304,5 +2338,34 @@
     "failedToRefreshSchema": "刷新结构失败",
     "dataRefreshed": "数据已刷新",
     "failedToRefreshData": "刷新数据失败"
+  },
+  "contextMenu": {
+    "unpin": "取消置顶",
+    "pinToTop": "置顶",
+    "tags": "标签",
+    "addTag": "添加标签",
+    "copyName": "复制名称",
+    "exportSchema": "导出结构",
+    "truncateTable": "清空表",
+    "dropView": "删除视图",
+    "dropTable": "删除表"
+  },
+  "diagram": {
+    "noSchema": "未加载结构",
+    "noTables": "此数据库没有可在图表中显示的表"
+  },
+  "quit": {
+    "cancel": "取消"
+  },
+  "folder": {
+    "newSubfolder": "新建子文件夹"
+  },
+  "stats": {
+    "count": "计数",
+    "sum": "求和",
+    "average": "平均值",
+    "min": "最小值",
+    "max": "最大值",
+    "numericValues": "({{count}} 个数值)"
   }
 }

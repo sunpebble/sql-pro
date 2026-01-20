@@ -4,6 +4,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
+    "rename": "Rename",
+    "optional": "optional",
     "loading": "Loading...",
     "error": "Error",
     "copy": "Copy",
@@ -431,7 +433,9 @@
   "sidebar": {
     "title": "Sidebar",
     "mobileSidebarDesc": "Displays the mobile sidebar.",
-    "toggleSidebar": "Toggle Sidebar"
+    "toggleSidebar": "Toggle Sidebar",
+    "show": "Show Sidebar",
+    "hide": "Hide Sidebar"
   },
   "theme": {
     "light": "Light",
@@ -643,7 +647,24 @@
     "failedToCreateFolderWithError": "Failed to create folder: {{error}}",
     "failedToRenameFolderWithError": "Failed to rename folder: {{error}}",
     "folderNameEmpty": "Folder name cannot be empty",
-    "folderNameTooLong": "Folder name must be 100 characters or less"
+    "folderNameTooLong": "Folder name must be 100 characters or less",
+    "connect": "Connect",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "folder": "Folder",
+    "tags": "Tags",
+    "notes": "Notes",
+    "folderHint": "Organize profiles into folders for better management",
+    "tagsHint": "Separate tags with commas for categorization and search",
+    "notesCounter": "{{current}}/{{max}} characters",
+    "validation": {
+      "displayNameEmpty": "Display name cannot be empty",
+      "displayNameTooLong": "Display name cannot exceed {{max}} characters",
+      "notesTooLong": "Notes cannot exceed {{max}} characters"
+    },
+    "recentConnections": "Recent Connections",
+    "savedProfiles": "Saved Profiles",
+    "databaseFileNotFound": "Database file not found at this location"
   },
   "about": {
     "title": "SQL Pro",
@@ -797,7 +818,17 @@
     "removeChange": "Remove change"
   },
   "diffPreview": {
-    "validationError": "Validation error"
+    "validationError": "Validation error",
+    "insert": "INSERT",
+    "update": "UPDATE",
+    "delete": "DELETE",
+    "sql": "SQL",
+    "discard": "Discard",
+    "applying": "Applying...",
+    "validating": "Validating...",
+    "apply": "Apply",
+    "new": "NEW",
+    "noChangesDetected": "No changes detected"
   },
   "database": {
     "selectTable": "Select a table from the sidebar to view its data",
@@ -2199,7 +2230,10 @@
     "lastOpened": "Last opened",
     "yes": "Yes",
     "editProfile": "Edit Profile",
-    "addConnectionToProfiles": "Add Connection to Profiles"
+    "addConnectionToProfiles": "Add Connection to Profiles",
+    "tags": "Tags",
+    "notes": "Notes",
+    "properties": "Properties"
   },
   "profileForm": {
     "displayName": "Display Name",
@@ -2304,5 +2338,34 @@
     "failedToRefreshSchema": "Failed to refresh schema",
     "dataRefreshed": "Data refreshed",
     "failedToRefreshData": "Failed to refresh data"
+  },
+  "contextMenu": {
+    "unpin": "Unpin",
+    "pinToTop": "Pin to Top",
+    "tags": "Tags",
+    "addTag": "Add Tag",
+    "copyName": "Copy Name",
+    "exportSchema": "Export Schema",
+    "truncateTable": "Truncate Table",
+    "dropView": "Drop View",
+    "dropTable": "Drop Table"
+  },
+  "diagram": {
+    "noSchema": "No Schema Loaded",
+    "noTables": "This database has no tables to display in the diagram"
+  },
+  "quit": {
+    "cancel": "Cancel"
+  },
+  "folder": {
+    "newSubfolder": "New Subfolder"
+  },
+  "stats": {
+    "count": "Count",
+    "sum": "Sum",
+    "average": "Average",
+    "min": "Min",
+    "max": "Max",
+    "numericValues": "({{count}} numeric values)"
   }
 }
