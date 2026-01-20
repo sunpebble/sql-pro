@@ -284,6 +284,10 @@
     "show": "显示侧边栏",
     "hide": "隐藏侧边栏"
   },
+  "schemaDetails": {
+    "show": "显示结构详情",
+    "hide": "隐藏结构详情"
+  },
   "theme": {
     "light": "浅色",
     "dark": "深色",
@@ -2340,12 +2344,17 @@
     "failedToRefreshData": "刷新数据失败"
   },
   "contextMenu": {
+    "openInQueryEditor": "在查询编辑器中打开",
     "unpin": "取消置顶",
     "pinToTop": "置顶",
     "tags": "标签",
+    "currentTags": "当前标签",
     "addTag": "添加标签",
+    "newTagPlaceholder": "新标签...",
     "copyName": "复制名称",
+    "copyCreateStatement": "复制 CREATE 语句",
     "exportSchema": "导出结构",
+    "generateMockData": "生成模拟数据",
     "truncateTable": "清空表",
     "dropView": "删除视图",
     "dropTable": "删除表"

@@ -1,6 +1,6 @@
 import type { ViewType } from './ActivityBar';
 import { Code, GitCompare, GitFork, Search, Table } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tour } from '@/components/onboarding';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
@@ -103,16 +103,6 @@ export function DatabaseView() {
   // The table to display - from active data tab or selected table
   const displayTable = activeDataTab?.table || selectedTable;
 
-  // Handler to scroll sidebar into view (used by DataTabBar's + button)
-  const handleOpenSidebar = useCallback(() => {
-    // Focus the sidebar search or just ensure data view is active
-    setActiveView('data');
-    // Also ensure sidebar is visible
-    if (sidebarCollapsed) {
-      toggleSidebar();
-    }
-  }, [sidebarCollapsed, toggleSidebar]);
-
   // Badge counts for activity bar
   const badges: Partial<Record<ViewType, number>> = {};
   if (dataTabs.length > 0) {
@@ -197,9 +187,7 @@ export function DatabaseView() {
           {activeView === 'data' && (
             <div className="flex h-full min-h-0 flex-1 flex-col">
               {/* Data Browser Tab Bar - shows opened table tabs */}
-              {dataTabs.length > 0 && (
-                <DataTabBar onOpenSidebar={handleOpenSidebar} />
-              )}
+              {dataTabs.length > 0 && <DataTabBar />}
 
               {/* Table View with optional Schema Details Panel */}
               <div className="flex min-h-0 flex-1 overflow-hidden">

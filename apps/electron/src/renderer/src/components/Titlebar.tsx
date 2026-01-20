@@ -74,7 +74,7 @@ export function Titlebar() {
       )}
 
       {/* Right side controls - non-draggable */}
-      <div className="titlebar-no-drag flex shrink-0 items-center gap-1 px-3">
+      <div className="titlebar-no-drag toolbar-section-sm px-3">
         {/* Toolbar controls (changes indicator, layout, commands, help) */}
         {connection && <Toolbar />}
 
@@ -89,7 +89,7 @@ export function Titlebar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="hover:text-gold h-8 w-8 hover:bg-[rgba(212,175,55,0.1)]"
+                  className="btn-gold-ghost h-8 w-8"
                 >
                   {getThemeIcon()}
                 </Button>
@@ -141,7 +141,7 @@ export function Titlebar() {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:text-gold h-8 w-8 hover:bg-[rgba(212,175,55,0.1)]"
+              className="btn-gold-ghost h-8 w-8"
               onClick={openSettings}
               data-action="open-settings"
             >

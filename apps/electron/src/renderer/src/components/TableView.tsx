@@ -24,7 +24,6 @@ import {
   Eye,
   FileText,
   ImageIcon,
-  Info,
   Plus,
   RefreshCw,
   Search,
@@ -84,7 +83,6 @@ export function TableView({ tableOverride }: TableViewProps) {
   } = useDataTabsStore();
   // Subscribe to the entire tabsByConnection state to ensure re-renders on any tab state change
   const tabsByConnection = useDataTabsStore((state) => state.tabsByConnection);
-  const { showSchemaDetails, toggleSchemaDetails } = useSettingsStore();
 
   // Use tableOverride if provided, otherwise fall back to store's selectedTable
   const selectedTable = tableOverride || storeSelectedTable;
@@ -755,32 +753,6 @@ export function TableView({ tableOverride }: TableViewProps) {
                 </TooltipContent>
               </Tooltip>
             </div>
-
-            {/* Schema Details Toggle */}
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant={showSchemaDetails ? 'secondary' : 'ghost'}
-                  size="sm"
-                  onClick={() => toggleSchemaDetails()}
-                  data-action="toggle-schema-details"
-                >
-                  <Info className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {showSchemaDetails
-                  ? t('table.hideSchemaDetails', {
-                      defaultValue: 'Hide schema details',
-                    })
-                  : t('table.viewSchemaDetails', {
-                      defaultValue: 'View schema details',
-                    })}
-                {' ('}
-                <ShortcutKbd action="view.toggle-schema-details" />
-                {')'}
-              </TooltipContent>
-            </Tooltip>
           </div>
         </div>
 

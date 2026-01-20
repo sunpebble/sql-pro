@@ -437,6 +437,10 @@
     "show": "Show Sidebar",
     "hide": "Hide Sidebar"
   },
+  "schemaDetails": {
+    "show": "Show Schema Details",
+    "hide": "Hide Schema Details"
+  },
   "theme": {
     "light": "Light",
     "dark": "Dark",
@@ -2340,12 +2344,17 @@
     "failedToRefreshData": "Failed to refresh data"
   },
   "contextMenu": {
+    "openInQueryEditor": "Open in Query Editor",
     "unpin": "Unpin",
     "pinToTop": "Pin to Top",
     "tags": "Tags",
+    "currentTags": "Current Tags",
     "addTag": "Add Tag",
+    "newTagPlaceholder": "New tag...",
     "copyName": "Copy Name",
+    "copyCreateStatement": "Copy CREATE Statement",
     "exportSchema": "Export Schema",
+    "generateMockData": "Generate Mock Data",
     "truncateTable": "Truncate Table",
     "dropView": "Drop View",
     "dropTable": "Drop Table"

@@ -109,7 +109,7 @@ const TabItem = memo(
               'group border-gold/10 relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1 border-r px-2 text-sm transition-colors',
               isActive
                 ? 'bg-background text-gold shadow-[inset_0_-2px_0_0_var(--color-gold)]'
-                : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-[rgba(212,175,55,0.05)]'
+                : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-gold-5'
             )}
             onClick={onSelect}
             onDoubleClick={handleDoubleClick}

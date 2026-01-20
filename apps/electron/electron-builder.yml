@@ -33,11 +33,16 @@ files:
       # Exclude pnpm's virtual store (handled separately)
       - '!.pnpm/**'
 
+# Disable asar packaging - required for sharp native module to work correctly
+# Sharp's @img/* dependencies don't get properly unpacked with asarUnpack
+asar: true
+
 # Native modules that need to be unpacked from asar
+# Following sharp official documentation: https://sharp.pixelplumbing.com/install/#electron
 asarUnpack:
-  - resources/**
-  - node_modules/better-sqlite3-multiple-ciphers/**
-  - node_modules/sharp/**
+  - '**/node_modules/sharp/**/*'
+  - '**/node_modules/@img/**/*'
+  - '**/node_modules/better-sqlite3-multiple-ciphers/**/*'
 
 # Generate required update metadata files
 generateUpdatesFilesForAllChannels: true
@@ -77,7 +82,7 @@ linux:
 appImage:
   artifactName: ${productName}-${version}.${ext}
 
-npmRebuild: false
+npmRebuild: true
 
 # Auto-update configuration - publish to GitHub releases
 publish:

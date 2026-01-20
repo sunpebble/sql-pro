@@ -198,8 +198,8 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
   return (
     <div className="bg-background flex h-full w-full flex-col overflow-hidden border-l">
       {/* Header */}
-      <div className="flex items-center justify-between border-b px-4 py-3">
-        <div className="flex items-center gap-2">
+      <div className="panel-header">
+        <div className="panel-header-title">
           <Database className="text-muted-foreground h-5 w-5" />
           <div>
             <h2 className="font-semibold">{t('pendingChanges.title')}</h2>

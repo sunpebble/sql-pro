@@ -1,5 +1,4 @@
 import type { DataTab } from '@/stores/data-tabs-store';
-import { Button } from '@sqlpro/ui/button';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -14,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@sqlpro/ui/tooltip';
-import { Eye, Plus, Table, X } from 'lucide-react';
+import { Eye, Table, X } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -103,7 +102,6 @@ function useTabKeyboardNavigation(
 
 interface DataTabBarProps {
   className?: string;
-  onOpenSidebar?: () => void;
 }
 
 interface TabItemProps {
@@ -151,10 +149,10 @@ const TabItem = memo(
                   role="tab"
                   aria-selected={isActive}
                   className={cn(
-                    'group border-gold/10 relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-2 text-sm transition-colors',
+                    'group border-border/30 relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-2.5 text-sm transition-colors',
                     isActive
-                      ? 'bg-background text-gold shadow-[inset_0_-2px_0_0_var(--color-gold)]'
-                      : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-[rgba(212,175,55,0.05)]'
+                      ? 'bg-background text-foreground border-b-gold border-b-2'
+                      : 'bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/60'
                   )}
                   onClick={onSelect}
                 >
@@ -215,82 +213,58 @@ const TabItem = memo(
 
 TabItem.displayName = 'DataTabItem';
 
-export const DataTabBar = memo(
-  ({ className, onOpenSidebar }: DataTabBarProps) => {
-    const { t } = useTranslation('common');
-    const { activeConnectionId } = useConnectionStore();
-    const { tabsByConnection, closeTab, closeOtherTabs, setActiveTab } =
-      useDataTabsStore();
+export const DataTabBar = memo(({ className }: DataTabBarProps) => {
+  const { activeConnectionId } = useConnectionStore();
+  const { tabsByConnection, closeTab, closeOtherTabs, setActiveTab } =
+    useDataTabsStore();
 
-    // Get tabs for current connection
-    const connectionTabState = activeConnectionId
-      ? tabsByConnection[activeConnectionId]
-      : null;
-    const tabs = connectionTabState?.tabs || [];
-    const activeTabId = connectionTabState?.activeTabId || null;
+  // Get tabs for current connection
+  const connectionTabState = activeConnectionId
+    ? tabsByConnection[activeConnectionId]
+    : null;
+  const tabs = connectionTabState?.tabs || [];
+  const activeTabId = connectionTabState?.activeTabId || null;
 
-    // Enable keyboard navigation between tabs
-    useTabKeyboardNavigation(
-      tabs,
-      activeTabId,
-      activeConnectionId,
-      setActiveTab,
-      closeOtherTabs
-    );
+  // Enable keyboard navigation between tabs
+  useTabKeyboardNavigation(
+    tabs,
+    activeTabId,
+    activeConnectionId,
+    setActiveTab,
+    closeOtherTabs
+  );
 
-    if (!activeConnectionId || tabs.length === 0) {
-      return null;
-    }
-
-    return (
-      <div
-        className={cn(
-          'bg-muted/30 flex h-8 shrink-0 items-center border-b',
-          className
-        )}
-        role="tablist"
-      >
-        <ScrollArea orientation="horizontal" className="h-8 flex-1">
-          <div className="flex h-8 items-center">
-            {tabs.map((tab, index) => (
-              <TabItem
-                key={tab.id}
-                tab={tab}
-                index={index}
-                isActive={tab.id === activeTabId}
-                connectionId={activeConnectionId}
-                onSelect={() => setActiveTab(activeConnectionId, tab.id)}
-                onClose={() => closeTab(activeConnectionId, tab.id)}
-                onCloseOthers={() => closeOtherTabs(activeConnectionId, tab.id)}
-                tabsCount={tabs.length}
-              />
-            ))}
-          </div>
-        </ScrollArea>
-        {onOpenSidebar && (
-          <div className="flex shrink-0 items-center border-l">
-            <TooltipProvider delay={300}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 shrink-0"
-                    onClick={onOpenSidebar}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
-                  {t('tabs.openFromSidebar')}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        )}
-      </div>
-    );
+  if (!activeConnectionId || tabs.length === 0) {
+    return null;
   }
-);
+
+  return (
+    <div
+      className={cn(
+        'bg-muted/20 border-border/50 flex h-8 shrink-0 items-center border-b',
+        className
+      )}
+      role="tablist"
+    >
+      <ScrollArea orientation="horizontal" className="h-8 flex-1">
+        <div className="flex h-8 items-center">
+          {tabs.map((tab, index) => (
+            <TabItem
+              key={tab.id}
+              tab={tab}
+              index={index}
+              isActive={tab.id === activeTabId}
+              connectionId={activeConnectionId}
+              onSelect={() => setActiveTab(activeConnectionId, tab.id)}
+              onClose={() => closeTab(activeConnectionId, tab.id)}
+              onCloseOthers={() => closeOtherTabs(activeConnectionId, tab.id)}
+              tabsCount={tabs.length}
+            />
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
+  );
+});
 
 DataTabBar.displayName = 'DataTabBar';

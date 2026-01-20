@@ -19,12 +19,7 @@ export function SettingItem({
   className,
 }: SettingItemProps) {
   return (
-    <div
-      className={cn(
-        'flex items-center justify-between rounded-lg border p-3',
-        className
-      )}
-    >
+    <div className={cn('setting-row', className)}>
       <div className="flex items-center gap-3">
         {Icon && (
           <div className="bg-muted flex h-9 w-9 shrink-0 items-center justify-center rounded-md">

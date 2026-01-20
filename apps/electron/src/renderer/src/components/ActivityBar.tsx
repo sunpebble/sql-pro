@@ -72,7 +72,7 @@ interface ActivityBarProps {
 /**
  * Activity Bar for view navigation.
  * Provides a vertical icon bar on the left side for switching between views.
- * Enhanced with glass-gold effects and refined animations.
+ * Clean, minimal design with subtle gold accents.
  */
 export function ActivityBar({
   activeView,
@@ -91,10 +91,10 @@ export function ActivityBar({
   });
 
   return (
-    <div className="glass-gold flex h-full w-14 shrink-0 flex-col py-2">
+    <div className="border-border/50 bg-muted/30 flex h-full w-12 shrink-0 flex-col border-r py-2">
       {/* Navigation Items */}
-      <div className="flex flex-1 flex-col items-center gap-1">
-        {visibleItems.map((item, index) => {
+      <div className="flex flex-1 flex-col items-center gap-0.5">
+        {visibleItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.id;
           const badgeCount = badges?.[item.id];
@@ -108,27 +108,19 @@ export function ActivityBar({
                   data-tour-target={item.tourTarget}
                   onClick={() => onViewChange(item.id)}
                   className={cn(
-                    'group relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200',
+                    'group relative flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-150',
                     isActive
-                      ? 'text-gold bg-gradient-to-br from-[rgba(212,175,55,0.25)] to-[rgba(201,169,98,0.15)] shadow-[0_0_20px_rgba(212,175,55,0.3)]'
-                      : 'text-muted-foreground hover:text-gold hover:scale-110 hover:bg-[rgba(212,175,55,0.1)]'
+                      ? 'text-gold bg-gold/10'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
                   )}
-                  style={{
-                    animationDelay: `${index * 50}ms`,
-                  }}
                 >
-                  <Icon
-                    className={cn(
-                      'h-[18px] w-[18px] transition-transform duration-200',
-                      isActive && 'scale-110'
-                    )}
-                  />
-                  {/* Active indicator dot */}
+                  <Icon className="h-[18px] w-[18px]" />
+                  {/* Active indicator - subtle left border */}
                   {isActive && (
-                    <span className="bg-gold absolute top-1/2 -left-1 h-5 w-1 -translate-y-1/2 rounded-full" />
+                    <span className="bg-gold absolute top-1/2 -left-0.5 h-4 w-0.5 -translate-y-1/2 rounded-full" />
                   )}
                   {badgeCount !== undefined && badgeCount > 0 && (
-                    <span className="bg-gold text-2xs absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 font-bold text-[#020202] shadow-lg">
+                    <span className="bg-gold text-2xs text-background absolute -top-0.5 -right-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-0.5 font-medium">
                       {badgeCount > 99 ? '99+' : badgeCount}
                     </span>
                   )}
@@ -137,7 +129,7 @@ export function ActivityBar({
               <TooltipContent
                 side="right"
                 sideOffset={8}
-                className="glass-gold border-gold/30 flex items-center gap-2"
+                className="flex items-center gap-2"
               >
                 <span className="font-medium">{t(item.labelKey)}</span>
                 {item.shortcutAction && (

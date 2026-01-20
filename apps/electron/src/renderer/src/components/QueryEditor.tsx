@@ -387,7 +387,7 @@ export function QueryEditor() {
 
       {/* Editor Header */}
       <div className="flex min-w-0 items-center justify-between gap-4 border-b px-4 py-2">
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="toolbar-section">
           <h2 className="font-medium">{t('queryEditor.title')}</h2>
           <span className="text-muted-foreground hidden text-xs sm:inline">
             {t('queryEditor.executeHint')}

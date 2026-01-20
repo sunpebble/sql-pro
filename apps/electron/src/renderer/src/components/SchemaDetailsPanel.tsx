@@ -56,7 +56,7 @@ export function SchemaDetailsPanel({
   if (!table) {
     return (
       <div className="bg-background flex h-full w-full flex-col overflow-hidden border-l">
-        <div className="flex items-center justify-between border-b px-4 py-3">
+        <div className="panel-header">
           <h2 className="font-semibold">
             {t('schema.title', { defaultValue: 'Schema Details' })}
           </h2>
@@ -78,8 +78,8 @@ export function SchemaDetailsPanel({
   return (
     <div className="bg-background flex h-full w-full flex-col overflow-hidden border-l">
       {/* Header */}
-      <div className="flex items-center justify-between border-b px-4 py-3">
-        <div className="flex items-center gap-2">
+      <div className="panel-header">
+        <div className="panel-header-title">
           {isView ? (
             <Eye className="text-muted-foreground h-4 w-4" />
           ) : (

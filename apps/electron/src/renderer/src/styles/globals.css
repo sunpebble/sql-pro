@@ -961,6 +961,244 @@ th {
 }
 
 /* ============================================
+ * GOLD THEME INTERACTIVE UTILITIES
+ * Reusable classes for gold-themed UI elements
+ * ============================================ */
+
+/* Gold background opacities */
+.bg-gold-5 {
+  background-color: oklch(0.78 0.12 85 / 5%);
+}
+.bg-gold-8 {
+  background-color: oklch(0.78 0.12 85 / 8%);
+}
+.bg-gold-10 {
+  background-color: oklch(0.78 0.12 85 / 10%);
+}
+.bg-gold-15 {
+  background-color: oklch(0.78 0.12 85 / 15%);
+}
+
+.dark .bg-gold-5 {
+  background-color: oklch(0.82 0.14 85 / 5%);
+}
+.dark .bg-gold-8 {
+  background-color: oklch(0.82 0.14 85 / 8%);
+}
+.dark .bg-gold-10 {
+  background-color: oklch(0.82 0.14 85 / 10%);
+}
+.dark .bg-gold-15 {
+  background-color: oklch(0.82 0.14 85 / 15%);
+}
+
+/* Interactive gold button - ghost style with gold hover */
+.btn-gold-ghost {
+  color: var(--muted-foreground);
+  background-color: transparent;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
+}
+.btn-gold-ghost:hover {
+  color: var(--gold);
+  background-color: oklch(0.78 0.12 85 / 10%);
+}
+.dark .btn-gold-ghost:hover {
+  background-color: oklch(0.82 0.14 85 / 10%);
+}
+
+/* Interactive gold button - active/selected state */
+.btn-gold-active {
+  color: var(--gold);
+  background-color: oklch(0.78 0.12 85 / 15%);
+}
+.dark .btn-gold-active {
+  background-color: oklch(0.82 0.14 85 / 15%);
+}
+
+/* Gold tab/pill - for mode switchers and segmented controls */
+.pill-gold {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 150ms ease;
+  color: var(--muted-foreground);
+}
+.pill-gold:hover {
+  color: var(--gold);
+}
+.pill-gold.active {
+  color: var(--gold);
+  background-color: oklch(0.78 0.12 85 / 15%);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.dark .pill-gold.active {
+  background-color: oklch(0.82 0.14 85 / 15%);
+}
+
+/* Gold segmented control container */
+.segmented-gold {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.5rem;
+  background-color: oklch(0.78 0.12 85 / 5%);
+  padding: 0.25rem;
+}
+.dark .segmented-gold {
+  background-color: oklch(0.82 0.14 85 / 5%);
+}
+
+/* Gold hover effect for list items */
+.hover-gold {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
+}
+.hover-gold:hover {
+  color: var(--gold);
+  background-color: oklch(0.78 0.12 85 / 5%);
+}
+.dark .hover-gold:hover {
+  background-color: oklch(0.82 0.14 85 / 8%);
+}
+
+/* ============================================
+ * TOOLBAR AND CONTROL BAR UTILITIES
+ * Common patterns for header bars and toolbars
+ * ============================================ */
+
+/* Toolbar container - horizontal action bar with controls */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Toolbar section - groups of related controls */
+.toolbar-section {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar-section-sm {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Control bar - compact horizontal bar for filters/actions */
+.control-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background-color: var(--muted);
+  border-radius: var(--radius);
+}
+
+/* Action group - inline button group */
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Panel header - consistent header for side panels */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--card);
+}
+
+/* Panel header title area */
+.panel-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
+}
+
+/* Panel header actions */
+.panel-header-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ============================================
+ * CARD AND CONTAINER UTILITIES
+ * Common card patterns for settings and content
+ * ============================================ */
+
+/* Base card - rounded border with padding */
+.card-base {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1rem;
+}
+
+.card-base-sm {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+}
+
+/* Interactive card - with hover effects */
+.card-interactive {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+.card-interactive:hover {
+  border-color: var(--gold);
+  background-color: var(--muted);
+}
+
+/* Setting item row - common pattern in settings */
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+}
+
+/* Content section with vertical spacing */
+.content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.content-section-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ============================================
  * FLOATING DOCK STYLES
  * Bottom-centered navigation dock
  * ============================================ */

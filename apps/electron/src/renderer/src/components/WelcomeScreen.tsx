@@ -7,7 +7,6 @@ import type {
 } from '@shared/types';
 import type { ProfileFormData } from './connection-profiles/ProfileForm';
 import type { ConnectionSettings } from './ConnectionSettingsDialog';
-import { DecoFrame, GoldButton, GradientText } from '@sqlpro/ui';
 import { Button } from '@sqlpro/ui/button';
 import {
   DropdownMenu,
@@ -916,38 +915,55 @@ export function WelcomeScreen() {
   );
 
   return (
-    <div className="bg-hex-pattern relative flex h-full flex-col overflow-hidden">
-      {/* Noise texture overlay for depth */}
-      <div className="noise-overlay" />
-
-      {/* Animated spotlight effects */}
-      <div
-        className="spotlight animate-float absolute -top-40 left-1/4"
-        style={{ animationDelay: '0s' }}
-      />
-      <div
-        className="spotlight animate-float absolute right-1/4 -bottom-40"
-        style={{ animationDelay: '2s' }}
-      />
-
-      {/* Ambient gold glow overlay */}
+    <div className="from-background via-background to-muted/20 relative flex h-full flex-col overflow-hidden bg-gradient-to-br">
+      {/* Subtle ambient glow - refined single effect */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background: `
-            radial-gradient(ellipse 60% 40% at 50% 10%, var(--gold-glow), transparent 50%),
-            radial-gradient(ellipse 40% 50% at 90% 60%, oklch(0.78 0.12 85 / 5%), transparent 40%)
+            radial-gradient(ellipse 80% 50% at 70% 20%, var(--gold-subtle), transparent 60%)
           `,
         }}
       />
 
+      {/* Minimal geometric accent */}
+      <div className="pointer-events-none absolute top-0 right-0 h-1/2 w-1/3 opacity-[0.03]">
+        <svg viewBox="0 0 200 200" className="h-full w-full">
+          <defs>
+            <linearGradient
+              id="gold-stroke"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor="var(--gold-bright)" />
+              <stop offset="100%" stopColor="var(--gold-dark)" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M100 10 L190 55 L190 145 L100 190 L10 145 L10 55 Z"
+            fill="none"
+            stroke="url(#gold-stroke)"
+            strokeWidth="0.5"
+          />
+          <path
+            d="M100 30 L170 65 L170 135 L100 170 L30 135 L30 65 Z"
+            fill="none"
+            stroke="url(#gold-stroke)"
+            strokeWidth="0.3"
+          />
+        </svg>
+      </div>
+
       {/* Top Right Controls */}
-      <div className="animate-fade-in-up stagger-1 absolute top-4 right-4 z-10 flex items-center gap-2">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger>
             <Button
               variant={showProfiles ? 'default' : 'ghost'}
               size="icon"
+              className="h-8 w-8"
               onClick={() => setShowProfiles(!showProfiles)}
               data-tour-target="profiles-button"
             >
@@ -962,11 +978,11 @@ export function WelcomeScreen() {
         </Tooltip>
       </div>
 
-      {/* Main Content - Two Column Layout */}
+      {/* Main Content - Asymmetric Layout for visual interest */}
       <div className="flex flex-1 items-stretch overflow-hidden">
-        {/* Left Column - Feature Showcase */}
-        <div className="animate-slide-in-left border-gold/10 flex w-1/2 items-center justify-center border-r p-8">
-          <div className="h-full w-full max-w-md">
+        {/* Left Column - Feature Showcase (wider) */}
+        <div className="border-border/50 flex w-[55%] items-center justify-center border-r p-10">
+          <div className="h-full w-full max-w-lg">
             <FeatureShowcase
               onStartTour={handleStartWelcomeTour}
               disabled={isConnecting || isLoadingSchema || connections.size > 0}
@@ -974,31 +990,18 @@ export function WelcomeScreen() {
           </div>
         </div>
 
-        {/* Right Column - Connection Area */}
-        <div className="animate-slide-in-right relative flex w-1/2 items-center justify-center p-8">
-          {/* Decorative corner frames with animation */}
-          <div className="border-deco pointer-events-none absolute inset-8 opacity-30" />
-
-          <div className="relative z-10 flex w-full max-w-sm flex-col space-y-6">
-            {/* Logo & Title with staggered animation */}
-            <div className="animate-fade-in-up stagger-1 shrink-0 text-center">
-              <DecoFrame
-                size="default"
-                variant="gold"
-                animated
-                className="vault-frame animate-breathe-glow mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl"
-              >
-                <Database
-                  className="h-8 w-8"
-                  style={{ color: 'var(--gold-muted)' }}
-                />
-              </DecoFrame>
-              <h1 className="text-2xl font-semibold tracking-tight">
-                <GradientText variant="gold" speed="slow">
-                  {t('app.name')}
-                </GradientText>
+        {/* Right Column - Connection Area (focused) */}
+        <div className="relative flex w-[45%] items-center justify-center p-10">
+          <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
+            {/* Logo & Title - refined, minimal */}
+            <div className="shrink-0 text-center">
+              <div className="border-gold/20 bg-gold/5 hover:border-gold/40 mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border shadow-sm transition-all duration-300 hover:shadow-[0_4px_20px_var(--gold-subtle)]">
+                <Database className="text-gold h-7 w-7" />
+              </div>
+              <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+                {t('app.name')}
               </h1>
-              <p className="text-muted-foreground mt-1 text-sm">
+              <p className="text-muted-foreground mt-1.5 text-sm">
                 {t('welcome.subtitle', {
                   defaultValue: 'Professional Database Manager',
                 })}
@@ -1007,18 +1010,18 @@ export function WelcomeScreen() {
 
             {/* Error Message */}
             {error && (
-              <div className="animate-fade-in-up border-destructive/50 bg-destructive/10 text-destructive flex items-center gap-2 rounded-lg border p-3 text-sm">
+              <div className="border-destructive/30 bg-destructive/5 text-destructive flex items-center gap-2.5 rounded-lg border p-3 text-sm">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            {/* Connection Buttons with staggered animation */}
-            <div className="animate-fade-in-up stagger-2 shrink-0 space-y-3">
-              <GoldButton
+            {/* Connection Buttons - clean, professional */}
+            <div className="shrink-0 space-y-3">
+              <Button
                 variant={isConnecting ? 'outline' : 'default'}
                 size="lg"
-                className="vault-frame w-full transition-all hover:scale-[1.02]"
+                className="bg-gold hover:bg-gold-dark text-background w-full font-medium shadow-sm transition-all hover:shadow-md"
                 onClick={handleOpenDatabase}
                 disabled={isConnecting}
                 data-action="open-database"
@@ -1029,11 +1032,11 @@ export function WelcomeScreen() {
                   : t('welcome.openSqlite', {
                       defaultValue: 'Open SQLite Database',
                     })}
-              </GoldButton>
-              <GoldButton
+              </Button>
+              <Button
                 variant="outline"
                 size="lg"
-                className="w-full"
+                className="border-border/80 hover:border-gold/50 hover:bg-gold/5 w-full transition-colors"
                 onClick={() => setDbTypeSelectorOpen(true)}
                 disabled={isConnecting}
                 data-action="connect-server"
@@ -1042,7 +1045,7 @@ export function WelcomeScreen() {
                 {t('welcome.connectServer', {
                   defaultValue: 'Connect to Server',
                 })}
-              </GoldButton>
+              </Button>
               <p className="text-muted-foreground text-center text-xs">
                 {t('welcome.supportsDb', {
                   defaultValue:
@@ -1051,10 +1054,10 @@ export function WelcomeScreen() {
               </p>
             </div>
 
-            {/* Recent Connections / Profile Manager with staggered animation */}
-            <div className="animate-fade-in-up stagger-3">
+            {/* Recent Connections / Profile Manager */}
+            <div>
               {showProfiles ? (
-                <div className="glass-gold max-h-64 overflow-hidden rounded-lg">
+                <div className="border-border/50 bg-card/50 max-h-64 overflow-hidden rounded-lg border backdrop-blur-sm">
                   <ProfileManager
                     onConnect={handleConnectFromProfile}
                     compact={true}
@@ -1063,7 +1066,7 @@ export function WelcomeScreen() {
               ) : (
                 recentConnections.length > 0 && (
                   <div
-                    className="flex flex-col space-y-2"
+                    className="flex flex-col space-y-3"
                     data-tour-target="recent-connections"
                   >
                     <div className="flex shrink-0 items-center justify-between px-1">
@@ -1075,7 +1078,7 @@ export function WelcomeScreen() {
                       <Clock className="text-muted-foreground h-3.5 w-3.5" />
                     </div>
                     <ScrollArea className="h-48">
-                      <div className="space-y-0.5 pr-2">
+                      <div className="space-y-1 pr-2">
                         {recentConnections.map((conn) => (
                           <div
                             key={conn.path}
