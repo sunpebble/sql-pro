@@ -110,6 +110,9 @@ function buildFromClause(
     return '';
   }
 
+  // Build node index map for O(1) lookups (js-index-maps)
+  const nodeById = new Map(nodes.map((n) => [n.id, n]));
+
   // Find the first table (base table)
   const baseNode = nodes[0];
   const usedNodeIds = new Set<string>([baseNode.id]);
@@ -147,8 +150,8 @@ function buildFromClause(
         processedEdges.add(edge.id);
         usedNodeIds.add(targetNodeId);
 
-        const targetNode = nodes.find((n) => n.id === targetNodeId);
-        const sourceNode = nodes.find((n) => n.id === sourceNodeId);
+        const targetNode = nodeById.get(targetNodeId);
+        const sourceNode = nodeById.get(sourceNodeId);
 
         if (targetNode && sourceNode) {
           const joinType = edge.data?.joinType || 'INNER';

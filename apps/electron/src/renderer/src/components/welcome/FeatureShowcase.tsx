@@ -14,7 +14,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useOnboardingStore } from '@/stores';
+import { useOnboardingStore } from '@/stores/onboarding-store';
 
 interface FeatureShowcaseProps {
   /** Callback to start the welcome tour */

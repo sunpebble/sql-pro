@@ -26,7 +26,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getSystemFonts, isLocalFontAccessAvailable } from '@/lib/font-utils';
 import { cn } from '@/lib/utils';
-import { useSettingsStore, useThemeStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useSettingsStore } from '@/stores/settings-store';
+import { useThemeStore } from '@/stores/theme-store';
 import { SettingGroup } from '../items/SettingGroup';
 
 interface FontOption {

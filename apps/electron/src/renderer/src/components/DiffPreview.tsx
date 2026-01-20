@@ -28,7 +28,7 @@ import { usePendingChanges } from '@/hooks/usePendingChanges';
 import { pendingChangesCollection } from '@/lib/collections';
 import { generateSQLScript } from '@/lib/sql-generator';
 import { cn } from '@/lib/utils';
-import { useConnectionStore } from '@/stores';
+import { useConnectionStore } from '@/stores/connection-store';
 
 interface DiffPreviewProps {
   onClose: () => void;

@@ -114,10 +114,11 @@ const ChartPreview = memo(({ config, data }: ChartPreviewProps) => {
             const startRad = ((startAngle - 90) * Math.PI) / 180;
             const endRad = ((currentAngle - 90) * Math.PI) / 180;
 
-            const x1 = 50 + 40 * Math.cos(startRad);
-            const y1 = 50 + 40 * Math.sin(startRad);
-            const x2 = 50 + 40 * Math.cos(endRad);
-            const y2 = 50 + 40 * Math.sin(endRad);
+            // Reduce SVG coordinate precision for smaller output (rendering-svg-precision)
+            const x1 = (50 + 40 * Math.cos(startRad)).toFixed(2);
+            const y1 = (50 + 40 * Math.sin(startRad)).toFixed(2);
+            const x2 = (50 + 40 * Math.cos(endRad)).toFixed(2);
+            const y2 = (50 + 40 * Math.sin(endRad)).toFixed(2);
 
             const largeArc = angle > 180 ? 1 : 0;
 

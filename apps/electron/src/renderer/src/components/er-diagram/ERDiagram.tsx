@@ -12,7 +12,7 @@ import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EmptyView } from '@/components/EmptyView';
-import { useConnectionStore } from '@/stores';
+import { useConnectionStore } from '@/stores/connection-store';
 import { useDiagramStore } from '@/stores/diagram-store';
 import { ERControls } from './ERControls';
 import { ERRelationshipEdge as ERRelationshipEdgeComponent } from './ERRelationshipEdge';

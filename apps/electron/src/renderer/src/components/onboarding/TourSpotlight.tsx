@@ -141,7 +141,10 @@ export function TourSpotlight({
     };
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', throttledUpdate, true);
+    window.addEventListener('scroll', throttledUpdate, {
+      capture: true,
+      passive: true,
+    });
 
     // Also observe DOM changes that might affect element position
     const observer = new MutationObserver(throttledUpdate);
@@ -154,7 +157,7 @@ export function TourSpotlight({
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', throttledUpdate, true);
+      window.removeEventListener('scroll', throttledUpdate, { capture: true });
       observer.disconnect();
       if (throttleTimeout) clearTimeout(throttleTimeout);
     };
@@ -291,11 +294,14 @@ export function useTourTargetPosition(
 
     // Update on resize/scroll
     window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('scroll', updatePosition, {
+      capture: true,
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('scroll', updatePosition, { capture: true });
     };
   }, [targetSelector, isActive]);
 

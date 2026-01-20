@@ -11,12 +11,11 @@ import { useTranslation } from 'react-i18next';
 import { LayoutButtons } from '@/components/LayoutButtons';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { TOOLBAR_BUTTON_INTERACTIVE } from '@/lib/utils';
-import {
-  useChangesStore,
-  useConnectionStore,
-  useDialogStore,
-  useOnboardingStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useChangesStore } from '@/stores/changes-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDialogStore } from '@/stores/dialog-store';
+import { useOnboardingStore } from '@/stores/onboarding-store';
 
 /**
  * Simplified toolbar with only essential right-side controls.

@@ -45,11 +45,10 @@ import {
 } from '@/components/ui/dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import {
-  useConnectionStore,
-  useDialogStore,
-  useOnboardingStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDialogStore } from '@/stores/dialog-store';
+import { useOnboardingStore } from '@/stores/onboarding-store';
 import { ProfileForm } from './connection-profiles/ProfileForm';
 import { ProfileManager } from './connection-profiles/ProfileManager';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';

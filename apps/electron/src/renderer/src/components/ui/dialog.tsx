@@ -9,7 +9,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { getFontFamilyCSS } from '@/hooks/useApplyFont';
 import { cn } from '@/lib/utils';
-import { useUIFont } from '@/stores';
+import { useUIFont } from '@/stores/settings-store';
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;

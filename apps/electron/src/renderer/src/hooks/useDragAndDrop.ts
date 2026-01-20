@@ -2,7 +2,7 @@ import type { DragEvent } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { sqlPro } from '@/lib/api';
-import { useConnectionStore } from '@/stores';
+import { useConnectionStore } from '@/stores/connection-store';
 
 // Supported database file extensions
 const DB_EXTENSIONS = ['.db', '.sqlite', '.sqlite3', '.db3', '.s3db', '.sl3'];

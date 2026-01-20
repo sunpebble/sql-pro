@@ -53,12 +53,11 @@ import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { sqlPro } from '@/lib/api';
 import { queryClient } from '@/lib/query-client';
 import { cn } from '@/lib/utils';
-import {
-  useConnectionStore,
-  useDialogStore,
-  useTableDataStore,
-} from '@/stores';
 import { useChangesStore } from '@/stores/changes-store';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDialogStore } from '@/stores/dialog-store';
+import { useTableDataStore } from '@/stores/table-data-store';
 
 // Preset colors for connection tabs (using OKLch for consistency)
 const PRESET_COLORS = [

@@ -23,7 +23,10 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { cn } from '@/lib/utils';
-import { useChangesStore, useConnectionStore, useTableFont } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useChangesStore } from '@/stores/changes-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useTableFont } from '@/stores/settings-store';
 
 interface ConnectionSelectorProps {
   onOpenDatabase?: () => void;

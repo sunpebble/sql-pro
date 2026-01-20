@@ -4,7 +4,9 @@ import { Button } from '@sqlpro/ui/button';
 import { Crown, Key, Lock, Settings, Sparkles, Wand2, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useAIStore, useProStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useAIStore } from '@/stores/ai-store';
+import { useProStore } from '@/stores/pro-store';
 import { ProBadge } from './ProBadge';
 
 /**

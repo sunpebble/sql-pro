@@ -56,13 +56,12 @@ import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { sqlPro } from '@/lib/api';
 import { generateSuggestions } from '@/lib/query-plan-analyzer';
 import { cn } from '@/lib/utils';
-import {
-  useAIStore,
-  useConnectionStore,
-  useQueryHistoryStore,
-  useQueryStore,
-  useQueryTabsStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useAIStore } from '@/stores/ai-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useQueryHistoryStore } from '@/stores/query-history-store';
+import { useQueryStore } from '@/stores/query-store';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
 import { QueryOptimizerPanel } from './data-tools/QueryOptimizerPanel';
 import { MonacoSqlEditor } from './MonacoSqlEditor';
 import { QueryHistoryFilters } from './query-editor/QueryHistoryFilters';

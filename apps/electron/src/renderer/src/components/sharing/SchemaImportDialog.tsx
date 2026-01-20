@@ -102,20 +102,17 @@ export function SchemaImportDialog({
     if (!schema) return null;
 
     if (schema.format === 'json' && schema.schemas) {
-      const totalTables = schema.schemas.reduce(
-        (sum, s) => sum + s.tables.length,
-        0
-      );
-      const totalViews = schema.schemas.reduce(
-        (sum, s) => sum + (s.views?.length || 0),
-        0
-      );
-      const totalIndexes = schema.schemas.reduce(
-        (sum, s) =>
-          sum +
-          s.tables.reduce((t, table) => t + (table.indexes?.length || 0), 0),
-        0
-      );
+      // Combine multiple iterations into single loop (js-combine-iterations)
+      let totalTables = 0;
+      let totalViews = 0;
+      let totalIndexes = 0;
+      for (const s of schema.schemas) {
+        totalTables += s.tables.length;
+        totalViews += s.views?.length || 0;
+        for (const table of s.tables) {
+          totalIndexes += table.indexes?.length || 0;
+        }
+      }
 
       return {
         schemas: schema.schemas.length,
@@ -124,15 +121,16 @@ export function SchemaImportDialog({
         indexes: totalIndexes,
       };
     } else if (schema.format === 'sql' && schema.sqlStatements) {
-      const createTableCount = schema.sqlStatements.filter((stmt) =>
-        /^\s*CREATE\s+TABLE/i.test(stmt)
-      ).length;
-      const createIndexCount = schema.sqlStatements.filter((stmt) =>
-        /^\s*CREATE\s+(?:UNIQUE\s+)?INDEX/i.test(stmt)
-      ).length;
-      const createTriggerCount = schema.sqlStatements.filter((stmt) =>
-        /^\s*CREATE\s+TRIGGER/i.test(stmt)
-      ).length;
+      // Combine multiple filter iterations into single loop (js-combine-iterations)
+      let createTableCount = 0;
+      let createIndexCount = 0;
+      let createTriggerCount = 0;
+      for (const stmt of schema.sqlStatements) {
+        if (/^\s*CREATE\s+TABLE/i.test(stmt)) createTableCount++;
+        else if (/^\s*CREATE\s+(?:UNIQUE\s+)?INDEX/i.test(stmt))
+          createIndexCount++;
+        else if (/^\s*CREATE\s+TRIGGER/i.test(stmt)) createTriggerCount++;
+      }
 
       return {
         statements: schema.sqlStatements.length,

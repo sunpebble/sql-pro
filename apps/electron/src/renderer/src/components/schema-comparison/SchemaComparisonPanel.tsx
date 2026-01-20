@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { useSchemaComparisonStore } from '@/stores';
+import { useSchemaComparisonStore } from '@/stores/schema-comparison-store';
 import { DiffFilterBar } from './DiffFilterBar';
 import { DiffSummary } from './DiffSummary';
 import { ExportReportDialog } from './ExportReportDialog';

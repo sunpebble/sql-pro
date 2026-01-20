@@ -14,16 +14,15 @@ import { withRetryOrDefault } from '@/lib/ipc-retry';
 import { initMockMode, isMockMode } from '@/lib/mock-api';
 import { queryClient } from '@/lib/query-client';
 import { router } from '@/routes';
-import {
-  useAIStore,
-  useConnectionStore,
-  useOnboardingStore,
-  useProStore,
-  useQueryTabsStore,
-  useTableDataStore,
-  useThemeStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useAIStore } from '@/stores/ai-store';
 import { useChangesStore } from '@/stores/changes-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useOnboardingStore } from '@/stores/onboarding-store';
+import { useProStore } from '@/stores/pro-store';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
+import { useTableDataStore } from '@/stores/table-data-store';
+import { useThemeStore } from '@/stores/theme-store';
 
 function App(): React.JSX.Element {
   const {
@@ -138,9 +137,15 @@ function App(): React.JSX.Element {
         .filter((conn) => hasChangesForConnection(conn.id))
         .map((conn) => {
           const changes = getChangesForConnection(conn.id);
-          const inserts = changes.filter((c) => c.type === 'insert').length;
-          const updates = changes.filter((c) => c.type === 'update').length;
-          const deletes = changes.filter((c) => c.type === 'delete').length;
+          // Combine multiple iterations into single loop (js-combine-iterations)
+          let inserts = 0;
+          let updates = 0;
+          let deletes = 0;
+          for (const c of changes) {
+            if (c.type === 'insert') inserts++;
+            else if (c.type === 'update') updates++;
+            else if (c.type === 'delete') deletes++;
+          }
 
           return {
             connectionId: conn.id,

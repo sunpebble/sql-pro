@@ -13,11 +13,10 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import {
-  useConnectionStore,
-  useConnectionSwitcherStore,
-  useUIFont,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useConnectionSwitcherStore } from '@/stores/connection-switcher-store';
+import { useUIFont } from '@/stores/settings-store';
 
 interface ConnectionSwitcherProps {
   onOpenRecentConnection?: (conn: RecentConnection) => void;

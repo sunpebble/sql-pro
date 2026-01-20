@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
-import { useConnectionStore } from '@/stores';
+import { useConnectionStore } from '@/stores/connection-store';
 
 /**
  * Welcome page route component.

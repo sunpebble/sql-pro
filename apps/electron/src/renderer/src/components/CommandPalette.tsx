@@ -11,11 +11,12 @@ import { Command as CommandIcon } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import {
   getFilteredCommands,
   useCommandPaletteStore,
-  useUIFont,
-} from '@/stores';
+} from '@/stores/command-palette-store';
+import { useUIFont } from '@/stores/settings-store';
 
 const categoryOrder = ['actions', 'navigation', 'view', 'settings', 'help'];
 

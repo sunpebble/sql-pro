@@ -14,12 +14,11 @@ import {
   SchemaImportDialog,
 } from '@/components/sharing';
 import { sqlPro } from '@/lib/api';
-import {
-  useChangesStore,
-  useConnectionStore,
-  useQueryTabsStore,
-  useTableDataStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useChangesStore } from '@/stores/changes-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
+import { useTableDataStore } from '@/stores/table-data-store';
 
 /**
  * Database page route component.

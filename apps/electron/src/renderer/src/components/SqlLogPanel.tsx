@@ -25,7 +25,8 @@ import {
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDebounce } from '@/hooks';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
 import {
   cleanupSqlLogListener,

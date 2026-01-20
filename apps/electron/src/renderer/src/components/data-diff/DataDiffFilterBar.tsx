@@ -5,7 +5,7 @@ import { Toggle } from '@sqlpro/ui/toggle';
 import { Edit, Filter, Minus, Plus, RotateCcw, Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useDataDiffStore } from '@/stores';
+import { useDataDiffStore } from '@/stores/data-diff-store';
 
 interface DataDiffFilterBarProps {
   className?: string;

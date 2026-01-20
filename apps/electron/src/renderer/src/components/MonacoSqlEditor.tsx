@@ -19,7 +19,9 @@ import {
 } from '@/lib/monaco-sql-config';
 
 import { cn } from '@/lib/utils';
-import { useEditorFont, useSettingsStore, useThemeStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useEditorFont, useSettingsStore } from '@/stores/settings-store';
+import { useThemeStore } from '@/stores/theme-store';
 
 // Default monospace font stack
 const DEFAULT_FONT_FAMILY =

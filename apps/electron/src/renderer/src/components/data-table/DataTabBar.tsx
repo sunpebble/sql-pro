@@ -1,4 +1,4 @@
-import type { DataTab } from '@/stores';
+import type { DataTab } from '@/stores/data-tabs-store';
 import { Button } from '@sqlpro/ui/button';
 import {
   ContextMenu,
@@ -18,7 +18,9 @@ import { Eye, Plus, Table, X } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useConnectionStore, useDataTabsStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataTabsStore } from '@/stores/data-tabs-store';
 
 /**
  * Hook for keyboard shortcuts to navigate between tabs

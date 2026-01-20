@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useDataDiffStore } from '@/stores';
+import { useDataDiffStore } from '@/stores/data-diff-store';
 
 interface DataDiffSummaryProps {
   comparisonResult: DataComparisonResult;

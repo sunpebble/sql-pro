@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { ProActivationDialog } from '@/components/pro/ProActivation';
 import { ProBadge } from '@/components/pro/ProBadge';
 import { cn } from '@/lib/utils';
-import { useProStore } from '@/stores';
+import { useProStore } from '@/stores/pro-store';
 
 export function ProSection() {
   const { t } = useTranslation('settings');

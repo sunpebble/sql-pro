@@ -9,6 +9,9 @@ import { DEFAULT_SHORTCUTS } from '@shared/types';
 import { create } from 'zustand';
 import { sqlPro } from '@/lib/api';
 
+// Modifier keys set for O(1) lookup (js-set-map-lookups)
+const MODIFIER_KEYS = new Set(['Control', 'Alt', 'Shift', 'Meta']);
+
 // Re-export types from shared for convenience
 export type {
   PresetName,
@@ -478,7 +481,7 @@ export function formatShortcutBinding(binding: ShortcutBinding | null): string {
  */
 export function parseKeyboardEvent(e: KeyboardEvent): ShortcutBinding | null {
   // Ignore modifier-only key presses
-  if (['Control', 'Alt', 'Shift', 'Meta'].includes(e.key)) {
+  if (MODIFIER_KEYS.has(e.key)) {
     return null;
   }
 

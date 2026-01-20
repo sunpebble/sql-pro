@@ -5,7 +5,7 @@ import type { ColumnSchema } from '@/types/database';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
-import { useSettingsStore } from '@/stores';
+import { useSettingsStore } from '@/stores/settings-store';
 
 interface CellPosition {
   rowId: string;

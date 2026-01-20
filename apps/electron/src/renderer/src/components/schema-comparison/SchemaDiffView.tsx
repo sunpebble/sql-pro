@@ -4,7 +4,7 @@ import { FileQuestion } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useSchemaComparisonStore } from '@/stores';
+import { useSchemaComparisonStore } from '@/stores/schema-comparison-store';
 import { TableDiffCard } from './TableDiffCard';
 
 interface SchemaDiffViewProps {

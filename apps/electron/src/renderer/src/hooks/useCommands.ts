@@ -1,5 +1,5 @@
 import type { GetSchemaResponse } from '@shared/types';
-import type { Command } from '@/stores';
+import type { Command } from '@/stores/command-palette-store';
 import {
   Code,
   FileDown,
@@ -28,20 +28,21 @@ import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
 import { invalidateTableData } from '@/lib/query-refresh';
 import { router } from '@/routes';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useChangesStore } from '@/stores/changes-store';
+import { useCommandPaletteStore } from '@/stores/command-palette-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useConnectionSwitcherStore } from '@/stores/connection-switcher-store';
+import { useDataTabsStore } from '@/stores/data-tabs-store';
 import {
   formatShortcutBinding,
   matchesBinding,
-  useChangesStore,
-  useCommandPaletteStore,
-  useConnectionStore,
-  useConnectionSwitcherStore,
-  useDataTabsStore,
   useKeyboardShortcutsStore,
-  useOnboardingStore,
-  useSettingsStore,
-  useTableDataStore,
-  useThemeStore,
-} from '@/stores';
+} from '@/stores/keyboard-shortcuts-store';
+import { useOnboardingStore } from '@/stores/onboarding-store';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useTableDataStore } from '@/stores/table-data-store';
+import { useThemeStore } from '@/stores/theme-store';
 
 /**
  * Hook that registers all application commands and sets up the global keyboard shortcut.

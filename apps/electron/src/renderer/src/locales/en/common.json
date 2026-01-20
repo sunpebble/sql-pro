@@ -730,6 +730,31 @@
     "vectorSearch": "Vector Search"
   },
   "vectorSearch": {
+    "title": "Vector Search",
+    "modes": {
+      "text": "Text",
+      "vector": "Vector",
+      "similar": "Similar"
+    },
+    "textQuery": "Search Query",
+    "textPlaceholder": "Enter your search text...",
+    "vectorInput": "Vector (JSON Array)",
+    "vectorPlaceholder": "[0.1, 0.2, 0.3, ...]",
+    "pointId": "Point ID",
+    "pointIdPlaceholder": "Enter point ID to find similar...",
+    "topK": "Top K",
+    "scoreThreshold": "Min Score",
+    "search": "Search",
+    "results": "Results",
+    "score": "Score",
+    "noResults": "Enter a query to search for similar vectors",
+    "findSimilar": "Similar",
+    "findSimilarTooltip": "Find vectors similar to this point",
+    "columns": {
+      "score": "Score",
+      "id": "ID",
+      "actions": "Actions"
+    },
     "2dVisualization": "2D visualization",
     "3dVisualization": "3D visualization",
     "visualization": "Visualization",

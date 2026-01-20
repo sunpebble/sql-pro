@@ -2,7 +2,7 @@ import type { BulkEditField } from './BulkEditDialog';
 import type { DataTableRef, TableRowData } from './data-table';
 import type { ExportOptions } from './ExportDialog';
 import type { UIFilterState } from '@/lib/filter-utils';
-import type { PageSizeOption } from '@/stores';
+import type { PageSizeOption } from '@/stores/settings-store';
 import type { PendingChange, SortState, TableSchema } from '@/types/database';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
@@ -42,13 +42,14 @@ import { usePendingChanges } from '@/hooks/usePendingChanges';
 import { usePgNotify } from '@/hooks/usePgNotify';
 import { useTableData } from '@/hooks/useTableData';
 import { convertUIFiltersToAPIFilters } from '@/lib/filter-utils';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataTabsStore } from '@/stores/data-tabs-store';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import {
   PAGE_SIZE_OPTIONS,
-  useConnectionStore,
-  useDataTabsStore,
   usePageSize,
   useSettingsStore,
-} from '@/stores';
+} from '@/stores/settings-store';
 import { BulkEditDialog } from './BulkEditDialog';
 import {
   ColumnStats,

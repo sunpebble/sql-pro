@@ -1,4 +1,4 @@
-import type { QueryTab } from '@/stores';
+import type { QueryTab } from '@/stores/query-tabs-store';
 import { Button } from '@sqlpro/ui/button';
 import {
   ContextMenu,
@@ -23,7 +23,9 @@ import { Columns2, Copy, FileCode, Plus, Rows2, X } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useConnectionStore, useQueryTabsStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
 
 interface QueryTabBarProps {
   className?: string;

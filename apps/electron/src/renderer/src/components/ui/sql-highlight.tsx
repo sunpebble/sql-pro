@@ -2,7 +2,7 @@ import * as monaco from 'monaco-editor';
 import { useEffect, useRef } from 'react';
 
 import { cn } from '@/lib/utils';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/theme-store';
 
 interface SqlHighlightProps {
   /** SQL code to highlight */

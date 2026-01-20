@@ -371,8 +371,8 @@ export const VectorVisualization = memo(
         y: offsetY + ny * scale,
       });
 
-      // Sort points by z-depth (back to front) for proper rendering
-      const sortedPoints = [...transformedPoints].sort((a, b) => {
+      // Sort points by z-depth (back to front) for proper rendering - use toSorted for immutability (js-tosorted-immutable)
+      const sortedPoints = transformedPoints.toSorted((a, b) => {
         // First sort by depth (z) - lower z renders first (back)
         if (dimensionMode === '3d') {
           if (a.nz !== b.nz) {

@@ -5,13 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
 import { invalidateTableData } from '@/lib/query-refresh';
-import {
-  useChangesStore,
-  useCommandPaletteStore,
-  useConnectionStore,
-  useDialogStore,
-  useTableDataStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useChangesStore } from '@/stores/changes-store';
+import { useCommandPaletteStore } from '@/stores/command-palette-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDialogStore } from '@/stores/dialog-store';
+import { useTableDataStore } from '@/stores/table-data-store';
 
 // Check if window API is available (always true in Tauri since we import sqlPro)
 const hasWindowAPI = (): boolean => {

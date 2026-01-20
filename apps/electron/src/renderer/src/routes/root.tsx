@@ -8,7 +8,7 @@ import { getFontFamilyCSS, useApplyFont } from '@/hooks/useApplyFont';
 import { useCommands } from '@/hooks/useCommands';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import { useMenuActions } from '@/hooks/useMenuActions';
-import { useUIFont } from '@/stores';
+import { useUIFont } from '@/stores/settings-store';
 
 /**
  * Root layout component that wraps all routes.

@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardShortcutsSettings } from '@/components/KeyboardShortcutsSettings';
 import { cn } from '@/lib/utils';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import {
   PRESET_INFO,
   useKeyboardShortcutsStore,
-  useSettingsStore,
-} from '@/stores';
+} from '@/stores/keyboard-shortcuts-store';
+import { useSettingsStore } from '@/stores/settings-store';
 import { SettingGroup } from '../items/SettingGroup';
 
 export function EditorSection() {

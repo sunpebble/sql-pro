@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useDialogStore } from '@/stores';
+import { useDialogStore } from '@/stores/dialog-store';
 
 /**
  * About dialog showing application information

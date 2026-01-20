@@ -23,7 +23,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { sqlPro } from '@/lib/api';
-import { useConnectionStore, useSchemaComparisonStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useSchemaComparisonStore } from '@/stores/schema-comparison-store';
 
 interface SourceSelectorProps {
   /** Which source is being selected (source or target) */

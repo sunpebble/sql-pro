@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useOnboardingStore } from '@/stores';
+import { useOnboardingStore } from '@/stores/onboarding-store';
 
 export interface WelcomeDialogProps {
   open: boolean;

@@ -1,4 +1,7 @@
-import type { QueryTemplate, TemplateCategory } from '@/stores';
+import type {
+  QueryTemplate,
+  TemplateCategory,
+} from '@/stores/query-templates-store';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
@@ -40,7 +43,10 @@ import {
 } from '@/components/ui/dialog';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { cn } from '@/lib/utils';
-import { TEMPLATE_CATEGORIES, useQueryTemplatesStore } from '@/stores';
+import {
+  TEMPLATE_CATEGORIES,
+  useQueryTemplatesStore,
+} from '@/stores/query-templates-store';
 
 interface QueryTemplatesPickerProps {
   open: boolean;

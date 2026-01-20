@@ -29,11 +29,12 @@ import {
   useRef,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDebouncedCallback } from '@/hooks';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useDebouncedCallback } from '@/hooks/useDebounce';
 import { useVirtualData } from '@/hooks/useVirtualData';
 import { generateSQLInsert } from '@/lib/sql-insert-generator';
 import { cn } from '@/lib/utils';
-import { useTableFont } from '@/stores';
+import { useTableFont } from '@/stores/settings-store';
 import { useDragSelection } from './hooks/useDragSelection';
 import { useTableCore } from './hooks/useTableCore';
 import { useTableEditing } from './hooks/useTableEditing';

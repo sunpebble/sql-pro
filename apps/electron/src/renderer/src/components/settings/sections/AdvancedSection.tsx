@@ -32,7 +32,9 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { DEFAULT_MODELS, useAIStore, useDialogStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { DEFAULT_MODELS, useAIStore } from '@/stores/ai-store';
+import { useDialogStore } from '@/stores/dialog-store';
 import { SettingGroup } from '../items/SettingGroup';
 import { SkeletonSettingsPanel } from './SkeletonSettingsPanel';
 

@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { sqlPro } from '@/lib/api';
-import { useDialogStore } from '@/stores';
+import { useDialogStore } from '@/stores/dialog-store';
 
 /**
  * Dialog showing update check results

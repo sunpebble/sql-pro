@@ -1,4 +1,4 @@
-import type { ALL_PRO_FEATURES } from '@/stores';
+import type { ALL_PRO_FEATURES } from '@/stores/pro-store';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
@@ -22,7 +22,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { useProStore } from '@/stores';
+import { useProStore } from '@/stores/pro-store';
 import { ProBadge } from './ProBadge';
 import { SkeletonProActivation } from './SkeletonProActivation';
 

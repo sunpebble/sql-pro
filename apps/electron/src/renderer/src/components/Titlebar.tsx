@@ -9,7 +9,10 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Database, Monitor, Moon, Settings, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useConnectionStore, useDialogStore, useThemeStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDialogStore } from '@/stores/dialog-store';
+import { useThemeStore } from '@/stores/theme-store';
 import { ConnectionTabBar } from './ConnectionTabBar';
 import { Toolbar } from './Toolbar';
 

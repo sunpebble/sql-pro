@@ -10,7 +10,7 @@ import { Redo2, Undo2 } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useUndoRedoStore } from '@/stores';
+import { useUndoRedoStore } from '@/stores/undo-redo-store';
 
 interface UndoRedoControlsProps {
   className?: string;

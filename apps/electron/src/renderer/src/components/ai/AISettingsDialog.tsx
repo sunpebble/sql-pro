@@ -38,7 +38,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { DEFAULT_MODELS, useAIStore } from '@/stores';
+import { DEFAULT_MODELS, useAIStore } from '@/stores/ai-store';
 
 interface AISettingsDialogProps {
   open: boolean;

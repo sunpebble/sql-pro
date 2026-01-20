@@ -72,14 +72,12 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import {
-  useConnectionStore,
-  useDataTabsStore,
-  useQueryTabsStore,
-  useSettingsStore,
-  useTableFont,
-  useTableOrganizationStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataTabsStore } from '@/stores/data-tabs-store';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
+import { useSettingsStore, useTableFont } from '@/stores/settings-store';
+import { useTableOrganizationStore } from '@/stores/table-organization-store';
 import { MockDataGeneratorDialog } from './mock-data-generator';
 import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
@@ -94,6 +92,9 @@ const SAMPLE_CREATE_TABLE_SQL = `CREATE TABLE example (
   name TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`;
+
+// Hoist static skeleton widths outside component (rendering-hoist-jsx)
+const SKELETON_WIDTHS = [80, 120, 95, 140, 75, 110, 130, 85];
 
 export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   const {
@@ -888,7 +889,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
           {isLoadingSchema ? (
             <div className="space-y-1 py-1">
               {/* Skeleton items that mimic table entries */}
-              {[80, 120, 95, 140, 75, 110, 130, 85].map((width, i) => (
+              {SKELETON_WIDTHS.map((width, i) => (
                 <div
                   key={`skeleton-${String(i)}`}
                   className="flex items-center gap-2 rounded px-2 py-1.5"

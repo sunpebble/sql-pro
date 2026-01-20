@@ -2,6 +2,9 @@ import { Skeleton } from '@sqlpro/ui/skeleton';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
+// Static arrays hoisted outside components (rendering-hoist-jsx)
+const SKELETON_INDICES_5 = [0, 1, 2, 3, 4];
+
 /**
  * Skeleton card for plugin marketplace, pro features, etc.
  * Matches the PluginCard grid layout structure.
@@ -148,9 +151,8 @@ export function SkeletonLicenseInfo({ className }: { className?: string }) {
 
       {/* Feature list */}
       <div className="space-y-2 rounded-lg border p-3">
-        {Array.from({ length: 5 }).map((_, i) => (
+        {SKELETON_INDICES_5.map((i) => (
           <div
-            // eslint-disable-next-line react/no-array-index-key -- Static skeleton list, index is stable
             key={i}
             className="flex items-center gap-2 py-1"
             style={{ animationDelay: `${i * 50}ms` }}

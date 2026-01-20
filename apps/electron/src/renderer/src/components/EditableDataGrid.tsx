@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { getColumnTypeCategory } from '@/lib/filter-utils';
 import { cn } from '@/lib/utils';
-import { useChangesStore } from '@/stores';
+import { useChangesStore } from '@/stores/changes-store';
 import { ColumnResizeHandle } from './ColumnResizeHandle';
 import { TypeBadge } from './data-table/TypeBadge';
 import { EditableCell } from './EditableCell';

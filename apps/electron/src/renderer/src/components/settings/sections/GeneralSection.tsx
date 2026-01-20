@@ -4,7 +4,7 @@ import { Switch } from '@sqlpro/ui/switch';
 import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage, LANGUAGES } from '@/lib/i18n';
-import { useSettingsStore } from '@/stores';
+import { useSettingsStore } from '@/stores/settings-store';
 import { SettingGroup } from '../items/SettingGroup';
 import { SettingItem } from '../items/SettingItem';
 

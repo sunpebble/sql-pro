@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { useConnectionStore } from '@/stores';
+import { useConnectionStore } from '@/stores/connection-store';
 import { FolderTree } from './FolderTree';
 import { ProfileForm } from './ProfileForm';
 import { SkeletonProfileList } from './SkeletonProfileList';

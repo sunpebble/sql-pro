@@ -7,7 +7,9 @@ import type {
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useConnectionStore, useDataDiffStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataDiffStore } from '@/stores/data-diff-store';
 import { DataDiffPanel } from './DataDiffPanel';
 
 function createMockConnection(

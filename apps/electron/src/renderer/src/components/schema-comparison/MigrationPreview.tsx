@@ -23,11 +23,10 @@ import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import {
-  useConnectionStore,
-  useQueryTabsStore,
-  useSchemaComparisonStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
+import { useSchemaComparisonStore } from '@/stores/schema-comparison-store';
 
 interface MigrationPreviewProps {
   className?: string;

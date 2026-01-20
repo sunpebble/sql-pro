@@ -1,4 +1,4 @@
-import type { QueryHistoryStatus } from '@/stores';
+import type { QueryHistoryStatus } from '@/stores/query-history-store';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
@@ -13,7 +13,7 @@ import { Calendar, FilterX } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useQueryHistoryStore } from '@/stores';
+import { useQueryHistoryStore } from '@/stores/query-history-store';
 
 interface QueryHistoryFiltersProps {
   className?: string;

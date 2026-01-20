@@ -240,8 +240,8 @@ export function usePendingChanges(
   const undoLastChange = useCallback(() => {
     if (changes.length === 0) return;
 
-    // Find the most recent change
-    const sortedChanges = [...changes].sort(
+    // Find the most recent change - use toSorted for immutability (js-tosorted-immutable)
+    const sortedChanges = changes.toSorted(
       (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
     );
     const lastChange = sortedChanges[0];

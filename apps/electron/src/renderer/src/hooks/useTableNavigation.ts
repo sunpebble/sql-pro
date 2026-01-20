@@ -1,10 +1,9 @@
 import type { TableSchema } from '@/types/database';
 import { useCallback, useMemo } from 'react';
-import {
-  useConnectionStore,
-  useDataTabsStore,
-  useTableOrganizationStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataTabsStore } from '@/stores/data-tabs-store';
+import { useTableOrganizationStore } from '@/stores/table-organization-store';
 
 /**
  * Hook that provides table navigation functionality for keyboard shortcuts.

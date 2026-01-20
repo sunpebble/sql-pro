@@ -6,7 +6,7 @@ import {
   lazyRouteComponent,
   redirect,
 } from '@tanstack/react-router';
-import { useConnectionStore } from '@/stores';
+import { useConnectionStore } from '@/stores/connection-store';
 import { RouterErrorFallback } from './error';
 import { RootLayout } from './root';
 

@@ -232,8 +232,8 @@ function enforceCacheLimits(): void {
 
   // Check query count limit
   if (queries.length > QUERY_CACHE_CONFIG.maxCachedQueries) {
-    // Sort by last update time (oldest first)
-    queries = [...queries].sort(
+    // Sort by last update time (oldest first) - use toSorted for immutability (js-tosorted-immutable)
+    queries = queries.toSorted(
       (a, b) => a.state.dataUpdatedAt - b.state.dataUpdatedAt
     );
 

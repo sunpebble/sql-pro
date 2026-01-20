@@ -23,11 +23,10 @@ import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import {
-  useConnectionStore,
-  useDataDiffStore,
-  useQueryTabsStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataDiffStore } from '@/stores/data-diff-store';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
 
 interface DataDiffSQLGeneratorProps {
   className?: string;

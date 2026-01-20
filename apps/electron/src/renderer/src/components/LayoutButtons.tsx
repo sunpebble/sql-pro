@@ -12,7 +12,7 @@ import { LayoutGrid } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { TOOLBAR_BUTTON_INTERACTIVE } from '@/lib/utils';
-import { useSettingsStore } from '@/stores';
+import { useSettingsStore } from '@/stores/settings-store';
 import { useSqlLogStore } from '@/stores/sql-log-store';
 
 /**

@@ -3,13 +3,12 @@ import { Code, GitCompare, GitFork, Search, Table } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tour } from '@/components/onboarding';
-import {
-  useChangesStore,
-  useConnectionStore,
-  useDataTabsStore,
-  useDialogStore,
-  useSettingsStore,
-} from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useChangesStore } from '@/stores/changes-store';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataTabsStore } from '@/stores/data-tabs-store';
+import { useDialogStore } from '@/stores/dialog-store';
+import { useSettingsStore } from '@/stores/settings-store';
 import { ActivityBar } from './ActivityBar';
 import { CompareView } from './CompareView';
 import { ContentHeader } from './ContentHeader';

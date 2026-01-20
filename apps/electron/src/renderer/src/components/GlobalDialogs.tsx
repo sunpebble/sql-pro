@@ -3,7 +3,9 @@ import type { ConnectionSettings } from './ConnectionSettingsDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { MemoryMonitorPanel } from '@/components/dev-tools';
 import { sqlPro } from '@/lib/api';
-import { useConnectionStore, useDialogStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDialogStore } from '@/stores/dialog-store';
 import { AboutDialog } from './AboutDialog';
 import { BackupRestoreDialog } from './backup';
 import { ChangePasswordDialog } from './ChangePasswordDialog';

@@ -23,7 +23,9 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
-import { useConnectionStore, useDataDiffStore } from '@/stores';
+// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDataDiffStore } from '@/stores/data-diff-store';
 
 interface DataDiffPanelProps {
   className?: string;

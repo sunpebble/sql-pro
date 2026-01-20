@@ -1,4 +1,4 @@
-import type { SplitPane } from '@/stores';
+import type { SplitPane } from '@/stores/query-tabs-store';
 import type { DatabaseSchema } from '@/types/database';
 import { GoldButton } from '@sqlpro/ui';
 import { Button } from '@sqlpro/ui/button';
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 import { generateSuggestions } from '@/lib/query-plan-analyzer';
 import { cn } from '@/lib/utils';
-import { useQueryTabsStore } from '@/stores';
+import { useQueryTabsStore } from '@/stores/query-tabs-store';
 import { QueryOptimizerPanel } from '../data-tools/QueryOptimizerPanel';
 import { MonacoSqlEditor } from '../MonacoSqlEditor';
 import { QueryResults } from '../QueryResults';
