@@ -9,7 +9,12 @@
  * Also loads background points for visualization.
  */
 
-import type { PointWithVector, VectorSearchResult } from '@shared/types';
+import type {
+  BatchVectorSearchResult,
+  PointWithVector,
+  QdrantSearchFilter,
+  VectorSearchResult,
+} from '@shared/types';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
@@ -26,16 +31,29 @@ interface UseVectorSearchReturn {
   searchByText: (
     text: string,
     limit: number,
-    threshold?: number
+    threshold?: number,
+    filter?: QdrantSearchFilter
   ) => Promise<void>;
   /** Search by raw vector array */
   searchByVector: (
     vector: number[],
     limit: number,
-    threshold?: number
+    threshold?: number,
+    filter?: QdrantSearchFilter
   ) => Promise<void>;
   /** Find similar points by point ID */
-  searchSimilar: (pointId: string | number, limit: number) => Promise<void>;
+  searchSimilar: (
+    pointId: string | number,
+    limit: number,
+    filter?: QdrantSearchFilter
+  ) => Promise<void>;
+  /** Batch search with multiple vectors */
+  batchSearch: (
+    vectors: number[][],
+    limit: number,
+    threshold?: number,
+    filter?: QdrantSearchFilter
+  ) => Promise<BatchVectorSearchResult[]>;
   /** Background points for visualization (sampled from collection) */
   backgroundPoints: PointWithVector[];
   /** Whether background points are loading */
@@ -44,6 +62,10 @@ interface UseVectorSearchReturn {
   vectorDimension: number;
   /** Clear search results and error */
   clearResults: () => void;
+  /** Current filter applied to searches */
+  filter: QdrantSearchFilter | undefined;
+  /** Set filter for searches */
+  setFilter: (filter: QdrantSearchFilter | undefined) => void;
 }
 
 /**
@@ -66,6 +88,9 @@ export function useVectorSearch(
   );
   const [isLoadingBackground, setIsLoadingBackground] = useState(false);
   const [vectorDimension, setVectorDimension] = useState(0);
+  const [filter, setFilter] = useState<QdrantSearchFilter | undefined>(
+    undefined
+  );
 
   const { provider, providerSettings, getEffectiveBaseUrl, embedding } =
     useAIStore();
@@ -185,7 +210,12 @@ export function useVectorSearch(
    * Search by text: embed the text and perform vector search
    */
   const searchByText = useCallback(
-    async (text: string, limit: number, threshold?: number) => {
+    async (
+      text: string,
+      limit: number,
+      threshold?: number,
+      searchFilter?: QdrantSearchFilter
+    ) => {
       if (!connectionId) {
         setError(t('vectorSearch.noConnection'));
         return;
@@ -213,6 +243,7 @@ export function useVectorSearch(
           vector,
           limit,
           scoreThreshold: threshold,
+          filter: searchFilter ?? filter,
           withPayload: true,
           withVector: false,
         });
@@ -231,14 +262,19 @@ export function useVectorSearch(
         setIsSearching(false);
       }
     },
-    [t, connectionId, collection, embedText]
+    [t, connectionId, collection, embedText, filter]
   );
 
   /**
    * Search by raw vector array
    */
   const searchByVector = useCallback(
-    async (vector: number[], limit: number, threshold?: number) => {
+    async (
+      vector: number[],
+      limit: number,
+      threshold?: number,
+      searchFilter?: QdrantSearchFilter
+    ) => {
       if (!connectionId) {
         setError(t('vectorSearch.noConnection'));
         return;
@@ -259,6 +295,7 @@ export function useVectorSearch(
           vector,
           limit,
           scoreThreshold: threshold,
+          filter: searchFilter ?? filter,
           withPayload: true,
           withVector: false,
         });
@@ -277,14 +314,18 @@ export function useVectorSearch(
         setIsSearching(false);
       }
     },
-    [t, connectionId, collection]
+    [t, connectionId, collection, filter]
   );
 
   /**
    * Find similar points by point ID
    */
   const searchSimilar = useCallback(
-    async (pointId: string | number, limit: number) => {
+    async (
+      pointId: string | number,
+      limit: number,
+      searchFilter?: QdrantSearchFilter
+    ) => {
       if (!connectionId) {
         setError(t('vectorSearch.noConnection'));
         return;
@@ -304,6 +345,7 @@ export function useVectorSearch(
           collection,
           pointId,
           limit,
+          filter: searchFilter ?? filter,
         });
 
         if (response.success) {
@@ -320,7 +362,7 @@ export function useVectorSearch(
         setIsSearching(false);
       }
     },
-    [t, connectionId, collection]
+    [t, connectionId, collection, filter]
   );
 
   /**
@@ -331,6 +373,58 @@ export function useVectorSearch(
     setError(null);
   }, []);
 
+  /**
+   * Batch search with multiple vectors at once
+   */
+  const batchSearch = useCallback(
+    async (
+      vectors: number[][],
+      limit: number,
+      threshold?: number,
+      searchFilter?: QdrantSearchFilter
+    ): Promise<BatchVectorSearchResult[]> => {
+      if (!connectionId) {
+        setError(t('vectorSearch.noConnection'));
+        return [];
+      }
+
+      if (!Array.isArray(vectors) || vectors.length === 0) {
+        setError(t('vectorSearch.vectorEmptyOrInvalid'));
+        return [];
+      }
+
+      setIsSearching(true);
+      setError(null);
+
+      try {
+        const response = await sqlPro.db.batchVectorSearch({
+          connectionId,
+          collection,
+          vectors,
+          limit,
+          scoreThreshold: threshold,
+          filter: searchFilter ?? filter,
+          withPayload: true,
+          withVector: false,
+        });
+
+        if (response.success) {
+          return response.batchResults;
+        } else {
+          setError(response.error);
+          return [];
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        setError(message);
+        return [];
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [t, connectionId, collection, filter]
+  );
+
   return {
     results,
     isSearching,
@@ -338,9 +432,12 @@ export function useVectorSearch(
     searchByText,
     searchByVector,
     searchSimilar,
+    batchSearch,
     backgroundPoints,
     isLoadingBackground,
     vectorDimension,
     clearResults,
+    filter,
+    setFilter,
   };
 }

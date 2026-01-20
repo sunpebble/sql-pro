@@ -1,4 +1,7 @@
-import type { VectorSearchResult } from '@shared/types';
+import type {
+  VectorSearchHistoryEntry,
+  VectorSearchResult,
+} from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
@@ -19,6 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { Textarea } from '@sqlpro/ui/textarea';
 import {
   AlertCircle,
+  Clock,
   FileText,
   Hash,
   Loader2,
@@ -27,10 +31,13 @@ import {
   Type,
   Waypoints,
 } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVectorSearch } from '@/hooks/useVectorSearch';
+import { useVectorSearchHistory } from '@/hooks/useVectorSearchHistory';
 import { cn } from '@/lib/utils';
+import { VectorSearchFilter } from './VectorSearchFilter';
+import { VectorSearchHistory } from './VectorSearchHistory';
 import { VectorVisualization } from './VectorVisualization';
 
 // Search mode types
@@ -128,7 +135,37 @@ export const VectorSearchPanel = memo(
       searchSimilar,
       backgroundPoints,
       isLoadingBackground,
+      filter,
+      setFilter,
     } = useVectorSearch(connectionId ?? null, collection);
+
+    // Use the search history hook
+    const {
+      addEntry: addHistoryEntry,
+      removeEntry: removeHistoryEntry,
+      clearHistory,
+      getHistoryByCollection,
+    } = useVectorSearchHistory();
+
+    // Show history panel state
+    const [showHistory, setShowHistory] = useState(false);
+
+    // Get history for current collection
+    const collectionHistory = useMemo(
+      () => getHistoryByCollection(collection),
+      [getHistoryByCollection, collection]
+    );
+
+    // Extract unique payload fields from background points for filter dropdown
+    const payloadFields = useMemo(() => {
+      const fieldSet = new Set<string>();
+      for (const point of backgroundPoints) {
+        if (point.payload) {
+          Object.keys(point.payload).forEach((key) => fieldSet.add(key));
+        }
+      }
+      return Array.from(fieldSet).sort();
+    }, [backgroundPoints]);
 
     // Validate vector JSON input
     const validateVectorInput = useCallback(
@@ -173,20 +210,49 @@ export const VectorSearchPanel = memo(
 
     // Handle search
     const handleSearch = useCallback(async () => {
+      let query = '';
       switch (searchMode) {
         case 'text':
-          await searchByText(textQuery, topK, scoreThreshold || undefined);
+          query = textQuery;
+          await searchByText(
+            textQuery,
+            topK,
+            scoreThreshold || undefined,
+            filter
+          );
           break;
         case 'vector': {
           const vector = validateVectorInput(vectorInput);
           if (vector) {
-            await searchByVector(vector, topK, scoreThreshold || undefined);
+            query = `[${vector.length} dimensions]`;
+            await searchByVector(
+              vector,
+              topK,
+              scoreThreshold || undefined,
+              filter
+            );
           }
           break;
         }
         case 'similar':
-          await searchSimilar(pointId, topK);
+          query = `Similar to: ${pointId}`;
+          await searchSimilar(pointId, topK, filter);
           break;
+      }
+
+      // Add to history after search completes (if we have results)
+      if (query) {
+        // We'll add history entry after results are available via useEffect
+        // For now, store the query for the history entry
+        setTimeout(() => {
+          addHistoryEntry({
+            collection,
+            mode: searchMode,
+            query,
+            resultsCount: results.length,
+            topScore: results[0]?.score,
+          });
+        }, 100);
       }
     }, [
       searchMode,
@@ -195,10 +261,14 @@ export const VectorSearchPanel = memo(
       pointId,
       topK,
       scoreThreshold,
+      filter,
+      collection,
+      results,
       searchByText,
       searchByVector,
       searchSimilar,
       validateVectorInput,
+      addHistoryEntry,
     ]);
 
     // Check if search can be performed
@@ -215,6 +285,23 @@ export const VectorSearchPanel = memo(
       }
     }, [searchMode, textQuery, vectorInput, vectorError, pointId]);
 
+    // Handle selecting a history entry
+    const handleSelectHistoryEntry = useCallback(
+      (entry: VectorSearchHistoryEntry) => {
+        setSearchMode(entry.mode);
+        if (entry.mode === 'text') {
+          setTextQuery(entry.query);
+        } else if (
+          entry.mode === 'similar' &&
+          entry.query.startsWith('Similar to: ')
+        ) {
+          setPointId(entry.query.replace('Similar to: ', ''));
+        }
+        setShowHistory(false);
+      },
+      []
+    );
+
     return (
       <div className={cn('flex h-full flex-col', className)}>
         {/* Header with collection name */}
@@ -228,7 +315,34 @@ export const VectorSearchPanel = memo(
               {collection}
             </span>
           </div>
+          <Button
+            variant={showHistory ? 'secondary' : 'ghost'}
+            size="sm"
+            onClick={() => setShowHistory(!showHistory)}
+            className="gap-1.5"
+          >
+            <Clock className="h-3.5 w-3.5" />
+            {t('vectorSearch.history.button', 'History')}
+            {collectionHistory.length > 0 && (
+              <span className="bg-muted text-muted-foreground ml-1 rounded-full px-1.5 py-0.5 text-xs">
+                {collectionHistory.length}
+              </span>
+            )}
+          </Button>
         </div>
+
+        {/* History panel (shown when showHistory is true) */}
+        {showHistory && (
+          <div className="border-b">
+            <VectorSearchHistory
+              entries={collectionHistory}
+              onSelectEntry={handleSelectHistoryEntry}
+              onDeleteEntry={removeHistoryEntry}
+              onClearHistory={clearHistory}
+              className="max-h-64"
+            />
+          </div>
+        )}
 
         {/* Main content with resizable panels */}
         <ResizablePanelGroup direction="horizontal" className="min-h-0 flex-1">
@@ -327,49 +441,63 @@ export const VectorSearchPanel = memo(
                   </TabsContent>
 
                   {/* Common search parameters */}
-                  <div className="flex items-end gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="top-k">
-                        {t('vectorSearch.topK', 'Top K')}
-                      </Label>
-                      <Select value={topK} onValueChange={(v) => setTopK(v)}>
-                        <SelectTrigger id="top-k" className="w-24">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {[5, 10, 20, 50, 100].map((k) => (
-                            <SelectItem key={k} value={k}>
-                              {k}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                  <div className="flex items-center gap-6 pt-4">
+                    <div className="flex items-center gap-6">
+                      <div className="flex items-center gap-2">
+                        <Label
+                          htmlFor="top-k"
+                          className="text-muted-foreground text-xs whitespace-nowrap"
+                        >
+                          {t('vectorSearch.topK', 'Top K')}
+                        </Label>
+                        <Select value={topK} onValueChange={(v) => setTopK(v)}>
+                          <SelectTrigger id="top-k" className="h-9 w-20">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {[5, 10, 20, 50, 100].map((k) => (
+                              <SelectItem key={k} value={k}>
+                                {k}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Label
+                          htmlFor="score-threshold"
+                          className="text-muted-foreground text-xs whitespace-nowrap"
+                        >
+                          {t('vectorSearch.scoreThreshold', 'Min Score')}
+                        </Label>
+                        <Input
+                          id="score-threshold"
+                          type="number"
+                          min={0}
+                          max={1}
+                          step={0.1}
+                          value={scoreThreshold}
+                          onChange={(e) =>
+                            setScoreThreshold(
+                              Number.parseFloat(e.target.value) || 0
+                            )
+                          }
+                          className="h-9 w-20"
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="score-threshold">
-                        {t('vectorSearch.scoreThreshold', 'Min Score')}
-                      </Label>
-                      <Input
-                        id="score-threshold"
-                        type="number"
-                        min={0}
-                        max={1}
-                        step={0.1}
-                        value={scoreThreshold}
-                        onChange={(e) =>
-                          setScoreThreshold(
-                            Number.parseFloat(e.target.value) || 0
-                          )
-                        }
-                        className="w-24"
-                      />
-                    </div>
+                    {/* Filter component inline */}
+                    <VectorSearchFilter
+                      onFilterChange={setFilter}
+                      payloadFields={payloadFields}
+                    />
 
                     <Button
                       onClick={handleSearch}
                       disabled={!canSearch() || isSearching}
-                      className="shrink-0"
+                      className="h-9 shrink-0"
                     >
                       {isSearching ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

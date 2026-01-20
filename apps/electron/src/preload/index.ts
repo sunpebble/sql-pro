@@ -13,6 +13,8 @@ import type {
   AnalyzeQueryPlanResponse,
   ApplyChangesRequest,
   ApplyChangesResponse,
+  BatchVectorSearchRequest,
+  BatchVectorSearchResponse,
   ChangePasswordRequest,
   ChangePasswordResponse,
   CheckUnsavedChangesRequest,
@@ -271,6 +273,10 @@ export const sqlProAPI = {
       request: VectorSearchRequest
     ): Promise<VectorSearchResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_VECTOR_SEARCH, request),
+    batchVectorSearch: (
+      request: BatchVectorSearchRequest
+    ): Promise<BatchVectorSearchResponse> =>
+      ipcRenderer.invoke(IPC_CHANNELS.DB_BATCH_VECTOR_SEARCH, request),
     searchSimilar: (
       request: SearchSimilarRequest
     ): Promise<SearchSimilarResponse> =>

@@ -197,6 +197,45 @@ export interface SearchSimilarRequest {
 
 export type SearchSimilarResponse = VectorSearchResponse;
 
+/** Batch vector search request - search with multiple vectors at once */
+export interface BatchVectorSearchRequest {
+  connectionId: string;
+  collection: string;
+  vectors: number[][];
+  limit: number;
+  scoreThreshold?: number;
+  filter?: QdrantSearchFilter;
+  withPayload?: boolean;
+  withVector?: boolean;
+}
+
+/** Batch vector search result - one result set per query vector */
+export interface BatchVectorSearchResult {
+  queryIndex: number;
+  results: VectorSearchResult[];
+}
+
+export type BatchVectorSearchResponse =
+  | {
+      success: true;
+      batchResults: BatchVectorSearchResult[];
+    }
+  | {
+      success: false;
+      error: string;
+    };
+
+/** Vector search history entry */
+export interface VectorSearchHistoryEntry {
+  id: string;
+  timestamp: number;
+  collection: string;
+  mode: 'text' | 'vector' | 'similar';
+  query: string;
+  resultsCount: number;
+  topScore?: number;
+}
+
 /** Get points with vectors request (for visualization) */
 export interface GetPointsWithVectorsRequest {
   connectionId: string;
@@ -2795,6 +2834,7 @@ export const IPC_CHANNELS = {
 
   // Vector Search (Qdrant)
   DB_VECTOR_SEARCH: 'db:vector-search',
+  DB_BATCH_VECTOR_SEARCH: 'db:batch-vector-search',
   DB_SEARCH_SIMILAR: 'db:search-similar',
   DB_GET_POINTS_WITH_VECTORS: 'db:get-points-with-vectors',
 

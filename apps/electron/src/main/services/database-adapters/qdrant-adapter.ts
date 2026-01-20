@@ -1091,6 +1091,73 @@ export class QdrantAdapter implements DatabaseAdapter {
     }
   }
 
+  async batchVectorSearch(
+    connectionId: string,
+    collection: string,
+    params: {
+      vectors: number[][];
+      limit: number;
+      scoreThreshold?: number;
+      filter?: QdrantSearchFilter;
+      withPayload?: boolean;
+      withVector?: boolean;
+    }
+  ): Promise<
+    | {
+        success: true;
+        batchResults: Array<{
+          queryIndex: number;
+          results: Array<{
+            id: string | number;
+            score: number;
+            payload: Record<string, unknown>;
+            vector?: number[];
+          }>;
+        }>;
+      }
+    | { success: false; error: string }
+  > {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    if (!params.vectors || params.vectors.length === 0) {
+      return { success: false, error: 'At least one vector is required' };
+    }
+
+    try {
+      // Execute searches in parallel for better performance
+      const searchPromises = params.vectors.map((vector, index) =>
+        connection.client
+          .search(collection, {
+            vector,
+            limit: params.limit,
+            score_threshold: params.scoreThreshold,
+            filter: params.filter,
+            with_payload: params.withPayload ?? true,
+            with_vector: params.withVector ?? false,
+          })
+          .then((results) => ({
+            queryIndex: index,
+            results: results.map((point) => ({
+              id: point.id,
+              score: point.score,
+              payload: (point.payload as Record<string, unknown>) || {},
+              vector: point.vector as number[] | undefined,
+            })),
+          }))
+      );
+
+      const batchResults = await Promise.all(searchPromises);
+
+      return { success: true, batchResults };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
+  }
+
   async getPointsWithVectors(
     connectionId: string,
     collection: string,

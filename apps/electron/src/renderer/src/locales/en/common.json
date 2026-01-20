@@ -798,7 +798,29 @@
     "inputMustBeArray": "Input must be a JSON array",
     "vectorCannotBeEmpty": "Vector cannot be empty",
     "allElementsMustBeNumbers": "All elements must be numbers",
-    "invalidJsonFormat": "Invalid JSON format"
+    "invalidJsonFormat": "Invalid JSON format",
+    "filter": {
+      "title": "Filters",
+      "operators": {
+        "equals": "="
+      },
+      "clearAll": "Clear all",
+      "noConditions": "No filter conditions",
+      "selectField": "Field",
+      "fieldName": "Field",
+      "value": "Value",
+      "addCondition": "Add",
+      "apply": "Apply"
+    },
+    "history": {
+      "button": "History",
+      "title": "Search History",
+      "clear": "Clear",
+      "noHistory": "No search history",
+      "searchedAt": "Searched at {{time}}",
+      "resultsCount": "{{count}} results",
+      "topScore": "Top score: {{score}}"
+    }
   },
   "pendingChanges": {
     "title": "Pending Changes",

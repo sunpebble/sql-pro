@@ -1,6 +1,7 @@
 import type {
   AnalyzeQueryPlanRequest,
   ApplyChangesRequest,
+  BatchVectorSearchRequest,
   ChangePasswordRequest,
   CloseDatabaseRequest,
   ExecuteQueryRequest,
@@ -589,6 +590,25 @@ export function setupDatabaseHandlers(): void {
         request.collection,
         {
           vector: request.vector,
+          limit: request.limit,
+          scoreThreshold: request.scoreThreshold,
+          filter: request.filter,
+          withPayload: request.withPayload,
+          withVector: request.withVector,
+        }
+      );
+    }
+  );
+
+  // Qdrant Vector Search: Batch search with multiple vectors
+  ipcMain.handle(
+    IPC_CHANNELS.DB_BATCH_VECTOR_SEARCH,
+    async (_event, request: BatchVectorSearchRequest) => {
+      return qdrantAdapter.batchVectorSearch(
+        request.connectionId,
+        request.collection,
+        {
+          vectors: request.vectors,
           limit: request.limit,
           scoreThreshold: request.scoreThreshold,
           filter: request.filter,

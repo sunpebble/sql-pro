@@ -645,7 +645,29 @@
     "inputMustBeArray": "输入必须是 JSON 数组",
     "vectorCannotBeEmpty": "向量不能为空",
     "allElementsMustBeNumbers": "所有元素必须是数字",
-    "invalidJsonFormat": "无效的 JSON 格式"
+    "invalidJsonFormat": "无效的 JSON 格式",
+    "filter": {
+      "title": "筛选条件",
+      "operators": {
+        "equals": "="
+      },
+      "clearAll": "清除全部",
+      "noConditions": "无筛选条件",
+      "selectField": "字段",
+      "fieldName": "字段",
+      "value": "值",
+      "addCondition": "添加",
+      "apply": "应用"
+    },
+    "history": {
+      "button": "历史记录",
+      "title": "搜索历史",
+      "clear": "清除",
+      "noHistory": "无搜索历史",
+      "searchedAt": "搜索于 {{time}}",
+      "resultsCount": "{{count}} 个结果",
+      "topScore": "最高分数：{{score}}"
+    }
   },
   "pendingChanges": {
     "title": "待处理的更改",
