@@ -167,7 +167,9 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
       });
 
       if (!response.success) {
-        setComparisonError(response.error || 'Failed to compare tables');
+        setComparisonError(
+          response.error || t('dataDiff.failedToCompareTables')
+        );
         return;
       }
 
@@ -221,7 +223,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               size="sm"
               onClick={() => setShowKeyboardShortcuts(!showKeyboardShortcuts)}
               className="gap-2"
-              title="Show keyboard shortcuts"
+              title={t('compare.showShortcuts')}
             >
               <Keyboard className="h-4 w-4" />
               <span className="hidden sm:inline">{t('compare.shortcuts')}</span>
@@ -471,7 +473,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               onClick={handleCompare}
               disabled={!canCompare}
               className="border-gold bg-gold/15 text-gold hover:bg-gold/25 min-w-50"
-              title="Compare tables (⌘↵)"
+              title={t('dataDiff.compareTablesShortcut')}
             >
               {isComparing ? (
                 <>

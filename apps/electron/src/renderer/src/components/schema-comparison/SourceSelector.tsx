@@ -88,7 +88,9 @@ export function SourceSelector({
         onChange({
           type: 'connection',
           connectionId: connection.id,
-          name: connection.filename || `Connection ${connection.id}`,
+          name:
+            connection.filename ||
+            t('compare.connectionFallback', { id: connection.id }),
         });
       }
     },
@@ -125,12 +127,12 @@ export function SourceSelector({
   // Handle create snapshot
   const handleCreateSnapshot = useCallback(async () => {
     if (!snapshotName.trim()) {
-      setCreateSnapshotError('Please enter a snapshot name');
+      setCreateSnapshotError(t('compare.enterSnapshotName'));
       return;
     }
 
     if (!selectedConnectionForSnapshot) {
-      setCreateSnapshotError('Please select a connection');
+      setCreateSnapshotError(t('compare.selectConnection'));
       return;
     }
 
@@ -161,11 +163,13 @@ export function SourceSelector({
         setShowCreateSnapshotDialog(false);
         setSnapshotName('');
       } else {
-        setCreateSnapshotError(response.error || 'Failed to create snapshot');
+        setCreateSnapshotError(
+          response.error || t('compare.failedToCreateSnapshot')
+        );
       }
     } catch (error) {
       setCreateSnapshotError(
-        error instanceof Error ? error.message : 'An unexpected error occurred'
+        error instanceof Error ? error.message : t('compare.unexpectedError')
       );
     } finally {
       setIsCreatingSnapshot(false);
@@ -174,8 +178,8 @@ export function SourceSelector({
 
   // Get display name for selected connection/snapshot
   const getDisplayName = () => {
-    if (!value) return 'Select...';
-    return value.name || 'Unknown';
+    if (!value) return t('compare.select');
+    return value.name || t('compare.unknown');
   };
 
   // Get connection status indicator color
@@ -220,7 +224,7 @@ export function SourceSelector({
                 onValueChange={handleConnectionSelect}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a connection">
+                  <SelectValue placeholder={t('compare.selectConnection')}>
                     {value?.type === 'connection' && (
                       <div className="flex items-center gap-2">
                         <span
@@ -277,7 +281,7 @@ export function SourceSelector({
                 onValueChange={handleSnapshotSelect}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a snapshot">
+                  <SelectValue placeholder={t('compare.selectSnapshot')}>
                     {value?.type === 'snapshot' && (
                       <div className="flex items-center gap-2">
                         <FileText className="text-muted-foreground h-3.5 w-3.5" />
@@ -294,8 +298,10 @@ export function SourceSelector({
                         <div className="flex flex-col">
                           <span className="truncate">{snapshot.name}</span>
                           <span className="text-muted-foreground text-xs">
-                            {snapshot.tableCount} table
-                            {snapshot.tableCount !== 1 ? 's' : ''} •{' '}
+                            {t('compare.tableCount', {
+                              count: snapshot.tableCount,
+                            })}{' '}
+                            •{' '}
                             {new Date(snapshot.createdAt).toLocaleDateString()}
                           </span>
                         </div>
@@ -372,14 +378,14 @@ export function SourceSelector({
                 }}
               >
                 <SelectTrigger id="snapshot-connection">
-                  <SelectValue placeholder="Select a connection">
+                  <SelectValue placeholder={t('compare.selectConnection')}>
                     {selectedConnectionForSnapshot && (
                       <div className="flex items-center gap-2">
                         <Database className="text-muted-foreground h-3.5 w-3.5" />
                         <span className="truncate">
                           {availableConnections.find(
                             (c) => c.id === selectedConnectionForSnapshot
-                          )?.filename || 'Unknown'}
+                          )?.filename || t('compare.unknown')}
                         </span>
                       </div>
                     )}
@@ -416,7 +422,7 @@ export function SourceSelector({
               onClick={() => setShowCreateSnapshotDialog(false)}
               disabled={isCreatingSnapshot}
             >
-              Cancel
+              {t('actions.cancel', { ns: 'common' })}
             </Button>
             <Button
               onClick={handleCreateSnapshot}

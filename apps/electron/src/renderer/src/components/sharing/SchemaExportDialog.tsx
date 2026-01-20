@@ -14,6 +14,7 @@ import {
 import { Textarea } from '@sqlpro/ui/textarea';
 import { Database, FileDown, Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -54,6 +55,7 @@ export function SchemaExportDialog({
   initialDocumentation = '',
   onExportComplete,
 }: SchemaExportDialogProps) {
+  const { t } = useTranslation();
   // Form state
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
@@ -122,7 +124,7 @@ export function SchemaExportDialog({
       onError: (err) => {
         setExportResult({
           success: false,
-          error: err.message || 'Unknown error',
+          error: err.message || t('common.unknownError'),
         });
       },
     }
@@ -273,11 +275,10 @@ export function SchemaExportDialog({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Database className="h-5 w-5" />
-              Export Schema
+              {t('sharing.exportSchema')}
             </DialogTitle>
             <DialogDescription>
-              Export database schema definitions with table structures, indexes,
-              and relationships
+              {t('sharing.exportSchemaDesc')}
             </DialogDescription>
           </DialogHeader>
 
@@ -287,10 +288,10 @@ export function SchemaExportDialog({
                 {exportResult.success ? (
                   <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
                     <p className="font-medium text-green-900 dark:text-green-100">
-                      Export Successful
+                      {t('sharing.exportSuccessful')}
                     </p>
                     <p className="text-sm text-green-700 dark:text-green-300">
-                      Schema exported successfully
+                      {t('sharing.schemaExportedSuccessfully')}
                     </p>
                     {exportResult.filePath && (
                       <p className="text-xs break-all text-green-600 dark:text-green-400">
@@ -301,10 +302,10 @@ export function SchemaExportDialog({
                 ) : (
                   <div className="bg-destructive/10 rounded-lg p-4">
                     <p className="text-destructive font-medium">
-                      Export Failed
+                      {t('sharing.exportFailed')}
                     </p>
                     <p className="text-destructive/80 mt-1 text-sm">
-                      {exportResult.error || 'Unknown error occurred'}
+                      {exportResult.error || t('sharing.unknownError')}
                     </p>
                   </div>
                 )}
@@ -314,18 +315,19 @@ export function SchemaExportDialog({
                 {/* Schema Name (Required) */}
                 <div className="space-y-2">
                   <Label htmlFor="schema-name" className="text-sm font-medium">
-                    Schema Name <span className="text-destructive">*</span>
+                    {t('sharing.schemaName')}{' '}
+                    <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="schema-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g., Production Database Schema"
+                    placeholder={t('sharing.schemaNamePlaceholder')}
                     maxLength={200}
                     disabled={isExporting || isLoadingSchema}
                   />
                   <p className="text-muted-foreground text-xs">
-                    A descriptive name for this schema export
+                    {t('sharing.schemaNameHelp')}
                   </p>
                 </div>
 
@@ -335,27 +337,27 @@ export function SchemaExportDialog({
                     htmlFor="schema-description"
                     className="text-sm font-medium"
                   >
-                    Description
+                    {t('sharing.description')}
                   </Label>
                   <Textarea
                     id="schema-description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Brief description of this database schema"
+                    placeholder={t('sharing.schemaDescription')}
                     maxLength={1000}
                     rows={2}
                     disabled={isExporting || isLoadingSchema}
                   />
                   <p className="text-muted-foreground text-xs">
-                    Optional description to help others understand the schema
-                    purpose
+                    {t('sharing.descriptionHelp')}
                   </p>
                 </div>
 
                 {/* Export Format */}
                 <div className="space-y-2">
                   <Label htmlFor="format" className="text-sm font-medium">
-                    Export Format <span className="text-destructive">*</span>
+                    {t('sharing.exportFormat')}{' '}
+                    <span className="text-destructive">*</span>
                   </Label>
                   <Select
                     value={format}
@@ -371,35 +373,38 @@ export function SchemaExportDialog({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="json">
-                        JSON (Schema Metadata)
+                        {t('sharing.jsonFormat')}
                       </SelectItem>
                       <SelectItem value="sql">
-                        SQL (CREATE Statements)
+                        {t('sharing.sqlFormat')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                   <p className="text-muted-foreground text-xs">
                     {format === 'json'
-                      ? 'Export as structured JSON with table metadata'
-                      : 'Export as SQL CREATE TABLE statements'}
+                      ? t('sharing.jsonFormatHelp')
+                      : t('sharing.sqlFormatHelp')}
                   </p>
                 </div>
 
                 {/* Table Selection */}
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                    Tables to Export <span className="text-destructive">*</span>
+                    {t('sharing.tablesToExport')}{' '}
+                    <span className="text-destructive">*</span>
                   </Label>
                   {isLoadingSchema ? (
                     <div className="flex items-center justify-center rounded-md border p-8">
                       <div className="text-muted-foreground flex items-center gap-2">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm">Loading schema...</span>
+                        <span className="text-sm">
+                          {t('sharing.loadingSchema')}
+                        </span>
                       </div>
                     </div>
                   ) : schemas.length === 0 ? (
                     <div className="text-muted-foreground rounded-md border p-4 text-center text-sm">
-                      No tables found in this database
+                      {t('sharing.noTablesFound')}
                     </div>
                   ) : (
                     <ScrollArea className="h-64">
@@ -423,8 +428,13 @@ export function SchemaExportDialog({
                                 {schema.name}
                               </span>
                               <span className="text-muted-foreground text-xs">
-                                ({schema.tables.length} table
-                                {schema.tables.length !== 1 ? 's' : ''})
+                                {schema.tables.length === 1
+                                  ? t('sharing.tableCount', {
+                                      count: schema.tables.length,
+                                    })
+                                  : t('sharing.tableCountPlural', {
+                                      count: schema.tables.length,
+                                    })}
                               </span>
                             </div>
                             {/* Tables */}
@@ -447,8 +457,13 @@ export function SchemaExportDialog({
                                       {table.name}
                                     </span>
                                     <span className="text-muted-foreground text-xs">
-                                      ({table.columns.length} column
-                                      {table.columns.length !== 1 ? 's' : ''})
+                                      {table.columns.length === 1
+                                        ? t('sharing.columnCount', {
+                                            count: table.columns.length,
+                                          })
+                                        : t('sharing.columnCountPlural', {
+                                            count: table.columns.length,
+                                          })}
                                     </span>
                                   </label>
                                 );
@@ -460,15 +475,22 @@ export function SchemaExportDialog({
                     </ScrollArea>
                   )}
                   <p className="text-muted-foreground text-xs">
-                    Selected {selectedTables.size} of {totalTables} table
-                    {totalTables !== 1 ? 's' : ''}
+                    {totalTables === 1
+                      ? t('sharing.selectedTables', {
+                          selected: selectedTables.size,
+                          total: totalTables,
+                        })
+                      : t('sharing.selectedTablesPlural', {
+                          selected: selectedTables.size,
+                          total: totalTables,
+                        })}
                   </p>
                 </div>
 
                 {/* Export Options */}
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">
-                    Include in Export
+                    {t('sharing.includeInExport')}
                   </Label>
                   <div className="space-y-3 rounded-md border p-3">
                     <label className="flex cursor-pointer items-center gap-2">
@@ -480,9 +502,9 @@ export function SchemaExportDialog({
                         disabled={isExporting || isLoadingSchema}
                       />
                       <div className="flex-1">
-                        <p className="text-sm">Indexes</p>
+                        <p className="text-sm">{t('sharing.indexes')}</p>
                         <p className="text-muted-foreground text-xs">
-                          Include table indexes and unique constraints
+                          {t('sharing.indexesHelp')}
                         </p>
                       </div>
                     </label>
@@ -496,9 +518,9 @@ export function SchemaExportDialog({
                         disabled={isExporting || isLoadingSchema}
                       />
                       <div className="flex-1">
-                        <p className="text-sm">Triggers</p>
+                        <p className="text-sm">{t('sharing.triggers')}</p>
                         <p className="text-muted-foreground text-xs">
-                          Include database triggers
+                          {t('sharing.triggersHelp')}
                         </p>
                       </div>
                     </label>
@@ -512,9 +534,9 @@ export function SchemaExportDialog({
                         disabled={isExporting || isLoadingSchema}
                       />
                       <div className="flex-1">
-                        <p className="text-sm">Foreign Keys</p>
+                        <p className="text-sm">{t('sharing.foreignKeys')}</p>
                         <p className="text-muted-foreground text-xs">
-                          Include foreign key relationships
+                          {t('sharing.foreignKeysHelp')}
                         </p>
                       </div>
                     </label>
@@ -528,9 +550,9 @@ export function SchemaExportDialog({
                         disabled={isExporting || isLoadingSchema}
                       />
                       <div className="flex-1">
-                        <p className="text-sm">Compress export file</p>
+                        <p className="text-sm">{t('sharing.compressExport')}</p>
                         <p className="text-muted-foreground text-xs">
-                          Automatically enabled for schemas larger than 100KB
+                          {t('sharing.compressHelp')}
                         </p>
                       </div>
                     </label>
@@ -543,20 +565,21 @@ export function SchemaExportDialog({
                     htmlFor="schema-documentation"
                     className="text-sm font-medium"
                   >
-                    Documentation
+                    {t('sharing.documentation')}
                   </Label>
                   <Textarea
                     id="schema-documentation"
                     value={documentation}
                     onChange={(e) => setDocumentation(e.target.value)}
-                    placeholder="Additional notes, migration instructions, or important considerations..."
+                    placeholder={t('sharing.documentationSchemaPlaceholder')}
                     maxLength={10000}
                     rows={3}
                     disabled={isExporting || isLoadingSchema}
                   />
                   <p className="text-muted-foreground text-xs">
-                    Optional detailed documentation or usage notes (
-                    {documentation.length}/10000)
+                    {t('sharing.documentationHelp', {
+                      count: documentation.length,
+                    })}
                   </p>
                 </div>
               </>
@@ -569,19 +592,19 @@ export function SchemaExportDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isExporting}
             >
-              {exportResult ? 'Close' : 'Cancel'}
+              {exportResult ? t('sharing.close') : t('sharing.cancel')}
             </Button>
             {!exportResult && (
               <Button onClick={handleExport} disabled={!isValid || isExporting}>
                 {isExporting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Exporting...
+                    {t('sharing.exporting')}
                   </>
                 ) : (
                   <>
                     <FileDown className="mr-2 h-4 w-4" />
-                    Export
+                    {t('sharing.export')}
                   </>
                 )}
               </Button>

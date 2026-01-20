@@ -13,6 +13,7 @@ import {
 import { Button } from '@sqlpro/ui/button';
 import { AlertTriangle, Edit3, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface UnsavedChangesDialogProps {
   open: boolean;
@@ -40,6 +41,7 @@ export function UnsavedChangesDialog({
   onDiscard,
   onCancel,
 }: UnsavedChangesDialogProps) {
+  const { t } = useTranslation('common');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -91,7 +93,11 @@ export function UnsavedChangesDialog({
       onOpenChange(false);
     } catch (err) {
       // Keep dialog open and show error
-      setError(err instanceof Error ? err.message : 'Failed to save changes');
+      setError(
+        err instanceof Error
+          ? err.message
+          : t('unsavedChangesDialog.failedToSave')
+      );
     } finally {
       setIsLoading(false);
     }
@@ -116,11 +122,9 @@ export function UnsavedChangesDialog({
           <AlertDialogMedia>
             <AlertTriangle className="text-amber-600" />
           </AlertDialogMedia>
-          <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+          <AlertDialogTitle>{t('unsavedChangesDialog.title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            You have {totalChanges} unsaved{' '}
-            {totalChanges === 1 ? 'change' : 'changes'}. What would you like to
-            do?
+            {t('unsavedChangesDialog.description', { count: totalChanges })}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -137,8 +141,9 @@ export function UnsavedChangesDialog({
                   <div className="flex items-center gap-1 text-green-600">
                     <Plus className="h-3 w-3" />
                     <span>
-                      {summary.inserts} insert
-                      {summary.inserts !== 1 ? 's' : ''}
+                      {t('unsavedChangesDialog.inserts', {
+                        count: summary.inserts,
+                      })}
                     </span>
                   </div>
                 )}
@@ -146,8 +151,9 @@ export function UnsavedChangesDialog({
                   <div className="flex items-center gap-1 text-amber-600">
                     <Edit3 className="h-3 w-3" />
                     <span>
-                      {summary.updates} update
-                      {summary.updates !== 1 ? 's' : ''}
+                      {t('unsavedChangesDialog.updates', {
+                        count: summary.updates,
+                      })}
                     </span>
                   </div>
                 )}
@@ -155,8 +161,9 @@ export function UnsavedChangesDialog({
                   <div className="flex items-center gap-1 text-red-600">
                     <Trash2 className="h-3 w-3" />
                     <span>
-                      {summary.deletes} delete
-                      {summary.deletes !== 1 ? 's' : ''}
+                      {t('unsavedChangesDialog.deletes', {
+                        count: summary.deletes,
+                      })}
                     </span>
                   </div>
                 )}
@@ -174,17 +181,19 @@ export function UnsavedChangesDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel} disabled={isLoading}>
-            Cancel
+            {t('actions.cancel')}
           </AlertDialogCancel>
           <Button
             variant="destructive"
             onClick={handleDiscard}
             disabled={isLoading}
           >
-            Discard Changes
+            {t('unsavedChangesDialog.discardChanges')}
           </Button>
           <AlertDialogAction onClick={handleSave} disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Save Changes'}
+            {isLoading
+              ? t('unsavedChangesDialog.saving')
+              : t('unsavedChangesDialog.saveChanges')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

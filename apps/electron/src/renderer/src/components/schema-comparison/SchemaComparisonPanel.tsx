@@ -167,7 +167,7 @@ export function SchemaComparisonPanel({
 
   const handleCompare = useCallback(async () => {
     if (!source || !target) {
-      setComparisonError('Please select both source and target to compare');
+      setComparisonError(t('compare.selectBothSourceAndTarget'));
       return;
     }
 
@@ -227,11 +227,11 @@ export function SchemaComparisonPanel({
       if (response.success && (response.result || response.comparison)) {
         setComparisonResult(response.result || response.comparison || null);
       } else {
-        setComparisonError(response.error || 'Comparison failed');
+        setComparisonError(response.error || t('compare.comparisonFailed'));
       }
     } catch (error) {
       setComparisonError(
-        error instanceof Error ? error.message : 'An unexpected error occurred'
+        error instanceof Error ? error.message : t('compare.unexpectedError')
       );
     } finally {
       setIsComparing(false);
@@ -267,7 +267,7 @@ export function SchemaComparisonPanel({
               size="sm"
               onClick={() => setShowKeyboardShortcuts(!showKeyboardShortcuts)}
               className="gap-2"
-              title="Show keyboard shortcuts"
+              title={t('compare.showShortcuts')}
             >
               <Keyboard className="h-4 w-4" />
               <span className="hidden sm:inline">{t('compare.shortcuts')}</span>
@@ -373,7 +373,7 @@ export function SchemaComparisonPanel({
               onClick={handleCompare}
               disabled={!canCompare}
               className="border-gold bg-gold/15 text-gold hover:bg-gold/25 min-w-50"
-              title="Compare schemas (⌘↵)"
+              title={t('compare.compareSchemasShortcut')}
             >
               {isComparing ? (
                 <>
@@ -393,7 +393,7 @@ export function SchemaComparisonPanel({
           {comparisonError && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Comparison Error</AlertTitle>
+              <AlertTitle>{t('compare.comparisonError')}</AlertTitle>
               <AlertDescription>{comparisonError}</AlertDescription>
             </Alert>
           )}
@@ -417,7 +417,7 @@ export function SchemaComparisonPanel({
                     variant="outline"
                     size="sm"
                     onClick={() => setIsExportDialogOpen(true)}
-                    title="Export comparison report (⌘E)"
+                    title={t('compare.exportReportShortcut')}
                   >
                     <FileDown className="mr-2 h-4 w-4" />
                     {t('compare.exportReport')}

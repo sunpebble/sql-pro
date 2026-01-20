@@ -60,6 +60,7 @@ const ShortcutEditor = memo(
     onBindingChange,
     conflicts,
   }: ShortcutEditorProps) => {
+    const { t } = useTranslation('settings');
     const [isRecording, setIsRecording] = useState(false);
     const [pendingBinding, setPendingBinding] =
       useState<ShortcutBinding | null>(null);
@@ -126,7 +127,7 @@ const ShortcutEditor = memo(
           </p>
           {hasConflicts && !isRecording && (
             <p className="mt-1 text-xs text-amber-600">
-              Conflicts with:{' '}
+              {t('shortcuts.conflictsWith')}{' '}
               {conflicts
                 .map(
                   (c) => SHORTCUT_ACTIONS.find((a) => a.id === c)?.label ?? c
@@ -144,7 +145,7 @@ const ShortcutEditor = memo(
                 value={
                   pendingBinding
                     ? formatShortcutBinding(pendingBinding)
-                    : 'Press keys...'
+                    : t('shortcuts.pressKeys')
                 }
                 readOnly
                 onKeyDown={handleKeyDown}
@@ -157,7 +158,7 @@ const ShortcutEditor = memo(
                   }, 100);
                 }}
                 className="h-8 w-32 text-center text-xs"
-                placeholder="Press keys..."
+                placeholder={t('shortcuts.pressKeys')}
               />
               <Button
                 variant="ghost"

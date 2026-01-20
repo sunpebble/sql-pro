@@ -195,9 +195,9 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
 
   const handleCreateTab = useCallback(() => {
     if (activeConnectionId) {
-      createTab(activeConnectionId);
+      createTab(activeConnectionId, t('queryEditor.newQuery'));
     }
-  }, [activeConnectionId, createTab]);
+  }, [activeConnectionId, createTab, t]);
 
   const handleSplitHorizontal = useCallback(() => {
     if (activeConnectionId) {

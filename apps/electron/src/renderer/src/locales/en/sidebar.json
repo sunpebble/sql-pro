@@ -13,7 +13,10 @@
     "disconnect": "Disconnect",
     "delete": "Delete Connection",
     "edit": "Edit Connection",
-    "duplicate": "Duplicate Connection"
+    "duplicate": "Duplicate Connection",
+    "switchConnection": "Switch Connection",
+    "keyboardSelect": "Select",
+    "keyboardSwitch": "Switch"
   },
   "schema": {
     "title": "Schema",
@@ -43,7 +46,11 @@
     "nameDesc": "Name (Z-A)",
     "rowsAsc": "Row Count (Low to High)",
     "rowsDesc": "Row Count (High to Low)",
-    "custom": "Custom"
+    "custom": "Custom",
+    "aToZ": "A-Z",
+    "zToA": "Z-A",
+    "rowsAscShort": "Rows ↑",
+    "rowsDescShort": "Rows ↓"
   },
   "filter": {
     "expandAll": "Expand All",
@@ -52,7 +59,9 @@
     "manageTags": "Manage Tags",
     "noTags": "No tags created yet.",
     "goToManageTags": "Go to \"Manage Tags\" to create one.",
-    "clearFilter": "Clear filter"
+    "clearFilter": "Clear filter",
+    "newTagPlaceholder": "New tag name...",
+    "noTagsYet": "No tags yet. Create one above or right-click a table to add tags."
   },
   "contextMenu": {
     "openInQueryEditor": "Open in Query Editor",
@@ -77,7 +86,9 @@
     "copySample": "Copy Sample CREATE TABLE",
     "databaseEmpty": "This database is empty. Create your first table using the SQL Query Editor or paste a CREATE TABLE statement.",
     "openSqlQueryEditor": "Open SQL Query Editor",
-    "copySampleSql": "Copy Sample SQL"
+    "copySampleSql": "Copy Sample SQL",
+    "sampleSqlCopied": "Sample SQL copied to clipboard",
+    "sampleSqlCopyFailed": "Failed to copy SQL to clipboard"
   },
   "noResults": {
     "title": "No results",
@@ -104,5 +115,6 @@
     "rename": "Rename Folder",
     "delete": "Delete Folder",
     "noFolders": "No folders"
-  }
+  },
+  "newQuery": "New Query"
 }

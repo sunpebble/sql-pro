@@ -251,16 +251,17 @@ export function QueryEditor() {
           result.executionTime || 0
         );
       } else {
-        setError(result.error || 'Query failed');
+        setError(result.error || t('queryEditor.queryFailed'));
         updateTabError(
           activeConnectionId,
           activeTabId,
-          result.error || 'Query failed'
+          result.error || t('queryEditor.queryFailed')
         );
         addToHistory(connection.path, tabQuery.trim(), false, 0, result.error);
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage =
+        err instanceof Error ? err.message : t('queryEditor.unknownError');
       setError(errorMessage);
       updateTabError(activeConnectionId, activeTabId, errorMessage);
       addToHistory(connection.path, tabQuery.trim(), false, 0, errorMessage);
@@ -357,7 +358,7 @@ export function QueryEditor() {
   const handleAnalyze = useCallback(
     async (query: string) => {
       if (!connection) {
-        throw new Error('No database connection');
+        throw new Error(t('queryEditor.noDbConnection'));
       }
 
       const result = await sqlPro.db.analyzeQueryPlan({
@@ -366,7 +367,7 @@ export function QueryEditor() {
       });
 
       if (!result.success || !result.plan || !result.stats) {
-        throw new Error(result.error || 'Failed to analyze query');
+        throw new Error(result.error || t('queryEditor.failedToAnalyze'));
       }
 
       const suggestions = generateSuggestions(result.plan, result.stats);
@@ -467,7 +468,7 @@ export function QueryEditor() {
             onClick={() => setShowOptimizer(true)}
             disabled={!tabQuery.trim()}
             className="gap-1"
-            title="Analyze query execution plan"
+            title={t('queryEditor.analyzeQueryPlan')}
           >
             <Zap className="h-4 w-4" />
             {t('queryEditor.analyze')}
@@ -560,24 +561,38 @@ export function QueryEditor() {
                       {tabResults.resultSets &&
                       tabResults.resultSets.length > 1 ? (
                         <span>
-                          {tabResults.resultSets.length} result sets
-                          {tabResults.executedStatements &&
-                            ` (${tabResults.executedStatements} statements)`}
+                          {tabResults.executedStatements
+                            ? t('queryEditor.resultSetsWithStatements', {
+                                count: tabResults.resultSets.length,
+                                statements: tabResults.executedStatements,
+                              })
+                            : t('queryEditor.resultSets', {
+                                count: tabResults.resultSets.length,
+                              })}
                         </span>
                       ) : tabResults.executedStatements &&
                         tabResults.executedStatements > 1 ? (
                         <span>
-                          {tabResults.executedStatements} statements executed
-                          {tabResults.rowsAffected > 0 &&
-                            ` (${tabResults.rowsAffected} rows affected)`}
+                          {tabResults.rowsAffected > 0
+                            ? t('queryEditor.statementsWithRows', {
+                                count: tabResults.executedStatements,
+                                rows: tabResults.rowsAffected,
+                              })
+                            : t('queryEditor.statementsExecuted', {
+                                count: tabResults.executedStatements,
+                              })}
                         </span>
                       ) : (
                         <span>
                           {tabResults.rows.length > 0
-                            ? `${tabResults.rows.length} rows`
+                            ? t('queryEditor.rowsCount', {
+                                count: tabResults.rows.length,
+                              })
                             : tabResults.rowsAffected > 0
-                              ? `${tabResults.rowsAffected} rows affected`
-                              : 'Query executed'}
+                              ? t('queryEditor.rowsAffected', {
+                                  count: tabResults.rowsAffected,
+                                })
+                              : t('queryEditor.queryExecuted')}
                         </span>
                       )}
                       {tabExecutionTime !== null && (
@@ -589,7 +604,9 @@ export function QueryEditor() {
                       {tabResults.lastInsertRowId !== undefined &&
                         tabResults.lastInsertRowId > 0 && (
                           <span>
-                            Last Insert ID: {tabResults.lastInsertRowId}
+                            {t('queryEditor.lastInsertId', {
+                              id: tabResults.lastInsertRowId,
+                            })}
                           </span>
                         )}
                     </div>
@@ -624,8 +641,10 @@ export function QueryEditor() {
                   <History className="h-4 w-4" />
                   <h3 className="font-medium">
                     {historySelectionMode
-                      ? `Selected (${selectedHistoryIds.size})`
-                      : 'Query History'}
+                      ? t('queryEditor.selected', {
+                          count: selectedHistoryIds.size,
+                        })
+                      : t('queryEditor.queryHistory')}
                   </h3>
                 </div>
                 <div className="flex items-center gap-1">
@@ -643,8 +662,8 @@ export function QueryEditor() {
                         disabled={filteredHistory.length === 0}
                       >
                         {selectedHistoryIds.size === filteredHistory.length
-                          ? 'Deselect All'
-                          : 'Select All'}
+                          ? t('queryEditor.deselectAll')
+                          : t('queryEditor.selectAll')}
                       </Button>
                       <Button
                         variant="ghost"
@@ -654,7 +673,7 @@ export function QueryEditor() {
                         disabled={selectedHistoryIds.size === 0}
                       >
                         <FileDown className="h-3.5 w-3.5" />
-                        Export
+                        {t('queryEditor.export')}
                       </Button>
                       <Button
                         variant="ghost"
@@ -662,7 +681,7 @@ export function QueryEditor() {
                         className="h-8 text-xs"
                         onClick={handleExitSelectionMode}
                       >
-                        Cancel
+                        {t('actions.cancel')}
                       </Button>
                     </>
                   ) : (
@@ -673,7 +692,7 @@ export function QueryEditor() {
                         className="h-8 w-8"
                         onClick={handleEnterSelectionMode}
                         disabled={history.length === 0}
-                        title="Select multiple queries"
+                        title={t('queryEditor.selectMultiple')}
                       >
                         <CheckSquare className="h-4 w-4" />
                       </Button>
@@ -683,7 +702,7 @@ export function QueryEditor() {
                         className="h-8 w-8"
                         onClick={() => setShowClearConfirm(true)}
                         disabled={history.length === 0}
-                        title="Clear all history"
+                        title={t('queryEditor.clearAllHistory')}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -706,7 +725,7 @@ export function QueryEditor() {
                   <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
                   <Input
                     type="text"
-                    placeholder="Search history..."
+                    placeholder={t('queryEditor.searchHistory')}
                     value={historyFilter.searchText || ''}
                     onChange={(e) =>
                       setHistoryFilter({
@@ -727,8 +746,8 @@ export function QueryEditor() {
                   {filteredHistory.length === 0 ? (
                     <p className="text-muted-foreground py-8 text-center text-sm">
                       {getActiveFilterCount() > 0
-                        ? 'No matching queries'
-                        : 'No queries yet'}
+                        ? t('queryEditor.noMatchingQueries')
+                        : t('queryEditor.noQueriesYet')}
                     </p>
                   ) : (
                     filteredHistory.map((item) => {
@@ -834,10 +853,9 @@ export function QueryEditor() {
       <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Clear Query History</DialogTitle>
+            <DialogTitle>{t('queryEditor.clearQueryHistory')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to clear all query history for this
-              database? This action cannot be undone.
+              {t('queryEditor.clearHistoryDesc')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -845,10 +863,10 @@ export function QueryEditor() {
               variant="outline"
               onClick={() => setShowClearConfirm(false)}
             >
-              Cancel
+              {t('actions.cancel')}
             </Button>
             <Button variant="destructive" onClick={handleClearAllHistory}>
-              Clear All
+              {t('queryEditor.clearAll')}
             </Button>
           </DialogFooter>
         </DialogContent>

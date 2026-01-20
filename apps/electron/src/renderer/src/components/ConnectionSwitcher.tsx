@@ -39,7 +39,7 @@ interface ConnectionItem {
 export function ConnectionSwitcher({
   onOpenRecentConnection,
 }: ConnectionSwitcherProps) {
-  const { t } = useTranslation('sidebar');
+  const { t } = useTranslation(['sidebar', 'common']);
 
   // Store selectors
   const isOpen = useConnectionSwitcherStore((s) => s.isOpen);
@@ -203,9 +203,10 @@ export function ConnectionSwitcher({
     const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays === 0) return t('common:dateFormat.today');
+    if (diffDays === 1) return t('common:dateFormat.yesterday');
+    if (diffDays < 7)
+      return t('common:dateFormat.daysAgo', { count: diffDays });
     return date.toLocaleDateString();
   };
 
@@ -216,7 +217,9 @@ export function ConnectionSwitcher({
         style={fontStyle}
         showCloseButton={false}
       >
-        <DialogTitle className="sr-only">Switch Connection</DialogTitle>
+        <DialogTitle className="sr-only">
+          {t('sidebar:connection.switchConnection')}
+        </DialogTitle>
         <Command
           className="**:[[cmdk-group-heading]]:text-muted-foreground **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group]]:px-2"
           shouldFilter={false}
@@ -308,20 +311,20 @@ export function ConnectionSwitcher({
                 <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">
                   ↑↓
                 </kbd>
-                <span>Select</span>
+                <span>{t('sidebar:connection.keyboardSelect')}</span>
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">
                   ↵
                 </kbd>
-                <span>Switch</span>
+                <span>{t('sidebar:connection.keyboardSwitch')}</span>
               </span>
             </div>
             <span className="flex items-center gap-1">
               <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">
                 Esc
               </kbd>
-              <span>{t('common.close', { ns: 'common' })}</span>
+              <span>{t('common:common.close')}</span>
             </span>
           </div>
         </Command>

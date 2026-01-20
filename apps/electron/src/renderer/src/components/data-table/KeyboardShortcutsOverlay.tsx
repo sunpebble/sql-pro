@@ -11,6 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import {
   formatShortcutBinding,
@@ -20,7 +21,7 @@ import {
 
 interface ShortcutItem {
   keys: string[];
-  description: string;
+  descriptionKey: string;
   category: 'navigation' | 'editing' | 'search' | 'general';
   action?: ShortcutAction; // If set, will be fetched from store
 }
@@ -28,43 +29,79 @@ interface ShortcutItem {
 // Static shortcuts that don't change based on user settings
 const staticShortcuts: ShortcutItem[] = [
   // Navigation
-  { keys: ['↑', '↓'], description: 'Navigate rows', category: 'navigation' },
-  { keys: ['←', '→'], description: 'Navigate columns', category: 'navigation' },
   {
-    keys: ['⌘', '↑'],
-    description: 'Jump to first row',
+    keys: ['↑', '↓'],
+    descriptionKey: 'shortcuts.navigateRows',
     category: 'navigation',
   },
-  { keys: ['⌘', '↓'], description: 'Jump to last row', category: 'navigation' },
-  { keys: ['Tab'], description: 'Next cell', category: 'navigation' },
-  { keys: ['⇧', 'Tab'], description: 'Previous cell', category: 'navigation' },
-  { keys: ['Page↑'], description: 'Previous page', category: 'navigation' },
-  { keys: ['Page↓'], description: 'Next page', category: 'navigation' },
+  {
+    keys: ['←', '→'],
+    descriptionKey: 'shortcuts.navigateColumns',
+    category: 'navigation',
+  },
+  {
+    keys: ['⌘', '↑'],
+    descriptionKey: 'shortcuts.jumpToFirstRow',
+    category: 'navigation',
+  },
+  {
+    keys: ['⌘', '↓'],
+    descriptionKey: 'shortcuts.jumpToLastRow',
+    category: 'navigation',
+  },
+  {
+    keys: ['Tab'],
+    descriptionKey: 'shortcuts.nextCell',
+    category: 'navigation',
+  },
+  {
+    keys: ['⇧', 'Tab'],
+    descriptionKey: 'shortcuts.previousCell',
+    category: 'navigation',
+  },
+  {
+    keys: ['Page↑'],
+    descriptionKey: 'shortcuts.previousPage',
+    category: 'navigation',
+  },
+  {
+    keys: ['Page↓'],
+    descriptionKey: 'shortcuts.nextPage',
+    category: 'navigation',
+  },
 
   // Editing - with action IDs for dynamic shortcuts
-  { keys: ['Enter'], description: 'Edit cell', category: 'editing' },
-  { keys: ['Escape'], description: 'Cancel edit', category: 'editing' },
+  {
+    keys: ['Enter'],
+    descriptionKey: 'shortcuts.editCell',
+    category: 'editing',
+  },
+  {
+    keys: ['Escape'],
+    descriptionKey: 'shortcuts.cancelEdit',
+    category: 'editing',
+  },
   {
     keys: [],
-    description: 'Save changes',
+    descriptionKey: 'shortcuts.saveChanges',
     category: 'editing',
     action: 'action.save-changes',
   },
   {
     keys: [],
-    description: 'Discard changes',
+    descriptionKey: 'shortcuts.discardChanges',
     category: 'editing',
     action: 'action.discard-changes',
   },
   {
     keys: [],
-    description: 'Add row',
+    descriptionKey: 'shortcuts.addRow',
     category: 'editing',
     action: 'action.add-row',
   },
   {
     keys: [],
-    description: 'Delete row',
+    descriptionKey: 'shortcuts.deleteRow',
     category: 'editing',
     action: 'action.delete-row',
   },
@@ -72,39 +109,51 @@ const staticShortcuts: ShortcutItem[] = [
   // Search & Filter
   {
     keys: [],
-    description: 'Search in table',
+    descriptionKey: 'shortcuts.searchInTable',
     category: 'search',
     action: 'action.focus-search',
   },
-  { keys: ['⌘', 'G'], description: 'Find next', category: 'search' },
-  { keys: ['⇧', '⌘', 'G'], description: 'Find previous', category: 'search' },
+  {
+    keys: ['⌘', 'G'],
+    descriptionKey: 'shortcuts.findNext',
+    category: 'search',
+  },
+  {
+    keys: ['⇧', '⌘', 'G'],
+    descriptionKey: 'shortcuts.findPrevious',
+    category: 'search',
+  },
 
   // General - with action IDs for dynamic shortcuts
   {
     keys: [],
-    description: 'Command palette',
+    descriptionKey: 'shortcuts.commandPalette',
     category: 'general',
     action: 'action.command-palette',
   },
   {
     keys: [],
-    description: 'Refresh data',
+    descriptionKey: 'shortcuts.refreshData',
     category: 'general',
     action: 'action.refresh-table',
   },
   {
     keys: [],
-    description: 'Export data',
+    descriptionKey: 'shortcuts.exportData',
     category: 'general',
     action: 'action.export-data',
   },
   {
     keys: [],
-    description: 'Toggle sidebar',
+    descriptionKey: 'shortcuts.toggleSidebar',
     category: 'general',
     action: 'nav.toggle-sidebar',
   },
-  { keys: ['?'], description: 'Show shortcuts', category: 'general' },
+  {
+    keys: ['?'],
+    descriptionKey: 'shortcuts.showShortcuts',
+    category: 'general',
+  },
 ];
 
 /**
@@ -139,6 +188,7 @@ interface KeyboardShortcutsOverlayProps {
  */
 export const KeyboardShortcutsOverlay = memo(
   ({ className }: KeyboardShortcutsOverlayProps) => {
+    const { t } = useTranslation('common');
     const [isOpen, setIsOpen] = useState(false);
     const getShortcut = useKeyboardShortcutsStore((s) => s.getShortcut);
 
@@ -191,10 +241,10 @@ export const KeyboardShortcutsOverlay = memo(
     );
 
     const categoryLabels: Record<string, string> = {
-      navigation: 'Navigation',
-      editing: 'Editing',
-      search: 'Search & Filter',
-      general: 'General',
+      navigation: t('keyboardShortcuts.navigation'),
+      editing: t('keyboardShortcuts.editing'),
+      search: t('keyboardShortcuts.searchAndFilter'),
+      general: t('keyboardShortcuts.general'),
     };
 
     const categoryIcons: Record<string, React.ReactNode> = {
@@ -215,7 +265,7 @@ export const KeyboardShortcutsOverlay = memo(
             'flex h-8 w-8 items-center justify-center',
             className
           )}
-          title="Keyboard shortcuts (?)"
+          title={t('keyboardShortcuts.tooltipTitle')}
         >
           <Keyboard className="h-4 w-4" />
         </PopoverTrigger>
@@ -229,7 +279,9 @@ export const KeyboardShortcutsOverlay = memo(
           <div className="flex items-center justify-between border-b px-3 py-2">
             <div className="flex items-center gap-2">
               <Keyboard className="text-gold h-4 w-4" />
-              <span className="text-sm font-medium">Keyboard Shortcuts</span>
+              <span className="text-sm font-medium">
+                {t('keyboardShortcuts.title')}
+              </span>
             </div>
             <Button
               variant="ghost"
@@ -255,11 +307,11 @@ export const KeyboardShortcutsOverlay = memo(
                 <div className="divide-border/50 divide-y">
                   {items.map((shortcut) => (
                     <div
-                      key={shortcut.description}
+                      key={shortcut.descriptionKey}
                       className="hover:bg-muted/30 flex items-center justify-between px-3 py-1.5 transition-colors"
                     >
                       <span className="text-muted-foreground text-xs">
-                        {shortcut.description}
+                        {t(shortcut.descriptionKey)}
                       </span>
                       <div className="flex items-center gap-0.5">
                         {shortcut.keys.map((key) => (
@@ -285,11 +337,10 @@ export const KeyboardShortcutsOverlay = memo(
           {/* Footer */}
           <div className="bg-muted/30 border-t px-3 py-2">
             <p className="text-muted-foreground text-2xs text-center">
-              Press{' '}
+              {t('keyboardShortcuts.pressToToggle')}{' '}
               <kbd className="bg-muted text-2xs rounded border px-1 py-0.5">
                 ?
-              </kbd>{' '}
-              to toggle this panel
+              </kbd>
             </p>
           </div>
         </PopoverContent>

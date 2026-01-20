@@ -472,7 +472,7 @@ function ColumnConfigRow({
           <div className="flex items-center gap-2">
             <Input
               type="number"
-              placeholder="Min"
+              placeholder={t('mockData.min', 'Min')}
               value={config.options?.min ?? ''}
               onChange={(e) =>
                 onUpdate({
@@ -487,7 +487,7 @@ function ColumnConfigRow({
             <span className="text-muted-foreground">-</span>
             <Input
               type="number"
-              placeholder="Max"
+              placeholder={t('mockData.max', 'Max')}
               value={config.options?.max ?? ''}
               onChange={(e) =>
                 onUpdate({

@@ -143,22 +143,22 @@ export function TableDiffCard({
             <div className="flex items-center gap-2 text-xs">
               {changeCounts.columns > 0 && (
                 <span className="text-muted-foreground">
-                  {changeCounts.columns} col
+                  {t('schema.colAbbr', { count: changeCounts.columns })}
                 </span>
               )}
               {changeCounts.indexes > 0 && (
                 <span className="text-muted-foreground">
-                  {changeCounts.indexes} idx
+                  {t('schema.idxAbbr', { count: changeCounts.indexes })}
                 </span>
               )}
               {changeCounts.foreignKeys > 0 && (
                 <span className="text-muted-foreground">
-                  {changeCounts.foreignKeys} fk
+                  {t('schema.fkAbbr', { count: changeCounts.foreignKeys })}
                 </span>
               )}
               {changeCounts.triggers > 0 && (
                 <span className="text-muted-foreground">
-                  {changeCounts.triggers} trg
+                  {t('schema.trgAbbr', { count: changeCounts.triggers })}
                 </span>
               )}
             </div>
@@ -177,7 +177,7 @@ export function TableDiffCard({
                 tableDiff.columnDiffs &&
                 tableDiff.columnDiffs.length > 0 && (
                   <DiffSection
-                    title="Columns"
+                    title={t('schema.columns')}
                     icon={<Columns3 className="h-4 w-4" />}
                     count={tableDiff.columnDiffs.length}
                   >
@@ -193,7 +193,7 @@ export function TableDiffCard({
                 tableDiff.indexDiffs &&
                 tableDiff.indexDiffs.length > 0 && (
                   <DiffSection
-                    title="Indexes"
+                    title={t('schema.indexes')}
                     icon={<Key className="h-4 w-4" />}
                     count={tableDiff.indexDiffs.length}
                   >
@@ -209,7 +209,7 @@ export function TableDiffCard({
                 tableDiff.foreignKeyDiffs &&
                 tableDiff.foreignKeyDiffs.length > 0 && (
                   <DiffSection
-                    title="Foreign Keys"
+                    title={t('schema.foreignKeys')}
                     icon={<Link2 className="h-4 w-4" />}
                     count={tableDiff.foreignKeyDiffs.length}
                   >
@@ -225,7 +225,7 @@ export function TableDiffCard({
                 tableDiff.triggerDiffs &&
                 tableDiff.triggerDiffs.length > 0 && (
                   <DiffSection
-                    title="Triggers"
+                    title={t('schema.triggers')}
                     icon={<Zap className="h-4 w-4" />}
                     count={tableDiff.triggerDiffs.length}
                   >
@@ -242,8 +242,9 @@ export function TableDiffCard({
           {diffType === 'added' && tableDiff.target && (
             <div className="space-y-2 text-sm">
               <p className="text-muted-foreground">
-                Table added in target with {tableDiff.target.columns.length}{' '}
-                column(s)
+                {t('schema.tableAddedInTarget', {
+                  count: tableDiff.target.columns.length,
+                })}
               </p>
               {tableDiff.target.columns.length > 0 && (
                 <div className="bg-background/50 rounded border p-2">
@@ -260,12 +261,12 @@ export function TableDiffCard({
                         </span>
                         {col.isPrimaryKey && (
                           <Badge variant="outline" className="text-2xs">
-                            PK
+                            {t('schema.pk')}
                           </Badge>
                         )}
                         {!col.nullable && (
                           <Badge variant="outline" className="text-2xs">
-                            NOT NULL
+                            {t('schema.notNull')}
                           </Badge>
                         )}
                       </div>
@@ -280,8 +281,9 @@ export function TableDiffCard({
           {diffType === 'removed' && tableDiff.source && (
             <div className="space-y-2 text-sm">
               <p className="text-muted-foreground">
-                Table removed from source with {tableDiff.source.columns.length}{' '}
-                column(s)
+                {t('schema.tableRemovedFromSource', {
+                  count: tableDiff.source.columns.length,
+                })}
               </p>
               {tableDiff.source.columns.length > 0 && (
                 <div className="bg-background/50 rounded border p-2">
@@ -298,12 +300,12 @@ export function TableDiffCard({
                         </span>
                         {col.isPrimaryKey && (
                           <Badge variant="outline" className="text-2xs">
-                            PK
+                            {t('schema.pk')}
                           </Badge>
                         )}
                         {!col.nullable && (
                           <Badge variant="outline" className="text-2xs">
-                            NOT NULL
+                            {t('schema.notNull')}
                           </Badge>
                         )}
                       </div>
@@ -356,13 +358,16 @@ function ColumnDiffList({
   columnDiffs,
   showOnlyDifferences,
 }: ColumnDiffListProps) {
+  const { t } = useTranslation('common');
   const filteredDiffs = showOnlyDifferences
     ? columnDiffs.filter((d) => d.diffType !== 'unchanged')
     : columnDiffs;
 
   if (filteredDiffs.length === 0) {
     return (
-      <p className="text-muted-foreground text-xs italic">No differences</p>
+      <p className="text-muted-foreground text-xs italic">
+        {t('schema.noDifferences')}
+      </p>
     );
   }
 
@@ -376,6 +381,8 @@ function ColumnDiffList({
 }
 
 function ColumnDiffRow({ diff }: { diff: ColumnDiff }) {
+  const { t } = useTranslation('common');
+
   const getIcon = () => {
     switch (diff.diffType) {
       case 'added':
@@ -438,27 +445,30 @@ function ColumnDiffRow({ diff }: { diff: ColumnDiff }) {
             <div>
               Nullable:{' '}
               <span className="line-through">
-                {diff.changes.nullable.from ? 'Yes' : 'No'}
+                {diff.changes.nullable.from ? t('schema.yes') : t('schema.no')}
               </span>{' '}
-              → {diff.changes.nullable.to ? 'Yes' : 'No'}
+              → {diff.changes.nullable.to ? t('schema.yes') : t('schema.no')}
             </div>
           )}
           {diff.changes.defaultValue && (
             <div>
               Default:{' '}
               <span className="line-through">
-                {diff.changes.defaultValue.from || 'None'}
+                {diff.changes.defaultValue.from || t('schema.none')}
               </span>{' '}
-              → {diff.changes.defaultValue.to || 'None'}
+              → {diff.changes.defaultValue.to || t('schema.none')}
             </div>
           )}
           {diff.changes.isPrimaryKey && (
             <div>
               Primary Key:{' '}
               <span className="line-through">
-                {diff.changes.isPrimaryKey.from ? 'Yes' : 'No'}
+                {diff.changes.isPrimaryKey.from
+                  ? t('schema.yes')
+                  : t('schema.no')}
               </span>{' '}
-              → {diff.changes.isPrimaryKey.to ? 'Yes' : 'No'}
+              →{' '}
+              {diff.changes.isPrimaryKey.to ? t('schema.yes') : t('schema.no')}
             </div>
           )}
         </div>
@@ -476,13 +486,16 @@ function IndexDiffList({
   indexDiffs,
   showOnlyDifferences,
 }: IndexDiffListProps) {
+  const { t } = useTranslation('common');
   const filteredDiffs = showOnlyDifferences
     ? indexDiffs.filter((d) => d.diffType !== 'unchanged')
     : indexDiffs;
 
   if (filteredDiffs.length === 0) {
     return (
-      <p className="text-muted-foreground text-xs italic">No differences</p>
+      <p className="text-muted-foreground text-xs italic">
+        {t('schema.noDifferences')}
+      </p>
     );
   }
 
@@ -496,6 +509,8 @@ function IndexDiffList({
 }
 
 function IndexDiffRow({ diff }: { diff: IndexDiff }) {
+  const { t } = useTranslation('common');
+
   const getIcon = () => {
     switch (diff.diffType) {
       case 'added':
@@ -534,7 +549,7 @@ function IndexDiffRow({ diff }: { diff: IndexDiff }) {
         </span>
         {index?.isUnique && (
           <Badge variant="outline" className="text-2xs">
-            UNIQUE
+            {t('schema.uniqueBadge')}
           </Badge>
         )}
       </div>
@@ -544,7 +559,7 @@ function IndexDiffRow({ diff }: { diff: IndexDiff }) {
         <div className="text-muted-foreground text-2xs ml-5 space-y-0.5">
           {diff.changes.columns && (
             <div>
-              Columns:{' '}
+              {t('schema.columnsLabel')}{' '}
               <span className="line-through">
                 {diff.changes.columns.from.join(', ')}
               </span>{' '}
@@ -553,11 +568,11 @@ function IndexDiffRow({ diff }: { diff: IndexDiff }) {
           )}
           {diff.changes.isUnique && (
             <div>
-              Unique:{' '}
+              {t('schema.unique')}{' '}
               <span className="line-through">
-                {diff.changes.isUnique.from ? 'Yes' : 'No'}
+                {diff.changes.isUnique.from ? t('schema.yes') : t('schema.no')}
               </span>{' '}
-              → {diff.changes.isUnique.to ? 'Yes' : 'No'}
+              → {diff.changes.isUnique.to ? t('schema.yes') : t('schema.no')}
             </div>
           )}
         </div>
@@ -575,13 +590,16 @@ function ForeignKeyDiffList({
   foreignKeyDiffs,
   showOnlyDifferences,
 }: ForeignKeyDiffListProps) {
+  const { t } = useTranslation('common');
   const filteredDiffs = showOnlyDifferences
     ? foreignKeyDiffs.filter((d) => d.diffType !== 'unchanged')
     : foreignKeyDiffs;
 
   if (filteredDiffs.length === 0) {
     return (
-      <p className="text-muted-foreground text-xs italic">No differences</p>
+      <p className="text-muted-foreground text-xs italic">
+        {t('schema.noDifferences')}
+      </p>
     );
   }
 
@@ -598,6 +616,8 @@ function ForeignKeyDiffList({
 }
 
 function ForeignKeyDiffRow({ diff }: { diff: ForeignKeyDiff }) {
+  const { t } = useTranslation('common');
+
   const getIcon = () => {
     switch (diff.diffType) {
       case 'added':
@@ -641,7 +661,7 @@ function ForeignKeyDiffRow({ diff }: { diff: ForeignKeyDiff }) {
         <div className="text-muted-foreground text-2xs ml-5 space-y-0.5">
           {diff.changes.referencedTable && (
             <div>
-              Referenced Table:{' '}
+              {t('schema.referencedTable')}{' '}
               <span className="line-through">
                 {diff.changes.referencedTable.from}
               </span>{' '}
@@ -650,7 +670,7 @@ function ForeignKeyDiffRow({ diff }: { diff: ForeignKeyDiff }) {
           )}
           {diff.changes.referencedColumn && (
             <div>
-              Referenced Column:{' '}
+              {t('schema.referencedColumn')}{' '}
               <span className="line-through">
                 {diff.changes.referencedColumn.from}
               </span>{' '}
@@ -659,14 +679,14 @@ function ForeignKeyDiffRow({ diff }: { diff: ForeignKeyDiff }) {
           )}
           {diff.changes.onDelete && (
             <div>
-              On Delete:{' '}
+              {t('schema.onDelete')}{' '}
               <span className="line-through">{diff.changes.onDelete.from}</span>{' '}
               → {diff.changes.onDelete.to}
             </div>
           )}
           {diff.changes.onUpdate && (
             <div>
-              On Update:{' '}
+              {t('schema.onUpdate')}{' '}
               <span className="line-through">{diff.changes.onUpdate.from}</span>{' '}
               → {diff.changes.onUpdate.to}
             </div>
@@ -686,13 +706,16 @@ function TriggerDiffList({
   triggerDiffs,
   showOnlyDifferences,
 }: TriggerDiffListProps) {
+  const { t } = useTranslation('common');
   const filteredDiffs = showOnlyDifferences
     ? triggerDiffs.filter((d) => d.diffType !== 'unchanged')
     : triggerDiffs;
 
   if (filteredDiffs.length === 0) {
     return (
-      <p className="text-muted-foreground text-xs italic">No differences</p>
+      <p className="text-muted-foreground text-xs italic">
+        {t('schema.noDifferences')}
+      </p>
     );
   }
 
@@ -706,6 +729,8 @@ function TriggerDiffList({
 }
 
 function TriggerDiffRow({ diff }: { diff: TriggerDiff }) {
+  const { t } = useTranslation('common');
+
   const getIcon = () => {
     switch (diff.diffType) {
       case 'added':
@@ -749,19 +774,19 @@ function TriggerDiffRow({ diff }: { diff: TriggerDiff }) {
         <div className="text-muted-foreground text-2xs ml-5 space-y-0.5">
           {diff.changes.timing && (
             <div>
-              Timing:{' '}
+              {t('schema.timing')}{' '}
               <span className="line-through">{diff.changes.timing.from}</span> →{' '}
               {diff.changes.timing.to}
             </div>
           )}
           {diff.changes.event && (
             <div>
-              Event:{' '}
+              {t('schema.event')}{' '}
               <span className="line-through">{diff.changes.event.from}</span> →{' '}
               {diff.changes.event.to}
             </div>
           )}
-          {diff.changes.sql && <div>SQL definition changed</div>}
+          {diff.changes.sql && <div>{t('schema.sqlDefinitionChanged')}</div>}
         </div>
       )}
     </div>

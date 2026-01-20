@@ -135,11 +135,11 @@ function DialogFormContent({
   // Password management handlers
   const handleSavePassword = async () => {
     if (newPassword !== confirmPassword) {
-      setPasswordError('Passwords do not match');
+      setPasswordError(t('connectionSettings.passwordsDoNotMatch'));
       return;
     }
     if (!newPassword.trim()) {
-      setPasswordError('Password cannot be empty');
+      setPasswordError(t('connectionSettings.passwordCannotBeEmpty'));
       return;
     }
 
@@ -158,11 +158,15 @@ function DialogFormContent({
         setNewPassword('');
         setConfirmPassword('');
       } else {
-        setPasswordError(result.error || 'Failed to save password');
+        setPasswordError(
+          result.error || t('connectionSettings.failedToSavePassword')
+        );
       }
     } catch (err) {
       setPasswordError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
+        err instanceof Error
+          ? err.message
+          : t('connectionSettings.unexpectedError')
       );
     } finally {
       setIsPasswordLoading(false);
@@ -181,11 +185,15 @@ function DialogFormContent({
         setHasSavedPassword(false);
         setShowPasswordEdit(false);
       } else {
-        setPasswordError(result.error || 'Failed to remove password');
+        setPasswordError(
+          result.error || t('connectionSettings.failedToRemovePassword')
+        );
       }
     } catch (err) {
       setPasswordError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
+        err instanceof Error
+          ? err.message
+          : t('connectionSettings.unexpectedError')
       );
     } finally {
       setIsPasswordLoading(false);
@@ -229,7 +237,7 @@ function DialogFormContent({
             type="text"
             value={displayName}
             onChange={(e) => handleDisplayNameChange(e.target.value)}
-            placeholder="Enter a name for this connection"
+            placeholder={t('connectionSettings.displayNamePlaceholder')}
             autoFocus
             className={cn(
               'bg-background w-full rounded-md border px-3 py-2 text-sm',
@@ -315,11 +323,13 @@ function DialogFormContent({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <KeyRound className="text-muted-foreground h-4 w-4" />
-                  <span className="text-sm font-medium">Saved Password</span>
+                  <span className="text-sm font-medium">
+                    {t('savedPassword')}
+                  </span>
                 </div>
                 {hasSavedPassword && (
                   <span className="text-xs text-green-600 dark:text-green-400">
-                    Password saved
+                    {t('passwordSaved')}
                   </span>
                 )}
               </div>
@@ -333,7 +343,7 @@ function DialogFormContent({
                     className="flex-1"
                     onClick={() => setShowPasswordEdit(true)}
                   >
-                    {hasSavedPassword ? 'Change Password' : 'Save Password'}
+                    {hasSavedPassword ? t('changePassword') : t('savePassword')}
                   </Button>
                   {hasSavedPassword && (
                     <Button
@@ -364,14 +374,14 @@ function DialogFormContent({
                       htmlFor="newPassword"
                       className="text-xs font-medium"
                     >
-                      {hasSavedPassword ? 'New Password' : 'Password'}
+                      {hasSavedPassword ? t('newPassword') : t('password')}
                     </label>
                     <input
                       id="newPassword"
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Enter password"
+                      placeholder={t('enterPassword')}
                       className={cn(
                         'border-input bg-background w-full rounded-md border px-3 py-1.5 text-sm',
                         'placeholder:text-muted-foreground',
@@ -385,14 +395,14 @@ function DialogFormContent({
                       htmlFor="confirmPassword"
                       className="text-xs font-medium"
                     >
-                      Confirm Password
+                      {t('confirmPassword')}
                     </label>
                     <input
                       id="confirmPassword"
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm password"
+                      placeholder={t('confirmPasswordPlaceholder')}
                       className={cn(
                         'border-input bg-background w-full rounded-md border px-3 py-1.5 text-sm',
                         'placeholder:text-muted-foreground',
@@ -404,7 +414,7 @@ function DialogFormContent({
                     />
                     {confirmPassword && !passwordsMatch && (
                       <p className="text-destructive text-xs">
-                        Passwords do not match
+                        {t('connectionSettings.passwordsDoNotMatch')}
                       </p>
                     )}
                   </div>
@@ -423,7 +433,7 @@ function DialogFormContent({
                       }}
                       disabled={isPasswordLoading}
                     >
-                      Cancel
+                      {t('actions.cancel', { ns: 'common' })}
                     </Button>
                     <Button
                       type="button"
@@ -436,14 +446,16 @@ function DialogFormContent({
                         !passwordsMatch
                       }
                     >
-                      {isPasswordLoading ? 'Saving...' : 'Save'}
+                      {isPasswordLoading
+                        ? t('connectionSettings.saving')
+                        : t('connectionSettings.save')}
                     </Button>
                   </div>
                 </div>
               )}
 
               <p className="text-muted-foreground text-xs">
-                Password is securely stored in your system keychain
+                {t('connectionSettings.keychainNote')}
               </p>
             </div>
           </>
@@ -469,9 +481,9 @@ function DialogFormContent({
       <ConfirmDialog
         open={showRemovePasswordConfirm}
         onOpenChange={setShowRemovePasswordConfirm}
-        title="Remove Saved Password"
-        description="Are you sure you want to remove the saved password? You will need to enter the password manually next time you connect."
-        confirmLabel="Remove Password"
+        title={t('connectionSettings.removePasswordTitle')}
+        description={t('connectionSettings.removePasswordDesc')}
+        confirmLabel={t('connectionSettings.removePasswordConfirm')}
         variant="destructive"
         onConfirm={confirmRemovePassword}
       />

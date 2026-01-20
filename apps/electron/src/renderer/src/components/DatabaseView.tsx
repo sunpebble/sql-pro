@@ -145,7 +145,7 @@ export function DatabaseView() {
         data-action="toggle-sidebar"
         onClick={toggleSidebar}
         className="sr-only"
-        aria-label="Toggle Sidebar"
+        aria-label={t('sidebar.toggleSidebar')}
       />
 
       {/* Main Content with Activity Bar */}

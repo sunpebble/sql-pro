@@ -37,6 +37,7 @@ import {
   X,
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Bar,
   BarChart,
@@ -201,6 +202,7 @@ interface TableRowProps {
 }
 
 const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
+  const { t } = useTranslation('common');
   const rowPercent = maxRows > 0 ? (table.rowCount / maxRows) * 100 : 0;
   const sizePercent =
     maxSize > 0 && table.sizeBytes ? (table.sizeBytes / maxSize) * 100 : 0;
@@ -219,10 +221,10 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
         </div>
         <div className="mt-1 flex items-center gap-4 text-xs">
           <span className="text-muted-foreground">
-            {table.rowCount.toLocaleString()} rows
+            {table.rowCount.toLocaleString()} {t('databaseDashboard.rows')}
           </span>
           <span className="text-muted-foreground">
-            {table.columnCount} columns
+            {table.columnCount} {t('databaseDashboard.columns')}
           </span>
           {table.sizeBytes !== undefined && (
             <span className="text-muted-foreground">
@@ -259,6 +261,7 @@ interface TableSizeChartProps {
 }
 
 const TableSizeChart = memo(({ tables }: TableSizeChartProps) => {
+  const { t } = useTranslation('common');
   const chartData = useMemo(() => {
     return tables
       .filter((t) => t.rowCount > 0)
@@ -274,7 +277,7 @@ const TableSizeChart = memo(({ tables }: TableSizeChartProps) => {
 
   const chartConfig = {
     rows: {
-      label: 'Row Count',
+      label: t('databaseDashboard.rowCountLabel'),
       color: 'hsl(var(--chart-1))',
     },
   };
@@ -282,7 +285,7 @@ const TableSizeChart = memo(({ tables }: TableSizeChartProps) => {
   if (chartData.length === 0) {
     return (
       <div className="text-muted-foreground flex h-64 items-center justify-center">
-        No table data available
+        {t('databaseDashboard.noTableData')}
       </div>
     );
   }
@@ -307,7 +310,10 @@ const TableSizeChart = memo(({ tables }: TableSizeChartProps) => {
                 return (
                   <div className="flex flex-col gap-1">
                     <span className="font-medium">{payload?.fullName}</span>
-                    <span>{Number(value).toLocaleString()} rows</span>
+                    <span>
+                      {Number(value).toLocaleString()}{' '}
+                      {t('databaseDashboard.rows')}
+                    </span>
                     {payload?.size && payload.size > 0 && (
                       <span className="text-muted-foreground">
                         {formatBytes(payload.size)}
@@ -331,6 +337,7 @@ interface DataTypeChartProps {
 }
 
 const DataTypeChart = memo(({ distribution }: DataTypeChartProps) => {
+  const { t } = useTranslation('common');
   const chartData = useMemo(() => {
     // Group by category
     const categoryMap = new Map<string, number>();
@@ -356,7 +363,7 @@ const DataTypeChart = memo(({ distribution }: DataTypeChartProps) => {
   if (chartData.length === 0) {
     return (
       <div className="text-muted-foreground flex h-64 items-center justify-center">
-        No data type information available
+        {t('databaseDashboard.noDataTypeInfo')}
       </div>
     );
   }
@@ -388,7 +395,8 @@ const DataTypeChart = memo(({ distribution }: DataTypeChartProps) => {
                 <div className="bg-background rounded-lg border px-3 py-2 shadow-lg">
                   <p className="font-medium">{data.name}</p>
                   <p className="text-muted-foreground text-sm">
-                    {data.value} columns ({percentage}%)
+                    {data.value} {t('databaseDashboard.columns')} ({percentage}
+                    %)
                   </p>
                 </div>
               );
@@ -422,6 +430,7 @@ export const DatabaseDashboard = memo(
     connectionId,
     databaseName,
   }: DatabaseDashboardProps) => {
+    const { t } = useTranslation('common');
     const [isLoading, setIsLoading] = useState(false);
     const [stats, setStats] = useState<DatabaseStats | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -437,7 +446,9 @@ export const DatabaseDashboard = memo(
         // Get schema information
         const schemaResult = await sqlPro.database.getSchema(connectionId);
         if (!schemaResult.success || !schemaResult.tables) {
-          throw new Error(schemaResult.error || 'Failed to get schema');
+          throw new Error(
+            schemaResult.error || t('database.failedToGetSchema')
+          );
         }
 
         const tables: TableStats[] = [];
@@ -551,7 +562,7 @@ export const DatabaseDashboard = memo(
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Database Dashboard
+              {t('databaseDashboard.title')}
               {databaseName && (
                 <Badge variant="secondary" className="ml-2">
                   {databaseName}
@@ -559,8 +570,7 @@ export const DatabaseDashboard = memo(
               )}
             </DialogTitle>
             <DialogDescription>
-              Comprehensive overview of database statistics, table metrics, and
-              data distribution.
+              {t('databaseDashboard.description')}
             </DialogDescription>
           </DialogHeader>
 
@@ -568,7 +578,9 @@ export const DatabaseDashboard = memo(
           {isLoading && !stats && (
             <div className="flex flex-col items-center justify-center py-16">
               <Loader2 className="text-muted-foreground mb-4 h-12 w-12 animate-spin" />
-              <p className="text-muted-foreground">Analyzing database...</p>
+              <p className="text-muted-foreground">
+                {t('databaseDashboard.analyzing')}
+              </p>
             </div>
           )}
 
@@ -583,7 +595,7 @@ export const DatabaseDashboard = memo(
                 onClick={analyzeDatabase}
                 className="ml-auto"
               >
-                Retry
+                {t('databaseDashboard.retry')}
               </Button>
             </div>
           )}
@@ -593,9 +605,15 @@ export const DatabaseDashboard = memo(
             <Tabs defaultValue="overview" className="flex-1">
               <div className="flex items-center justify-between">
                 <TabsList>
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="tables">Tables</TabsTrigger>
-                  <TabsTrigger value="charts">Charts</TabsTrigger>
+                  <TabsTrigger value="overview">
+                    {t('databaseDashboard.overview')}
+                  </TabsTrigger>
+                  <TabsTrigger value="tables">
+                    {t('databaseDashboard.tables')}
+                  </TabsTrigger>
+                  <TabsTrigger value="charts">
+                    {t('databaseDashboard.charts')}
+                  </TabsTrigger>
                 </TabsList>
                 <Button
                   variant="ghost"
@@ -606,7 +624,7 @@ export const DatabaseDashboard = memo(
                   <RefreshCw
                     className={cn('mr-2 h-4 w-4', isLoading && 'animate-spin')}
                   />
-                  Refresh
+                  {t('databaseDashboard.refresh')}
                 </Button>
               </div>
 
@@ -615,32 +633,32 @@ export const DatabaseDashboard = memo(
                 {/* Summary Stats */}
                 <div className="grid grid-cols-5 gap-4">
                   <StatCard
-                    label="Tables"
+                    label={t('databaseDashboard.tablesLabel')}
                     value={stats.tableCount}
                     icon={Layers}
                     color="text-blue-500"
                   />
                   <StatCard
-                    label="Total Rows"
+                    label={t('databaseDashboard.totalRows')}
                     value={formatNumber(stats.totalRows)}
                     subValue={stats.totalRows.toLocaleString()}
                     icon={Hash}
                     color="text-green-500"
                   />
                   <StatCard
-                    label="Columns"
+                    label={t('databaseDashboard.columnsLabel')}
                     value={stats.totalColumns}
                     icon={FileText}
                     color="text-purple-500"
                   />
                   <StatCard
-                    label="Indexes"
+                    label={t('databaseDashboard.indexesLabel')}
                     value={stats.totalIndexes}
                     icon={TrendingUp}
                     color="text-amber-500"
                   />
                   <StatCard
-                    label="Total Size"
+                    label={t('databaseDashboard.totalSize')}
                     value={formatBytes(stats.totalSizeBytes)}
                     icon={HardDrive}
                     color="text-rose-500"
@@ -653,7 +671,7 @@ export const DatabaseDashboard = memo(
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-base">
                         <Database className="h-4 w-4" />
-                        Top Tables by Row Count
+                        {t('databaseDashboard.topTablesByRowCount')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -665,7 +683,7 @@ export const DatabaseDashboard = memo(
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-base">
                         <PieChart className="h-4 w-4" />
-                        Data Type Distribution
+                        {t('databaseDashboard.dataTypeDistribution')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -678,7 +696,8 @@ export const DatabaseDashboard = memo(
 
                 {/* Analysis Info */}
                 <div className="text-muted-foreground text-center text-xs">
-                  Last analyzed: {stats.analyzedAt.toLocaleString()}
+                  {t('databaseDashboard.lastAnalyzed')}:{' '}
+                  {stats.analyzedAt.toLocaleString()}
                 </div>
               </TabsContent>
 
@@ -686,9 +705,11 @@ export const DatabaseDashboard = memo(
               <TabsContent value="tables">
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base">All Tables</CardTitle>
+                    <CardTitle className="text-base">
+                      {t('databaseDashboard.allTables')}
+                    </CardTitle>
                     <CardDescription>
-                      Detailed statistics for each table in the database
+                      {t('databaseDashboard.allTablesDescription')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -714,10 +735,10 @@ export const DatabaseDashboard = memo(
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base">
-                      Table Size Comparison
+                      {t('databaseDashboard.tableSizeComparison')}
                     </CardTitle>
                     <CardDescription>
-                      Visual comparison of row counts across all tables
+                      {t('databaseDashboard.tableSizeComparisonDescription')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -728,10 +749,10 @@ export const DatabaseDashboard = memo(
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base">
-                      Column Type Analysis
+                      {t('databaseDashboard.columnTypeAnalysis')}
                     </CardTitle>
                     <CardDescription>
-                      Distribution of column data types across the database
+                      {t('databaseDashboard.columnTypeAnalysisDescription')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -743,10 +764,10 @@ export const DatabaseDashboard = memo(
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base">
-                      Data Type Details
+                      {t('databaseDashboard.dataTypeDetails')}
                     </CardTitle>
                     <CardDescription>
-                      Breakdown of all column types in use
+                      {t('databaseDashboard.dataTypeDetailsDescription')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

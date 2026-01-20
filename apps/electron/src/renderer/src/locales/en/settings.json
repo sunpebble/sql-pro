@@ -51,6 +51,7 @@
     "uiDesc": "Application interface",
     "systemDefault": "System Default",
     "loadingFonts": "Loading fonts...",
+    "searchFonts": "Search fonts...",
     "noFontFound": "No font found."
   },
   "tabSize": {

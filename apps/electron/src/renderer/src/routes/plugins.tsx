@@ -3,6 +3,7 @@ import { Button } from '@sqlpro/ui/button';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeft, Store } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PluginManager } from '@/components/plugins/PluginManager';
 import { PluginMarketplace } from '@/components/plugins/PluginMarketplace';
 
@@ -11,6 +12,7 @@ import { PluginMarketplace } from '@/components/plugins/PluginMarketplace';
  * Displays the plugin manager with installed plugins and access to the marketplace.
  */
 export function PluginsPage() {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const [marketplaceOpen, setMarketplaceOpen] = useState(false);
   const [installedPlugins, setInstalledPlugins] = useState<PluginInfo[]>([]);
@@ -36,14 +38,14 @@ export function PluginsPage() {
             variant="ghost"
             size="icon"
             onClick={handleBack}
-            aria-label="Go back"
+            aria-label={t('plugins.goBack')}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-lg font-semibold">Plugins</h1>
+            <h1 className="text-lg font-semibold">{t('plugins.title')}</h1>
             <p className="text-muted-foreground text-sm">
-              Extend SQL Pro with plugins
+              {t('plugins.description')}
             </p>
           </div>
         </div>
@@ -54,7 +56,7 @@ export function PluginsPage() {
           className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
         >
           <Store className="mr-2 h-4 w-4" />
-          Browse Marketplace
+          {t('plugins.browseMarketplace')}
         </Button>
       </div>
 

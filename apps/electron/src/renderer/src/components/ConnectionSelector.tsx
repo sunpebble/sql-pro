@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { cn } from '@/lib/utils';
 import { useChangesStore, useConnectionStore, useTableFont } from '@/stores';
@@ -35,6 +36,7 @@ export function ConnectionSelector({
   onOpenRecentConnection,
   className,
 }: ConnectionSelectorProps) {
+  const { t } = useTranslation('common');
   const {
     connections,
     activeConnectionId,
@@ -129,7 +131,7 @@ export function ConnectionSelector({
     });
 
     if (!response.success) {
-      throw new Error(response.error || 'Failed to apply changes');
+      throw new Error(response.error || t('connection.failedToApplyChanges'));
     }
 
     // Clear changes and switch connection
@@ -192,7 +194,7 @@ export function ConnectionSelector({
     });
 
     if (!response.success) {
-      throw new Error(response.error || 'Failed to apply changes');
+      throw new Error(response.error || t('connection.failedToApplyChanges'));
     }
 
     // Clear changes and close connection
@@ -275,7 +277,7 @@ export function ConnectionSelector({
         className={cn('w-full justify-start gap-2', className)}
       >
         <Plus className="h-4 w-4" />
-        <span>Open Database...</span>
+        <span>{t('connectionSelector.openDatabase')}</span>
       </Button>
     );
   }
@@ -310,12 +312,15 @@ export function ConnectionSelector({
                   <TooltipTrigger>
                     <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
                   </TooltipTrigger>
-                  <TooltipContent>Unsaved changes</TooltipContent>
+                  <TooltipContent>
+                    {t('connectionSelector.unsavedChanges')}
+                  </TooltipContent>
                 </Tooltip>
               )}
               <Database className="text-muted-foreground h-4 w-4 shrink-0" />
               <span className="truncate">
-                {activeConnection?.filename || 'No connection'}
+                {activeConnection?.filename ||
+                  t('connectionSelector.noConnection')}
               </span>
             </div>
             <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
@@ -333,7 +338,7 @@ export function ConnectionSelector({
           {/* Open connections */}
           {allConnections.length > 0 && (
             <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">
-              Open Connections
+              {t('connectionSelector.openConnections')}
             </DropdownMenuLabel>
           )}
           {allConnections.map((conn) => {
@@ -358,7 +363,9 @@ export function ConnectionSelector({
                       <TooltipTrigger>
                         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
                       </TooltipTrigger>
-                      <TooltipContent>Unsaved changes</TooltipContent>
+                      <TooltipContent>
+                        {t('connectionSelector.unsavedChanges')}
+                      </TooltipContent>
                     </Tooltip>
                   )}
                   <span className="truncate">{conn.filename}</span>
@@ -374,7 +381,9 @@ export function ConnectionSelector({
                       <TooltipTrigger>
                         <KeyRound className="h-3 w-3 text-green-500" />
                       </TooltipTrigger>
-                      <TooltipContent>Encrypted database</TooltipContent>
+                      <TooltipContent>
+                        {t('connectionSelector.encryptedDatabase')}
+                      </TooltipContent>
                     </Tooltip>
                   )}
                   {conn.id === activeConnectionId && (
@@ -399,7 +408,7 @@ export function ConnectionSelector({
               <DropdownMenuSeparator />
               <DropdownMenuLabel className="text-muted-foreground flex items-center gap-1.5 text-xs font-normal">
                 <Clock className="h-3 w-3" />
-                Recent
+                {t('connectionSelector.recent')}
               </DropdownMenuLabel>
               {filteredRecentConnections.slice(0, 5).map((conn) => (
                 <DropdownMenuItem
@@ -423,7 +432,9 @@ export function ConnectionSelector({
                       <TooltipTrigger>
                         <KeyRound className="h-3 w-3 shrink-0 text-green-500" />
                       </TooltipTrigger>
-                      <TooltipContent>Encrypted database</TooltipContent>
+                      <TooltipContent>
+                        {t('connectionSelector.encryptedDatabase')}
+                      </TooltipContent>
                     </Tooltip>
                   )}
                 </DropdownMenuItem>
@@ -439,7 +450,7 @@ export function ConnectionSelector({
             onClick={handleOpenDatabase}
           >
             <Plus className="h-4 w-4" />
-            <span>Open Database...</span>
+            <span>{t('connectionSelector.openDatabase')}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -366,6 +366,7 @@ function FilterRow({
   onUpdate,
   onRemove,
 }: FilterRowProps) {
+  const { t } = useTranslation();
   const selectedTable = tableOptions.find((t) => t.alias === filter.table);
   const columns = selectedTable?.columns || [];
 
@@ -400,7 +401,7 @@ function FilterRow({
         }}
       >
         <SelectTrigger className="h-7 w-24">
-          <SelectValue placeholder="Table" />
+          <SelectValue placeholder={t('queryBuilder.table', 'Table')} />
         </SelectTrigger>
         <SelectContent>
           {tableOptions.map((t) => (
@@ -418,7 +419,7 @@ function FilterRow({
         onValueChange={(v) => v && onUpdate({ column: v })}
       >
         <SelectTrigger className="h-7 w-28">
-          <SelectValue placeholder="Column" />
+          <SelectValue placeholder={t('queryBuilder.column', 'Column')} />
         </SelectTrigger>
         <SelectContent>
           {columns.map((col) => (
@@ -449,7 +450,7 @@ function FilterRow({
         <Input
           value={filter.value}
           onChange={(e) => onUpdate({ value: e.target.value })}
-          placeholder="Value"
+          placeholder={t('queryBuilder.value', 'Value')}
           className="h-7 flex-1"
         />
       )}
@@ -478,7 +479,8 @@ interface SortRowProps {
 }
 
 function SortRow({ sort, tableOptions, onUpdate, onRemove }: SortRowProps) {
-  const selectedTable = tableOptions.find((t) => t.alias === sort.table);
+  const { t } = useTranslation();
+  const selectedTable = tableOptions.find((tbl) => tbl.alias === sort.table);
   const columns = selectedTable?.columns || [];
 
   return (
@@ -487,7 +489,7 @@ function SortRow({ sort, tableOptions, onUpdate, onRemove }: SortRowProps) {
         value={sort.table}
         onValueChange={(v) => {
           if (!v) return;
-          const table = tableOptions.find((t) => t.alias === v);
+          const table = tableOptions.find((tbl) => tbl.alias === v);
           onUpdate({
             table: v,
             column: table?.columns[0]?.name || '',
@@ -495,12 +497,12 @@ function SortRow({ sort, tableOptions, onUpdate, onRemove }: SortRowProps) {
         }}
       >
         <SelectTrigger className="h-7 w-28">
-          <SelectValue placeholder="Table" />
+          <SelectValue placeholder={t('queryBuilder.table', 'Table')} />
         </SelectTrigger>
         <SelectContent>
-          {tableOptions.map((t) => (
-            <SelectItem key={t.alias} value={t.alias}>
-              {t.alias}
+          {tableOptions.map((tbl) => (
+            <SelectItem key={tbl.alias} value={tbl.alias}>
+              {tbl.alias}
             </SelectItem>
           ))}
         </SelectContent>
@@ -513,7 +515,7 @@ function SortRow({ sort, tableOptions, onUpdate, onRemove }: SortRowProps) {
         onValueChange={(v) => v && onUpdate({ column: v })}
       >
         <SelectTrigger className="h-7 flex-1">
-          <SelectValue placeholder="Column" />
+          <SelectValue placeholder={t('queryBuilder.column', 'Column')} />
         </SelectTrigger>
         <SelectContent>
           {columns.map((col) => (

@@ -88,9 +88,7 @@ function QueryBuilderTableNodeComponent({
               <X className="h-3.5 w-3.5" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
-            {t('queryBuilder.removeTable', 'Remove table')}
-          </TooltipContent>
+          <TooltipContent>{t('queryBuilder.removeTable')}</TooltipContent>
         </Tooltip>
       </div>
 
@@ -110,8 +108,8 @@ function QueryBuilderTableNodeComponent({
         />
         <span className="text-muted-foreground text-sm font-medium">
           {allSelected
-            ? t('queryBuilder.deselectAll', 'Deselect all')
-            : t('queryBuilder.selectAll', 'Select all')}
+            ? t('queryBuilder.deselectAll')
+            : t('queryBuilder.selectAll')}
         </span>
         <span className="text-muted-foreground ml-auto text-xs">
           {selectedColumns.size}/{table.columns.length}
@@ -161,7 +159,9 @@ function QueryBuilderTableNodeComponent({
                     <TooltipTrigger>
                       <Key className="h-3 w-3 text-amber-500" />
                     </TooltipTrigger>
-                    <TooltipContent>Primary Key</TooltipContent>
+                    <TooltipContent>
+                      {t('queryBuilder.primaryKey')}
+                    </TooltipContent>
                   </Tooltip>
                 )}
                 {isFK && (
@@ -169,7 +169,9 @@ function QueryBuilderTableNodeComponent({
                     <TooltipTrigger>
                       <Link2 className="h-3 w-3 text-blue-500" />
                     </TooltipTrigger>
-                    <TooltipContent>Foreign Key</TooltipContent>
+                    <TooltipContent>
+                      {t('queryBuilder.foreignKey')}
+                    </TooltipContent>
                   </Tooltip>
                 )}
               </div>
@@ -210,7 +212,7 @@ function QueryBuilderTableNodeComponent({
       {/* Footer with row count */}
       {table.rowCount !== undefined && (
         <div className="text-muted-foreground border-t px-3 py-1.5 text-xs">
-          {table.rowCount.toLocaleString()} {t('queryBuilder.rows', 'rows')}
+          {table.rowCount.toLocaleString()} {t('queryBuilder.rows')}
         </div>
       )}
     </div>

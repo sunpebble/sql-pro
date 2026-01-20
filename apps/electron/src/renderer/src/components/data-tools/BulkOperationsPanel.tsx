@@ -23,6 +23,7 @@ import {
   X,
 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -69,19 +70,19 @@ const FORMAT_INFO = {
   csv: {
     icon: FileSpreadsheet,
     label: 'CSV',
-    description: 'Comma-separated values',
+    descriptionKey: 'bulkOperations.csvDescription',
     extension: '.csv',
   },
   json: {
     icon: FileJson,
     label: 'JSON',
-    description: 'JavaScript Object Notation',
+    descriptionKey: 'bulkOperations.jsonDescription',
     extension: '.json',
   },
   sql: {
     icon: FileText,
     label: 'SQL',
-    description: 'SQL INSERT statements',
+    descriptionKey: 'bulkOperations.sqlDescription',
     extension: '.sql',
   },
 };
@@ -95,6 +96,7 @@ export const BulkOperationsPanel = memo(
     onExport,
     onImport,
   }: BulkOperationsPanelProps) => {
+    const { t } = useTranslation('common');
     const [activeTab, setActiveTab] = useState<'export' | 'import'>('export');
 
     // Export state
@@ -150,7 +152,7 @@ export const BulkOperationsPanel = memo(
           success: false,
           rowsImported: 0,
           rowsFailed: 0,
-          errors: ['Import failed. Please check your file format.'],
+          errors: [t('bulkOperations.importFailed')],
         });
       } finally {
         setIsImporting(false);
@@ -187,7 +189,7 @@ export const BulkOperationsPanel = memo(
               ) : (
                 <ArrowUpFromLine className="h-5 w-5" />
               )}
-              Bulk Operations
+              {t('bulkOperations.title')}
               {tableName && (
                 <Badge variant="secondary" className="ml-2">
                   {tableName}
@@ -195,7 +197,7 @@ export const BulkOperationsPanel = memo(
               )}
             </DialogTitle>
             <DialogDescription>
-              Export or import data in various formats.
+              {t('bulkOperations.description')}
             </DialogDescription>
           </DialogHeader>
 
@@ -206,18 +208,18 @@ export const BulkOperationsPanel = memo(
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="export" className="gap-2">
                 <ArrowDownToLine className="h-4 w-4" />
-                Export
+                {t('bulkOperations.export')}
               </TabsTrigger>
               <TabsTrigger value="import" className="gap-2">
                 <ArrowUpFromLine className="h-4 w-4" />
-                Import
+                {t('bulkOperations.import')}
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="export" className="space-y-4 pt-4">
               {/* Format Selection */}
               <div className="grid gap-2">
-                <Label>Export Format</Label>
+                <Label>{t('bulkOperations.exportFormat')}</Label>
                 <div className="grid grid-cols-3 gap-2">
                   {(Object.keys(FORMAT_INFO) as ExportFormat[]).map(
                     (format) => {
@@ -250,7 +252,9 @@ export const BulkOperationsPanel = memo(
               {exportFormat === 'csv' && (
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="grid gap-2">
-                    <Label htmlFor="delimiter">Delimiter</Label>
+                    <Label htmlFor="delimiter">
+                      {t('bulkOperations.delimiter')}
+                    </Label>
                     <Select
                       value={exportOptions.delimiter}
                       onValueChange={(v) =>
@@ -262,15 +266,25 @@ export const BulkOperationsPanel = memo(
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value=",">Comma (,)</SelectItem>
-                        <SelectItem value=";">Semicolon (;)</SelectItem>
-                        <SelectItem value="\t">Tab</SelectItem>
-                        <SelectItem value="|">Pipe (|)</SelectItem>
+                        <SelectItem value=",">
+                          {t('bulkOperations.comma')}
+                        </SelectItem>
+                        <SelectItem value=";">
+                          {t('bulkOperations.semicolon')}
+                        </SelectItem>
+                        <SelectItem value="\t">
+                          {t('bulkOperations.tab')}
+                        </SelectItem>
+                        <SelectItem value="|">
+                          {t('bulkOperations.pipe')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="nullValue">NULL Representation</Label>
+                    <Label htmlFor="nullValue">
+                      {t('bulkOperations.nullRepresentation')}
+                    </Label>
                     <Input
                       id="nullValue"
                       value={exportOptions.nullValue}
@@ -289,7 +303,11 @@ export const BulkOperationsPanel = memo(
               {/* Columns Preview */}
               {columns.length > 0 && (
                 <div className="grid gap-2">
-                  <Label>Columns to Export ({columns.length})</Label>
+                  <Label>
+                    {t('bulkOperations.columnsToExport', {
+                      count: columns.length,
+                    })}
+                  </Label>
                   <div className="bg-muted/50 flex flex-wrap gap-1 rounded-lg p-2">
                     {columns.map((col) => (
                       <Badge key={col} variant="secondary" className="text-xs">
@@ -328,16 +346,18 @@ export const BulkOperationsPanel = memo(
                       onClick={() => setImportFile(null)}
                     >
                       <X className="mr-1 h-4 w-4" />
-                      Remove
+                      {t('bulkOperations.remove')}
                     </Button>
                   </>
                 ) : (
                   <>
                     <Upload className="text-muted-foreground h-10 w-10" />
                     <div className="text-center">
-                      <p className="font-medium">Drop a file here</p>
+                      <p className="font-medium">
+                        {t('bulkOperations.dropFileHere')}
+                      </p>
                       <p className="text-muted-foreground text-sm">
-                        or click to browse
+                        {t('bulkOperations.orClickToBrowse')}
                       </p>
                     </div>
                     <Input
@@ -354,7 +374,7 @@ export const BulkOperationsPanel = memo(
                         'cursor-pointer'
                       )}
                     >
-                      Browse Files
+                      {t('bulkOperations.browseFiles')}
                     </Label>
                   </>
                 )}
@@ -364,7 +384,9 @@ export const BulkOperationsPanel = memo(
               {importFile && (
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="grid gap-2">
-                    <Label htmlFor="hasHeaders">First Row as Headers</Label>
+                    <Label htmlFor="hasHeaders">
+                      {t('bulkOperations.firstRowAsHeaders')}
+                    </Label>
                     <Select
                       value={importOptions.hasHeaders ? 'yes' : 'no'}
                       onValueChange={(v) =>
@@ -378,13 +400,19 @@ export const BulkOperationsPanel = memo(
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="yes">Yes</SelectItem>
-                        <SelectItem value="no">No</SelectItem>
+                        <SelectItem value="yes">
+                          {t('bulkOperations.yes')}
+                        </SelectItem>
+                        <SelectItem value="no">
+                          {t('bulkOperations.no')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="batchSize">Batch Size</Label>
+                    <Label htmlFor="batchSize">
+                      {t('bulkOperations.batchSize')}
+                    </Label>
                     <Input
                       id="batchSize"
                       type="number"
@@ -404,7 +432,7 @@ export const BulkOperationsPanel = memo(
               {isImporting && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span>Importing...</span>
+                    <span>{t('bulkOperations.importing')}</span>
                     <span>{importProgress}%</span>
                   </div>
                   <Progress value={importProgress} />
@@ -429,13 +457,17 @@ export const BulkOperationsPanel = memo(
                   <div className="flex-1">
                     <p className="font-medium">
                       {importResult.success
-                        ? 'Import Complete'
-                        : 'Import Failed'}
+                        ? t('bulkOperations.importComplete')
+                        : t('bulkOperations.importFailed')}
                     </p>
                     <p className="text-muted-foreground text-sm">
-                      {importResult.rowsImported} rows imported
+                      {t('bulkOperations.rowsImported', {
+                        count: importResult.rowsImported,
+                      })}
                       {importResult.rowsFailed > 0 &&
-                        `, ${importResult.rowsFailed} failed`}
+                        t('bulkOperations.rowsFailed', {
+                          count: importResult.rowsFailed,
+                        })}
                     </p>
                     {importResult.errors.length > 0 && (
                       <ul className="mt-2 text-sm text-red-600">
@@ -452,7 +484,7 @@ export const BulkOperationsPanel = memo(
 
           <DialogFooter>
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {t('bulkOperations.cancel')}
             </Button>
             {activeTab === 'export' ? (
               <Button onClick={handleExport} disabled={isExporting}>
@@ -461,7 +493,7 @@ export const BulkOperationsPanel = memo(
                 ) : (
                   <ArrowDownToLine className="mr-2 h-4 w-4" />
                 )}
-                Export
+                {t('bulkOperations.export')}
               </Button>
             ) : (
               <Button
@@ -473,7 +505,7 @@ export const BulkOperationsPanel = memo(
                 ) : (
                   <ArrowUpFromLine className="mr-2 h-4 w-4" />
                 )}
-                Import
+                {t('bulkOperations.import')}
               </Button>
             )}
           </DialogFooter>

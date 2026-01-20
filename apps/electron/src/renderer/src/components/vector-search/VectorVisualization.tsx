@@ -632,11 +632,17 @@ export const VectorVisualization = memo(
               variant="outline"
               size="sm"
             >
-              <ToggleGroupItem value="2d" aria-label="2D visualization">
+              <ToggleGroupItem
+                value="2d"
+                aria-label={t('vectorSearch.2dVisualization')}
+              >
                 <Square className="mr-1 h-3 w-3" />
                 2D
               </ToggleGroupItem>
-              <ToggleGroupItem value="3d" aria-label="3D visualization">
+              <ToggleGroupItem
+                value="3d"
+                aria-label={t('vectorSearch.3dVisualization')}
+              >
                 <Box className="mr-1 h-3 w-3" />
                 3D
               </ToggleGroupItem>

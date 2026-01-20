@@ -16,6 +16,7 @@ import {
   Type,
 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -127,6 +128,7 @@ interface ColumnCardProps {
 }
 
 const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
+  const { t } = useTranslation('common');
   const Icon = getTypeIcon(column.type);
   const nullPercentage = (column.nullCount / column.totalCount) * 100;
   const uniquePercentage = (column.distinctCount / column.totalCount) * 100;
@@ -150,17 +152,21 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
           </div>
         </div>
         <Badge variant="secondary" className="text-xs">
-          {column.distinctCount.toLocaleString()} unique
+          {column.distinctCount.toLocaleString()} {t('dataProfiler.unique')}
         </Badge>
       </div>
       <div className="mt-3 space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Null %</span>
+          <span className="text-muted-foreground">
+            {t('dataProfiler.nullPercentage')}
+          </span>
           <span>{nullPercentage.toFixed(1)}%</span>
         </div>
         <Progress value={nullPercentage} className="h-1" />
         <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Unique %</span>
+          <span className="text-muted-foreground">
+            {t('dataProfiler.uniquePercentage')}
+          </span>
           <span>{uniquePercentage.toFixed(1)}%</span>
         </div>
         <Progress value={uniquePercentage} className="h-1" />
@@ -174,6 +180,7 @@ interface ColumnDetailProps {
 }
 
 const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
+  const { t } = useTranslation('common');
   const nullPercentage = (column.nullCount / column.totalCount) * 100;
   const emptyPercentage = (column.emptyCount / column.totalCount) * 100;
   const filledPercentage = 100 - nullPercentage - emptyPercentage;
@@ -200,21 +207,27 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
           <p className="text-lg font-bold">
             {column.distinctCount.toLocaleString()}
           </p>
-          <p className="text-muted-foreground text-xs">Distinct Values</p>
+          <p className="text-muted-foreground text-xs">
+            {t('dataProfiler.distinctValues')}
+          </p>
         </div>
         <div className="bg-muted/50 rounded-lg p-3 text-center">
           <p className="text-lg font-bold">{nullPercentage.toFixed(1)}%</p>
-          <p className="text-muted-foreground text-xs">Null Values</p>
+          <p className="text-muted-foreground text-xs">
+            {t('dataProfiler.nullValues')}
+          </p>
         </div>
         <div className="bg-muted/50 rounded-lg p-3 text-center">
           <p className="text-lg font-bold">{emptyPercentage.toFixed(1)}%</p>
-          <p className="text-muted-foreground text-xs">Empty Values</p>
+          <p className="text-muted-foreground text-xs">
+            {t('dataProfiler.emptyValues')}
+          </p>
         </div>
       </div>
 
       {/* Data Quality Bar */}
       <div className="space-y-2">
-        <h4 className="text-sm font-medium">Data Quality</h4>
+        <h4 className="text-sm font-medium">{t('dataProfiler.dataQuality')}</h4>
         <div className="flex h-4 overflow-hidden rounded-full">
           <div
             className="bg-green-500"
@@ -229,15 +242,21 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         <div className="flex justify-between text-xs">
           <div className="flex items-center gap-1">
             <div className="h-2 w-2 rounded-full bg-green-500" />
-            <span>Filled ({filledPercentage.toFixed(1)}%)</span>
+            <span>
+              {t('dataProfiler.filled')} ({filledPercentage.toFixed(1)}%)
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <div className="h-2 w-2 rounded-full bg-amber-500" />
-            <span>Empty ({emptyPercentage.toFixed(1)}%)</span>
+            <span>
+              {t('dataProfiler.empty')} ({emptyPercentage.toFixed(1)}%)
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <div className="h-2 w-2 rounded-full bg-red-500" />
-            <span>Null ({nullPercentage.toFixed(1)}%)</span>
+            <span>
+              {t('dataProfiler.null')} ({nullPercentage.toFixed(1)}%)
+            </span>
           </div>
         </div>
       </div>
@@ -245,11 +264,15 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
       {/* Min/Max/Avg */}
       {(column.minValue !== undefined || column.maxValue !== undefined) && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium">Value Range</h4>
+          <h4 className="text-sm font-medium">
+            {t('dataProfiler.valueRange')}
+          </h4>
           <div className="bg-muted/50 grid grid-cols-3 gap-3 rounded-lg p-3">
             {column.minValue !== undefined && (
               <div>
-                <p className="text-muted-foreground text-xs">Min</p>
+                <p className="text-muted-foreground text-xs">
+                  {t('dataProfiler.min')}
+                </p>
                 <p className="truncate font-mono text-sm">
                   {String(column.minValue)}
                 </p>
@@ -257,7 +280,9 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
             )}
             {column.avgValue !== undefined && (
               <div>
-                <p className="text-muted-foreground text-xs">Average</p>
+                <p className="text-muted-foreground text-xs">
+                  {t('dataProfiler.average')}
+                </p>
                 <p className="font-mono text-sm">
                   {column.avgValue.toFixed(2)}
                 </p>
@@ -265,7 +290,9 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
             )}
             {column.maxValue !== undefined && (
               <div>
-                <p className="text-muted-foreground text-xs">Max</p>
+                <p className="text-muted-foreground text-xs">
+                  {t('dataProfiler.max')}
+                </p>
                 <p className="truncate font-mono text-sm">
                   {String(column.maxValue)}
                 </p>
@@ -278,7 +305,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
       {/* Top Values */}
       {column.topValues && column.topValues.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium">Top Values</h4>
+          <h4 className="text-sm font-medium">{t('dataProfiler.topValues')}</h4>
           <div className="space-y-1">
             {column.topValues.map((item) => (
               <div
@@ -288,7 +315,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <span className="truncate font-mono text-sm">
-                      {item.value || '(empty)'}
+                      {item.value || t('dataProfiler.emptyValue')}
                     </span>
                     <span className="text-muted-foreground shrink-0 text-xs">
                       {item.count.toLocaleString()} (
@@ -308,6 +335,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
 
 export const DataProfiler = memo(
   ({ open, onOpenChange, tableName, onAnalyze }: DataProfilerProps) => {
+    const { t } = useTranslation('common');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [profile, setProfile] = useState<TableProfile | null>(null);
     const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
@@ -336,7 +364,7 @@ export const DataProfiler = memo(
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Data Profiler
+              {t('dataProfiler.title')}
               {tableName && (
                 <Badge variant="secondary" className="ml-2">
                   {tableName}
@@ -344,8 +372,7 @@ export const DataProfiler = memo(
               )}
             </DialogTitle>
             <DialogDescription>
-              Analyze column statistics, data quality, and distribution
-              patterns.
+              {t('dataProfiler.description')}
             </DialogDescription>
           </DialogHeader>
 
@@ -353,9 +380,11 @@ export const DataProfiler = memo(
           {!profile && (
             <div className="flex flex-col items-center justify-center py-12">
               <PieChart className="text-muted-foreground mb-4 h-16 w-16 opacity-30" />
-              <h3 className="mb-2 text-lg font-medium">Ready to Profile</h3>
+              <h3 className="mb-2 text-lg font-medium">
+                {t('dataProfiler.readyToProfile')}
+              </h3>
               <p className="text-muted-foreground mb-4 text-sm">
-                Analyze your data to discover patterns and quality issues
+                {t('dataProfiler.analyzeDescription')}
               </p>
               <Button onClick={handleAnalyze} disabled={isAnalyzing}>
                 {isAnalyzing ? (
@@ -363,7 +392,7 @@ export const DataProfiler = memo(
                 ) : (
                   <BarChart3 className="mr-2 h-4 w-4" />
                 )}
-                Start Analysis
+                {t('dataProfiler.startAnalysis')}
               </Button>
             </div>
           )}
@@ -373,8 +402,12 @@ export const DataProfiler = memo(
             <Tabs defaultValue="overview" className="flex-1">
               <div className="flex items-center justify-between">
                 <TabsList>
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="columns">Columns</TabsTrigger>
+                  <TabsTrigger value="overview">
+                    {t('dataProfiler.overview')}
+                  </TabsTrigger>
+                  <TabsTrigger value="columns">
+                    {t('dataProfiler.columns')}
+                  </TabsTrigger>
                 </TabsList>
                 <Button
                   variant="ghost"
@@ -388,7 +421,7 @@ export const DataProfiler = memo(
                       isAnalyzing && 'animate-spin'
                     )}
                   />
-                  Refresh
+                  {t('dataProfiler.refresh')}
                 </Button>
               </div>
 
@@ -396,19 +429,19 @@ export const DataProfiler = memo(
                 {/* Summary Stats */}
                 <div className="grid grid-cols-4 gap-4">
                   <StatCard
-                    label="Total Rows"
+                    label={t('dataProfiler.totalRows')}
                     value={profile.rowCount.toLocaleString()}
                     icon={Hash}
                     color="text-blue-500"
                   />
                   <StatCard
-                    label="Columns"
+                    label={t('dataProfiler.columnsLabel')}
                     value={profile.columnCount}
                     icon={Type}
                     color="text-green-500"
                   />
                   <StatCard
-                    label="Table Size"
+                    label={t('dataProfiler.tableSize')}
                     value={
                       profile.sizeBytes
                         ? `${(profile.sizeBytes / 1024).toFixed(1)} KB`
@@ -418,7 +451,7 @@ export const DataProfiler = memo(
                     color="text-purple-500"
                   />
                   <StatCard
-                    label="Analyzed"
+                    label={t('dataProfiler.analyzed')}
                     value={new Date(profile.analyzedAt).toLocaleTimeString()}
                     subValue={new Date(profile.analyzedAt).toLocaleDateString()}
                     icon={Calendar}
@@ -428,7 +461,9 @@ export const DataProfiler = memo(
 
                 {/* Column Summary Grid */}
                 <div className="space-y-2">
-                  <h3 className="font-medium">Column Summary</h3>
+                  <h3 className="font-medium">
+                    {t('dataProfiler.columnSummary')}
+                  </h3>
                   <ScrollArea className="h-64">
                     <div className="grid grid-cols-2 gap-3 pr-4">
                       {profile.columns.map((col) => (
@@ -476,7 +511,7 @@ export const DataProfiler = memo(
                     <ColumnDetail column={selectedColumnData} />
                   ) : (
                     <div className="text-muted-foreground flex h-full items-center justify-center">
-                      Select a column to view details
+                      {t('dataProfiler.selectColumn')}
                     </div>
                   )}
                 </div>

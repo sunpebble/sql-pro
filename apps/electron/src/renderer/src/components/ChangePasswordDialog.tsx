@@ -4,6 +4,7 @@ import { Button } from '@sqlpro/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, Info, KeyRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -27,6 +28,7 @@ export function ChangePasswordDialog({
   dbPath,
   isCurrentlyEncrypted,
 }: ChangePasswordDialogProps) {
+  const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [rememberPassword, setRememberPassword] = useState(false);
@@ -91,7 +93,7 @@ export function ChangePasswordDialog({
         onSuccess();
         handleOpenChange(false);
       } else {
-        setError(result.error || 'Failed to change password');
+        setError(result.error || t('changePassword.failedToChangePassword'));
       }
     } catch (err) {
       setError(
@@ -108,7 +110,7 @@ export function ChangePasswordDialog({
 
     // Validate passwords match
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('changePassword.passwordsNotMatch'));
       return;
     }
 
@@ -137,13 +139,13 @@ export function ChangePasswordDialog({
             </div>
             <Dialog.Title className="text-lg font-semibold">
               {isCurrentlyEncrypted
-                ? 'Change Database Password'
-                : 'Encrypt Database'}
+                ? t('changePassword.changeTitle')
+                : t('changePassword.encryptTitle')}
             </Dialog.Title>
             <Dialog.Description className="text-muted-foreground mt-2 text-sm">
               {isCurrentlyEncrypted
-                ? `Change the encryption password for "${filename}"`
-                : `Add encryption protection to "${filename}"`}
+                ? t('changePassword.changeDesc', { filename })
+                : t('changePassword.encryptDesc', { filename })}
             </Dialog.Description>
           </div>
 
@@ -158,7 +160,7 @@ export function ChangePasswordDialog({
             {/* New Password */}
             <div className="space-y-2">
               <label htmlFor="newPassword" className="text-sm font-medium">
-                New Password
+                {t('changePassword.newPassword')}
               </label>
               <input
                 id="newPassword"
@@ -167,8 +169,8 @@ export function ChangePasswordDialog({
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder={
                   isCurrentlyEncrypted
-                    ? 'Enter new password (empty to remove encryption)'
-                    : 'Enter password'
+                    ? t('changePassword.newPasswordPlaceholder')
+                    : t('changePassword.enterPassword')
                 }
                 autoFocus
                 className={cn(
@@ -179,7 +181,7 @@ export function ChangePasswordDialog({
               />
               {isCurrentlyEncrypted && (
                 <p className="text-muted-foreground text-xs">
-                  Leave empty to remove encryption
+                  {t('changePassword.leaveEmptyToRemove')}
                 </p>
               )}
             </div>
@@ -187,14 +189,14 @@ export function ChangePasswordDialog({
             {/* Confirm Password */}
             <div className="space-y-2">
               <label htmlFor="confirmPassword" className="text-sm font-medium">
-                Confirm Password
+                {t('changePassword.confirmPassword')}
               </label>
               <input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm new password"
+                placeholder={t('changePassword.confirmPlaceholder')}
                 className={cn(
                   'border-input bg-background w-full rounded-md border px-3 py-2 text-sm',
                   'placeholder:text-muted-foreground',
@@ -204,7 +206,7 @@ export function ChangePasswordDialog({
               />
               {confirmPassword && !passwordsMatch && (
                 <p className="text-destructive text-xs">
-                  Passwords do not match
+                  {t('changePassword.passwordsNotMatch')}
                 </p>
               )}
             </div>
@@ -227,7 +229,7 @@ export function ChangePasswordDialog({
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      Remember new password
+                      {t('changePassword.rememberPassword')}
                     </span>
                     {!isStorageAvailable && (
                       <Tooltip>
@@ -235,13 +237,13 @@ export function ChangePasswordDialog({
                           <Info className="text-muted-foreground h-3.5 w-3.5" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Secure storage is not available on this system</p>
+                          <p>{t('changePassword.secureStorageNotAvailable')}</p>
                         </TooltipContent>
                       </Tooltip>
                     )}
                   </div>
                   <p className="text-muted-foreground text-xs">
-                    Securely store password in system keychain
+                    {t('changePassword.storeInKeychain')}
                   </p>
                 </div>
               </label>
@@ -251,7 +253,7 @@ export function ChangePasswordDialog({
             {newPassword && hasSavedPassword && (
               <div className="text-muted-foreground flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
                 <Info className="h-4 w-4 text-blue-500" />
-                <span>Your saved password will be automatically updated.</span>
+                <span>{t('changePassword.autoUpdateSavedPassword')}</span>
               </div>
             )}
 
@@ -260,8 +262,7 @@ export function ChangePasswordDialog({
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Removing encryption will make your database accessible without
-                  a password.
+                  {t('changePassword.removeEncryptionWarning')}
                 </AlertDescription>
               </Alert>
             )}
@@ -274,16 +275,16 @@ export function ChangePasswordDialog({
                 onClick={() => handleOpenChange(false)}
                 disabled={isLoading}
               >
-                Cancel
+                {t('changePassword.cancel')}
               </Button>
               <Button type="submit" className="flex-1" disabled={!canSubmit}>
                 {isLoading
-                  ? 'Changing...'
+                  ? t('changePassword.changing')
                   : newPassword === ''
-                    ? 'Remove Encryption'
+                    ? t('changePassword.removeEncryption')
                     : isCurrentlyEncrypted
-                      ? 'Change Password'
-                      : 'Encrypt'}
+                      ? t('changePassword.changePasswordBtn')
+                      : t('changePassword.encrypt')}
               </Button>
             </div>
           </form>
@@ -294,9 +295,9 @@ export function ChangePasswordDialog({
       <ConfirmDialog
         open={showRemoveEncryptionConfirm}
         onOpenChange={setShowRemoveEncryptionConfirm}
-        title="Remove Encryption"
-        description="Are you sure you want to remove encryption from this database? The database will no longer be protected."
-        confirmLabel="Remove Encryption"
+        title={t('changePassword.removeEncryptionTitle')}
+        description={t('changePassword.removeEncryptionDesc')}
+        confirmLabel={t('changePassword.removeEncryption')}
         variant="destructive"
         onConfirm={performPasswordChange}
       />

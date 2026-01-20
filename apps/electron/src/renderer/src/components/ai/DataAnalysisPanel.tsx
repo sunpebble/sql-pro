@@ -14,6 +14,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import {
   Dialog,
@@ -62,6 +63,7 @@ const SEVERITY_ICON_STYLES: Record<string, string> = {
 
 export const DataAnalysisPanel = memo(
   ({ open, onOpenChange, columns, rows }: DataAnalysisPanelProps) => {
+    const { t } = useTranslation('common');
     const [showSettings, setShowSettings] = useState(false);
 
     const { analyzeData, insights, summary, isAnalyzing, error, isConfigured } =
@@ -82,11 +84,10 @@ export const DataAnalysisPanel = memo(
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
-                AI Data Analysis
+                {t('dataAnalysis.title')}
               </DialogTitle>
               <DialogDescription>
-                Use AI to detect anomalies, identify patterns, and get
-                intelligent suggestions about your data.
+                {t('dataAnalysis.description')}
               </DialogDescription>
             </DialogHeader>
 
@@ -95,9 +96,11 @@ export const DataAnalysisPanel = memo(
               <div className="bg-warning/10 border-warning/50 flex items-start gap-3 rounded-lg border p-3">
                 <AlertCircle className="text-warning mt-0.5 h-5 w-5 shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium">AI not configured</p>
+                  <p className="text-sm font-medium">
+                    {t('dataAnalysis.aiNotConfigured')}
+                  </p>
                   <p className="text-muted-foreground text-xs">
-                    Please configure your AI provider to use data analysis.
+                    {t('dataAnalysis.aiNotConfiguredDescription')}
                   </p>
                 </div>
                 <Button
@@ -106,7 +109,7 @@ export const DataAnalysisPanel = memo(
                   onClick={() => setShowSettings(true)}
                 >
                   <Settings2 className="mr-1 h-3 w-3" />
-                  Configure
+                  {t('dataAnalysis.configure')}
                 </Button>
               </div>
             )}
@@ -114,10 +117,19 @@ export const DataAnalysisPanel = memo(
             {/* Data Info */}
             <div className="bg-muted/50 flex items-center justify-between rounded-lg p-3">
               <div className="text-sm">
-                <span className="text-muted-foreground">Analyzing </span>
-                <span className="font-medium">{rows.length} rows</span>
-                <span className="text-muted-foreground"> across </span>
-                <span className="font-medium">{columns.length} columns</span>
+                <span className="text-muted-foreground">
+                  {t('dataAnalysis.analyzing')}{' '}
+                </span>
+                <span className="font-medium">
+                  {rows.length} {t('dataAnalysis.rows')}
+                </span>
+                <span className="text-muted-foreground">
+                  {' '}
+                  {t('dataAnalysis.across')}{' '}
+                </span>
+                <span className="font-medium">
+                  {columns.length} {t('dataAnalysis.columns')}
+                </span>
               </div>
               <Button
                 size="sm"
@@ -127,12 +139,12 @@ export const DataAnalysisPanel = memo(
                 {isAnalyzing ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Analyzing...
+                    {t('dataAnalysis.analyzingButton')}
                   </>
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Analyze Data
+                    {t('dataAnalysis.analyzeData')}
                   </>
                 )}
               </Button>
@@ -144,7 +156,7 @@ export const DataAnalysisPanel = memo(
                 <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                 <div>
                   <p className="text-destructive text-sm font-medium">
-                    Analysis Error
+                    {t('dataAnalysis.analysisError')}
                   </p>
                   <p className="text-destructive/80 text-xs">{error}</p>
                 </div>
@@ -156,7 +168,9 @@ export const DataAnalysisPanel = memo(
               <div className="bg-gold/5 border-gold/20 rounded-lg border p-4">
                 <div className="mb-2 flex items-center gap-2">
                   <Info className="text-gold h-4 w-4" />
-                  <span className="text-sm font-medium">Summary</span>
+                  <span className="text-sm font-medium">
+                    {t('dataAnalysis.summary')}
+                  </span>
                 </div>
                 <p className="text-muted-foreground text-sm">{summary}</p>
               </div>
@@ -169,15 +183,15 @@ export const DataAnalysisPanel = memo(
                 <div className="flex gap-4">
                   <Badge variant="outline" className="gap-1">
                     <AlertTriangle className="h-3 w-3 text-amber-600" />
-                    {anomalies.length} Anomalies
+                    {anomalies.length} {t('dataAnalysis.anomalies')}
                   </Badge>
                   <Badge variant="outline" className="gap-1">
                     <Lightbulb className="h-3 w-3 text-blue-600" />
-                    {suggestions.length} Suggestions
+                    {suggestions.length} {t('dataAnalysis.suggestions')}
                   </Badge>
                   <Badge variant="outline" className="gap-1">
                     <TrendingUp className="h-3 w-3 text-green-600" />
-                    {patterns.length} Patterns
+                    {patterns.length} {t('dataAnalysis.patterns')}
                   </Badge>
                 </div>
 
@@ -241,11 +255,11 @@ export const DataAnalysisPanel = memo(
             {!isAnalyzing && insights.length === 0 && !error && (
               <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center py-12">
                 <BarChart3 className="mb-4 h-12 w-12 opacity-30" />
-                <p className="text-lg font-medium">Ready to Analyze</p>
+                <p className="text-lg font-medium">
+                  {t('dataAnalysis.readyToAnalyze')}
+                </p>
                 <p className="text-center text-sm">
-                  Click Analyze Data to detect anomalies,
-                  <br />
-                  identify patterns, and get suggestions.
+                  {t('dataAnalysis.readyToAnalyzeDescription')}
                 </p>
               </div>
             )}

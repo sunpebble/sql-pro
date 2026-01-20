@@ -14,6 +14,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -124,6 +125,8 @@ export function PluginMarketplace({
   installedPlugins = [],
   onPluginInstalled,
 }: PluginMarketplaceProps) {
+  const { t } = useTranslation();
+
   // State for marketplace data
   const [state, setState] = React.useState<MarketplaceState>({
     plugins: [],
@@ -175,7 +178,7 @@ export function PluginMarketplace({
         setState((prev) => ({
           ...prev,
           isLoading: false,
-          error: response.error || 'Failed to fetch marketplace data',
+          error: response.error || t('plugins.failedToFetchMarketplace'),
           isOffline: false,
         }));
       }
@@ -186,10 +189,10 @@ export function PluginMarketplace({
         ...prev,
         isLoading: false,
         error: isOffline
-          ? 'You appear to be offline. Please check your internet connection.'
+          ? t('plugins.offlineError')
           : error instanceof Error
             ? error.message
-            : 'Failed to fetch marketplace data',
+            : t('plugins.failedToFetchMarketplace'),
         isOffline,
       }));
     }
@@ -243,14 +246,16 @@ export function PluginMarketplace({
           // Show error in state or toast
           setState((prev) => ({
             ...prev,
-            error: response.error || 'Failed to install plugin',
+            error: response.error || t('plugins.failedToInstallPlugin'),
           }));
         }
       } catch (error) {
         setState((prev) => ({
           ...prev,
           error:
-            error instanceof Error ? error.message : 'Failed to install plugin',
+            error instanceof Error
+              ? error.message
+              : t('plugins.failedToInstallPlugin'),
         }));
       } finally {
         setInstallingPluginId(null);
@@ -313,10 +318,10 @@ export function PluginMarketplace({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Store className="h-5 w-5" />
-              Plugin Marketplace
+              {t('marketplace.title')}
             </DialogTitle>
             <DialogDescription>
-              Browse and install plugins to extend SQL Pro functionality
+              {t('marketplace.description')}
             </DialogDescription>
           </DialogHeader>
 
@@ -328,7 +333,7 @@ export function PluginMarketplace({
                 <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
                   data-slot="marketplace-search"
-                  placeholder="Search plugins..."
+                  placeholder={t('marketplace.searchPlaceholder')}
                   value={searchQuery}
                   onChange={handleSearchChange}
                   className="pl-9"
@@ -341,7 +346,7 @@ export function PluginMarketplace({
                   variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
                   size="icon-sm"
                   onClick={() => setViewMode('grid')}
-                  aria-label="Grid view"
+                  aria-label={t('marketplace.gridView')}
                 >
                   <Grid3X3 className="h-4 w-4" />
                 </Button>
@@ -349,7 +354,7 @@ export function PluginMarketplace({
                   variant={viewMode === 'list' ? 'secondary' : 'ghost'}
                   size="icon-sm"
                   onClick={() => setViewMode('list')}
-                  aria-label="List view"
+                  aria-label={t('marketplace.listView')}
                 >
                   <LayoutList className="h-4 w-4" />
                 </Button>
@@ -361,7 +366,7 @@ export function PluginMarketplace({
                 size="icon"
                 onClick={fetchMarketplace}
                 disabled={state.isLoading}
-                aria-label="Refresh marketplace"
+                aria-label={t('marketplace.refresh')}
               >
                 <RefreshCw
                   className={cn('h-4 w-4', state.isLoading && 'animate-spin')}
@@ -378,7 +383,7 @@ export function PluginMarketplace({
                 }
               >
                 <TabsList className="w-full justify-start overflow-x-auto">
-                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="all">{t('marketplace.all')}</TabsTrigger>
                   {state.categories.map((category) => (
                     <TabsTrigger key={category} value={category}>
                       {category}
@@ -400,14 +405,16 @@ export function PluginMarketplace({
                 <div className="flex flex-col items-center justify-center gap-4 py-16">
                   <WifiOff className="text-muted-foreground h-12 w-12" />
                   <div className="text-center">
-                    <p className="text-sm font-medium">You're offline</p>
+                    <p className="text-sm font-medium">
+                      {t('marketplace.offline')}
+                    </p>
                     <p className="text-muted-foreground mt-1 text-sm">
-                      Please check your internet connection and try again.
+                      {t('marketplace.offlineDesc')}
                     </p>
                   </div>
                   <Button variant="outline" onClick={fetchMarketplace}>
                     <RefreshCw className="mr-2 h-4 w-4" />
-                    Retry
+                    {t('marketplace.retry')}
                   </Button>
                 </div>
               )}
@@ -419,7 +426,7 @@ export function PluginMarketplace({
                     <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
                     <div>
                       <p className="text-destructive text-sm font-medium">
-                        Failed to load marketplace
+                        {t('marketplace.failedToLoad')}
                       </p>
                       <p className="text-destructive/80 mt-1 text-xs">
                         {state.error}
@@ -428,7 +435,7 @@ export function PluginMarketplace({
                   </div>
                   <Button variant="outline" onClick={fetchMarketplace}>
                     <RefreshCw className="mr-2 h-4 w-4" />
-                    Try Again
+                    {t('marketplace.tryAgain')}
                   </Button>
                 </div>
               )}
@@ -441,9 +448,11 @@ export function PluginMarketplace({
                     <Store className="text-muted-foreground h-12 w-12" />
                     {searchQuery || selectedCategory !== 'all' ? (
                       <>
-                        <p className="text-sm font-medium">No plugins found</p>
+                        <p className="text-sm font-medium">
+                          {t('marketplace.noPluginsFound')}
+                        </p>
                         <p className="text-muted-foreground text-sm">
-                          Try adjusting your search or filter criteria
+                          {t('marketplace.adjustFilters')}
                         </p>
                         <Button
                           variant="outline"
@@ -453,16 +462,16 @@ export function PluginMarketplace({
                             setSelectedCategory('all');
                           }}
                         >
-                          Clear filters
+                          {t('marketplace.clearFilters')}
                         </Button>
                       </>
                     ) : (
                       <>
                         <p className="text-sm font-medium">
-                          No plugins available
+                          {t('marketplace.noPluginsAvailable')}
                         </p>
                         <p className="text-muted-foreground text-sm">
-                          Check back later for new plugins
+                          {t('marketplace.checkBackLater')}
                         </p>
                       </>
                     )}
@@ -503,16 +512,21 @@ export function PluginMarketplace({
             {!state.isLoading && !state.error && (
               <div className="text-muted-foreground flex items-center justify-between border-t pt-3 text-xs">
                 <span>
-                  {filteredPlugins.length} of {state.plugins.length} plugins
-                  {searchQuery && ` matching "${searchQuery}"`}
-                  {selectedCategory !== 'all' && ` in ${selectedCategory}`}
+                  {t('marketplace.pluginsCount', {
+                    filtered: filteredPlugins.length,
+                    total: state.plugins.length,
+                  })}
+                  {searchQuery &&
+                    ` ${t('marketplace.matchingQuery', { query: searchQuery })}`}
+                  {selectedCategory !== 'all' &&
+                    ` ${t('marketplace.inCategory', { category: selectedCategory })}`}
                 </span>
                 <span>
-                  Press{' '}
+                  {t('marketplace.pressToSearch')}{' '}
                   <kbd className="bg-muted text-muted-foreground text-2xs rounded px-1.5 py-0.5 font-mono">
                     Cmd/Ctrl+F
                   </kbd>{' '}
-                  to search
+                  {t('marketplace.toSearch')}
                 </span>
               </div>
             )}

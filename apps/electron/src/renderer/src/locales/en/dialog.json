@@ -82,7 +82,28 @@
       "branch": "Branch",
       "branchPlaceholder": "main",
       "branchHint": "Database branch (leave empty for main branch)"
-    }
+    },
+    "qdrant": {
+      "hostHint": "Qdrant server hostname (e.g., localhost or cloud.qdrant.io)",
+      "portHint": "REST API port (default: 6333)",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "Your API key",
+      "apiKeyHint": "Required for Qdrant Cloud or secured instances",
+      "useTLS": "Use TLS (HTTPS)"
+    },
+    "supabase": {
+      "projectUrl": "Project URL",
+      "projectUrlHint": "Found in Project Settings → General",
+      "databaseHost": "Database Host",
+      "databaseHostHint": "Found in Project Settings → Database → Connection string. Use pooler host for better performance.",
+      "portPlaceholder": "5432 or 6543 for transaction mode",
+      "usernamePlaceholder": "postgres or postgres.[project-ref]",
+      "usernameHint": "For pooler: postgres.[project-ref]. Auto-detected if empty.",
+      "databasePassword": "Database Password",
+      "passwordPlaceholder": "Your database password",
+      "passwordHint": "The password you set when creating the project"
+    },
+    "recommended": "recommended"
   },
   "settings": {
     "title": "Settings",
@@ -113,6 +134,27 @@
     "storageUnavailable": "Secure storage is not available on this system",
     "saveConnect": "Save & Connect",
     "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "save": "Save",
+    "keychainNote": "Password is securely stored in your system keychain",
+    "removePasswordTitle": "Remove Saved Password",
+    "removePasswordDesc": "Are you sure you want to remove the saved password? You will need to enter the password manually next time you connect.",
+    "removePasswordConfirm": "Remove Password",
+    "savedPassword": "Saved Password",
+    "passwordSaved": "Password saved",
+    "changePassword": "Change Password",
+    "savePassword": "Save Password",
+    "newPassword": "New Password",
+    "password": "Password",
+    "enterPassword": "Enter password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordCannotBeEmpty": "Password cannot be empty",
+    "failedToSavePassword": "Failed to save password",
+    "failedToRemovePassword": "Failed to remove password",
+    "unexpectedError": "An unexpected error occurred",
+    "displayNamePlaceholder": "Enter a name for this connection",
     "validation": {
       "empty": "Display name cannot be empty",
       "tooLong": "Display name cannot exceed {{max}} characters"
@@ -125,5 +167,7 @@
     "discardAll": "Discard All Changes",
     "saving": "Saving...",
     "cancel": "Cancel"
-  }
+  },
+  "openDatabase": "Open Database",
+  "saveFile": "Save File"
 }

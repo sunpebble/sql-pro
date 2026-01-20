@@ -1,5 +1,6 @@
 import type { FileChangeEvent, GetSchemaResponse } from '@shared/types';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
 import { queryClient } from '@/lib/query-client';
@@ -12,6 +13,8 @@ import { useConnectionStore } from '@/stores';
  * Should be called once at the app root level.
  */
 export function useFileWatcher() {
+  const { t } = useTranslation('common');
+
   useEffect(() => {
     // Guard: Ensure Electron APIs are available
     if (typeof window === 'undefined' || !window.sqlPro?.db?.onFileChanged) {
@@ -70,10 +73,10 @@ export function useFileWatcher() {
             }
           }
 
-          toast.success('Data refreshed', { id: toastId });
+          toast.success(t('toast.dataRefreshed'), { id: toastId });
         } catch (error) {
           console.error('[FileWatcher] Failed to refresh:', error);
-          toast.error('Failed to refresh data', { id: toastId });
+          toast.error(t('toast.failedToRefreshData'), { id: toastId });
         }
       }
     );
@@ -82,5 +85,5 @@ export function useFileWatcher() {
       // Cleanup listener on unmount
       unsubscribe();
     };
-  }, []);
+  }, [t]);
 }

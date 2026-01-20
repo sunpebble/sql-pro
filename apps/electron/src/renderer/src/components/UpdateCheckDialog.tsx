@@ -1,6 +1,7 @@
 import { Button } from '@sqlpro/ui/button';
 import { CheckCircle2, Download, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import { useDialogStore } from '@/stores';
  * Dialog showing update check results
  */
 export function UpdateCheckDialog() {
+  const { t } = useTranslation('common');
   const {
     updateCheckOpen,
     updateCheckMessage,
@@ -39,10 +41,12 @@ export function UpdateCheckDialog() {
         setDownloadComplete(true);
         setDownloadProgress(100);
       } else {
-        setError(result.error || 'Failed to download update');
+        setError(result.error || t('updateCheck.downloadFailed'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Download failed');
+      setError(
+        err instanceof Error ? err.message : t('updateCheck.downloadFailed')
+      );
     } finally {
       setIsDownloading(false);
     }
@@ -55,10 +59,12 @@ export function UpdateCheckDialog() {
         // The app will restart, so close the dialog
         closeUpdateCheck();
       } else {
-        setError(result.error || 'Failed to install update');
+        setError(result.error || t('updateCheck.installFailed'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Install failed');
+      setError(
+        err instanceof Error ? err.message : t('updateCheck.installFailed')
+      );
     }
   };
 
@@ -85,7 +91,9 @@ export function UpdateCheckDialog() {
             )}
           </div>
           <DialogTitle>
-            {updateAvailable ? 'Update Available' : 'Check for Updates'}
+            {updateAvailable
+              ? t('updateCheck.updateAvailable')
+              : t('updateCheck.checkForUpdates')}
           </DialogTitle>
           <DialogDescription className="text-center">
             {error ? (
@@ -99,12 +107,16 @@ export function UpdateCheckDialog() {
         {updateInfo && (
           <div className="bg-muted/50 space-y-2 rounded-lg p-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Version:</span>
+              <span className="text-muted-foreground">
+                {t('updateCheck.version')}:
+              </span>
               <span className="font-medium">{updateInfo.version}</span>
             </div>
             {updateInfo.releaseDate && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Release Date:</span>
+                <span className="text-muted-foreground">
+                  {t('updateCheck.releaseDate')}:
+                </span>
                 <span className="font-medium">
                   {new Date(updateInfo.releaseDate).toLocaleDateString()}
                 </span>
@@ -112,7 +124,9 @@ export function UpdateCheckDialog() {
             )}
             {updateInfo.releaseNotes && (
               <div className="mt-2">
-                <span className="text-muted-foreground">Release Notes:</span>
+                <span className="text-muted-foreground">
+                  {t('updateCheck.releaseNotes')}:
+                </span>
                 <p className="mt-1 text-xs whitespace-pre-wrap">
                   {updateInfo.releaseNotes}
                 </p>
@@ -130,7 +144,7 @@ export function UpdateCheckDialog() {
               />
             </div>
             <p className="text-muted-foreground text-center text-sm">
-              Downloading... {downloadProgress.toFixed(0)}%
+              {t('updateCheck.downloading')} {downloadProgress.toFixed(0)}%
             </p>
           </div>
         )}
@@ -139,32 +153,32 @@ export function UpdateCheckDialog() {
           {updateAvailable && !downloadComplete && !isDownloading && (
             <>
               <Button variant="outline" onClick={handleClose}>
-                Later
+                {t('updateCheck.later')}
               </Button>
               <Button onClick={handleDownload}>
                 <Download className="mr-2 h-4 w-4" />
-                Download
+                {t('updateCheck.download')}
               </Button>
             </>
           )}
           {downloadComplete && (
             <>
               <Button variant="outline" onClick={handleClose}>
-                Later
+                {t('updateCheck.later')}
               </Button>
               <Button onClick={handleInstall}>
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Restart & Install
+                {t('updateCheck.restartAndInstall')}
               </Button>
             </>
           )}
           {isDownloading && (
             <Button variant="outline" disabled>
-              Downloading...
+              {t('updateCheck.downloadingButton')}
             </Button>
           )}
           {!updateAvailable && !isDownloading && (
-            <Button onClick={handleClose}>OK</Button>
+            <Button onClick={handleClose}>{t('updateCheck.ok')}</Button>
           )}
         </DialogFooter>
       </DialogContent>

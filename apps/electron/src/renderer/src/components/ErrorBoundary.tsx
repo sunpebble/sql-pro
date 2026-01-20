@@ -11,6 +11,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { Component, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/utils';
 
@@ -141,6 +142,7 @@ function CollapsibleSection({
 
 // Stack trace viewer component
 function StackTraceViewer({ stack }: { stack: string }) {
+  const { t } = useTranslation();
   const { copy, copied } = useCopyToClipboard();
   const frames = parseStackTrace(stack);
 
@@ -152,7 +154,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <span className="text-muted-foreground text-xs">
-          {frames.length} stack frames
+          {t('errorBoundary.stackFrames', { count: frames.length })}
         </span>
         <Button
           variant="ghost"
@@ -161,7 +163,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
           onClick={handleCopy}
         >
           <Copy className="mr-1 h-3 w-3" />
-          {copied ? 'Copied!' : 'Copy'}
+          {copied ? t('common.copied') : t('common.copy')}
         </Button>
       </div>
       <ScrollArea className="h-64">
@@ -205,6 +207,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
 
 // Component stack viewer
 function ComponentStackViewer({ componentStack }: { componentStack: string }) {
+  const { t } = useTranslation();
   const { copy, copied } = useCopyToClipboard();
   const lines = componentStack
     .trim()
@@ -220,7 +223,7 @@ function ComponentStackViewer({ componentStack }: { componentStack: string }) {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <span className="text-muted-foreground text-xs">
-          Component hierarchy
+          {t('errorBoundary.componentHierarchy')}
         </span>
         <Button
           variant="ghost"
@@ -229,7 +232,7 @@ function ComponentStackViewer({ componentStack }: { componentStack: string }) {
           onClick={handleCopy}
         >
           <Copy className="mr-1 h-3 w-3" />
-          {copied ? 'Copied!' : 'Copy'}
+          {copied ? t('common.copied') : t('common.copy')}
         </Button>
       </div>
       <ScrollArea className="h-48">
@@ -341,6 +344,7 @@ function ErrorFallback({
   onReset: () => void;
   onReload: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-background text-foreground flex h-full min-h-screen flex-col items-center justify-center p-8">
       <div className="flex w-full max-w-2xl flex-col items-center text-center">
@@ -349,9 +353,11 @@ function ErrorFallback({
           <AlertTriangle className="text-destructive h-8 w-8" />
         </div>
 
-        <h2 className="mb-1 text-xl font-semibold">Something went wrong</h2>
+        <h2 className="mb-1 text-xl font-semibold">
+          {t('errorBoundary.somethingWentWrong')}
+        </h2>
         <p className="text-muted-foreground mb-4 text-sm">
-          An unexpected error occurred in the application.
+          {t('errorBoundary.unexpectedError')}
         </p>
 
         {/* Error message box */}
@@ -359,7 +365,7 @@ function ErrorFallback({
           <div className="bg-destructive/5 border-destructive/20 mb-4 w-full rounded-lg border p-4 text-left">
             <div className="text-destructive flex items-start gap-2">
               <span className="bg-destructive/20 rounded px-1.5 py-0.5 font-mono text-xs font-medium">
-                {error.name || 'Error'}
+                {error.name || t('errorBoundary.error')}
               </span>
             </div>
             <p className="text-destructive mt-2 font-mono text-sm">
@@ -372,13 +378,16 @@ function ErrorFallback({
         {error && (
           <div className="mb-6 w-full space-y-3 text-left">
             {error.stack && (
-              <CollapsibleSection title="Stack Trace" defaultOpen>
+              <CollapsibleSection
+                title={t('errorBoundary.stackTrace')}
+                defaultOpen
+              >
                 <StackTraceViewer stack={error.stack} />
               </CollapsibleSection>
             )}
 
             {errorInfo?.componentStack && (
-              <CollapsibleSection title="Component Stack">
+              <CollapsibleSection title={t('errorBoundary.componentStack')}>
                 <ComponentStackViewer
                   componentStack={errorInfo.componentStack}
                 />
@@ -391,11 +400,11 @@ function ErrorFallback({
         <div className="flex gap-3">
           <Button variant="outline" onClick={onReset}>
             <RotateCcw className="mr-2 h-4 w-4" />
-            Try Again
+            {t('errorBoundary.tryAgain')}
           </Button>
           <Button onClick={onReload}>
             <RefreshCw className="mr-2 h-4 w-4" />
-            Reload App
+            {t('errorBoundary.reloadApp')}
           </Button>
         </div>
       </div>

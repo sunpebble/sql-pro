@@ -24,6 +24,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@/hooks';
 import { cn } from '@/lib/utils';
 import {
@@ -44,6 +45,7 @@ interface SqlLogItemProps {
 }
 
 function SqlLogItem({ entry }: SqlLogItemProps) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const timestamp = new Date(entry.timestamp).toLocaleTimeString();
 
@@ -92,7 +94,9 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             {/* Row count */}
             {entry.rowCount !== undefined && (
               <span className="text-muted-foreground text-xs">
-                {entry.rowCount} row{entry.rowCount !== 1 ? 's' : ''}
+                {entry.rowCount === 1
+                  ? t('sqlLog.rowCount', { count: entry.rowCount })
+                  : t('sqlLog.rowsCount', { count: entry.rowCount })}
               </span>
             )}
 
@@ -128,10 +132,14 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             <div className="text-muted-foreground mt-2 space-y-1 text-xs">
               <div className="flex items-center gap-2">
                 <Database className="h-3 w-3" />
-                <span>Connection: {entry.connectionId}</span>
+                <span>
+                  {t('sqlLog.connection', { id: entry.connectionId })}
+                </span>
               </div>
               {entry.dbPath && (
-                <div className="truncate">Path: {entry.dbPath}</div>
+                <div className="truncate">
+                  {t('sqlLog.path', { path: entry.dbPath })}
+                </div>
               )}
             </div>
           )}
@@ -142,6 +150,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
 }
 
 export function SqlLogPanel() {
+  const { t } = useTranslation();
   const {
     logs,
     isLoading,
@@ -198,7 +207,7 @@ export function SqlLogPanel() {
             <div className="flex items-center justify-between">
               <SheetTitle className="flex items-center gap-2">
                 <Database className="h-4 w-4" />
-                SQL Log
+                {t('sqlLog.title')}
                 <Badge variant="secondary" className="ml-2">
                   {filteredLogs.length}
                 </Badge>
@@ -219,7 +228,7 @@ export function SqlLogPanel() {
             <div className="relative max-w-xs flex-1">
               <Search className="text-muted-foreground absolute top-1/2 left-2 h-4 w-4 -translate-y-1/2" />
               <Input
-                placeholder="Search SQL..."
+                placeholder={t('sqlLog.searchPlaceholder')}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 className="h-8 pl-8"
@@ -237,14 +246,14 @@ export function SqlLogPanel() {
             >
               <SelectTrigger className="h-8 w-30">
                 <Filter className="mr-1 h-3 w-3" />
-                <SelectValue placeholder="Level" />
+                <SelectValue placeholder={t('sqlLog.level')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="info">Info</SelectItem>
-                <SelectItem value="warn">Warn</SelectItem>
-                <SelectItem value="error">Error</SelectItem>
-                <SelectItem value="debug">Debug</SelectItem>
+                <SelectItem value="all">{t('sqlLog.all')}</SelectItem>
+                <SelectItem value="info">{t('sqlLog.info')}</SelectItem>
+                <SelectItem value="warn">{t('sqlLog.warn')}</SelectItem>
+                <SelectItem value="error">{t('sqlLog.error')}</SelectItem>
+                <SelectItem value="debug">{t('sqlLog.debug')}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -258,12 +267,12 @@ export function SqlLogPanel() {
               {isPaused ? (
                 <>
                   <Play className="mr-1 h-4 w-4" />
-                  Resume
+                  {t('sqlLog.resume')}
                 </>
               ) : (
                 <>
                   <Pause className="mr-1 h-4 w-4" />
-                  Pause
+                  {t('sqlLog.pause')}
                 </>
               )}
             </Button>
@@ -276,7 +285,7 @@ export function SqlLogPanel() {
               className="h-8"
             >
               <Trash2 className="mr-1 h-4 w-4" />
-              Clear
+              {t('sqlLog.clear')}
             </Button>
           </div>
 
@@ -284,11 +293,11 @@ export function SqlLogPanel() {
           <ScrollArea className="min-h-0 flex-1">
             {isLoading ? (
               <div className="text-muted-foreground flex h-full items-center justify-center">
-                Loading...
+                {t('sqlLog.loading')}
               </div>
             ) : filteredLogs.length === 0 ? (
               <div className="text-muted-foreground flex h-full items-center justify-center">
-                No logs
+                {t('sqlLog.noLogs')}
               </div>
             ) : (
               <div className="divide-y">

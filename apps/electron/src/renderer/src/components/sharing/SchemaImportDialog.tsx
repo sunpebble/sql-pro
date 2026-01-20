@@ -14,6 +14,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -41,6 +42,7 @@ export function SchemaImportDialog({
   connectionId,
   onImportComplete,
 }: SchemaImportDialogProps) {
+  const { t } = useTranslation();
   // Import state
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportSchemaResponse | null>(
@@ -152,11 +154,10 @@ export function SchemaImportDialog({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Upload className="h-5 w-5" />
-              Import Schema
+              {t('sharing.importSchema')}
             </DialogTitle>
             <DialogDescription>
-              Import schema definitions from a previously exported file with
-              validation and preview
+              {t('sharing.importSchemaDesc')}
             </DialogDescription>
           </DialogHeader>
 
@@ -164,16 +165,13 @@ export function SchemaImportDialog({
             {!importResult ? (
               <div className="space-y-3">
                 <p className="text-muted-foreground text-sm">
-                  Click the button below to select a schema file to import. The
-                  file will be validated before you can use it.
+                  {t('sharing.selectSchemaFilePrompt')}
                 </p>
                 {connectionId && (
                   <div className="bg-muted rounded-lg p-3">
                     <p className="text-sm">
-                      <span className="font-medium">Note:</span> This schema
-                      will be imported into the currently connected database.
-                      Make sure to review the preview before applying any
-                      changes.
+                      <span className="font-medium">{t('sharing.note')}:</span>{' '}
+                      {t('sharing.schemaImportNote')}
                     </p>
                   </div>
                 )}
@@ -188,11 +186,10 @@ export function SchemaImportDialog({
                       <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-destructive font-medium">
-                          Version Incompatible
+                          {t('sharing.versionIncompatible')}
                         </p>
                         <p className="text-destructive/80 mt-1 text-sm">
-                          This schema was created with an incompatible version
-                          and may not work correctly.
+                          {t('sharing.schemaVersionIncompatibleDesc')}
                         </p>
                       </div>
                     </div>
@@ -204,22 +201,22 @@ export function SchemaImportDialog({
                       <CheckCircle2 className="text-muted-foreground h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          Compressed File Detected
+                          {t('sharing.compressedFileDetected')}
                         </p>
                         <p className="text-muted-foreground text-xs">
-                          Algorithm:{' '}
+                          {t('sharing.algorithm')}:{' '}
                           {importResult.validation.compressionInfo.algorithm}{' '}
                           {importResult.validation.compressionInfo
                             .originalSize &&
                             importResult.validation.compressionInfo
                               .compressedSize && (
                               <>
-                                • Original:{' '}
+                                • {t('sharing.originalSize')}:{' '}
                                 {Math.round(
                                   importResult.validation.compressionInfo
                                     .originalSize / 1024
                                 )}
-                                KB → Compressed:{' '}
+                                KB → {t('sharing.compressedSize')}:{' '}
                                 {Math.round(
                                   importResult.validation.compressionInfo
                                     .compressedSize / 1024
@@ -239,11 +236,10 @@ export function SchemaImportDialog({
                         <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                         <div className="flex-1">
                           <p className="text-destructive font-medium">
-                            Validation Errors
+                            {t('sharing.validationErrors')}
                           </p>
                           <p className="text-destructive/80 mt-1 text-sm">
-                            The following errors were found in the imported
-                            schema:
+                            {t('sharing.errorsFoundInSchemaImport')}
                           </p>
                         </div>
                       </div>
@@ -262,10 +258,10 @@ export function SchemaImportDialog({
                         <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-400" />
                         <div className="flex-1">
                           <p className="font-medium text-yellow-900 dark:text-yellow-100">
-                            Warnings
+                            {t('sharing.warnings')}
                           </p>
                           <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
-                            The schema is valid but has some warnings:
+                            {t('sharing.schemaWarningsDesc')}
                           </p>
                         </div>
                       </div>
@@ -283,10 +279,10 @@ export function SchemaImportDialog({
                       <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
                       <div className="flex-1">
                         <p className="font-medium text-green-900 dark:text-green-100">
-                          Validation Successful
+                          {t('sharing.validationSuccessful')}
                         </p>
                         <p className="mt-1 text-sm text-green-700 dark:text-green-300">
-                          The schema is valid and ready to use
+                          {t('sharing.schemaValidAndReady')}
                         </p>
                       </div>
                     </div>
@@ -296,10 +292,10 @@ export function SchemaImportDialog({
                   {!importResult.success && (
                     <div className="bg-destructive/10 rounded-lg p-4">
                       <p className="text-destructive font-medium">
-                        Import Failed
+                        {t('sharing.importFailed')}
                       </p>
                       <p className="text-destructive/80 mt-1 text-sm">
-                        {importResult.error || 'Unknown error occurred'}
+                        {importResult.error || t('sharing.unknownError')}
                       </p>
                     </div>
                   )}
@@ -309,17 +305,22 @@ export function SchemaImportDialog({
                 {importResult.schema && (
                   <div className="space-y-4 rounded-lg border p-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold">Schema Preview</h3>
+                      <h3 className="text-sm font-semibold">
+                        {t('sharing.schemaPreview')}
+                      </h3>
                       {importResult.schema.metadata && (
                         <span className="text-muted-foreground text-xs">
-                          Version: {importResult.schema.metadata.version}
+                          {t('sharing.version')}:{' '}
+                          {importResult.schema.metadata.version}
                         </span>
                       )}
                     </div>
 
                     {/* Schema Name */}
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-medium">Schema Name</Label>
+                      <Label className="text-xs font-medium">
+                        {t('sharing.schemaName')}
+                      </Label>
                       <p className="text-sm">{importResult.schema.name}</p>
                     </div>
 
@@ -327,7 +328,7 @@ export function SchemaImportDialog({
                     {importResult.schema.description && (
                       <div className="space-y-1.5">
                         <Label className="text-xs font-medium">
-                          Description
+                          {t('sharing.description')}
                         </Label>
                         <p className="text-muted-foreground text-sm">
                           {importResult.schema.description}
@@ -340,7 +341,7 @@ export function SchemaImportDialog({
                       {importResult.schema.databaseName && (
                         <div className="space-y-1.5">
                           <Label className="text-xs font-medium">
-                            Database Name
+                            {t('sharing.databaseName')}
                           </Label>
                           <p className="text-muted-foreground text-sm">
                             {importResult.schema.databaseName}
@@ -350,7 +351,7 @@ export function SchemaImportDialog({
                       {importResult.schema.databaseType && (
                         <div className="space-y-1.5">
                           <Label className="text-xs font-medium">
-                            Database Type
+                            {t('sharing.databaseType')}
                           </Label>
                           <p className="text-muted-foreground text-sm capitalize">
                             {importResult.schema.databaseType}
@@ -364,35 +365,43 @@ export function SchemaImportDialog({
                       <div className="flex items-center gap-2">
                         <Database className="text-muted-foreground h-4 w-4" />
                         <Label className="text-xs font-medium">
-                          Export Format
+                          {t('sharing.exportFormat')}
                         </Label>
                       </div>
                       <p className="text-sm">
                         {importResult.schema.format === 'json'
-                          ? 'JSON (Schema Metadata)'
-                          : 'SQL (CREATE Statements)'}
+                          ? t('sharing.jsonFormat')
+                          : t('sharing.sqlFormat')}
                       </p>
                       {stats && (
                         <div className="text-muted-foreground grid grid-cols-2 gap-2 pt-2 text-xs">
                           {importResult.schema.format === 'json' ? (
                             <>
                               <div>
-                                <span className="font-medium">Schemas:</span>{' '}
+                                <span className="font-medium">
+                                  {t('sharing.schemas')}:
+                                </span>{' '}
                                 {stats.schemas}
                               </div>
                               <div>
-                                <span className="font-medium">Tables:</span>{' '}
+                                <span className="font-medium">
+                                  {t('sharing.tables')}:
+                                </span>{' '}
                                 {stats.tables}
                               </div>
                               {(stats.views ?? 0) > 0 && (
                                 <div>
-                                  <span className="font-medium">Views:</span>{' '}
+                                  <span className="font-medium">
+                                    {t('sharing.views')}:
+                                  </span>{' '}
                                   {stats.views}
                                 </div>
                               )}
                               {stats.indexes > 0 && (
                                 <div>
-                                  <span className="font-medium">Indexes:</span>{' '}
+                                  <span className="font-medium">
+                                    {t('sharing.indexes')}:
+                                  </span>{' '}
                                   {stats.indexes}
                                 </div>
                               )}
@@ -401,23 +410,29 @@ export function SchemaImportDialog({
                             <>
                               <div>
                                 <span className="font-medium">
-                                  Total Statements:
+                                  {t('sharing.totalStatements')}:
                                 </span>{' '}
                                 {stats.statements}
                               </div>
                               <div>
-                                <span className="font-medium">Tables:</span>{' '}
+                                <span className="font-medium">
+                                  {t('sharing.tables')}:
+                                </span>{' '}
                                 {stats.tables}
                               </div>
                               {stats.indexes > 0 && (
                                 <div>
-                                  <span className="font-medium">Indexes:</span>{' '}
+                                  <span className="font-medium">
+                                    {t('sharing.indexes')}:
+                                  </span>{' '}
                                   {stats.indexes}
                                 </div>
                               )}
                               {(stats.triggers ?? 0) > 0 && (
                                 <div>
-                                  <span className="font-medium">Triggers:</span>{' '}
+                                  <span className="font-medium">
+                                    {t('sharing.triggers')}:
+                                  </span>{' '}
                                   {stats.triggers}
                                 </div>
                               )}
@@ -430,7 +445,7 @@ export function SchemaImportDialog({
                     {/* Export Options */}
                     <div className="space-y-2">
                       <Label className="text-xs font-medium">
-                        Export Options
+                        {t('sharing.exportOptionsLabel')}
                       </Label>
                       <div className="space-y-1.5 rounded-lg border p-3">
                         <div className="flex items-center gap-2">
@@ -442,7 +457,9 @@ export function SchemaImportDialog({
                             }
                             disabled
                           />
-                          <span className="text-sm">Include Indexes</span>
+                          <span className="text-sm">
+                            {t('sharing.includeIndexes')}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Checkbox
@@ -453,7 +470,9 @@ export function SchemaImportDialog({
                             }
                             disabled
                           />
-                          <span className="text-sm">Include Triggers</span>
+                          <span className="text-sm">
+                            {t('sharing.includeTriggers')}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Checkbox
@@ -464,7 +483,9 @@ export function SchemaImportDialog({
                             }
                             disabled
                           />
-                          <span className="text-sm">Include Foreign Keys</span>
+                          <span className="text-sm">
+                            {t('sharing.includeForeignKeys')}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -475,7 +496,7 @@ export function SchemaImportDialog({
                       importResult.schema.schemas.length > 0 && (
                         <div className="space-y-2">
                           <Label className="text-xs font-medium">
-                            Tables Included
+                            {t('sharing.tablesIncluded')}
                           </Label>
                           <ScrollArea className="h-48">
                             <div className="space-y-2 rounded-lg border p-3">
@@ -491,8 +512,10 @@ export function SchemaImportDialog({
                                         className="text-muted-foreground text-xs"
                                       >
                                         • {table.name} ({table.columns.length}{' '}
-                                        column
-                                        {table.columns.length !== 1 ? 's' : ''})
+                                        {table.columns.length !== 1
+                                          ? t('sharing.columns')
+                                          : t('sharing.column')}
+                                        )
                                       </p>
                                     ))}
                                   </div>
@@ -509,7 +532,7 @@ export function SchemaImportDialog({
                       importResult.schema.sqlStatements.length > 0 && (
                         <div className="space-y-2">
                           <Label className="text-xs font-medium">
-                            SQL Statements Preview
+                            {t('sharing.sqlStatementsPreview')}
                           </Label>
                           <Textarea
                             value={importResult.schema.sqlStatements
@@ -521,9 +544,10 @@ export function SchemaImportDialog({
                           />
                           {importResult.schema.sqlStatements.length > 5 && (
                             <p className="text-muted-foreground text-xs">
-                              Showing first 5 of{' '}
-                              {importResult.schema.sqlStatements.length}{' '}
-                              statements
+                              {t('sharing.showingFirstStatements', {
+                                shown: 5,
+                                total: importResult.schema.sqlStatements.length,
+                              })}
                             </p>
                           )}
                         </div>
@@ -533,7 +557,7 @@ export function SchemaImportDialog({
                     {importResult.schema.documentation && (
                       <div className="space-y-1.5">
                         <Label className="text-xs font-medium">
-                          Documentation
+                          {t('sharing.documentation')}
                         </Label>
                         <Textarea
                           value={importResult.schema.documentation}
@@ -549,7 +573,9 @@ export function SchemaImportDialog({
                       <div className="text-muted-foreground grid grid-cols-2 gap-2 text-xs">
                         {importResult.schema.createdAt && (
                           <div>
-                            <span className="font-medium">Created:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.created')}:
+                            </span>{' '}
                             {new Date(
                               importResult.schema.createdAt
                             ).toLocaleString()}
@@ -557,13 +583,17 @@ export function SchemaImportDialog({
                         )}
                         {importResult.schema.author && (
                           <div>
-                            <span className="font-medium">Author:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.author')}:
+                            </span>{' '}
                             {importResult.schema.author}
                           </div>
                         )}
                         {importResult.schema.metadata?.exportedAt && (
                           <div>
-                            <span className="font-medium">Exported:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.exported')}:
+                            </span>{' '}
                             {new Date(
                               importResult.schema.metadata.exportedAt
                             ).toLocaleString()}
@@ -571,7 +601,9 @@ export function SchemaImportDialog({
                         )}
                         {importResult.schema.metadata?.appVersion && (
                           <div>
-                            <span className="font-medium">App Version:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.appVersion')}:
+                            </span>{' '}
                             {importResult.schema.metadata.appVersion}
                           </div>
                         )}
@@ -585,16 +617,27 @@ export function SchemaImportDialog({
                           <AlertTriangle className="h-4 w-4 shrink-0 text-yellow-600 dark:text-yellow-400" />
                           <div className="flex-1">
                             <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100">
-                              Schema Conflict Warning
+                              {t('sharing.schemaConflictWarning')}
                             </p>
                             <p className="mt-1 text-xs text-yellow-700 dark:text-yellow-300">
-                              This schema contains{' '}
-                              {importResult.schema.format === 'json'
-                                ? `${stats.tables} table${stats.tables !== 1 ? 's' : ''}`
-                                : `${stats.statements} SQL statement${stats.statements !== 1 ? 's' : ''}`}
-                              . Importing will create or replace tables in your
-                              database. Make sure to back up your data before
-                              applying this schema.
+                              {t('sharing.schemaConflictDesc', {
+                                content:
+                                  importResult.schema.format === 'json'
+                                    ? stats.tables !== 1
+                                      ? t('sharing.tablesCountPlural', {
+                                          count: stats.tables,
+                                        })
+                                      : t('sharing.tableCount', {
+                                          count: stats.tables,
+                                        })
+                                    : stats.statements !== 1
+                                      ? t('sharing.statementsCountPlural', {
+                                          count: stats.statements,
+                                        })
+                                      : t('sharing.statementCount', {
+                                          count: stats.statements,
+                                        }),
+                              })}
                             </p>
                           </div>
                         </div>
@@ -612,19 +655,19 @@ export function SchemaImportDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isImporting}
             >
-              {importResult ? 'Close' : 'Cancel'}
+              {importResult ? t('sharing.close') : t('sharing.cancel')}
             </Button>
             {!importResult && (
               <Button onClick={handleImport} disabled={isImporting}>
                 {isImporting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Importing...
+                    {t('sharing.importing')}
                   </>
                 ) : (
                   <>
                     <FileUp className="mr-2 h-4 w-4" />
-                    Select File
+                    {t('sharing.selectFile')}
                   </>
                 )}
               </Button>

@@ -159,7 +159,7 @@ function AISettingsPanel() {
           if (result.success && result.models) {
             setDynamicModels(result.models);
           } else {
-            setModelsError(result.error || 'Failed to fetch models');
+            setModelsError(result.error || t('ai.failedToFetchModels'));
             setDynamicModels(DEFAULT_MODELS[provider]);
           }
         }

@@ -12,6 +12,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -36,6 +37,7 @@ export function QueryImportDialog({
   onOpenChange,
   onImportComplete,
 }: QueryImportDialogProps) {
+  const { t } = useTranslation();
   // Import state
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportQueryResponse | null>(
@@ -97,11 +99,10 @@ export function QueryImportDialog({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Upload className="h-5 w-5" />
-              Import Query
+              {t('sharing.importQuery')}
             </DialogTitle>
             <DialogDescription>
-              Import a query from a previously exported file with validation and
-              preview
+              {t('sharing.importQueryDesc')}
             </DialogDescription>
           </DialogHeader>
 
@@ -109,8 +110,7 @@ export function QueryImportDialog({
             {!importResult ? (
               <div className="space-y-3">
                 <p className="text-muted-foreground text-sm">
-                  Click the button below to select a query file to import. The
-                  file will be validated before you can use it.
+                  {t('sharing.selectFilePrompt')}
                 </p>
               </div>
             ) : (
@@ -123,11 +123,10 @@ export function QueryImportDialog({
                       <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-destructive font-medium">
-                          Version Incompatible
+                          {t('sharing.versionIncompatible')}
                         </p>
                         <p className="text-destructive/80 mt-1 text-sm">
-                          This query was created with an incompatible version
-                          and may not work correctly.
+                          {t('sharing.versionIncompatibleDesc')}
                         </p>
                       </div>
                     </div>
@@ -139,22 +138,22 @@ export function QueryImportDialog({
                       <CheckCircle2 className="text-muted-foreground h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          Compressed File Detected
+                          {t('sharing.compressedFileDetected')}
                         </p>
                         <p className="text-muted-foreground text-xs">
-                          Algorithm:{' '}
+                          {t('sharing.algorithm')}:{' '}
                           {importResult.validation.compressionInfo.algorithm}{' '}
                           {importResult.validation.compressionInfo
                             .originalSize &&
                             importResult.validation.compressionInfo
                               .compressedSize && (
                               <>
-                                • Original:{' '}
+                                • {t('sharing.originalSize')}:{' '}
                                 {Math.round(
                                   importResult.validation.compressionInfo
                                     .originalSize / 1024
                                 )}
-                                KB → Compressed:{' '}
+                                KB → {t('sharing.compressedSize')}:{' '}
                                 {Math.round(
                                   importResult.validation.compressionInfo
                                     .compressedSize / 1024
@@ -174,11 +173,10 @@ export function QueryImportDialog({
                         <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                         <div className="flex-1">
                           <p className="text-destructive font-medium">
-                            Validation Errors
+                            {t('sharing.validationErrors')}
                           </p>
                           <p className="text-destructive/80 mt-1 text-sm">
-                            The following errors were found in the imported
-                            query:
+                            {t('sharing.errorsFoundInImport')}
                           </p>
                         </div>
                       </div>
@@ -197,10 +195,10 @@ export function QueryImportDialog({
                         <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-400" />
                         <div className="flex-1">
                           <p className="font-medium text-yellow-900 dark:text-yellow-100">
-                            Warnings
+                            {t('sharing.warnings')}
                           </p>
                           <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
-                            The query is valid but has some warnings:
+                            {t('sharing.warningsDesc')}
                           </p>
                         </div>
                       </div>
@@ -218,10 +216,10 @@ export function QueryImportDialog({
                       <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
                       <div className="flex-1">
                         <p className="font-medium text-green-900 dark:text-green-100">
-                          Validation Successful
+                          {t('sharing.validationSuccessful')}
                         </p>
                         <p className="mt-1 text-sm text-green-700 dark:text-green-300">
-                          The query is valid and ready to use
+                          {t('sharing.queryValidAndReady')}
                         </p>
                       </div>
                     </div>
@@ -231,10 +229,10 @@ export function QueryImportDialog({
                   {!importResult.success && (
                     <div className="bg-destructive/10 rounded-lg p-4">
                       <p className="text-destructive font-medium">
-                        Import Failed
+                        {t('sharing.importFailed')}
                       </p>
                       <p className="text-destructive/80 mt-1 text-sm">
-                        {importResult.error || 'Unknown error occurred'}
+                        {importResult.error || t('sharing.unknownError')}
                       </p>
                     </div>
                   )}
@@ -244,17 +242,22 @@ export function QueryImportDialog({
                 {importResult.query && (
                   <div className="space-y-4 rounded-lg border p-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold">Query Preview</h3>
+                      <h3 className="text-sm font-semibold">
+                        {t('sharing.queryPreview')}
+                      </h3>
                       {importResult.query.metadata && (
                         <span className="text-muted-foreground text-xs">
-                          Version: {importResult.query.metadata.version}
+                          {t('sharing.version')}:{' '}
+                          {importResult.query.metadata.version}
                         </span>
                       )}
                     </div>
 
                     {/* Query Name */}
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-medium">Name</Label>
+                      <Label className="text-xs font-medium">
+                        {t('sharing.name')}
+                      </Label>
                       <p className="text-sm">{importResult.query.name}</p>
                     </div>
 
@@ -262,7 +265,7 @@ export function QueryImportDialog({
                     {importResult.query.description && (
                       <div className="space-y-1.5">
                         <Label className="text-xs font-medium">
-                          Description
+                          {t('sharing.description')}
                         </Label>
                         <p className="text-muted-foreground text-sm">
                           {importResult.query.description}
@@ -272,7 +275,9 @@ export function QueryImportDialog({
 
                     {/* SQL Query */}
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-medium">SQL Query</Label>
+                      <Label className="text-xs font-medium">
+                        {t('sharing.sqlQuery')}
+                      </Label>
                       <Textarea
                         value={importResult.query.sql}
                         readOnly
@@ -280,7 +285,9 @@ export function QueryImportDialog({
                         rows={6}
                       />
                       <p className="text-muted-foreground text-xs">
-                        {importResult.query.sql.length} characters
+                        {t('sharing.characters', {
+                          count: importResult.query.sql.length,
+                        })}
                       </p>
                     </div>
 
@@ -288,7 +295,7 @@ export function QueryImportDialog({
                     {importResult.query.databaseContext && (
                       <div className="space-y-1.5">
                         <Label className="text-xs font-medium">
-                          Database Context
+                          {t('sharing.databaseContext')}
                         </Label>
                         <p className="text-muted-foreground text-sm">
                           {importResult.query.databaseContext}
@@ -300,7 +307,9 @@ export function QueryImportDialog({
                     {importResult.query.tags &&
                       importResult.query.tags.length > 0 && (
                         <div className="space-y-1.5">
-                          <Label className="text-xs font-medium">Tags</Label>
+                          <Label className="text-xs font-medium">
+                            {t('sharing.tags')}
+                          </Label>
                           <div className="flex flex-wrap gap-1.5">
                             {importResult.query.tags.map((tag) => (
                               <span
@@ -318,7 +327,7 @@ export function QueryImportDialog({
                     {importResult.query.documentation && (
                       <div className="space-y-1.5">
                         <Label className="text-xs font-medium">
-                          Documentation
+                          {t('sharing.documentation')}
                         </Label>
                         <Textarea
                           value={importResult.query.documentation}
@@ -334,7 +343,9 @@ export function QueryImportDialog({
                       <div className="text-muted-foreground grid grid-cols-2 gap-2 text-xs">
                         {importResult.query.createdAt && (
                           <div>
-                            <span className="font-medium">Created:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.created')}:
+                            </span>{' '}
                             {new Date(
                               importResult.query.createdAt
                             ).toLocaleString()}
@@ -342,7 +353,9 @@ export function QueryImportDialog({
                         )}
                         {importResult.query.modifiedAt && (
                           <div>
-                            <span className="font-medium">Modified:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.modified')}:
+                            </span>{' '}
                             {new Date(
                               importResult.query.modifiedAt
                             ).toLocaleString()}
@@ -350,13 +363,17 @@ export function QueryImportDialog({
                         )}
                         {importResult.query.author && (
                           <div>
-                            <span className="font-medium">Author:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.author')}:
+                            </span>{' '}
                             {importResult.query.author}
                           </div>
                         )}
                         {importResult.query.metadata?.exportedAt && (
                           <div>
-                            <span className="font-medium">Exported:</span>{' '}
+                            <span className="font-medium">
+                              {t('sharing.exported')}:
+                            </span>{' '}
                             {new Date(
                               importResult.query.metadata.exportedAt
                             ).toLocaleString()}
@@ -376,19 +393,19 @@ export function QueryImportDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isImporting}
             >
-              {importResult ? 'Close' : 'Cancel'}
+              {importResult ? t('sharing.close') : t('sharing.cancel')}
             </Button>
             {!importResult && (
               <Button onClick={handleImport} disabled={isImporting}>
                 {isImporting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Importing...
+                    {t('sharing.importing')}
                   </>
                 ) : (
                   <>
                     <FileUp className="mr-2 h-4 w-4" />
-                    Select File
+                    {t('sharing.selectFile')}
                   </>
                 )}
               </Button>

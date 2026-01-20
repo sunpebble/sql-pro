@@ -32,6 +32,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMemoryMonitor } from '@/hooks/useMemoryMonitor';
 import { schemaCache } from '@/lib/schema-cache';
 import { cn } from '@/lib/utils';
@@ -127,6 +128,7 @@ function MemoryGraph({
   maxHeap: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -222,11 +224,11 @@ function MemoryGraph({
       <div className="text-muted-foreground mt-1 flex justify-between text-xs">
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-full bg-blue-500" />
-          Heap
+          {t('devTools.memoryMonitor.heap')}
         </span>
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-full bg-purple-500 opacity-50" />
-          RSS
+          {t('devTools.memoryMonitor.rss')}
         </span>
       </div>
     </div>
@@ -274,6 +276,8 @@ function CacheStatsSection({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useTranslation('common');
+
   if (!stats) return null;
 
   return (
@@ -292,7 +296,7 @@ function CacheStatsSection({
           {title}
         </span>
         <span className="text-muted-foreground text-xs">
-          {stats.itemCount} items
+          {t('devTools.memoryMonitor.items', { count: stats.itemCount })}
         </span>
       </button>
 
@@ -300,20 +304,29 @@ function CacheStatsSection({
         <div className="space-y-2 border-t px-3 py-2">
           <div className="grid grid-cols-2 gap-2">
             <StatItem
-              label="Memory Used"
+              label={t('devTools.memoryMonitor.memoryUsed')}
               value={formatBytes(stats.totalBytes)}
             />
-            <StatItem label="Max Memory" value={formatBytes(stats.maxBytes)} />
             <StatItem
-              label="Hit Rate"
+              label={t('devTools.memoryMonitor.maxMemory')}
+              value={formatBytes(stats.maxBytes)}
+            />
+            <StatItem
+              label={t('devTools.memoryMonitor.hitRate')}
               value={formatPercent(stats.hitRate / 100)}
             />
-            <StatItem label="Evictions" value={stats.evictions.toString()} />
+            <StatItem
+              label={t('devTools.memoryMonitor.evictions')}
+              value={stats.evictions.toString()}
+            />
           </div>
 
           <div className="flex items-center justify-between pt-1">
             <span className="text-muted-foreground text-xs">
-              {stats.hits} hits / {stats.misses} misses
+              {t('devTools.memoryMonitor.hitsAndMisses', {
+                hits: stats.hits,
+                misses: stats.misses,
+              })}
             </span>
             <Button
               variant="ghost"
@@ -322,7 +335,7 @@ function CacheStatsSection({
               className="h-6 text-xs"
             >
               <Trash2 className="mr-1 h-3 w-3" />
-              Clear
+              {t('devTools.memoryMonitor.clear')}
             </Button>
           </div>
         </div>
@@ -343,6 +356,8 @@ function RendererMetricsSection({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useTranslation('common');
+
   return (
     <div className="bg-muted/30 rounded-lg border">
       <button
@@ -356,7 +371,7 @@ function RendererMetricsSection({
             <ChevronRight className="h-4 w-4" />
           )}
           <HardDrive className="text-muted-foreground h-4 w-4" />
-          Renderer Process
+          {t('devTools.memoryMonitor.rendererProcess')}
         </span>
       </button>
 
@@ -364,22 +379,22 @@ function RendererMetricsSection({
         <div className="border-t px-3 py-2">
           <div className="grid grid-cols-2 gap-2">
             <StatItem
-              label="DOM Nodes"
+              label={t('devTools.memoryMonitor.domNodes')}
               value={metrics.domNodeCount.toString()}
             />
             <StatItem
-              label="Components (est.)"
+              label={t('devTools.memoryMonitor.components')}
               value={metrics.componentCount.toString()}
             />
             {metrics.usedJsHeapSize !== undefined && (
               <StatItem
-                label="JS Heap Used"
+                label={t('devTools.memoryMonitor.jsHeapUsed')}
                 value={formatBytes(metrics.usedJsHeapSize)}
               />
             )}
             {metrics.jsHeapSize !== undefined && (
               <StatItem
-                label="JS Heap Total"
+                label={t('devTools.memoryMonitor.jsHeapTotal')}
                 value={formatBytes(metrics.jsHeapSize)}
               />
             )}
@@ -401,6 +416,8 @@ export function MemoryMonitorPanel({
   onClose,
   className,
 }: MemoryMonitorPanelProps) {
+  const { t } = useTranslation('common');
+
   // Memory monitoring hook
   const {
     mainProcessStats,
@@ -533,7 +550,9 @@ export function MemoryMonitorPanel({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Zap className="text-muted-foreground h-4 w-4" />
-            <CardTitle className="text-sm">Memory Monitor</CardTitle>
+            <CardTitle className="text-sm">
+              {t('devTools.memoryMonitor.title')}
+            </CardTitle>
           </div>
           {onClose && (
             <Button
@@ -547,7 +566,7 @@ export function MemoryMonitorPanel({
           )}
         </div>
         <CardDescription className="text-xs">
-          Real-time memory usage and cache statistics
+          {t('devTools.memoryMonitor.description')}
         </CardDescription>
       </CardHeader>
 
@@ -577,7 +596,7 @@ export function MemoryMonitorPanel({
               <span
                 className={cn('font-medium', getPressureColor(pressureLevel))}
               >
-                Memory Pressure:{' '}
+                {t('devTools.memoryMonitor.memoryPressure')}{' '}
                 {pressureLevel.charAt(0).toUpperCase() + pressureLevel.slice(1)}
               </span>
             </div>
@@ -588,7 +607,9 @@ export function MemoryMonitorPanel({
               onClick={() => (isSubscribed ? unsubscribe() : subscribe())}
               disabled={isLoading}
             >
-              {isSubscribed ? 'Pause' : 'Resume'}
+              {isSubscribed
+                ? t('devTools.memoryMonitor.pause')
+                : t('devTools.memoryMonitor.resume')}
             </Button>
           </div>
 
@@ -601,34 +622,34 @@ export function MemoryMonitorPanel({
           {mainProcessStats?.metrics && mainProcessStats?.process && (
             <div className="space-y-2">
               <h3 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                Main Process Memory
+                {t('devTools.memoryMonitor.mainProcessMemory')}
               </h3>
               <div className="bg-muted/30 grid grid-cols-2 gap-3 rounded-lg border p-3">
                 <StatItem
-                  label="Heap Used"
+                  label={t('devTools.memoryMonitor.heapUsed')}
                   value={`${mainProcessStats.metrics.usedHeapMB.toFixed(1)} MB`}
                   subValue={formatPercent(
                     mainProcessStats.metrics.heapUsagePercent
                   )}
                 />
                 <StatItem
-                  label="Heap Available"
+                  label={t('devTools.memoryMonitor.heapAvailable')}
                   value={`${mainProcessStats.metrics.availableHeapMB.toFixed(1)} MB`}
                 />
                 <StatItem
-                  label="RSS (Total)"
+                  label={t('devTools.memoryMonitor.rssTotal')}
                   value={`${mainProcessStats.metrics.totalMemoryMB.toFixed(1)} MB`}
                 />
                 <StatItem
-                  label="External"
+                  label={t('devTools.memoryMonitor.external')}
                   value={formatBytes(mainProcessStats.process.external)}
                 />
                 <StatItem
-                  label="Array Buffers"
+                  label={t('devTools.memoryMonitor.arrayBuffers')}
                   value={formatBytes(mainProcessStats.process.arrayBuffers)}
                 />
                 <StatItem
-                  label="Heap Total"
+                  label={t('devTools.memoryMonitor.heapTotal')}
                   value={formatBytes(mainProcessStats.process.heapTotal)}
                 />
               </div>
@@ -640,11 +661,11 @@ export function MemoryMonitorPanel({
           {/* Cache Statistics */}
           <div className="space-y-2">
             <h3 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Cache Statistics
+              {t('devTools.memoryMonitor.cacheStatistics')}
             </h3>
 
             <CacheStatsSection
-              title="Table Data Cache"
+              title={t('devTools.memoryMonitor.tableDataCache')}
               stats={tableDataStats}
               onClear={handleClearTableDataCache}
               isExpanded={expandedSections.tableData}
@@ -652,7 +673,7 @@ export function MemoryMonitorPanel({
             />
 
             <CacheStatsSection
-              title="Query Results Cache"
+              title={t('devTools.memoryMonitor.queryResultsCache')}
               stats={queryResultsStats}
               onClear={handleClearQueryResultsCache}
               isExpanded={expandedSections.queryResults}
@@ -672,10 +693,12 @@ export function MemoryMonitorPanel({
                     <ChevronRight className="h-4 w-4" />
                   )}
                   <Database className="text-muted-foreground h-4 w-4" />
-                  Schema Cache
+                  {t('devTools.memoryMonitor.schemaCache')}
                 </span>
                 <span className="text-muted-foreground text-xs">
-                  {schemaCacheStats.connectionCount} connections
+                  {t('devTools.memoryMonitor.connections', {
+                    count: schemaCacheStats.connectionCount,
+                  })}
                 </span>
               </button>
 
@@ -683,21 +706,21 @@ export function MemoryMonitorPanel({
                 <div className="space-y-2 border-t px-3 py-2">
                   <div className="grid grid-cols-2 gap-2">
                     <StatItem
-                      label="Schema Lists"
+                      label={t('devTools.memoryMonitor.schemaLists')}
                       value={schemaCacheStats.schemaListCount.toString()}
                     />
                     <StatItem
-                      label="Table Details"
+                      label={t('devTools.memoryMonitor.tableDetails')}
                       value={schemaCacheStats.totalTableDetailsCount.toString()}
                     />
                     <StatItem
-                      label="Memory Used"
+                      label={t('devTools.memoryMonitor.memoryUsed')}
                       value={formatBytes(
                         schemaCacheStats.totalTableDetailsBytes
                       )}
                     />
                     <StatItem
-                      label="Pending Fetches"
+                      label={t('devTools.memoryMonitor.pendingFetches')}
                       value={schemaCacheStats.pendingFetches.toString()}
                     />
                   </div>
@@ -710,7 +733,7 @@ export function MemoryMonitorPanel({
                       className="h-6 text-xs"
                     >
                       <Trash2 className="mr-1 h-3 w-3" />
-                      Clear
+                      {t('devTools.memoryMonitor.clear')}
                     </Button>
                   </div>
                 </div>
@@ -723,7 +746,7 @@ export function MemoryMonitorPanel({
           {/* Renderer Metrics */}
           <div className="space-y-2">
             <h3 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Renderer Metrics
+              {t('devTools.memoryMonitor.rendererMetrics')}
             </h3>
 
             <RendererMetricsSection
@@ -738,7 +761,7 @@ export function MemoryMonitorPanel({
           {/* Actions */}
           <div className="space-y-2">
             <h3 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Actions
+              {t('devTools.memoryMonitor.actions')}
             </h3>
 
             <div className="flex flex-col gap-2">
@@ -752,7 +775,9 @@ export function MemoryMonitorPanel({
                 <RefreshCw
                   className={cn('mr-2 h-4 w-4', isGCRunning && 'animate-spin')}
                 />
-                {isGCRunning ? 'Running GC...' : 'Trigger Garbage Collection'}
+                {isGCRunning
+                  ? t('devTools.memoryMonitor.runningGC')
+                  : t('devTools.memoryMonitor.triggerGC')}
               </Button>
 
               <Button
@@ -762,7 +787,7 @@ export function MemoryMonitorPanel({
                 className="w-full justify-start"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Clear All Caches
+                {t('devTools.memoryMonitor.clearAllCaches')}
               </Button>
 
               <Button
@@ -772,7 +797,7 @@ export function MemoryMonitorPanel({
                 className="w-full justify-start"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh Renderer Metrics
+                {t('devTools.memoryMonitor.refreshRendererMetrics')}
               </Button>
             </div>
           </div>

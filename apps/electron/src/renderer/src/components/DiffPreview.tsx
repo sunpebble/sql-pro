@@ -453,6 +453,7 @@ function ChangeItem({
   onRemove,
   validationError,
 }: ChangeItemProps) {
+  const { t } = useTranslation();
   const getTypeConfig = () => {
     switch (change.type) {
       case 'insert':
@@ -535,7 +536,9 @@ function ChangeItem({
               <AlertCircle className="text-destructive h-3.5 w-3.5" />
             </TooltipTrigger>
             <TooltipContent side="left" className="max-w-xs">
-              {validationError || change.validationError || 'Validation error'}
+              {validationError ||
+                change.validationError ||
+                t('diffPreview.validationError')}
             </TooltipContent>
           </Tooltip>
         )}
@@ -546,7 +549,7 @@ function ChangeItem({
             onRemove();
           }}
           className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded p-1 transition-colors"
-          title="Remove change"
+          title={t('diff.removeChange')}
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -569,6 +572,7 @@ function ChangeItem({
 
 // Table-based diff view for clearer visualization
 function DiffTable({ change }: { change: PendingChange }) {
+  const { t } = useTranslation();
   // Get schema information for the table
   const schema = useConnectionStore((state) => state.getSchema());
   const tableSchema = useMemo(() => {
@@ -777,12 +781,18 @@ function DiffTable({ change }: { change: PendingChange }) {
       <table className="w-full">
         <thead>
           <tr className="bg-muted/50 text-muted-foreground">
-            <th className="px-2 py-1.5 text-left font-medium">Field</th>
+            <th className="px-2 py-1.5 text-left font-medium">
+              {t('diff.field')}
+            </th>
             {change.type !== 'insert' && (
-              <th className="px-2 py-1.5 text-left font-medium">Old</th>
+              <th className="px-2 py-1.5 text-left font-medium">
+                {t('diff.old')}
+              </th>
             )}
             {change.type !== 'delete' && (
-              <th className="px-2 py-1.5 text-left font-medium">New</th>
+              <th className="px-2 py-1.5 text-left font-medium">
+                {t('diff.new')}
+              </th>
             )}
           </tr>
         </thead>

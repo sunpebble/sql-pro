@@ -80,8 +80,8 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
           onPressedChange={setShowOnlyDifferences}
           variant="outline"
           size="sm"
-          aria-label="Show only differences"
-          title="Toggle show only differences (⌘D)"
+          aria-label={t('diffFilter.onlyDifferences')}
+          title={t('diffFilter.toggleOnlyDiff')}
         >
           {t('diffFilter.onlyDifferences')}
         </Toggle>
@@ -100,7 +100,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             onPressedChange={(pressed) => setChangeTypeFilter('added', pressed)}
             variant="outline"
             size="sm"
-            aria-label="Show added items"
+            aria-label={t('diffFilter.showAddedItems')}
             className="gap-1.5"
           >
             <Plus className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
@@ -113,7 +113,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show removed items"
+            aria-label={t('diffFilter.showRemovedItems')}
             className="gap-1.5"
           >
             <Minus className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
@@ -126,7 +126,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show modified items"
+            aria-label={t('diffFilter.showModifiedItems')}
             className="gap-1.5"
           >
             <Edit className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
@@ -150,7 +150,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show tables"
+            aria-label={t('diffFilter.showTables')}
             className="gap-1.5"
           >
             <Database className="h-3.5 w-3.5" />
@@ -163,7 +163,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show columns"
+            aria-label={t('diffFilter.showColumns')}
             className="gap-1.5"
           >
             <Columns className="h-3.5 w-3.5" />
@@ -176,7 +176,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show indexes"
+            aria-label={t('diffFilter.showIndexes')}
             className="gap-1.5"
           >
             <Hash className="h-3.5 w-3.5" />
@@ -189,7 +189,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show foreign keys"
+            aria-label={t('diffFilter.showForeignKeys')}
             className="gap-1.5"
           >
             <Link className="h-3.5 w-3.5" />
@@ -202,7 +202,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show triggers"
+            aria-label={t('diffFilter.showTriggers')}
             className="gap-1.5"
           >
             <Zap className="h-3.5 w-3.5" />
@@ -222,14 +222,14 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
           value={filters.searchText}
           onChange={handleSearchChange}
           className="h-8 w-full pr-8 pl-8 text-sm"
-          title="Search for schema objects (⌘F to focus)"
+          title={t('diffFilter.searchShortcut')}
         />
         {filters.searchText && (
           <button
             type="button"
             onClick={handleClearSearch}
             className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2"
-            title="Clear search"
+            title={t('diffFilter.clearSearch')}
           >
             <X className="h-4 w-4" />
           </button>
@@ -245,7 +245,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
             size="sm"
             onClick={handleResetFilters}
             className="gap-2"
-            title="Reset all filters (⌘R)"
+            title={t('diffFilter.resetShortcut')}
           >
             <RotateCcw className="h-4 w-4" />
             <span className="hidden sm:inline">{t('diffFilter.reset')}</span>

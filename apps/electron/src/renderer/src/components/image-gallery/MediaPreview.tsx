@@ -885,11 +885,11 @@ export function MediaPreview({
                   {isVideo && <Film className="h-4 w-4" />}
                   {isVideo
                     ? t('mediaGallery.videoPreview', 'Video Preview')
-                    : t('mediaGallery.preview', 'Image Preview')}
+                    : t('mediaGallery.imagePreview', 'Image Preview')}
                 </DialogTitle>
                 <DialogDescription className="truncate">
-                  Row {item.rowIndex + 1} · {item.column} · {currentIndex + 1} /{' '}
-                  {totalCount}
+                  {t('mediaGallery.rowLabel', { row: item.rowIndex + 1 })} ·{' '}
+                  {item.column} · {currentIndex + 1} / {totalCount}
                 </DialogDescription>
               </div>
               <div className="flex shrink-0 items-center gap-1">
@@ -1090,7 +1090,7 @@ export function MediaPreview({
                     ) : (
                       <Play className="h-3 w-3" />
                     )}
-                    <span>Space</span>
+                    <span>{t('mediaPreview.spaceKey')}</span>
                   </div>
                 </div>
               ) : (
@@ -1105,7 +1105,10 @@ export function MediaPreview({
                   <img
                     ref={imageRef}
                     src={displayUrl}
-                    alt={`Row ${item.rowIndex + 1}, ${item.column}`}
+                    alt={t('mediaGallery.rowWithColumn', {
+                      row: item.rowIndex + 1,
+                      column: item.column,
+                    })}
                     className={cn(
                       'max-h-full max-w-full object-contain select-none',
                       !isMediaLoaded && 'invisible'
@@ -1157,8 +1160,10 @@ export function MediaPreview({
                 </div>
                 <div className="font-medium">
                   {displayMetadata.format}
-                  {displayMetadata.isVideo && ' video'}
-                  {!displayMetadata.isVideo && ' image'}
+                  {displayMetadata.isVideo &&
+                    ` ${t('mediaGallery.mediaType.video')}`}
+                  {!displayMetadata.isVideo &&
+                    ` ${t('mediaGallery.mediaType.image')}`}
                 </div>
               </div>
 
@@ -1181,7 +1186,8 @@ export function MediaPreview({
                       : t('mediaGallery.imageSize', 'Image Size')}
                   </div>
                   <div className="font-medium">
-                    {displayMetadata.width} × {displayMetadata.height} pixels
+                    {displayMetadata.width} × {displayMetadata.height}{' '}
+                    {t('mediaGallery.pixels')}
                   </div>
                 </div>
               )}
@@ -1247,8 +1253,8 @@ export function MediaPreview({
                     </div>
                     <div className="font-medium">
                       {displayMetadata.isProgressive
-                        ? t('tableDetails.yes', 'Yes')
-                        : t('tableDetails.no', 'No')}
+                        ? t('schema.yes', 'Yes')
+                        : t('schema.no', 'No')}
                     </div>
                   </div>
                 )}

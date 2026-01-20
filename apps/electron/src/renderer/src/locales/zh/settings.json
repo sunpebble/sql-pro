@@ -51,6 +51,7 @@
     "uiDesc": "应用程序界面",
     "systemDefault": "系统默认",
     "loadingFonts": "加载字体中...",
+    "searchFonts": "搜索字体...",
     "noFontFound": "未找到字体"
   },
   "tabSize": {

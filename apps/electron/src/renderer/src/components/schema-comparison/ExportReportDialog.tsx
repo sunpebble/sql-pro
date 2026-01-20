@@ -11,6 +11,7 @@ import {
 } from '@sqlpro/ui/select';
 import { FileCode, FileDown, FileJson, FileText, Loader2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -26,7 +27,7 @@ type ReportFormat = 'html' | 'json' | 'markdown';
 interface ReportFormatOption {
   value: ReportFormat;
   label: string;
-  description: string;
+  descriptionKey: string;
   icon: typeof FileText;
   extension: string;
 }
@@ -35,21 +36,21 @@ const FORMAT_OPTIONS: ReportFormatOption[] = [
   {
     value: 'html',
     label: 'HTML',
-    description: 'Styled web page with visual indicators',
+    descriptionKey: 'exportReport.htmlDescription',
     icon: FileCode,
     extension: 'html',
   },
   {
     value: 'json',
     label: 'JSON',
-    description: 'Raw data for programmatic use',
+    descriptionKey: 'exportReport.jsonDescription',
     icon: FileJson,
     extension: 'json',
   },
   {
     value: 'markdown',
     label: 'Markdown',
-    description: 'Documentation-friendly format',
+    descriptionKey: 'exportReport.markdownDescription',
     icon: FileText,
     extension: 'md',
   },
@@ -70,6 +71,7 @@ export function ExportReportDialog({
   onOpenChange,
   comparisonResult,
 }: ExportReportDialogProps) {
+  const { t } = useTranslation('common');
   const [selectedFormat, setSelectedFormat] = useState<ReportFormat>('html');
   const [includeMigrationSQL, setIncludeMigrationSQL] =
     useState<boolean>(false);
@@ -100,14 +102,14 @@ export function ExportReportDialog({
 
       // Show save dialog
       const result = await window.sqlPro.dialog.saveFile({
-        title: 'Export Comparison Report',
+        title: t('exportReport.saveDialogTitle'),
         defaultPath: defaultFilename,
         filters: [
           {
             name: formatOption.label,
             extensions: [formatOption.extension],
           },
-          { name: 'All Files', extensions: ['*'] },
+          { name: t('exportReport.allFiles'), extensions: ['*'] },
         ],
       });
 
@@ -125,16 +127,18 @@ export function ExportReportDialog({
       });
 
       if (!response.success) {
-        throw new Error(response.error || 'Export failed');
+        throw new Error(response.error || t('exportReport.exportFailed'));
       }
 
       // Close dialog on success
       onOpenChange(false);
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error('Failed to export report', {
+      toast.error(t('exportReport.failedToExport'), {
         description:
-          error instanceof Error ? error.message : 'Unknown error occurred',
+          error instanceof Error
+            ? error.message
+            : t('exportReport.unknownError'),
       });
     } finally {
       setIsExporting(false);
@@ -161,12 +165,12 @@ export function ExportReportDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileDown className="h-5 w-5" />
-            Export Comparison Report
+            {t('exportReport.title')}
           </DialogTitle>
           <DialogDescription>
             {comparisonResult
-              ? `Export comparison results with ${totalChanges} table ${totalChanges === 1 ? 'change' : 'changes'}`
-              : 'No comparison results to export'}
+              ? t('exportReport.description', { count: totalChanges })
+              : t('exportReport.noResults')}
           </DialogDescription>
         </DialogHeader>
 
@@ -174,7 +178,7 @@ export function ExportReportDialog({
           {/* Format Selection */}
           <div className="space-y-2">
             <Label htmlFor="report-format" className="text-sm font-medium">
-              Report Format
+              {t('exportReport.reportFormat')}
             </Label>
             <Select
               value={selectedFormat}
@@ -183,7 +187,7 @@ export function ExportReportDialog({
               }
             >
               <SelectTrigger id="report-format" className="w-full">
-                <SelectValue placeholder="Select format">
+                <SelectValue placeholder={t('exportReport.selectFormat')}>
                   <div className="flex items-center gap-2">
                     <FormatIcon className="h-4 w-4" />
                     <span>{selectedFormatInfo?.label}</span>
@@ -200,7 +204,7 @@ export function ExportReportDialog({
                         <div className="flex flex-col">
                           <span>{option.label}</span>
                           <span className="text-muted-foreground text-xs">
-                            {option.description}
+                            {t(option.descriptionKey)}
                           </span>
                         </div>
                       </div>
@@ -213,7 +217,9 @@ export function ExportReportDialog({
 
           {/* Include Migration SQL Option */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium">Options</Label>
+            <Label className="text-sm font-medium">
+              {t('exportReport.options')}
+            </Label>
             <div className="space-y-3 rounded-md border p-3">
               <label className="flex cursor-pointer items-center gap-2">
                 <Checkbox
@@ -223,9 +229,11 @@ export function ExportReportDialog({
                   }
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm">Include migration SQL</span>
+                  <span className="text-sm">
+                    {t('exportReport.includeMigrationSQL')}
+                  </span>
                   <span className="text-muted-foreground text-xs">
-                    Append generated SQL statements to the report
+                    {t('exportReport.includeMigrationSQLDesc')}
                   </span>
                 </div>
               </label>
@@ -235,29 +243,31 @@ export function ExportReportDialog({
           {/* Report Preview Info */}
           {comparisonResult && (
             <div className="space-y-2 rounded-md border p-3">
-              <Label className="text-sm font-medium">Report Summary</Label>
+              <Label className="text-sm font-medium">
+                {t('exportReport.reportSummary')}
+              </Label>
               <div className="text-muted-foreground space-y-1 text-xs">
                 <div className="flex justify-between">
-                  <span>Source:</span>
+                  <span>{t('exportReport.source')}</span>
                   <span className="font-medium">
                     {comparisonResult.sourceName}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Target:</span>
+                  <span>{t('exportReport.target')}</span>
                   <span className="font-medium">
                     {comparisonResult.targetName}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Tables compared:</span>
+                  <span>{t('exportReport.tablesCompared')}</span>
                   <span className="font-medium">
                     {comparisonResult.summary.sourceTables} →{' '}
                     {comparisonResult.summary.targetTables}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Total changes:</span>
+                  <span>{t('exportReport.totalChanges')}</span>
                   <span className="font-medium">{totalChanges}</span>
                 </div>
               </div>
@@ -271,18 +281,18 @@ export function ExportReportDialog({
             onClick={() => onOpenChange(false)}
             disabled={isExporting}
           >
-            Cancel
+            {t('actions.cancel')}
           </Button>
           <Button onClick={handleExport} disabled={isExportDisabled}>
             {isExporting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Exporting...
+                {t('exportReport.exporting')}
               </>
             ) : (
               <>
                 <FileDown className="mr-2 h-4 w-4" />
-                Export Report
+                {t('exportReport.exportButton')}
               </>
             )}
           </Button>

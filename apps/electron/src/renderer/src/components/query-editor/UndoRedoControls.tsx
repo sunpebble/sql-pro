@@ -8,6 +8,7 @@ import {
 } from '@sqlpro/ui/tooltip';
 import { Redo2, Undo2 } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useUndoRedoStore } from '@/stores';
 
@@ -19,6 +20,7 @@ interface UndoRedoControlsProps {
 
 export const UndoRedoControls = memo(
   ({ className, onUndo, onRedo }: UndoRedoControlsProps) => {
+    const { t } = useTranslation();
     const {
       canUndo,
       canRedo,
@@ -95,11 +97,15 @@ export const UndoRedoControls = memo(
             <TooltipContent side="bottom">
               {hasUndo ? (
                 <div className="flex flex-col gap-0.5">
-                  <span>Undo: {undoDescription}</span>
+                  <span>
+                    {t('actions.undoWithDescription', {
+                      description: undoDescription,
+                    })}
+                  </span>
                   <span className="text-muted-foreground text-xs">⌘Z</span>
                 </div>
               ) : (
-                <span>Nothing to undo</span>
+                <span>{t('actions.nothingToUndo')}</span>
               )}
             </TooltipContent>
           </Tooltip>
@@ -121,11 +127,15 @@ export const UndoRedoControls = memo(
             <TooltipContent side="bottom">
               {hasRedo ? (
                 <div className="flex flex-col gap-0.5">
-                  <span>Redo: {redoDescription}</span>
+                  <span>
+                    {t('actions.redoWithDescription', {
+                      description: redoDescription,
+                    })}
+                  </span>
                   <span className="text-muted-foreground text-xs">⌘⇧Z</span>
                 </div>
               ) : (
-                <span>Nothing to redo</span>
+                <span>{t('actions.nothingToRedo')}</span>
               )}
             </TooltipContent>
           </Tooltip>

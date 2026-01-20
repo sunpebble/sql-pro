@@ -265,7 +265,7 @@ const DataRow = memo(
               <Checkbox
                 checked={isSelected}
                 onCheckedChange={handleToggleSelected}
-                aria-label="Select row"
+                aria-label={t('dataTable.selectRow')}
               />
             </td>
           )}

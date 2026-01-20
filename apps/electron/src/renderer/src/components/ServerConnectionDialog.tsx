@@ -412,8 +412,7 @@ export function ServerConnectionDialog({
                       required
                     />
                     <p className="text-muted-foreground text-xs">
-                      Qdrant server hostname (e.g., localhost or
-                      cloud.qdrant.io)
+                      {t('connection.qdrant.hostHint')}
                     </p>
                   </div>
 
@@ -428,27 +427,27 @@ export function ServerConnectionDialog({
                       onChange={(e) => setQdrantPort(e.target.value)}
                     />
                     <p className="text-muted-foreground text-xs">
-                      REST API port (default: 6333)
+                      {t('connection.qdrant.portHint')}
                     </p>
                   </div>
 
                   {/* Qdrant API Key */}
                   <div className="space-y-2">
                     <Label htmlFor="qdrantApiKey">
-                      API Key{' '}
+                      {t('connection.qdrant.apiKey')}{' '}
                       <span className="text-muted-foreground text-xs">
-                        (optional)
+                        ({t('connection.optional')})
                       </span>
                     </Label>
                     <Input
                       id="qdrantApiKey"
                       type="password"
-                      placeholder="Your API key"
+                      placeholder={t('connection.qdrant.apiKeyPlaceholder')}
                       value={qdrantApiKey}
                       onChange={(e) => setQdrantApiKey(e.target.value)}
                     />
                     <p className="text-muted-foreground text-xs">
-                      Required for Qdrant Cloud or secured instances
+                      {t('connection.qdrant.apiKeyHint')}
                     </p>
                   </div>
 
@@ -462,7 +461,7 @@ export function ServerConnectionDialog({
                       }
                     />
                     <Label htmlFor="qdrantUseTLS" className="font-normal">
-                      Use TLS (HTTPS)
+                      {t('connection.qdrant.useTLS')}
                     </Label>
                   </div>
                 </>
@@ -549,7 +548,8 @@ export function ServerConnectionDialog({
                   {/* Supabase URL */}
                   <div className="space-y-2">
                     <Label htmlFor="supabaseUrl">
-                      Project URL <span className="text-destructive">*</span>
+                      {t('connection.supabase.projectUrl')}{' '}
+                      <span className="text-destructive">*</span>
                     </Label>
                     <Input
                       id="supabaseUrl"
@@ -560,16 +560,16 @@ export function ServerConnectionDialog({
                       required
                     />
                     <p className="text-muted-foreground text-xs">
-                      Found in Project Settings → General
+                      {t('connection.supabase.projectUrlHint')}
                     </p>
                   </div>
 
                   {/* Supabase Host (optional, for pooler connections) */}
                   <div className="space-y-2">
                     <Label htmlFor="supabaseHost">
-                      Database Host{' '}
+                      {t('connection.supabase.databaseHost')}{' '}
                       <span className="text-muted-foreground text-xs">
-                        (recommended)
+                        ({t('connection.recommended')})
                       </span>
                     </Label>
                     <Input
@@ -579,23 +579,22 @@ export function ServerConnectionDialog({
                       onChange={(e) => setHost(e.target.value)}
                     />
                     <p className="text-muted-foreground text-xs">
-                      Found in Project Settings → Database → Connection string.
-                      Use pooler host for better performance.
+                      {t('connection.supabase.databaseHostHint')}
                     </p>
                   </div>
 
                   {/* Port for Supabase */}
                   <div className="space-y-2">
                     <Label htmlFor="supabasePort">
-                      Port{' '}
+                      {t('connection.port')}{' '}
                       <span className="text-muted-foreground text-xs">
-                        (optional)
+                        ({t('connection.optional')})
                       </span>
                     </Label>
                     <Input
                       id="supabasePort"
                       type="number"
-                      placeholder="5432 or 6543 for transaction mode"
+                      placeholder={t('connection.supabase.portPlaceholder')}
                       value={port}
                       onChange={(e) => setPort(e.target.value)}
                     />
@@ -604,39 +603,38 @@ export function ServerConnectionDialog({
                   {/* Username for Supabase */}
                   <div className="space-y-2">
                     <Label htmlFor="supabaseUsername">
-                      Username{' '}
+                      {t('connection.username')}{' '}
                       <span className="text-muted-foreground text-xs">
-                        (optional)
+                        ({t('connection.optional')})
                       </span>
                     </Label>
                     <Input
                       id="supabaseUsername"
-                      placeholder="postgres or postgres.[project-ref]"
+                      placeholder={t('connection.supabase.usernamePlaceholder')}
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                     />
                     <p className="text-muted-foreground text-xs">
-                      For pooler: postgres.[project-ref]. Auto-detected if
-                      empty.
+                      {t('connection.supabase.usernameHint')}
                     </p>
                   </div>
 
                   {/* Supabase Key/Password */}
                   <div className="space-y-2">
                     <Label htmlFor="supabaseKey">
-                      Database Password{' '}
+                      {t('connection.supabase.databasePassword')}{' '}
                       <span className="text-destructive">*</span>
                     </Label>
                     <Input
                       id="supabaseKey"
                       type="password"
-                      placeholder="Your database password"
+                      placeholder={t('connection.supabase.passwordPlaceholder')}
                       value={supabaseKey}
                       onChange={(e) => setSupabaseKey(e.target.value)}
                       required
                     />
                     <p className="text-muted-foreground text-xs">
-                      The password you set when creating the project
+                      {t('connection.supabase.passwordHint')}
                     </p>
                   </div>
                 </>
@@ -755,7 +753,7 @@ export function ServerConnectionDialog({
                     <>
                       <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" />
                       <span className="text-green-600">
-                        Connected
+                        {t('connection.testSuccess')}
                         {testResult.latencyMs !== undefined && (
                           <span className="text-muted-foreground ml-1">
                             ({testResult.latencyMs}ms)
@@ -850,7 +848,7 @@ export function ServerConnectionDialog({
                         error:
                           err instanceof Error
                             ? err.message
-                            : 'Test connection failed',
+                            : t('connection.testFailed'),
                       });
                     } finally {
                       setIsTesting(false);

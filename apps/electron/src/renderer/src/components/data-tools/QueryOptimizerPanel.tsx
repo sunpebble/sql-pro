@@ -45,6 +45,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Component, memo, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -61,10 +62,18 @@ import '@xyflow/react/dist/style.css';
 
 // Error Boundary for graceful error handling
 class DiagramErrorBoundary extends Component<
-  { children: ReactNode },
+  {
+    children: ReactNode;
+    errorMessage?: string;
+    unexpectedErrorMessage?: string;
+  },
   { hasError: boolean; error: Error | null }
 > {
-  constructor(props: { children: ReactNode }) {
+  constructor(props: {
+    children: ReactNode;
+    errorMessage?: string;
+    unexpectedErrorMessage?: string;
+  }) {
     super(props);
     this.state = { hasError: false, error: null };
   }
@@ -84,10 +93,10 @@ class DiagramErrorBoundary extends Component<
         <div className="flex h-full flex-col items-center justify-center p-8">
           <AlertCircle className="text-destructive mb-4 h-12 w-12" />
           <p className="text-destructive mb-2 font-medium">
-            Failed to render diagram
+            {this.props.errorMessage}
           </p>
           <p className="text-muted-foreground text-center text-sm">
-            {this.state.error?.message || 'An unexpected error occurred'}
+            {this.state.error?.message || this.props.unexpectedErrorMessage}
           </p>
         </div>
       );
@@ -151,6 +160,7 @@ const PlanNode = memo(function PlanNode({
   children = [],
 }: PlanNodeProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const { t } = useTranslation('common');
 
   // Defensive checks for node data
   if (!node || !node.detail) {
@@ -190,8 +200,20 @@ const PlanNode = memo(function PlanNode({
           <p className="font-mono text-sm">{node.detail}</p>
           {(node.estimatedCost || node.estimatedRows) && (
             <div className="text-muted-foreground flex gap-4 text-xs">
-              {node.estimatedCost && <span>Cost: {node.estimatedCost}</span>}
-              {node.estimatedRows && <span>Rows: ~{node.estimatedRows}</span>}
+              {node.estimatedCost && (
+                <span>
+                  {t('devTools.queryOptimizer.cost', {
+                    cost: node.estimatedCost,
+                  })}
+                </span>
+              )}
+              {node.estimatedRows && (
+                <span>
+                  {t('devTools.queryOptimizer.rows', {
+                    rows: node.estimatedRows,
+                  })}
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -207,6 +229,7 @@ const PlanNode = memo(function PlanNode({
 export const QueryOptimizerPanel = memo(
   ({ open, onOpenChange, query = '', onAnalyze }: QueryOptimizerPanelProps) => {
     const { resolvedTheme } = useTheme();
+    const { t } = useTranslation('common');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [plan, setPlan] = useState<QueryPlanNode[]>([]);
     const [stats, setStats] = useState<QueryPlanStats | null>(null);
@@ -333,17 +356,19 @@ export const QueryOptimizerPanel = memo(
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Zap className="h-5 w-5" />
-              Query Optimizer
+              {t('devTools.queryOptimizer.title')}
             </DialogTitle>
             <DialogDescription>
-              Analyze query execution plan and get optimization suggestions.
+              {t('devTools.queryOptimizer.description')}
             </DialogDescription>
           </DialogHeader>
 
           {/* Query Preview */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground text-sm">Query</span>
+              <span className="text-muted-foreground text-sm">
+                {t('devTools.queryOptimizer.query')}
+              </span>
               <Button
                 size="sm"
                 onClick={handleAnalyze}
@@ -354,7 +379,7 @@ export const QueryOptimizerPanel = memo(
                 ) : (
                   <Search className="mr-2 h-4 w-4" />
                 )}
-                Analyze
+                {t('devTools.queryOptimizer.analyze')}
               </Button>
             </div>
             {query ? (
@@ -365,7 +390,7 @@ export const QueryOptimizerPanel = memo(
               />
             ) : (
               <pre className="bg-muted text-muted-foreground rounded-lg p-3 font-mono text-sm">
-                No query to analyze
+                {t('devTools.queryOptimizer.noQuery')}
               </pre>
             )}
           </div>
@@ -375,7 +400,9 @@ export const QueryOptimizerPanel = memo(
             <div className="border-destructive/50 bg-destructive/10 flex items-start gap-3 rounded-lg border p-4">
               <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
               <div>
-                <p className="text-destructive font-medium">Analysis Error</p>
+                <p className="text-destructive font-medium">
+                  {t('devTools.queryOptimizer.analysisError')}
+                </p>
                 <p className="text-destructive/80 text-sm">{error}</p>
               </div>
             </div>
@@ -391,21 +418,29 @@ export const QueryOptimizerPanel = memo(
                     {(stats.executionTime ?? 0).toFixed(2)}ms
                   </span>
                 </div>
-                <p className="text-muted-foreground text-xs">Execution Time</p>
+                <p className="text-muted-foreground text-xs">
+                  {t('devTools.queryOptimizer.executionTime')}
+                </p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold">{stats.rowsExamined ?? 0}</p>
-                <p className="text-muted-foreground text-xs">Rows Examined</p>
+                <p className="text-muted-foreground text-xs">
+                  {t('devTools.queryOptimizer.rowsExamined')}
+                </p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold">{stats.rowsReturned ?? 0}</p>
-                <p className="text-muted-foreground text-xs">Rows Returned</p>
+                <p className="text-muted-foreground text-xs">
+                  {t('devTools.queryOptimizer.rowsReturned')}
+                </p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold">
                   {stats.indexesUsed?.length ?? 0}
                 </p>
-                <p className="text-muted-foreground text-xs">Indexes Used</p>
+                <p className="text-muted-foreground text-xs">
+                  {t('devTools.queryOptimizer.indexesUsed')}
+                </p>
               </div>
             </div>
           )}
@@ -414,7 +449,9 @@ export const QueryOptimizerPanel = memo(
           {plan.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium">Execution Plan</h3>
+                <h3 className="font-medium">
+                  {t('devTools.queryOptimizer.executionPlan')}
+                </h3>
                 <div className="flex gap-1">
                   <Button
                     variant={viewMode === 'tree' ? 'default' : 'ghost'}
@@ -438,7 +475,7 @@ export const QueryOptimizerPanel = memo(
                     onClick={handleExportText}
                     disabled={!stats || plan.length === 0}
                     className="h-8 px-2"
-                    title="Export as Text"
+                    title={t('devTools.queryOptimizer.exportAsText')}
                   >
                     <FileText className="h-4 w-4" />
                   </Button>
@@ -449,7 +486,7 @@ export const QueryOptimizerPanel = memo(
                       onClick={handleExportPng}
                       disabled={isExporting}
                       className="h-8 px-2"
-                      title="Export as PNG"
+                      title={t('devTools.queryOptimizer.exportAsPng')}
                     >
                       <Download className="h-4 w-4" />
                     </Button>
@@ -458,11 +495,16 @@ export const QueryOptimizerPanel = memo(
               </div>
 
               {viewMode === 'tree' && (
-                <DiagramErrorBoundary>
+                <DiagramErrorBoundary
+                  errorMessage={t(
+                    'devTools.queryOptimizer.failedToRenderDiagram'
+                  )}
+                  unexpectedErrorMessage={t('common.unexpectedError')}
+                >
                   <ScrollArea className="bg-muted/30 h-48 rounded-lg border p-2">
                     {rootNodes.length === 0 ? (
                       <div className="text-muted-foreground flex h-full items-center justify-center py-8">
-                        No execution plan to display
+                        {t('devTools.queryOptimizer.noPlanToDisplay')}
                       </div>
                     ) : (
                       rootNodes.map((node) => (
@@ -479,11 +521,16 @@ export const QueryOptimizerPanel = memo(
               )}
 
               {viewMode === 'diagram' && (
-                <DiagramErrorBoundary>
+                <DiagramErrorBoundary
+                  errorMessage={t(
+                    'devTools.queryOptimizer.failedToRenderDiagram'
+                  )}
+                  unexpectedErrorMessage={t('common.unexpectedError')}
+                >
                   <div className="bg-muted/30 query-optimizer-flow h-96 rounded-lg border">
                     {flowNodes.length === 0 ? (
                       <div className="text-muted-foreground flex h-full items-center justify-center">
-                        No execution plan to display
+                        {t('devTools.queryOptimizer.noPlanToDisplay')}
                       </div>
                     ) : (
                       <ReactFlow
@@ -519,7 +566,9 @@ export const QueryOptimizerPanel = memo(
           {/* Optimization Suggestions */}
           {suggestions.length > 0 && (
             <div className="space-y-2">
-              <h3 className="font-medium">Suggestions</h3>
+              <h3 className="font-medium">
+                {t('devTools.queryOptimizer.suggestions')}
+              </h3>
               <ScrollArea className="max-h-48">
                 <div className="space-y-2">
                   {suggestions.map((suggestion) => (
@@ -556,7 +605,9 @@ export const QueryOptimizerPanel = memo(
                             }
                             className="text-xs"
                           >
-                            {suggestion.impact} impact
+                            {t('devTools.queryOptimizer.impact', {
+                              impact: suggestion.impact,
+                            })}
                           </Badge>
                         </div>
                         <p className="text-muted-foreground text-sm">
@@ -574,9 +625,11 @@ export const QueryOptimizerPanel = memo(
           {!isAnalyzing && plan.length === 0 && !error && (
             <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center py-12">
               <Zap className="mb-4 h-12 w-12 opacity-30" />
-              <p className="text-lg font-medium">Ready to Analyze</p>
+              <p className="text-lg font-medium">
+                {t('devTools.queryOptimizer.readyToAnalyze')}
+              </p>
               <p className="text-sm">
-                Click Analyze to see the query execution plan
+                {t('devTools.queryOptimizer.clickAnalyze')}
               </p>
             </div>
           )}
@@ -598,14 +651,16 @@ export const QueryOptimizerPanel = memo(
                     {selectedNode.data.operation}
                   </SheetTitle>
                   <SheetDescription>
-                    Execution plan node details
+                    {t('devTools.queryOptimizer.nodeDetails')}
                   </SheetDescription>
                 </SheetHeader>
 
                 <div className="mt-6 space-y-6">
                   {/* Operation Details */}
                   <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Operation</h3>
+                    <h3 className="text-sm font-medium">
+                      {t('devTools.queryOptimizer.operation')}
+                    </h3>
                     <div className="bg-muted rounded-lg p-3">
                       <p className="font-mono text-sm">
                         {selectedNode.data.detail}
@@ -617,13 +672,15 @@ export const QueryOptimizerPanel = memo(
                   {(selectedNode.data.tableName ||
                     selectedNode.data.indexName) && (
                     <div className="space-y-2">
-                      <h3 className="text-sm font-medium">Table &amp; Index</h3>
+                      <h3 className="text-sm font-medium">
+                        {t('devTools.queryOptimizer.tableAndIndex')}
+                      </h3>
                       <div className="space-y-2">
                         {selectedNode.data.tableName && (
                           <div className="flex items-center gap-2">
                             <Table className="text-muted-foreground h-4 w-4" />
                             <span className="text-muted-foreground text-sm">
-                              Table:
+                              {t('devTools.queryOptimizer.table')}
                             </span>
                             <span className="font-mono text-sm font-medium">
                               {selectedNode.data.tableName}
@@ -634,7 +691,7 @@ export const QueryOptimizerPanel = memo(
                           <div className="flex items-center gap-2">
                             <Zap className="text-muted-foreground h-4 w-4" />
                             <span className="text-muted-foreground text-sm">
-                              Index:
+                              {t('devTools.queryOptimizer.index')}
                             </span>
                             <span className="font-mono text-sm font-medium">
                               {selectedNode.data.indexName}
@@ -650,7 +707,7 @@ export const QueryOptimizerPanel = memo(
                     selectedNode.data.estimatedRows !== undefined) && (
                     <div className="space-y-2">
                       <h3 className="text-sm font-medium">
-                        Performance Metrics
+                        {t('devTools.queryOptimizer.performanceMetrics')}
                       </h3>
                       <div className="bg-muted/50 grid grid-cols-2 gap-4 rounded-lg p-4">
                         {selectedNode.data.estimatedCost !== undefined && (
@@ -659,7 +716,7 @@ export const QueryOptimizerPanel = memo(
                               {selectedNode.data.estimatedCost}
                             </p>
                             <p className="text-muted-foreground text-xs">
-                              Estimated Cost
+                              {t('devTools.queryOptimizer.estimatedCost')}
                             </p>
                           </div>
                         )}
@@ -669,7 +726,7 @@ export const QueryOptimizerPanel = memo(
                               ~{selectedNode.data.estimatedRows}
                             </p>
                             <p className="text-muted-foreground text-xs">
-                              Estimated Rows
+                              {t('devTools.queryOptimizer.estimatedRows')}
                             </p>
                           </div>
                         )}
@@ -681,7 +738,7 @@ export const QueryOptimizerPanel = memo(
                   {selectedNode.data.hasWarning && (
                     <div className="space-y-2">
                       <h3 className="text-sm font-medium">
-                        Performance Warning
+                        {t('devTools.queryOptimizer.performanceWarning')}
                       </h3>
                       <div
                         className={cn(
@@ -712,24 +769,29 @@ export const QueryOptimizerPanel = memo(
                         <div className="flex-1 space-y-1">
                           <p className="font-medium">
                             {selectedNode.data.warningType === 'full-scan' &&
-                              'Full Table Scan'}
+                              t('devTools.queryOptimizer.warning.fullScan')}
                             {selectedNode.data.warningType === 'temp-btree' &&
-                              'Temporary B-Tree'}
+                              t('devTools.queryOptimizer.warning.tempBtree')}
                             {selectedNode.data.warningType === 'subquery' &&
-                              'Subquery Operation'}
+                              t('devTools.queryOptimizer.warning.subquery')}
                             {selectedNode.data.warningType ===
-                              'missing-index' && 'Missing Index'}
+                              'missing-index' &&
+                              t('devTools.queryOptimizer.warning.missingIndex')}
                           </p>
                           <p className="text-muted-foreground text-sm">
                             {selectedNode.data.warningType === 'full-scan' &&
-                              'This operation scans all rows in the table. Consider adding an index to improve performance.'}
+                              t('devTools.queryOptimizer.warning.fullScanDesc')}
                             {selectedNode.data.warningType === 'temp-btree' &&
-                              'A temporary structure is created for sorting. Adding an index on sort columns may help.'}
+                              t(
+                                'devTools.queryOptimizer.warning.tempBtreeDesc'
+                              )}
                             {selectedNode.data.warningType === 'subquery' &&
-                              'Subqueries can be expensive. Consider rewriting as a JOIN if possible.'}
+                              t('devTools.queryOptimizer.warning.subqueryDesc')}
                             {selectedNode.data.warningType ===
                               'missing-index' &&
-                              'An index could improve performance for this operation.'}
+                              t(
+                                'devTools.queryOptimizer.warning.missingIndexDesc'
+                              )}
                           </p>
                         </div>
                       </div>

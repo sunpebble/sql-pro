@@ -9,6 +9,7 @@ import {
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Copy, Maximize2 } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/utils';
 
@@ -34,6 +35,7 @@ export const RowHoverCard = memo(
     primaryKeyColumn,
     onExpand,
   }: RowHoverCardProps) => {
+    const { t } = useTranslation();
     const { copy, copied } = useCopyToClipboard();
 
     // Get the row identifier
@@ -45,7 +47,7 @@ export const RowHoverCard = memo(
     // Format a value for display
     const formatValue = (value: unknown, type: string): string => {
       if (value === null || value === undefined) {
-        return 'NULL';
+        return t('dataTable.null');
       }
 
       const typeLower = type.toLowerCase();
@@ -63,7 +65,7 @@ export const RowHoverCard = memo(
       }
 
       if (typeLower === 'boolean' || typeLower === 'bool') {
-        return value ? '✓ True' : '✗ False';
+        return value ? `✓ ${t('dataTable.true')}` : `✗ ${t('dataTable.false')}`;
       }
 
       if (typeof value === 'object') {
@@ -127,7 +129,9 @@ export const RowHoverCard = memo(
           <div className="border-b px-3 py-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground text-xs">Row ID:</span>
+                <span className="text-muted-foreground text-xs">
+                  {t('dataTable.rowId')}:
+                </span>
                 <span className="bg-gold/10 text-gold rounded px-1.5 py-0.5 font-mono text-xs">
                   {String(rowId)}
                 </span>
@@ -137,7 +141,9 @@ export const RowHoverCard = memo(
                   variant="ghost"
                   size="icon-xs"
                   onClick={handleCopyJson}
-                  title={copied ? 'Copied!' : 'Copy as JSON'}
+                  title={
+                    copied ? t('common.copied') : t('dataTable.copyAsJson')
+                  }
                 >
                   <Copy
                     className={cn(
@@ -151,7 +157,7 @@ export const RowHoverCard = memo(
                     variant="ghost"
                     size="icon-xs"
                     onClick={onExpand}
-                    title="Expand row"
+                    title={t('dataTable.expandRow')}
                   >
                     <Maximize2 className="h-3 w-3" />
                   </Button>
@@ -193,7 +199,7 @@ export const RowHoverCard = memo(
           {columns.length > 10 && (
             <div className="border-t px-3 py-1.5">
               <span className="text-muted-foreground text-2xs">
-                +{columns.length - 10} more columns
+                {t('dataTable.moreColumns', { count: columns.length - 10 })}
               </span>
             </div>
           )}

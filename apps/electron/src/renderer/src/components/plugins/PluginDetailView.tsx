@@ -28,6 +28,7 @@ import {
   User,
 } from 'lucide-react';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 // ============ Plugin Types (mirrored from main process for renderer usage) ============
@@ -250,60 +251,39 @@ function getStateBadgeVariant(
 }
 
 /**
- * Get human-readable state label
+ * Get human-readable state label key
  */
-function getStateLabel(state: PluginState): string {
+function getStateLabelKey(state: PluginState): string {
   switch (state) {
     case 'enabled':
-      return 'Enabled';
+      return 'pluginCard.enabled';
     case 'disabled':
-      return 'Disabled';
+      return 'pluginCard.disabled';
     case 'installed':
-      return 'Installed';
+      return 'pluginCard.installed';
     case 'error':
-      return 'Error';
+      return 'pluginCard.error';
     case 'loading':
-      return 'Loading...';
+      return 'pluginCard.loading';
     case 'unloading':
-      return 'Unloading...';
+      return 'pluginCard.unloading';
     default:
       return state;
   }
 }
 
 /**
- * Get human-readable permission label
+ * Get permission label key
  */
-function getPermissionLabel(permission: PluginPermission): string {
-  const labels: Record<PluginPermission, string> = {
-    'query:read': 'Read Queries',
-    'query:write': 'Execute Queries',
-    'ui:menu': 'Add Menu Items',
-    'ui:panel': 'Add Panels',
-    'ui:command': 'Add Commands',
-    'storage:read': 'Read Storage',
-    'storage:write': 'Write Storage',
-    'connection:info': 'Connection Info',
-  };
-  return labels[permission] || permission;
+function getPermissionLabelKey(permission: PluginPermission): string {
+  return `pluginDetail.permissionLabels.${permission}`;
 }
 
 /**
- * Get permission description
+ * Get permission description key
  */
-function getPermissionDescription(permission: PluginPermission): string {
-  const descriptions: Record<PluginPermission, string> = {
-    'query:read': 'Can read and inspect SQL queries before and after execution',
-    'query:write': 'Can modify SQL queries and execute database operations',
-    'ui:menu': 'Can add items to the application menu bar',
-    'ui:panel': 'Can add custom panels to the sidebar or other locations',
-    'ui:command': 'Can register commands in the command palette',
-    'storage:read': 'Can read data stored by this plugin',
-    'storage:write': 'Can store persistent data for this plugin',
-    'connection:info':
-      'Can access information about the current database connection',
-  };
-  return descriptions[permission] || 'Unknown permission';
+function getPermissionDescriptionKey(permission: PluginPermission): string {
+  return `pluginDetail.permissionDescriptions.${permission}`;
 }
 
 /**
@@ -371,6 +351,7 @@ export function PluginDetailView({
   onUninstall,
   onUpdate,
 }: PluginDetailViewProps) {
+  const { t } = useTranslation();
   // State for screenshot carousel
   const [currentScreenshotIndex, setCurrentScreenshotIndex] = React.useState(0);
 
@@ -482,20 +463,25 @@ export function PluginDetailView({
                 <SheetTitle className="text-xl">{pluginName}</SheetTitle>
                 {variant === 'installed' && pluginState && (
                   <Badge variant={getStateBadgeVariant(pluginState)}>
-                    {getStateLabel(pluginState)}
+                    {t(getStateLabelKey(pluginState))}
                   </Badge>
                 )}
                 {variant === 'marketplace' && isInstalled && (
-                  <Badge variant="secondary">Installed</Badge>
+                  <Badge variant="secondary">{t('pluginCard.installed')}</Badge>
                 )}
                 {hasUpdate && (
                   <Badge variant="default">
-                    Update {updateVersion ? `v${updateVersion}` : 'Available'}
+                    {updateVersion
+                      ? t('pluginDetail.updateVersion', {
+                          version: updateVersion,
+                        })
+                      : t('pluginDetail.updateAvailable')}
                   </Badge>
                 )}
               </div>
               <SheetDescription className="mt-1">
-                v{pluginVersion} by {pluginAuthor}
+                v{pluginVersion}{' '}
+                {t('pluginCard.byAuthor', { author: pluginAuthor })}
               </SheetDescription>
             </div>
           </div>
@@ -508,7 +494,9 @@ export function PluginDetailView({
               <div className="bg-destructive/10 border-destructive/50 flex items-start gap-3 rounded-lg border p-3">
                 <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
                 <div>
-                  <p className="text-destructive text-sm font-medium">Error</p>
+                  <p className="text-destructive text-sm font-medium">
+                    {t('pluginCard.error')}
+                  </p>
                   <p className="text-destructive/80 text-xs">{errorMessage}</p>
                 </div>
               </div>
@@ -516,7 +504,9 @@ export function PluginDetailView({
 
             {/* Description */}
             <div>
-              <h4 className="mb-2 text-sm font-medium">Description</h4>
+              <h4 className="mb-2 text-sm font-medium">
+                {t('pluginDetail.description')}
+              </h4>
               <p className="text-muted-foreground text-sm">
                 {pluginDescription}
               </p>
@@ -525,7 +515,9 @@ export function PluginDetailView({
             {/* Screenshots */}
             {hasScreenshots && (
               <div>
-                <h4 className="mb-2 text-sm font-medium">Screenshots</h4>
+                <h4 className="mb-2 text-sm font-medium">
+                  {t('pluginDetail.screenshots')}
+                </h4>
                 <div className="bg-muted relative overflow-hidden rounded-lg">
                   <img
                     src={pluginScreenshots![currentScreenshotIndex]}
@@ -541,7 +533,9 @@ export function PluginDetailView({
                         onClick={handlePrevScreenshot}
                       >
                         <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Previous screenshot</span>
+                        <span className="sr-only">
+                          {t('pluginDetail.previousScreenshot')}
+                        </span>
                       </Button>
                       <Button
                         variant="ghost"
@@ -550,7 +544,9 @@ export function PluginDetailView({
                         onClick={handleNextScreenshot}
                       >
                         <ChevronRight className="h-4 w-4" />
-                        <span className="sr-only">Next screenshot</span>
+                        <span className="sr-only">
+                          {t('pluginDetail.nextScreenshot')}
+                        </span>
                       </Button>
                       <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1.5">
                         {pluginScreenshots!.map((screenshot, index) => (
@@ -565,7 +561,7 @@ export function PluginDetailView({
                             onClick={() => setCurrentScreenshotIndex(index)}
                           >
                             <span className="sr-only">
-                              Screenshot {index + 1}
+                              {t('pluginDetail.screenshotN', { n: index + 1 })}
                             </span>
                           </button>
                         ))}
@@ -581,7 +577,9 @@ export function PluginDetailView({
               <div>
                 <div className="mb-2 flex items-center gap-2">
                   <Shield className="text-muted-foreground h-4 w-4" />
-                  <h4 className="text-sm font-medium">Permissions</h4>
+                  <h4 className="text-sm font-medium">
+                    {t('pluginDetail.permissions')}
+                  </h4>
                 </div>
                 <div className="space-y-2">
                   {pluginPermissions.map((permission) => (
@@ -590,10 +588,10 @@ export function PluginDetailView({
                       className="bg-muted/50 flex items-start gap-3 rounded-md p-2"
                     >
                       <Badge variant="outline" className="shrink-0">
-                        {getPermissionLabel(permission)}
+                        {t(getPermissionLabelKey(permission))}
                       </Badge>
                       <p className="text-muted-foreground text-xs">
-                        {getPermissionDescription(permission)}
+                        {t(getPermissionDescriptionKey(permission))}
                       </p>
                     </div>
                   ))}
@@ -608,7 +606,9 @@ export function PluginDetailView({
               {/* Author */}
               <div className="flex items-center gap-3 text-sm">
                 <User className="text-muted-foreground h-4 w-4 shrink-0" />
-                <span className="text-muted-foreground">Author</span>
+                <span className="text-muted-foreground">
+                  {t('pluginDetail.author')}
+                </span>
                 <span className="ml-auto font-medium">{pluginAuthor}</span>
               </div>
 
@@ -616,7 +616,9 @@ export function PluginDetailView({
               {pluginLicense && (
                 <div className="flex items-center gap-3 text-sm">
                   <Shield className="text-muted-foreground h-4 w-4 shrink-0" />
-                  <span className="text-muted-foreground">License</span>
+                  <span className="text-muted-foreground">
+                    {t('pluginDetail.license')}
+                  </span>
                   <span className="ml-auto font-medium">{pluginLicense}</span>
                 </div>
               )}
@@ -625,7 +627,9 @@ export function PluginDetailView({
               {installedAt && (
                 <div className="flex items-center gap-3 text-sm">
                   <Calendar className="text-muted-foreground h-4 w-4 shrink-0" />
-                  <span className="text-muted-foreground">Installed</span>
+                  <span className="text-muted-foreground">
+                    {t('pluginDetail.installed')}
+                  </span>
                   <span className="ml-auto font-medium">
                     {formatDate(installedAt)}
                   </span>
@@ -636,7 +640,9 @@ export function PluginDetailView({
               {updatedAt && (
                 <div className="flex items-center gap-3 text-sm">
                   <Calendar className="text-muted-foreground h-4 w-4 shrink-0" />
-                  <span className="text-muted-foreground">Last Updated</span>
+                  <span className="text-muted-foreground">
+                    {t('pluginDetail.lastUpdated')}
+                  </span>
                   <span className="ml-auto font-medium">
                     {formatDate(updatedAt)}
                   </span>
@@ -647,7 +653,9 @@ export function PluginDetailView({
               {downloads !== undefined && (
                 <div className="flex items-center gap-3 text-sm">
                   <Download className="text-muted-foreground h-4 w-4 shrink-0" />
-                  <span className="text-muted-foreground">Downloads</span>
+                  <span className="text-muted-foreground">
+                    {t('pluginDetail.downloads')}
+                  </span>
                   <span className="ml-auto font-medium">
                     {downloads.toLocaleString()}
                   </span>
@@ -657,9 +665,11 @@ export function PluginDetailView({
               {/* Rating (marketplace only) */}
               {rating !== undefined && (
                 <div className="flex items-center gap-3 text-sm">
-                  <span className="text-muted-foreground">Rating</span>
+                  <span className="text-muted-foreground">
+                    {t('pluginDetail.rating')}
+                  </span>
                   <span className="ml-auto font-medium">
-                    {rating.toFixed(1)} stars
+                    {t('pluginDetail.stars', { rating: rating.toFixed(1) })}
                   </span>
                 </div>
               )}
@@ -671,7 +681,9 @@ export function PluginDetailView({
                 <Separator />
                 <div>
                   <h4 className="mb-2 text-sm font-medium">
-                    {isPluginInfoType ? 'Keywords' : 'Categories'}
+                    {isPluginInfoType
+                      ? t('pluginDetail.keywords')
+                      : t('pluginDetail.categories')}
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
                     {pluginKeywords.map((keyword) => (
@@ -701,7 +713,7 @@ export function PluginDetailView({
                       onClick={() => window.open(pluginHomepage, '_blank')}
                     >
                       <Globe className="mr-2 h-4 w-4" />
-                      Website
+                      {t('pluginDetail.website')}
                       <ExternalLink className="ml-auto h-3 w-3 opacity-50" />
                     </Button>
                   )}
@@ -713,7 +725,7 @@ export function PluginDetailView({
                       onClick={() => window.open(pluginRepository, '_blank')}
                     >
                       <Github className="mr-2 h-4 w-4" />
-                      Repository
+                      {t('pluginDetail.repository')}
                       <ExternalLink className="ml-auto h-3 w-3 opacity-50" />
                     </Button>
                   )}
@@ -734,10 +746,16 @@ export function PluginDetailView({
                     checked={isEnabled}
                     onCheckedChange={handleToggleEnabled}
                     disabled={isLoading || hasError}
-                    aria-label={isEnabled ? 'Disable plugin' : 'Enable plugin'}
+                    aria-label={
+                      isEnabled
+                        ? t('pluginCard.disablePlugin')
+                        : t('pluginCard.enablePlugin')
+                    }
                   />
                   <span className="text-muted-foreground text-sm">
-                    {isEnabled ? 'Enabled' : 'Disabled'}
+                    {isEnabled
+                      ? t('pluginCard.enabled')
+                      : t('pluginCard.disabled')}
                   </span>
                 </div>
               )}
@@ -757,7 +775,7 @@ export function PluginDetailView({
                     ) : (
                       <Download className="mr-2 h-4 w-4" />
                     )}
-                    Update
+                    {t('pluginDetail.update')}
                   </Button>
                 )}
 
@@ -774,7 +792,7 @@ export function PluginDetailView({
                     ) : (
                       <Trash2 className="mr-2 h-4 w-4" />
                     )}
-                    Uninstall
+                    {t('pluginCard.uninstall')}
                   </Button>
                 )}
               </div>
@@ -786,7 +804,7 @@ export function PluginDetailView({
             <div className="flex w-full items-center justify-end gap-3">
               {isInstalled ? (
                 <Badge variant="secondary" className="px-4 py-1.5 text-sm">
-                  Already Installed
+                  {t('pluginDetail.alreadyInstalled')}
                 </Badge>
               ) : (
                 <Button
@@ -798,12 +816,12 @@ export function PluginDetailView({
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Installing...
+                      {t('pluginDetail.installing')}
                     </>
                   ) : (
                     <>
                       <Download className="mr-2 h-4 w-4" />
-                      Install Plugin
+                      {t('pluginDetail.installPlugin')}
                     </>
                   )}
                 </Button>

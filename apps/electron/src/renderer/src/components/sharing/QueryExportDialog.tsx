@@ -6,6 +6,7 @@ import { Label } from '@sqlpro/ui/label';
 import { Textarea } from '@sqlpro/ui/textarea';
 import { FileDown, Loader2, Share2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -48,6 +49,7 @@ export function QueryExportDialog({
   initialDocumentation = '',
   onExportComplete,
 }: QueryExportDialogProps) {
+  const { t } = useTranslation();
   // Form state
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
@@ -153,12 +155,9 @@ export function QueryExportDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Share2 className="h-5 w-5" />
-            Export Query
+            {t('sharing.exportQuery')}
           </DialogTitle>
-          <DialogDescription>
-            Export this query with metadata and documentation for sharing with
-            your team
-          </DialogDescription>
+          <DialogDescription>{t('sharing.exportQueryDesc')}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -167,10 +166,10 @@ export function QueryExportDialog({
               {exportResult.success ? (
                 <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
                   <p className="font-medium text-green-900 dark:text-green-100">
-                    Export Successful
+                    {t('sharing.exportSuccessful')}
                   </p>
                   <p className="text-sm text-green-700 dark:text-green-300">
-                    Query exported successfully
+                    {t('sharing.queryExportedSuccessfully')}
                   </p>
                   {exportResult.filePath && (
                     <p className="text-xs break-all text-green-600 dark:text-green-400">
@@ -180,9 +179,11 @@ export function QueryExportDialog({
                 </div>
               ) : (
                 <div className="bg-destructive/10 rounded-lg p-4">
-                  <p className="text-destructive font-medium">Export Failed</p>
+                  <p className="text-destructive font-medium">
+                    {t('sharing.exportFailed')}
+                  </p>
                   <p className="text-destructive/80 mt-1 text-sm">
-                    {exportResult.error || 'Unknown error occurred'}
+                    {exportResult.error || t('sharing.unknownError')}
                   </p>
                 </div>
               )}
@@ -192,18 +193,19 @@ export function QueryExportDialog({
               {/* Query Name (Required) */}
               <div className="space-y-2">
                 <Label htmlFor="query-name" className="text-sm font-medium">
-                  Query Name <span className="text-destructive">*</span>
+                  {t('sharing.queryName')}{' '}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="query-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g., User Activity Report"
+                  placeholder={t('sharing.queryNamePlaceholder')}
                   maxLength={200}
                   disabled={isExporting}
                 />
                 <p className="text-muted-foreground text-xs">
-                  A descriptive name for this query
+                  {t('sharing.queryNameHelp')}
                 </p>
               </div>
 
@@ -213,26 +215,27 @@ export function QueryExportDialog({
                   htmlFor="query-description"
                   className="text-sm font-medium"
                 >
-                  Description
+                  {t('sharing.description')}
                 </Label>
                 <Textarea
                   id="query-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Brief description of what this query does"
+                  placeholder={t('sharing.descriptionPlaceholder')}
                   maxLength={1000}
                   rows={2}
                   disabled={isExporting}
                 />
                 <p className="text-muted-foreground text-xs">
-                  Optional description to help others understand the query
-                  purpose
+                  {t('sharing.descriptionHelp')}
                 </p>
               </div>
 
               {/* SQL Preview (Read-only) */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">SQL Query</Label>
+                <Label className="text-sm font-medium">
+                  {t('sharing.sqlQuery')}
+                </Label>
                 <Textarea
                   value={sql}
                   readOnly
@@ -240,7 +243,7 @@ export function QueryExportDialog({
                   rows={4}
                 />
                 <p className="text-muted-foreground text-xs">
-                  {sql.length} characters
+                  {t('sharing.characters', { count: sql.length })}
                 </p>
               </div>
 
@@ -250,37 +253,37 @@ export function QueryExportDialog({
                   htmlFor="database-context"
                   className="text-sm font-medium"
                 >
-                  Database Context
+                  {t('sharing.databaseContext')}
                 </Label>
                 <Input
                   id="database-context"
                   value={databaseContext}
                   onChange={(e) => setDatabaseContext(e.target.value)}
-                  placeholder="e.g., production, analytics, customers.db"
+                  placeholder={t('sharing.databaseContextPlaceholder')}
                   maxLength={200}
                   disabled={isExporting}
                 />
                 <p className="text-muted-foreground text-xs">
-                  Optional context about which database this query is for
+                  {t('sharing.databaseContextHelp')}
                 </p>
               </div>
 
               {/* Tags (Optional) */}
               <div className="space-y-2">
                 <Label htmlFor="query-tags" className="text-sm font-medium">
-                  Tags
+                  {t('sharing.tags')}
                 </Label>
                 <Input
                   id="query-tags"
                   value={tagsInput}
                   onChange={(e) => setTagsInput(e.target.value)}
-                  placeholder="e.g., reporting, analytics, users"
+                  placeholder={t('sharing.tagsPlaceholder')}
                   disabled={isExporting}
                 />
                 <p className="text-muted-foreground text-xs">
-                  Comma-separated tags for categorization
+                  {t('sharing.tagsHelp')}
                   {parsedTags.length > 0 &&
-                    ` (${parsedTags.length} tag${parsedTags.length !== 1 ? 's' : ''})`}
+                    ` ${parsedTags.length === 1 ? t('sharing.tagsCount', { count: parsedTags.length }) : t('sharing.tagsCountPlural', { count: parsedTags.length })}`}
                 </p>
               </div>
 
@@ -290,26 +293,29 @@ export function QueryExportDialog({
                   htmlFor="query-documentation"
                   className="text-sm font-medium"
                 >
-                  Documentation
+                  {t('sharing.documentation')}
                 </Label>
                 <Textarea
                   id="query-documentation"
                   value={documentation}
                   onChange={(e) => setDocumentation(e.target.value)}
-                  placeholder="Additional notes, usage examples, or important considerations..."
+                  placeholder={t('sharing.documentationPlaceholder')}
                   maxLength={10000}
                   rows={4}
                   disabled={isExporting}
                 />
                 <p className="text-muted-foreground text-xs">
-                  Optional detailed documentation or usage notes (
-                  {documentation.length}/10000)
+                  {t('sharing.documentationHelp', {
+                    count: documentation.length,
+                  })}
                 </p>
               </div>
 
               {/* Export Options */}
               <div className="space-y-3">
-                <Label className="text-sm font-medium">Export Options</Label>
+                <Label className="text-sm font-medium">
+                  {t('sharing.exportOptions')}
+                </Label>
                 <div className="space-y-3 rounded-md border p-3">
                   <label className="flex cursor-pointer items-center gap-2">
                     <Checkbox
@@ -320,9 +326,9 @@ export function QueryExportDialog({
                       disabled={isExporting}
                     />
                     <div className="flex-1">
-                      <p className="text-sm">Compress export file</p>
+                      <p className="text-sm">{t('sharing.compressExport')}</p>
                       <p className="text-muted-foreground text-xs">
-                        Automatically enabled for queries larger than 100KB
+                        {t('sharing.compressHelp')}
                       </p>
                     </div>
                   </label>
@@ -338,19 +344,19 @@ export function QueryExportDialog({
             onClick={() => handleOpenChange(false)}
             disabled={isExporting}
           >
-            {exportResult ? 'Close' : 'Cancel'}
+            {exportResult ? t('sharing.close') : t('sharing.cancel')}
           </Button>
           {!exportResult && (
             <Button onClick={handleExport} disabled={!isValid || isExporting}>
               {isExporting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Exporting...
+                  {t('sharing.exporting')}
                 </>
               ) : (
                 <>
                   <FileDown className="mr-2 h-4 w-4" />
-                  Export
+                  {t('sharing.export')}
                 </>
               )}
             </Button>

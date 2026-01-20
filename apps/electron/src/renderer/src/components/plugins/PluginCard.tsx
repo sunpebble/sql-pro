@@ -19,6 +19,7 @@ import {
 import { Switch } from '@sqlpro/ui/switch';
 import { Download, MoreHorizontal, Package, Trash2 } from 'lucide-react';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 // ============ Plugin Types (mirrored from main process for renderer usage) ============
@@ -213,22 +214,22 @@ function getStateBadgeVariant(
 }
 
 /**
- * Get human-readable state label
+ * Get human-readable state label key
  */
-function getStateLabel(state: PluginState): string {
+function getStateLabelKey(state: PluginState): string {
   switch (state) {
     case 'enabled':
-      return 'Enabled';
+      return 'pluginCard.enabled';
     case 'disabled':
-      return 'Disabled';
+      return 'pluginCard.disabled';
     case 'installed':
-      return 'Installed';
+      return 'pluginCard.installed';
     case 'error':
-      return 'Error';
+      return 'pluginCard.error';
     case 'loading':
-      return 'Loading...';
+      return 'pluginCard.loading';
     case 'unloading':
-      return 'Unloading...';
+      return 'pluginCard.unloading';
     default:
       return state;
   }
@@ -252,6 +253,7 @@ export function PluginCard({
   onUpdate,
   className,
 }: PluginCardProps) {
+  const { t } = useTranslation();
   const pluginId = getPluginId(plugin);
   const pluginName = getPluginName(plugin);
   const pluginVersion = getPluginVersion(plugin);
@@ -345,17 +347,17 @@ export function PluginCard({
                 variant={getStateBadgeVariant(pluginState)}
                 className="text-2xs px-1.5"
               >
-                {getStateLabel(pluginState)}
+                {t(getStateLabelKey(pluginState))}
               </Badge>
             )}
             {variant === 'marketplace' && isInstalled && (
               <Badge variant="secondary" className="text-2xs px-1.5">
-                Installed
+                {t('pluginCard.installed')}
               </Badge>
             )}
             {hasUpdate && (
               <Badge variant="default" className="text-2xs px-1.5">
-                Update
+                {t('pluginCard.update')}
               </Badge>
             )}
           </div>
@@ -371,7 +373,11 @@ export function PluginCard({
               checked={isEnabled}
               onCheckedChange={handleToggleEnabled}
               disabled={isLoading || hasError}
-              aria-label={isEnabled ? 'Disable plugin' : 'Enable plugin'}
+              aria-label={
+                isEnabled
+                  ? t('pluginCard.disablePlugin')
+                  : t('pluginCard.enablePlugin')
+              }
             />
           )}
           {variant === 'marketplace' && !isInstalled && onInstall && (
@@ -383,7 +389,7 @@ export function PluginCard({
               className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
             >
               <Download className="size-4" />
-              Install
+              {t('pluginCard.install')}
             </Button>
           )}
           {variant === 'installed' && (
@@ -391,7 +397,9 @@ export function PluginCard({
               <DropdownMenuTrigger>
                 <Button variant="ghost" size="icon-sm" disabled={isLoading}>
                   <MoreHorizontal className="size-4" />
-                  <span className="sr-only">Plugin options</span>
+                  <span className="sr-only">
+                    {t('pluginCard.pluginOptions')}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -399,7 +407,7 @@ export function PluginCard({
                   <>
                     <DropdownMenuItem onClick={handleUpdate}>
                       <Download className="size-4" />
-                      Update Plugin
+                      {t('pluginCard.updatePlugin')}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                   </>
@@ -410,7 +418,7 @@ export function PluginCard({
                     className="text-destructive focus:text-destructive"
                   >
                     <Trash2 className="size-4" />
-                    Uninstall
+                    {t('pluginCard.uninstall')}
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -456,20 +464,22 @@ export function PluginCard({
               <CardTitle className="truncate text-base">{pluginName}</CardTitle>
               {variant === 'installed' && pluginState && (
                 <Badge variant={getStateBadgeVariant(pluginState)}>
-                  {getStateLabel(pluginState)}
+                  {t(getStateLabelKey(pluginState))}
                 </Badge>
               )}
               {variant === 'marketplace' && isInstalled && (
-                <Badge variant="secondary">Installed</Badge>
+                <Badge variant="secondary">{t('pluginCard.installed')}</Badge>
               )}
-              {hasUpdate && <Badge variant="default">Update</Badge>}
+              {hasUpdate && (
+                <Badge variant="default">{t('pluginCard.update')}</Badge>
+              )}
             </div>
             <div className="mt-1 flex items-center gap-2">
               <span className="text-muted-foreground text-xs">
                 v{pluginVersion}
               </span>
               <span className="text-muted-foreground text-xs">
-                by {pluginAuthor}
+                {t('pluginCard.byAuthor', { author: pluginAuthor })}
               </span>
             </div>
           </div>
@@ -492,10 +502,14 @@ export function PluginCard({
         {variant === 'marketplace' && !isPluginInfoType && (
           <div className="text-muted-foreground flex items-center gap-3 text-xs">
             {'downloads' in plugin && plugin.downloads !== undefined && (
-              <span>{plugin.downloads.toLocaleString()} downloads</span>
+              <span>
+                {t('pluginCard.downloads', { count: plugin.downloads })}
+              </span>
             )}
             {'rating' in plugin && plugin.rating !== undefined && (
-              <span>{plugin.rating.toFixed(1)} stars</span>
+              <span>
+                {t('pluginCard.stars', { rating: plugin.rating.toFixed(1) })}
+              </span>
             )}
           </div>
         )}
@@ -510,13 +524,17 @@ export function PluginCard({
           {variant === 'installed' && onToggleEnabled && (
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-xs">
-                {isEnabled ? 'Enabled' : 'Disabled'}
+                {isEnabled ? t('pluginCard.enabled') : t('pluginCard.disabled')}
               </span>
               <Switch
                 checked={isEnabled}
                 onCheckedChange={handleToggleEnabled}
                 disabled={isLoading || hasError}
-                aria-label={isEnabled ? 'Disable plugin' : 'Enable plugin'}
+                aria-label={
+                  isEnabled
+                    ? t('pluginCard.disablePlugin')
+                    : t('pluginCard.enablePlugin')
+                }
               />
             </div>
           )}
@@ -529,7 +547,7 @@ export function PluginCard({
               className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
             >
               <Download className="size-4" />
-              Install
+              {t('pluginCard.install')}
             </Button>
           )}
           {variant === 'installed' && (
@@ -537,7 +555,9 @@ export function PluginCard({
               <DropdownMenuTrigger>
                 <Button variant="ghost" size="icon-sm" disabled={isLoading}>
                   <MoreHorizontal className="size-4" />
-                  <span className="sr-only">Plugin options</span>
+                  <span className="sr-only">
+                    {t('pluginCard.pluginOptions')}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -545,7 +565,7 @@ export function PluginCard({
                   <>
                     <DropdownMenuItem onClick={handleUpdate}>
                       <Download className="size-4" />
-                      Update Plugin
+                      {t('pluginCard.updatePlugin')}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                   </>
@@ -556,7 +576,7 @@ export function PluginCard({
                     className="text-destructive focus:text-destructive"
                   >
                     <Trash2 className="size-4" />
-                    Uninstall
+                    {t('pluginCard.uninstall')}
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>

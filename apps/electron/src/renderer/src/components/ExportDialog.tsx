@@ -22,6 +22,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -32,10 +33,10 @@ import {
 } from '@/components/ui/dialog';
 
 const DELIMITER_OPTIONS = [
-  { value: ',', label: 'Comma (,)' },
-  { value: '\t', label: 'Tab' },
-  { value: ';', label: 'Semicolon (;)' },
-  { value: '|', label: 'Pipe (|)' },
+  { value: ',', labelKey: 'sharing.delimiterComma' },
+  { value: '\t', labelKey: 'sharing.delimiterTab' },
+  { value: ';', labelKey: 'sharing.delimiterSemicolon' },
+  { value: '|', labelKey: 'sharing.delimiterPipe' },
 ] as const;
 
 interface ExportDialogProps {
@@ -64,31 +65,31 @@ export interface ExportOptions {
 const FORMAT_OPTIONS: {
   value: ExportFormat;
   label: string;
-  description: string;
+  descriptionKey: string;
   icon: typeof FileText;
 }[] = [
   {
     value: 'csv',
     label: 'CSV',
-    description: 'Comma-separated values',
+    descriptionKey: 'sharing.csvDesc',
     icon: FileText,
   },
   {
     value: 'json',
     label: 'JSON',
-    description: 'JavaScript Object Notation',
+    descriptionKey: 'sharing.jsonDesc',
     icon: FileJson,
   },
   {
     value: 'sql',
     label: 'SQL',
-    description: 'INSERT statements',
+    descriptionKey: 'sharing.sqlDesc',
     icon: FileCode,
   },
   {
     value: 'xlsx',
     label: 'Excel',
-    description: 'Microsoft Excel workbook',
+    descriptionKey: 'sharing.xlsxDesc',
     icon: FileSpreadsheet,
   },
 ];
@@ -102,6 +103,7 @@ export function ExportDialog({
   connectionId,
   onExport,
 }: ExportDialogProps) {
+  const { t } = useTranslation();
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('csv');
 
   // Derive column names for dependency tracking
@@ -265,11 +267,13 @@ export function ExportDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileDown className="h-5 w-5" />
-            Export Data
+            {t('sharing.exportData')}
           </DialogTitle>
           <DialogDescription>
-            Export {rows.length.toLocaleString()} rows from &quot;{tableName}
-            &quot;
+            {t('sharing.exportDataDesc', {
+              count: rows.length,
+              table: tableName,
+            })}
           </DialogDescription>
         </DialogHeader>
 
@@ -277,7 +281,7 @@ export function ExportDialog({
           {/* Format Selection */}
           <div className="space-y-2">
             <Label htmlFor="export-format" className="text-sm font-medium">
-              Export Format
+              {t('sharing.exportFormat')}
             </Label>
             <Select
               value={selectedFormat}
@@ -286,7 +290,7 @@ export function ExportDialog({
               }
             >
               <SelectTrigger id="export-format" className="w-full">
-                <SelectValue placeholder="Select format">
+                <SelectValue placeholder={t('sharing.selectFormat')}>
                   <div className="flex items-center gap-2">
                     <FormatIcon className="h-4 w-4" />
                     <span>{selectedFormatInfo?.label}</span>
@@ -303,7 +307,7 @@ export function ExportDialog({
                         <div className="flex flex-col">
                           <span>{option.label}</span>
                           <span className="text-muted-foreground text-xs">
-                            {option.description}
+                            {t(option.descriptionKey)}
                           </span>
                         </div>
                       </div>
@@ -318,7 +322,10 @@ export function ExportDialog({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">
-                Columns ({selectedColumns.size} of {columns.length} selected)
+                {t('sharing.columnsSelected', {
+                  selected: selectedColumns.size,
+                  total: columns.length,
+                })}
               </Label>
               <div className="flex gap-2">
                 <Button
@@ -329,7 +336,7 @@ export function ExportDialog({
                   onClick={handleSelectAll}
                   disabled={allSelected}
                 >
-                  Select All
+                  {t('sharing.selectAll')}
                 </Button>
                 <Button
                   type="button"
@@ -339,7 +346,7 @@ export function ExportDialog({
                   onClick={handleDeselectAll}
                   disabled={noneSelected}
                 >
-                  Deselect All
+                  {t('sharing.deselectAll')}
                 </Button>
               </div>
             </div>
@@ -369,26 +376,28 @@ export function ExportDialog({
           {/* Format-Specific Options */}
           {selectedFormat === 'csv' && (
             <div className="space-y-3">
-              <Label className="text-sm font-medium">CSV Options</Label>
+              <Label className="text-sm font-medium">
+                {t('sharing.csvOptions')}
+              </Label>
               <div className="space-y-3 rounded-md border p-3">
                 <div className="space-y-2">
                   <Label
                     htmlFor="delimiter"
                     className="text-muted-foreground text-xs"
                   >
-                    Delimiter
+                    {t('sharing.delimiter')}
                   </Label>
                   <Select
                     value={delimiter}
                     onValueChange={(v: string) => v && setDelimiter(v)}
                   >
                     <SelectTrigger id="delimiter" className="w-full">
-                      <SelectValue placeholder="Select delimiter" />
+                      <SelectValue placeholder={t('sharing.selectDelimiter')} />
                     </SelectTrigger>
                     <SelectContent>
                       {DELIMITER_OPTIONS.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          {t(option.labelKey)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -401,7 +410,7 @@ export function ExportDialog({
                       setIncludeHeaders(checked === true)
                     }
                   />
-                  <span className="text-sm">Include column headers</span>
+                  <span className="text-sm">{t('sharing.includeHeaders')}</span>
                 </label>
               </div>
             </div>
@@ -409,7 +418,9 @@ export function ExportDialog({
 
           {selectedFormat === 'json' && (
             <div className="space-y-3">
-              <Label className="text-sm font-medium">JSON Options</Label>
+              <Label className="text-sm font-medium">
+                {t('sharing.jsonOptions')}
+              </Label>
               <div className="space-y-3 rounded-md border p-3">
                 <label className="flex cursor-pointer items-center gap-2">
                   <Checkbox
@@ -418,9 +429,7 @@ export function ExportDialog({
                       setPrettyPrint(checked === true)
                     }
                   />
-                  <span className="text-sm">
-                    Pretty-print (indented output)
-                  </span>
+                  <span className="text-sm">{t('sharing.prettyPrint')}</span>
                 </label>
               </div>
             </div>
@@ -428,14 +437,16 @@ export function ExportDialog({
 
           {selectedFormat === 'xlsx' && (
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Excel Options</Label>
+              <Label className="text-sm font-medium">
+                {t('sharing.excelOptions')}
+              </Label>
               <div className="space-y-3 rounded-md border p-3">
                 <div className="space-y-2">
                   <Label
                     htmlFor="sheet-name"
                     className="text-muted-foreground text-xs"
                   >
-                    Sheet Name
+                    {t('sharing.sheetName')}
                   </Label>
                   <Input
                     id="sheet-name"
@@ -445,7 +456,7 @@ export function ExportDialog({
                     maxLength={31}
                   />
                   <p className="text-muted-foreground text-xs">
-                    Maximum 31 characters
+                    {t('sharing.maxCharacters')}
                   </p>
                 </div>
               </div>
@@ -458,7 +469,7 @@ export function ExportDialog({
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Exporting {rows.length.toLocaleString()} rows...
+                  {t('sharing.exportingRows', { count: rows.length })}
                 </span>
                 <span className="text-muted-foreground">
                   {Math.round(exportProgress)}%
@@ -475,18 +486,18 @@ export function ExportDialog({
             onClick={() => onOpenChange(false)}
             disabled={isExporting}
           >
-            Cancel
+            {t('sharing.cancel')}
           </Button>
           <Button onClick={handleExport} disabled={isExportDisabled}>
             {isExporting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Exporting...
+                {t('sharing.exporting')}
               </>
             ) : (
               <>
                 <FileDown className="mr-2 h-4 w-4" />
-                Export
+                {t('sharing.export')}
               </>
             )}
           </Button>

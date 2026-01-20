@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface ColumnResizeHandleProps {
@@ -16,6 +17,7 @@ export function ColumnResizeHandle({
   onDoubleClick,
   isResizing = false,
 }: ColumnResizeHandleProps) {
+  const { t } = useTranslation();
   return (
     <div
       className={cn(
@@ -34,7 +36,7 @@ export function ColumnResizeHandle({
         e.stopPropagation();
         onDoubleClick();
       }}
-      title="Drag to resize, double-click to reset"
+      title={t('dataTable.resizeColumnTooltip')}
     />
   );
 }

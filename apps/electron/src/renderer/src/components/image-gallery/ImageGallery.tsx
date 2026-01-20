@@ -81,6 +81,7 @@ const ImageThumbnail = memo(
     onClick,
     onSelect,
   }: ImageThumbnailProps) => {
+    const { t } = useTranslation('common');
     const {
       imgProps,
       videoProps,
@@ -92,7 +93,10 @@ const ImageThumbnail = memo(
     } = useMediaLoader(item.source, {
       lazy: true,
       enableFallback: true,
-      alt: `Row ${item.rowIndex + 1}, ${item.column}`,
+      alt: t('mediaGallery.rowWithColumn', {
+        row: item.rowIndex + 1,
+        column: item.column,
+      }),
     });
 
     return (
@@ -189,7 +193,7 @@ const ImageThumbnail = memo(
         ) : (
           <div className="bg-muted text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-1">
             <ImageOff className="h-6 w-6" />
-            <span className="text-xs">Error</span>
+            <span className="text-xs">{t('mediaGallery.error')}</span>
           </div>
         )}
 
@@ -198,7 +202,8 @@ const ImageThumbnail = memo(
           <div className="flex items-center gap-1">
             {isVideo && <Film className="h-3 w-3 text-white" />}
             <p className="truncate text-xs text-white">
-              Row {item.rowIndex + 1} · {item.column}
+              {t('mediaGallery.rowLabel', { row: item.rowIndex + 1 })} ·{' '}
+              {item.column}
             </p>
           </div>
         </div>
@@ -244,7 +249,10 @@ const ImageListItem = memo(
     } = useMediaLoader(item.source, {
       lazy: true,
       enableFallback: true,
-      alt: `Row ${item.rowIndex + 1}, ${item.column}`,
+      alt: t('mediaGallery.rowWithColumn', {
+        row: item.rowIndex + 1,
+        column: item.column,
+      }),
     });
 
     // Copy URL to clipboard
@@ -301,22 +309,39 @@ const ImageListItem = memo(
 
     // Get display info
     const getSourceInfo = () => {
-      if (!item.source) return { type: 'Unknown', detail: '' };
-      const mediaType = item.source.isVideo ? 'Video' : 'Image';
+      if (!item.source)
+        return { type: t('mediaGallery.sourceType.unknown'), detail: '' };
       switch (item.source.type) {
         case 'url':
-          return { type: `URL ${mediaType}`, detail: item.source.url };
+          return {
+            type: item.source.isVideo
+              ? t('mediaGallery.sourceType.urlVideo')
+              : t('mediaGallery.sourceType.urlImage'),
+            detail: item.source.url,
+          };
         case 'base64':
-          return { type: `Base64 ${mediaType}`, detail: 'Embedded data' };
+          return {
+            type: item.source.isVideo
+              ? t('mediaGallery.sourceType.base64Video')
+              : t('mediaGallery.sourceType.base64Image'),
+            detail: t('mediaGallery.sourceType.embeddedData'),
+          };
         case 'blob':
           return {
-            type: item.source.mimeType.split('/')[1]?.toUpperCase() ?? 'BLOB',
+            type:
+              item.source.mimeType.split('/')[1]?.toUpperCase() ??
+              t('mediaGallery.sourceType.blob'),
             detail: `${(item.source.data.byteLength / 1024).toFixed(1)} KB`,
           };
         case 'file':
-          return { type: `File ${mediaType}`, detail: item.source.path };
+          return {
+            type: item.source.isVideo
+              ? t('mediaGallery.sourceType.fileVideo')
+              : t('mediaGallery.sourceType.fileImage'),
+            detail: item.source.path,
+          };
         default:
-          return { type: 'Unknown', detail: '' };
+          return { type: t('mediaGallery.sourceType.unknown'), detail: '' };
       }
     };
 
@@ -424,7 +449,9 @@ const ImageListItem = memo(
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             {isVideo && <Film className="text-muted-foreground h-4 w-4" />}
-            <span className="text-sm font-medium">Row {item.rowIndex + 1}</span>
+            <span className="text-sm font-medium">
+              {t('mediaGallery.rowLabel', { row: item.rowIndex + 1 })}
+            </span>
             <span className="bg-muted rounded px-1.5 py-0.5 text-xs font-medium">
               {item.column}
             </span>

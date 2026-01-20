@@ -61,6 +61,7 @@ import { FeatureShowcase } from './welcome';
 // Check if a database has a saved password - moved to top level
 function HasSavedPasswordIndicator({ path }: { path: string }) {
   const [hasSaved, setHasSaved] = useState(false);
+  const { t } = useTranslation('common');
 
   // Check on mount
   useEffect(() => {
@@ -78,7 +79,7 @@ function HasSavedPasswordIndicator({ path }: { path: string }) {
       <TooltipTrigger>
         <KeyRound className="h-3 w-3 text-green-500" />
       </TooltipTrigger>
-      <TooltipContent>Password saved</TooltipContent>
+      <TooltipContent>{t('welcomeScreen.passwordSaved')}</TooltipContent>
     </Tooltip>
   );
 }
@@ -294,7 +295,7 @@ export function WelcomeScreen() {
             return;
           }
           // Show error message (won't trigger password dialog loop)
-          setError(result.error || 'Failed to open database');
+          setError(result.error || t('database.failedToOpen'));
           setIsConnecting(false);
           return;
         }
@@ -391,11 +392,13 @@ export function WelcomeScreen() {
   );
 
   const handleOpenDatabase = useCallback(async () => {
-    const result = await sqlPro.dialog.openFile();
+    const result = await sqlPro.dialog.openFile({
+      title: t('dialog.openDatabase'),
+    });
     if (result.success && !result.canceled && result.filePath) {
       await openDatabaseFile(result.filePath);
     }
-  }, [openDatabaseFile]);
+  }, [openDatabaseFile, t]);
 
   const handleSettingsSubmit = async (settings: ConnectionSettings) => {
     setSettingsDialogOpen(false);
@@ -505,7 +508,7 @@ export function WelcomeScreen() {
           });
 
           if (!result.success) {
-            setError(result.error || 'Failed to connect to database');
+            setError(result.error || t('database.failedToConnect'));
             setIsConnecting(false);
             return;
           }
@@ -626,7 +629,9 @@ export function WelcomeScreen() {
         });
 
         if (!updateResult.success) {
-          setError(updateResult.error || 'Failed to update connection');
+          setError(
+            updateResult.error || t('welcomeScreen.failedToUpdateConnection')
+          );
           setIsConnecting(false);
           return;
         }
@@ -674,7 +679,7 @@ export function WelcomeScreen() {
         const result = await sqlPro.db.open({ config });
 
         if (!result.success) {
-          setError(result.error || 'Failed to connect to database');
+          setError(result.error || t('database.failedToConnect'));
           setIsConnecting(false);
           return;
         }
@@ -814,10 +819,12 @@ export function WelcomeScreen() {
           setShowProfiles(false);
           setTimeout(() => setShowProfiles(true), 100);
         } else {
-          setError(result.error || 'Failed to save profile');
+          setError(result.error || t('welcomeScreen.failedToSaveProfile'));
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(
+          err instanceof Error ? err.message : t('database.unknownError')
+        );
       }
     },
     [profileToSave, setError]
@@ -849,7 +856,7 @@ export function WelcomeScreen() {
         const result = await sqlPro.db.open({ config });
 
         if (!result.success) {
-          setError(result.error || 'Failed to connect to database');
+          setError(result.error || t('database.failedToConnect'));
           setIsConnecting(false);
           return;
         }
@@ -1204,7 +1211,7 @@ export function WelcomeScreen() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save as Profile</DialogTitle>
+            <DialogTitle>{t('welcomeScreen.saveAsProfile')}</DialogTitle>
           </DialogHeader>
           {profileToSave && (
             <ProfileForm

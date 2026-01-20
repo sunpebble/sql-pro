@@ -11,6 +11,7 @@ import {
 } from '@sqlpro/ui/select';
 import { BarChart3, LineChart, PieChart, Plus, TrendingUp } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -43,42 +44,42 @@ interface ChartBuilderProps {
 const CHART_TYPES: {
   type: ChartType;
   icon: React.ElementType;
-  label: string;
+  labelKey: string;
 }[] = [
-  { type: 'bar', icon: BarChart3, label: 'Bar Chart' },
-  { type: 'line', icon: LineChart, label: 'Line Chart' },
-  { type: 'pie', icon: PieChart, label: 'Pie Chart' },
-  { type: 'area', icon: TrendingUp, label: 'Area Chart' },
+  { type: 'bar', icon: BarChart3, labelKey: 'chartBuilder.barChart' },
+  { type: 'line', icon: LineChart, labelKey: 'chartBuilder.lineChart' },
+  { type: 'pie', icon: PieChart, labelKey: 'chartBuilder.pieChart' },
+  { type: 'area', icon: TrendingUp, labelKey: 'chartBuilder.areaChart' },
 ];
 
 const AGGREGATIONS = [
-  { value: 'none', label: 'None (Raw Values)' },
-  { value: 'count', label: 'Count' },
-  { value: 'sum', label: 'Sum' },
-  { value: 'avg', label: 'Average' },
-  { value: 'min', label: 'Minimum' },
-  { value: 'max', label: 'Maximum' },
+  { value: 'none', labelKey: 'chartBuilder.noneRawValues' },
+  { value: 'count', labelKey: 'chartBuilder.count' },
+  { value: 'sum', labelKey: 'chartBuilder.sum' },
+  { value: 'avg', labelKey: 'chartBuilder.average' },
+  { value: 'min', labelKey: 'chartBuilder.minimum' },
+  { value: 'max', labelKey: 'chartBuilder.maximum' },
 ];
 
 const COLOR_SCHEMES = [
   {
     value: 'default',
-    label: 'Default',
+    labelKey: 'chartBuilder.default',
     colors: ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)'],
   },
   {
     value: 'cool',
-    label: 'Cool',
+    labelKey: 'chartBuilder.cool',
     colors: ['var(--chart-1)', 'var(--chart-4)', 'var(--chart-5)'],
   },
   {
     value: 'warm',
-    label: 'Warm',
+    labelKey: 'chartBuilder.warm',
     colors: ['var(--destructive)', 'var(--warning)', 'var(--chart-3)'],
   },
   {
     value: 'mono',
-    label: 'Monochrome',
+    labelKey: 'chartBuilder.monochrome',
     colors: ['var(--foreground)', 'var(--muted-foreground)', 'var(--border)'],
   },
 ];
@@ -182,6 +183,7 @@ const ChartPreview = memo(({ config, data }: ChartPreviewProps) => {
 
 export const ChartBuilder = memo(
   ({ open, onOpenChange, results, onCreateChart }: ChartBuilderProps) => {
+    const { t } = useTranslation('common');
     const [config, setConfig] = useState<ChartConfig>(() => ({
       id: generateId(),
       type: 'bar',
@@ -256,7 +258,8 @@ export const ChartBuilder = memo(
           ...config,
           id: generateId(),
           title:
-            config.title || `${config.xAxis} by ${config.yAxis || 'Count'}`,
+            config.title ||
+            `${config.xAxis} by ${config.yAxis || t('chartBuilder.count')}`,
         });
         onOpenChange(false);
       }
@@ -271,18 +274,20 @@ export const ChartBuilder = memo(
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Create Chart
+              {t('chartBuilder.title')}
             </DialogTitle>
             <DialogDescription>
-              Visualize your query results with interactive charts.
+              {t('chartBuilder.description')}
             </DialogDescription>
           </DialogHeader>
 
           {!results?.rows?.length ? (
             <div className="text-muted-foreground flex flex-col items-center justify-center py-12">
               <BarChart3 className="mb-4 h-12 w-12 opacity-30" />
-              <p className="text-lg font-medium">No Data Available</p>
-              <p className="text-sm">Execute a query first to create charts</p>
+              <p className="text-lg font-medium">
+                {t('chartBuilder.noDataAvailable')}
+              </p>
+              <p className="text-sm">{t('chartBuilder.executeQueryFirst')}</p>
             </div>
           ) : (
             <div className="grid gap-6 lg:grid-cols-2">
@@ -290,9 +295,9 @@ export const ChartBuilder = memo(
               <div className="space-y-4">
                 {/* Chart Type */}
                 <div className="space-y-2">
-                  <Label>Chart Type</Label>
+                  <Label>{t('chartBuilder.chartType')}</Label>
                   <div className="grid grid-cols-4 gap-2">
-                    {CHART_TYPES.map(({ type, icon: Icon, label }) => (
+                    {CHART_TYPES.map(({ type, icon: Icon, labelKey }) => (
                       <button
                         key={type}
                         onClick={() => setConfig({ ...config, type })}
@@ -304,7 +309,7 @@ export const ChartBuilder = memo(
                         )}
                       >
                         <Icon className="h-5 w-5" />
-                        <span className="text-xs">{label}</span>
+                        <span className="text-xs">{t(labelKey)}</span>
                       </button>
                     ))}
                   </div>
@@ -312,20 +317,20 @@ export const ChartBuilder = memo(
 
                 {/* Title */}
                 <div className="space-y-2">
-                  <Label htmlFor="title">Chart Title</Label>
+                  <Label htmlFor="title">{t('chartBuilder.chartTitle')}</Label>
                   <Input
                     id="title"
                     value={config.title}
                     onChange={(e) =>
                       setConfig({ ...config, title: e.target.value })
                     }
-                    placeholder="My Chart"
+                    placeholder={t('chartBuilder.chartTitlePlaceholder')}
                   />
                 </div>
 
                 {/* X-Axis */}
                 <div className="space-y-2">
-                  <Label>X-Axis (Category)</Label>
+                  <Label>{t('chartBuilder.xAxis')}</Label>
                   <Select
                     value={config.xAxis}
                     onValueChange={(v) =>
@@ -333,7 +338,9 @@ export const ChartBuilder = memo(
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select column..." />
+                      <SelectValue
+                        placeholder={t('chartBuilder.selectColumn')}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {columns.map((col) => (
@@ -347,7 +354,7 @@ export const ChartBuilder = memo(
 
                 {/* Y-Axis */}
                 <div className="space-y-2">
-                  <Label>Y-Axis (Value)</Label>
+                  <Label>{t('chartBuilder.yAxis')}</Label>
                   <Select
                     value={config.yAxis}
                     onValueChange={(v) =>
@@ -355,10 +362,14 @@ export const ChartBuilder = memo(
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select column..." />
+                      <SelectValue
+                        placeholder={t('chartBuilder.selectColumn')}
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Use aggregation only</SelectItem>
+                      <SelectItem value="">
+                        {t('chartBuilder.useAggregationOnly')}
+                      </SelectItem>
                       {numericColumns.map((col) => (
                         <SelectItem key={col} value={col}>
                           {col}
@@ -370,7 +381,7 @@ export const ChartBuilder = memo(
 
                 {/* Aggregation */}
                 <div className="space-y-2">
-                  <Label>Aggregation</Label>
+                  <Label>{t('chartBuilder.aggregation')}</Label>
                   <Select
                     value={config.aggregation}
                     onValueChange={(v) =>
@@ -387,7 +398,7 @@ export const ChartBuilder = memo(
                     <SelectContent>
                       {AGGREGATIONS.map((agg) => (
                         <SelectItem key={agg.value} value={agg.value}>
-                          {agg.label}
+                          {t(agg.labelKey)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -396,7 +407,7 @@ export const ChartBuilder = memo(
 
                 {/* Color Scheme */}
                 <div className="space-y-2">
-                  <Label>Color Scheme</Label>
+                  <Label>{t('chartBuilder.colorScheme')}</Label>
                   <div className="grid grid-cols-4 gap-2">
                     {COLOR_SCHEMES.map((scheme) => (
                       <button
@@ -420,7 +431,7 @@ export const ChartBuilder = memo(
                             />
                           ))}
                         </div>
-                        <span className="text-xs">{scheme.label}</span>
+                        <span className="text-xs">{t(scheme.labelKey)}</span>
                       </button>
                     ))}
                   </div>
@@ -429,23 +440,25 @@ export const ChartBuilder = memo(
 
               {/* Preview */}
               <div className="space-y-2">
-                <Label>Preview</Label>
+                <Label>{t('chartBuilder.preview')}</Label>
                 <div className="bg-muted/30 flex min-h-[300px] flex-col rounded-lg border">
                   {previewData.length > 0 ? (
                     <>
                       <div className="border-b px-4 py-2 text-center font-medium">
-                        {config.title || 'Chart Preview'}
+                        {config.title || t('chartBuilder.chartPreview')}
                       </div>
                       <div className="flex-1">
                         <ChartPreview config={config} data={previewData} />
                       </div>
                       <div className="text-muted-foreground border-t px-4 py-2 text-center text-xs">
-                        Showing {previewData.length} data points
+                        {t('chartBuilder.showingDataPoints', {
+                          count: previewData.length,
+                        })}
                       </div>
                     </>
                   ) : (
                     <div className="text-muted-foreground flex flex-1 items-center justify-center">
-                      Select X-axis column to see preview
+                      {t('chartBuilder.selectXAxisToPreview')}
                     </div>
                   )}
                 </div>
@@ -455,11 +468,11 @@ export const ChartBuilder = memo(
 
           <DialogFooter>
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {t('chartBuilder.cancel')}
             </Button>
             <Button onClick={handleCreate} disabled={!canCreate}>
               <Plus className="mr-2 h-4 w-4" />
-              Create Chart
+              {t('chartBuilder.createChart')}
             </Button>
           </DialogFooter>
         </DialogContent>

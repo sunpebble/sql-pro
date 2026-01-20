@@ -2,6 +2,7 @@ import type { RecentConnection } from '@shared/types';
 import type { ConnectionSettings } from '@/components/ConnectionSettingsDialog';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ConnectionSettingsDialog } from '@/components/ConnectionSettingsDialog';
 import { ConnectionSwitcher } from '@/components/ConnectionSwitcher';
 import { DatabaseView } from '@/components/DatabaseView';
@@ -30,6 +31,7 @@ import {
  *   are managed in DatabaseView component (not as separate routes)
  */
 export function DatabasePage() {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const {
     connection,
@@ -119,7 +121,7 @@ export function DatabasePage() {
             setIsConnecting(false);
             return;
           }
-          setError(result.error || 'Failed to open database');
+          setError(result.error || t('database.failedToOpen'));
           setIsConnecting(false);
           return;
         }
@@ -174,7 +176,9 @@ export function DatabasePage() {
           setPendingSettings(null);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(
+          err instanceof Error ? err.message : t('database.unknownError')
+        );
       } finally {
         setIsConnecting(false);
       }
@@ -244,7 +248,9 @@ export function DatabasePage() {
 
   // Open database file dialog
   const handleOpenDatabase = useCallback(async () => {
-    const result = await sqlPro.dialog.openFile();
+    const result = await sqlPro.dialog.openFile({
+      title: t('dialog.openDatabase'),
+    });
     if (result.success && result.filePath && !result.canceled) {
       const filePath = result.filePath;
       const filename = filePath.split('/').pop() || filePath;
@@ -268,7 +274,7 @@ export function DatabasePage() {
       setPendingIsEncrypted(isEncrypted);
       setSettingsDialogOpen(true);
     }
-  }, [setIsConnecting]);
+  }, [setIsConnecting, t]);
 
   // Open a recent connection directly (skip file picker and settings dialog)
   const handleOpenRecentConnection = useCallback(
@@ -288,7 +294,7 @@ export function DatabasePage() {
           });
 
           if (!result.success) {
-            setError(result.error || 'Failed to connect to database');
+            setError(result.error || t('database.failedToConnect'));
             setIsConnecting(false);
             return;
           }

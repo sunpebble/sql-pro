@@ -19,6 +19,7 @@ interface SingleResultTableProps {
 }
 
 const SingleResultTable = memo<SingleResultTableProps>(({ columns, rows }) => {
+  const { t } = useTranslation('common');
   // Convert simple column names to ColumnSchema objects for DataTable
   const tableColumns = useMemo<ColumnSchema[]>(() => {
     return columns.map((colName) => ({
@@ -41,7 +42,7 @@ const SingleResultTable = memo<SingleResultTableProps>(({ columns, rows }) => {
   if (columns.length === 0) {
     return (
       <div className="text-muted-foreground flex h-full items-center justify-center">
-        <p>Query executed successfully (no results to display)</p>
+        <p>{t('queryResults.noResultsToDisplay')}</p>
       </div>
     );
   }
@@ -81,7 +82,7 @@ export function QueryResults({ results }: QueryResultsProps) {
   ) {
     return (
       <div className="text-muted-foreground flex h-full items-center justify-center">
-        <p>Query executed successfully (no results to display)</p>
+        <p>{t('queryResults.noResultsToDisplay')}</p>
       </div>
     );
   }
@@ -105,7 +106,7 @@ export function QueryResults({ results }: QueryResultsProps) {
       <div
         className="bg-muted/30 flex items-center gap-1 overflow-x-auto border-b px-2 py-1"
         role="tablist"
-        aria-label="Query result sets"
+        aria-label={t('queryResults.resultSets')}
       >
         {resultSets.map((resultSet, index) => (
           <button
@@ -122,7 +123,7 @@ export function QueryResults({ results }: QueryResultsProps) {
             aria-controls={`result-panel-${index}`}
             id={`result-tab-${index}`}
           >
-            <span>Result {index + 1}</span>
+            <span>{t('queryResults.result', { index: index + 1 })}</span>
             <span className="text-muted-foreground/70">
               ({resultSet.rows.length}{' '}
               {t('table.rows', { defaultValue: 'rows' })})

@@ -104,12 +104,10 @@ export function BulkEditDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Edit3 className="h-5 w-5" />
-            Bulk Edit
+            {t('table.bulkEdit.title')}
           </DialogTitle>
           <DialogDescription>
-            Edit {selectedRowCount} selected row
-            {selectedRowCount > 1 ? 's' : ''}. Changes will be added to pending
-            changes.
+            {t('table.bulkEdit.description', { count: selectedRowCount })}
           </DialogDescription>
         </DialogHeader>
 
@@ -118,7 +116,7 @@ export function BulkEditDialog({
           <div className="flex items-end gap-2">
             <div className="flex-1">
               <Label htmlFor="column-select" className="text-xs">
-                Add field to edit
+                {t('table.bulkEdit.addFieldToEdit')}
               </Label>
               <Select
                 value={selectedColumn}
@@ -128,7 +126,7 @@ export function BulkEditDialog({
                 disabled={availableColumns.length === 0}
               >
                 <SelectTrigger id="column-select">
-                  <SelectValue placeholder="Select a column..." />
+                  <SelectValue placeholder={t('table.bulkEdit.selectColumn')} />
                 </SelectTrigger>
                 <SelectContent>
                   {availableColumns.map((col) => (
@@ -151,7 +149,7 @@ export function BulkEditDialog({
               onClick={handleAddField}
               disabled={!selectedColumn}
             >
-              Add
+              {t('table.bulkEdit.add')}
             </Button>
           </div>
 
@@ -175,7 +173,7 @@ export function BulkEditDialog({
                         )}
                         {colInfo?.nullable && (
                           <Badge variant="outline" className="text-xs">
-                            nullable
+                            {t('table.bulkEdit.nullable')}
                           </Badge>
                         )}
                       </div>
@@ -186,8 +184,8 @@ export function BulkEditDialog({
                         }
                         placeholder={
                           colInfo?.nullable
-                            ? 'Enter value or leave empty for NULL'
-                            : 'Enter new value'
+                            ? t('table.bulkEdit.enterValueOrNull')
+                            : t('table.bulkEdit.enterNewValue')
                         }
                         className="h-8"
                       />
@@ -225,14 +223,15 @@ export function BulkEditDialog({
           {editFields.length > 0 && (
             <div className="bg-gold/5 border-gold/20 rounded-lg border p-3 text-sm">
               <p>
-                <span className="font-medium">{editFields.length}</span> field
-                {editFields.length > 1 ? 's' : ''} will be updated on{' '}
-                <span className="font-medium">{selectedRowCount}</span> row
-                {selectedRowCount > 1 ? 's' : ''}.
+                {t('table.bulkEdit.fieldsWillBeUpdated', {
+                  count: editFields.length,
+                  rows: selectedRowCount,
+                })}
               </p>
               <p className="text-muted-foreground mt-1 text-xs">
-                This will create {selectedRowCount} pending update
-                {selectedRowCount > 1 ? 's' : ''}.
+                {t('table.bulkEdit.willCreatePendingUpdates', {
+                  count: selectedRowCount,
+                })}
               </p>
             </div>
           )}
@@ -240,7 +239,7 @@ export function BulkEditDialog({
 
         <DialogFooter>
           <DialogClose render={<Button variant="outline" />}>
-            Cancel
+            {t('actions.cancel')}
           </DialogClose>
           <Button
             onClick={handleApply}
@@ -252,7 +251,7 @@ export function BulkEditDialog({
             )}
           >
             <Edit3 className="mr-1.5 h-4 w-4" />
-            Apply to {selectedRowCount} row{selectedRowCount > 1 ? 's' : ''}
+            {t('table.bulkEdit.applyToRows', { count: selectedRowCount })}
           </Button>
         </DialogFooter>
       </DialogContent>

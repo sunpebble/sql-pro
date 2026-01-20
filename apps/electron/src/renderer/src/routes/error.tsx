@@ -10,6 +10,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/utils';
 
@@ -195,6 +196,7 @@ function CollapsibleSection({
 }
 
 function StackTraceViewer({ stack }: { stack: string }) {
+  const { t } = useTranslation('common');
   const { copy, copied } = useCopyToClipboard();
   const frames = parseStackTrace(stack);
 
@@ -206,7 +208,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <span className="text-xs text-zinc-500">
-          {frames.length} stack frames
+          {t('error.stackFrames', { count: frames.length })}
         </span>
         <Button
           variant="ghost"
@@ -215,7 +217,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
           onClick={handleCopy}
         >
           <Copy className="mr-1 h-3 w-3" />
-          {copied ? 'Copied!' : 'Copy'}
+          {copied ? t('common.copied') : t('common.copy')}
         </Button>
       </div>
       <ScrollArea className="h-64">
@@ -264,6 +266,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
  * Displays when an error occurs within a route.
  */
 export function RouterErrorFallback({ error, reset }: ErrorComponentProps) {
+  const { t } = useTranslation('common');
   const err = error instanceof Error ? error : new Error(String(error));
 
   const handleReload = () => {
@@ -278,16 +281,18 @@ export function RouterErrorFallback({ error, reset }: ErrorComponentProps) {
           <AlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
         </div>
 
-        <h2 className="mb-1 text-xl font-semibold">Something went wrong</h2>
+        <h2 className="mb-1 text-xl font-semibold">
+          {t('error.somethingWentWrong')}
+        </h2>
         <p className="mb-4 text-sm text-zinc-500">
-          An unexpected error occurred in the application.
+          {t('error.unexpectedError')}
         </p>
 
         {/* Error message box */}
         <div className="mb-4 w-full rounded-lg border border-red-200 bg-red-50 p-4 text-left dark:border-red-800 dark:bg-red-900/20">
           <div className="flex items-start gap-2">
             <span className="rounded bg-red-200 px-1.5 py-0.5 font-mono text-xs font-medium text-red-700 dark:bg-red-800 dark:text-red-300">
-              {err.name || 'Error'}
+              {err.name || t('error.error')}
             </span>
           </div>
           <p className="mt-2 font-mono text-sm text-red-700 dark:text-red-300">
@@ -298,7 +303,7 @@ export function RouterErrorFallback({ error, reset }: ErrorComponentProps) {
         {/* Stack trace */}
         {err.stack && (
           <div className="mb-6 w-full space-y-3 text-left">
-            <CollapsibleSection title="Stack Trace" defaultOpen>
+            <CollapsibleSection title={t('error.stackTrace')} defaultOpen>
               <StackTraceViewer stack={err.stack} />
             </CollapsibleSection>
           </div>
@@ -308,11 +313,11 @@ export function RouterErrorFallback({ error, reset }: ErrorComponentProps) {
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => reset()}>
             <RotateCcw className="mr-2 h-4 w-4" />
-            Try Again
+            {t('error.tryAgain')}
           </Button>
           <Button onClick={handleReload}>
             <RefreshCw className="mr-2 h-4 w-4" />
-            Reload App
+            {t('error.reloadApp')}
           </Button>
         </div>
       </div>

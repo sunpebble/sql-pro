@@ -14,6 +14,7 @@ import {
   Search,
 } from 'lucide-react';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAsyncOperation } from '@/hooks/useAsyncOperation';
 import { cn } from '@/lib/utils';
 import { PluginCard } from './PluginCard';
@@ -103,6 +104,7 @@ export function PluginManager({
   className,
   onPluginsChange,
 }: PluginManagerProps) {
+  const { t } = useTranslation();
   // Use useAsyncOperation for fetching plugins
   const {
     data: plugins,
@@ -116,7 +118,7 @@ export function PluginManager({
       if (response.success && response.plugins) {
         return response.plugins as PluginInfo[];
       }
-      throw new Error(response.error || 'Failed to fetch plugins');
+      throw new Error(response.error || t('plugins.failedToFetchPlugins'));
     },
     { retries: 2, retryDelay: 500, initialData: [] }
   );
@@ -288,9 +290,11 @@ export function PluginManager({
       <div className="flex flex-col gap-4 border-b p-4">
         <div className="flex items-center justify-between">
           <div>
-            <Label className="text-lg font-semibold">Installed Plugins</Label>
+            <Label className="text-lg font-semibold">
+              {t('plugins.title')}
+            </Label>
             <p className="text-muted-foreground text-sm">
-              Manage your installed plugins
+              {t('plugins.description')}
             </p>
           </div>
           <Button
@@ -298,7 +302,7 @@ export function PluginManager({
             size="icon"
             onClick={() => fetchPlugins()}
             disabled={isLoading}
-            aria-label="Refresh plugins"
+            aria-label={t('plugins.refresh')}
           >
             <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
           </Button>
@@ -311,7 +315,7 @@ export function PluginManager({
             <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               data-slot="plugin-search"
-              placeholder="Search plugins..."
+              placeholder={t('plugins.search')}
               value={searchQuery}
               onChange={handleSearchChange}
               className="pl-9"
@@ -324,7 +328,7 @@ export function PluginManager({
               variant={viewMode === 'list' ? 'secondary' : 'ghost'}
               size="icon-sm"
               onClick={() => setViewMode('list')}
-              aria-label="List view"
+              aria-label={t('plugins.listView')}
             >
               <LayoutList className="h-4 w-4" />
             </Button>
@@ -332,7 +336,7 @@ export function PluginManager({
               variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
               size="icon-sm"
               onClick={() => setViewMode('grid')}
-              aria-label="Grid view"
+              aria-label={t('plugins.gridView')}
             >
               <Grid3X3 className="h-4 w-4" />
             </Button>
@@ -345,16 +349,18 @@ export function PluginManager({
           onValueChange={(value) => setFilterState(value as FilterState)}
         >
           <TabsList className="w-full justify-start">
-            <TabsTrigger value="all">All ({stateCounts.all})</TabsTrigger>
+            <TabsTrigger value="all">
+              {t('plugins.all')} ({stateCounts.all})
+            </TabsTrigger>
             <TabsTrigger value="enabled">
-              Enabled ({stateCounts.enabled})
+              {t('plugins.enabled')} ({stateCounts.enabled})
             </TabsTrigger>
             <TabsTrigger value="disabled">
-              Disabled ({stateCounts.disabled})
+              {t('plugins.disabled')} ({stateCounts.disabled})
             </TabsTrigger>
             {stateCounts.error > 0 && (
               <TabsTrigger value="error" className="text-destructive">
-                Errors ({stateCounts.error})
+                {t('plugins.error')} ({stateCounts.error})
               </TabsTrigger>
             )}
           </TabsList>
@@ -366,7 +372,9 @@ export function PluginManager({
         <div className="bg-destructive/10 border-destructive/50 mx-4 mt-4 flex items-start gap-3 rounded-lg border p-3">
           <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
           <div className="flex-1">
-            <p className="text-destructive text-sm font-medium">Error</p>
+            <p className="text-destructive text-sm font-medium">
+              {t('plugins.error')}
+            </p>
             <p className="text-destructive/80 text-xs">{error.message}</p>
           </div>
           <Button
@@ -375,7 +383,7 @@ export function PluginManager({
             className="text-destructive hover:text-destructive"
             onClick={handleClearError}
           >
-            Dismiss
+            {t('plugins.dismiss')}
           </Button>
         </div>
       )}
@@ -388,7 +396,7 @@ export function PluginManager({
             <div className="flex flex-col items-center justify-center gap-3 py-16">
               <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
               <p className="text-muted-foreground text-sm">
-                Loading plugins...
+                {t('plugins.loading')}
               </p>
             </div>
           )}
@@ -398,9 +406,9 @@ export function PluginManager({
             <div className="flex flex-col items-center justify-center gap-4 py-16">
               <Package className="text-muted-foreground h-12 w-12" />
               <div className="text-center">
-                <p className="text-sm font-medium">No plugins installed</p>
+                <p className="text-sm font-medium">{t('plugins.noPlugins')}</p>
                 <p className="text-muted-foreground mt-1 text-sm">
-                  Browse the marketplace to discover and install plugins
+                  {t('plugins.noPluginsDesc')}
                 </p>
               </div>
             </div>
@@ -413,9 +421,11 @@ export function PluginManager({
               <div className="flex flex-col items-center justify-center gap-3 py-16">
                 <Search className="text-muted-foreground h-12 w-12" />
                 <div className="text-center">
-                  <p className="text-sm font-medium">No plugins found</p>
+                  <p className="text-sm font-medium">
+                    {t('plugins.noResults')}
+                  </p>
                   <p className="text-muted-foreground mt-1 text-sm">
-                    Try adjusting your search or filter criteria
+                    {t('plugins.noResultsDesc')}
                   </p>
                 </div>
                 <Button
@@ -426,7 +436,7 @@ export function PluginManager({
                     setFilterState('all');
                   }}
                 >
-                  Clear filters
+                  {t('plugins.clearFilters')}
                 </Button>
               </div>
             )}

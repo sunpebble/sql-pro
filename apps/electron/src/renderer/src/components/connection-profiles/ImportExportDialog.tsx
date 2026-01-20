@@ -4,6 +4,7 @@ import { Checkbox } from '@sqlpro/ui/checkbox';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Download, Upload } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -37,6 +38,7 @@ export function ImportExportDialog({
   folders = [],
   onImportComplete,
 }: ImportExportDialogProps) {
+  const { t } = useTranslation('common');
   // Export state
   const [selectedProfileIds, setSelectedProfileIds] = useState<Set<string>>(
     () => new Set()
@@ -180,19 +182,19 @@ export function ImportExportDialog({
             {mode === 'export' ? (
               <>
                 <Download className="mr-2 inline-block size-5" />
-                Export Profiles
+                {t('importExport.exportProfiles')}
               </>
             ) : (
               <>
                 <Upload className="mr-2 inline-block size-5" />
-                Import Profiles
+                {t('importExport.importProfiles')}
               </>
             )}
           </DialogTitle>
           <DialogDescription>
             {mode === 'export'
-              ? 'Select profiles and folders to export. Passwords will not be included for security reasons.'
-              : 'Import profiles from a previously exported file. You can choose to merge with existing profiles or skip duplicates.'}
+              ? t('importExport.exportDescription')
+              : t('importExport.importDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -205,11 +207,12 @@ export function ImportExportDialog({
                   {exportResult.success ? (
                     <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
                       <p className="font-medium text-green-900 dark:text-green-100">
-                        Export Successful
+                        {t('importExport.exportSuccessful')}
                       </p>
                       <p className="text-sm text-green-700 dark:text-green-300">
-                        Exported {exportResult.exportedCount} profile
-                        {exportResult.exportedCount !== 1 ? 's' : ''}
+                        {t('importExport.exportedCount', {
+                          count: exportResult.exportedCount,
+                        })}
                       </p>
                       {exportResult.filePath && (
                         <p className="text-xs break-all text-green-600 dark:text-green-400">
@@ -220,10 +223,10 @@ export function ImportExportDialog({
                   ) : (
                     <div className="bg-destructive/10 rounded-lg p-4">
                       <p className="text-destructive font-medium">
-                        Export Failed
+                        {t('importExport.exportFailed')}
                       </p>
                       <p className="text-destructive/80 mt-1 text-sm">
-                        {exportResult.error || 'Unknown error occurred'}
+                        {exportResult.error || t('importExport.unknownError')}
                       </p>
                     </div>
                   )}
@@ -234,8 +237,10 @@ export function ImportExportDialog({
                     {/* Selection controls */}
                     <div className="flex items-center justify-between border-b pb-2">
                       <span className="text-sm font-medium">
-                        {selectedProfileIds.size + selectedFolderIds.size}{' '}
-                        selected
+                        {t('importExport.selected', {
+                          count:
+                            selectedProfileIds.size + selectedFolderIds.size,
+                        })}
                       </span>
                       <div className="flex gap-2">
                         <Button
@@ -244,7 +249,7 @@ export function ImportExportDialog({
                           size="sm"
                           onClick={selectAllProfiles}
                         >
-                          Select All
+                          {t('importExport.selectAll')}
                         </Button>
                         <Button
                           type="button"
@@ -252,7 +257,7 @@ export function ImportExportDialog({
                           size="sm"
                           onClick={clearSelection}
                         >
-                          Clear
+                          {t('importExport.clear')}
                         </Button>
                       </div>
                     </div>
@@ -263,7 +268,7 @@ export function ImportExportDialog({
                         {folders.length > 0 && (
                           <div className="space-y-2">
                             <h4 className="text-muted-foreground text-xs font-semibold uppercase">
-                              Folders
+                              {t('importExport.folders')}
                             </h4>
                             {folders.map((folder) => (
                               <label
@@ -287,7 +292,7 @@ export function ImportExportDialog({
                         {profiles.length > 0 && (
                           <div className="space-y-2">
                             <h4 className="text-muted-foreground text-xs font-semibold uppercase">
-                              Profiles
+                              {t('importExport.profiles')}
                             </h4>
                             {profiles.map((profile) => (
                               <label
@@ -315,7 +320,7 @@ export function ImportExportDialog({
 
                         {profiles.length === 0 && folders.length === 0 && (
                           <p className="text-muted-foreground py-8 text-center text-sm">
-                            No profiles or folders available to export
+                            {t('importExport.noProfilesOrFolders')}
                           </p>
                         )}
                       </div>
@@ -338,10 +343,10 @@ export function ImportExportDialog({
                   />
                   <div className="flex-1">
                     <p className="text-sm font-medium">
-                      Merge with existing profiles
+                      {t('importExport.mergeWithExisting')}
                     </p>
                     <p className="text-muted-foreground text-xs">
-                      If unchecked, duplicate profiles will be skipped
+                      {t('importExport.mergeDescription')}
                     </p>
                   </div>
                 </label>
@@ -352,18 +357,20 @@ export function ImportExportDialog({
                     {importResult.success ? (
                       <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
                         <p className="font-medium text-green-900 dark:text-green-100">
-                          Import Successful
+                          {t('importExport.importSuccessful')}
                         </p>
                         <div className="space-y-1 text-sm text-green-700 dark:text-green-300">
                           <p>
-                            Imported: {importResult.importedCount || 0}{' '}
-                            profile(s)
+                            {t('importExport.importedCount', {
+                              count: importResult.importedCount || 0,
+                            })}
                           </p>
                           {importResult.skippedCount !== undefined &&
                             importResult.skippedCount > 0 && (
                               <p>
-                                Skipped: {importResult.skippedCount}{' '}
-                                duplicate(s)
+                                {t('importExport.skippedCount', {
+                                  count: importResult.skippedCount,
+                                })}
                               </p>
                             )}
                         </div>
@@ -371,16 +378,16 @@ export function ImportExportDialog({
                     ) : (
                       <div className="bg-destructive/10 space-y-2 rounded-lg p-4">
                         <p className="text-destructive font-medium">
-                          Import Failed
+                          {t('importExport.importFailed')}
                         </p>
                         <p className="text-destructive/80 text-sm">
-                          {importResult.error || 'Unknown error occurred'}
+                          {importResult.error || t('importExport.unknownError')}
                         </p>
                         {importResult.errors &&
                           importResult.errors.length > 0 && (
                             <div className="mt-2 space-y-1">
                               <p className="text-destructive text-xs font-medium">
-                                Validation Errors:
+                                {t('importExport.validationErrors')}
                               </p>
                               <ul className="text-destructive/80 list-inside list-disc space-y-0.5 text-xs">
                                 {importResult.errors.map((error) => (
@@ -400,7 +407,9 @@ export function ImportExportDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
-            {exportResult || importResult ? 'Close' : 'Cancel'}
+            {exportResult || importResult
+              ? t('common.close')
+              : t('common.cancel')}
           </Button>
           {!exportResult && !importResult && (
             <Button
@@ -414,16 +423,16 @@ export function ImportExportDialog({
               }
             >
               {isProcessing ? (
-                <>Processing...</>
+                <>{t('importExport.processing')}</>
               ) : mode === 'export' ? (
                 <>
                   <Download className="mr-2 size-4" />
-                  Export
+                  {t('importExport.export')}
                 </>
               ) : (
                 <>
                   <Upload className="mr-2 size-4" />
-                  Import
+                  {t('importExport.import')}
                 </>
               )}
             </Button>

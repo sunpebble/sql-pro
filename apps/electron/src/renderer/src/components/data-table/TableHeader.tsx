@@ -14,6 +14,7 @@ import {
   PinOff,
 } from 'lucide-react';
 import { memo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getColumnTypeCategory } from '@/lib/filter-utils';
 import { cn } from '@/lib/utils';
 import { ColumnFilterPopover } from './ColumnFilterPopover';
@@ -61,6 +62,7 @@ const HeaderCell = memo(
     pinnedOffset,
     isLastPinned,
   }: HeaderCellProps) => {
+    const { t } = useTranslation();
     // State for filter popover
     const [filterPopoverOpen, setFilterPopoverOpen] = useState(false);
     // Track if resize handle was recently interacted with to prevent sort
@@ -222,7 +224,9 @@ const HeaderCell = memo(
                 isPinned && 'text-gold opacity-100'
               )}
               onClick={handlePinClick}
-              title={isPinned ? 'Unpin column' : 'Pin column'}
+              title={
+                isPinned ? t('dataTable.unpinColumn') : t('dataTable.pinColumn')
+              }
             >
               {isPinned ? (
                 <PinOff className="h-3 w-3" />
@@ -242,7 +246,11 @@ const HeaderCell = memo(
                 isGrouped && 'text-gold opacity-100'
               )}
               onClick={handleGroupClick}
-              title={isGrouped ? 'Remove grouping' : 'Group by this column'}
+              title={
+                isGrouped
+                  ? t('dataTable.removeGrouping')
+                  : t('dataTable.groupByColumn')
+              }
             >
               <Layers className="h-3 w-3" />
             </button>
@@ -271,7 +279,11 @@ const HeaderCell = memo(
                   setFilterPopoverOpen(true);
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
-                title={hasActiveFilter ? 'Edit filter' : 'Filter this column'}
+                title={
+                  hasActiveFilter
+                    ? t('dataTable.editFilter')
+                    : t('dataTable.filterColumn')
+                }
               >
                 <Filter className="h-3 w-3" />
               </button>
@@ -312,7 +324,7 @@ const HeaderCell = memo(
             onClick={(e) => {
               e.stopPropagation();
             }}
-            title="Drag to resize, double-click to reset"
+            title={t('dataTable.resizeColumnTooltip')}
           />
         )}
       </th>
@@ -360,6 +372,7 @@ export const TableHeader = memo(
     pinnedColumns = [],
     enableSelection = false,
   }: TableHeaderProps) => {
+    const { t } = useTranslation();
     // Create a map of column id to existing filter for quick lookup
     const filtersByColumn = filters.reduce<Record<string, UIFilterState>>(
       (acc, filter) => {
@@ -407,7 +420,7 @@ export const TableHeader = memo(
                   onCheckedChange={(checked) =>
                     table.toggleAllPageRowsSelected(!!checked)
                   }
-                  aria-label="Select all"
+                  aria-label={t('dataTable.selectAll')}
                 />
               </th>
             )}

@@ -2,6 +2,7 @@ import type { ERTableNodeData } from '@/types/er-diagram';
 import { Handle, Position } from '@xyflow/react';
 import { Eye, Key, Link2, Table } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface ERTableNodeProps {
@@ -10,6 +11,7 @@ interface ERTableNodeProps {
 }
 
 function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
+  const { t } = useTranslation();
   const { tableName, columns, primaryKey, foreignKeys, isView } = data;
 
   // Get set of FK column names for quick lookup
@@ -56,12 +58,12 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
               {/* PK/FK indicators */}
               <div className="flex w-8 shrink-0 items-center gap-0.5">
                 {isPK && (
-                  <span title="Primary Key">
+                  <span title={t('dataTable.primaryKey')}>
                     <Key className="h-3 w-3 text-amber-500" />
                   </span>
                 )}
                 {isFK && (
-                  <span title="Foreign Key">
+                  <span title={t('dataTable.foreignKey')}>
                     <Link2 className="h-3 w-3 text-blue-500" />
                   </span>
                 )}
@@ -74,7 +76,7 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
                   isPK && 'font-medium',
                   !column.nullable && 'underline decoration-dotted'
                 )}
-                title={`${column.name}${!column.nullable ? ' (NOT NULL)' : ''}`}
+                title={`${column.name}${!column.nullable ? ` (${t('dataTable.notNull')})` : ''}`}
               >
                 {column.name}
               </span>

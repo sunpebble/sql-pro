@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -95,6 +96,7 @@ interface ConstraintCardProps {
 }
 
 const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
+  const { t } = useTranslation('common');
   return (
     <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg border p-3 transition-colors">
       <div className="flex items-center gap-3">
@@ -115,12 +117,12 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
       <div className="flex items-center gap-2">
         {constraint.isPrimaryKey && (
           <Badge variant="secondary" className="bg-amber-100 text-amber-800">
-            Primary Key
+            {t('dataValidation.primaryKey')}
           </Badge>
         )}
         {constraint.isForeignKey && (
           <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-            Foreign Key
+            {t('dataValidation.foreignKey')}
           </Badge>
         )}
         {constraint.isNotNull && (
@@ -132,7 +134,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                This column cannot contain NULL values
+                {t('dataValidation.notNullTooltip')}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -145,7 +147,9 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
                   UNIQUE
                 </Badge>
               </TooltipTrigger>
-              <TooltipContent>All values must be unique</TooltipContent>
+              <TooltipContent>
+                {t('dataValidation.uniqueTooltip')}
+              </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}
@@ -158,7 +162,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                Default: {constraint.defaultValue}
+                {t('dataValidation.default')}: {constraint.defaultValue}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -174,6 +178,7 @@ interface ForeignKeyCardProps {
 }
 
 const ForeignKeyCard = memo(({ fk, onNavigate }: ForeignKeyCardProps) => {
+  const { t } = useTranslation('common');
   return (
     <div className="hover:bg-muted/50 rounded-lg border p-3 transition-colors">
       <div className="flex items-center justify-between">
@@ -198,7 +203,7 @@ const ForeignKeyCard = memo(({ fk, onNavigate }: ForeignKeyCardProps) => {
             onClick={() => onNavigate(fk.table)}
           >
             <ExternalLink className="mr-1 h-4 w-4" />
-            Go to table
+            {t('dataValidation.goToTable')}
           </Button>
         )}
       </div>
@@ -211,6 +216,7 @@ interface IssueCardProps {
 }
 
 const IssueCard = memo(({ issue }: IssueCardProps) => {
+  const { t } = useTranslation('common');
   const styles = SEVERITY_STYLES[issue.severity];
 
   return (
@@ -232,7 +238,8 @@ const IssueCard = memo(({ issue }: IssueCardProps) => {
         <div className="flex items-center gap-2">
           <Badge className={styles.badge}>{issue.column}</Badge>
           <span className="text-muted-foreground text-xs">
-            {issue.affectedRows.toLocaleString()} rows affected
+            {issue.affectedRows.toLocaleString()}{' '}
+            {t('dataValidation.rowsAffected')}
           </span>
         </div>
         <p className="mt-1 text-sm">{issue.issue}</p>
@@ -254,6 +261,7 @@ export const DataValidationPanel = memo(
     onValidate,
     onNavigateToTable,
   }: DataValidationPanelProps) => {
+    const { t } = useTranslation('common');
     const [isValidating, setIsValidating] = useState(false);
     const [constraints, setConstraints] = useState<ColumnConstraint[]>([]);
     const [foreignKeys, setForeignKeys] = useState<ForeignKeyInfo[]>([]);
@@ -284,7 +292,7 @@ export const DataValidationPanel = memo(
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              Data Validation
+              {t('dataValidation.title')}
               {tableName && (
                 <Badge variant="secondary" className="ml-2">
                   {tableName}
@@ -292,7 +300,7 @@ export const DataValidationPanel = memo(
               )}
             </DialogTitle>
             <DialogDescription>
-              View constraints, foreign keys, and validate data integrity.
+              {t('dataValidation.description')}
             </DialogDescription>
           </DialogHeader>
 
@@ -302,17 +310,19 @@ export const DataValidationPanel = memo(
               {hasValidated && (
                 <>
                   {errorCount > 0 && (
-                    <Badge variant="destructive">{errorCount} errors</Badge>
+                    <Badge variant="destructive">
+                      {errorCount} {t('dataValidation.errors')}
+                    </Badge>
                   )}
                   {warningCount > 0 && (
                     <Badge className="bg-amber-100 text-amber-800">
-                      {warningCount} warnings
+                      {warningCount} {t('dataValidation.warnings')}
                     </Badge>
                   )}
                   {errorCount === 0 && warningCount === 0 && (
                     <Badge className="bg-green-100 text-green-800">
                       <Check className="mr-1 h-3 w-3" />
-                      All valid
+                      {t('dataValidation.allValid')}
                     </Badge>
                   )}
                 </>
@@ -324,7 +334,9 @@ export const DataValidationPanel = memo(
               ) : (
                 <RefreshCw className="mr-2 h-4 w-4" />
               )}
-              {hasValidated ? 'Re-validate' : 'Validate'}
+              {hasValidated
+                ? t('dataValidation.reValidate')
+                : t('dataValidation.validate')}
             </Button>
           </div>
 
@@ -332,11 +344,11 @@ export const DataValidationPanel = memo(
           {!hasValidated ? (
             <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center py-12">
               <Shield className="mb-4 h-16 w-16 opacity-30" />
-              <h3 className="mb-2 text-lg font-medium">Ready to Validate</h3>
+              <h3 className="mb-2 text-lg font-medium">
+                {t('dataValidation.readyToValidate')}
+              </h3>
               <p className="mb-4 text-center text-sm">
-                Check column constraints, foreign key relationships,
-                <br />
-                and data integrity issues
+                {t('dataValidation.readyToValidateDescription')}
               </p>
               <Button onClick={handleValidate} disabled={isValidating}>
                 {isValidating ? (
@@ -344,7 +356,7 @@ export const DataValidationPanel = memo(
                 ) : (
                   <Shield className="mr-2 h-4 w-4" />
                 )}
-                Start Validation
+                {t('dataValidation.startValidation')}
               </Button>
             </div>
           ) : (
@@ -352,15 +364,15 @@ export const DataValidationPanel = memo(
               <TabsList>
                 <TabsTrigger value="constraints" className="gap-1">
                   <Shield className="h-4 w-4" />
-                  Constraints ({constraints.length})
+                  {t('dataValidation.constraints')} ({constraints.length})
                 </TabsTrigger>
                 <TabsTrigger value="foreignKeys" className="gap-1">
                   <Link2 className="h-4 w-4" />
-                  Foreign Keys ({foreignKeys.length})
+                  {t('dataValidation.foreignKeys')} ({foreignKeys.length})
                 </TabsTrigger>
                 <TabsTrigger value="issues" className="gap-1">
                   <AlertTriangle className="h-4 w-4" />
-                  Issues ({issues.length})
+                  {t('dataValidation.issues')} ({issues.length})
                 </TabsTrigger>
               </TabsList>
 
@@ -368,7 +380,7 @@ export const DataValidationPanel = memo(
                 <ScrollArea className="h-64">
                   {constraints.length === 0 ? (
                     <div className="text-muted-foreground flex items-center justify-center py-12">
-                      No constraints defined
+                      {t('dataValidation.noConstraints')}
                     </div>
                   ) : (
                     <div className="space-y-2 pr-4">
@@ -387,7 +399,7 @@ export const DataValidationPanel = memo(
                 <ScrollArea className="h-64">
                   {foreignKeys.length === 0 ? (
                     <div className="text-muted-foreground flex items-center justify-center py-12">
-                      No foreign keys defined
+                      {t('dataValidation.noForeignKeys')}
                     </div>
                   ) : (
                     <div className="space-y-2 pr-4">
@@ -409,10 +421,10 @@ export const DataValidationPanel = memo(
                     <div className="flex flex-col items-center justify-center py-12">
                       <Check className="mb-2 h-12 w-12 text-green-500" />
                       <p className="font-medium text-green-600">
-                        No issues found
+                        {t('dataValidation.noIssuesFound')}
                       </p>
                       <p className="text-muted-foreground text-sm">
-                        Your data passes all validation checks
+                        {t('dataValidation.noIssuesDescription')}
                       </p>
                     </div>
                   ) : (

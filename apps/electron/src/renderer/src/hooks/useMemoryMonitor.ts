@@ -5,6 +5,7 @@ import type {
   MemoryStatsUpdateEvent,
 } from '@shared/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 
 /**
@@ -221,6 +222,7 @@ function collectRendererMetrics(): RendererMetrics {
 export function useMemoryMonitor(
   options: UseMemoryMonitorOptions = {}
 ): UseMemoryMonitorResult {
+  const { t } = useTranslation('common');
   const {
     autoSubscribe = false,
     intervalMs,
@@ -281,16 +283,16 @@ export function useMemoryMonitor(
           setPressureLevel(response.pressureLevel);
         }
       } else {
-        setError(response.error || 'Failed to fetch memory stats');
+        setError(response.error || t('memory.failedToFetchStats'));
       }
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'Failed to fetch memory stats'
+        err instanceof Error ? err.message : t('memory.failedToFetchStats')
       );
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   /**
    * Subscribe to memory updates from the main process
@@ -337,13 +339,11 @@ export function useMemoryMonitor(
         );
         refreshRendererMetrics();
       } else {
-        setError(response.error || 'Failed to subscribe to memory updates');
+        setError(response.error || t('memory.failedToSubscribe'));
       }
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to subscribe to memory updates'
+        err instanceof Error ? err.message : t('memory.failedToSubscribe')
       );
     } finally {
       setIsLoading(false);
@@ -353,6 +353,7 @@ export function useMemoryMonitor(
     intervalMs,
     rendererMetricsIntervalMs,
     refreshRendererMetrics,
+    t,
   ]);
 
   /**

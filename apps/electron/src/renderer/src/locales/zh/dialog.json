@@ -82,7 +82,28 @@
       "branch": "分支",
       "branchPlaceholder": "main",
       "branchHint": "数据库分支（留空使用主分支）"
-    }
+    },
+    "qdrant": {
+      "hostHint": "Qdrant 服务器主机名（如 localhost 或 cloud.qdrant.io）",
+      "portHint": "REST API 端口（默认：6333）",
+      "apiKey": "API 密钥",
+      "apiKeyPlaceholder": "您的 API 密钥",
+      "apiKeyHint": "Qdrant Cloud 或安全实例需要此密钥",
+      "useTLS": "使用 TLS (HTTPS)"
+    },
+    "supabase": {
+      "projectUrl": "项目 URL",
+      "projectUrlHint": "在项目设置 → 常规中找到",
+      "databaseHost": "数据库主机",
+      "databaseHostHint": "在项目设置 → 数据库 → 连接字符串中找到。使用连接池主机可获得更好性能。",
+      "portPlaceholder": "5432 或 6543（事务模式）",
+      "usernamePlaceholder": "postgres 或 postgres.[project-ref]",
+      "usernameHint": "连接池：postgres.[project-ref]。留空自动检测。",
+      "databasePassword": "数据库密码",
+      "passwordPlaceholder": "您的数据库密码",
+      "passwordHint": "创建项目时设置的密码"
+    },
+    "recommended": "推荐"
   },
   "settings": {
     "title": "设置",
@@ -113,6 +134,27 @@
     "storageUnavailable": "安全存储在此系统上不可用",
     "saveConnect": "保存并连接",
     "saveChanges": "保存更改",
+    "saving": "正在保存...",
+    "save": "保存",
+    "keychainNote": "密码已安全存储在系统钥匙串中",
+    "removePasswordTitle": "移除已保存的密码",
+    "removePasswordDesc": "确定要移除已保存的密码吗？下次连接时需要手动输入密码。",
+    "removePasswordConfirm": "移除密码",
+    "savedPassword": "已保存的密码",
+    "passwordSaved": "密码已保存",
+    "changePassword": "更改密码",
+    "savePassword": "保存密码",
+    "newPassword": "新密码",
+    "password": "密码",
+    "enterPassword": "输入密码",
+    "confirmPassword": "确认密码",
+    "confirmPasswordPlaceholder": "确认密码",
+    "passwordsDoNotMatch": "密码不匹配",
+    "passwordCannotBeEmpty": "密码不能为空",
+    "failedToSavePassword": "保存密码失败",
+    "failedToRemovePassword": "移除密码失败",
+    "unexpectedError": "发生意外错误",
+    "displayNamePlaceholder": "输入此连接的名称",
     "validation": {
       "empty": "显示名称不能为空",
       "tooLong": "显示名称不能超过 {{max}} 个字符"
@@ -125,5 +167,7 @@
     "discardAll": "放弃所有更改",
     "saving": "正在保存...",
     "cancel": "取消"
-  }
+  },
+  "openDatabase": "打开数据库",
+  "saveFile": "保存文件"
 }

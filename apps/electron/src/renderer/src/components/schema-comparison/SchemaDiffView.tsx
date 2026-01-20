@@ -2,6 +2,7 @@ import type { SchemaComparisonResult } from '@shared/types';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { FileQuestion } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useSchemaComparisonStore } from '@/stores';
 import { TableDiffCard } from './TableDiffCard';
@@ -20,6 +21,7 @@ export function SchemaDiffView({
   comparisonResult,
   className,
 }: SchemaDiffViewProps) {
+  const { t } = useTranslation('common');
   const { filters, expandedSections, toggleTableExpanded } =
     useSchemaComparisonStore();
 
@@ -66,12 +68,12 @@ export function SchemaDiffView({
       >
         <FileQuestion className="text-muted-foreground mb-4 h-12 w-12 opacity-30" />
         <p className="text-muted-foreground font-medium">
-          No differences found
+          {t('schemaDiff.noDifferencesFound')}
         </p>
         <p className="text-muted-foreground text-sm">
           {filters.showOnlyDifferences || filters.searchText
-            ? 'Try adjusting your filters'
-            : 'The schemas are identical'}
+            ? t('schemaDiff.tryAdjustingFilters')
+            : t('schemaDiff.schemasIdentical')}
         </p>
       </div>
     );

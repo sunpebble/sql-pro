@@ -7,6 +7,7 @@ import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Textarea } from '@sqlpro/ui/textarea';
 import { FileDown, Loader2, Package } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -44,6 +45,7 @@ export function QueryBundleExportDialog({
   initialDatabaseContext = '',
   onExportComplete,
 }: QueryBundleExportDialogProps) {
+  const { t } = useTranslation('common');
   // Bundle metadata state
   const [bundleName, setBundleName] = useState('');
   const [bundleDescription, setBundleDescription] = useState('');
@@ -187,11 +189,10 @@ export function QueryBundleExportDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
-            Export Query Bundle
+            {t('queryBundleExport.title')}
           </DialogTitle>
           <DialogDescription>
-            Export {queries.length} quer{queries.length !== 1 ? 'ies' : 'y'} as
-            a bundle with shared metadata and individual query notes
+            {t('queryBundleExport.description', { count: queries.length })}
           </DialogDescription>
         </DialogHeader>
 
@@ -201,11 +202,12 @@ export function QueryBundleExportDialog({
               {exportResult.success ? (
                 <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
                   <p className="font-medium text-green-900 dark:text-green-100">
-                    Export Successful
+                    {t('queryBundleExport.exportSuccessful')}
                   </p>
                   <p className="text-sm text-green-700 dark:text-green-300">
-                    Bundle exported successfully with {queries.length} quer
-                    {queries.length !== 1 ? 'ies' : 'y'}
+                    {t('queryBundleExport.exportSuccessDescription', {
+                      count: queries.length,
+                    })}
                   </p>
                   {exportResult.filePath && (
                     <p className="text-xs break-all text-green-600 dark:text-green-400">
@@ -215,9 +217,11 @@ export function QueryBundleExportDialog({
                 </div>
               ) : (
                 <div className="bg-destructive/10 rounded-lg p-4">
-                  <p className="text-destructive font-medium">Export Failed</p>
+                  <p className="text-destructive font-medium">
+                    {t('queryBundleExport.exportFailed')}
+                  </p>
                   <p className="text-destructive/80 mt-1 text-sm">
-                    {exportResult.error || 'Unknown error occurred'}
+                    {exportResult.error || t('queryBundleExport.unknownError')}
                   </p>
                 </div>
               )}
@@ -226,23 +230,26 @@ export function QueryBundleExportDialog({
             <>
               {/* Bundle Metadata */}
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="text-sm font-semibold">Bundle Information</h4>
+                <h4 className="text-sm font-semibold">
+                  {t('queryBundleExport.bundleInformation')}
+                </h4>
 
                 {/* Bundle Name (Required) */}
                 <div className="space-y-2">
                   <Label htmlFor="bundle-name" className="text-sm font-medium">
-                    Bundle Name <span className="text-destructive">*</span>
+                    {t('queryBundleExport.bundleName')}{' '}
+                    <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="bundle-name"
                     value={bundleName}
                     onChange={(e) => setBundleName(e.target.value)}
-                    placeholder="e.g., Analytics Query Collection"
+                    placeholder={t('queryBundleExport.bundleNamePlaceholder')}
                     maxLength={200}
                     disabled={isExporting}
                   />
                   <p className="text-muted-foreground text-xs">
-                    A descriptive name for this query bundle
+                    {t('queryBundleExport.bundleNameDescription')}
                   </p>
                 </div>
 
@@ -252,19 +259,19 @@ export function QueryBundleExportDialog({
                     htmlFor="bundle-description"
                     className="text-sm font-medium"
                   >
-                    Description
+                    {t('queryBundleExport.description_label')}
                   </Label>
                   <Textarea
                     id="bundle-description"
                     value={bundleDescription}
                     onChange={(e) => setBundleDescription(e.target.value)}
-                    placeholder="Brief description of this query collection"
+                    placeholder={t('queryBundleExport.descriptionPlaceholder')}
                     maxLength={1000}
                     rows={2}
                     disabled={isExporting}
                   />
                   <p className="text-muted-foreground text-xs">
-                    Optional description of the bundle purpose
+                    {t('queryBundleExport.descriptionHint')}
                   </p>
                 </div>
 
@@ -274,37 +281,39 @@ export function QueryBundleExportDialog({
                     htmlFor="database-context"
                     className="text-sm font-medium"
                   >
-                    Database Context
+                    {t('queryBundleExport.databaseContext')}
                   </Label>
                   <Input
                     id="database-context"
                     value={databaseContext}
                     onChange={(e) => setDatabaseContext(e.target.value)}
-                    placeholder="e.g., production, analytics, customers.db"
+                    placeholder={t(
+                      'queryBundleExport.databaseContextPlaceholder'
+                    )}
                     maxLength={200}
                     disabled={isExporting}
                   />
                   <p className="text-muted-foreground text-xs">
-                    Optional context about which database these queries are for
+                    {t('queryBundleExport.databaseContextHint')}
                   </p>
                 </div>
 
                 {/* Bundle Tags (Optional) */}
                 <div className="space-y-2">
                   <Label htmlFor="bundle-tags" className="text-sm font-medium">
-                    Tags
+                    {t('queryBundleExport.tags')}
                   </Label>
                   <Input
                     id="bundle-tags"
                     value={bundleTags}
                     onChange={(e) => setBundleTags(e.target.value)}
-                    placeholder="e.g., analytics, reporting, templates"
+                    placeholder={t('queryBundleExport.tagsPlaceholder')}
                     disabled={isExporting}
                   />
                   <p className="text-muted-foreground text-xs">
-                    Comma-separated tags for categorization
+                    {t('queryBundleExport.tagsHint')}
                     {parseBundleTags.length > 0 &&
-                      ` (${parseBundleTags.length} tag${parseBundleTags.length !== 1 ? 's' : ''})`}
+                      ` (${parseBundleTags.length} ${t('queryBundleExport.tagsCount', { count: parseBundleTags.length })})`}
                   </p>
                 </div>
 
@@ -314,20 +323,24 @@ export function QueryBundleExportDialog({
                     htmlFor="bundle-documentation"
                     className="text-sm font-medium"
                   >
-                    Documentation
+                    {t('queryBundleExport.documentation')}
                   </Label>
                   <Textarea
                     id="bundle-documentation"
                     value={documentation}
                     onChange={(e) => setDocumentation(e.target.value)}
-                    placeholder="Additional notes, usage examples, or important considerations..."
+                    placeholder={t(
+                      'queryBundleExport.documentationPlaceholder'
+                    )}
                     maxLength={10000}
                     rows={3}
                     disabled={isExporting}
                   />
                   <p className="text-muted-foreground text-xs">
-                    Optional detailed documentation ({documentation.length}
-                    /10000)
+                    {t('queryBundleExport.documentationHint', {
+                      current: documentation.length,
+                      max: 10000,
+                    })}
                   </p>
                 </div>
               </div>
@@ -335,7 +348,9 @@ export function QueryBundleExportDialog({
               {/* Individual Query Metadata */}
               <div className="space-y-4 rounded-lg border p-4">
                 <h4 className="text-sm font-semibold">
-                  Individual Queries ({queries.length})
+                  {t('queryBundleExport.individualQueries', {
+                    count: queries.length,
+                  })}
                 </h4>
                 <ScrollArea className="h-75 pr-4">
                   <div className="space-y-4">
@@ -349,7 +364,9 @@ export function QueryBundleExportDialog({
                           <div className="flex items-start justify-between gap-2">
                             <div className="flex-1">
                               <p className="text-sm font-medium">
-                                Query {index + 1}
+                                {t('queryBundleExport.queryNumber', {
+                                  number: index + 1,
+                                })}
                               </p>
                               <p className="text-muted-foreground font-mono text-xs">
                                 {(query.queryText ?? '').substring(0, 80)}
@@ -366,7 +383,7 @@ export function QueryBundleExportDialog({
                               htmlFor={`query-name-${query.id}`}
                               className="text-xs"
                             >
-                              Name
+                              {t('queryBundleExport.queryName')}
                             </Label>
                             <Input
                               id={`query-name-${query.id}`}
@@ -378,7 +395,10 @@ export function QueryBundleExportDialog({
                                   e.target.value
                                 )
                               }
-                              placeholder={`Query ${index + 1}`}
+                              placeholder={t(
+                                'queryBundleExport.queryNamePlaceholder',
+                                { number: index + 1 }
+                              )}
                               maxLength={200}
                               disabled={isExporting}
                               className="h-8 text-xs"
@@ -391,7 +411,7 @@ export function QueryBundleExportDialog({
                               htmlFor={`query-description-${query.id}`}
                               className="text-xs"
                             >
-                              Description
+                              {t('queryBundleExport.queryDescription')}
                             </Label>
                             <Textarea
                               id={`query-description-${query.id}`}
@@ -403,7 +423,9 @@ export function QueryBundleExportDialog({
                                   e.target.value
                                 )
                               }
-                              placeholder="Brief description"
+                              placeholder={t(
+                                'queryBundleExport.queryDescriptionPlaceholder'
+                              )}
                               maxLength={1000}
                               rows={2}
                               disabled={isExporting}
@@ -417,7 +439,7 @@ export function QueryBundleExportDialog({
                               htmlFor={`query-notes-${query.id}`}
                               className="text-xs"
                             >
-                              Notes
+                              {t('queryBundleExport.queryNotes')}
                             </Label>
                             <Textarea
                               id={`query-notes-${query.id}`}
@@ -429,7 +451,9 @@ export function QueryBundleExportDialog({
                                   e.target.value
                                 )
                               }
-                              placeholder="Optional notes for this query"
+                              placeholder={t(
+                                'queryBundleExport.queryNotesPlaceholder'
+                              )}
                               maxLength={1000}
                               rows={2}
                               disabled={isExporting}
@@ -443,7 +467,7 @@ export function QueryBundleExportDialog({
                               htmlFor={`query-tags-${query.id}`}
                               className="text-xs"
                             >
-                              Tags
+                              {t('queryBundleExport.queryTags')}
                             </Label>
                             <Input
                               id={`query-tags-${query.id}`}
@@ -455,7 +479,9 @@ export function QueryBundleExportDialog({
                                   e.target.value
                                 )
                               }
-                              placeholder="comma, separated, tags"
+                              placeholder={t(
+                                'queryBundleExport.queryTagsPlaceholder'
+                              )}
                               disabled={isExporting}
                               className="h-8 text-xs"
                             />
@@ -469,7 +495,9 @@ export function QueryBundleExportDialog({
 
               {/* Export Options */}
               <div className="space-y-3">
-                <Label className="text-sm font-medium">Export Options</Label>
+                <Label className="text-sm font-medium">
+                  {t('queryBundleExport.exportOptions')}
+                </Label>
                 <div className="space-y-3 rounded-md border p-3">
                   <label className="flex cursor-pointer items-center gap-2">
                     <Checkbox
@@ -480,9 +508,11 @@ export function QueryBundleExportDialog({
                       disabled={isExporting}
                     />
                     <div className="flex-1">
-                      <p className="text-sm">Compress export file</p>
+                      <p className="text-sm">
+                        {t('queryBundleExport.compressExport')}
+                      </p>
                       <p className="text-muted-foreground text-xs">
-                        Automatically enabled for bundles larger than 100KB
+                        {t('queryBundleExport.compressExportHint')}
                       </p>
                     </div>
                   </label>
@@ -498,19 +528,21 @@ export function QueryBundleExportDialog({
             onClick={() => handleOpenChange(false)}
             disabled={isExporting}
           >
-            {exportResult ? 'Close' : 'Cancel'}
+            {exportResult
+              ? t('queryBundleExport.close')
+              : t('queryBundleExport.cancel')}
           </Button>
           {!exportResult && (
             <Button onClick={handleExport} disabled={!isValid || isExporting}>
               {isExporting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Exporting...
+                  {t('queryBundleExport.exporting')}
                 </>
               ) : (
                 <>
                   <FileDown className="mr-2 h-4 w-4" />
-                  Export Bundle
+                  {t('queryBundleExport.exportBundle')}
                 </>
               )}
             </Button>

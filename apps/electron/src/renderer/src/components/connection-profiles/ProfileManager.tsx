@@ -151,7 +151,7 @@ export function ProfileManager({
         // Validate database file existence
         await validateDatabaseFiles(profilesResult.profiles);
       } else {
-        setError(profilesResult.error || 'Failed to load profiles');
+        setError(profilesResult.error || t('profiles.failedToLoadProfiles'));
       }
 
       // Load folders
@@ -159,7 +159,7 @@ export function ProfileManager({
       if (foldersResult.success && foldersResult.folders) {
         setFolders(foldersResult.folders);
       } else {
-        setError(foldersResult.error || 'Failed to load folders');
+        setError(foldersResult.error || t('profiles.failedToLoadFolders'));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -243,7 +243,8 @@ export function ProfileManager({
         if (result.success && result.profile) {
           addProfile(result.profile);
         } else {
-          const errorMsg = result.error || 'Failed to duplicate profile';
+          const errorMsg =
+            result.error || t('profiles.failedToDuplicateProfile');
           if (errorMsg.includes('keychain') || errorMsg.includes('password')) {
             setError(
               `${errorMsg}${!keychainAvailable ? ' (Keychain is unavailable on this system)' : ''}`
@@ -287,7 +288,7 @@ export function ProfileManager({
           selectProfile(null);
         }
       } else {
-        setError(result.error || 'Failed to delete profile');
+        setError(result.error || t('profiles.failedToDeleteProfile'));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -320,7 +321,7 @@ export function ProfileManager({
           setEditDialogOpen(false);
           setEditingProfile(null);
         } else {
-          setError(result.error || 'Failed to update profile');
+          setError(result.error || t('profiles.failedToUpdateProfile'));
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
@@ -416,7 +417,7 @@ export function ProfileManager({
             updateProfile(p.id, { folderId: undefined });
           });
       } else {
-        setError(result.error || 'Failed to delete folder');
+        setError(result.error || t('profiles.failedToDeleteFolder'));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -483,11 +484,14 @@ export function ProfileManager({
             setEditingFolder(null);
             setError(null); // Clear any previous errors
           } else {
-            setError(result.error || 'Failed to create folder');
+            setError(result.error || t('profiles.failedToCreateFolder'));
           }
         } catch (err) {
-          const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-          setError(`Failed to create folder: ${errorMsg}`);
+          const errorMsg =
+            err instanceof Error ? err.message : t('database.unknownError');
+          setError(
+            t('profiles.failedToCreateFolderWithError', { error: errorMsg })
+          );
         }
       } else {
         // Rename existing folder
@@ -506,11 +510,14 @@ export function ProfileManager({
             setEditingFolder(null);
             setError(null); // Clear any previous errors
           } else {
-            setError(result.error || 'Failed to rename folder');
+            setError(result.error || t('profiles.failedToRenameFolder'));
           }
         } catch (err) {
-          const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-          setError(`Failed to rename folder: ${errorMsg}`);
+          const errorMsg =
+            err instanceof Error ? err.message : t('database.unknownError');
+          setError(
+            t('profiles.failedToRenameFolderWithError', { error: errorMsg })
+          );
         }
       }
     },
@@ -542,7 +549,7 @@ export function ProfileManager({
         if (result.success && result.profile) {
           updateProfile(profileId, { folderId });
         } else {
-          setError(result.error || 'Failed to move profile');
+          setError(result.error || t('profiles.failedToMoveProfile'));
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
@@ -554,7 +561,9 @@ export function ProfileManager({
   // Handle add connection - open file dialog
   const handleAddConnection = useCallback(async () => {
     try {
-      const result = await sqlPro.dialog.openFile();
+      const result = await sqlPro.dialog.openFile({
+        title: t('dialog.openDatabase'),
+      });
       if (result.success && !result.canceled && result.filePath) {
         const filename = result.filePath.split('/').pop() || result.filePath;
         // Try to open the file to check if it's encrypted
@@ -576,10 +585,12 @@ export function ProfileManager({
       }
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'Failed to open file dialog'
+        err instanceof Error
+          ? err.message
+          : t('profiles.failedToOpenFileDialog')
       );
     }
-  }, []);
+  }, [t]);
 
   // Handle add connection form submit
   const handleAddConnectionSubmit = useCallback(
@@ -608,7 +619,7 @@ export function ProfileManager({
           setAddConnectionDialogOpen(false);
           setPendingNewConnection(null);
         } else {
-          setError(result.error || 'Failed to save profile');
+          setError(result.error || t('profiles.failedToSaveProfile'));
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
@@ -842,23 +853,23 @@ export function ProfileManager({
                       {selectedProfile.isEncrypted && (
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">
-                            Encrypted:
+                            {t('profileManager.encrypted')}:
                           </span>
-                          <span>Yes</span>
+                          <span>{t('profileManager.yes')}</span>
                         </div>
                       )}
                       {selectedProfile.readOnly && (
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">
-                            Read-only:
+                            {t('profileManager.readOnly')}:
                           </span>
-                          <span>Yes</span>
+                          <span>{t('profileManager.yes')}</span>
                         </div>
                       )}
                       {selectedProfile.lastOpened && (
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">
-                            Last opened:
+                            {t('profileManager.lastOpened')}:
                           </span>
                           <span>
                             {new Date(
@@ -902,7 +913,7 @@ export function ProfileManager({
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Profile</DialogTitle>
+            <DialogTitle>{t('profileManager.editProfile')}</DialogTitle>
           </DialogHeader>
           {editingProfile && (
             <ProfileForm
@@ -987,7 +998,9 @@ export function ProfileManager({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Connection to Profiles</DialogTitle>
+            <DialogTitle>
+              {t('profileManager.addConnectionToProfiles')}
+            </DialogTitle>
           </DialogHeader>
           {pendingNewConnection && (
             <ProfileForm
@@ -1010,13 +1023,17 @@ export function ProfileManager({
       <ConfirmDialog
         open={deleteProfileConfirmOpen}
         onOpenChange={setDeleteProfileConfirmOpen}
-        title="Delete Profile"
+        title={t('profiles.deleteProfileTitle')}
         description={
           pendingDeleteProfileId
-            ? `Delete profile "${profiles.get(pendingDeleteProfileId)?.displayName || profiles.get(pendingDeleteProfileId)?.filename}"?`
+            ? t('profiles.deleteProfileDesc', {
+                name:
+                  profiles.get(pendingDeleteProfileId)?.displayName ||
+                  profiles.get(pendingDeleteProfileId)?.filename,
+              })
             : ''
         }
-        confirmLabel="Delete"
+        confirmLabel={t('profiles.delete')}
         variant="destructive"
         onConfirm={confirmDeleteProfile}
         onCancel={() => setPendingDeleteProfileId(null)}
@@ -1026,9 +1043,9 @@ export function ProfileManager({
       <ConfirmDialog
         open={deleteFolderConfirmOpen}
         onOpenChange={setDeleteFolderConfirmOpen}
-        title="Delete Folder"
+        title={t('profiles.deleteFolderTitle')}
         description={deleteFolderMessage}
-        confirmLabel="Delete"
+        confirmLabel={t('profiles.delete')}
         variant="destructive"
         onConfirm={confirmDeleteFolder}
         onCancel={() => setPendingDeleteFolderId(null)}

@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { sqlPro } from '@/lib/api';
@@ -38,6 +39,7 @@ interface DataDiffSQLGeneratorProps {
  * copy to clipboard, save to file, and insert into query editor.
  */
 export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
+  const { t } = useTranslation('common');
   const { comparisonResult, selectedRowKeys } = useDataDiffStore();
   const { activeConnectionId } = useConnectionStore();
   const { createTab } = useQueryTabsStore();
@@ -132,10 +134,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
 
     try {
       const result = await sqlPro.dialog.saveFile({
-        title: 'Save Sync SQL',
+        title: t('dataDiff.saveSyncSQL'),
         filters: [
-          { name: 'SQL Files', extensions: ['sql'] },
-          { name: 'All Files', extensions: ['*'] },
+          { name: t('dataDiff.sqlFiles'), extensions: ['sql'] },
+          { name: t('dataDiff.allFiles'), extensions: ['*'] },
         ],
         defaultPath: `data_sync_${new Date().toISOString().split('T')[0]}.sql`,
       });
@@ -152,13 +154,13 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
           setSaved(true);
           setTimeout(() => setSaved(false), 2000);
         } else {
-          setSaveError(writeResult.error || 'Failed to save file');
+          setSaveError(writeResult.error || t('dataDiff.failedToSave'));
           setTimeout(() => setSaveError(null), 5000);
         }
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to save file';
+        err instanceof Error ? err.message : t('dataDiff.failedToSave');
       setSaveError(errorMessage);
       setTimeout(() => setSaveError(null), 5000);
     }
@@ -203,12 +205,13 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            Sync SQL Generator
+            {t('dataDiffSQL.title')}
           </CardTitle>
           {syncSQL?.statements && (
             <Badge variant="secondary">
-              {syncSQL.statements.length} statement
-              {syncSQL.statements.length !== 1 ? 's' : ''}
+              {t('dataDiffSQL.statementsCount', {
+                count: syncSQL.statements.length,
+              })}
             </Badge>
           )}
         </div>
@@ -218,10 +221,9 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
         {!hasSelection && (
           <Alert>
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>No Rows Selected</AlertTitle>
+            <AlertTitle>{t('dataDiffSQL.noRowsSelected')}</AlertTitle>
             <AlertDescription>
-              Select one or more rows from the comparison results to generate
-              sync SQL statements.
+              {t('dataDiffSQL.noRowsSelectedDescription')}
             </AlertDescription>
           </Alert>
         )}
@@ -231,13 +233,13 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
             {/* Selection Summary */}
             <div className="rounded-lg border p-3">
               <div className="text-muted-foreground mb-2 text-xs font-medium">
-                Selected Rows: {selectedRowKeys.size}
+                {t('dataDiffSQL.selectedRows', { count: selectedRowKeys.size })}
               </div>
               <div className="grid grid-cols-3 gap-2 text-xs">
                 {counts.inserts > 0 && (
                   <div className="rounded bg-green-100 p-2 dark:bg-green-950">
                     <div className="text-green-700 dark:text-green-300">
-                      Inserts
+                      {t('dataDiffSQL.inserts')}
                     </div>
                     <div className="text-lg font-semibold">
                       {counts.inserts}
@@ -247,7 +249,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                 {counts.updates > 0 && (
                   <div className="rounded bg-amber-100 p-2 dark:bg-amber-950">
                     <div className="text-amber-700 dark:text-amber-300">
-                      Updates
+                      {t('dataDiffSQL.updates')}
                     </div>
                     <div className="text-lg font-semibold">
                       {counts.updates}
@@ -257,7 +259,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                 {counts.deletes > 0 && (
                   <div className="rounded bg-red-100 p-2 dark:bg-red-950">
                     <div className="text-red-700 dark:text-red-300">
-                      Deletes
+                      {t('dataDiffSQL.deletes')}
                     </div>
                     <div className="text-lg font-semibold">
                       {counts.deletes}
@@ -284,10 +286,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     <span className="text-green-600 dark:text-green-400">
                       ■
                     </span>
-                    Include INSERT Statements
+                    {t('dataDiffSQL.includeInserts')}
                   </div>
                   <p className="text-muted-foreground mt-0.5 text-xs font-normal">
-                    Add rows that exist in source but not in target
+                    {t('dataDiffSQL.includeInsertsDescription')}
                   </p>
                 </Label>
               </div>
@@ -309,10 +311,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     <span className="text-amber-600 dark:text-amber-400">
                       ■
                     </span>
-                    Include UPDATE Statements
+                    {t('dataDiffSQL.includeUpdates')}
                   </div>
                   <p className="text-muted-foreground mt-0.5 text-xs font-normal">
-                    Modify rows with different values between source and target
+                    {t('dataDiffSQL.includeUpdatesDescription')}
                   </p>
                 </Label>
               </div>
@@ -332,11 +334,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                 >
                   <div className="flex items-center gap-1.5">
                     <AlertCircle className="text-destructive h-3.5 w-3.5" />
-                    Include DELETE Statements
+                    {t('dataDiffSQL.includeDeletes')}
                   </div>
                   <p className="text-muted-foreground mt-0.5 text-xs font-normal">
-                    Remove rows that exist in target but not in source (⚠️ data
-                    loss)
+                    {t('dataDiffSQL.includeDeletesDescription')}
                   </p>
                 </Label>
               </div>
@@ -346,7 +347,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
             {isGenerating && (
               <div className="text-muted-foreground flex items-center justify-center gap-2 py-8 text-sm">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Generating sync SQL...
+                {t('dataDiffSQL.generating')}
               </div>
             )}
 
@@ -354,7 +355,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
             {syncSQL && !syncSQL.success && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Generation Error</AlertTitle>
+                <AlertTitle>{t('dataDiffSQL.generationError')}</AlertTitle>
                 <AlertDescription>{syncSQL.error}</AlertDescription>
               </Alert>
             )}
@@ -367,10 +368,11 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
               !includeDeletes && (
                 <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-8 text-center">
                   <AlertCircle className="h-12 w-12 opacity-30" />
-                  <p className="font-medium">No Operations Selected</p>
+                  <p className="font-medium">
+                    {t('dataDiffSQL.noOperationsSelected')}
+                  </p>
                   <p className="text-sm">
-                    Enable at least one statement type (INSERT, UPDATE, or
-                    DELETE)
+                    {t('dataDiffSQL.noOperationsSelectedDescription')}
                   </p>
                 </div>
               )}
@@ -385,7 +387,11 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertTitle className="flex items-center justify-between">
-                        <span>Warnings ({syncSQL.warnings.length})</span>
+                        <span>
+                          {t('dataDiffSQL.warnings', {
+                            count: syncSQL.warnings.length,
+                          })}
+                        </span>
                         <Button
                           variant="ghost"
                           size="sm"
@@ -423,12 +429,12 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                       {copied ? (
                         <>
                           <Check className="mr-2 h-4 w-4" />
-                          Copied!
+                          {t('dataDiffSQL.copied')}
                         </>
                       ) : (
                         <>
                           <Copy className="mr-2 h-4 w-4" />
-                          Copy to Clipboard
+                          {t('dataDiffSQL.copyToClipboard')}
                         </>
                       )}
                     </Button>
@@ -442,17 +448,17 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                       {saved ? (
                         <>
                           <Check className="mr-2 h-4 w-4" />
-                          Saved!
+                          {t('dataDiffSQL.saved')}
                         </>
                       ) : saveError ? (
                         <>
                           <AlertCircle className="mr-2 h-4 w-4" />
-                          Save Failed
+                          {t('dataDiffSQL.saveFailed')}
                         </>
                       ) : (
                         <>
                           <FileDown className="mr-2 h-4 w-4" />
-                          Save to File
+                          {t('dataDiffSQL.saveToFile')}
                         </>
                       )}
                     </Button>
@@ -465,7 +471,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                         disabled={!syncSQL.sql}
                       >
                         <FileText className="mr-2 h-4 w-4" />
-                        Open in Query Editor
+                        {t('dataDiffSQL.openInQueryEditor')}
                       </Button>
                     )}
                   </div>
@@ -484,7 +490,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   {syncSQL.sql && (
                     <div className="space-y-2">
                       <Label className="text-xs font-medium">
-                        Generated SQL:
+                        {t('dataDiffSQL.generatedSQL')}
                       </Label>
                       <ScrollArea className="h-100 rounded-lg border">
                         <div className="p-4">
@@ -503,9 +509,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   {/* Statement Count Info */}
                   {syncSQL.statements && syncSQL.statements.length > 0 && (
                     <p className="text-muted-foreground text-xs">
-                      💡 Tip: Review the SQL carefully before executing,
-                      especially if DELETE statements are included. Consider
-                      backing up your database first.
+                      💡 {t('dataDiffSQL.tip')}
                     </p>
                   )}
                 </>

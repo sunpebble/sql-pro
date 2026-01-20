@@ -7,6 +7,7 @@ import {
   MapPin,
 } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 /**
@@ -31,28 +32,17 @@ export interface ErrorDisplayProps {
 }
 
 /**
- * Maps error codes to user-friendly titles.
+ * Maps error codes to translation keys.
  */
-function getErrorTitle(errorCode?: ErrorCode): string {
-  switch (errorCode) {
-    case 'SQL_SYNTAX_ERROR':
-      return 'Syntax Error';
-    case 'SQL_CONSTRAINT_ERROR':
-      return 'Constraint Violation';
-    case 'CONNECTION_ERROR':
-      return 'Connection Error';
-    case 'ENCRYPTION_ERROR':
-      return 'Encryption Error';
-    case 'PERMISSION_ERROR':
-      return 'Permission Denied';
-    case 'FILE_NOT_FOUND':
-      return 'File Not Found';
-    case 'QUERY_EXECUTION_ERROR':
-      return 'Query Error';
-    default:
-      return 'Query Error';
-  }
-}
+const ERROR_CODE_TO_KEY: Record<string, string> = {
+  SQL_SYNTAX_ERROR: 'errorDisplay.syntaxError',
+  SQL_CONSTRAINT_ERROR: 'errorDisplay.constraintViolation',
+  CONNECTION_ERROR: 'errorDisplay.connectionError',
+  ENCRYPTION_ERROR: 'errorDisplay.encryptionError',
+  PERMISSION_ERROR: 'errorDisplay.permissionDenied',
+  FILE_NOT_FOUND: 'errorDisplay.fileNotFound',
+  QUERY_EXECUTION_ERROR: 'errorDisplay.queryError',
+};
 
 /**
  * Enhanced error display component that shows:
@@ -72,7 +62,11 @@ export const ErrorDisplay = memo(
     troubleshootingSteps,
     className,
   }: ErrorDisplayProps) => {
-    const title = getErrorTitle(errorCode);
+    const { t } = useTranslation('common');
+    const titleKey = errorCode
+      ? ERROR_CODE_TO_KEY[errorCode]
+      : 'errorDisplay.queryError';
+    const title = t(titleKey || 'errorDisplay.queryError');
     const hasSuggestions = suggestions && suggestions.length > 0;
     const hasTroubleshootingSteps =
       troubleshootingSteps && troubleshootingSteps.length > 0;
@@ -108,7 +102,10 @@ export const ErrorDisplay = memo(
             <div className="text-muted-foreground ml-8 flex items-center gap-2 text-xs">
               <MapPin className="h-3.5 w-3.5" />
               <span>
-                Line {errorPosition.line}, Column {errorPosition.column}
+                {t('errorDisplay.lineColumn', {
+                  line: errorPosition.line,
+                  column: errorPosition.column,
+                })}
               </span>
             </div>
           )}
@@ -118,7 +115,7 @@ export const ErrorDisplay = memo(
             <div className="border-destructive/20 ml-8 border-t pt-3">
               <div className="text-foreground/80 mb-2 flex items-center gap-2 text-sm font-medium">
                 <Lightbulb className="h-4 w-4 text-amber-500" />
-                <span>Suggestions</span>
+                <span>{t('errorDisplay.suggestions')}</span>
               </div>
               <ul className="space-y-1.5">
                 {suggestions.map((suggestion) => (
@@ -139,7 +136,7 @@ export const ErrorDisplay = memo(
             <div className="border-destructive/20 ml-8 border-t pt-3">
               <div className="text-foreground/80 mb-2 flex items-center gap-2 text-sm font-medium">
                 <Lightbulb className="h-4 w-4 text-amber-500" />
-                <span>Troubleshooting Steps</span>
+                <span>{t('errorDisplay.troubleshootingSteps')}</span>
               </div>
               <ol className="list-inside list-decimal space-y-1.5">
                 {troubleshootingSteps.map((step) => (
@@ -161,7 +158,7 @@ export const ErrorDisplay = memo(
                 className="text-gold inline-flex items-center gap-2 text-sm hover:underline"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
-                <span>View SQLite Documentation</span>
+                <span>{t('errorDisplay.viewDocumentation')}</span>
               </a>
             </div>
           )}

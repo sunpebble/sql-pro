@@ -157,7 +157,10 @@ export function ProfileForm({
   };
 
   const isValid = !validationErrors.displayName && !validationErrors.notes;
-  const submitLabel = mode === 'new' ? 'Save Profile' : 'Save Changes';
+  const submitLabel =
+    mode === 'new'
+      ? t('profileForm.saveProfile')
+      : t('profileForm.saveChanges');
 
   // Build folder hierarchy for display
   const rootFolders = folders.filter((f) => !f.parentId);
@@ -178,14 +181,15 @@ export function ProfileForm({
       {/* Display Name */}
       <div className="space-y-2">
         <label htmlFor="displayName" className="text-sm font-medium">
-          Display Name <span className="text-destructive">*</span>
+          {t('profileForm.displayName')}{' '}
+          <span className="text-destructive">*</span>
         </label>
         <input
           id="displayName"
           type="text"
           value={displayName}
           onChange={(e) => handleDisplayNameChange(e.target.value)}
-          placeholder="Enter a name for this profile"
+          placeholder={t('profileForm.enterProfileName')}
           autoFocus
           className={cn(
             'bg-background w-full rounded-md border px-3 py-2 text-sm',
@@ -200,7 +204,10 @@ export function ProfileForm({
           </p>
         )}
         <p className="text-muted-foreground text-xs">
-          {displayName.trim().length}/{MAX_DISPLAY_NAME_LENGTH} characters
+          {t('profileForm.characterCount', {
+            current: displayName.trim().length,
+            max: MAX_DISPLAY_NAME_LENGTH,
+          })}
         </p>
       </div>
 
@@ -253,7 +260,7 @@ export function ProfileForm({
           type="text"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          placeholder="production, backup, testing"
+          placeholder={t('profileForm.tagsPlaceholder')}
           className={cn(
             'bg-background w-full rounded-md border px-3 py-2 text-sm',
             'placeholder:text-muted-foreground',
@@ -275,7 +282,7 @@ export function ProfileForm({
           id="notes"
           value={notes}
           onChange={(e) => handleNotesChange(e.target.value)}
-          placeholder="Add notes about this connection..."
+          placeholder={t('profileForm.notesPlaceholder')}
           className={cn(validationErrors.notes ? 'border-destructive' : '')}
           rows={3}
         />
@@ -296,9 +303,11 @@ export function ProfileForm({
           className="border-input h-4 w-4 rounded"
         />
         <div className="flex-1">
-          <span className="text-sm font-medium">Open in read-only mode</span>
+          <span className="text-sm font-medium">
+            {t('profileForm.readOnlyMode')}
+          </span>
           <p className="text-muted-foreground text-xs">
-            Prevents accidental modifications to the database
+            {t('profileForm.readOnlyDescription')}
           </p>
         </div>
       </label>
@@ -322,7 +331,9 @@ export function ProfileForm({
           />
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Remember password</span>
+              <span className="text-sm font-medium">
+                {t('profileForm.rememberPassword')}
+              </span>
               {!isStorageAvailable && (
                 <Tooltip>
                   <TooltipTrigger>
@@ -330,17 +341,14 @@ export function ProfileForm({
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="max-w-xs text-xs">
-                      Password storage is not available on this system.
-                      Passwords can only be saved if your system supports secure
-                      storage (Windows Credential Manager, macOS Keychain, or
-                      Linux Secret Service).
+                      {t('profileForm.passwordStorageUnavailable')}
                     </p>
                   </TooltipContent>
                 </Tooltip>
               )}
             </div>
             <p className="text-muted-foreground text-xs">
-              Store password securely in system keychain for automatic login
+              {t('profileForm.rememberPasswordDescription')}
             </p>
           </div>
         </label>

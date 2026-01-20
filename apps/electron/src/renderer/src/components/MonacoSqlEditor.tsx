@@ -9,6 +9,7 @@ import * as monaco from 'monaco-editor';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import { initVimMode } from 'monaco-vim';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   createSqlCompletionProvider,
   createSqlHoverProvider,
@@ -90,6 +91,7 @@ export function MonacoSqlEditor({
   onCursorPositionChange,
   onScrollPositionChange,
 }: MonacoSqlEditorProps) {
+  const { t } = useTranslation('common');
   const { theme } = useThemeStore();
   const { editorVimMode, tabSize } = useSettingsStore();
   const editorFont = useEditorFont();
@@ -667,7 +669,7 @@ export function MonacoSqlEditor({
           'hover:bg-gold/20 bg-transparent',
           isResizing && 'bg-gold/30'
         )}
-        title="Drag to resize, double-click to restore default"
+        title={t('queryEditor.resizeHandle')}
       >
         {/* Visual indicator in center of handle */}
         <div className="mx-auto flex h-full w-8 items-center justify-center">

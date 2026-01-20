@@ -1,5 +1,6 @@
 import { Outlet } from '@tanstack/react-router';
 import { Upload } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { CommandPalette } from '@/components/CommandPalette';
 import { GlobalDialogs } from '@/components/GlobalDialogs';
 import { Titlebar } from '@/components/Titlebar';
@@ -14,6 +15,7 @@ import { useUIFont } from '@/stores';
  * Provides the common app shell with titlebar and DevTools.
  */
 export function RootLayout() {
+  const { t } = useTranslation('common');
   const uiFont = useUIFont();
 
   // Register commands and global keyboard shortcuts
@@ -53,7 +55,7 @@ export function RootLayout() {
           <div className="bg-background/80 border-primary flex flex-col items-center justify-center rounded-2xl border-2 border-dashed px-16 py-12">
             <Upload className="text-primary mb-4 h-12 w-12" />
             <p className="text-primary text-lg font-medium">
-              Drop database file here
+              {t('dragDrop.dropDatabaseFile')}
             </p>
             <p className="text-muted-foreground mt-1 text-sm">
               {DB_EXTENSIONS.join(', ')}

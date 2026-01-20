@@ -128,7 +128,9 @@ const TemplateCard = memo(
                   <Copy className="h-3.5 w-3.5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Duplicate template</TooltipContent>
+              <TooltipContent>
+                {t('queryTemplates.duplicateTemplate')}
+              </TooltipContent>
             </Tooltip>
           </TooltipProvider>
           {!template.isBuiltIn && (
@@ -170,6 +172,7 @@ function NewTemplateDialog({
   onOpenChange,
   initialQuery = '',
 }: NewTemplateDialogProps) {
+  const { t } = useTranslation('common');
   const { addTemplate } = useQueryTemplatesStore();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -197,32 +200,34 @@ function NewTemplateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create Query Template</DialogTitle>
+          <DialogTitle>{t('queryTemplates.createTitle')}</DialogTitle>
           <DialogDescription>
-            Save a reusable SQL query template for quick access.
+            {t('queryTemplates.createDescription')}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t('queryTemplates.name')}</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="My Query Template"
+              placeholder={t('queryTemplates.namePlaceholder')}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">
+              {t('queryTemplates.descriptionLabel')}
+            </Label>
             <Input
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Brief description of what this query does"
+              placeholder={t('queryTemplates.descriptionPlaceholder')}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">{t('queryTemplates.category')}</Label>
             <Select
               value={category}
               onValueChange={(value) => setCategory(value as TemplateCategory)}
@@ -242,25 +247,25 @@ function NewTemplateDialog({
             </Select>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="query">SQL Query</Label>
+            <Label htmlFor="query">{t('queryTemplates.sqlQuery')}</Label>
             <Textarea
               id="query"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="SELECT * FROM table_name;"
+              placeholder={t('queryTemplates.sqlQueryPlaceholder')}
               className="min-h-30 font-mono"
             />
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t('queryTemplates.cancel')}
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={!name.trim() || !query.trim()}
           >
-            Create Template
+            {t('queryTemplates.createTemplate')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -317,10 +322,10 @@ export const QueryTemplatesPicker = memo(
             <DialogHeader className="border-b px-6 py-4">
               <DialogTitle className="flex items-center gap-2">
                 <Code className="h-5 w-5" />
-                Query Templates
+                {t('queryTemplates.title')}
               </DialogTitle>
               <DialogDescription>
-                Choose a template to quickly insert common SQL queries.
+                {t('queryTemplates.description')}
               </DialogDescription>
             </DialogHeader>
 
@@ -329,7 +334,7 @@ export const QueryTemplatesPicker = memo(
               <div className="relative flex-1">
                 <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input
-                  placeholder="Search templates..."
+                  placeholder={t('queryTemplates.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9"
@@ -365,7 +370,7 @@ export const QueryTemplatesPicker = memo(
                 </Select>
                 <Button onClick={() => setShowNewDialog(true)} size="sm">
                   <Plus className="mr-1 h-4 w-4" />
-                  New
+                  {t('queryTemplates.new')}
                 </Button>
               </div>
             </div>

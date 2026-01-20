@@ -412,6 +412,7 @@ const ConnectionTab = memo(
 ConnectionTab.displayName = 'ConnectionTab';
 
 export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
+  const { t } = useTranslation('common');
   const {
     activeConnectionId,
     connectionTabOrder,
@@ -509,7 +510,7 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
     });
 
     if (!response.success) {
-      throw new Error(response.error || 'Failed to apply changes');
+      throw new Error(response.error || t('connection.failedToApplyChanges'));
     }
 
     // Clear changes and disconnect
@@ -521,6 +522,7 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
     allConnections,
     getChangesForConnection,
     performDisconnect,
+    t,
   ]);
 
   // Handle discard and disconnect

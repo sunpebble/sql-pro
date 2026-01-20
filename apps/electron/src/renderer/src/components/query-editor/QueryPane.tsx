@@ -89,7 +89,11 @@ export const QueryPane = memo(
             result.executionTime || 0
           );
         } else {
-          updateTabError(connectionId, tab.id, result.error || 'Query failed');
+          updateTabError(
+            connectionId,
+            tab.id,
+            result.error || t('query.queryFailed')
+          );
         }
       } catch (err) {
         const errorMessage =
@@ -108,7 +112,7 @@ export const QueryPane = memo(
         });
 
         if (!result.success || !result.plan || !result.stats) {
-          throw new Error(result.error || 'Failed to analyze query');
+          throw new Error(result.error || t('query.failedToAnalyzeQuery'));
         }
 
         const suggestions = generateSuggestions(result.plan, result.stats);
@@ -185,7 +189,7 @@ export const QueryPane = memo(
               className="h-7 gap-1 px-2"
               onClick={() => setShowOptimizer(true)}
               disabled={!tab.query.trim()}
-              title="Analyze query"
+              title={t('queryEditor.analyzeQuery')}
             >
               <Zap className="h-3.5 w-3.5" />
             </Button>
@@ -211,7 +215,7 @@ export const QueryPane = memo(
                   e.stopPropagation();
                   onClose();
                 }}
-                title="Close split"
+                title={t('queryEditor.closeSplit')}
               >
                 <X className="h-3.5 w-3.5" />
               </Button>
@@ -244,7 +248,9 @@ export const QueryPane = memo(
               <div className="border-destructive/50 bg-destructive/10 flex max-w-md items-start gap-3 rounded-lg border p-4">
                 <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                 <div>
-                  <p className="text-destructive font-medium">Query Error</p>
+                  <p className="text-destructive font-medium">
+                    {t('queryEditor.queryError')}
+                  </p>
                   <p className="text-destructive/80 mt-1 text-sm">
                     {tab.error}
                   </p>
@@ -270,7 +276,7 @@ export const QueryPane = memo(
             </div>
           ) : (
             <div className="text-muted-foreground flex h-full items-center justify-center">
-              <p>Execute a query to see results</p>
+              <p>{t('queryEditor.noResults')}</p>
             </div>
           )}
         </div>

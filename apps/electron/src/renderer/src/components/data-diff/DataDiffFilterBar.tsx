@@ -3,6 +3,7 @@ import { Input } from '@sqlpro/ui/input';
 import { Separator } from '@sqlpro/ui/separator';
 import { Toggle } from '@sqlpro/ui/toggle';
 import { Edit, Filter, Minus, Plus, RotateCcw, Search, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useDataDiffStore } from '@/stores';
 
@@ -15,6 +16,7 @@ interface DataDiffFilterBarProps {
  * Provides filtering by diff type and text search.
  */
 export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
+  const { t } = useTranslation();
   const {
     filters,
     setShowOnlyDifferences,
@@ -59,10 +61,10 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
           onPressedChange={setShowOnlyDifferences}
           variant="outline"
           size="sm"
-          aria-label="Show only differences"
-          title="Toggle show only differences (⌘D)"
+          aria-label={t('diffFilter.onlyDifferences')}
+          title={t('diffFilter.toggleOnlyDiff')}
         >
-          Only Differences
+          {t('diffFilter.onlyDifferences')}
         </Toggle>
       </div>
 
@@ -71,7 +73,7 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
       {/* Diff Type Filters */}
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground text-xs font-medium">
-          Row Type:
+          {t('diffFilter.rowType')}
         </span>
         <div className="flex gap-1">
           <Toggle
@@ -79,22 +81,22 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
             onPressedChange={(pressed) => setDiffTypeFilter('added', pressed)}
             variant="outline"
             size="sm"
-            aria-label="Show added rows"
+            aria-label={t('diffFilter.showAddedRows')}
             className="gap-1.5"
           >
             <Plus className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
-            <span>Added</span>
+            <span>{t('diffFilter.added')}</span>
           </Toggle>
           <Toggle
             pressed={filters.diffTypes.removed}
             onPressedChange={(pressed) => setDiffTypeFilter('removed', pressed)}
             variant="outline"
             size="sm"
-            aria-label="Show removed rows"
+            aria-label={t('diffFilter.removed')}
             className="gap-1.5"
           >
             <Minus className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
-            <span>Removed</span>
+            <span>{t('diffFilter.removed')}</span>
           </Toggle>
           <Toggle
             pressed={filters.diffTypes.modified}
@@ -103,11 +105,11 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show modified rows"
+            aria-label={t('diffFilter.modified')}
             className="gap-1.5"
           >
             <Edit className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-            <span>Modified</span>
+            <span>{t('diffFilter.modified')}</span>
           </Toggle>
           <Toggle
             pressed={filters.diffTypes.unchanged}
@@ -116,10 +118,12 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
             }
             variant="outline"
             size="sm"
-            aria-label="Show unchanged rows"
+            aria-label={t('diffFilter.unchanged')}
             className="gap-1.5"
           >
-            <span className="text-muted-foreground">Unchanged</span>
+            <span className="text-muted-foreground">
+              {t('diffFilter.unchanged')}
+            </span>
           </Toggle>
         </div>
       </div>
@@ -132,11 +136,11 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
         <div className="relative flex-1">
           <Input
             type="text"
-            placeholder="Search by column values..."
+            placeholder={t('diffFilter.searchByColumnValues')}
             value={filters.searchText}
             onChange={handleSearchChange}
             className="h-8 pr-8"
-            aria-label="Search by column values"
+            aria-label={t('diffFilter.searchByColumnValues')}
           />
           {filters.searchText && (
             <Button
@@ -144,7 +148,7 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
               size="icon"
               className="absolute top-0 right-0 h-8 w-8"
               onClick={handleClearSearch}
-              aria-label="Clear search"
+              aria-label={t('diffFilter.clearSearch')}
             >
               <X className="h-3.5 w-3.5" />
             </Button>
@@ -161,10 +165,10 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
             size="sm"
             onClick={handleResetFilters}
             className="gap-1.5"
-            aria-label="Reset all filters"
+            aria-label={t('diffFilter.reset')}
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>Reset</span>
+            <span>{t('diffFilter.reset')}</span>
           </Button>
         </>
       )}

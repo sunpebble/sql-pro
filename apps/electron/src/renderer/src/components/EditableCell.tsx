@@ -1,5 +1,6 @@
 import type { ColumnSchema } from '@/types/database';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface EditableCellProps {
@@ -28,6 +29,7 @@ export function EditableCell({
   onCancel,
   onKeyDown,
 }: EditableCellProps) {
+  const { t } = useTranslation('common');
   const [editValue, setEditValue] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,7 +62,7 @@ export function EditableCell({
     // Check NOT NULL constraint
     if (column && !column.nullable) {
       if (val === '' || val.toLowerCase() === 'null') {
-        return 'This field cannot be empty';
+        return t('editableCell.fieldCannotBeEmpty');
       }
     }
 
@@ -69,7 +71,7 @@ export function EditableCell({
       if (val !== '' && val.toLowerCase() !== 'null') {
         const parsed = Number.parseInt(val, 10);
         if (Number.isNaN(parsed)) {
-          return 'Must be a valid integer';
+          return t('editableCell.mustBeValidInteger');
         }
       }
     } else if (
@@ -80,7 +82,7 @@ export function EditableCell({
       if (val !== '' && val.toLowerCase() !== 'null') {
         const parsed = Number.parseFloat(val);
         if (Number.isNaN(parsed)) {
-          return 'Must be a valid number';
+          return t('editableCell.mustBeValidNumber');
         }
       }
     }
@@ -178,7 +180,7 @@ export function EditableCell({
       )}
       title={
         hasChange && oldValue !== undefined
-          ? `Original: ${oldValue}`
+          ? t('editableCell.originalValue', { value: oldValue })
           : undefined
       }
     >

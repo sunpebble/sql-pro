@@ -1,6 +1,7 @@
 import type { GetSchemaResponse } from '@shared/types';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
 import { invalidateTableData } from '@/lib/query-refresh';
@@ -22,6 +23,7 @@ const hasWindowAPI = (): boolean => {
  * Should be called once at the app root level.
  */
 export function useMenuActions() {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const toggle = useCommandPaletteStore((s) => s.toggle);
 
@@ -106,7 +108,7 @@ export function useMenuActions() {
             invalidateSchemaCache,
           } = connectionStore;
           if (connection && activeConnectionId) {
-            const toastId = toast.loading('Refreshing...');
+            const toastId = toast.loading(t('toast.refreshing'));
             // Invalidate cache first to force fresh data
             invalidateSchemaCache(activeConnectionId);
             sqlPro.db
@@ -118,13 +120,13 @@ export function useMenuActions() {
                     tables: result.tables || [],
                     views: result.views || [],
                   });
-                  toast.success('Refreshed', { id: toastId });
+                  toast.success(t('toast.refreshed'), { id: toastId });
                 } else {
-                  toast.error('Failed to refresh', { id: toastId });
+                  toast.error(t('toast.failedToRefresh'), { id: toastId });
                 }
               })
               .catch(() => {
-                toast.error('Failed to refresh', { id: toastId });
+                toast.error(t('toast.failedToRefresh'), { id: toastId });
               });
           }
           break;
@@ -317,7 +319,7 @@ export function useMenuActions() {
                   useDialogStore
                     .getState()
                     .openUpdateCheck(
-                      result.error || 'Failed to check for updates.'
+                      result.error || t('updateCheck.failedToCheckForUpdates')
                     );
                 }
               }
@@ -325,7 +327,9 @@ export function useMenuActions() {
             .catch((error: unknown) => {
               useDialogStore
                 .getState()
-                .openUpdateCheck(`Error checking for updates: ${error}`);
+                .openUpdateCheck(
+                  t('updateCheck.errorCheckingForUpdates', { error })
+                );
             });
           break;
         }
@@ -339,5 +343,5 @@ export function useMenuActions() {
     });
 
     return cleanup;
-  }, [navigate, toggle]);
+  }, [navigate, toggle, t]);
 }

@@ -747,7 +747,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {t('table.imageGallery', { defaultValue: 'Image gallery' })}
+                  {t('table.mediaGallery')}
                   {' ('}
                   <ShortcutKbd action="view.gallery-view" />
                   {')'}

@@ -3,6 +3,7 @@ import { Badge } from '@sqlpro/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@sqlpro/ui/card';
 import { ChevronDown, ChevronRight, Minus, Plus, Table } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface RowDiffCardProps {
@@ -25,6 +26,7 @@ export function RowDiffCard({
   showOnlyDifferences = false,
   className,
 }: RowDiffCardProps) {
+  const { t } = useTranslation('common');
   const { diffType, primaryKey, columnChanges } = rowDiff;
 
   // Get styling based on diff type
@@ -36,14 +38,14 @@ export function RowDiffCard({
           icon: <Plus className="h-4 w-4 text-green-600 dark:text-green-400" />,
           badge:
             'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-          label: 'Added',
+          label: t('rowDiff.added'),
         };
       case 'removed':
         return {
           bg: 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950',
           icon: <Minus className="h-4 w-4 text-red-600 dark:text-red-400" />,
           badge: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
-          label: 'Removed',
+          label: t('rowDiff.removed'),
         };
       case 'modified':
         return {
@@ -53,7 +55,7 @@ export function RowDiffCard({
           ),
           badge:
             'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
-          label: 'Modified',
+          label: t('rowDiff.modified'),
         };
       case 'unchanged':
       default:
@@ -62,7 +64,7 @@ export function RowDiffCard({
           icon: <Table className="h-4 w-4 text-gray-600 dark:text-gray-400" />,
           badge:
             'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-          label: 'Unchanged',
+          label: t('rowDiff.unchanged'),
         };
     }
   };
@@ -106,7 +108,7 @@ export function RowDiffCard({
           </Badge>
           {changeCount > 0 && (
             <span className="text-muted-foreground text-xs">
-              {changeCount} {changeCount === 1 ? 'change' : 'changes'}
+              {t('rowDiff.changeCount', { count: changeCount })}
             </span>
           )}
         </div>
@@ -143,7 +145,7 @@ export function RowDiffCard({
           {diffType === 'added' && rowDiff.targetRow && (
             <div className="space-y-2">
               <div className="text-muted-foreground mb-2 text-sm font-medium">
-                New Values
+                {t('rowDiff.newValues')}
               </div>
               {Object.entries(rowDiff.targetRow).map(([column, value]) => (
                 <div
@@ -165,7 +167,7 @@ export function RowDiffCard({
           {diffType === 'removed' && rowDiff.sourceRow && (
             <div className="space-y-2">
               <div className="text-muted-foreground mb-2 text-sm font-medium">
-                Deleted Values
+                {t('rowDiff.deletedValues')}
               </div>
               {Object.entries(rowDiff.sourceRow).map(([column, value]) => (
                 <div
@@ -187,7 +189,7 @@ export function RowDiffCard({
           {diffType === 'unchanged' && rowDiff.sourceRow && (
             <div className="space-y-2">
               <div className="text-muted-foreground mb-2 text-sm font-medium">
-                Current Values
+                {t('rowDiff.currentValues')}
               </div>
               {Object.entries(rowDiff.sourceRow).map(([column, value]) => (
                 <div

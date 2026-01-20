@@ -6,6 +6,7 @@ import { Button } from '@sqlpro/ui/button';
 
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { getFontFamilyCSS } from '@/hooks/useApplyFont';
 import { cn } from '@/lib/utils';
 import { useUIFont } from '@/stores';
@@ -64,6 +65,7 @@ function DialogContent({
   decorated?: boolean;
 }) {
   const uiFont = useUIFont();
+  const { t } = useTranslation('common');
 
   const content = (
     <DialogPrimitive.Popup
@@ -101,7 +103,7 @@ function DialogContent({
           }
         >
           <XIcon />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">{t('common.close')}</span>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Popup>
@@ -133,6 +135,7 @@ function DialogFooter({
 }: React.ComponentProps<'div'> & {
   showCloseButton?: boolean;
 }) {
+  const { t } = useTranslation('common');
   return (
     <div
       data-slot="dialog-footer"
@@ -145,7 +148,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Close
+          {t('common.close')}
         </DialogPrimitive.Close>
       )}
     </div>

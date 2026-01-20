@@ -47,7 +47,6 @@ function generateId(): string {
 // Error message for SQL operations not supported by Qdrant
 const SQL_NOT_SUPPORTED_ERROR =
   'SQL operations are not supported for Qdrant vector database';
-const NOT_IMPLEMENTED_ERROR = 'Not implemented yet';
 
 /**
  * Qdrant vector database adapter implementation
@@ -542,7 +541,108 @@ export class QdrantAdapter implements DatabaseAdapter {
     _schema?: string,
     _limit?: number
   ): GetColumnDistributionResponse {
-    return { success: false, error: NOT_IMPLEMENTED_ERROR };
+    return {
+      success: false,
+      error: 'Use getColumnDistributionAsync for Qdrant connections',
+    };
+  }
+
+  async getColumnDistributionAsync(
+    connectionId: string,
+    table: string,
+    column: string,
+    _schema?: string,
+    limit?: number
+  ): Promise<GetColumnDistributionResponse> {
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    // Special columns are not queryable
+    if (column === '__id' || column === '__vector') {
+      return {
+        success: false,
+        error: `Cannot get distribution for special column: ${column}`,
+      };
+    }
+
+    try {
+      // Get collection info for total count
+      const collectionInfo = await connection.client.getCollection(table);
+      const totalRows = collectionInfo.points_count || 0;
+
+      if (totalRows === 0) {
+        return {
+          success: true,
+          distribution: [],
+          totalRows: 0,
+          distinctCount: 0,
+          nullCount: 0,
+        };
+      }
+
+      // Sample points to analyze distribution
+      // Use a larger sample for better accuracy
+      const sampleSize = Math.min(totalRows, 10000);
+      const result = await connection.client.scroll(table, {
+        limit: sampleSize,
+        with_payload: true,
+        with_vector: false,
+      });
+
+      // Count value occurrences
+      const valueCounts = new Map<string, { value: unknown; count: number }>();
+      let nullCount = 0;
+
+      for (const point of result.points) {
+        const value = point.payload?.[column];
+
+        if (value === null || value === undefined) {
+          nullCount++;
+          continue;
+        }
+
+        // Use JSON.stringify for complex types to create a consistent key
+        const key =
+          typeof value === 'object' ? JSON.stringify(value) : String(value);
+
+        const existing = valueCounts.get(key);
+        if (existing) {
+          existing.count++;
+        } else {
+          valueCounts.set(key, { value, count: 1 });
+        }
+      }
+
+      // Sort by count descending and apply limit
+      let sortedValues = Array.from(valueCounts.values()).sort(
+        (a, b) => b.count - a.count
+      );
+
+      if (limit && limit > 0) {
+        sortedValues = sortedValues.slice(0, limit);
+      }
+
+      // Calculate percentages based on sampled data
+      const sampledRows = result.points.length;
+      const distribution = sortedValues.map((item) => ({
+        value: item.value,
+        count: item.count,
+        percentage: sampledRows > 0 ? (item.count / sampledRows) * 100 : 0,
+      }));
+
+      return {
+        success: true,
+        distribution,
+        totalRows,
+        distinctCount: valueCounts.size,
+        nullCount,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, error: message };
+    }
   }
 
   // ============================================
@@ -620,12 +720,133 @@ export class QdrantAdapter implements DatabaseAdapter {
   // ============================================
 
   validateChanges(
-    _connectionId: string,
-    _changes: PendingChangeInfo[]
+    connectionId: string,
+    changes: PendingChangeInfo[]
   ):
     | { success: true; results: ValidationResult[] }
     | { success: false; error: string } {
-    return { success: false, error: NOT_IMPLEMENTED_ERROR };
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    const results: ValidationResult[] = [];
+
+    for (const change of changes) {
+      const validation = this.validateSingleChange(change);
+      results.push(validation);
+    }
+
+    return { success: true, results };
+  }
+
+  private validateSingleChange(change: PendingChangeInfo): ValidationResult {
+    const baseResult = { changeId: change.id, isValid: true };
+
+    switch (change.type) {
+      case 'insert': {
+        if (!change.newValues) {
+          return {
+            changeId: change.id,
+            isValid: false,
+            error: 'Insert requires newValues',
+          };
+        }
+
+        const { __vector } = change.newValues as Record<string, unknown>;
+
+        // Validate vector format for inserts
+        if (!__vector) {
+          return {
+            changeId: change.id,
+            isValid: false,
+            error: 'Vector (__vector) is required for insert operations',
+          };
+        }
+
+        // Check vector is array or valid JSON array string
+        if (typeof __vector === 'string') {
+          try {
+            const parsed = JSON.parse(__vector);
+            if (!Array.isArray(parsed)) {
+              return {
+                changeId: change.id,
+                isValid: false,
+                error: 'Vector must be an array of numbers',
+              };
+            }
+            if (!parsed.every((v: unknown) => typeof v === 'number')) {
+              return {
+                changeId: change.id,
+                isValid: false,
+                error: 'Vector must contain only numbers',
+              };
+            }
+          } catch {
+            return {
+              changeId: change.id,
+              isValid: false,
+              error: 'Invalid vector format. Expected JSON array of numbers.',
+            };
+          }
+        } else if (Array.isArray(__vector)) {
+          if (!__vector.every((v) => typeof v === 'number')) {
+            return {
+              changeId: change.id,
+              isValid: false,
+              error: 'Vector must contain only numbers',
+            };
+          }
+        } else {
+          return {
+            changeId: change.id,
+            isValid: false,
+            error: 'Vector must be an array of numbers or JSON string',
+          };
+        }
+
+        return baseResult;
+      }
+
+      case 'update': {
+        if (!change.newValues) {
+          return {
+            changeId: change.id,
+            isValid: false,
+            error: 'Update requires newValues',
+          };
+        }
+
+        if (!change.rowId) {
+          return {
+            changeId: change.id,
+            isValid: false,
+            error: 'Update requires rowId (point ID)',
+          };
+        }
+
+        return baseResult;
+      }
+
+      case 'delete': {
+        if (!change.rowId) {
+          return {
+            changeId: change.id,
+            isValid: false,
+            error: 'Delete requires rowId (point ID)',
+          };
+        }
+
+        return baseResult;
+      }
+
+      default:
+        return {
+          changeId: change.id,
+          isValid: false,
+          error: `Unknown change type: ${change.type}`,
+        };
+    }
   }
 
   applyChanges(
@@ -949,11 +1170,18 @@ export class QdrantAdapter implements DatabaseAdapter {
   }
 
   getPendingChanges(
-    _connectionId: string
+    connectionId: string
   ):
     | { success: true; changes: PendingChangeInfo[] }
     | { success: false; error: string } {
-    return { success: false, error: NOT_IMPLEMENTED_ERROR };
+    const connection = this.connections.get(connectionId);
+    if (!connection) {
+      return { success: false, error: 'Connection not found' };
+    }
+
+    // Qdrant is a stateless connection - pending changes are managed client-side
+    // Return empty array as there are no server-side pending changes
+    return { success: true, changes: [] };
   }
 }
 

@@ -128,7 +128,9 @@ export function AppearanceSection() {
 
   // Flat list for backward compatibility
   const availableFonts = useMemo((): FontOption[] => {
-    const result: FontOption[] = [{ name: 'System Default', value: '' }];
+    const result: FontOption[] = [
+      { name: t('fonts.systemDefault'), value: '' },
+    ];
 
     for (const font of systemFonts) {
       result.push({
@@ -139,7 +141,7 @@ export function AppearanceSection() {
     }
 
     return result;
-  }, [systemFonts]);
+  }, [systemFonts, t]);
 
   return (
     <div className="space-y-6">
@@ -283,12 +285,13 @@ function FontSettingsRow({
   synced,
   loading = false,
 }: FontSettingsRowProps) {
+  const { t } = useTranslation('settings');
   const [fontSelectOpen, setFontSelectOpen] = useState(false);
 
   const selectedFont = availableFonts.find(
     (f: FontOption) => f.value === config.family
   );
-  const selectedFontName = selectedFont?.name || 'System Default';
+  const selectedFontName = selectedFont?.name || t('fonts.systemDefault');
 
   const categoriesToShow: FontCategory[] = [
     'monospace',
@@ -330,7 +333,7 @@ function FontSettingsRow({
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-                  <span className="truncate">Loading fonts...</span>
+                  <span className="truncate">{t('fonts.loadingFonts')}</span>
                 </>
               ) : (
                 <span
@@ -345,9 +348,12 @@ function FontSettingsRow({
           </PopoverTrigger>
           <PopoverContent className="w-72 p-0" align="start" sideOffset={4}>
             <Command className="flex flex-col">
-              <CommandInput placeholder="Search fonts..." className="h-9" />
+              <CommandInput
+                placeholder={t('fonts.searchFonts')}
+                className="h-9"
+              />
               <CommandList className="max-h-75">
-                <CommandEmpty>No font found.</CommandEmpty>
+                <CommandEmpty>{t('fonts.noFontFound')}</CommandEmpty>
                 {/* System Default option */}
                 <CommandGroup>
                   <CommandItem
@@ -364,7 +370,7 @@ function FontSettingsRow({
                         config.family === '' ? 'opacity-100' : 'opacity-0'
                       )}
                     />
-                    System Default
+                    {t('fonts.systemDefault')}
                   </CommandItem>
                 </CommandGroup>
                 {/* Grouped fonts by category */}

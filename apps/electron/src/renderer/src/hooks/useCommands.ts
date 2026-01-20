@@ -280,13 +280,13 @@ export function useCommands() {
                   tables: result.tables || [],
                   views: result.views || [],
                 });
-                toast.success('Schema refreshed');
+                toast.success(t('toast.schemaRefreshed'));
               } else {
-                toast.error('Failed to refresh schema');
+                toast.error(t('toast.failedToRefreshSchema'));
               }
             })
             .catch(() => {
-              toast.error('Failed to refresh schema');
+              toast.error(t('toast.failedToRefreshSchema'));
             });
         }
         return;

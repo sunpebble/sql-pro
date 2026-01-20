@@ -2,6 +2,7 @@ import type { ColumnSchema, PendingChange, SortState } from '@/types/database';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowDown, ArrowUp, Key, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { getColumnTypeCategory } from '@/lib/filter-utils';
@@ -32,6 +33,7 @@ export function EditableDataGrid({
   primaryKeyColumn,
   readOnly = false,
 }: EditableDataGridProps) {
+  const { t } = useTranslation();
   const parentRef = useRef<HTMLDivElement>(null);
   const { changes, addChange, getChangeForRow } = useChangesStore();
   const [editingCell, setEditingCell] = useState<{
@@ -392,10 +394,10 @@ export function EditableDataGrid({
     const text = value === null ? '' : String(value);
     try {
       await navigator.clipboard.writeText(text);
-      toast.success('Copied to clipboard');
+      toast.success(t('dataTable.copiedToClipboard'));
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
-      toast.error('Failed to copy');
+      toast.error(t('dataTable.failedToCopy'));
     }
   }, [focusedCell, displayRows, columns]);
 
@@ -439,7 +441,7 @@ export function EditableDataGrid({
   if (columns.length === 0) {
     return (
       <div className="text-muted-foreground flex h-full items-center justify-center">
-        No data to display
+        {t('dataTable.noDataToDisplay')}
       </div>
     );
   }
@@ -564,7 +566,7 @@ export function EditableDataGrid({
                       {/* NEW badge for first column of new rows */}
                       {isNew && idx === 0 && (
                         <span className="text-2xs mr-1 rounded bg-green-500 px-1 py-0.5 font-medium text-white">
-                          NEW
+                          {t('dataTable.newBadge')}
                         </span>
                       )}
                       <EditableCell
@@ -600,7 +602,7 @@ export function EditableDataGrid({
                     <button
                       onClick={() => handleDeleteRow(virtualRow.index)}
                       className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded p-1"
-                      title="Delete row"
+                      title={t('dataTable.deleteRow')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

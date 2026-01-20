@@ -644,6 +644,21 @@ class DatabaseManager {
     }
 
     const adapter = managed.adapter;
+
+    // Check if adapter has async method (Qdrant, etc.)
+    if (
+      'getColumnDistributionAsync' in adapter &&
+      typeof adapter.getColumnDistributionAsync === 'function'
+    ) {
+      return adapter.getColumnDistributionAsync(
+        connectionId,
+        table,
+        column,
+        schema,
+        limit
+      );
+    }
+
     return adapter.getColumnDistribution(
       connectionId,
       table,

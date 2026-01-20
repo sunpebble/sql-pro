@@ -9,6 +9,7 @@ import {
   Plus,
   TableIcon,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useDataDiffStore } from '@/stores';
 
@@ -32,6 +33,7 @@ export function DataDiffSummary({
   comparisonResult,
   className,
 }: DataDiffSummaryProps) {
+  const { t } = useTranslation();
   const { expandedRows, toggleSummaryExpanded, setDiffTypeFilter } =
     useDataDiffStore();
 
@@ -70,7 +72,9 @@ export function DataDiffSummary({
         onClick={toggleSummaryExpanded}
       >
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Row Comparison Summary</CardTitle>
+          <CardTitle className="text-base">
+            {t('diffFilter.rowComparisonSummary')}
+          </CardTitle>
           {expandedRows.summary ? (
             <ChevronUp className="text-muted-foreground h-4 w-4" />
           ) : (
@@ -84,11 +88,15 @@ export function DataDiffSummary({
           {/* Total Rows Info */}
           <div className="bg-muted/50 flex items-center gap-2 rounded-md p-3">
             <TableIcon className="text-muted-foreground h-4 w-4" />
-            <span className="text-sm font-medium">Total Rows:</span>
+            <span className="text-sm font-medium">
+              {t('diffFilter.totalRows')}
+            </span>
             <span className="text-sm">{totalRows.toLocaleString()}</span>
             <span className="text-muted-foreground ml-auto text-xs">
-              {comparisonResult.summary.sourceRows.toLocaleString()} source →{' '}
-              {comparisonResult.summary.targetRows.toLocaleString()} target
+              {t('diffFilter.sourceToTarget', {
+                source: comparisonResult.summary.sourceRows.toLocaleString(),
+                target: comparisonResult.summary.targetRows.toLocaleString(),
+              })}
             </span>
           </div>
 
@@ -101,11 +109,11 @@ export function DataDiffSummary({
                 size="sm"
                 onClick={() => handleCountClick('added')}
                 className="h-auto flex-col items-start gap-1 p-3 hover:bg-green-100 dark:hover:bg-green-950"
-                title="Filter to show added rows only"
+                title={t('diffFilter.filterAdded')}
               >
                 <div className="flex items-center gap-1.5 text-green-700 dark:text-green-300">
                   <Plus className="h-3.5 w-3.5" />
-                  <span className="text-xs">Added</span>
+                  <span className="text-xs">{t('diffFilter.added')}</span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.added.toLocaleString()}
@@ -120,11 +128,11 @@ export function DataDiffSummary({
                 size="sm"
                 onClick={() => handleCountClick('removed')}
                 className="h-auto flex-col items-start gap-1 p-3 hover:bg-red-100 dark:hover:bg-red-950"
-                title="Filter to show removed rows only"
+                title={t('diffFilter.filterRemoved')}
               >
                 <div className="flex items-center gap-1.5 text-red-700 dark:text-red-300">
                   <Minus className="h-3.5 w-3.5" />
-                  <span className="text-xs">Removed</span>
+                  <span className="text-xs">{t('diffFilter.removed')}</span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.removed.toLocaleString()}
@@ -139,11 +147,11 @@ export function DataDiffSummary({
                 size="sm"
                 onClick={() => handleCountClick('modified')}
                 className="h-auto flex-col items-start gap-1 p-3 hover:bg-amber-100 dark:hover:bg-amber-950"
-                title="Filter to show modified rows only"
+                title={t('diffFilter.filterModified')}
               >
                 <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-300">
                   <Edit className="h-3.5 w-3.5" />
-                  <span className="text-xs">Modified</span>
+                  <span className="text-xs">{t('diffFilter.modified')}</span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.modified.toLocaleString()}
@@ -158,10 +166,10 @@ export function DataDiffSummary({
                 size="sm"
                 onClick={() => handleCountClick('unchanged')}
                 className="h-auto flex-col items-start gap-1 p-3 hover:bg-blue-100 dark:hover:bg-blue-950"
-                title="Filter to show unchanged rows only"
+                title={t('diffFilter.filterUnchanged')}
               >
                 <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-300">
-                  <span className="text-xs">Unchanged</span>
+                  <span className="text-xs">{t('diffFilter.unchanged')}</span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.unchanged.toLocaleString()}
@@ -173,20 +181,26 @@ export function DataDiffSummary({
           {/* Change Summary Text */}
           <div className="text-muted-foreground text-xs">
             {counts.added + counts.removed + counts.modified === 0 ? (
-              <p>No differences found. All rows are identical.</p>
+              <p>{t('diffFilter.noDifferencesFound')}</p>
             ) : (
               <p>
-                {counts.added + counts.removed + counts.modified}{' '}
                 {counts.added + counts.removed + counts.modified === 1
-                  ? 'row has'
-                  : 'rows have'}{' '}
-                differences (
-                {(
-                  ((counts.added + counts.removed + counts.modified) /
-                    totalRows) *
-                  100
-                ).toFixed(1)}
-                % of total rows)
+                  ? t('diffFilter.rowHasDifferences', {
+                      count: counts.added + counts.removed + counts.modified,
+                      percent: (
+                        ((counts.added + counts.removed + counts.modified) /
+                          totalRows) *
+                        100
+                      ).toFixed(1),
+                    })
+                  : t('diffFilter.rowsHaveDifferences', {
+                      count: counts.added + counts.removed + counts.modified,
+                      percent: (
+                        ((counts.added + counts.removed + counts.modified) /
+                          totalRows) *
+                        100
+                      ).toFixed(1),
+                    })}
               </p>
             )}
           </div>

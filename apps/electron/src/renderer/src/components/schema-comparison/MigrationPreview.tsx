@@ -121,10 +121,10 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
 
     try {
       const result = await sqlPro.dialog.saveFile({
-        title: 'Save Migration SQL',
+        title: t('schemaComparison.saveMigrationSQL'),
         filters: [
-          { name: 'SQL Files', extensions: ['sql'] },
-          { name: 'All Files', extensions: ['*'] },
+          { name: t('schemaComparison.sqlFiles'), extensions: ['sql'] },
+          { name: t('schemaComparison.allFiles'), extensions: ['*'] },
         ],
         defaultPath: `migration_${new Date().toISOString().split('T')[0]}.sql`,
       });
@@ -141,13 +141,13 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
           setSaved(true);
           setTimeout(() => setSaved(false), 2000);
         } else {
-          setSaveError(writeResult.error || 'Failed to save file');
+          setSaveError(writeResult.error || t('schemaComparison.failedToSave'));
           setTimeout(() => setSaveError(null), 5000);
         }
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to save file';
+        err instanceof Error ? err.message : t('schemaComparison.failedToSave');
       setSaveError(errorMessage);
       setTimeout(() => setSaveError(null), 5000);
     }

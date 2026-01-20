@@ -27,6 +27,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ProBadge } from '@/components/pro/ProBadge';
 import {
   Dialog,
@@ -48,6 +49,7 @@ export function AISettingsDialog({
   open,
   onOpenChange,
 }: AISettingsDialogProps) {
+  const { t } = useTranslation('common');
   const {
     provider,
     apiKey,
@@ -132,14 +134,10 @@ export function AISettingsDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            AI Settings
+            {t('aiSettings.title')}
             <ProBadge size="sm" />
           </DialogTitle>
-          <DialogDescription>
-            Configure your AI provider and API key to enable AI-powered features
-            like natural language to SQL conversion, query optimization, and
-            data analysis.
-          </DialogDescription>
+          <DialogDescription>{t('aiSettings.description')}</DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
@@ -150,7 +148,7 @@ export function AISettingsDialog({
           <div className="grid gap-4 py-4">
             {/* Provider Selection */}
             <div className="grid gap-2">
-              <Label htmlFor="provider">AI Provider</Label>
+              <Label htmlFor="provider">{t('aiSettings.provider')}</Label>
               <Select
                 value={localProvider}
                 onValueChange={(value: string) =>
@@ -158,7 +156,7 @@ export function AISettingsDialog({
                 }
               >
                 <SelectTrigger id="provider">
-                  <SelectValue placeholder="Select provider" />
+                  <SelectValue placeholder={t('aiSettings.selectProvider')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="openai">OpenAI</SelectItem>
@@ -169,7 +167,7 @@ export function AISettingsDialog({
 
             {/* API Key Input */}
             <div className="grid gap-2">
-              <Label htmlFor="apiKey">API Key</Label>
+              <Label htmlFor="apiKey">{t('aiSettings.apiKey')}</Label>
               <div className="relative">
                 <Input
                   id="apiKey"
@@ -196,13 +194,13 @@ export function AISettingsDialog({
                 </Button>
               </div>
               <p className="text-muted-foreground text-xs">
-                Your API key is stored securely and never shared.
+                {t('aiSettings.apiKeySecure')}
               </p>
             </div>
 
             {/* Base URL Input */}
             <div className="grid gap-2">
-              <Label htmlFor="baseUrl">Base URL (Optional)</Label>
+              <Label htmlFor="baseUrl">{t('aiSettings.baseUrl')}</Label>
               <Input
                 id="baseUrl"
                 type="text"
@@ -215,14 +213,15 @@ export function AISettingsDialog({
                 }
               />
               <p className="text-muted-foreground text-xs">
-                Custom API base URL. Leave empty to use the official{' '}
-                {localProvider === 'openai' ? 'OpenAI' : 'Anthropic'} API.
+                {t('aiSettings.baseUrlDescription', {
+                  provider: localProvider === 'openai' ? 'OpenAI' : 'Anthropic',
+                })}
               </p>
             </div>
 
             {/* Model Selection with Custom Input */}
             <div className="grid gap-2">
-              <Label htmlFor="model">Model</Label>
+              <Label htmlFor="model">{t('aiSettings.model')}</Label>
               <Popover
                 open={modelPopoverOpen}
                 onOpenChange={setModelPopoverOpen}
@@ -234,7 +233,7 @@ export function AISettingsDialog({
                     aria-expanded={modelPopoverOpen}
                     className="w-full justify-between font-normal"
                   >
-                    {localModel || 'Select or enter model...'}
+                    {localModel || t('aiSettings.selectOrEnterModel')}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -244,17 +243,19 @@ export function AISettingsDialog({
                 >
                   <Command>
                     <CommandInput
-                      placeholder="Search or enter custom model..."
+                      placeholder={t('aiSettings.searchOrEnterModel')}
                       value={localModel}
                       onValueChange={setLocalModel}
                     />
                     <CommandList>
                       <CommandEmpty>
                         <div className="py-2 text-sm">
-                          Press Enter to use "{localModel}"
+                          {t('aiSettings.pressEnterToUse', {
+                            model: localModel,
+                          })}
                         </div>
                       </CommandEmpty>
-                      <CommandGroup heading="Suggested Models">
+                      <CommandGroup heading={t('aiSettings.suggestedModels')}>
                         {availableModels.map((m) => (
                           <CommandItem
                             key={m}
@@ -279,7 +280,7 @@ export function AISettingsDialog({
                 </PopoverContent>
               </Popover>
               <p className="text-muted-foreground text-xs">
-                Select a suggested model or enter a custom model name.
+                {t('aiSettings.modelDescription')}
               </p>
             </div>
           </div>
@@ -287,16 +288,16 @@ export function AISettingsDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
-            Cancel
+            {t('aiSettings.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={isSaving || !localApiKey}>
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                {t('aiSettings.saving')}
               </>
             ) : (
-              'Save Settings'
+              t('aiSettings.saveSettings')
             )}
           </Button>
         </DialogFooter>

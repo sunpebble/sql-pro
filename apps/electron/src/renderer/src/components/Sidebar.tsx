@@ -332,18 +332,18 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   // Open SQL Query Editor for empty state
   const handleOpenSqlTab = useCallback(() => {
     if (activeConnectionId) {
-      createTab(activeConnectionId, 'New Query', '');
+      createTab(activeConnectionId, t('newQuery'), '');
       onSwitchToQuery?.();
     }
-  }, [activeConnectionId, createTab, onSwitchToQuery]);
+  }, [activeConnectionId, createTab, onSwitchToQuery, t]);
 
   // Copy sample CREATE TABLE SQL to clipboard
   const handleCopySampleSQL = useCallback(async () => {
     await copy(SAMPLE_CREATE_TABLE_SQL, {
-      successMessage: 'Sample SQL copied to clipboard',
-      errorMessage: 'Failed to copy SQL to clipboard',
+      successMessage: t('empty.sampleSqlCopied'),
+      errorMessage: t('empty.sampleSqlCopyFailed'),
     });
-  }, [copy]);
+  }, [copy, t]);
 
   const handleOpenInQueryEditor = useCallback(
     (table: TableSchema) => {
@@ -792,10 +792,10 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
               >
                 <SortAsc className="h-3.5 w-3.5 shrink-0" />
                 <span className="text-xs">
-                  {sortOption === 'name-asc' && 'A-Z'}
-                  {sortOption === 'name-desc' && 'Z-A'}
-                  {sortOption === 'row-count-asc' && 'Rows ↑'}
-                  {sortOption === 'row-count-desc' && 'Rows ↓'}
+                  {sortOption === 'name-asc' && t('sort.aToZ')}
+                  {sortOption === 'name-desc' && t('sort.zToA')}
+                  {sortOption === 'row-count-asc' && t('sort.rowsAscShort')}
+                  {sortOption === 'row-count-desc' && t('sort.rowsDescShort')}
                   {sortOption === 'custom' && t('sort.custom')}
                 </span>
               </Button>
@@ -1142,6 +1142,7 @@ function SchemaSection({
   onRemoveTableTag,
   onTogglePinned,
 }: SchemaSectionProps) {
+  const { t } = useTranslation('sidebar');
   const tablesKey = `${schemaInfo.name}:tables`;
   const viewsKey = `${schemaInfo.name}:views`;
   const triggersKey = `${schemaInfo.name}:triggers`;
@@ -1186,7 +1187,7 @@ function SchemaSection({
                 ) : (
                   <ChevronRight className="h-3 w-3" />
                 )}
-                Tables
+                {t('schema.tables')}
                 <span className="text-muted-foreground/60 font-normal">
                   ({schemaInfo.tables.length})
                 </span>
@@ -1249,7 +1250,7 @@ function SchemaSection({
                 ) : (
                   <ChevronRight className="h-3 w-3" />
                 )}
-                Views
+                {t('schema.views')}
                 <span className="text-muted-foreground/60 font-normal">
                   ({schemaInfo.views.length})
                 </span>
@@ -1313,7 +1314,7 @@ function SchemaSection({
                 ) : (
                   <ChevronRight className="h-3 w-3" />
                 )}
-                Triggers
+                {t('schema.triggers')}
                 <span className="text-muted-foreground/60 font-normal">
                   ({schemaInfo.triggers.length})
                 </span>
@@ -1645,7 +1646,7 @@ function FilterTagsPopover({
                 {activeTagFilter}
               </Badge>
             ) : (
-              <span className="text-xs">Filter</span>
+              <span className="text-xs">{t('filter.filter')}</span>
             )}
             {!activeTagFilter && availableTags.length > 0 && (
               <Badge variant="outline" className="text-2xs h-4 px-1">
@@ -1732,7 +1733,7 @@ function FilterTagsPopover({
               {/* Add new tag */}
               <div className="flex gap-1">
                 <Input
-                  placeholder="New tag name..."
+                  placeholder={t('filter.newTagPlaceholder')}
                   value={newTagInput}
                   onChange={(e) => setNewTagInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -1782,8 +1783,7 @@ function FilterTagsPopover({
                 </ScrollArea>
               ) : (
                 <div className="text-muted-foreground text-xs">
-                  No tags yet. Create one above or right-click a table to add
-                  tags.
+                  {t('filter.noTagsYet')}
                 </div>
               )}
             </div>
