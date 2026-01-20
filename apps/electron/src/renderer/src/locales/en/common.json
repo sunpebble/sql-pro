@@ -661,7 +661,10 @@
       "displayNameEmpty": "Display name cannot be empty",
       "displayNameTooLong": "Display name cannot exceed {{max}} characters",
       "notesTooLong": "Notes cannot exceed {{max}} characters"
-    }
+    },
+    "recentConnections": "Recent Connections",
+    "savedProfiles": "Saved Profiles",
+    "databaseFileNotFound": "Database file not found at this location"
   },
   "about": {
     "title": "SQL Pro",
@@ -790,7 +793,17 @@
     "removeChange": "Remove change"
   },
   "diffPreview": {
-    "validationError": "Validation error"
+    "validationError": "Validation error",
+    "insert": "INSERT",
+    "update": "UPDATE",
+    "delete": "DELETE",
+    "sql": "SQL",
+    "discard": "Discard",
+    "applying": "Applying...",
+    "validating": "Validating...",
+    "apply": "Apply",
+    "new": "NEW",
+    "noChangesDetected": "No changes detected"
   },
   "database": {
     "selectTable": "Select a table from the sidebar to view its data",
@@ -2192,7 +2205,10 @@
     "lastOpened": "Last opened",
     "yes": "Yes",
     "editProfile": "Edit Profile",
-    "addConnectionToProfiles": "Add Connection to Profiles"
+    "addConnectionToProfiles": "Add Connection to Profiles",
+    "tags": "Tags",
+    "notes": "Notes",
+    "properties": "Properties"
   },
   "profileForm": {
     "displayName": "Display Name",

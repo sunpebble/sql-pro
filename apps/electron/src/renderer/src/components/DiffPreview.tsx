@@ -223,7 +223,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
               className="border-green-500/50 bg-green-500/10 text-green-600 dark:text-green-400"
             >
               <Plus className="mr-1 h-3 w-3" />
-              {totalInserts} INSERT
+              {totalInserts} {t('diffPreview.insert')}
             </Badge>
           )}
           {totalUpdates > 0 && (
@@ -232,7 +232,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
               className="border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
             >
               <Edit3 className="mr-1 h-3 w-3" />
-              {totalUpdates} UPDATE
+              {totalUpdates} {t('diffPreview.update')}
             </Badge>
           )}
           {totalDeletes > 0 && (
@@ -241,7 +241,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
               className="border-red-500/50 bg-red-500/10 text-red-600 dark:text-red-400"
             >
               <Trash2 className="mr-1 h-3 w-3" />
-              {totalDeletes} DELETE
+              {totalDeletes} {t('diffPreview.delete')}
             </Badge>
           )}
         </div>
@@ -254,7 +254,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
               onClick={() => setShowSqlPreview(!showSqlPreview)}
             >
               <Code className="h-3.5 w-3.5" />
-              <span className="text-xs">SQL</span>
+              <span className="text-xs">{t('diffPreview.sql')}</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left">
@@ -417,7 +417,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
           data-action="discard-changes"
         >
           <Undo2 className="mr-1.5 h-3.5 w-3.5" />
-          Discard
+          {t('diffPreview.discard')}
         </Button>
         <Button
           size="sm"
@@ -428,10 +428,10 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
         >
           <Check className="mr-1.5 h-3.5 w-3.5" />
           {isApplying
-            ? 'Applying...'
+            ? t('diffPreview.applying')
             : isValidating
-              ? 'Validating...'
-              : 'Apply'}
+              ? t('diffPreview.validating')
+              : t('diffPreview.apply')}
         </Button>
       </div>
     </div>

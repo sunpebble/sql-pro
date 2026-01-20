@@ -701,7 +701,7 @@ export function ProfileManager({
               {recentProfiles.length > 0 && (
                 <div>
                   <h3 className="text-muted-foreground mb-2 text-xs font-semibold uppercase">
-                    Recent Connections
+                    {t('profiles.recentConnections')}
                   </h3>
                   <div className="space-y-1">
                     {recentProfiles.map((profile) => (
@@ -724,7 +724,7 @@ export function ProfileManager({
                               <AlertTriangle className="size-4 text-yellow-500" />
                             </TooltipTrigger>
                             <TooltipContent>
-                              Database file not found at this location
+                              {t('profiles.databaseFileNotFound')}
                             </TooltipContent>
                           </Tooltip>
                         )}
@@ -744,7 +744,7 @@ export function ProfileManager({
               {(savedProfiles.length > 0 || folders.size > 0) && (
                 <div>
                   <h3 className="text-muted-foreground mb-2 text-xs font-semibold uppercase">
-                    Saved Profiles
+                    {t('profiles.savedProfiles')}
                   </h3>
                   <FolderTree
                     folders={Array.from(folders.values())}
@@ -816,7 +816,7 @@ export function ProfileManager({
                     <div>
                       <div className="text-muted-foreground mb-1 flex items-center gap-1 text-xs font-medium">
                         <Tag className="size-3" />
-                        Tags
+                        {t('profileManager.tags')}
                       </div>
                       <div className="flex flex-wrap gap-1">
                         {selectedProfile.tags.map((tag) => (
@@ -836,7 +836,7 @@ export function ProfileManager({
                     <div>
                       <div className="text-muted-foreground mb-1 flex items-center gap-1 text-xs font-medium">
                         <FileText className="size-3" />
-                        Notes
+                        {t('profileManager.notes')}
                       </div>
                       <p className="text-muted-foreground text-sm whitespace-pre-wrap">
                         {selectedProfile.notes}
@@ -847,7 +847,7 @@ export function ProfileManager({
                   {/* Properties */}
                   <div>
                     <div className="text-muted-foreground mb-1 text-xs font-medium">
-                      Properties
+                      {t('profileManager.properties')}
                     </div>
                     <div className="space-y-1 text-xs">
                       {selectedProfile.isEncrypted && (
