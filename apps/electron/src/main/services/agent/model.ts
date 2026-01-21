@@ -105,18 +105,7 @@ export function createChatModel(config: AgentConfig): ChatModelResult {
     ? normalizeBaseUrl(config.baseUrl)
     : config.baseUrl;
 
-  console.warn('[Agent Model] Creating model:', {
-    model: config.model,
-    baseUrl: config.baseUrl,
-    normalizedUrl,
-    isCustomUrl,
-    isDirectAnthropic,
-    userApiType: config.apiType,
-    effectiveApiType,
-  });
-
   if (effectiveApiType === 'anthropic') {
-    console.warn('[Agent Model] Using Anthropic provider');
     const anthropic = createAnthropic({
       apiKey: config.apiKey,
       baseURL: config.baseUrl || undefined,
@@ -130,10 +119,6 @@ export function createChatModel(config: AgentConfig): ChatModelResult {
 
   // For custom endpoints, use OpenAI-compatible provider
   if (config.baseUrl && !config.baseUrl.includes('api.openai.com')) {
-    console.warn(
-      '[Agent Model] Using OpenAI-compatible provider for custom URL:',
-      normalizedUrl
-    );
     const provider = createOpenAICompatible({
       name: 'custom-provider',
       apiKey: config.apiKey,
@@ -146,7 +131,6 @@ export function createChatModel(config: AgentConfig): ChatModelResult {
     };
   }
 
-  console.warn('[Agent Model] Using default OpenAI provider');
   // Default OpenAI
   const openai = createOpenAI({
     apiKey: config.apiKey,

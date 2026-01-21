@@ -16,19 +16,12 @@ const settingsStore = new Store<SettingsSchema>({
   },
 });
 
-console.warn('[Agent Settings Store] Initialized, path:', settingsStore.path);
-
 export const agentSettingsStore = {
   /**
    * Get agent settings
    */
   getSettings(): AgentSettings {
-    const settings = settingsStore.get('agent');
-    console.warn(
-      '[Agent Settings Store] getSettings:',
-      JSON.stringify(settings.config, null, 2)
-    );
-    return settings;
+    return settingsStore.get('agent');
   },
 
   /**
@@ -49,9 +42,7 @@ export const agentSettingsStore = {
       config: mergedConfig,
       execution: { ...current.execution, ...settings.execution },
     };
-    console.warn('[Agent Settings Store] Saving to:', settingsStore.path);
     settingsStore.set('agent', updated);
-    console.warn('[Agent Settings Store] Saved successfully');
     return updated;
   },
 

@@ -38,15 +38,7 @@ export function setupAgentHandlers(): void {
       async (request: {
         settings: Partial<AgentSettings>;
       }): Promise<SaveSettingsResponse> => {
-        console.warn(
-          '[Agent IPC] SETTINGS_SAVE received:',
-          JSON.stringify(request.settings, null, 2)
-        );
         const settings = agentSettingsStore.saveSettings(request.settings);
-        console.warn(
-          '[Agent IPC] Settings saved:',
-          JSON.stringify(settings.config, null, 2)
-        );
         return { settings };
       }
     )
@@ -123,15 +115,7 @@ export function setupAgentHandlers(): void {
       const { connectionId, sessionId, messages } = request;
       const settings = agentSettingsStore.getSettings();
 
-      console.warn('[Agent IPC] CHAT_SEND received:', {
-        connectionId,
-        sessionId,
-        messageCount: messages.length,
-        isConfigured: agentSettingsStore.isConfigured(),
-      });
-
       if (!agentSettingsStore.isConfigured()) {
-        console.warn('[Agent IPC] Agent not configured');
         return { success: false, error: 'Agent not configured' };
       }
 
@@ -141,7 +125,6 @@ export function setupAgentHandlers(): void {
       activeStreams.set(streamId, abortController);
 
       try {
-        console.warn('[Agent IPC] Calling handleChat...');
         const result = await handleChat({
           connectionId,
           messages,
@@ -151,37 +134,19 @@ export function setupAgentHandlers(): void {
 
         // Stream chunks to renderer
         const window = BrowserWindow.fromWebContents(event.sender);
-        console.warn('[Agent IPC] Starting stream iteration...');
 
-        let chunkCount = 0;
         for await (const chunk of result.fullStream) {
           if (abortController.signal.aborted) break;
-          chunkCount++;
-
-          // Log chunk details for debugging
-          console.warn(
-            '[Agent IPC] Chunk',
-            chunkCount,
-            ':',
-            JSON.stringify(chunk)
-          );
 
           window?.webContents.send(
             `${AGENT_IPC_CHANNELS.CHAT_STREAM}:${streamId}`,
             chunk
           );
         }
-        console.warn('[Agent IPC] Stream completed, total chunks:', chunkCount);
 
         // Get final result - use response.messages which includes tool calls and results
         const text = await result.text;
         const response = await result.response;
-
-        console.warn('[Agent IPC] Final text length:', text.length);
-        console.warn(
-          '[Agent IPC] Response messages count:',
-          response.messages?.length
-        );
 
         // Update history with new messages
         // Convert response messages to UIMessage format
@@ -265,7 +230,6 @@ export function setupAgentHandlers(): void {
 
         return { success: true, text, toolCalls: await result.toolCalls };
       } catch (error) {
-        console.error('[Agent IPC] Error in CHAT_SEND:', error);
         if (abortController.signal.aborted) {
           return { success: false, error: 'Chat cancelled' };
         }

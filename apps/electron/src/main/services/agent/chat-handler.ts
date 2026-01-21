@@ -49,31 +49,12 @@ export interface ChatHandlerOptions {
 export async function handleChat(options: ChatHandlerOptions) {
   const { connectionId, messages, settings, signal } = options;
 
-  console.warn('[Agent] handleChat called with:', {
-    connectionId,
-    messageCount: messages.length,
-    config: {
-      baseUrl: settings.config.baseUrl,
-      model: settings.config.model,
-      apiType: settings.config.apiType,
-      hasApiKey: !!settings.config.apiKey,
-    },
-  });
-
   // Create model and tools
   const { model, isDirectAnthropic } = createChatModel(settings.config);
   const tools = createAgentTools(connectionId, settings.execution);
 
-  console.warn('[Agent] Model created, isDirectAnthropic:', isDirectAnthropic);
-
   // Convert UI messages to model messages
   const modelMessages = await convertToModelMessages(messages);
-
-  console.warn(
-    '[Agent] Starting streamText with',
-    modelMessages.length,
-    'messages'
-  );
 
   // Build streamText options
   const streamOptions: Parameters<typeof streamText>[0] = {
@@ -96,10 +77,6 @@ export async function handleChat(options: ChatHandlerOptions) {
       modelName.includes('claude-4');
 
     if (supportsThinking) {
-      console.warn(
-        '[Agent] Enabling extended thinking for model:',
-        settings.config.model
-      );
       streamOptions.providerOptions = {
         anthropic: {
           thinking: { type: 'enabled', budgetTokens: 10000 },
