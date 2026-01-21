@@ -94,7 +94,7 @@ export function useAgent(options: UseAgentOptions): UseAgentReturn {
   const [isConfigured, setIsConfigured] = useState(false);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState(
-    initialSessionId || generateSessionId()
+    () => initialSessionId || generateSessionId()
   );
 
   // Refs
