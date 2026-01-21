@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@sqlpro/tsconfig": "workspace:*",
-    "@types/react": "^19.2.8",
+    "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
     "typescript": "^5.9.3"
   }
