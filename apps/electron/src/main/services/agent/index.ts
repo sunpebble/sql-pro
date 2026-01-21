@@ -135,13 +135,26 @@ export function setupAgentHandlers(): void {
         // Stream chunks to renderer
         const window = BrowserWindow.fromWebContents(event.sender);
 
-        for await (const chunk of result.fullStream) {
-          if (abortController.signal.aborted) break;
+        try {
+          for await (const chunk of result.fullStream) {
+            if (abortController.signal.aborted) break;
 
+            window?.webContents.send(
+              `${AGENT_IPC_CHANNELS.CHAT_STREAM}:${streamId}`,
+              chunk
+            );
+          }
+        } catch (streamError) {
+          // Send error event through stream so renderer can display it
+          const errorMessage =
+            streamError instanceof Error
+              ? streamError.message
+              : 'Stream processing failed';
           window?.webContents.send(
             `${AGENT_IPC_CHANNELS.CHAT_STREAM}:${streamId}`,
-            chunk
+            { type: 'error', error: errorMessage }
           );
+          throw streamError; // Re-throw to be caught by outer catch block
         }
 
         // Get final result - use response.messages which includes tool calls and results

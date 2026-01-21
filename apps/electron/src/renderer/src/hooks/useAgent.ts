@@ -59,6 +59,8 @@ interface UseAgentReturn {
   sendMessage: (content: string) => Promise<void>;
   cancelChat: () => Promise<void>;
   clearMessages: () => void;
+  clearError: () => void;
+  reload: () => Promise<void>;
   loadSession: (sessionId: string) => Promise<void>;
   createNewSession: () => string;
   deleteSession: (sessionId: string) => Promise<void>;
@@ -198,32 +200,38 @@ export function useAgent(options: UseAgentOptions): UseAgentReturn {
     }
 
     // Handle reasoning-delta chunks (thinking process)
-    if (typedChunk.type === 'reasoning-delta' && typedChunk.delta) {
-      setMessages((prev) => {
-        const last = prev[prev.length - 1];
-        if (last?.role === 'assistant') {
-          const reasoningPart = last.parts.find((p) => p.type === 'reasoning');
-          const currentReasoning = reasoningPart?.text || '';
-          const newReasoning = currentReasoning + typedChunk.delta;
-
-          let newParts: MessagePart[];
-          if (reasoningPart) {
-            // Update existing reasoning part
-            newParts = last.parts.map((p) =>
-              p.type === 'reasoning' ? { ...p, text: newReasoning } : p
+    // AI SDK 6.x uses 'text' field for reasoning-delta, not 'delta'
+    if (typedChunk.type === 'reasoning-delta') {
+      const reasoningDelta = typedChunk.text || typedChunk.delta || '';
+      if (reasoningDelta) {
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last?.role === 'assistant') {
+            const reasoningPart = last.parts.find(
+              (p) => p.type === 'reasoning'
             );
-          } else {
-            // Add reasoning part at the beginning
-            newParts = [
-              { type: 'reasoning' as const, text: newReasoning },
-              ...last.parts,
-            ];
-          }
+            const currentReasoning = reasoningPart?.text || '';
+            const newReasoning = currentReasoning + reasoningDelta;
 
-          return [...prev.slice(0, -1), { ...last, parts: newParts }];
-        }
-        return prev;
-      });
+            let newParts: MessagePart[];
+            if (reasoningPart) {
+              // Update existing reasoning part
+              newParts = last.parts.map((p) =>
+                p.type === 'reasoning' ? { ...p, text: newReasoning } : p
+              );
+            } else {
+              // Add reasoning part at the beginning
+              newParts = [
+                { type: 'reasoning' as const, text: newReasoning },
+                ...last.parts,
+              ];
+            }
+
+            return [...prev.slice(0, -1), { ...last, parts: newParts }];
+          }
+          return prev;
+        });
+      }
     }
 
     // Handle legacy reasoning chunks (AI SDK 4.x format)
@@ -350,6 +358,23 @@ export function useAgent(options: UseAgentOptions): UseAgentReturn {
         }
         return prev;
       });
+    }
+
+    // Handle stream error events (sent by main process when stream fails)
+    if (typedChunk.type === 'error') {
+      const errorChunk = chunk as {
+        type: 'error';
+        error?: unknown;
+      };
+      const errorValue = errorChunk.error;
+      const errorMessage =
+        typeof errorValue === 'string'
+          ? errorValue
+          : errorValue instanceof Error
+            ? errorValue.message
+            : 'An error occurred';
+      setError(errorMessage);
+      setIsLoading(false);
     }
   }, []);
 
@@ -595,6 +620,40 @@ export function useAgent(options: UseAgentOptions): UseAgentReturn {
     setError(null);
   }, []);
 
+  /**
+   * Clear error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  /**
+   * Retry last failed message
+   * Removes the failed assistant message and resends the last user message
+   */
+  const reload = useCallback(async () => {
+    // Find the last user message
+    const lastUserMessage = [...messages]
+      .reverse()
+      .find((m) => m.role === 'user');
+    if (!lastUserMessage) return;
+
+    // Get the text content from the user message
+    const textPart = lastUserMessage.parts.find((p) => p.type === 'text');
+    if (!textPart?.text) return;
+
+    // Remove messages after (and including) the failed assistant message
+    // Keep messages up to and including the last user message's index
+    const lastUserIndex = messages.findIndex(
+      (m) => m.id === lastUserMessage.id
+    );
+    setMessages(messages.slice(0, lastUserIndex));
+    setError(null);
+
+    // Resend the message
+    await sendMessage(textPart.text);
+  }, [messages, sendMessage]);
+
   return {
     messages,
     isLoading,
@@ -605,6 +664,8 @@ export function useAgent(options: UseAgentOptions): UseAgentReturn {
     sendMessage,
     cancelChat,
     clearMessages,
+    clearError,
+    reload,
     loadSession,
     createNewSession,
     deleteSession,

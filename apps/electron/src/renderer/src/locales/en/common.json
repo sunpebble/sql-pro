@@ -1208,7 +1208,8 @@
     "panels": "Panels",
     "sidebar": "Sidebar",
     "schemaDetails": "Schema Details",
-    "sqlLog": "SQL Log"
+    "sqlLog": "SQL Log",
+    "aiAgent": "AI Agent"
   },
   "commandPalette": {
     "title": "Command Palette",
@@ -2398,5 +2399,50 @@
     "min": "Min",
     "max": "Max",
     "numericValues": "({{count}} numeric values)"
+  },
+  "agent": {
+    "title": "SQL Pro Agent",
+    "subtitle": "AI-powered database assistant",
+    "settings": "Agent Settings",
+    "newSession": "New Session",
+    "clearChat": "Clear Chat",
+    "welcomeTitle": "How can I help?",
+    "welcomeDescription": "Ask me to query data, analyze schemas, or optimize your database.",
+    "welcome": "Hello! I'm your database assistant. How can I help you today?",
+    "placeholder": "Ask about your data...",
+    "thinking": "Thinking...",
+    "disclaimer": "AI may make mistakes. Verify important queries.",
+    "quickAction": {
+      "schema": "Show schema",
+      "tables": "List tables",
+      "schemaQuery": "Show me the database schema",
+      "tablesQuery": "List all tables"
+    },
+    "settings.api": "API Configuration",
+    "settings.execution": "Execution",
+    "settings.baseUrl": "API Base URL",
+    "settings.baseUrlHelp": "Leave empty for default OpenAI API. Supports OpenAI, Anthropic, and compatible providers.",
+    "settings.apiKey": "API Key",
+    "settings.model": "Model",
+    "settings.modelHelp": "Model identifier (e.g., gpt-4o, claude-sonnet-4-20250514)",
+    "settings.apiType": "API Type",
+    "settings.apiTypeAuto": "Auto-detect",
+    "settings.apiTypeHelp": "Auto-detect works for most providers. Select manually if needed.",
+    "settings.autoExecute": "Auto-Execute Settings",
+    "settings.queries": "queries",
+    "settings.statements": "statements",
+    "settings.confirmDDL": "Confirm DDL Operations",
+    "settings.confirmDDLHelp": "Always require confirmation for DROP, ALTER, TRUNCATE",
+    "settings.timeout": "Query Timeout (ms)",
+    "reasoningTitle": "Thinking",
+    "reasoningLines": "{{count}} lines",
+    "errorTitle": "Something went wrong",
+    "retry": "Retry",
+    "toolPending": "Pending",
+    "toolRunning": "Running...",
+    "toolCompleted": "Completed",
+    "toolError": "Error",
+    "toolInput": "Input",
+    "toolOutput": "Output"
   }
 }

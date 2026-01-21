@@ -1055,7 +1055,8 @@
     "panels": "面板",
     "sidebar": "侧边栏",
     "schemaDetails": "结构详情",
-    "sqlLog": "SQL 日志"
+    "sqlLog": "SQL 日志",
+    "aiAgent": "AI 助手"
   },
   "commandPalette": {
     "title": "命令面板",
@@ -2398,5 +2399,50 @@
     "min": "最小值",
     "max": "最大值",
     "numericValues": "({{count}} 个数值)"
+  },
+  "agent": {
+    "title": "SQL Pro 智能助手",
+    "subtitle": "AI 驱动的数据库助手",
+    "settings": "助手设置",
+    "newSession": "新建会话",
+    "clearChat": "清空对话",
+    "welcomeTitle": "有什么可以帮您？",
+    "welcomeDescription": "您可以让我查询数据、分析结构或优化数据库。",
+    "welcome": "您好！我是您的数据库助手，有什么可以帮您的吗？",
+    "placeholder": "询问您的数据...",
+    "thinking": "思考中...",
+    "disclaimer": "AI 可能会出错，请验证重要查询。",
+    "quickAction": {
+      "schema": "显示结构",
+      "tables": "列出表",
+      "schemaQuery": "显示数据库结构",
+      "tablesQuery": "列出所有表"
+    },
+    "settings.api": "API 配置",
+    "settings.execution": "执行设置",
+    "settings.baseUrl": "API 基础 URL",
+    "settings.baseUrlHelp": "留空使用默认 OpenAI API。支持 OpenAI、Anthropic 及兼容提供商。",
+    "settings.apiKey": "API 密钥",
+    "settings.model": "模型",
+    "settings.modelHelp": "模型标识符（如 gpt-4o、claude-sonnet-4-20250514）",
+    "settings.apiType": "API 类型",
+    "settings.apiTypeAuto": "自动检测",
+    "settings.apiTypeHelp": "自动检测适用于大多数提供商。如需要可手动选择。",
+    "settings.autoExecute": "自动执行设置",
+    "settings.queries": "查询",
+    "settings.statements": "语句",
+    "settings.confirmDDL": "确认 DDL 操作",
+    "settings.confirmDDLHelp": "始终要求确认 DROP、ALTER、TRUNCATE 操作",
+    "settings.timeout": "查询超时时间 (毫秒)",
+    "reasoningTitle": "思考过程",
+    "reasoningLines": "{{count}} 行",
+    "errorTitle": "出错了",
+    "retry": "重试",
+    "toolPending": "等待中",
+    "toolRunning": "运行中...",
+    "toolCompleted": "已完成",
+    "toolError": "错误",
+    "toolInput": "输入",
+    "toolOutput": "输出"
   }
 }

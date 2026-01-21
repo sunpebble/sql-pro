@@ -2,13 +2,13 @@
 // Refined sidebar chat interface for SQL Pro AI Agent
 
 import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
+  AlertCircle,
   Bot,
   ChevronRight,
-  Loader2,
   Plus,
+  RefreshCw,
   Send,
   Settings,
   Sparkles,
@@ -48,6 +48,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
   const [showSettings, setShowSettings] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const initializedRef = useRef(false);
 
   const {
     messages,
@@ -57,6 +58,8 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
     sendMessage,
     cancelChat,
     clearMessages,
+    clearError,
+    reload,
     createNewSession,
     saveSettings,
     settings,
@@ -75,13 +78,19 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  // Show settings if not configured
+  // Show settings only on initial load if not configured
+  // Use ref to ensure we only auto-show once, allowing manual toggle afterward
   useEffect(() => {
+    if (settings === null || initializedRef.current) {
+      // Still loading or already initialized
+      return;
+    }
+    initializedRef.current = true;
     if (!isConfigured) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional conditional show
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional one-time initialization
       setShowSettings(true);
     }
-  }, [isConfigured]);
+  }, [isConfigured, settings]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -108,13 +117,13 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
   // Settings view
   if (showSettings) {
     return (
-      <div className="bg-background/95 flex h-full flex-col backdrop-blur-sm">
+      <div className="glass-gold flex h-full flex-col">
         {/* Header */}
-        <div className="border-b px-4 py-3">
+        <div className="bg-gold-5 border-b border-[var(--gold-muted)]/20 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="from-primary/20 to-primary/5 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br">
-                <Settings className="text-primary h-4 w-4" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--gold)]/20 to-[var(--gold)]/5">
+                <Settings className="h-4 w-4 text-[var(--gold)]" />
               </div>
               <span className="text-sm font-medium">
                 {t('agent.settings', 'Agent Settings')}
@@ -123,7 +132,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="btn-gold-ghost h-7 w-7"
               onClick={onClose}
             >
               <X className="h-4 w-4" />
@@ -147,20 +156,20 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
   }
 
   return (
-    <div className="bg-background/95 flex h-full flex-col backdrop-blur-sm">
-      {/* Header - Refined glass effect */}
-      <div className="from-muted/50 to-background border-b bg-gradient-to-b px-3 py-2.5">
+    <div className="glass-gold flex h-full flex-col">
+      {/* Header - Gold accent bar */}
+      <div className="bg-gold-5 border-b border-[var(--gold-muted)]/20 px-3 py-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="from-primary/20 via-primary/10 relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br to-transparent shadow-sm">
-              <Sparkles className="text-primary h-4 w-4" />
-              <div className="bg-primary/20 absolute inset-0 rounded-xl blur-sm" />
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--gold)]/20 via-[var(--gold)]/10 to-transparent shadow-sm">
+              <Sparkles className="h-4 w-4 text-[var(--gold)]" />
+              <div className="absolute inset-0 rounded-xl bg-[var(--gold)]/10 blur-sm" />
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold tracking-tight">
                 {t('agent.title', 'SQL Pro Agent')}
               </span>
-              <span className="text-muted-foreground text-[10px]">
+              <span className="text-[10px] text-[var(--gold-muted)]">
                 {t('agent.subtitle', 'AI-powered database assistant')}
               </span>
             </div>
@@ -169,7 +178,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 rounded-lg"
+              className="btn-gold-ghost h-7 w-7 rounded-lg"
               onClick={createNewSession}
               title={t('agent.newSession', 'New Session')}
             >
@@ -178,7 +187,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 rounded-lg"
+              className="btn-gold-ghost h-7 w-7 rounded-lg"
               onClick={clearMessages}
               title={t('agent.clearChat', 'Clear Chat')}
             >
@@ -187,17 +196,17 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 rounded-lg"
+              className="btn-gold-ghost h-7 w-7 rounded-lg"
               onClick={() => setShowSettings(true)}
               title={t('agent.settings', 'Settings')}
             >
               <Settings className="h-3.5 w-3.5" />
             </Button>
-            <div className="bg-border mx-1 h-4 w-px" />
+            <div className="mx-1 h-4 w-px bg-[var(--gold-muted)]/30" />
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 rounded-lg"
+              className="btn-gold-ghost h-7 w-7 rounded-lg"
               onClick={onClose}
               title={t('common.close', 'Close')}
             >
@@ -213,8 +222,8 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
           {/* Empty State */}
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="from-primary/10 via-primary/5 mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br to-transparent">
-                <Bot className="text-primary/60 h-8 w-8" />
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent">
+                <Bot className="h-8 w-8 text-[var(--gold)]/70" />
               </div>
               <p className="text-muted-foreground mb-1 text-sm font-medium">
                 {t('agent.welcomeTitle', 'How can I help?')}
@@ -230,11 +239,17 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
                 {[
                   {
                     label: t('agent.quickAction.schema', 'Show schema'),
-                    query: 'Show me the database schema',
+                    query: t(
+                      'agent.quickAction.schemaQuery',
+                      'Show me the database schema'
+                    ),
                   },
                   {
                     label: t('agent.quickAction.tables', 'List tables'),
-                    query: 'List all tables',
+                    query: t(
+                      'agent.quickAction.tablesQuery',
+                      'List all tables'
+                    ),
                   },
                 ].map((action) => (
                   <button
@@ -244,7 +259,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
                       setInput(action.query);
                       inputRef.current?.focus();
                     }}
-                    className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors"
+                    className="rounded-full bg-[var(--gold-subtle)] px-2.5 py-1 text-[10px] font-medium text-[var(--gold-muted)] transition-colors hover:bg-[var(--gold)]/15 hover:text-[var(--gold)]"
                   >
                     {action.label}
                   </button>
@@ -254,7 +269,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
           )}
 
           {/* Message List */}
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <div
               key={message.id}
               className={cn(
@@ -264,8 +279,8 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
             >
               {/* Assistant Avatar */}
               {message.role === 'assistant' && (
-                <div className="from-primary/15 to-primary/5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br">
-                  <Bot className="text-primary h-3 w-3" />
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--gold)]/20 to-[var(--gold)]/5">
+                  <Bot className="h-3 w-3 text-[var(--gold)]" />
                 </div>
               )}
 
@@ -274,7 +289,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
                 className={cn(
                   'max-w-[85%] rounded-xl px-3 py-2',
                   message.role === 'user'
-                    ? 'bg-primary text-primary-foreground rounded-br-sm'
+                    ? 'rounded-br-sm bg-[var(--gold)]/90 text-[#1a1a1a]'
                     : 'bg-muted/70 rounded-tl-sm'
                 )}
               >
@@ -286,6 +301,7 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
                   <MessageContent
                     parts={message.parts || []}
                     className="text-[13px] leading-relaxed"
+                    isStreaming={isLoading && index === messages.length - 1}
                   />
                 )}
               </div>
@@ -298,34 +314,51 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
               )}
             </div>
           ))}
-
-          {/* Loading Indicator */}
-          {isLoading &&
-            messages.length > 0 &&
-            getMessageText(messages[messages.length - 1]) === '' && (
-              <div className="flex items-center gap-2 px-1">
-                <div className="from-primary/15 to-primary/5 flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-br">
-                  <Loader2 className="text-primary h-3 w-3 animate-spin" />
-                </div>
-                <span className="text-muted-foreground text-xs">
-                  {t('agent.thinking', 'Thinking...')}
-                </span>
-              </div>
-            )}
         </div>
       </ScrollArea>
 
-      {/* Error Display */}
+      {/* Error Display - Enhanced with retry capability */}
       {error && (
-        <div className="bg-destructive/5 border-destructive/20 border-t px-3 py-2">
-          <p className="text-destructive text-xs">{error}</p>
+        <div className="border-t border-red-500/20 bg-red-500/5 px-3 py-2.5">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-medium text-red-500">
+                {t('agent.errorTitle', 'Something went wrong')}
+              </p>
+              <p className="mt-0.5 text-xs text-red-400/80">{error}</p>
+            </div>
+            <div className="flex shrink-0 items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                onClick={() => reload()}
+                title={t('agent.retry', 'Retry')}
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                onClick={clearError}
+                title={t('common.close', 'Close')}
+              >
+                <X className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Input Area - Refined */}
-      <form onSubmit={handleSubmit} className="border-t p-3">
-        <div className="bg-muted/50 focus-within:ring-primary/20 flex items-center gap-2 rounded-xl px-3 py-1.5 transition-all focus-within:ring-2">
-          <Input
+      {/* Input Area - Gold themed */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gold-5 border-t border-[var(--gold-muted)]/20 p-3"
+      >
+        <div className="flex items-center gap-2 rounded-xl bg-[var(--background)]/80 px-3 py-2 ring-1 ring-[var(--gold-muted)]/30 transition-all focus-within:ring-2 focus-within:ring-[var(--gold)]/40">
+          <input
             ref={inputRef}
             value={input}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -334,30 +367,29 @@ export function AIAgentSidebar({ connectionId, onClose }: AIAgentSidebarProps) {
             onKeyDown={handleKeyDown}
             placeholder={t('agent.placeholder', 'Ask about your data...')}
             disabled={isLoading || !isConfigured}
-            className="h-8 flex-1 border-0 bg-transparent px-0 text-sm shadow-none placeholder:text-xs focus-visible:ring-0"
+            className="h-8 flex-1 bg-transparent text-sm outline-none placeholder:text-xs placeholder:text-[var(--muted-foreground)] disabled:cursor-not-allowed disabled:opacity-50"
           />
           {isLoading ? (
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="h-7 w-7 shrink-0 rounded-lg"
+              className="h-8 w-8 shrink-0 rounded-lg text-[var(--gold)] hover:bg-[var(--gold)]/10 hover:text-[var(--gold)]"
               onClick={cancelChat}
             >
               <Square className="h-3.5 w-3.5" />
             </Button>
           ) : (
-            <Button
+            <button
               type="submit"
-              size="icon"
-              className="h-7 w-7 shrink-0 rounded-lg"
               disabled={!input.trim() || !isConfigured}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--gold)] text-[#1a1a1a] transition-all hover:bg-[var(--gold-bright)] disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Send className="h-3.5 w-3.5" />
-            </Button>
+            </button>
           )}
         </div>
-        <p className="text-muted-foreground/60 mt-1.5 text-center text-[10px]">
+        <p className="mt-2 text-center text-[10px] text-[var(--gold-muted)]/70">
           {t(
             'agent.disclaimer',
             'AI may make mistakes. Verify important queries.'

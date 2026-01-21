@@ -1,5 +1,6 @@
 // Message Content Renderer
-// Renders AI message parts with Markdown support
+// Renders AI message parts following Vercel AI Elements patterns
+// Supports text, reasoning, tool-call, and streaming states
 
 import type { ComponentPropsWithoutRef } from 'react';
 import {
@@ -12,9 +13,12 @@ import {
   XCircle,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
+
+// ============ Types ============
 
 interface MessagePart {
   type: string;
@@ -22,9 +26,8 @@ interface MessagePart {
   toolCallId?: string;
   toolName?: string;
   status?: 'pending' | 'running' | 'completed' | 'error';
-  args?: unknown; // Tool call arguments (AI SDK format)
-  result?: unknown; // Tool call result (AI SDK format)
-  // Legacy field names for backward compatibility
+  args?: unknown;
+  result?: unknown;
   input?: unknown;
   output?: unknown;
   error?: string;
@@ -33,16 +36,15 @@ interface MessagePart {
 interface MessageContentProps {
   parts: MessagePart[];
   className?: string;
+  /** Whether this message is currently streaming */
+  isStreaming?: boolean;
 }
 
-/**
- * Custom components for Markdown rendering
- * Styled to match the chat UI aesthetics
- */
+// ============ Markdown Components ============
+
 const markdownComponents: ComponentPropsWithoutRef<
   typeof Markdown
 >['components'] = {
-  // Headings
   h1: ({ children, ...props }) => (
     <h1 className="mb-2 text-lg font-bold" {...props}>
       {children}
@@ -58,15 +60,11 @@ const markdownComponents: ComponentPropsWithoutRef<
       {children}
     </h3>
   ),
-
-  // Paragraphs
   p: ({ children, ...props }) => (
     <p className="mb-2 last:mb-0" {...props}>
       {children}
     </p>
   ),
-
-  // Lists
   ul: ({ children, ...props }) => (
     <ul className="mb-2 ml-4 list-disc space-y-1" {...props}>
       {children}
@@ -82,8 +80,6 @@ const markdownComponents: ComponentPropsWithoutRef<
       {children}
     </li>
   ),
-
-  // Inline code
   code: ({ children, className, ...props }) => {
     const isInline = !className;
     if (isInline) {
@@ -96,15 +92,12 @@ const markdownComponents: ComponentPropsWithoutRef<
         </code>
       );
     }
-    // Code blocks
     return (
       <code className={cn('block', className)} {...props}>
         {children}
       </code>
     );
   },
-
-  // Code blocks
   pre: ({ children, ...props }) => (
     <pre
       className="bg-muted my-2 overflow-x-auto rounded-md p-3 font-mono text-xs"
@@ -113,8 +106,6 @@ const markdownComponents: ComponentPropsWithoutRef<
       {children}
     </pre>
   ),
-
-  // Links
   a: ({ children, href, ...props }) => (
     <a
       href={href}
@@ -126,8 +117,6 @@ const markdownComponents: ComponentPropsWithoutRef<
       {children}
     </a>
   ),
-
-  // Blockquotes
   blockquote: ({ children, ...props }) => (
     <blockquote
       className="border-muted-foreground/30 my-2 border-l-2 pl-3 italic"
@@ -136,8 +125,6 @@ const markdownComponents: ComponentPropsWithoutRef<
       {children}
     </blockquote>
   ),
-
-  // Tables
   table: ({ children, ...props }) => (
     <div className="my-2 overflow-x-auto">
       <table className="min-w-full border-collapse text-sm" {...props}>
@@ -155,11 +142,7 @@ const markdownComponents: ComponentPropsWithoutRef<
       {children}
     </td>
   ),
-
-  // Horizontal rule
   hr: (props) => <hr className="border-muted my-3" {...props} />,
-
-  // Strong and emphasis
   strong: ({ children, ...props }) => (
     <strong className="font-semibold" {...props}>
       {children}
@@ -172,35 +155,103 @@ const markdownComponents: ComponentPropsWithoutRef<
   ),
 };
 
+// ============ Shimmer Loader Component ============
+
 /**
- * Collapsible reasoning block component
+ * Shimmer loading indicator for streaming state
+ * Following AI Elements Loader pattern
  */
-function ReasoningBlock({ text }: { text: string }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+function Shimmer({ className }: { className?: string }) {
+  const { t } = useTranslation();
 
   return (
-    <div className="bg-muted/30 my-2 rounded-md border border-dashed">
+    <div className={cn('flex items-center gap-2 py-1', className)}>
+      <div className="flex gap-1">
+        <span
+          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--gold)]"
+          style={{ animationDelay: '0ms' }}
+        />
+        <span
+          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--gold)]"
+          style={{ animationDelay: '150ms' }}
+        />
+        <span
+          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--gold)]"
+          style={{ animationDelay: '300ms' }}
+        />
+      </div>
+      <span className="text-muted-foreground text-xs">
+        {t('agent.thinking', 'Thinking...')}
+      </span>
+    </div>
+  );
+}
+
+// ============ Reasoning Component ============
+
+/**
+ * Collapsible reasoning block component
+ * Following AI Elements Reasoning pattern with trigger and content
+ */
+interface ReasoningProps {
+  text: string;
+  isStreaming?: boolean;
+  className?: string;
+}
+
+function Reasoning({ text, isStreaming, className }: ReasoningProps) {
+  const { t } = useTranslation();
+  // Auto-expand while streaming, collapse when done
+  const [isExpanded, setIsExpanded] = useState(isStreaming ?? false);
+
+  const lineCount = text.split('\n').filter((line) => line.trim()).length;
+
+  return (
+    <div
+      className={cn(
+        'my-2 rounded-lg border border-[var(--gold-muted)]/30 bg-[var(--gold-subtle)]',
+        isStreaming && 'border-[var(--gold)]/50',
+        className
+      )}
+    >
+      {/* ReasoningTrigger */}
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-2 py-1.5 text-xs transition-colors"
+        className="flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-[var(--gold)]/5"
       >
         {isExpanded ? (
-          <ChevronDown className="h-3 w-3" />
+          <ChevronDown className="h-3.5 w-3.5 text-[var(--gold)]" />
         ) : (
-          <ChevronRight className="h-3 w-3" />
+          <ChevronRight className="h-3.5 w-3.5 text-[var(--gold)]" />
         )}
-        <Brain className="h-3 w-3" />
-        <span className="font-medium">Thinking...</span>
+        <Brain className="h-3.5 w-3.5 text-[var(--gold)]" />
+        <span className="font-medium text-[var(--gold)]">
+          {t('agent.reasoningTitle', 'Thinking')}
+        </span>
+        {isStreaming && (
+          <Loader2 className="ml-1 h-3 w-3 animate-spin text-[var(--gold)]" />
+        )}
+        {!isExpanded && !isStreaming && (
+          <span className="text-muted-foreground ml-auto text-[10px]">
+            {t('agent.reasoningLines', '{{count}} lines', { count: lineCount })}
+          </span>
+        )}
       </button>
+      {/* ReasoningContent */}
       {isExpanded && (
-        <div className="text-muted-foreground border-t border-dashed px-3 py-2 text-xs whitespace-pre-wrap">
+        <div className="text-muted-foreground border-t border-[var(--gold-muted)]/20 px-3 py-2.5 text-xs leading-relaxed whitespace-pre-wrap">
           {text}
+          {isStreaming && (
+            <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-[var(--gold)]" />
+          )}
         </div>
       )}
     </div>
   );
 }
+
+// ============ Tool Call Component ============
 
 /**
  * Format tool output based on tool type
@@ -229,7 +280,6 @@ function formatToolOutput(
   }
 
   // Format get_schema output
-  // Structure: { success: true, data: { tables: [...], schemas: [...], views: [...] } }
   if (toolName === 'get_schema' && data.success && data.data) {
     const schemaData = data.data as {
       tables?: Array<{
@@ -241,8 +291,6 @@ function formatToolOutput(
           isPrimaryKey?: boolean;
         }>;
       }>;
-      schemas?: unknown[];
-      views?: unknown[];
     };
     const tables = schemaData.tables || [];
     return (
@@ -288,7 +336,6 @@ function formatToolOutput(
   }
 
   // Format execute_sql output
-  // Structure: { success: true, data: [...rows], rowCount: number, executionTime: number }
   if (toolName === 'execute_sql' && data.success) {
     const rows = data.data as unknown[] | undefined;
     const rowCount = data.rowCount as number | undefined;
@@ -357,7 +404,6 @@ function formatToolOutput(
   }
 
   // Format explain_query output
-  // Structure: { success: true, plan: string | object }
   if (toolName === 'explain_query' && data.success && data.plan) {
     return (
       <div className="mt-1">
@@ -371,7 +417,6 @@ function formatToolOutput(
   }
 
   // Format analyze_table output
-  // Structure: { success: true, data: { tableName, totalRows, columns: {...} } }
   if (toolName === 'analyze_table' && data.success && data.data) {
     const tableData = data.data as {
       tableName?: string;
@@ -430,29 +475,53 @@ function formatToolOutput(
 }
 
 /**
- * Tool call status indicator
+ * Tool call block component
+ * Following AI Elements pattern for tool invocations
  */
-function ToolCallBlock({ part }: { part: MessagePart }) {
+interface ToolCallProps {
+  part: MessagePart;
+  isStreaming?: boolean;
+}
+
+function ToolCall({ part, isStreaming }: ToolCallProps) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toolDisplayName = part.toolName?.replace(/_/g, ' ') || 'Tool';
+  const isRunning = part.status === 'running' || part.status === 'pending';
 
-  const statusIcon = {
-    pending: <Loader2 className="text-muted-foreground h-3 w-3 animate-spin" />,
-    running: <Loader2 className="h-3 w-3 animate-spin text-blue-500" />,
-    completed: <CheckCircle2 className="h-3 w-3 text-green-500" />,
-    error: <XCircle className="h-3 w-3 text-red-500" />,
-  }[part.status || 'pending'];
+  const statusConfig = {
+    pending: {
+      icon: <Loader2 className="text-muted-foreground h-3 w-3 animate-spin" />,
+      text: t('agent.toolPending', 'Pending'),
+      color: 'text-muted-foreground',
+    },
+    running: {
+      icon: <Loader2 className="h-3 w-3 animate-spin text-blue-500" />,
+      text: t('agent.toolRunning', 'Running...'),
+      color: 'text-blue-500',
+    },
+    completed: {
+      icon: <CheckCircle2 className="h-3 w-3 text-green-500" />,
+      text: t('agent.toolCompleted', 'Completed'),
+      color: 'text-green-500',
+    },
+    error: {
+      icon: <XCircle className="h-3 w-3 text-red-500" />,
+      text: t('agent.toolError', 'Error'),
+      color: 'text-red-500',
+    },
+  };
 
-  const statusText = {
-    pending: 'Pending',
-    running: 'Running...',
-    completed: 'Completed',
-    error: 'Error',
-  }[part.status || 'pending'];
+  const status = statusConfig[part.status || 'pending'];
 
   return (
-    <div className="bg-muted/50 my-2 rounded-md border">
+    <div
+      className={cn(
+        'bg-muted/50 my-2 rounded-md border',
+        isRunning && isStreaming && 'border-blue-500/30'
+      )}
+    >
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -465,35 +534,43 @@ function ToolCallBlock({ part }: { part: MessagePart }) {
         )}
         <Database className="h-3 w-3" />
         <span className="font-medium capitalize">{toolDisplayName}</span>
-        <span className="ml-auto flex items-center gap-1">
-          {statusIcon}
-          <span className="text-xs">{statusText}</span>
+        <span className={cn('ml-auto flex items-center gap-1', status.color)}>
+          {status.icon}
+          <span className="text-xs">{status.text}</span>
         </span>
       </button>
       {isExpanded && (
         <div className="border-t px-3 py-2 text-xs">
-          {/* Support both args (new) and input (legacy) field names */}
+          {/* Input/Args */}
           {((part.args !== undefined &&
             Object.keys(part.args as object).length > 0) ||
             (part.input !== undefined &&
               Object.keys(part.input as object).length > 0)) && (
             <div className="mb-2">
-              <span className="text-muted-foreground font-medium">Input:</span>
+              <span className="text-muted-foreground font-medium">
+                {t('agent.toolInput', 'Input')}:
+              </span>
               <pre className="bg-muted mt-1 overflow-x-auto rounded p-2 font-mono">
                 {JSON.stringify(part.args ?? part.input, null, 2)}
               </pre>
             </div>
           )}
-          {/* Support both result (new) and output (legacy) field names */}
+          {/* Output/Result */}
           {(part.result !== undefined || part.output !== undefined) && (
             <div>
-              <span className="text-muted-foreground font-medium">Output:</span>
+              <span className="text-muted-foreground font-medium">
+                {t('agent.toolOutput', 'Output')}:
+              </span>
               {formatToolOutput(part.toolName, part.result ?? part.output)}
             </div>
           )}
+          {/* Error */}
           {part.error && (
             <div className="text-red-500">
-              <span className="font-medium">Error:</span> {part.error}
+              <span className="font-medium">
+                {t('agent.toolError', 'Error')}:
+              </span>{' '}
+              {part.error}
             </div>
           )}
         </div>
@@ -502,38 +579,84 @@ function ToolCallBlock({ part }: { part: MessagePart }) {
   );
 }
 
+// ============ Text Response Component ============
+
 /**
- * Renders message parts with Markdown support
- * Handles text parts and renders them with proper formatting
+ * Text response with markdown rendering
+ * Following AI Elements MessageResponse pattern
  */
-export function MessageContent({ parts, className }: MessageContentProps) {
+interface TextResponseProps {
+  text: string;
+  isStreaming?: boolean;
+}
+
+function TextResponse({ text, isStreaming }: TextResponseProps) {
+  return (
+    <div className="relative">
+      <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+        {text}
+      </Markdown>
+      {isStreaming && (
+        <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-[var(--gold)]" />
+      )}
+    </div>
+  );
+}
+
+// ============ Main Component ============
+
+/**
+ * Renders message parts following Vercel AI Elements patterns
+ * Handles text, reasoning, tool-call parts with streaming awareness
+ */
+export function MessageContent({
+  parts,
+  className,
+  isStreaming = false,
+}: MessageContentProps) {
   return (
     <div className={cn('text-sm', className)}>
+      {parts.length === 0 && isStreaming && <Shimmer />}
       {parts.map((part, index) => {
-        if (part.type === 'text' && part.text) {
-          return (
-            <Markdown
-              key={index}
-              remarkPlugins={[remarkGfm]}
-              components={markdownComponents}
-            >
-              {part.text}
-            </Markdown>
-          );
-        }
+        const isLastPart = index === parts.length - 1;
+        const partIsStreaming = isStreaming && isLastPart;
 
-        // Handle reasoning part (thinking process)
-        if (part.type === 'reasoning' && part.text) {
-          return <ReasoningBlock key={index} text={part.text} />;
-        }
+        switch (part.type) {
+          case 'text':
+            if (!part.text) {
+              // Empty text part while streaming - show shimmer
+              return partIsStreaming ? <Shimmer key={index} /> : null;
+            }
+            return (
+              <TextResponse
+                key={index}
+                text={part.text}
+                isStreaming={partIsStreaming}
+              />
+            );
 
-        // Handle tool-call part
-        if (part.type === 'tool-call') {
-          return <ToolCallBlock key={index} part={part} />;
-        }
+          case 'reasoning':
+            if (!part.text) return null;
+            return (
+              <Reasoning
+                key={index}
+                text={part.text}
+                isStreaming={partIsStreaming}
+              />
+            );
 
-        return null;
+          case 'tool-call':
+            return (
+              <ToolCall key={index} part={part} isStreaming={partIsStreaming} />
+            );
+
+          default:
+            return null;
+        }
       })}
     </div>
   );
 }
+
+// Export individual components for flexibility
+export { Reasoning, Shimmer, TextResponse, ToolCall };

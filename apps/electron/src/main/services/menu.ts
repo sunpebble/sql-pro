@@ -427,6 +427,13 @@ export function updateLanguage(language: 'en' | 'zh'): void {
 }
 
 /**
+ * Get current language
+ */
+export function getCurrentLanguage(): 'en' | 'zh' {
+  return currentLanguage;
+}
+
+/**
  * Register IPC handler for shortcuts sync
  */
 export function registerShortcutsHandler(): void {
