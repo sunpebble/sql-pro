@@ -1,5 +1,6 @@
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
+import { cleanupAgentHandlers, setupAgentHandlers } from '../agent';
 import { setupAIHandlers } from './ai';
 import { setupBackupHandlers } from './backup';
 import { setupDatabaseHandlers } from './database';
@@ -41,6 +42,7 @@ export function setupIpcHandlers(): void {
   setupProHandlers();
   setupLicenseHandlers();
   setupAIHandlers();
+  setupAgentHandlers(); // New unified AI Agent
   setupSystemHandlers();
   setupUpdatesHandlers();
   setupRendererStoreHandlers();
@@ -63,4 +65,6 @@ export function cleanupIpcHandlers(): void {
   cleanupPgNotifyHandlers();
   // Clean up image handlers
   cleanupImageHandlers();
+  // Clean up agent handlers
+  cleanupAgentHandlers();
 }

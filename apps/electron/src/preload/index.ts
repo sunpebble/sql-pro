@@ -180,6 +180,14 @@ import type {
   WriteFileResponse,
 } from '@shared/types';
 import type {
+  AgentSettings,
+  ChatSendResponse,
+  GetHistoryResponse,
+  GetSessionsResponse,
+  GetSettingsResponse,
+  SaveSettingsResponse,
+} from '@shared/types/agent';
+import type {
   CheckUpdatesRequest,
   CheckUpdatesResponse,
   DisablePluginRequest,
@@ -209,8 +217,10 @@ import type {
   UpdateRendererStateRequest,
   UpdateRendererStateResponse,
 } from '@shared/types/renderer-store';
+import type { UIMessage } from 'ai';
 import { electronAPI } from '@electron-toolkit/preload';
 import { IPC_CHANNELS } from '@shared/types';
+import { AGENT_IPC_CHANNELS } from '@shared/types/agent';
 import { RENDERER_STORE_CHANNELS } from '@shared/types/renderer-store';
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 
@@ -558,6 +568,60 @@ export const sqlProAPI = {
       info?: { version: string; path: string };
       error?: string;
     }> => ipcRenderer.invoke(IPC_CHANNELS.AI_GET_CLAUDE_CODE_INFO, request),
+  },
+
+  // AI Agent operations (new unified agent)
+  agent: {
+    // Settings
+    getSettings: (): Promise<GetSettingsResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.SETTINGS_GET),
+    saveSettings: (request: {
+      settings: Partial<AgentSettings>;
+    }): Promise<SaveSettingsResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.SETTINGS_SAVE, request),
+
+    // Chat
+    sendChat: (request: {
+      connectionId: string;
+      sessionId: string;
+      messages: UIMessage[];
+    }): Promise<ChatSendResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.CHAT_SEND, request),
+    cancelChat: (request: {
+      connectionId: string;
+      sessionId: string;
+    }): Promise<Record<string, never>> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.CHAT_CANCEL, request),
+    onChatStream: (
+      streamId: string,
+      callback: (chunk: unknown) => void
+    ): (() => void) => {
+      const channel = `${AGENT_IPC_CHANNELS.CHAT_STREAM}:${streamId}`;
+      const handler = (_event: Electron.IpcRendererEvent, chunk: unknown) =>
+        callback(chunk);
+      ipcRenderer.on(channel, handler);
+      return () => ipcRenderer.off(channel, handler);
+    },
+
+    // History
+    getSessions: (request: {
+      connectionId: string;
+    }): Promise<GetSessionsResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.HISTORY_GET_SESSIONS, request),
+    getSession: (request: {
+      connectionId: string;
+      sessionId: string;
+    }): Promise<GetHistoryResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.HISTORY_GET, request),
+    deleteSession: (request: {
+      connectionId: string;
+      sessionId: string;
+    }): Promise<Record<string, never>> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.HISTORY_DELETE_SESSION, request),
+    clearHistory: (request: {
+      connectionId: string;
+    }): Promise<Record<string, never>> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.HISTORY_CLEAR, request),
   },
 
   // Pro tier operations

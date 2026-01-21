@@ -266,6 +266,13 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
     category: 'actions',
     scope: 'global',
   },
+  {
+    id: 'action.open-agent',
+    label: 'Open AI Agent',
+    description: 'Open the AI Agent dialog',
+    category: 'actions',
+    scope: 'global',
+  },
   // Settings
   {
     id: 'settings.open',
@@ -330,6 +337,7 @@ export const VSCODE_SHORTCUTS: ShortcutPreset = {
   'action.delete-row': { key: 'Backspace', modifiers: { cmd: true } },
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
+  'action.open-agent': { key: 'j', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
   'onboarding.skip': null,
   'onboarding.next': { key: 'Enter', modifiers: {} },
@@ -386,6 +394,7 @@ export const SUBLIME_SHORTCUTS: ShortcutPreset = {
   'action.delete-row': { key: 'Backspace', modifiers: { cmd: true } },
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
+  'action.open-agent': { key: 'j', modifiers: { cmd: true } },
   'settings.open': { key: ',', modifiers: { cmd: true } },
   'onboarding.skip': null,
   'onboarding.next': { key: 'Enter', modifiers: {} },

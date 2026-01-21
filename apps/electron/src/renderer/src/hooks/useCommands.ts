@@ -1,6 +1,7 @@
 import type { GetSchemaResponse } from '@shared/types';
 import type { Command } from '@/stores/command-palette-store';
 import {
+  Bot,
   Code,
   FileDown,
   GitCompare,
@@ -34,6 +35,7 @@ import { useCommandPaletteStore } from '@/stores/command-palette-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useConnectionSwitcherStore } from '@/stores/connection-switcher-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
+import { useDialogStore } from '@/stores/dialog-store';
 import {
   formatShortcutBinding,
   matchesBinding,
@@ -83,6 +85,9 @@ export function useCommands() {
   const dataTabsStoreRef = useRef<ReturnType<
     typeof useDataTabsStore.getState
   > | null>(null);
+  const dialogStoreRef = useRef<ReturnType<
+    typeof useDialogStore.getState
+  > | null>(null);
 
   // Keep refs up to date - initialize on mount and subscribe to updates
   useEffect(() => {
@@ -95,6 +100,7 @@ export function useCommands() {
     shortcutsStoreRef.current = useKeyboardShortcutsStore.getState();
     onboardingStoreRef.current = useOnboardingStore.getState();
     dataTabsStoreRef.current = useDataTabsStore.getState();
+    dialogStoreRef.current = useDialogStore.getState();
 
     // Subscribe to future updates
     const unsubTheme = useThemeStore.subscribe((s) => {
@@ -121,6 +127,9 @@ export function useCommands() {
     const unsubDataTabs = useDataTabsStore.subscribe((s) => {
       dataTabsStoreRef.current = s;
     });
+    const unsubDialog = useDialogStore.subscribe((s) => {
+      dialogStoreRef.current = s;
+    });
 
     return () => {
       unsubTheme();
@@ -131,6 +140,7 @@ export function useCommands() {
       unsubShortcuts();
       unsubOnboarding();
       unsubDataTabs();
+      unsubDialog();
     };
   }, []);
 
@@ -173,6 +183,17 @@ export function useCommands() {
         if (searchInput) {
           searchInput.focus();
           searchInput.select();
+        }
+        return;
+      }
+
+      // Open AI Agent shortcut (Cmd+J) - works everywhere
+      const openAgentBinding = getShortcut('action.open-agent');
+      if (matchesBinding(e, openAgentBinding)) {
+        e.preventDefault();
+        const { activeConnectionId } = connectionStoreRef.current!;
+        if (activeConnectionId && dialogStoreRef.current) {
+          dialogStoreRef.current.openAgent(activeConnectionId);
         }
         return;
       }
@@ -970,6 +991,21 @@ export function useCommands() {
           searchInput?.focus();
           searchInput?.select();
         },
+      },
+      {
+        id: 'action.open-agent',
+        label: t('commands.openAgent', { defaultValue: 'Open AI Agent' }),
+        shortcut: getShortcutDisplay('action.open-agent'),
+        icon: Bot,
+        category: 'actions',
+        keywords: ['ai', 'agent', 'chat', 'assistant', 'sql', 'query'],
+        action: () => {
+          const { activeConnectionId } = connectionStoreRef.current!;
+          if (activeConnectionId && dialogStoreRef.current) {
+            dialogStoreRef.current.openAgent(activeConnectionId);
+          }
+        },
+        disabled: () => !connectionStoreRef.current?.activeConnectionId,
       },
 
       // Onboarding commands
