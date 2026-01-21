@@ -47,6 +47,9 @@ const is = {
 // This enables proxying remote images and bypassing CORS
 registerImageProxyScheme();
 
+// Security: Enable sandbox for all renderers globally
+app.enableSandbox();
+
 function setAppUserModelId(id: string): void {
   if (process.platform === 'win32') {
     app.setAppUserModelId(id);
@@ -120,6 +123,8 @@ function createWindow(): BrowserWindow {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: true,
+      nodeIntegration: false,
+      contextIsolation: true,
       // Native app experience - disable browser features
       spellcheck: false,
       enableWebSQL: false,
@@ -220,6 +225,39 @@ app.whenReady().then(async () => {
 
   app.on('browser-window-created', (_, window) => {
     watchWindowShortcuts(window);
+  });
+
+  // Security: Restrict navigation to prevent loading untrusted content
+  app.on('web-contents-created', (_, contents) => {
+    // Prevent navigation to external URLs
+    contents.on('will-navigate', (event, navigationUrl) => {
+      const parsedUrl = new URL(navigationUrl);
+      // Allow navigation only to local files and dev server
+      const allowedOrigins = [
+        'file://',
+        process.env.ELECTRON_RENDERER_URL || '',
+      ].filter(Boolean);
+
+      const isAllowed = allowedOrigins.some(
+        (origin) =>
+          navigationUrl.startsWith(origin) || parsedUrl.protocol === 'file:'
+      );
+
+      if (!isAllowed) {
+        event.preventDefault();
+        // Open external URLs in system browser instead
+        shell.openExternal(navigationUrl);
+      }
+    });
+
+    // Prevent opening new windows from webview
+    contents.on('will-attach-webview', (event, webPreferences) => {
+      // Strip away preload scripts
+      delete webPreferences.preload;
+      // Ensure security settings
+      webPreferences.nodeIntegration = false;
+      webPreferences.contextIsolation = true;
+    });
   });
 
   // Create the initial window and register it with the window manager

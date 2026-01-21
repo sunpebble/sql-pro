@@ -3334,3 +3334,7 @@ export interface ListTursoBranchesResponse {
   branches?: TursoBranchInfo[];
   error?: string;
 }
+
+// ============ AI Agent Types ============
+
+export * from './types/agent';
