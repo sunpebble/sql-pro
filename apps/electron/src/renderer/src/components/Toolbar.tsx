@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@sqlpro/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Compass, FileText, HelpCircle } from 'lucide-react';
+import { Bot, Compass, FileText, HelpCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LayoutButtons } from '@/components/LayoutButtons';
 import { ShortcutKbd } from '@/components/ui/kbd';
@@ -26,6 +26,7 @@ export function Toolbar() {
   const { hasChanges, changes } = useChangesStore();
   const { startTour } = useOnboardingStore();
   const openChangesPanel = useDialogStore((s) => s.openChangesPanel);
+  const { agentSidebarOpen, toggleAgentSidebar } = useDialogStore();
   const { t } = useTranslation('common');
 
   if (!connection) return null;
@@ -51,6 +52,23 @@ export function Toolbar() {
           </span>
         </button>
       )}
+
+      {/* AI Agent Button */}
+      <Tooltip>
+        <TooltipTrigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => toggleAgentSidebar(connection.id)}
+            className={`h-7 w-7 ${agentSidebarOpen ? 'bg-accent' : ''} ${TOOLBAR_BUTTON_INTERACTIVE}`}
+          >
+            <Bot className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          {t('toolbar.aiAgent', { defaultValue: 'AI Agent' })}
+        </TooltipContent>
+      </Tooltip>
 
       {/* Layout Buttons - VSCode style panel toggles */}
       <LayoutButtons />

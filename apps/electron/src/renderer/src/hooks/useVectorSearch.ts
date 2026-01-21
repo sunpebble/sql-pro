@@ -2,7 +2,7 @@
  * Hook for vector search operations on Qdrant collections.
  *
  * Provides three search modes:
- * - Text: Embed text using AI provider and search by vector
+ * - Text: Embed text using AI provider and search by vector (currently disabled)
  * - Vector: Direct vector search with raw vector array
  * - Similar: Find similar points by point ID
  *
@@ -18,7 +18,6 @@ import type {
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
-import { useAIStore } from '@/stores/ai-store';
 
 interface UseVectorSearchReturn {
   /** Search results from the most recent search */
@@ -92,9 +91,6 @@ export function useVectorSearch(
     undefined
   );
 
-  const { provider, providerSettings, getEffectiveBaseUrl, embedding } =
-    useAIStore();
-
   // Load background points for visualization when connection/collection changes
   useEffect(() => {
     if (!connectionId || !collection) {
@@ -139,71 +135,20 @@ export function useVectorSearch(
   }, [connectionId, collection]);
 
   /**
-   * Embed text using the configured embedding settings.
-   * Uses OpenAI-compatible embedding endpoint.
+   * Embed text is currently disabled.
+   * Text-based embedding requires AI configuration which has been removed.
    */
   const embedText = useCallback(
-    async (text: string): Promise<number[] | null> => {
-      // Use embedding-specific settings, falling back to main provider settings
-      const embeddingApiKey =
-        embedding.apiKey || providerSettings[provider]?.apiKey;
-      const embeddingBaseUrl =
-        embedding.baseUrl ||
-        (embedding.provider === 'openai'
-          ? 'https://api.openai.com'
-          : getEffectiveBaseUrl());
-
-      if (!embeddingApiKey) {
-        setError(t('vectorSearch.embeddingApiKeyNotConfigured'));
-        return null;
-      }
-
-      try {
-        // Build embedding URL based on embedding provider settings
-        // OpenAI and compatible providers use /v1/embeddings
-        let embeddingUrl: string;
-        if (!embeddingBaseUrl.includes('/v1')) {
-          embeddingUrl = `${embeddingBaseUrl}/v1/embeddings`;
-        } else if (embeddingBaseUrl.endsWith('/v1')) {
-          embeddingUrl = `${embeddingBaseUrl}/embeddings`;
-        } else {
-          embeddingUrl = `${embeddingBaseUrl}/v1/embeddings`;
-        }
-
-        const response = await fetch(embeddingUrl, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${embeddingApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: embedding.model,
-            input: text,
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(
-            errorData.error?.message || `HTTP ${response.status}`
-          );
-        }
-
-        const data = await response.json();
-        const embeddingVector = data.data?.[0]?.embedding;
-
-        if (!embeddingVector || !Array.isArray(embeddingVector)) {
-          throw new Error(t('vectorSearch.invalidEmbeddingResponse'));
-        }
-
-        return embeddingVector;
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        setError(t('vectorSearch.embeddingFailed', { message }));
-        return null;
-      }
+    async (_text: string): Promise<number[] | null> => {
+      setError(
+        t('vectorSearch.embeddingNotConfigured', {
+          defaultValue:
+            'Text embedding is not available. Use vector search instead.',
+        })
+      );
+      return null;
     },
-    [t, provider, providerSettings, getEffectiveBaseUrl, embedding]
+    [t]
   );
 
   /**

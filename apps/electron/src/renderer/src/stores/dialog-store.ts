@@ -87,11 +87,12 @@ interface DialogState {
   openDashboard: (connectionId: string, databaseName?: string) => void;
   closeDashboard: () => void;
 
-  // AI Agent dialog
-  agentOpen: boolean;
+  // AI Agent sidebar
+  agentSidebarOpen: boolean;
   agentConnectionId: string | null;
-  openAgent: (connectionId: string) => void;
-  closeAgent: () => void;
+  openAgentSidebar: (connectionId: string) => void;
+  closeAgentSidebar: () => void;
+  toggleAgentSidebar: (connectionId?: string) => void;
 }
 
 export const useDialogStore = create<DialogState>((set) => ({
@@ -194,17 +195,21 @@ export const useDialogStore = create<DialogState>((set) => ({
       dashboardDatabaseName: null,
     }),
 
-  // AI Agent dialog
-  agentOpen: false,
+  // AI Agent sidebar
+  agentSidebarOpen: false,
   agentConnectionId: null,
-  openAgent: (connectionId) =>
+  openAgentSidebar: (connectionId) =>
     set({
-      agentOpen: true,
+      agentSidebarOpen: true,
       agentConnectionId: connectionId,
     }),
-  closeAgent: () =>
+  closeAgentSidebar: () =>
     set({
-      agentOpen: false,
-      agentConnectionId: null,
+      agentSidebarOpen: false,
     }),
+  toggleAgentSidebar: (connectionId) =>
+    set((state) => ({
+      agentSidebarOpen: connectionId ? !state.agentSidebarOpen : false,
+      agentConnectionId: connectionId ?? state.agentConnectionId,
+    })),
 }));

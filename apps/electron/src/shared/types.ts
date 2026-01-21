@@ -1638,8 +1638,6 @@ export type ProFeatureType =
 
 /** String identifier for Pro features used in UI components */
 export type ProFeature =
-  | 'ai-nl-to-sql'
-  | 'ai-data-analysis'
   | 'advanced-export'
   | 'plugin-system'
   | 'query-optimizer';

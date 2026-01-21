@@ -1,5 +1,4 @@
 export * from './use-mobile';
-export * from './useAI';
 export * from './useApplyFont';
 export * from './useAsyncOperation';
 export * from './useAutoRefresh';

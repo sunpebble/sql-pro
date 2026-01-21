@@ -15,7 +15,6 @@ import {
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import {
   AlertCircle,
-  BarChart3,
   CheckSquare,
   Clock,
   Code,
@@ -26,17 +25,14 @@ import {
   Play,
   Search,
   Share2,
-  Sparkles,
   Square,
   Trash2,
-  Wand2,
   X,
   Zap,
 } from 'lucide-react';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DataAnalysisPanel, NLToSQLDialog } from '@/components/ai';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import {
   QueryBundleExportDialog,
@@ -57,7 +53,6 @@ import { sqlPro } from '@/lib/api';
 import { generateSuggestions } from '@/lib/query-plan-analyzer';
 import { cn } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
-import { useAIStore } from '@/stores/ai-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useQueryHistoryStore } from '@/stores/query-history-store';
 import { useQueryStore } from '@/stores/query-store';
@@ -134,8 +129,6 @@ export function QueryEditor() {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showOptimizer, setShowOptimizer] = useState(false);
-  const [showNLToSQL, setShowNLToSQL] = useState(false);
-  const [showDataAnalysis, setShowDataAnalysis] = useState(false);
   const [showAISettings, setShowAISettings] = useState(false);
   const [showQueryExport, setShowQueryExport] = useState(false);
   const [showQueryImport, setShowQueryImport] = useState(false);
@@ -145,9 +138,6 @@ export function QueryEditor() {
     () => new Set()
   );
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // AI store
-  const { isConfigured: isAIConfigured } = useAIStore();
 
   // Query history filter store
   const historyFilter = useQueryHistoryStore((state) => state.filter);
@@ -394,31 +384,6 @@ export function QueryEditor() {
           </span>
         </div>
         <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-1">
-          {/* AI Features Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="ghost" size="sm" className="gap-1">
-                <Sparkles className="h-4 w-4" />
-                {t('queryEditor.ai')}
-                {!isAIConfigured && (
-                  <span className="bg-warning ml-1 h-1.5 w-1.5 rounded-full" />
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-50">
-              <DropdownMenuItem onClick={() => setShowNLToSQL(true)}>
-                <Wand2 className="mr-2 h-4 w-4" />
-                {t('queryEditor.nlToSql')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setShowDataAnalysis(true)}
-                disabled={!tabResults}
-              >
-                <BarChart3 className="mr-2 h-4 w-4" />
-                {t('queryEditor.analyzeResults')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
           {/* Share Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -884,30 +849,6 @@ export function QueryEditor() {
         onOpenChange={setShowOptimizer}
         query={tabQuery}
         onAnalyze={handleAnalyze}
-      />
-
-      {/* AI: Natural Language to SQL Dialog */}
-      <NLToSQLDialog
-        open={showNLToSQL}
-        onOpenChange={setShowNLToSQL}
-        schema={schema?.schemas ?? []}
-        onSQLGenerated={handleQueryChange}
-      />
-
-      {/* AI: Data Analysis Panel */}
-      <DataAnalysisPanel
-        open={showDataAnalysis}
-        onOpenChange={setShowDataAnalysis}
-        columns={
-          tabResults?.columns?.map((c) => ({
-            name: c,
-            type: 'unknown',
-            nullable: true,
-            defaultValue: null,
-            isPrimaryKey: false,
-          })) ?? []
-        }
-        rows={tabResults?.rows ?? []}
       />
 
       {/* AI: Settings Dialog */}

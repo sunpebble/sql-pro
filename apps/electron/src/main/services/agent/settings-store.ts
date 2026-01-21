@@ -16,12 +16,19 @@ const settingsStore = new Store<SettingsSchema>({
   },
 });
 
+console.warn('[Agent Settings Store] Initialized, path:', settingsStore.path);
+
 export const agentSettingsStore = {
   /**
    * Get agent settings
    */
   getSettings(): AgentSettings {
-    return settingsStore.get('agent');
+    const settings = settingsStore.get('agent');
+    console.warn(
+      '[Agent Settings Store] getSettings:',
+      JSON.stringify(settings.config, null, 2)
+    );
+    return settings;
   },
 
   /**
@@ -29,11 +36,22 @@ export const agentSettingsStore = {
    */
   saveSettings(settings: Partial<AgentSettings>): AgentSettings {
     const current = this.getSettings();
+
+    // Merge config
+    const mergedConfig = { ...current.config, ...settings.config };
+
+    // If apiType is null, it means "auto-detect" - delete the field
+    if (settings.config && settings.config.apiType === null) {
+      delete mergedConfig.apiType;
+    }
+
     const updated: AgentSettings = {
-      config: { ...current.config, ...settings.config },
+      config: mergedConfig,
       execution: { ...current.execution, ...settings.execution },
     };
+    console.warn('[Agent Settings Store] Saving to:', settingsStore.path);
     settingsStore.set('agent', updated);
+    console.warn('[Agent Settings Store] Saved successfully');
     return updated;
   },
 

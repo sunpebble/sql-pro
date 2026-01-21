@@ -20,6 +20,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useAgent } from '@/hooks/useAgent';
 import { cn } from '@/lib/utils';
 import { AgentSettingsPanel } from './AgentSettingsPanel';
+import { MessageContent } from './MessageContent';
 
 interface AIAgentDialogProps {
   open: boolean;
@@ -188,39 +189,42 @@ export function AIAgentDialog({
               </div>
             )}
 
-            {messages.map((message) => {
-              const text = getMessageText(message);
-              return (
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={cn(
+                  'flex gap-3',
+                  message.role === 'user' ? 'justify-end' : 'justify-start'
+                )}
+              >
+                {message.role === 'assistant' && (
+                  <div className="bg-primary/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                    <Bot className="text-primary h-4 w-4" />
+                  </div>
+                )}
                 <div
-                  key={message.id}
                   className={cn(
-                    'flex gap-3',
-                    message.role === 'user' ? 'justify-end' : 'justify-start'
+                    'max-w-[80%] rounded-lg px-4 py-2',
+                    message.role === 'user'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
                   )}
                 >
-                  {message.role === 'assistant' && (
-                    <div className="bg-primary/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
-                      <Bot className="text-primary h-4 w-4" />
+                  {message.role === 'user' ? (
+                    <div className="text-sm whitespace-pre-wrap">
+                      {getMessageText(message)}
                     </div>
-                  )}
-                  <div
-                    className={cn(
-                      'max-w-[80%] rounded-lg px-4 py-2',
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    )}
-                  >
-                    <div className="text-sm whitespace-pre-wrap">{text}</div>
-                  </div>
-                  {message.role === 'user' && (
-                    <div className="bg-muted flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
-                      <User className="h-4 w-4" />
-                    </div>
+                  ) : (
+                    <MessageContent parts={message.parts || []} />
                   )}
                 </div>
-              );
-            })}
+                {message.role === 'user' && (
+                  <div className="bg-muted flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                    <User className="h-4 w-4" />
+                  </div>
+                )}
+              </div>
+            ))}
 
             {isLoading &&
               messages.length > 0 &&

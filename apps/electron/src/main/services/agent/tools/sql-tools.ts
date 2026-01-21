@@ -8,7 +8,18 @@ import type {
 } from '@shared/types/agent';
 import { tool } from 'ai';
 import { z } from 'zod';
+import { databaseService } from '../../database';
 import { databaseManager } from '../../database-adapters/database-manager';
+
+/**
+ * Check if connection exists in either manager
+ */
+function _hasConnection(connectionId: string): boolean {
+  return (
+    databaseManager.getConnection(connectionId) !== null ||
+    databaseService.getConnection(connectionId) !== null
+  );
+}
 
 /**
  * Detect SQL operation type from query string
@@ -82,7 +93,11 @@ export function createExecuteSqlTool(
         if (isAsync) {
           result = await databaseManager.queryAsync(connectionId, sql, params);
         } else {
+          // Try databaseManager first, fall back to databaseService for legacy SQLite
           result = databaseManager.query(connectionId, sql, params);
+          if (!result.success && result.error === 'Connection not found') {
+            result = databaseService.query(connectionId, sql, params);
+          }
         }
 
         const executionTime = Date.now() - startTime;
@@ -129,7 +144,14 @@ export function createGetSchemaTool(connectionId: string) {
         if (isAsync) {
           schemaResult = await databaseManager.getSchemaAsync(connectionId);
         } else {
+          // Try databaseManager first, fall back to databaseService for legacy SQLite
           schemaResult = databaseManager.getSchema(connectionId);
+          if (
+            !schemaResult.success &&
+            schemaResult.error === 'Connection not found'
+          ) {
+            schemaResult = databaseService.getSchema(connectionId);
+          }
         }
 
         if (!schemaResult.success) {
@@ -183,7 +205,11 @@ export function createExplainQueryTool(connectionId: string) {
         if (isAsync) {
           result = await databaseManager.explainQueryAsync(connectionId, sql);
         } else {
+          // Try databaseManager first, fall back to databaseService for legacy SQLite
           result = databaseManager.explainQuery(connectionId, sql);
+          if (!result.success && result.error === 'Connection not found') {
+            result = databaseService.explainQuery(connectionId, sql);
+          }
         }
 
         if (!result.success) {

@@ -11,11 +11,34 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 const sqlProAPI = window.sqlPro;
 
+// Message part types
+interface TextPart {
+  type: 'text';
+  text: string;
+}
+
+interface ReasoningPart {
+  type: 'reasoning';
+  text: string;
+}
+
+interface ToolCallPart {
+  type: 'tool-call';
+  toolCallId: string;
+  toolName: string;
+  status: 'pending' | 'running' | 'completed' | 'error';
+  args?: unknown; // Use 'args' to match AI SDK UIMessage format
+  result?: unknown; // Use 'result' to match AI SDK UIMessage format
+  error?: string;
+}
+
+type MessagePart = TextPart | ReasoningPart | ToolCallPart;
+
 // Simplified message type for internal use
 interface SimpleMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
-  parts: Array<{ type: 'text'; text: string }>;
+  parts: MessagePart[];
 }
 
 interface UseAgentOptions {
@@ -54,7 +77,10 @@ function generateSessionId(): string {
  * Convert UIMessage to SimpleMessage
  */
 function toSimpleMessage(msg: UIMessage): SimpleMessage {
-  const text =
+  const parts: MessagePart[] = [];
+
+  // Extract text parts
+  const textContent =
     msg.parts
       ?.filter(
         (p): p is { type: 'text'; text: string } =>
@@ -62,10 +88,35 @@ function toSimpleMessage(msg: UIMessage): SimpleMessage {
       )
       .map((p) => p.text)
       .join('') || '';
+
+  if (textContent) {
+    parts.push({ type: 'text', text: textContent });
+  }
+
+  // Extract reasoning parts
+  const reasoningContent =
+    msg.parts
+      ?.filter(
+        (p): p is { type: 'reasoning'; text: string } =>
+          p.type === 'reasoning' && 'text' in p
+      )
+      .map((p) => p.text)
+      .join('') || '';
+
+  if (reasoningContent) {
+    // Add reasoning at the beginning
+    parts.unshift({ type: 'reasoning', text: reasoningContent });
+  }
+
+  // Ensure at least an empty text part
+  if (parts.length === 0) {
+    parts.push({ type: 'text', text: '' });
+  }
+
   return {
     id: msg.id,
     role: msg.role as 'user' | 'assistant' | 'system',
-    parts: [{ type: 'text', text }],
+    parts,
   };
 }
 
@@ -102,28 +153,200 @@ export function useAgent(options: UseAgentOptions): UseAgentReturn {
   const abortRef = useRef(false);
 
   /**
-   * Handle incoming stream chunks
+   * Handle incoming stream chunks from Vercel AI SDK fullStream
    */
   const handleStreamChunk = useCallback((chunk: unknown) => {
     if (!chunk || typeof chunk !== 'object') return;
 
+    // Debug: log all incoming chunks
+    console.warn('[useAgent] Stream chunk received:', JSON.stringify(chunk));
+
     const typedChunk = chunk as {
       type?: string;
-      textDelta?: string;
-      text?: string;
+      textDelta?: string; // AI SDK 4.x
+      text?: string; // AI SDK 5.x/6.x
+      delta?: string; // AI SDK 5.x/6.x (also used for text-delta)
     };
 
-    if (typedChunk.type === 'text-delta' && typedChunk.textDelta) {
-      // Append text delta to the last assistant message
+    // Handle text-delta chunks (main response text)
+    // AI SDK 6.x uses 'text' or 'delta' field, 4.x uses 'textDelta'
+    if (typedChunk.type === 'text-delta') {
+      const deltaText =
+        typedChunk.text || typedChunk.delta || typedChunk.textDelta || '';
+      if (deltaText) {
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last?.role === 'assistant') {
+            const textPart = last.parts.find((p) => p.type === 'text');
+            const currentText = textPart?.text || '';
+            const newText = currentText + deltaText;
+
+            // Update text part, keep other parts
+            const newParts = last.parts.map((p) =>
+              p.type === 'text' ? { ...p, text: newText } : p
+            );
+            // If no text part exists, add one
+            if (!textPart) {
+              newParts.push({ type: 'text' as const, text: newText });
+            }
+
+            return [...prev.slice(0, -1), { ...last, parts: newParts }];
+          }
+          return prev;
+        });
+      }
+    }
+
+    // Handle reasoning-delta chunks (thinking process)
+    if (typedChunk.type === 'reasoning-delta' && typedChunk.delta) {
       setMessages((prev) => {
         const last = prev[prev.length - 1];
         if (last?.role === 'assistant') {
-          const currentText = last.parts[0]?.text || '';
-          const newText = currentText + typedChunk.textDelta;
+          const reasoningPart = last.parts.find((p) => p.type === 'reasoning');
+          const currentReasoning = reasoningPart?.text || '';
+          const newReasoning = currentReasoning + typedChunk.delta;
+
+          let newParts: MessagePart[];
+          if (reasoningPart) {
+            // Update existing reasoning part
+            newParts = last.parts.map((p) =>
+              p.type === 'reasoning' ? { ...p, text: newReasoning } : p
+            );
+          } else {
+            // Add reasoning part at the beginning
+            newParts = [
+              { type: 'reasoning' as const, text: newReasoning },
+              ...last.parts,
+            ];
+          }
+
+          return [...prev.slice(0, -1), { ...last, parts: newParts }];
+        }
+        return prev;
+      });
+    }
+
+    // Handle legacy reasoning chunks (AI SDK 4.x format)
+    if (typedChunk.type === 'reasoning' && typedChunk.text) {
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === 'assistant') {
+          const reasoningPart = last.parts.find((p) => p.type === 'reasoning');
+
+          let newParts: MessagePart[];
+          if (reasoningPart) {
+            newParts = last.parts.map((p) =>
+              p.type === 'reasoning' ? { ...p, text: typedChunk.text! } : p
+            );
+          } else {
+            newParts = [
+              { type: 'reasoning' as const, text: typedChunk.text! },
+              ...last.parts,
+            ];
+          }
+
+          return [...prev.slice(0, -1), { ...last, parts: newParts }];
+        }
+        return prev;
+      });
+    }
+
+    // Handle tool-call chunks
+    if (typedChunk.type === 'tool-call') {
+      const toolChunk = chunk as {
+        type: 'tool-call';
+        toolName: string;
+        toolCallId: string;
+        args?: unknown;
+      };
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === 'assistant') {
+          // Add tool call part with toolCallId for later matching
+          const toolCallPart: ToolCallPart = {
+            type: 'tool-call',
+            toolCallId: toolChunk.toolCallId,
+            toolName: toolChunk.toolName,
+            status: 'running',
+            args: toolChunk.args,
+          };
+
           return [
             ...prev.slice(0, -1),
-            { ...last, parts: [{ type: 'text' as const, text: newText }] },
+            { ...last, parts: [...last.parts, toolCallPart] },
           ];
+        }
+        return prev;
+      });
+    }
+
+    // Handle tool-result chunks
+    if (typedChunk.type === 'tool-result') {
+      const resultChunk = chunk as {
+        type: 'tool-result';
+        toolCallId: string;
+        toolName?: string;
+        input?: unknown;
+        output?: unknown; // AI SDK uses 'output' not 'result'
+      };
+      console.warn(
+        '[useAgent] Tool result received:',
+        resultChunk.toolCallId,
+        resultChunk.output
+      );
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === 'assistant') {
+          // Update tool call status to completed - match by toolCallId
+          const newParts = last.parts.map((p) => {
+            if (
+              p.type === 'tool-call' &&
+              p.toolCallId === resultChunk.toolCallId
+            ) {
+              return {
+                ...p,
+                status: 'completed' as const,
+                args: resultChunk.input ?? p.args, // Update args if provided
+                result: resultChunk.output,
+              };
+            }
+            return p;
+          });
+
+          return [...prev.slice(0, -1), { ...last, parts: newParts }];
+        }
+        return prev;
+      });
+    }
+
+    // Handle tool-error chunks
+    if (typedChunk.type === 'tool-error') {
+      const errorChunk = chunk as {
+        type: 'tool-error';
+        toolCallId?: string;
+        error?: string;
+      };
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === 'assistant') {
+          // Update tool call status to error - match by toolCallId if available
+          const newParts = last.parts.map((p) => {
+            if (
+              p.type === 'tool-call' &&
+              (errorChunk.toolCallId
+                ? p.toolCallId === errorChunk.toolCallId
+                : p.status === 'running')
+            ) {
+              return {
+                ...p,
+                status: 'error' as const,
+                error: errorChunk.error || 'Tool execution failed',
+              };
+            }
+            return p;
+          });
+
+          return [...prev.slice(0, -1), { ...last, parts: newParts }];
         }
         return prev;
       });
@@ -306,14 +529,27 @@ export function useAgent(options: UseAgentOptions): UseAgentReturn {
           // Remove placeholder on error
           setMessages((prev) => prev.slice(0, -1));
         } else {
-          // Update with final response
+          // Update with final response - preserve streaming parts (tool calls, reasoning)
+          // Only update the text part with final text
           setMessages((prev) => {
             const updated = [...prev];
             const lastIdx = updated.length - 1;
             if (updated[lastIdx]?.role === 'assistant') {
+              const existingParts = updated[lastIdx].parts;
+              // Update or add text part with final text
+              const hasTextPart = existingParts.some((p) => p.type === 'text');
+              const newParts = hasTextPart
+                ? existingParts.map((p) =>
+                    p.type === 'text' ? { ...p, text: response.text || '' } : p
+                  )
+                : [
+                    ...existingParts,
+                    { type: 'text' as const, text: response.text || '' },
+                  ];
+
               updated[lastIdx] = {
                 ...updated[lastIdx],
-                parts: [{ type: 'text', text: response.text || '' }],
+                parts: newParts,
               };
             }
             return updated;

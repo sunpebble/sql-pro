@@ -9,10 +9,17 @@ import type {
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@sqlpro/ui/select';
 import { Switch } from '@sqlpro/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { Eye, EyeOff } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface AgentSettingsPanelProps {
@@ -59,6 +66,16 @@ export function AgentSettingsPanel({
       setIsSaving(false);
     }
   }, [config, execution, onSave]);
+
+  // Sync form state when settings prop changes (async load)
+  useEffect(() => {
+    if (settings?.config) {
+      setConfig(settings.config);
+    }
+    if (settings?.execution) {
+      setExecution(settings.execution);
+    }
+  }, [settings]);
 
   return (
     <div className="space-y-6">
@@ -141,6 +158,43 @@ export function AgentSettingsPanel({
               {t(
                 'agent.settings.modelHelp',
                 'Model identifier (e.g., gpt-4o, claude-sonnet-4-20250514)'
+              )}
+            </p>
+          </div>
+
+          {/* API Type */}
+          <div className="space-y-2">
+            <Label htmlFor="apiType">
+              {t('agent.settings.apiType', 'API Type')}
+            </Label>
+            <Select
+              value={config.apiType || 'auto'}
+              onValueChange={(value: string) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  // Use null to signal "auto-detect" (undefined gets stripped in JSON)
+                  apiType:
+                    value === 'auto'
+                      ? (null as unknown as undefined)
+                      : (value as 'openai' | 'anthropic'),
+                }))
+              }
+            >
+              <SelectTrigger id="apiType">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="auto">
+                  {t('agent.settings.apiTypeAuto', 'Auto-detect')}
+                </SelectItem>
+                <SelectItem value="openai">OpenAI</SelectItem>
+                <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-muted-foreground text-xs">
+              {t(
+                'agent.settings.apiTypeHelp',
+                'Auto-detect works for most providers. Select manually if needed.'
               )}
             </p>
           </div>

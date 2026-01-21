@@ -1,17 +1,16 @@
 // Agent IPC Handlers
 // Main entry point for AI Agent IPC communication
 
-import type {AgentSettings, ChatSendResponse, GetHistoryResponse, GetSessionsResponse, GetSettingsResponse, SaveSettingsResponse} from '@shared/types/agent';
-import type { UIMessage } from 'ai';
-import {
-  AGENT_IPC_CHANNELS
-  
-  
-  
-  
-  
-  
+import type {
+  AgentSettings,
+  ChatSendResponse,
+  GetHistoryResponse,
+  GetSessionsResponse,
+  GetSettingsResponse,
+  SaveSettingsResponse,
 } from '@shared/types/agent';
+import type { UIMessage } from 'ai';
+import { AGENT_IPC_CHANNELS } from '@shared/types/agent';
 import { BrowserWindow, ipcMain } from 'electron';
 import { createHandler } from '../ipc/utils';
 import { handleChat } from './chat-handler';
@@ -39,7 +38,15 @@ export function setupAgentHandlers(): void {
       async (request: {
         settings: Partial<AgentSettings>;
       }): Promise<SaveSettingsResponse> => {
+        console.warn(
+          '[Agent IPC] SETTINGS_SAVE received:',
+          JSON.stringify(request.settings, null, 2)
+        );
         const settings = agentSettingsStore.saveSettings(request.settings);
+        console.warn(
+          '[Agent IPC] Settings saved:',
+          JSON.stringify(settings.config, null, 2)
+        );
         return { settings };
       }
     )
@@ -116,7 +123,15 @@ export function setupAgentHandlers(): void {
       const { connectionId, sessionId, messages } = request;
       const settings = agentSettingsStore.getSettings();
 
+      console.warn('[Agent IPC] CHAT_SEND received:', {
+        connectionId,
+        sessionId,
+        messageCount: messages.length,
+        isConfigured: agentSettingsStore.isConfigured(),
+      });
+
       if (!agentSettingsStore.isConfigured()) {
+        console.warn('[Agent IPC] Agent not configured');
         return { success: false, error: 'Agent not configured' };
       }
 
@@ -126,6 +141,7 @@ export function setupAgentHandlers(): void {
       activeStreams.set(streamId, abortController);
 
       try {
+        console.warn('[Agent IPC] Calling handleChat...');
         const result = await handleChat({
           connectionId,
           messages,
@@ -135,35 +151,121 @@ export function setupAgentHandlers(): void {
 
         // Stream chunks to renderer
         const window = BrowserWindow.fromWebContents(event.sender);
+        console.warn('[Agent IPC] Starting stream iteration...');
 
+        let chunkCount = 0;
         for await (const chunk of result.fullStream) {
           if (abortController.signal.aborted) break;
+          chunkCount++;
+
+          // Log chunk details for debugging
+          console.warn(
+            '[Agent IPC] Chunk',
+            chunkCount,
+            ':',
+            JSON.stringify(chunk)
+          );
 
           window?.webContents.send(
             `${AGENT_IPC_CHANNELS.CHAT_STREAM}:${streamId}`,
             chunk
           );
         }
+        console.warn('[Agent IPC] Stream completed, total chunks:', chunkCount);
 
-        // Get final result
+        // Get final result - use response.messages which includes tool calls and results
         const text = await result.text;
-        const toolCalls = await result.toolCalls;
+        const response = await result.response;
+
+        console.warn('[Agent IPC] Final text length:', text.length);
+        console.warn(
+          '[Agent IPC] Response messages count:',
+          response.messages?.length
+        );
 
         // Update history with new messages
-        // Create a simplified message format for storage
+        // Convert response messages to UIMessage format
+        // UIMessage uses parts array with tool-call and tool-result types
+        // convertToModelMessages will handle converting these back to proper API format
+        const responseMessages = response.messages || [];
+        const assistantParts: Array<{
+          type: string;
+          text?: string;
+          toolCallId?: string;
+          toolName?: string;
+          args?: unknown;
+          result?: unknown;
+        }> = [];
+
+        for (const msg of responseMessages) {
+          if (msg.role === 'assistant' && Array.isArray(msg.content)) {
+            for (const part of msg.content) {
+              const p = part as {
+                type: string;
+                text?: string;
+                toolCallId?: string;
+                toolName?: string;
+                input?: unknown;
+              };
+              if (p.type === 'text' && p.text) {
+                assistantParts.push({ type: 'text', text: p.text });
+              } else if (p.type === 'tool-call') {
+                assistantParts.push({
+                  type: 'tool-call',
+                  toolCallId: p.toolCallId,
+                  toolName: p.toolName,
+                  args: p.input,
+                });
+              }
+            }
+          } else if (
+            msg.role === 'assistant' &&
+            typeof msg.content === 'string'
+          ) {
+            assistantParts.push({ type: 'text', text: msg.content });
+          } else if (msg.role === 'tool' && Array.isArray(msg.content)) {
+            // Tool results go into the same assistant message as tool-result parts
+            for (const part of msg.content) {
+              const p = part as {
+                type: string;
+                toolCallId?: string;
+                toolName?: string;
+                result?: unknown;
+                output?: unknown;
+              };
+              if (p.type === 'tool-result') {
+                assistantParts.push({
+                  type: 'tool-result',
+                  toolCallId: p.toolCallId,
+                  toolName: p.toolName,
+                  result: p.output ?? p.result,
+                });
+              }
+            }
+          }
+        }
+
+        // Create a single assistant UIMessage with all parts
         const assistantMessage = {
           id: `assistant-${Date.now()}`,
           role: 'assistant' as const,
           content: text,
-          parts: [{ type: 'text' as const, text }],
+          parts:
+            assistantParts.length > 0
+              ? assistantParts
+              : [{ type: 'text' as const, text }],
         };
+
+        // Store messages - use type assertion since our simplified format is compatible
+        // with what convertToModelMessages expects
         agentHistoryStore.updateSession(connectionId, sessionId, [
           ...messages,
-          assistantMessage,
+          assistantMessage as unknown as UIMessage,
         ]);
 
-        return { success: true, text, toolCalls };
+        return { success: true, text, toolCalls: await result.toolCalls };
       } catch (error) {
+        console.error('[Agent IPC] Error in CHAT_SEND:', error);
         if (abortController.signal.aborted) {
           return { success: false, error: 'Chat cancelled' };
         }

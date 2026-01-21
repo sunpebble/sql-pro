@@ -1,22 +1,12 @@
 import type { ProFeature } from '@shared/types';
 import type { ReactNode } from 'react';
 import { Button } from '@sqlpro/ui/button';
-import { Crown, Key, Lock, Settings, Sparkles, Wand2, Zap } from 'lucide-react';
+import { Crown, Lock, Settings, Sparkles, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
-import { useAIStore } from '@/stores/ai-store';
 import { useProStore } from '@/stores/pro-store';
 import { ProBadge } from './ProBadge';
-
-/**
- * AI features that can be unlocked with user's own API key.
- */
-const AI_FEATURES: ProFeature[] = [
-  'ai-nl-to-sql',
-  'ai-data-analysis',
-  'query-optimizer',
-];
 
 /**
  * Feature-specific configurations for display
@@ -29,18 +19,6 @@ const FEATURE_CONFIG: Record<
     previewDescription: string;
   }
 > = {
-  'ai-nl-to-sql': {
-    icon: Wand2,
-    gradient: 'from-violet-500 to-purple-500',
-    previewDescription:
-      'Just describe what you want in plain English, and let AI write the SQL for you.',
-  },
-  'ai-data-analysis': {
-    icon: Sparkles,
-    gradient: 'from-blue-500 to-cyan-500',
-    previewDescription:
-      'Get AI-powered insights and analysis from your data with natural language queries.',
-  },
   'query-optimizer': {
     icon: Zap,
     gradient: 'from-orange-500 to-amber-500',
@@ -81,11 +59,6 @@ interface ProGateProps {
    */
   onUpgrade?: () => void;
   /**
-   * Callback when user clicks the "Configure API Key" button.
-   * Only shown for AI features.
-   */
-  onConfigureApiKey?: () => void;
-  /**
    * Additional class name for the gate container.
    */
   className?: string;
@@ -114,20 +87,14 @@ export function ProGate({
   children,
   fallback,
   onUpgrade,
-  onConfigureApiKey,
   className,
   compact = false,
 }: ProGateProps) {
   const { t } = useTranslation('common');
   const { isPro, hasFeature } = useProStore();
-  const { isConfigured: hasOwnApiKey } = useAIStore();
 
   // Check if user has access to this specific feature
-  // Pro users get access through their subscription
-  // For AI features, users with their own API key also get access
-  const isAIFeature = AI_FEATURES.includes(feature);
-  const hasAccess =
-    (isPro && hasFeature(feature)) || (isAIFeature && hasOwnApiKey);
+  const hasAccess = isPro && hasFeature(feature);
 
   // If user has access, render children
   if (hasAccess) {
@@ -243,22 +210,6 @@ export function ProGate({
           <Sparkles className="mr-2 h-4 w-4" />
           {t('pro.upgrade', { defaultValue: 'Upgrade to Pro' })}
         </Button>
-
-        {/* API Key option for AI features */}
-        {isAIFeature && onConfigureApiKey && (
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-muted-foreground text-xs">or</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onConfigureApiKey}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <Key className="mr-1.5 h-3.5 w-3.5" />
-              Use your own API key
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -283,14 +234,11 @@ export function ProGateInline({
   children,
   fallback,
   onUpgrade,
-}: Omit<ProGateProps, 'className' | 'compact' | 'onConfigureApiKey'>) {
+}: Omit<ProGateProps, 'className' | 'compact'>) {
   const { isPro, hasFeature } = useProStore();
-  const { isConfigured: hasOwnApiKey } = useAIStore();
 
-  // Check if user has access - same logic as ProGate
-  const isAIFeature = AI_FEATURES.includes(feature);
-  const hasAccess =
-    (isPro && hasFeature(feature)) || (isAIFeature && hasOwnApiKey);
+  // Check if user has access
+  const hasAccess = isPro && hasFeature(feature);
 
   if (hasAccess) {
     return <>{children}</>;

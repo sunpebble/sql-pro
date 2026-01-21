@@ -2,6 +2,7 @@ import type { ViewType } from './ActivityBar';
 import { Code, GitCompare, GitFork, Search, Table } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AIAgentSidebar } from '@/components/agent';
 import { Tour } from '@/components/onboarding';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useChangesStore } from '@/stores/changes-store';
@@ -50,8 +51,13 @@ export function DatabaseView() {
     showSchemaDetails,
     setShowSchemaDetails,
   } = useSettingsStore();
-  const { changesPanelOpen: showChangesPanel, closeChangesPanel } =
-    useDialogStore();
+  const {
+    changesPanelOpen: showChangesPanel,
+    closeChangesPanel,
+    agentSidebarOpen,
+    agentConnectionId,
+    closeAgentSidebar,
+  } = useDialogStore();
 
   const [activeView, setActiveView] = useState<ViewType>('data');
   const [queryMode, setQueryMode] = useState<'editor' | 'builder'>('editor');
@@ -270,6 +276,22 @@ export function DatabaseView() {
             storageKey="changes-panel"
           >
             <DiffPreview onClose={closeChangesPanel} />
+          </ResizablePanel>
+        )}
+
+        {/* AI Agent Sidebar - Resizable */}
+        {agentSidebarOpen && agentConnectionId && (
+          <ResizablePanel
+            side="right"
+            defaultWidth={380}
+            minWidth={320}
+            maxWidth={520}
+            storageKey="agent-sidebar"
+          >
+            <AIAgentSidebar
+              connectionId={agentConnectionId}
+              onClose={closeAgentSidebar}
+            />
           </ResizablePanel>
         )}
       </div>

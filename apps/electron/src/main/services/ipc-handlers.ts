@@ -1,6 +1,2 @@
 // Re-export from modular IPC handlers
-export {
-  cleanupIpcHandlers,
-  findClaudeCodePaths,
-  setupIpcHandlers,
-} from './ipc';
+export { cleanupIpcHandlers, setupIpcHandlers } from './ipc';

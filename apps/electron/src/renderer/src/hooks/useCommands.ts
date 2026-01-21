@@ -193,7 +193,7 @@ export function useCommands() {
         e.preventDefault();
         const { activeConnectionId } = connectionStoreRef.current!;
         if (activeConnectionId && dialogStoreRef.current) {
-          dialogStoreRef.current.openAgent(activeConnectionId);
+          dialogStoreRef.current.toggleAgentSidebar(activeConnectionId);
         }
         return;
       }
@@ -1002,7 +1002,7 @@ export function useCommands() {
         action: () => {
           const { activeConnectionId } = connectionStoreRef.current!;
           if (activeConnectionId && dialogStoreRef.current) {
-            dialogStoreRef.current.openAgent(activeConnectionId);
+            dialogStoreRef.current.toggleAgentSidebar(activeConnectionId);
           }
         },
         disabled: () => !connectionStoreRef.current?.activeConnectionId,

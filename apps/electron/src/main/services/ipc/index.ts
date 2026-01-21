@@ -1,7 +1,6 @@
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
 import { cleanupAgentHandlers, setupAgentHandlers } from '../agent';
-import { setupAIHandlers } from './ai';
 import { setupBackupHandlers } from './backup';
 import { setupDatabaseHandlers } from './database';
 import { setupDialogHandlers } from './dialog';
@@ -26,8 +25,6 @@ import { setupSqlLogHandlers } from './sql-log';
 import { setupSystemHandlers } from './system';
 import { setupUpdatesHandlers } from './updates';
 
-export { findClaudeCodePaths } from './ai';
-
 export function setupIpcHandlers(): void {
   setupDatabaseHandlers();
   setupDialogHandlers();
@@ -41,8 +38,7 @@ export function setupIpcHandlers(): void {
   setupPreferencesHandlers();
   setupProHandlers();
   setupLicenseHandlers();
-  setupAIHandlers();
-  setupAgentHandlers(); // New unified AI Agent
+  setupAgentHandlers(); // Unified AI Agent
   setupSystemHandlers();
   setupUpdatesHandlers();
   setupRendererStoreHandlers();

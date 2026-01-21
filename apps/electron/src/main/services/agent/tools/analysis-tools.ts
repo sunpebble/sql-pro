@@ -4,6 +4,7 @@
 import type { ToolExecutionResult } from '@shared/types/agent';
 import { tool } from 'ai';
 import { z } from 'zod';
+import { databaseService } from '../../database';
 import { databaseManager } from '../../database-adapters/database-manager';
 
 /**
@@ -41,7 +42,14 @@ export function createAnalyzeTableTool(connectionId: string) {
             countSql
           );
         } else {
+          // Try databaseManager first, fall back to databaseService for legacy SQLite
           countResult = databaseManager.query(connectionId, countSql);
+          if (
+            !countResult.success &&
+            countResult.error === 'Connection not found'
+          ) {
+            countResult = databaseService.query(connectionId, countSql);
+          }
         }
 
         if (!countResult.success) {
@@ -63,11 +71,22 @@ export function createAnalyzeTableTool(connectionId: string) {
             schema
           );
         } else {
+          // Try databaseManager first, fall back to databaseService for legacy SQLite
           structureResult = databaseManager.getTableStructure(
             connectionId,
             tableName,
             schema
           );
+          if (
+            !structureResult.success &&
+            structureResult.error === 'Connection not found'
+          ) {
+            structureResult = databaseService.getTableStructure(
+              connectionId,
+              tableName,
+              schema
+            );
+          }
         }
 
         if (!structureResult.success) {
@@ -104,7 +123,14 @@ export function createAnalyzeTableTool(connectionId: string) {
               statsQuery
             );
           } else {
+            // Try databaseManager first, fall back to databaseService for legacy SQLite
             statsResult = databaseManager.query(connectionId, statsQuery);
+            if (
+              !statsResult.success &&
+              statsResult.error === 'Connection not found'
+            ) {
+              statsResult = databaseService.query(connectionId, statsQuery);
+            }
           }
 
           if (statsResult.success && statsResult.rows?.[0]) {
@@ -128,7 +154,7 @@ export function createAnalyzeTableTool(connectionId: string) {
                     ? `${(
                         ((stats.total - stats.non_null) / stats.total) *
                         100
-                      ).toFixed(2)  }%`
+                      ).toFixed(2)}%`
                     : '0%',
                 distinctValues: stats.distinct_values,
               };
@@ -180,7 +206,14 @@ export function createSuggestIndexTool(connectionId: string) {
             sql
           );
         } else {
+          // Try databaseManager first, fall back to databaseService for legacy SQLite
           explainResult = databaseManager.explainQuery(connectionId, sql);
+          if (
+            !explainResult.success &&
+            explainResult.error === 'Connection not found'
+          ) {
+            explainResult = databaseService.explainQuery(connectionId, sql);
+          }
         }
 
         // Parse WHERE, JOIN, ORDER BY clauses for column references
@@ -298,8 +331,21 @@ export function createCompareDataTool(connectionId: string) {
             databaseManager.queryAsync(connectionId, targetQuery),
           ]);
         } else {
+          // Try databaseManager first, fall back to databaseService for legacy SQLite
           sourceResult = databaseManager.query(connectionId, sourceQuery);
+          if (
+            !sourceResult.success &&
+            sourceResult.error === 'Connection not found'
+          ) {
+            sourceResult = databaseService.query(connectionId, sourceQuery);
+          }
           targetResult = databaseManager.query(connectionId, targetQuery);
+          if (
+            !targetResult.success &&
+            targetResult.error === 'Connection not found'
+          ) {
+            targetResult = databaseService.query(connectionId, targetQuery);
+          }
         }
 
         if (!sourceResult.success) {

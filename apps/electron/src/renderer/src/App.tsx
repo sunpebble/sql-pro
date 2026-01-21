@@ -15,7 +15,6 @@ import { initMockMode, isMockMode } from '@/lib/mock-api';
 import { queryClient } from '@/lib/query-client';
 import { router } from '@/routes';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
-import { useAIStore } from '@/stores/ai-store';
 import { useChangesStore } from '@/stores/changes-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useOnboardingStore } from '@/stores/onboarding-store';
@@ -38,7 +37,6 @@ function App(): React.JSX.Element {
   const { setActiveConnectionId: setTableDataActiveConnection } =
     useTableDataStore();
   const { loadTheme } = useThemeStore();
-  const { loadSettings: loadAISettings } = useAIStore();
   const { loadStatus: loadProStatus } = useProStore();
   const {
     getChangesForConnection,
@@ -63,11 +61,10 @@ function App(): React.JSX.Element {
   // Set up file watcher for database file changes
   useFileWatcher();
 
-  // Load theme and AI settings from store on mount
+  // Load theme from store on mount
   useEffect(() => {
     loadTheme();
-    loadAISettings();
-  }, [loadTheme, loadAISettings]);
+  }, [loadTheme]);
 
   // Load Pro status on mount
   useEffect(() => {

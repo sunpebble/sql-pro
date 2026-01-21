@@ -27,8 +27,6 @@ interface ProState {
  * All Pro features that are enabled when Pro is activated.
  */
 export const ALL_PRO_FEATURES: ProFeature[] = [
-  'ai-nl-to-sql',
-  'ai-data-analysis',
   'advanced-export',
   'plugin-system',
   'query-optimizer',

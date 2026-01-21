@@ -7,7 +7,6 @@ import { sqlPro } from '@/lib/api';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
 import { AboutDialog } from './AboutDialog';
-import { AIAgentDialog } from './agent';
 import { BackupRestoreDialog } from './backup';
 import { ChangePasswordDialog } from './ChangePasswordDialog';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
@@ -62,11 +61,6 @@ export function GlobalDialogs() {
   const dashboardConnectionId = useDialogStore((s) => s.dashboardConnectionId);
   const dashboardDatabaseName = useDialogStore((s) => s.dashboardDatabaseName);
   const closeDashboard = useDialogStore((s) => s.closeDashboard);
-
-  // AI Agent dialog state from store
-  const agentOpen = useDialogStore((s) => s.agentOpen);
-  const agentConnectionId = useDialogStore((s) => s.agentConnectionId);
-  const closeAgent = useDialogStore((s) => s.closeAgent);
 
   // Computed properties for connection settings dialog
   const [editFilename, setEditFilename] = useState('');
@@ -205,17 +199,6 @@ export function GlobalDialogs() {
         connectionId={dashboardConnectionId || undefined}
         databaseName={dashboardDatabaseName || undefined}
       />
-
-      {/* AI Agent Dialog */}
-      {agentConnectionId && (
-        <AIAgentDialog
-          open={agentOpen}
-          onOpenChange={(open) => {
-            if (!open) closeAgent();
-          }}
-          connectionId={agentConnectionId}
-        />
-      )}
     </>
   );
 }

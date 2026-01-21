@@ -12,6 +12,8 @@ import { LayoutGrid } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { TOOLBAR_BUTTON_INTERACTIVE } from '@/lib/utils';
+import { useConnectionStore } from '@/stores/connection-store';
+import { useDialogStore } from '@/stores/dialog-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useSqlLogStore } from '@/stores/sql-log-store';
 
@@ -29,6 +31,9 @@ export function LayoutButtons() {
 
   const { isVisible: sqlLogVisible, toggleVisible: toggleSqlLog } =
     useSqlLogStore();
+
+  const { agentSidebarOpen, toggleAgentSidebar } = useDialogStore();
+  const { activeConnectionId } = useConnectionStore();
 
   const { t } = useTranslation('common');
 
@@ -83,6 +88,16 @@ export function LayoutButtons() {
           onCheckedChange={() => toggleSqlLog()}
         >
           <span>{t('toolbar.sqlLog', { defaultValue: 'SQL Log' })}</span>
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuCheckboxItem
+          checked={agentSidebarOpen}
+          onCheckedChange={() =>
+            toggleAgentSidebar(activeConnectionId || undefined)
+          }
+          disabled={!activeConnectionId}
+        >
+          <span>{t('toolbar.aiAgent', { defaultValue: 'AI Agent' })}</span>
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
