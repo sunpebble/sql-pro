@@ -204,26 +204,24 @@ export function AIAgentSidebar({
 
   if (showSettings) {
     return (
-      <div className="bg-background flex h-full flex-col">
-        <div className="border-border/50 bg-muted/30 border-b px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="from-primary/20 to-primary/5 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br">
-                <Settings className="text-primary h-4 w-4" />
-              </div>
-              <span className="text-sm font-medium">
-                {t('agent.settings', 'Agent Settings')}
-              </span>
+      <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
+        <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
+          <div className="flex items-center gap-2">
+            <div className="from-primary/20 via-primary/10 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br to-transparent">
+              <Settings className="text-primary h-4 w-4" />
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              onClick={onClose}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <span className="text-sm font-semibold tracking-tight">
+              {t('agent.settings', 'Agent Settings')}
+            </span>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+            onClick={onClose}
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
 
         <ScrollArea className="flex-1 p-4">
@@ -242,33 +240,33 @@ export function AIAgentSidebar({
 
   if (showHistory) {
     return (
-      <div className="bg-background flex h-full flex-col">
-        <div className="border-border/50 bg-muted/30 border-b px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="from-primary/20 to-primary/5 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br">
-                <History className="text-primary h-4 w-4" />
-              </div>
-              <span className="text-sm font-medium">
-                {t('agent.history', 'Chat History')}
-              </span>
+      <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
+        <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
+          <div className="flex items-center gap-2">
+            <div className="from-primary/20 via-primary/10 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br to-transparent">
+              <History className="text-primary h-4 w-4" />
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => setShowHistory(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <span className="text-sm font-semibold tracking-tight">
+              {t('agent.history', 'Chat History')}
+            </span>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+            onClick={() => setShowHistory(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
 
         <ScrollArea className="flex-1">
           <div className="space-y-1 p-2">
             {sessions.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <MessageSquare className="text-muted-foreground/30 mb-3 h-10 w-10" />
+                <div className="from-primary/15 via-primary/8 mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br to-transparent">
+                  <MessageSquare className="text-primary/50 h-6 w-6" />
+                </div>
                 <p className="text-muted-foreground text-sm">
                   {t('agent.noHistory', 'No chat history yet')}
                 </p>
@@ -285,13 +283,13 @@ export function AIAgentSidebar({
                   <button
                     type="button"
                     key={session.id}
-                    className="group hover:bg-muted/50 flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors"
+                    className="group hover:bg-primary/10 flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors"
                     onClick={() => {
                       loadSession(session.id);
                       setShowHistory(false);
                     }}
                   >
-                    <MessageSquare className="text-muted-foreground h-4 w-4 shrink-0" />
+                    <MessageSquare className="text-muted-foreground group-hover:text-primary h-4 w-4 shrink-0 transition-colors" />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm">{sessionTitle}</p>
                       <div className="text-muted-foreground flex items-center gap-2 text-xs">
@@ -308,7 +306,7 @@ export function AIAgentSidebar({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-muted-foreground hover:text-destructive h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                      className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteSession(session.id);
@@ -323,10 +321,10 @@ export function AIAgentSidebar({
           </div>
         </ScrollArea>
 
-        <div className="border-border/50 border-t p-3">
+        <div className="border-primary/10 border-t p-3">
           <Button
             variant="outline"
-            className="w-full"
+            className="hover:bg-primary/10 hover:text-primary hover:border-primary/30 w-full"
             onClick={() => {
               createNewSession();
               setShowHistory(false);
@@ -341,117 +339,117 @@ export function AIAgentSidebar({
   }
 
   return (
-    <div className="bg-background flex h-full flex-col">
-      <div className="border-border/50 bg-muted/30 border-b px-3 py-2.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="from-primary/20 via-primary/10 relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br to-transparent shadow-sm">
-              <Sparkles className="text-primary h-4 w-4" />
-              <div className="bg-primary/10 absolute inset-0 rounded-xl blur-sm" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold tracking-tight">
-                {t('agent.title', 'SQL Pro Agent')}
+    <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
+      {/* Header */}
+      <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
+        <div className="flex items-center gap-2">
+          <div className="from-primary/20 via-primary/10 relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br to-transparent">
+            <Sparkles className="text-primary h-4 w-4" />
+            <div className="bg-primary/10 absolute inset-0 rounded-xl blur-sm" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold tracking-tight">
+              {t('agent.title', 'SQL Pro Agent')}
+            </span>
+            {(databaseName || tableName) && (
+              <span className="text-muted-foreground flex items-center gap-1 text-[10px]">
+                {databaseName && <span>{databaseName}</span>}
+                {tableName && (
+                  <>
+                    <ChevronRight className="h-2.5 w-2.5" />
+                    <span className="text-primary">{tableName}</span>
+                  </>
+                )}
               </span>
-              {(databaseName || tableName) && (
-                <span className="text-muted-foreground flex items-center gap-1 text-[10px]">
-                  {databaseName && <span>{databaseName}</span>}
-                  {tableName && (
-                    <>
-                      <ChevronRight className="h-2.5 w-2.5" />
-                      <span className="text-primary">{tableName}</span>
-                    </>
-                  )}
-                </span>
-              )}
-              {!databaseName && !tableName && (
-                <span className="text-muted-foreground text-[10px]">
-                  {t('agent.subtitle', 'AI-powered database assistant')}
-                </span>
-              )}
-            </div>
+            )}
+            {!databaseName && !tableName && (
+              <span className="text-muted-foreground text-[10px]">
+                {t('agent.subtitle', 'AI-powered database assistant')}
+              </span>
+            )}
           </div>
-          <div className="flex items-center gap-0.5">
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 rounded-lg"
-                  onClick={() => setShowHistory(true)}
-                >
-                  <History className="h-3.5 w-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t('agent.history', 'Chat History')}
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 rounded-lg"
-                  onClick={createNewSession}
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t('agent.newSession', 'New Session')}
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 rounded-lg"
-                  onClick={() => setMessages([])}
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t('agent.clearChat', 'Clear Chat')}
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 rounded-lg"
-                  onClick={() => setShowSettings(true)}
-                >
-                  <Settings className="h-3.5 w-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t('agent.settings', 'Settings')}
-              </TooltipContent>
-            </Tooltip>
-            <div className="bg-border/50 mx-1 h-4 w-px" />
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 rounded-lg"
-                  onClick={onClose}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t('common.close', 'Close')}
-              </TooltipContent>
-            </Tooltip>
-          </div>
+        </div>
+        <div className="flex items-center gap-0.5">
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                onClick={() => setShowHistory(true)}
+              >
+                <History className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {t('agent.history', 'Chat History')}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                onClick={createNewSession}
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {t('agent.newSession', 'New Session')}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                onClick={() => setMessages([])}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {t('agent.clearChat', 'Clear Chat')}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                onClick={() => setShowSettings(true)}
+              >
+                <Settings className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {t('agent.settings', 'Settings')}
+            </TooltipContent>
+          </Tooltip>
+          <div className="bg-primary/20 mx-1 h-4 w-px" />
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                onClick={onClose}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {t('common.close', 'Close')}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
 
+      {/* Messages Area */}
       <ScrollArea className="flex-1" ref={scrollRef}>
         <div className="space-y-3 p-3">
           {messages.length === 0 && (
@@ -474,7 +472,7 @@ export function AIAgentSidebar({
                     key={action.label}
                     type="button"
                     onClick={() => handleQuickAction(action.query)}
-                    className="bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-lg px-2.5 py-2 text-left text-[11px] font-medium transition-colors"
+                    className="bg-background/60 text-muted-foreground hover:bg-primary/10 hover:text-primary border-primary/10 rounded-lg border px-2.5 py-2 text-left text-[11px] font-medium transition-colors"
                   >
                     {action.label}
                   </button>
@@ -494,8 +492,9 @@ export function AIAgentSidebar({
         </div>
       </ScrollArea>
 
+      {/* Error Banner */}
       {error && (
-        <div className="border-destructive/20 bg-destructive/5 border-t px-3 py-2.5">
+        <div className="border-destructive/30 bg-destructive/10 border-t px-3 py-2.5">
           <div className="flex items-start gap-2">
             <AlertCircle className="text-destructive mt-0.5 h-4 w-4 shrink-0" />
             <div className="min-w-0 flex-1">
@@ -521,11 +520,9 @@ export function AIAgentSidebar({
         </div>
       )}
 
-      <form
-        onSubmit={handleSubmit}
-        className="border-border/50 bg-muted/30 border-t p-3"
-      >
-        <div className="bg-background/80 ring-border/50 focus-within:ring-primary/40 flex items-end gap-2 rounded-xl px-3 py-2 ring-1 transition-all focus-within:ring-2">
+      {/* Input Area */}
+      <form onSubmit={handleSubmit} className="border-primary/10 border-t p-3">
+        <div className="bg-background/80 ring-primary/20 focus-within:ring-primary/40 flex items-end gap-2 rounded-xl px-3 py-2 ring-1 transition-all focus-within:ring-2">
           <textarea
             ref={textareaRef}
             value={input}
@@ -578,7 +575,7 @@ export function AIAgentSidebar({
             )}
           </span>
           <div className="flex items-center gap-2">
-            <kbd className="bg-muted/50 rounded px-1 py-0.5 font-mono text-[9px]">
+            <kbd className="bg-primary/10 text-primary/80 rounded px-1 py-0.5 font-mono text-[9px]">
               ⌘↵
             </kbd>
             <span>{t('agent.toSend', 'to send')}</span>
