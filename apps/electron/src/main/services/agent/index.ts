@@ -145,7 +145,6 @@ export function setupAgentHandlers(): void {
             );
           }
         } catch (streamError) {
-          // Send error event through stream so renderer can display it
           const errorMessage =
             streamError instanceof Error
               ? streamError.message
@@ -154,7 +153,7 @@ export function setupAgentHandlers(): void {
             `${AGENT_IPC_CHANNELS.CHAT_STREAM}:${streamId}`,
             { type: 'error', error: errorMessage }
           );
-          throw streamError; // Re-throw to be caught by outer catch block
+          throw streamError;
         }
 
         // Get final result - use response.messages which includes tool calls and results

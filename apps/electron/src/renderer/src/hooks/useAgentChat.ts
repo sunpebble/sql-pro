@@ -1,10 +1,8 @@
 import type { AgentSettings, ChatSession } from '@shared/types/agent';
 import type { UIMessage } from 'ai';
 import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport } from 'ai';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-
-const API_PORT = 3847;
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { IPCChatTransport } from '@/lib/ipc-chat-transport';
 
 interface UseAgentChatOptions {
   connectionId: string;
@@ -45,14 +43,16 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
     () => options.sessionId || generateSessionId()
   );
 
-  const transport = useMemo(
-    () =>
-      new DefaultChatTransport({
-        api: `http://127.0.0.1:${API_PORT}/api/chat`,
-        body: { connectionId },
-      }),
-    [connectionId]
-  );
+  const transportRef = useRef<IPCChatTransport | null>(null);
+
+  const transport = useMemo(() => {
+    const newTransport = new IPCChatTransport({
+      connectionId,
+      sessionId: currentSessionId,
+    });
+    transportRef.current = newTransport;
+    return newTransport;
+  }, [connectionId, currentSessionId]);
 
   const {
     messages,
@@ -67,7 +67,7 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
   });
 
   const clearError = useCallback(() => {
-    // useChat doesn't expose clearError, so we handle errors via status
+    // useChat doesn't expose clearError, errors are handled via status
   }, []);
 
   const sendMessage = useCallback(
@@ -109,6 +109,9 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
     const newId = generateSessionId();
     setCurrentSessionId(newId);
     setMessages([]);
+    if (transportRef.current) {
+      transportRef.current.setSessionId(newId);
+    }
     return newId;
   }, [setMessages]);
 
@@ -122,6 +125,9 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
         if (response.session) {
           setMessages(response.session.messages as UIMessage[]);
           setCurrentSessionId(sessionId);
+          if (transportRef.current) {
+            transportRef.current.setSessionId(sessionId);
+          }
         }
       } catch (err) {
         console.error('Failed to load session:', err);
