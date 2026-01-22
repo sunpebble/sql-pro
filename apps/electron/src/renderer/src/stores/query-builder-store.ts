@@ -17,6 +17,10 @@ interface QueryBuilderStore {
   edges: QueryBuilderEdge[];
   viewport: Viewport;
 
+  // Highlighting state
+  highlightedColumn: { nodeId: string; column: string } | null;
+  highlightedEdgeIds: Set<string>;
+
   // Query configuration
   selectedColumns: SelectedColumn[];
   filters: FilterCondition[];
@@ -29,6 +33,10 @@ interface QueryBuilderStore {
   // Table alias counter for auto-generating unique aliases
   tableAliasCounter: Record<string, number>;
 
+  // Actions - Highlighting
+  setHighlightedColumn: (nodeId: string, column: string) => void;
+  clearHighlightedColumn: () => void;
+
   // Actions - Node management
   addTable: (table: TableSchema, position?: { x: number; y: number }) => void;
   removeTable: (nodeId: string) => void;
@@ -37,6 +45,7 @@ interface QueryBuilderStore {
     position: { x: number; y: number }
   ) => void;
   setNodes: (nodes: QueryBuilderNode[]) => void;
+  autoLayout: () => void;
 
   // Actions - Column selection
   toggleColumn: (
@@ -97,6 +106,8 @@ const initialState = {
   nodes: [] as QueryBuilderNode[],
   edges: [] as QueryBuilderEdge[],
   viewport: { x: 0, y: 0, zoom: 1 },
+  highlightedColumn: null as { nodeId: string; column: string } | null,
+  highlightedEdgeIds: new Set<string>(),
   selectedColumns: [] as SelectedColumn[],
   filters: [] as FilterCondition[],
   sorts: [] as SortConfig[],
@@ -112,11 +123,37 @@ export const useQueryBuilderStore = create<QueryBuilderStore>()(
     (set, get) => ({
       ...initialState,
 
-      // Node management
+      setHighlightedColumn: (nodeId, column) => {
+        const { edges } = get();
+        const relatedEdgeIds = new Set<string>();
+
+        for (const edge of edges) {
+          const sourceCol = edge.data?.sourceColumn;
+          const targetCol = edge.data?.targetColumn;
+          if (
+            (edge.source === nodeId && sourceCol === column) ||
+            (edge.target === nodeId && targetCol === column)
+          ) {
+            relatedEdgeIds.add(edge.id);
+          }
+        }
+
+        set({
+          highlightedColumn: { nodeId, column },
+          highlightedEdgeIds: relatedEdgeIds,
+        });
+      },
+
+      clearHighlightedColumn: () => {
+        set({
+          highlightedColumn: null,
+          highlightedEdgeIds: new Set(),
+        });
+      },
+
       addTable: (table, position = { x: 100, y: 100 }) => {
         const { nodes, tableAliasCounter } = get();
 
-        // Generate unique alias
         const count = (tableAliasCounter[table.name] || 0) + 1;
         const alias = count === 1 ? table.name : `${table.name}_${count}`;
 
@@ -172,6 +209,66 @@ export const useQueryBuilderStore = create<QueryBuilderStore>()(
       },
 
       setNodes: (nodes) => set({ nodes }),
+
+      autoLayout: () => {
+        const { nodes, edges } = get();
+        if (nodes.length === 0) return;
+
+        const NODE_WIDTH = 280;
+        const NODE_HEIGHT = 200;
+        const HORIZONTAL_GAP = 100;
+        const VERTICAL_GAP = 80;
+        const COLUMNS = Math.max(2, Math.ceil(Math.sqrt(nodes.length)));
+
+        const connectedNodes = new Map<string, Set<string>>();
+        for (const node of nodes) {
+          connectedNodes.set(node.id, new Set());
+        }
+        for (const edge of edges) {
+          connectedNodes.get(edge.source)?.add(edge.target);
+          connectedNodes.get(edge.target)?.add(edge.source);
+        }
+
+        const visited = new Set<string>();
+        const ordered: string[] = [];
+
+        const bfs = (startId: string) => {
+          const queue = [startId];
+          while (queue.length > 0) {
+            const current = queue.shift()!;
+            if (visited.has(current)) continue;
+            visited.add(current);
+            ordered.push(current);
+            const neighbors = connectedNodes.get(current) || new Set();
+            for (const neighbor of neighbors) {
+              if (!visited.has(neighbor)) {
+                queue.push(neighbor);
+              }
+            }
+          }
+        };
+
+        for (const node of nodes) {
+          if (!visited.has(node.id)) {
+            bfs(node.id);
+          }
+        }
+
+        const newNodes = nodes.map((node) => {
+          const index = ordered.indexOf(node.id);
+          const col = index % COLUMNS;
+          const row = Math.floor(index / COLUMNS);
+          return {
+            ...node,
+            position: {
+              x: 50 + col * (NODE_WIDTH + HORIZONTAL_GAP),
+              y: 50 + row * (NODE_HEIGHT + VERTICAL_GAP),
+            },
+          };
+        });
+
+        set({ nodes: newNodes });
+      },
 
       // Column selection
       toggleColumn: (nodeId, table, alias, column) => {

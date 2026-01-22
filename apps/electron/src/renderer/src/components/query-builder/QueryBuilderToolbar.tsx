@@ -30,6 +30,7 @@ import {
   ArrowDownAZ,
   ArrowUpAZ,
   Filter,
+  LayoutGrid,
   Play,
   Plus,
   RefreshCw,
@@ -67,6 +68,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
   const {
     nodes,
     addTable,
+    autoLayout,
     filters,
     addFilter,
     updateFilter,
@@ -317,6 +319,22 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
       <div className="flex-1" />
 
       {/* Actions */}
+      <Tooltip>
+        <TooltipTrigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={autoLayout}
+            disabled={nodes.length < 2}
+          >
+            <LayoutGrid className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          {t('queryBuilder.autoLayout', 'Auto Layout')}
+        </TooltipContent>
+      </Tooltip>
+
       <Tooltip>
         <TooltipTrigger>
           <Button

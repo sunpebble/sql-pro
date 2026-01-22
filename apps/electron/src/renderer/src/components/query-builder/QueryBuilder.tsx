@@ -55,6 +55,8 @@ export function QueryBuilder() {
     distinct,
     limit,
     offset,
+    highlightedColumn,
+    highlightedEdgeIds,
     setNodes: setStoreNodes,
     setEdges: _setStoreEdges,
     addJoin,
@@ -98,6 +100,30 @@ export function QueryBuilder() {
     limit,
     offset,
   ]);
+
+  // Compute highlighted columns for the selected columns summary
+  const highlightedColumnsInSummary = useMemo(() => {
+    if (!highlightedColumn || highlightedEdgeIds.size === 0) {
+      return new Set<string>();
+    }
+
+    const highlighted = new Set<string>();
+    for (const edge of storeEdges) {
+      if (!highlightedEdgeIds.has(edge.id)) continue;
+
+      // Find the source and target nodes to get their aliases
+      const sourceNode = storeNodes.find((n) => n.id === edge.source);
+      const targetNode = storeNodes.find((n) => n.id === edge.target);
+
+      if (sourceNode && edge.data?.sourceColumn) {
+        highlighted.add(`${sourceNode.data.alias}.${edge.data.sourceColumn}`);
+      }
+      if (targetNode && edge.data?.targetColumn) {
+        highlighted.add(`${targetNode.data.alias}.${edge.data.targetColumn}`);
+      }
+    }
+    return highlighted;
+  }, [storeNodes, storeEdges, highlightedColumn, highlightedEdgeIds]);
 
   // Handle node changes and sync to store
   const handleNodesChange = useCallback(
@@ -337,14 +363,23 @@ export function QueryBuilder() {
                   {selectedColumns.length})
                 </h4>
                 <div className="flex flex-wrap gap-1">
-                  {selectedColumns.slice(0, 10).map((col) => (
-                    <span
-                      key={`${col.tableAlias}.${col.column}`}
-                      className="bg-primary/10 inline-flex items-center rounded-full px-2 py-0.5 text-xs"
-                    >
-                      {col.tableAlias}.{col.column}
-                    </span>
-                  ))}
+                  {selectedColumns.slice(0, 10).map((col) => {
+                    const key = `${col.tableAlias}.${col.column}`;
+                    const isHighlighted = highlightedColumnsInSummary.has(key);
+                    return (
+                      <span
+                        key={key}
+                        className={cn(
+                          'inline-flex items-center rounded-full px-2 py-0.5 text-xs transition-colors',
+                          isHighlighted
+                            ? 'bg-cyan-500 text-white ring-2 ring-cyan-300'
+                            : 'bg-primary/10'
+                        )}
+                      >
+                        {key}
+                      </span>
+                    );
+                  })}
                   {selectedColumns.length > 10 && (
                     <span className="text-muted-foreground text-xs">
                       +{selectedColumns.length - 10} more
