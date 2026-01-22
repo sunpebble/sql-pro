@@ -921,7 +921,7 @@ export function WelcomeScreen() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background: `
-            radial-gradient(ellipse 80% 50% at 70% 20%, var(--gold-subtle), transparent 60%)
+            radial-gradient(ellipse 80% 50% at 70% 20%, var(--primary-subtle), transparent 60%)
           `,
         }}
       />
@@ -931,26 +931,26 @@ export function WelcomeScreen() {
         <svg viewBox="0 0 200 200" className="h-full w-full">
           <defs>
             <linearGradient
-              id="gold-stroke"
+              id="primary-stroke"
               x1="0%"
               y1="0%"
               x2="100%"
               y2="100%"
             >
-              <stop offset="0%" stopColor="var(--gold-bright)" />
-              <stop offset="100%" stopColor="var(--gold-dark)" />
+              <stop offset="0%" stopColor="var(--primary)" />
+              <stop offset="100%" stopColor="var(--primary-dark)" />
             </linearGradient>
           </defs>
           <path
             d="M100 10 L190 55 L190 145 L100 190 L10 145 L10 55 Z"
             fill="none"
-            stroke="url(#gold-stroke)"
+            stroke="url(#primary-stroke)"
             strokeWidth="0.5"
           />
           <path
             d="M100 30 L170 65 L170 135 L100 170 L30 135 L30 65 Z"
             fill="none"
-            stroke="url(#gold-stroke)"
+            stroke="url(#primary-stroke)"
             strokeWidth="0.3"
           />
         </svg>
@@ -995,8 +995,8 @@ export function WelcomeScreen() {
           <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
             {/* Logo & Title - refined, minimal */}
             <div className="shrink-0 text-center">
-              <div className="border-gold/20 bg-gold/5 hover:border-gold/40 mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border shadow-sm transition-all duration-300 hover:shadow-[0_4px_20px_var(--gold-subtle)]">
-                <Database className="text-gold h-7 w-7" />
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[var(--primary)]/20 bg-[var(--primary)]/5 shadow-sm transition-all duration-300 hover:border-[var(--primary)]/40 hover:shadow-[0_4px_20px_var(--primary-subtle)]">
+                <Database className="h-7 w-7 text-[var(--primary)]" />
               </div>
               <h1 className="text-foreground text-2xl font-semibold tracking-tight">
                 {t('app.name')}
@@ -1021,7 +1021,7 @@ export function WelcomeScreen() {
               <Button
                 variant={isConnecting ? 'outline' : 'default'}
                 size="lg"
-                className="bg-gold hover:bg-gold-dark text-background w-full font-medium shadow-sm transition-all hover:shadow-md"
+                className="text-background w-full bg-[var(--primary)] font-medium shadow-sm transition-all hover:bg-[var(--primary-dark)] hover:shadow-md"
                 onClick={handleOpenDatabase}
                 disabled={isConnecting}
                 data-action="open-database"
@@ -1036,7 +1036,7 @@ export function WelcomeScreen() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-border/80 hover:border-gold/50 hover:bg-gold/5 w-full transition-colors"
+                className="border-border/80 w-full transition-colors hover:border-[var(--primary)]/50 hover:bg-[var(--primary)]/5"
                 onClick={() => setDbTypeSelectorOpen(true)}
                 disabled={isConnecting}
                 data-action="connect-server"

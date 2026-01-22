@@ -1,20 +1,32 @@
+/* =========================================
+   Skip Link - Modern Fresh Design
+   Accessible skip navigation
+   ========================================= */
+
 .skip-link {
   position: absolute;
   top: -100%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  padding: 12px 24px;
-  background: var(--color-primary);
-  color: white;
+  padding: 14px 28px;
+  background: var(--primary);
+  color: var(--text-inverse);
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: var(--border-radius-lg);
   text-decoration: none;
-  transition: top 0.2s ease;
+  box-shadow: var(--shadow-lg);
+  transition: top var(--duration-normal) var(--ease-out);
 }
 
 .skip-link:focus {
   top: 16px;
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--primary-dark);
   outline-offset: 2px;
+}
+
+.skip-link:hover {
+  background: var(--primary-dark);
 }
