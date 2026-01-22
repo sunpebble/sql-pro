@@ -167,14 +167,14 @@ const StatCard = memo(
     value,
     subValue,
     icon: Icon,
-    color = 'text-gold',
+    color = 'text-primary',
   }: StatCardProps) => {
     return (
       <div className="bg-muted/50 rounded-lg p-4">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-muted-foreground text-sm">{label}</p>
-            <p className="text-2xl font-bold">{value}</p>
+            <p className="text-2xl font-semibold">{value}</p>
             {subValue && (
               <p className="text-muted-foreground text-xs">{subValue}</p>
             )}

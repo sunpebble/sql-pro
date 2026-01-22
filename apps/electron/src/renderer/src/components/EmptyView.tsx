@@ -30,64 +30,66 @@ interface EmptyViewProps {
  * Unified empty state component for all views.
  * Provides consistent styling with Data Sanctum design language.
  */
-export const EmptyView = memo(({
-  icon: Icon,
-  title,
-  description,
-  action,
-  secondaryAction,
-  className,
-}: EmptyViewProps) => {
-  return (
-    <div
-      className={cn(
-        'bg-grid-dot flex h-full flex-1 items-center justify-center p-8',
-        className
-      )}
-    >
-      <div className="animate-fade-in-up flex max-w-md flex-col items-center text-center">
-        {/* Decorated Icon */}
-        <DecoFrame
-          size="default"
-          variant="gold"
-          animated
-          className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
-        >
-          <Icon className="text-gold h-10 w-10" />
-        </DecoFrame>
-
-        {/* Title */}
-        <h3 className="text-gold mb-2 text-lg font-semibold">{title}</h3>
-
-        {/* Description */}
-        <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-          {description}
-        </p>
-
-        {/* Actions */}
-        {(action || secondaryAction) && (
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {action && (
-              <GoldButton onClick={action.onClick} className="gap-2">
-                {action.icon && <action.icon className="h-4 w-4" />}
-                {action.label}
-              </GoldButton>
-            )}
-            {secondaryAction && (
-              <GoldButton
-                variant="outline"
-                onClick={secondaryAction.onClick}
-                className="gap-2"
-              >
-                {secondaryAction.icon && (
-                  <secondaryAction.icon className="h-4 w-4" />
-                )}
-                {secondaryAction.label}
-              </GoldButton>
-            )}
-          </div>
+export const EmptyView = memo(
+  ({
+    icon: Icon,
+    title,
+    description,
+    action,
+    secondaryAction,
+    className,
+  }: EmptyViewProps) => {
+    return (
+      <div
+        className={cn(
+          'bg-grid-dot flex h-full flex-1 items-center justify-center p-8',
+          className
         )}
+      >
+        <div className="animate-fade-in-up flex max-w-md flex-col items-center text-center">
+          {/* Decorated Icon */}
+          <DecoFrame
+            size="default"
+            variant="gold"
+            animated
+            className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
+          >
+            <Icon className="text-primary h-10 w-10" />
+          </DecoFrame>
+
+          {/* Title */}
+          <h3 className="text-primary mb-2 text-lg font-semibold">{title}</h3>
+
+          {/* Description */}
+          <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+            {description}
+          </p>
+
+          {/* Actions */}
+          {(action || secondaryAction) && (
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {action && (
+                <GoldButton onClick={action.onClick} className="gap-2">
+                  {action.icon && <action.icon className="h-4 w-4" />}
+                  {action.label}
+                </GoldButton>
+              )}
+              {secondaryAction && (
+                <GoldButton
+                  variant="outline"
+                  onClick={secondaryAction.onClick}
+                  className="gap-2"
+                >
+                  {secondaryAction.icon && (
+                    <secondaryAction.icon className="h-4 w-4" />
+                  )}
+                  {secondaryAction.label}
+                </GoldButton>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);

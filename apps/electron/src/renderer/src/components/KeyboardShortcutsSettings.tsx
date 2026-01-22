@@ -111,7 +111,7 @@ const ShortcutEditor = memo(
       <div
         className={cn(
           'flex items-center justify-between gap-4 rounded-lg border p-3 transition-colors',
-          isRecording && 'border-gold bg-gold/5',
+          isRecording && 'border-primary bg-primary/5',
           hasConflicts && !isRecording && 'border-amber-500/50 bg-amber-500/5'
         )}
       >
@@ -184,7 +184,7 @@ const ShortcutEditor = memo(
                 onClick={startRecording}
                 className={cn(
                   'flex h-8 min-w-24 items-center justify-center rounded border px-3 text-xs transition-colors',
-                  'hover:border-gold hover:bg-muted',
+                  'hover:border-primary hover:bg-muted',
                   !binding && 'text-muted-foreground italic'
                 )}
               >
@@ -440,11 +440,7 @@ export const KeyboardShortcutsSettings = memo(
               <RotateCcw className="h-4 w-4" />
               {t('shortcuts.reset')}
             </Button>
-            <Button
-              onClick={() => onOpenChange(false)}
-              className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
-              variant="outline"
-            >
+            <Button onClick={() => onOpenChange(false)} variant="accent">
               {t('shortcuts.done')}
             </Button>
           </DialogFooter>

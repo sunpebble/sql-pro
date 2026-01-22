@@ -65,7 +65,7 @@ function ERRelationshipEdgeComponent({
         path={edgePath}
         style={{
           stroke: selected
-            ? 'var(--color-gold)'
+            ? 'var(--color-primary)'
             : 'var(--color-muted-foreground)',
           strokeWidth: selected ? 2 : 1.5,
         }}

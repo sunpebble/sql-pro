@@ -94,7 +94,7 @@ function ExecutionPlanNodeComponent({
       <Handle
         type="target"
         position={Position.Top}
-        className="!border-gold !bg-gold !h-2 !w-2 !border-2"
+        className="!border-primary !bg-primary !h-2 !w-2 !border-2"
       />
 
       {/* Header with operation type */}
@@ -187,7 +187,7 @@ function ExecutionPlanNodeComponent({
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!border-gold !bg-gold !h-2 !w-2 !border-2"
+        className="!border-primary !bg-primary !h-2 !w-2 !border-2"
       />
     </div>
   );

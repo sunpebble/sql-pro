@@ -93,15 +93,15 @@ function VimModeToggle({
       className={cn(
         'flex flex-col items-start rounded-lg border p-3 text-left transition-colors',
         enabled
-          ? 'border-gold bg-gold/10'
-          : 'border-border hover:border-gold/50 hover:bg-muted/50'
+          ? 'border-primary bg-primary/10'
+          : 'border-border hover:border-primary/50 hover:bg-muted/50'
       )}
     >
       <div className="flex items-center gap-2">
         <span
           className={cn(
             'font-mono text-xs font-bold uppercase',
-            enabled ? 'text-gold' : 'text-muted-foreground'
+            enabled ? 'text-primary' : 'text-muted-foreground'
           )}
         >
           {enabled ? 'VIM' : 'OFF'}

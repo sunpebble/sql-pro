@@ -58,7 +58,7 @@ export function AnimatedLoader({
           </svg>
         </div>
         {/* Pulsing center icon */}
-        <Database className={cn('text-gold animate-pulse', sizes.icon)} />
+        <Database className={cn('text-primary animate-pulse', sizes.icon)} />
       </div>
       <span className={cn('text-muted-foreground animate-pulse', sizes.text)}>
         {text}
@@ -84,7 +84,7 @@ export function SkeletonRow({ columns, className, style }: SkeletonRowProps) {
     >
       {/* Checkbox skeleton */}
       <div className="w-10 shrink-0 px-2">
-        <div className="bg-muted h-4 w-4 rounded" />
+        <div className="bg-muted h-4 w-4 rounded-md" />
       </div>
       {/* Column skeletons */}
       {Array.from({ length: columns }).map((_, i) => (
@@ -96,7 +96,7 @@ export function SkeletonRow({ columns, className, style }: SkeletonRowProps) {
           }}
         >
           <div
-            className="bg-muted h-4 rounded"
+            className="bg-muted h-4 rounded-md"
             style={{
               width: `${Math.random() * 40 + 40}%`,
             }}
@@ -126,12 +126,12 @@ export function SkeletonTable({
       {/* Header skeleton */}
       <div className="bg-muted/50 flex h-10 items-center border-b">
         <div className="w-10 shrink-0 px-2">
-          <div className="bg-muted-foreground/20 h-4 w-4 rounded" />
+          <div className="bg-muted-foreground/20 h-4 w-4 rounded-md" />
         </div>
         {Array.from({ length: columns }).map((_, i) => (
           <div key={`skeleton-header-${i}`} className="flex-1 px-2">
             <div
-              className="bg-muted-foreground/20 h-4 rounded"
+              className="bg-muted-foreground/20 h-4 rounded-md"
               style={{ width: `${Math.random() * 30 + 50}%` }}
             />
           </div>
@@ -227,7 +227,7 @@ export function PulseHighlight({
     <div className={cn('relative', active && 'animate-highlight', className)}>
       {children}
       {active && (
-        <div className="bg-gold/10 pointer-events-none absolute inset-0 animate-ping rounded" />
+        <div className="bg-primary/10 pointer-events-none absolute inset-0 animate-ping rounded-md" />
       )}
     </div>
   );

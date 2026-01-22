@@ -32,7 +32,7 @@ export const GroupRow = memo(({ row, isExpanded }: GroupRowProps) => {
           {row.depth > 0 && <div style={{ width: row.depth * 20 }} />}
 
           <button
-            className="hover:bg-accent flex h-5 w-5 items-center justify-center rounded"
+            className="hover:bg-accent flex h-5 w-5 items-center justify-center rounded-md"
             onClick={(e) => {
               e.stopPropagation();
               row.toggleExpanded();

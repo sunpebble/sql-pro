@@ -22,13 +22,11 @@ export function GeneralSection() {
             return (
               <Button
                 key={code}
-                variant="outline"
+                variant={isActive ? 'accent' : 'outline'}
                 size="sm"
                 onClick={() => changeLanguage(code)}
                 className={`justify-start ${
-                  isActive
-                    ? 'border-gold bg-gold/15 text-gold hover:bg-gold/25'
-                    : 'hover:border-gold/50 hover:text-gold'
+                  !isActive && 'hover:border-primary/50 hover:text-primary'
                 }`}
               >
                 <Globe className="mr-2 h-4 w-4" />
@@ -48,7 +46,7 @@ export function GeneralSection() {
           <Switch
             checked={restoreSession}
             onCheckedChange={setRestoreSession}
-            className="data-checked:bg-gold"
+            className="data-checked:bg-primary"
           />
         </SettingItem>
       </SettingGroup>

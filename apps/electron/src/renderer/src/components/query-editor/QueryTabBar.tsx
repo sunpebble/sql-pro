@@ -106,9 +106,9 @@ const TabItem = memo(
             role="tab"
             aria-selected={isActive}
             className={cn(
-              'group border-gold/10 relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1 border-r px-2 text-sm transition-colors',
+              'group border-primary/10 relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1 border-r px-2 text-sm transition-colors',
               isActive
-                ? 'bg-background text-gold shadow-[inset_0_-2px_0_0_var(--color-gold)]'
+                ? 'bg-background text-primary shadow-[inset_0_-2px_0_0_var(--color-primary)]'
                 : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-gold-5'
             )}
             onClick={onSelect}
@@ -130,7 +130,7 @@ const TabItem = memo(
               <span className="flex-1 truncate">{tab.title}</span>
             )}
             {tab.isDirty && (
-              <span className="text-gold h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
+              <span className="text-primary h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
             )}
             <TooltipProvider delay={300}>
               <Tooltip>

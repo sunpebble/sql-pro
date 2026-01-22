@@ -168,8 +168,14 @@
   "a11y": {
     "skipToContent": "Skip to main content",
     "languageSelector": "Select language",
+    "themeSelector": "Select theme",
     "mainNavigation": "Main navigation",
     "featureCard": "Feature: {{title}}",
     "socialLink": "Visit {{name}} (opens in new tab)"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }

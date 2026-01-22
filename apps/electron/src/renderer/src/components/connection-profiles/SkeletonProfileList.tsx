@@ -42,7 +42,7 @@ export function SkeletonProfileList({
               className="flex items-center gap-2 rounded-sm px-2 py-1.5"
               style={{ animationDelay: `${i * 50}ms` }}
             >
-              <Skeleton className="size-4 rounded" />
+              <Skeleton className="size-4 rounded-md" />
               <Skeleton className="h-4 flex-1" style={{ width }} />
             </div>
           ))}
@@ -61,7 +61,7 @@ export function SkeletonProfileList({
                 className="flex items-center gap-2 rounded-sm px-2 py-1.5"
                 style={{ animationDelay: `${(i + 3) * 50}ms` }}
               >
-                <Skeleton className="size-4 rounded" />
+                <Skeleton className="size-4 rounded-md" />
                 <Skeleton className="h-4 flex-1" style={{ width }} />
               </div>
             ))}

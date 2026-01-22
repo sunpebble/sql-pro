@@ -26,9 +26,9 @@ export function ColumnResizeHandle({
         // Use pseudo-element for larger hit area
         'before:absolute before:inset-y-0 before:-right-2 before:-left-2 before:content-[""]',
         // Visual indicator
-        'hover:bg-gold/50 active:bg-gold bg-transparent',
+        'hover:bg-primary/50 active:bg-primary bg-transparent',
         'transition-colors duration-75',
-        isResizing && 'bg-gold'
+        isResizing && 'bg-primary'
       )}
       onMouseDown={onMouseDown}
       onDoubleClick={(e) => {

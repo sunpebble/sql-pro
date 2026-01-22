@@ -93,7 +93,7 @@ export function ResizablePanel({
       {/* Resize handle */}
       <div
         className={cn(
-          'hover:bg-gold/50 absolute top-0 z-10 h-full w-1 cursor-col-resize transition-colors',
+          'hover:bg-primary/50 absolute top-0 z-10 h-full w-1 cursor-col-resize transition-colors',
           side === 'left' ? 'right-0' : 'left-0'
         )}
         onMouseDown={handleMouseDown}

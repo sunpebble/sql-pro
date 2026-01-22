@@ -95,14 +95,14 @@ const StatCard = memo(
     value,
     subValue,
     icon: Icon,
-    color = 'text-gold',
+    color = 'text-primary',
   }: StatCardProps) => {
     return (
       <div className="bg-muted/50 rounded-lg p-4">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-muted-foreground text-sm">{label}</p>
-            <p className="text-2xl font-bold">{value}</p>
+            <p className="text-2xl font-semibold">{value}</p>
             {subValue && (
               <p className="text-muted-foreground text-xs">{subValue}</p>
             )}
@@ -137,8 +137,8 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
     <button
       onClick={onClick}
       className={cn(
-        'hover:border-gold/50 w-full rounded-lg border p-3 text-left transition-colors',
-        isSelected && 'border-gold bg-gold/5'
+        'hover:border-primary/50 w-full rounded-lg border p-3 text-left transition-colors',
+        isSelected && 'border-primary bg-primary/5'
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -189,10 +189,10 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="bg-gold/10 rounded-lg p-2">
+        <div className="bg-primary/10 rounded-lg p-2">
           {(() => {
             const Icon = getTypeIcon(column.type);
-            return <Icon className="text-gold h-6 w-6" />;
+            return <Icon className="text-primary h-6 w-6" />;
           })()}
         </div>
         <div>
@@ -204,7 +204,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
       {/* Statistics */}
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-muted/50 rounded-lg p-3 text-center">
-          <p className="text-lg font-bold">
+          <p className="text-lg font-semibold">
             {column.distinctCount.toLocaleString()}
           </p>
           <p className="text-muted-foreground text-xs">
@@ -212,13 +212,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
           </p>
         </div>
         <div className="bg-muted/50 rounded-lg p-3 text-center">
-          <p className="text-lg font-bold">{nullPercentage.toFixed(1)}%</p>
+          <p className="text-lg font-semibold">{nullPercentage.toFixed(1)}%</p>
           <p className="text-muted-foreground text-xs">
             {t('dataProfiler.nullValues')}
           </p>
         </div>
         <div className="bg-muted/50 rounded-lg p-3 text-center">
-          <p className="text-lg font-bold">{emptyPercentage.toFixed(1)}%</p>
+          <p className="text-lg font-semibold">{emptyPercentage.toFixed(1)}%</p>
           <p className="text-muted-foreground text-xs">
             {t('dataProfiler.emptyValues')}
           </p>

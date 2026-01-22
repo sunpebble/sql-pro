@@ -155,7 +155,7 @@ export const ErrorDisplay = memo(
                 href={documentationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gold inline-flex items-center gap-2 text-sm hover:underline"
+                className="text-primary inline-flex items-center gap-2 text-sm hover:underline"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span>{t('errorDisplay.viewDocumentation')}</span>

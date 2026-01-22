@@ -7,6 +7,7 @@ import {
   loadWindowState,
   saveWindowState,
 } from './lib/window-state';
+import { startApiServer, stopApiServer } from './services/api-server';
 import { fileWatcherService } from './services/file-watcher';
 import {
   registerImageProxyScheme,
@@ -220,6 +221,8 @@ app.whenReady().then(async () => {
   // Initialize auto-updater
   initAutoUpdater();
 
+  startApiServer();
+
   // Create native application menu
   createApplicationMenu();
 
@@ -282,6 +285,8 @@ app.on('window-all-closed', async () => {
 
   // Clean up file watchers
   fileWatcherService.unwatchAll();
+
+  stopApiServer();
 
   // On macOS, apps typically stay active even with no windows open
   // Don't cleanup IPC handlers here since new windows can still be created

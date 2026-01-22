@@ -50,7 +50,9 @@ export function SettingsNav({
               isActive ? 'btn-gold-active font-medium' : 'hover-gold'
             )}
           >
-            <Icon className={cn('h-4 w-4 shrink-0', isActive && 'text-gold')} />
+            <Icon
+              className={cn('h-4 w-4 shrink-0', isActive && 'text-primary')}
+            />
             <span className="truncate">{t(item.labelKey)}</span>
           </button>
         );

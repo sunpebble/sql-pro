@@ -187,8 +187,8 @@ const PlanNode = memo(function PlanNode({
         ) : (
           <span className="w-5" />
         )}
-        <div className="bg-gold/10 rounded p-1">
-          <Icon className="text-gold h-4 w-4" />
+        <div className="bg-primary/10 rounded p-1">
+          <Icon className="text-primary h-4 w-4" />
         </div>
         <div className="flex-1">
           <p className="font-mono text-sm">{node.detail}</p>
@@ -412,7 +412,7 @@ export const QueryOptimizerPanel = memo(
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1">
                   <Clock className="h-4 w-4" />
-                  <span className="text-lg font-bold">
+                  <span className="text-lg font-semibold">
                     {(stats.executionTime ?? 0).toFixed(2)}ms
                   </span>
                 </div>
@@ -421,19 +421,23 @@ export const QueryOptimizerPanel = memo(
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-bold">{stats.rowsExamined ?? 0}</p>
+                <p className="text-lg font-semibold">
+                  {stats.rowsExamined ?? 0}
+                </p>
                 <p className="text-muted-foreground text-xs">
                   {t('devTools.queryOptimizer.rowsExamined')}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-bold">{stats.rowsReturned ?? 0}</p>
+                <p className="text-lg font-semibold">
+                  {stats.rowsReturned ?? 0}
+                </p>
                 <p className="text-muted-foreground text-xs">
                   {t('devTools.queryOptimizer.rowsReturned')}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-bold">
+                <p className="text-lg font-semibold">
                   {stats.indexesUsed?.length ?? 0}
                 </p>
                 <p className="text-muted-foreground text-xs">
@@ -712,7 +716,7 @@ export const QueryOptimizerPanel = memo(
                       <div className="bg-muted/50 grid grid-cols-2 gap-4 rounded-lg p-4">
                         {selectedNode.data.estimatedCost !== undefined && (
                           <div className="text-center">
-                            <p className="text-2xl font-bold">
+                            <p className="text-2xl font-semibold">
                               {selectedNode.data.estimatedCost}
                             </p>
                             <p className="text-muted-foreground text-xs">
@@ -722,7 +726,7 @@ export const QueryOptimizerPanel = memo(
                         )}
                         {selectedNode.data.estimatedRows !== undefined && (
                           <div className="text-center">
-                            <p className="text-2xl font-bold">
+                            <p className="text-2xl font-semibold">
                               ~{selectedNode.data.estimatedRows}
                             </p>
                             <p className="text-muted-foreground text-xs">

@@ -3,13 +3,13 @@ import * as React from 'react';
 import { cn } from './lib/utils';
 
 /**
- * SanctumCard - Data Sanctum branded card
+ * BrandCard - Themed card component with decorative effects
  *
- * An Art Deco inspired card with decorative corner frames and gold accents.
- * Features inner border that animates on hover for a ceremonial feel.
+ * A card component with decorative inner border frame and subtle accents.
+ * Features inner border that animates on hover for a refined feel.
  */
 
-interface SanctumCardProps extends React.ComponentProps<'div'> {
+interface BrandCardProps extends React.ComponentProps<'div'> {
   /** Show decorative inner border frame */
   decorated?: boolean;
   /** Enable hover lift and glow effect */
@@ -18,26 +18,26 @@ interface SanctumCardProps extends React.ComponentProps<'div'> {
   size?: 'default' | 'sm' | 'lg';
 }
 
-function SanctumCard({
+function BrandCard({
   className,
   decorated = true,
   interactive = true,
   size = 'default',
   children,
   ...props
-}: SanctumCardProps) {
+}: BrandCardProps) {
   return (
     <div
-      data-slot="sanctum-card"
+      data-slot="brand-card"
       data-decorated={decorated}
       data-interactive={interactive}
       className={cn(
         // Base structure
-        'group/sanctum-card relative flex flex-col overflow-hidden',
-        // Background gradient
-        'bg-gradient-to-br from-[rgba(20,20,20,0.9)] to-[rgba(11,11,11,0.95)]',
+        'group/brand-card relative flex flex-col overflow-hidden',
+        // Background
+        'bg-card',
         // Border
-        'border border-[rgba(248,246,241,0.08)]',
+        'border-border/10 border',
         // Transitions
         'transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
 
@@ -50,8 +50,7 @@ function SanctumCard({
 
         // Interactive hover effects
         interactive && [
-          'hover:border-[rgba(212,175,55,0.3)]',
-          'hover:-translate-y-2',
+          'hover:border-primary/30',
           'hover:shadow-[0_16px_64px_rgba(0,0,0,0.5)]',
         ],
 
@@ -64,11 +63,11 @@ function SanctumCard({
         <div
           className={cn(
             'pointer-events-none absolute inset-3',
-            'border border-[rgba(248,246,241,0.08)]',
+            'border-border/10 border',
             'opacity-0 transition-all duration-300',
             // Animate inward on hover
             interactive &&
-              'group-hover/sanctum-card:inset-4 group-hover/sanctum-card:border-[rgba(212,175,55,0.2)] group-hover/sanctum-card:opacity-100'
+              'group-hover/brand-card:border-primary/20 group-hover/brand-card:inset-4 group-hover/brand-card:opacity-100'
           )}
         />
       )}
@@ -78,36 +77,36 @@ function SanctumCard({
   );
 }
 
-interface SanctumCardHeaderProps extends React.ComponentProps<'div'> {
-  /** Show decorative gold line above title */
+interface BrandCardHeaderProps extends React.ComponentProps<'div'> {
+  /** Show decorative accent line above title */
   decorated?: boolean;
 }
 
-function SanctumCardHeader({
+function BrandCardHeader({
   className,
   decorated = false,
   children,
   ...props
-}: SanctumCardHeaderProps) {
+}: BrandCardHeaderProps) {
   return (
     <div
-      data-slot="sanctum-card-header"
+      data-slot="brand-card-header"
       className={cn('flex flex-col gap-2', className)}
       {...props}
     >
-      {decorated && <div className="mb-2 h-px w-12 bg-[#C9A962]" />}
+      {decorated && <div className="bg-primary mb-2 h-px w-12" />}
       {children}
     </div>
   );
 }
 
-function SanctumCardTitle({ className, ...props }: React.ComponentProps<'h3'>) {
+function BrandCardTitle({ className, ...props }: React.ComponentProps<'h3'>) {
   return (
     <h3
-      data-slot="sanctum-card-title"
+      data-slot="brand-card-title"
       className={cn(
-        "font-['Cormorant_Garamond',serif] text-xl font-medium",
-        'tracking-tight text-[#F8F6F1]',
+        'font-sans text-xl font-medium',
+        'text-card-foreground tracking-tight',
         className
       )}
       {...props}
@@ -115,39 +114,36 @@ function SanctumCardTitle({ className, ...props }: React.ComponentProps<'h3'>) {
   );
 }
 
-function SanctumCardDescription({
+function BrandCardDescription({
   className,
   ...props
 }: React.ComponentProps<'p'>) {
   return (
     <p
-      data-slot="sanctum-card-description"
-      className={cn('text-sm text-[rgba(248,246,241,0.6)]', className)}
+      data-slot="brand-card-description"
+      className={cn('text-muted-foreground text-sm', className)}
       {...props}
     />
   );
 }
 
-function SanctumCardContent({
+function BrandCardContent({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="sanctum-card-content"
+      data-slot="brand-card-content"
       className={cn('flex-1', className)}
       {...props}
     />
   );
 }
 
-function SanctumCardFooter({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+function BrandCardFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="sanctum-card-footer"
+      data-slot="brand-card-footer"
       className={cn('flex items-center gap-4', className)}
       {...props}
     />
@@ -155,10 +151,10 @@ function SanctumCardFooter({
 }
 
 export {
-  SanctumCard,
-  SanctumCardContent,
-  SanctumCardDescription,
-  SanctumCardFooter,
-  SanctumCardHeader,
-  SanctumCardTitle,
+  BrandCard,
+  BrandCardContent,
+  BrandCardDescription,
+  BrandCardFooter,
+  BrandCardHeader,
+  BrandCardTitle,
 };

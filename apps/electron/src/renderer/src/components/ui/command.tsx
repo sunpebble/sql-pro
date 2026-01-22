@@ -33,7 +33,7 @@ function CommandDialog({
       </DialogHeader>
       <DialogContent
         className={cn(
-          'ring-gold/20 overflow-hidden rounded-none! p-0',
+          'ring-primary/20 overflow-hidden rounded-none! p-0',
           className
         )}
         showCloseButton={showCloseButton}

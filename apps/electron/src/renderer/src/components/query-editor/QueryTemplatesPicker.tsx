@@ -79,7 +79,7 @@ const TemplateCard = memo(
     return (
       <div
         className={cn(
-          'group hover:border-gold/50 hover:bg-accent/30 relative flex cursor-pointer flex-col gap-2.5 rounded-xl border p-4 transition-all duration-200',
+          'group hover:border-primary/50 hover:bg-accent/30 relative flex cursor-pointer flex-col gap-2.5 rounded-xl border p-4 transition-all duration-200',
           template.isBuiltIn && 'border-dashed'
         )}
         onClick={() => onSelect(template.query)}

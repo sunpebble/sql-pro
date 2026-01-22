@@ -3,9 +3,9 @@ import * as React from 'react';
 import { cn } from './lib/utils';
 
 /**
- * GradientText - Animated gold shimmer text
+ * GradientText - Animated shimmer text
  *
- * Creates a shimmering gold gradient text effect for headlines and CTAs.
+ * Creates a shimmering gradient text effect for headlines and CTAs.
  * Use for important titles that need visual prominence.
  */
 
@@ -19,7 +19,7 @@ interface GradientTextProps {
   /** Animation speed */
   speed?: 'slow' | 'default' | 'fast';
   /** Gradient variant */
-  variant?: 'gold' | 'ivory' | 'warm';
+  variant?: 'primary' | 'foreground' | 'accent';
   /** Additional class names */
   className?: string;
   /** Content */
@@ -31,13 +31,13 @@ function GradientText({
   className,
   animate = true,
   speed = 'default',
-  variant = 'gold',
+  variant = 'primary',
   children,
 }: GradientTextProps) {
   const gradientMap = {
-    gold: 'from-[#D4AF37] via-[#E8D59E] via-[#C9A962] via-[#E8D59E] to-[#D4AF37]',
-    ivory: 'from-[#F8F6F1] via-[rgba(248,246,241,0.7)] to-[#F8F6F1]',
-    warm: 'from-[#D4AF37] via-[#F8F6F1] to-[#C9A962]',
+    primary: 'from-primary via-primary/70 to-primary',
+    foreground: 'from-foreground via-foreground/70 to-foreground',
+    accent: 'from-primary via-foreground to-primary',
   };
 
   const speedMap = {
@@ -80,8 +80,8 @@ function SectionNumber({ className, children, ...props }: SectionNumberProps) {
       className={cn(
         'inline-block px-4 py-2',
         'font-mono text-xs tracking-[0.4em] uppercase',
-        'text-[#C9A962]',
-        'border border-[rgba(212,175,55,0.2)]',
+        'text-primary',
+        'border-primary/20 border',
         className
       )}
       {...props}
@@ -92,12 +92,12 @@ function SectionNumber({ className, children, ...props }: SectionNumberProps) {
 }
 
 /**
- * SanctumHeading - Branded heading with decorative line
+ * BrandHeading - Branded heading with decorative line
  *
- * Display heading in Cormorant Garamond with optional decorative elements.
+ * Display heading with optional decorative elements.
  */
 
-interface SanctumHeadingProps extends React.ComponentProps<'div'> {
+interface BrandHeadingProps extends React.ComponentProps<'div'> {
   /** Heading level */
   level?: 1 | 2 | 3;
   /** Show decorative line above */
@@ -108,14 +108,14 @@ interface SanctumHeadingProps extends React.ComponentProps<'div'> {
   children: React.ReactNode;
 }
 
-function SanctumHeading({
+function BrandHeading({
   level = 2,
   decorated = false,
   centered = false,
   className,
   children,
   ...props
-}: SanctumHeadingProps) {
+}: BrandHeadingProps) {
   const Tag = `h${level}` as const;
 
   const sizeClasses = {
@@ -126,19 +126,19 @@ function SanctumHeading({
 
   return (
     <div
-      data-slot="sanctum-heading"
+      data-slot="brand-heading"
       className={cn(centered && 'text-center', className)}
       {...props}
     >
       {decorated && (
         <div
-          className={cn('mb-6 h-px w-12 bg-[#C9A962]', centered && 'mx-auto')}
+          className={cn('bg-primary mb-6 h-px w-12', centered && 'mx-auto')}
         />
       )}
       <Tag
         className={cn(
-          "font-['Cormorant_Garamond',serif]",
-          'tracking-tight text-[#F8F6F1]',
+          'font-sans',
+          'text-foreground tracking-tight',
           sizeClasses[level]
         )}
       >
@@ -151,7 +151,7 @@ function SanctumHeading({
 /**
  * MonoText - Technical/code styled text
  *
- * IBM Plex Mono styled text for technical content.
+ * Monospace styled text for technical content.
  */
 
 function MonoText({ className, ...props }: React.ComponentProps<'span'>) {
@@ -160,7 +160,7 @@ function MonoText({ className, ...props }: React.ComponentProps<'span'>) {
       data-slot="mono-text"
       className={cn(
         'font-mono text-sm tracking-tight',
-        'text-[rgba(248,246,241,0.6)]',
+        'text-muted-foreground',
         className
       )}
       {...props}
@@ -168,4 +168,4 @@ function MonoText({ className, ...props }: React.ComponentProps<'span'>) {
   );
 }
 
-export { GradientText, MonoText, SanctumHeading, SectionNumber };
+export { BrandHeading, GradientText, MonoText, SectionNumber };

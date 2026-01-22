@@ -9,6 +9,7 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import Pricing from './components/Pricing';
 import SkipLink from './components/SkipLink';
 import Testimonials from './components/Testimonials';
+import ThemeSwitcher from './components/ThemeSwitcher';
 
 function Loading() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <SkipLink />
+      <ThemeSwitcher />
       <LanguageSwitcher />
       <main id="main-content" role="main" aria-label={t('meta.title')}>
         <Hero />

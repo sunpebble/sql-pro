@@ -111,7 +111,7 @@ export const VectorSearchHistory = memo(
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <div className="bg-muted flex h-6 w-6 shrink-0 items-center justify-center rounded">
+                      <div className="bg-muted flex h-6 w-6 shrink-0 items-center justify-center rounded-md">
                         <ModeIcon mode={entry.mode} />
                       </div>
                     </TooltipTrigger>

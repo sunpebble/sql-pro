@@ -20,7 +20,7 @@ export function ProSection() {
         className={cn(
           'rounded-lg border p-4 transition-colors',
           isPro
-            ? 'border-gold/30 bg-gradient-to-r from-[rgba(212,175,55,0.08)] to-[rgba(201,169,98,0.08)]'
+            ? 'border-primary/30 bg-gradient-to-r from-[rgba(212,175,55,0.08)] to-[rgba(201,169,98,0.08)]'
             : 'border-border'
         )}
       >
@@ -37,13 +37,13 @@ export function ProSection() {
               <Crown
                 className={cn(
                   'h-5 w-5',
-                  isPro ? 'text-gold' : 'text-muted-foreground'
+                  isPro ? 'text-primary' : 'text-muted-foreground'
                 )}
               />
             </DecoFrame>
             <div>
               <div className="flex items-center gap-2">
-                <span className={cn('font-medium', isPro && 'text-gold')}>
+                <span className={cn('font-medium', isPro && 'text-primary')}>
                   {isPro ? t('pro.active') : t('pro.free')}
                 </span>
                 {isPro && <ProBadge size="sm" />}

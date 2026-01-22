@@ -600,7 +600,7 @@ export function ResizableTable({
               >
                 <input
                   type="checkbox"
-                  className="border-border/40 h-4 w-4 cursor-pointer rounded"
+                  className="border-border/40 h-4 w-4 cursor-pointer rounded-md"
                   style={
                     mounted
                       ? {
@@ -870,7 +870,7 @@ export function ResizableTable({
                       >
                         <input
                           type="checkbox"
-                          className="border-border/40 h-4 w-4 cursor-pointer rounded"
+                          className="border-border/40 h-4 w-4 cursor-pointer rounded-md"
                           style={
                             mounted
                               ? {

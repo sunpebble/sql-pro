@@ -255,7 +255,9 @@ export function ConnectionSwitcher({
                       {item.isEncrypted && (
                         <KeyRound className="h-3 w-3 text-green-500" />
                       )}
-                      {item.isActive && <Check className="text-gold h-4 w-4" />}
+                      {item.isActive && (
+                        <Check className="text-primary h-4 w-4" />
+                      )}
                     </div>
                   </CommandItem>
                 ))}

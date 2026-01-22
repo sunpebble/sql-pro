@@ -208,7 +208,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <GitCompare className="text-gold h-6 w-6" />
+              <GitCompare className="text-primary h-6 w-6" />
               <div>
                 <h1 className="text-2xl font-semibold">
                   {t('compare.dataComparison')}
@@ -469,10 +469,10 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
           <div className="flex justify-center">
             <Button
               size="lg"
-              variant="outline"
+              variant="accent"
               onClick={handleCompare}
               disabled={!canCompare}
-              className="border-gold bg-gold/15 text-gold hover:bg-gold/25 min-w-50"
+              className="min-w-50"
               title={t('dataDiff.compareTablesShortcut')}
             >
               {isComparing ? (
@@ -532,7 +532,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                         })}
                       </p>
                       <div className="mt-2 grid grid-cols-4 gap-2 text-xs">
-                        <div className="rounded bg-green-100 p-2 dark:bg-green-950">
+                        <div className="rounded-md bg-green-100 p-2 dark:bg-green-950">
                           <div className="text-green-700 dark:text-green-300">
                             {t('compare.rowsAdded')}
                           </div>
@@ -540,7 +540,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                             {comparisonResult.summary.rowsAdded}
                           </div>
                         </div>
-                        <div className="rounded bg-red-100 p-2 dark:bg-red-950">
+                        <div className="rounded-md bg-red-100 p-2 dark:bg-red-950">
                           <div className="text-red-700 dark:text-red-300">
                             {t('compare.rowsRemoved')}
                           </div>
@@ -548,7 +548,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                             {comparisonResult.summary.rowsRemoved}
                           </div>
                         </div>
-                        <div className="rounded bg-amber-100 p-2 dark:bg-amber-950">
+                        <div className="rounded-md bg-amber-100 p-2 dark:bg-amber-950">
                           <div className="text-amber-700 dark:text-amber-300">
                             {t('compare.rowsModified')}
                           </div>
@@ -556,7 +556,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                             {comparisonResult.summary.rowsModified}
                           </div>
                         </div>
-                        <div className="rounded bg-blue-100 p-2 dark:bg-blue-950">
+                        <div className="rounded-md bg-blue-100 p-2 dark:bg-blue-950">
                           <div className="text-blue-700 dark:text-blue-300">
                             {t('compare.rowsUnchanged')}
                           </div>

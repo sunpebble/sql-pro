@@ -191,7 +191,7 @@ export function MediaGalleryToolbar({
               className={cn(
                 'rounded-l-md p-1.5 transition-colors',
                 viewMode === 'grid'
-                  ? 'bg-gold text-background'
+                  ? 'bg-primary text-background'
                   : 'hover:bg-muted'
               )}
               title={t('mediaGallery.gridView', 'Grid view')}
@@ -203,7 +203,7 @@ export function MediaGalleryToolbar({
               className={cn(
                 'rounded-r-md p-1.5 transition-colors',
                 viewMode === 'list'
-                  ? 'bg-gold text-background'
+                  ? 'bg-primary text-background'
                   : 'hover:bg-muted'
               )}
               title={t('mediaGallery.listView', 'List view')}

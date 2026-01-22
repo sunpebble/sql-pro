@@ -314,7 +314,7 @@ export function ProfileForm({
           type="checkbox"
           checked={readOnly}
           onChange={(e) => setReadOnly(e.target.checked)}
-          className="border-input h-4 w-4 rounded"
+          className="border-input h-4 w-4 rounded-md"
         />
         <div className="flex-1">
           <span className="text-sm font-medium">
@@ -341,7 +341,7 @@ export function ProfileForm({
             checked={rememberPassword}
             onChange={(e) => setRememberPassword(e.target.checked)}
             disabled={!isStorageAvailable}
-            className="border-input h-4 w-4 rounded"
+            className="border-input h-4 w-4 rounded-md"
           />
           <div className="flex-1">
             <div className="flex items-center gap-2">

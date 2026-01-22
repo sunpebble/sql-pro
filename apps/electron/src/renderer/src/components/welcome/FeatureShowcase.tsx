@@ -111,9 +111,9 @@ export function FeatureShowcase({
           {featureKeys.map((feature) => (
             <div
               key={feature.key}
-              className="group border-border/40 bg-card/30 hover:border-gold/30 hover:bg-gold/5 flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-all duration-200 hover:shadow-sm"
+              className="group border-border/40 bg-card/30 hover:border-primary/30 hover:bg-primary/5 flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-all duration-200 hover:shadow-sm"
             >
-              <div className="text-muted-foreground group-hover:text-gold transition-colors">
+              <div className="text-muted-foreground group-hover:text-primary transition-colors">
                 {feature.icon}
               </div>
               <span className="text-foreground/90 text-xs leading-tight font-medium">
@@ -131,7 +131,7 @@ export function FeatureShowcase({
           <Button
             variant="outline"
             onClick={onStartTour}
-            className="border-border/60 text-muted-foreground hover:border-gold/40 hover:text-foreground hover:bg-gold/5 mt-6 w-full border-dashed transition-colors"
+            className="border-border/60 text-muted-foreground hover:border-primary/40 hover:text-foreground hover:bg-primary/5 mt-6 w-full border-dashed transition-colors"
           >
             <PlayCircle className="mr-2 h-4 w-4" />
             {t('features.takeTour', { defaultValue: 'Take the quick tour' })}

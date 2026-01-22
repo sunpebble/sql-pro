@@ -66,8 +66,8 @@ export function Titlebar() {
           className="flex min-w-0 flex-1 items-center justify-center"
           data-tauri-drag-region
         >
-          <Database className="text-gold mr-2 h-4 w-4 shrink-0" />
-          <span className="text-gold text-sm font-medium tracking-wide">
+          <Database className="text-primary mr-2 h-4 w-4 shrink-0" />
+          <span className="text-primary text-sm font-medium tracking-wide">
             SQL Pro
           </span>
         </div>
@@ -79,18 +79,14 @@ export function Titlebar() {
         {connection && <Toolbar />}
 
         {/* Separator */}
-        <div className="bg-gold/20 mx-1 h-4 w-px" />
+        <div className="bg-primary/20 mx-1 h-4 w-px" />
 
         {/* Theme Switcher */}
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger>
               <DropdownMenuTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="btn-gold-ghost h-8 w-8"
-                >
+                <Button variant="ghost-primary" size="icon" className="h-8 w-8">
                   {getThemeIcon()}
                 </Button>
               </DropdownMenuTrigger>
@@ -110,7 +106,7 @@ export function Titlebar() {
               <Sun className="mr-2 h-4 w-4" />
               {t('theme.light', { defaultValue: 'Light' })}
               {theme === 'light' && (
-                <span className="text-gold ml-auto">✓</span>
+                <span className="text-primary ml-auto">✓</span>
               )}
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -119,7 +115,9 @@ export function Titlebar() {
             >
               <Moon className="mr-2 h-4 w-4" />
               {t('theme.dark', { defaultValue: 'Dark' })}
-              {theme === 'dark' && <span className="text-gold ml-auto">✓</span>}
+              {theme === 'dark' && (
+                <span className="text-primary ml-auto">✓</span>
+              )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -129,7 +127,7 @@ export function Titlebar() {
               <Monitor className="mr-2 h-4 w-4" />
               {t('theme.system', { defaultValue: 'System' })}
               {theme === 'system' && (
-                <span className="text-gold ml-auto">✓</span>
+                <span className="text-primary ml-auto">✓</span>
               )}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -139,9 +137,9 @@ export function Titlebar() {
         <Tooltip>
           <TooltipTrigger>
             <Button
-              variant="ghost"
+              variant="ghost-primary"
               size="icon"
-              className="btn-gold-ghost h-8 w-8"
+              className="h-8 w-8"
               onClick={openSettings}
               data-action="open-settings"
             >

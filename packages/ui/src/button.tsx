@@ -19,6 +19,12 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30',
         link: 'text-primary underline-offset-4 hover:underline',
+        // Accent: Soft primary with border - for secondary prominent actions
+        accent:
+          'border-primary bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 dark:hover:bg-primary/25',
+        // Ghost Primary: Transparent with primary hover - for toolbar/utility actions
+        'ghost-primary':
+          'text-muted-foreground hover:text-primary hover:bg-primary/10 dark:hover:bg-primary/10',
       },
       size: {
         default:

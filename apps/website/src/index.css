@@ -40,49 +40,49 @@
      ═══════════════════════════════════════ */
 
   /* Primary - Vibrant Green */
-  --primary: #10b981;
-  --primary-light: #34d399;
-  --primary-dark: #059669;
-  --primary-50: #ecfdf5;
-  --primary-100: #d1fae5;
-  --primary-glow: rgba(16, 185, 129, 0.2);
+  --primary: oklch(0.696 0.17 162.48);
+  --primary-light: oklch(0.76 0.17 163.22);
+  --primary-dark: oklch(0.596 0.145 163.23);
+  --primary-50: oklch(0.97 0.02 166);
+  --primary-100: oklch(0.94 0.04 166);
+  --primary-glow: oklch(0.696 0.17 162.48 / 20%);
 
   /* Secondary - Deep Navy */
-  --secondary: #0f172a;
-  --secondary-light: #1e293b;
-  --secondary-muted: #334155;
+  --secondary: oklch(0.145 0.02 264.36);
+  --secondary-light: oklch(0.205 0.02 264.36);
+  --secondary-muted: oklch(0.269 0.02 264.36);
 
   /* Backgrounds */
-  --bg-white: #ffffff;
-  --bg-light: #f8fafc;
-  --bg-subtle: #f1f5f9;
-  --bg-card: #ffffff;
-  --bg-dark: #0f172a;
+  --bg-white: oklch(1 0 0);
+  --bg-light: oklch(0.985 0.005 264.53);
+  --bg-subtle: oklch(0.97 0.01 264.53);
+  --bg-card: oklch(1 0 0);
+  --bg-dark: oklch(0.145 0.02 264.36);
 
   /* Text Colors */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
-  --text-inverse: #ffffff;
+  --text-primary: oklch(0.145 0.02 264.36);
+  --text-secondary: oklch(0.398 0.02 264.53);
+  --text-muted: oklch(0.556 0.02 264.53);
+  --text-light: oklch(0.708 0.01 264.53);
+  --text-inverse: oklch(1 0 0);
 
   /* Borders */
-  --border-light: #e2e8f0;
-  --border-medium: #cbd5e1;
-  --border-dark: #94a3b8;
+  --border-light: oklch(0.922 0.01 264.53);
+  --border-medium: oklch(0.869 0.01 264.53);
+  --border-dark: oklch(0.708 0.01 264.53);
 
   /* Accent Colors */
-  --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
-  --accent-orange: #f97316;
-  --accent-pink: #ec4899;
-  --accent-cyan: #06b6d4;
+  --accent-blue: oklch(0.623 0.214 259.82);
+  --accent-purple: oklch(0.586 0.24 292.72);
+  --accent-orange: oklch(0.705 0.213 47.6);
+  --accent-pink: oklch(0.656 0.241 354.31);
+  --accent-cyan: oklch(0.715 0.143 215.22);
 
   /* Status Colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --info: #3b82f6;
+  --success: oklch(0.696 0.17 162.48);
+  --warning: oklch(0.769 0.188 70.08);
+  --error: oklch(0.577 0.245 27.33);
+  --info: oklch(0.623 0.214 259.82);
 
   /* ═══════════════════════════════════════
      TYPOGRAPHY SYSTEM
@@ -133,7 +133,7 @@
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.06);
   --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
-  --shadow-primary: 0 8px 24px rgba(16, 185, 129, 0.25);
+  --shadow-primary: 0 8px 24px oklch(0.696 0.17 162.48 / 25%);
 }
 
 /* ═══════════════════════════════════════
@@ -169,9 +169,15 @@ body::before {
   inset: 0;
   z-index: -2;
   background:
-    /* Subtle grid pattern */
-    linear-gradient(rgba(241, 245, 249, 0.5) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(241, 245, 249, 0.5) 1px, transparent 1px);
+    linear-gradient(
+      var(--grid-color, oklch(0.97 0.01 264.53 / 50%)) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      var(--grid-color, oklch(0.97 0.01 264.53 / 50%)) 1px,
+      transparent 1px
+    );
   background-size: 60px 60px;
   mask-image: radial-gradient(
     ellipse 80% 60% at 50% 0%,
@@ -416,7 +422,7 @@ pre {
 }
 
 .card-dark p {
-  color: rgba(255, 255, 255, 0.7);
+  color: oklch(1 0 0 / 70%);
 }
 
 /* Bento Box Card */
@@ -460,7 +466,7 @@ pre {
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.1);
+  background: oklch(0.696 0.17 162.48 / 10%);
   color: var(--success);
 }
 
@@ -890,11 +896,11 @@ select:focus-visible {
 }
 
 .section-dark p {
-  color: rgba(255, 255, 255, 0.7);
+  color: oklch(1 0 0 / 70%);
 }
 
 .section-dark .section-label {
-  background: rgba(16, 185, 129, 0.2);
+  background: oklch(0.696 0.17 162.48 / 20%);
   color: var(--primary-light);
 }
 
@@ -920,4 +926,132 @@ select:focus-visible {
 
 .bg-gradient-subtle {
   background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-light) 100%);
+}
+
+/* ═══════════════════════════════════════
+   DARK MODE THEME
+   Applied via .dark class on <html>
+   ═══════════════════════════════════════ */
+
+.dark {
+  --grid-color: oklch(1 0 0 / 8%);
+
+  --primary: oklch(0.76 0.17 163.22);
+  --primary-light: oklch(0.8 0.15 163);
+  --primary-dark: oklch(0.696 0.17 162.48);
+  --primary-50: oklch(0.76 0.17 163.22 / 15%);
+  --primary-100: oklch(0.76 0.17 163.22 / 25%);
+  --primary-glow: oklch(0.76 0.17 163.22 / 25%);
+
+  /* Secondary - Keep dark navy for footer/dark sections */
+  --secondary: oklch(0.12 0.02 264.36);
+  --secondary-light: oklch(0.16 0.02 264.36);
+  --secondary-muted: oklch(0.22 0.02 264.36);
+
+  /* Backgrounds - Dark slate palette */
+  --bg-white: oklch(0.145 0.02 264.36);
+  --bg-light: oklch(0.175 0.02 264.36);
+  --bg-subtle: oklch(0.205 0.02 264.36);
+  --bg-card: oklch(0.205 0.02 264.36);
+  --bg-dark: oklch(0.985 0 0);
+
+  /* Text Colors - Light on dark */
+  --text-primary: oklch(0.985 0 0);
+  --text-secondary: oklch(0.75 0 0);
+  --text-muted: oklch(0.6 0 0);
+  --text-light: oklch(0.5 0 0);
+  --text-inverse: oklch(0.985 0 0);
+
+  /* Borders - Subtle light borders */
+  --border-light: oklch(1 0 0 / 10%);
+  --border-medium: oklch(1 0 0 / 15%);
+  --border-dark: oklch(1 0 0 / 25%);
+
+  /* Shadows - Deeper for dark mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.3);
+  --shadow-primary: 0 8px 24px oklch(0.76 0.17 163.22 / 30%);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: var(--bg-light);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(1 0 0 / 20%);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(1 0 0 / 30%);
+}
+
+/* Dark mode selection */
+.dark ::selection {
+  background: oklch(0.76 0.17 163.22 / 30%);
+  color: var(--text-primary);
+}
+
+/* Dark mode gradient text */
+.dark .gradient-text-dark {
+  background: linear-gradient(135deg, oklch(0.985 0 0) 0%, oklch(0.8 0 0) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Dark mode section-dark inverts */
+.dark .section-dark {
+  background: var(--bg-light);
+  color: var(--text-primary);
+}
+
+.dark .section-dark h1,
+.dark .section-dark h2,
+.dark .section-dark h3,
+.dark .section-dark h4 {
+  color: var(--text-primary);
+}
+
+.dark .section-dark p {
+  color: var(--text-secondary);
+}
+
+.dark .section-dark .section-label {
+  background: var(--primary-50);
+  color: var(--primary);
+}
+
+/* Dark mode card-dark inverts */
+.dark .card-dark {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.dark .card-dark p {
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════
+   THEME TRANSITIONS
+   Smooth color transitions when switching
+   ═══════════════════════════════════════ */
+
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.2s ease,
+    box-shadow 0.3s ease !important;
 }

@@ -163,7 +163,7 @@ export const ContentHeader = memo(
                     className={cn(
                       'h-7 w-7',
                       schemaDetailsOpen
-                        ? 'text-gold bg-gold/10'
+                        ? 'text-primary bg-primary/10'
                         : 'text-muted-foreground hover:text-foreground'
                     )}
                     onClick={onToggleSchemaDetails}

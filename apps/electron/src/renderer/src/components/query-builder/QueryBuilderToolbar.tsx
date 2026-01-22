@@ -186,7 +186,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             <Filter className="h-4 w-4" />
             {t('queryBuilder.filters', 'Filters')}
             {filters.length > 0 && (
-              <span className="bg-gold/15 text-gold rounded-full px-1.5 text-xs">
+              <span className="bg-primary/15 text-primary rounded-full px-1.5 text-xs">
                 {filters.length}
               </span>
             )}
@@ -238,7 +238,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             <ArrowDownAZ className="h-4 w-4" />
             {t('queryBuilder.sort', 'Sort')}
             {sorts.length > 0 && (
-              <span className="bg-gold/15 text-gold rounded-full px-1.5 text-xs">
+              <span className="bg-primary/15 text-primary rounded-full px-1.5 text-xs">
                 {sorts.length}
               </span>
             )}
@@ -334,9 +334,9 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
       </Tooltip>
 
       <Button
-        variant="outline"
+        variant="accent"
         size="sm"
-        className="border-gold bg-gold/15 text-gold hover:bg-gold/25 gap-2"
+        className="gap-2"
         onClick={onRunQuery}
         disabled={nodes.length === 0}
       >

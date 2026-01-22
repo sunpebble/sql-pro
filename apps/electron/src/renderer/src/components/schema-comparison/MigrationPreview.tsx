@@ -295,11 +295,10 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-2">
               <Button
-                variant="outline"
+                variant="accent"
                 size="sm"
                 onClick={handleCopyToClipboard}
                 disabled={!migrationSQL.sql}
-                className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
               >
                 {copied ? (
                   <>

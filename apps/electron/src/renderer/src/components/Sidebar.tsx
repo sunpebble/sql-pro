@@ -758,7 +758,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       data-tour-target="sidebar"
     >
       {/* Search - matches DataTabBar height */}
-      <div className="border-gold/10 mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
+      <div className="border-primary/10 mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
         <div className="relative flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
           <input
@@ -781,7 +781,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       </div>
 
       {/* Sort and Filter Controls */}
-      <ScrollArea className="border-gold/10 h-8 w-full shrink-0 border-b">
+      <ScrollArea className="border-primary/10 h-8 w-full shrink-0 border-b">
         <div className="flex h-full min-w-0 items-center gap-1 px-1.5">
           {/* Sort Dropdown */}
           <DropdownMenu>
@@ -894,9 +894,9 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                   key={`skeleton-${String(i)}`}
                   className="flex items-center gap-2 rounded px-2 py-1.5"
                 >
-                  <div className="bg-muted h-4 w-4 animate-pulse rounded" />
+                  <div className="bg-muted h-4 w-4 animate-pulse rounded-md" />
                   <div
-                    className="bg-muted h-3.5 animate-pulse rounded"
+                    className="bg-muted h-3.5 animate-pulse rounded-md"
                     style={{ width: `${width}px` }}
                   />
                 </div>
@@ -954,10 +954,10 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                   <EmptyContent>
                     <div className="flex flex-col gap-2 sm:flex-row">
                       <Button
-                        variant="outline"
+                        variant="accent"
                         size="sm"
                         onClick={handleOpenSqlTab}
-                        className="border-gold bg-gold/15 text-gold hover:bg-gold/25 w-full sm:w-auto"
+                        className="w-full sm:w-auto"
                       >
                         <Code className="mr-2 size-4" />
                         {t('empty.openSqlQueryEditor')}
@@ -966,7 +966,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                         variant="outline"
                         size="sm"
                         onClick={handleCopySampleSQL}
-                        className="hover:border-gold/50 hover:text-gold w-full sm:w-auto"
+                        className="hover:border-primary/50 hover:text-primary w-full sm:w-auto"
                       >
                         <Copy className="mr-2 size-4" />
                         {t('empty.copySampleSql')}
@@ -1399,24 +1399,24 @@ function TableItem({
           className={cn(
             'flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 transition-colors',
             isSelected
-              ? 'bg-gold/15 text-gold font-medium'
+              ? 'bg-primary/15 text-primary font-medium'
               : 'hover:bg-accent/50 text-foreground/90',
-            isFocused && !isSelected && 'ring-gold/50 ring-1 ring-inset'
+            isFocused && !isSelected && 'ring-primary/50 ring-1 ring-inset'
           )}
         >
-          {isPinned && <Pin className="text-gold h-3 w-3 shrink-0" />}
+          {isPinned && <Pin className="text-primary h-3 w-3 shrink-0" />}
           {isView ? (
             <Eye
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-gold/70' : 'text-muted-foreground/70'
+                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
               )}
             />
           ) : (
             <Table
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-gold/70' : 'text-muted-foreground/70'
+                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
               )}
             />
           )}
@@ -1445,7 +1445,7 @@ function TableItem({
             <span
               className={cn(
                 'shrink-0 text-xs tabular-nums',
-                isSelected ? 'text-gold/60' : 'text-muted-foreground/60'
+                isSelected ? 'text-primary/60' : 'text-muted-foreground/60'
               )}
             >
               {table.rowCount.toLocaleString()}
@@ -1664,7 +1664,7 @@ function FilterTagsPopover({
             className={cn(
               'flex-1 px-3 py-2 text-xs font-medium transition-colors',
               activeTab === 'filter'
-                ? 'border-gold text-foreground border-b-2'
+                ? 'border-primary text-foreground border-b-2'
                 : 'text-muted-foreground hover:text-foreground'
             )}
             onClick={() => setActiveTab('filter')}
@@ -1675,7 +1675,7 @@ function FilterTagsPopover({
             className={cn(
               'flex-1 px-3 py-2 text-xs font-medium transition-colors',
               activeTab === 'manage'
-                ? 'border-gold text-foreground border-b-2'
+                ? 'border-primary text-foreground border-b-2'
                 : 'text-muted-foreground hover:text-foreground'
             )}
             onClick={() => setActiveTab('manage')}

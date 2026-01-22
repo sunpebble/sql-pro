@@ -46,17 +46,17 @@ const markdownComponents: ComponentPropsWithoutRef<
   typeof Markdown
 >['components'] = {
   h1: ({ children, ...props }) => (
-    <h1 className="mb-2 text-lg font-bold" {...props}>
+    <h1 className="mb-2 text-lg font-semibold" {...props}>
       {children}
     </h1>
   ),
   h2: ({ children, ...props }) => (
-    <h2 className="mb-2 text-base font-bold" {...props}>
+    <h2 className="mb-2 text-base font-semibold" {...props}>
       {children}
     </h2>
   ),
   h3: ({ children, ...props }) => (
-    <h3 className="mb-1 text-sm font-bold" {...props}>
+    <h3 className="mb-1 text-sm font-medium" {...props}>
       {children}
     </h3>
   ),
@@ -85,7 +85,7 @@ const markdownComponents: ComponentPropsWithoutRef<
     if (isInline) {
       return (
         <code
-          className="bg-muted rounded px-1 py-0.5 font-mono text-xs"
+          className="bg-muted rounded-md px-1 py-0.5 font-mono text-xs"
           {...props}
         >
           {children}

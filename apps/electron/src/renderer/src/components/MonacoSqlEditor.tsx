@@ -668,8 +668,8 @@ export function MonacoSqlEditor({
         onDoubleClick={handleDoubleClick}
         className={cn(
           'h-1.5 cursor-ns-resize transition-colors',
-          'hover:bg-gold/20 bg-transparent',
-          isResizing && 'bg-gold/30'
+          'hover:bg-primary/20 bg-transparent',
+          isResizing && 'bg-primary/30'
         )}
         title={t('queryEditor.resizeHandle')}
       >

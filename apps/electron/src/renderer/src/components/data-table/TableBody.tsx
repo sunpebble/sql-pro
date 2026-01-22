@@ -239,8 +239,8 @@ const DataRow = memo(
       isEven ? 'bg-background' : 'bg-muted/20',
       isDeleted && 'bg-destructive/10 line-through opacity-50',
       isNewRow && 'bg-green-500/10',
-      isSelected && 'bg-gold/10',
-      isInDragRange && !isSelected && 'bg-gold/5'
+      isSelected && 'bg-primary/10',
+      isInDragRange && !isSelected && 'bg-primary/5'
     );
 
     return (

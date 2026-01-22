@@ -256,7 +256,7 @@ const ConnectionTab = memo(
                       ? 'bg-background text-foreground'
                       : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground',
                     isDragging &&
-                      'ring-gold/50 z-50 scale-105 cursor-grabbing opacity-90 shadow-lg ring-2'
+                      'ring-primary/50 z-50 scale-105 cursor-grabbing opacity-90 shadow-lg ring-2'
                   )}
                   style={{
                     transform: CSS.Transform.toString(transform),

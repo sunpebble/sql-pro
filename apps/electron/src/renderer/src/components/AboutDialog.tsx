@@ -32,11 +32,11 @@ export function AboutDialog() {
             animated
             className="mx-auto mb-4 flex h-20 w-20 items-center justify-center"
           >
-            <Database className="text-gold h-10 w-10" />
+            <Database className="text-primary h-10 w-10" />
           </DecoFrame>
 
           <DialogTitle className="text-2xl tracking-wide">
-            <GradientText variant="gold" speed="slow">
+            <GradientText variant="primary" speed="slow">
               SQL Pro
             </GradientText>
           </DialogTitle>
@@ -53,7 +53,7 @@ export function AboutDialog() {
               <p className="text-muted-foreground text-xs tracking-wider uppercase">
                 {t('about.version')}
               </p>
-              <p className="text-gold font-mono text-sm">1.9.0</p>
+              <p className="text-primary font-mono text-sm">1.9.0</p>
             </div>
             <div className="space-y-1">
               <p className="text-muted-foreground text-xs tracking-wider uppercase">
@@ -76,7 +76,7 @@ export function AboutDialog() {
             <p className="text-muted-foreground text-xs">
               {t('about.copyright')}
             </p>
-            <p className="text-gold/60 text-xs tracking-widest uppercase">
+            <p className="text-primary/60 text-xs tracking-widest uppercase">
               {t('about.tagline')}
             </p>
           </div>

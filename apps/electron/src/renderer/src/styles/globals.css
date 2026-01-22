@@ -1454,22 +1454,6 @@ th {
   border: 1px solid oklch(0.76 0.17 163.22 / 30%);
 }
 
-/* Ghost button with primary hover */
-.btn-gold-ghost {
-  color: var(--muted-foreground);
-  background-color: transparent;
-  transition:
-    color 150ms ease,
-    background-color 150ms ease;
-}
-.btn-gold-ghost:hover {
-  color: var(--primary);
-  background-color: oklch(0.696 0.17 162.48 / 10%);
-}
-.dark .btn-gold-ghost:hover {
-  background-color: oklch(0.76 0.17 163.22 / 10%);
-}
-
 /* Active/selected state */
 .btn-gold-active {
   color: var(--primary);

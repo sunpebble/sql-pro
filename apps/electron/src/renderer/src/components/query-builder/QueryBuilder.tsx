@@ -245,7 +245,7 @@ export function QueryBuilder() {
               proOptions={{ hideAttribution: true }}
               nodeDragThreshold={5}
               connectionLineStyle={{
-                stroke: 'var(--color-gold)',
+                stroke: 'var(--color-primary)',
                 strokeWidth: 2,
               }}
               defaultEdgeOptions={{
@@ -340,7 +340,7 @@ export function QueryBuilder() {
                   {selectedColumns.slice(0, 10).map((col) => (
                     <span
                       key={`${col.tableAlias}.${col.column}`}
-                      className="bg-gold/10 inline-flex items-center rounded-full px-2 py-0.5 text-xs"
+                      className="bg-primary/10 inline-flex items-center rounded-full px-2 py-0.5 text-xs"
                     >
                       {col.tableAlias}.{col.column}
                     </span>

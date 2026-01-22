@@ -110,17 +110,17 @@ export function ActivityBar({
                   className={cn(
                     'group relative flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-150',
                     isActive
-                      ? 'text-gold bg-gold/10'
+                      ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
                   )}
                 >
                   <Icon className="h-[18px] w-[18px]" />
                   {/* Active indicator - subtle left border */}
                   {isActive && (
-                    <span className="bg-gold absolute top-1/2 -left-0.5 h-4 w-0.5 -translate-y-1/2 rounded-full" />
+                    <span className="bg-primary absolute top-1/2 -left-0.5 h-4 w-0.5 -translate-y-1/2 rounded-full" />
                   )}
                   {badgeCount !== undefined && badgeCount > 0 && (
-                    <span className="bg-gold text-2xs text-background absolute -top-0.5 -right-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-0.5 font-medium">
+                    <span className="bg-primary text-2xs text-background absolute -top-0.5 -right-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-0.5 font-medium">
                       {badgeCount > 99 ? '99+' : badgeCount}
                     </span>
                   )}

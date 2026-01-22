@@ -50,10 +50,9 @@ export function PluginsPage() {
           </div>
         </div>
         <Button
-          variant="outline"
+          variant="accent"
           onClick={() => setMarketplaceOpen(true)}
           data-action="open-marketplace"
-          className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
         >
           <Store className="mr-2 h-4 w-4" />
           {t('plugins.browseMarketplace')}

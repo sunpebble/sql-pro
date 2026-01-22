@@ -298,7 +298,7 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
                 </td>
                 <td className="py-1.5 whitespace-nowrap">
                   {isPK && (
-                    <span className="bg-gold/10 text-gold rounded px-1.5 py-0.5 text-xs font-medium">
+                    <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-xs font-medium">
                       PK
                     </span>
                   )}
@@ -325,7 +325,7 @@ function IndexesList({ indexes, t }: IndexesListProps) {
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs font-medium">{index.name}</span>
             {index.isUnique && (
-              <span className="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+              <span className="rounded-md bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-950 dark:text-blue-300">
                 UNIQUE
               </span>
             )}
@@ -395,10 +395,10 @@ function TriggersList({ triggers }: TriggersListProps) {
             <span className="font-mono text-xs font-medium">
               {trigger.name}
             </span>
-            <span className="rounded bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+            <span className="rounded-md bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-950 dark:text-purple-300">
               {trigger.timing}
             </span>
-            <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-950 dark:text-green-300">
+            <span className="rounded-md bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-950 dark:text-green-300">
               {trigger.event}
             </span>
           </div>

@@ -102,9 +102,9 @@ export function ProStatusCard({
               variant="gold"
               className="flex h-8 w-8 items-center justify-center"
             >
-              <Crown className="text-gold h-4 w-4" />
+              <Crown className="text-primary h-4 w-4" />
             </DecoFrame>
-            <GradientText variant="gold">{t('pro.proLicense')}</GradientText>
+            <GradientText variant="primary">{t('pro.proLicense')}</GradientText>
           </CardTitle>
           <Badge variant={STATUS_VARIANTS[license.status] || 'outline'}>
             {license.status === 'active' && <Check className="mr-1 h-3 w-3" />}

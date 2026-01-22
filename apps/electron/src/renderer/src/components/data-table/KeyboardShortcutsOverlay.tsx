@@ -278,7 +278,7 @@ export const KeyboardShortcutsOverlay = memo(
           {/* Header */}
           <div className="flex items-center justify-between border-b px-3 py-2">
             <div className="flex items-center gap-2">
-              <Keyboard className="text-gold h-4 w-4" />
+              <Keyboard className="text-primary h-4 w-4" />
               <span className="text-sm font-medium">
                 {t('keyboardShortcuts.title')}
               </span>
@@ -367,7 +367,7 @@ export const InlineShortcutHint = memo(
           <kbd
             key={key}
             className={cn(
-              'rounded px-1 py-0.5 font-mono text-[9px]',
+              'rounded-md px-1 py-0.5 font-mono text-[9px]',
               'bg-muted/50 text-muted-foreground',
               'min-w-3.5 text-center'
             )}

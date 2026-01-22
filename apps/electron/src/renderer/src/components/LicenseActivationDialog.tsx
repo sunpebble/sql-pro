@@ -264,7 +264,7 @@ export function LicenseActivationDialog({
               'relative cursor-pointer transition-all',
               selectedPlan === plan.id
                 ? 'ring-gold ring-2'
-                : 'hover:border-gold/50'
+                : 'hover:border-primary/50'
             )}
             onClick={() => setSelectedPlan(plan.id)}
           >
@@ -277,7 +277,7 @@ export function LicenseActivationDialog({
             <CardHeader className="p-3 pb-1">
               <CardTitle className="text-sm">{t(plan.nameKey)}</CardTitle>
               <CardDescription className="space-y-0.5">
-                <span className="text-foreground text-lg font-bold">
+                <span className="text-foreground text-lg font-semibold">
                   {plan.price}
                 </span>
                 <span className="text-muted-foreground text-xs">
@@ -392,7 +392,7 @@ export function LicenseActivationDialog({
         {t('pro.cantFindKey')}{' '}
         <a
           href="mailto:support@sqlpro.dev"
-          className="text-gold hover:underline"
+          className="text-primary hover:underline"
         >
           {t('pro.contactSupport')}
         </a>

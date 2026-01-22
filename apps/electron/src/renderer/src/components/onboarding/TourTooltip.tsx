@@ -359,10 +359,10 @@ export function TourTooltip({
             </Button>
           )}
           <Button
-            variant="outline"
+            variant="accent"
             size="sm"
             onClick={isLastStep ? onComplete : onNext}
-            className="border-gold bg-gold/15 text-gold hover:bg-gold/25 gap-1"
+            className="gap-1"
           >
             {isLastStep ? (
               <span>{t('tour.finish')}</span>
@@ -384,9 +384,9 @@ export function TourTooltip({
             className={cn(
               'h-1.5 w-1.5 rounded-full transition-all duration-200',
               index === currentStepIndex
-                ? 'bg-gold w-4'
+                ? 'bg-primary w-4'
                 : index < currentStepIndex
-                  ? 'bg-gold/50'
+                  ? 'bg-primary/50'
                   : 'bg-muted-foreground/30'
             )}
             role="presentation"

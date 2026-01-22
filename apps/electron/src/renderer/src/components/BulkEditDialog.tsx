@@ -221,7 +221,7 @@ export function BulkEditDialog({
 
           {/* Summary */}
           {editFields.length > 0 && (
-            <div className="bg-gold/5 border-gold/20 rounded-lg border p-3 text-sm">
+            <div className="bg-primary/5 border-primary/20 rounded-lg border p-3 text-sm">
               <p>
                 {t('table.bulkEdit.fieldsWillBeUpdated', {
                   count: editFields.length,

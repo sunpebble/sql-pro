@@ -236,7 +236,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
               </div>
               <div className="grid grid-cols-3 gap-2 text-xs">
                 {counts.inserts > 0 && (
-                  <div className="rounded bg-green-100 p-2 dark:bg-green-950">
+                  <div className="rounded-md bg-green-100 p-2 dark:bg-green-950">
                     <div className="text-green-700 dark:text-green-300">
                       {t('dataDiffSQL.inserts')}
                     </div>
@@ -246,7 +246,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   </div>
                 )}
                 {counts.updates > 0 && (
-                  <div className="rounded bg-amber-100 p-2 dark:bg-amber-950">
+                  <div className="rounded-md bg-amber-100 p-2 dark:bg-amber-950">
                     <div className="text-amber-700 dark:text-amber-300">
                       {t('dataDiffSQL.updates')}
                     </div>
@@ -256,7 +256,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   </div>
                 )}
                 {counts.deletes > 0 && (
-                  <div className="rounded bg-red-100 p-2 dark:bg-red-950">
+                  <div className="rounded-md bg-red-100 p-2 dark:bg-red-950">
                     <div className="text-red-700 dark:text-red-300">
                       {t('dataDiffSQL.deletes')}
                     </div>
@@ -419,11 +419,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   {/* Action Buttons */}
                   <div className="flex flex-wrap gap-2">
                     <Button
-                      variant="outline"
+                      variant="accent"
                       size="sm"
                       onClick={handleCopyToClipboard}
                       disabled={!syncSQL.sql}
-                      className="border-gold bg-gold/15 text-gold hover:bg-gold/25"
                     >
                       {copied ? (
                         <>

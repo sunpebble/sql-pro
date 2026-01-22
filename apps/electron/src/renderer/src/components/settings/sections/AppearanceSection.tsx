@@ -162,13 +162,11 @@ export function AppearanceSection() {
             return (
               <Button
                 key={themeOption}
-                variant="outline"
+                variant={isActive ? 'accent' : 'outline'}
                 size="sm"
                 onClick={() => setTheme(themeOption)}
                 className={`justify-start ${
-                  isActive
-                    ? 'border-gold bg-gold/15 text-gold hover:bg-gold/25'
-                    : 'hover:border-gold/50 hover:text-gold'
+                  !isActive && 'hover:border-primary/50 hover:text-primary'
                 }`}
               >
                 <Icon className="mr-2 h-4 w-4" />
@@ -187,7 +185,10 @@ export function AppearanceSection() {
             variant="ghost"
             size="sm"
             onClick={() => setSyncAll(!fonts.syncAll)}
-            className={cn('h-7 gap-1.5 text-xs', fonts.syncAll && 'text-gold')}
+            className={cn(
+              'h-7 gap-1.5 text-xs',
+              fonts.syncAll && 'text-primary'
+            )}
           >
             {fonts.syncAll ? (
               <Link className="h-3.5 w-3.5" />
@@ -247,13 +248,11 @@ export function AppearanceSection() {
             return (
               <Button
                 key={size}
-                variant="outline"
+                variant={isActive ? 'accent' : 'outline'}
                 size="sm"
                 onClick={() => setTabSize(size)}
                 className={
-                  isActive
-                    ? 'border-gold bg-gold/15 text-gold hover:bg-gold/25'
-                    : 'hover:border-gold/50 hover:text-gold'
+                  !isActive ? 'hover:border-primary/50 hover:text-primary' : ''
                 }
               >
                 {size}
@@ -309,7 +308,7 @@ function FontSettingsRow({
     <div
       className={cn(
         'rounded-lg border p-3 transition-colors',
-        synced && 'border-gold/20 bg-gold/5'
+        synced && 'border-primary/20 bg-primary/5'
       )}
     >
       <div className="mb-2 flex items-center justify-between">

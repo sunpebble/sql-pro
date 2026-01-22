@@ -31,6 +31,16 @@
     />
   </head>
   <body>
+    <script>
+      (function () {
+        var theme = localStorage.getItem('sqlpro-theme') || 'system';
+        var isDark =
+          theme === 'dark' ||
+          (theme === 'system' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) document.documentElement.classList.add('dark');
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

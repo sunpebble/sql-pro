@@ -139,7 +139,7 @@ const ChartPreview = memo(({ config, data }: ChartPreviewProps) => {
               className="flex items-center gap-2 text-sm"
             >
               <div
-                className="h-3 w-3 rounded"
+                className="h-3 w-3 rounded-md"
                 style={{ backgroundColor: colors[idx % colors.length] }}
               />
               <span className="truncate">{d.label}</span>
@@ -305,8 +305,8 @@ export const ChartBuilder = memo(
                         className={cn(
                           'flex flex-col items-center gap-1 rounded-lg border p-3 transition-colors',
                           config.type === type
-                            ? 'border-gold bg-gold/5'
-                            : 'hover:border-gold/50'
+                            ? 'border-primary bg-primary/5'
+                            : 'hover:border-primary/50'
                         )}
                       >
                         <Icon className="h-5 w-5" />
@@ -419,15 +419,15 @@ export const ChartBuilder = memo(
                         className={cn(
                           'flex flex-col items-center gap-1 rounded-lg border p-2 transition-colors',
                           config.colorScheme === scheme.value
-                            ? 'border-gold bg-gold/5'
-                            : 'hover:border-gold/50'
+                            ? 'border-primary bg-primary/5'
+                            : 'hover:border-primary/50'
                         )}
                       >
                         <div className="flex gap-0.5">
                           {scheme.colors.map((color) => (
                             <div
                               key={color}
-                              className="h-4 w-4 rounded"
+                              className="h-4 w-4 rounded-md"
                               style={{ backgroundColor: color }}
                             />
                           ))}
