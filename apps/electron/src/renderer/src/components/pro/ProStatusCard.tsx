@@ -1,7 +1,7 @@
 /**
  * Pro Status Card Component
  * Displays the current Pro license status with management options
- * Uses Data Sanctum gold color system
+ * Uses Fresh Modern primary color system
  */
 
 import { DecoFrame, GoldButton, GradientText } from '@sqlpro/ui';
@@ -87,12 +87,12 @@ export function ProStatusCard({
     <Card
       className={cn(
         'relative overflow-hidden',
-        'border-gold/30 bg-gradient-to-br from-[rgba(212,175,55,0.05)] to-[rgba(201,169,98,0.05)]',
+        'border-[var(--primary)]/30 bg-gradient-to-br from-[var(--primary-subtle)] to-[var(--primary-subtle)]',
         className
       )}
     >
       {/* Decorative gradient */}
-      <div className="from-gold-bright/20 to-gold/20 absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br blur-2xl" />
+      <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-[var(--primary)]/20 to-[var(--primary)]/20 blur-2xl" />
 
       <CardHeader className="relative pb-2">
         <div className="flex items-center justify-between">
@@ -135,12 +135,12 @@ export function ProStatusCard({
 
       <CardContent className="relative space-y-3 pt-0">
         {/* Plan info */}
-        <div className="flex items-center justify-between rounded-lg bg-[rgba(212,175,55,0.05)] p-3 dark:bg-[rgba(212,175,55,0.08)]">
+        <div className="flex items-center justify-between rounded-lg bg-[var(--primary-subtle)] p-3 dark:bg-[var(--primary-subtle)]">
           <div>
             <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               {t('pro.currentPlan')}
             </p>
-            <p className="text-gold text-lg font-semibold">
+            <p className="text-lg font-semibold text-[var(--primary)]">
               {t(`pro.plans.${license.plan}`, { defaultValue: license.plan })}
             </p>
           </div>
@@ -152,7 +152,7 @@ export function ProStatusCard({
               <p
                 className={cn(
                   'flex items-center gap-1.5 text-sm font-medium',
-                  isExpiringSoon && 'text-gold-bright'
+                  isExpiringSoon && 'text-[var(--primary)]'
                 )}
               >
                 <Calendar className="h-3.5 w-3.5" />
@@ -161,7 +161,10 @@ export function ProStatusCard({
             </div>
           )}
           {isLifetime && (
-            <Badge variant="outline" className="border-gold/50 text-gold">
+            <Badge
+              variant="outline"
+              className="border-[var(--primary)]/50 text-[var(--primary)]"
+            >
               {t('pro.forever')}
             </Badge>
           )}
@@ -169,8 +172,8 @@ export function ProStatusCard({
 
         {/* Expiring soon warning */}
         {isExpiringSoon && (
-          <div className="border-gold/30 rounded-lg border bg-[rgba(212,175,55,0.1)] p-3">
-            <p className="text-gold-dark dark:text-gold-bright text-sm">
+          <div className="rounded-lg border border-[var(--primary)]/30 bg-[var(--primary-subtle)] p-3">
+            <p className="text-sm text-[var(--primary-dark)] dark:text-[var(--primary)]">
               {t('pro.renewsInDays', {
                 days: daysUntilExpiry,
                 count: daysUntilExpiry,
@@ -199,7 +202,7 @@ export function ProStatusCard({
 
       {/* Deactivate option */}
       {onDeactivate && (
-        <div className="border-gold/10 border-t px-6 py-3">
+        <div className="border-t border-[var(--primary)]/10 px-6 py-3">
           <GoldButton
             variant="ghost"
             size="sm"

@@ -1,15 +1,21 @@
+/* =========================================
+   Feature Comparison Table - Modern Fresh Design
+   Clean, professional comparison layout
+   ========================================= */
+
 .comparison-table-wrapper {
   margin-top: 64px;
   padding-top: 48px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border-light);
 }
 
 .comparison-title {
   text-align: center;
+  font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 32px;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .comparison-table-container {
@@ -29,21 +35,23 @@
 .comparison-table td {
   padding: 16px;
   text-align: center;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .comparison-table th {
-  background: var(--color-surface);
+  background: var(--bg-subtle);
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .feature-header {
   text-align: left !important;
   width: 200px;
-  color: var(--color-text-secondary);
+  color: var(--text-muted);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 .plan-header {
@@ -55,11 +63,11 @@
 .plan-header-featured {
   background: linear-gradient(
     180deg,
-    rgba(59, 130, 246, 0.1) 0%,
-    var(--color-surface) 100%
+    var(--primary-50) 0%,
+    var(--bg-subtle) 100%
   ) !important;
-  border-left: 2px solid var(--color-primary);
-  border-right: 2px solid var(--color-primary);
+  border-left: 2px solid var(--primary);
+  border-right: 2px solid var(--primary);
 }
 
 .plan-header-featured::before {
@@ -69,21 +77,17 @@
   left: -2px;
   right: -2px;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
 }
 
 .featured-badge {
   display: inline-block;
-  padding: 2px 8px;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-accent)
-  );
-  color: white;
+  padding: 4px 10px;
+  background: var(--primary);
+  color: var(--text-inverse);
   font-size: 10px;
   font-weight: 600;
-  border-radius: 10px;
+  border-radius: var(--border-radius-full);
   text-transform: uppercase;
   letter-spacing: 0.3px;
   margin-bottom: 8px;
@@ -91,46 +95,52 @@
 
 .plan-name {
   display: block;
+  font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .plan-price {
   display: block;
   font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  color: var(--text-muted);
 }
 
 .feature-name {
   text-align: left !important;
-  color: var(--color-text);
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .feature-value {
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .feature-value-featured {
-  background: rgba(59, 130, 246, 0.05);
-  border-left: 2px solid var(--color-primary);
-  border-right: 2px solid var(--color-primary);
+  background: var(--primary-50);
+  border-left: 2px solid var(--primary);
+  border-right: 2px solid var(--primary);
 }
 
 .check-icon {
-  color: var(--color-primary);
+  color: var(--primary);
 }
 
 .x-icon {
-  color: var(--color-text-muted);
+  color: var(--text-light);
   opacity: 0.5;
 }
 
 .feature-text {
   font-size: 0.8125rem;
+  color: var(--text-secondary);
 }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
 
 @media (max-width: 768px) {
   .comparison-table-wrapper {

@@ -1,5 +1,5 @@
 /**
- * Data Sanctum Design System - CSS Utilities
+ * Fresh Modern Design System - CSS Utilities
  *
  * Include this file in your app's global styles to enable
  * branded component animations and effects.
@@ -24,15 +24,28 @@
   }
 }
 
-@keyframes gold-pulse {
+@keyframes primary-pulse {
   0%,
   100% {
-    box-shadow: 0 4px 30px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 30px oklch(0.696 0.17 162.48 / 30%);
   }
   50% {
     box-shadow:
-      0 8px 50px rgba(212, 175, 55, 0.5),
-      0 0 100px rgba(212, 175, 55, 0.15);
+      0 8px 50px oklch(0.696 0.17 162.48 / 50%),
+      0 0 100px oklch(0.696 0.17 162.48 / 15%);
+  }
+}
+
+/* Legacy alias */
+@keyframes gold-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 30px oklch(0.696 0.17 162.48 / 30%);
+  }
+  50% {
+    box-shadow:
+      0 8px 50px oklch(0.696 0.17 162.48 / 50%),
+      0 0 100px oklch(0.696 0.17 162.48 / 15%);
   }
 }
 
@@ -104,57 +117,149 @@
    ═══════════════════════════════════════ */
 
 :root {
-  /* Gold Palette */
-  --gold-bright: #d4af37;
-  --gold-muted: #c9a962;
-  --gold-dark: #9a7b2d;
-  --gold-glow: rgba(212, 175, 55, 0.35);
-  --gold-subtle: rgba(212, 175, 55, 0.08);
+  /* Primary Palette (Emerald Green) */
+  --primary: oklch(0.696 0.17 162.48);
+  --primary-light: oklch(0.75 0.18 162.48);
+  --primary-dark: oklch(0.55 0.12 162.48);
+  --primary-glow: oklch(0.696 0.17 162.48 / 35%);
+  --primary-subtle: oklch(0.696 0.17 162.48 / 8%);
 
-  /* Void (Dark) Palette */
-  --void-absolute: #020202;
-  --void-deep: #060606;
-  --void-base: #0b0b0b;
-  --void-elevated: #141414;
+  /* Legacy Gold aliases (now use primary green) */
+  --gold-bright: var(--primary);
+  --gold-muted: var(--primary-dark);
+  --gold-dark: oklch(0.45 0.1 162.48);
+  --gold-glow: var(--primary-glow);
+  --gold-subtle: var(--primary-subtle);
 
-  /* Ivory (Light) Palette */
-  --ivory: #f8f6f1;
-  --ivory-dim: rgba(248, 246, 241, 0.85);
-  --ivory-muted: rgba(248, 246, 241, 0.6);
-  --ivory-ghost: rgba(248, 246, 241, 0.25);
-  --ivory-whisper: rgba(248, 246, 241, 0.08);
+  /* Background Palette (Light Mode) */
+  --bg-white: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-light: #f1f5f9;
+  --bg-elevated: #e2e8f0;
+
+  /* Legacy Void aliases */
+  --void-absolute: var(--bg-white);
+  --void-deep: var(--bg-subtle);
+  --void-base: var(--bg-light);
+  --void-elevated: var(--bg-elevated);
+
+  /* Text Palette */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Legacy Ivory aliases */
+  --ivory: var(--text-primary);
+  --ivory-dim: var(--text-secondary);
+  --ivory-muted: var(--text-muted);
+  --ivory-ghost: oklch(0.5 0 0 / 25%);
+  --ivory-whisper: oklch(0.5 0 0 / 8%);
 
   /* Accent Colors */
-  --burgundy: #8b2942;
-  --burgundy-glow: rgba(139, 41, 66, 0.4);
+  --accent-cyan: oklch(0.75 0.15 200);
+  --error: #ef4444;
+  --success: #22c55e;
+  --warning: #f59e0b;
+
+  /* Legacy */
+  --burgundy: var(--error);
+  --burgundy-glow: oklch(0.55 0.2 25 / 40%);
 
   /* Gradients */
-  --gradient-gold: linear-gradient(
+  --gradient-primary: linear-gradient(
     135deg,
-    #d4af37 0%,
-    #e8d59e 25%,
-    #c9a962 50%,
-    #e8d59e 75%,
-    #d4af37 100%
+    oklch(0.696 0.17 162.48) 0%,
+    oklch(0.75 0.15 200) 50%,
+    oklch(0.696 0.17 162.48) 100%
   );
+
+  /* Legacy alias */
+  --gradient-gold: var(--gradient-primary);
 
   /* Timing Functions */
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
   --ease-dramatic: cubic-bezier(0.6, 0.01, 0.05, 0.95);
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
 
   /* Durations */
   --duration-instant: 100ms;
   --duration-swift: 200ms;
   --duration-smooth: 400ms;
   --duration-theatrical: 800ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
 
   /* Shadows */
-  --shadow-subtle: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-elevated: 0 16px 64px rgba(0, 0, 0, 0.5);
-  --shadow-dramatic:
-    0 32px 128px rgba(0, 0, 0, 0.6), 0 0 1px rgba(212, 175, 55, 0.2);
-  --shadow-gold-glow: 0 0 40px rgba(212, 175, 55, 0.35);
+  --shadow-subtle: 0 4px 24px oklch(0 0 0 / 10%);
+  --shadow-elevated: 0 16px 64px oklch(0 0 0 / 15%);
+  --shadow-dramatic: 0 32px 128px oklch(0 0 0 / 20%);
+  --shadow-primary-glow: 0 0 40px oklch(0.696 0.17 162.48 / 35%);
+
+  /* Legacy alias */
+  --shadow-gold-glow: var(--shadow-primary-glow);
+
+  /* Border Radius */
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 24px;
+  --border-radius-full: 9999px;
+
+  /* Borders */
+  --border-light: oklch(0.9 0 0);
+  --border-medium: oklch(0.85 0 0);
+}
+
+/* Dark mode overrides */
+.dark {
+  /* Primary Palette */
+  --primary: oklch(0.76 0.17 163.22);
+  --primary-light: oklch(0.82 0.15 163.22);
+  --primary-dark: oklch(0.65 0.12 163.22);
+  --primary-glow: oklch(0.76 0.17 163.22 / 40%);
+  --primary-subtle: oklch(0.76 0.17 163.22 / 10%);
+
+  /* Legacy Gold aliases */
+  --gold-bright: var(--primary);
+  --gold-muted: var(--primary-dark);
+  --gold-dark: oklch(0.55 0.1 163.22);
+  --gold-glow: var(--primary-glow);
+  --gold-subtle: var(--primary-subtle);
+
+  /* Background Palette (Dark Mode) */
+  --bg-white: #0f172a;
+  --bg-subtle: #1e293b;
+  --bg-light: #334155;
+  --bg-elevated: #475569;
+
+  /* Legacy Void aliases */
+  --void-absolute: #020617;
+  --void-deep: var(--bg-white);
+  --void-base: var(--bg-subtle);
+  --void-elevated: var(--bg-light);
+
+  /* Text Palette */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  /* Legacy Ivory aliases */
+  --ivory: var(--text-primary);
+  --ivory-dim: var(--text-secondary);
+  --ivory-muted: var(--text-muted);
+
+  /* Shadows for dark mode */
+  --shadow-subtle: 0 4px 24px oklch(0 0 0 / 30%);
+  --shadow-elevated: 0 16px 64px oklch(0 0 0 / 40%);
+  --shadow-dramatic: 0 32px 128px oklch(0 0 0 / 50%);
+
+  /* Borders */
+  --border-light: oklch(0.35 0 0);
+  --border-medium: oklch(0.4 0 0);
 }
 
 /* ═══════════════════════════════════════
@@ -166,8 +271,13 @@
   animation: shimmer 4s ease-in-out infinite;
 }
 
+.animate-primary-pulse {
+  animation: primary-pulse 3.5s ease-in-out infinite;
+}
+
+/* Legacy alias */
 .animate-gold-pulse {
-  animation: gold-pulse 3.5s ease-in-out infinite;
+  animation: primary-pulse 3.5s ease-in-out infinite;
 }
 
 .animate-fade-up {
@@ -209,20 +319,41 @@
   animation-delay: 0.6s;
 }
 
-/* Gold glow effects */
+/* Primary glow effects */
+.glow-primary {
+  box-shadow: var(--shadow-primary-glow);
+}
+
+.glow-primary-intense {
+  box-shadow:
+    0 8px 50px oklch(0.696 0.17 162.48 / 50%),
+    0 0 80px oklch(0.696 0.17 162.48 / 15%);
+}
+
+/* Legacy aliases */
 .glow-gold {
-  box-shadow: var(--shadow-gold-glow);
+  box-shadow: var(--shadow-primary-glow);
 }
 
 .glow-gold-intense {
   box-shadow:
-    0 8px 50px rgba(212, 175, 55, 0.5),
-    0 0 80px rgba(212, 175, 55, 0.15);
+    0 8px 50px oklch(0.696 0.17 162.48 / 50%),
+    0 0 80px oklch(0.696 0.17 162.48 / 15%);
 }
 
 /* Text gradient */
+.text-gradient-primary {
+  background: var(--gradient-primary);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+/* Legacy alias */
 .text-gradient-gold {
-  background: var(--gradient-gold);
+  background: var(--gradient-primary);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -244,8 +375,10 @@
   }
 
   .animate-shimmer,
+  .animate-primary-pulse,
   .animate-gold-pulse,
   .animate-float,
+  .text-gradient-primary,
   .text-gradient-gold {
     animation: none;
   }

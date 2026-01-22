@@ -1,13 +1,14 @@
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
+import About from './components/About';
 import Download from './components/Download';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import Pricing from './components/Pricing';
-import Screenshots from './components/Screenshots';
 import SkipLink from './components/SkipLink';
+import Testimonials from './components/Testimonials';
 
 function Loading() {
   return (
@@ -27,8 +28,9 @@ export default function App() {
       <LanguageSwitcher />
       <main id="main-content" role="main" aria-label={t('meta.title')}>
         <Hero />
+        <About />
         <Features />
-        <Screenshots />
+        <Testimonials />
         <Pricing />
         <Download />
       </main>
