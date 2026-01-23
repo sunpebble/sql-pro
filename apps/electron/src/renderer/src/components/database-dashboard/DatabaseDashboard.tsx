@@ -14,11 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@sqlpro/ui/card';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@sqlpro/ui/chart';
 import { Progress } from '@sqlpro/ui/progress';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
@@ -45,6 +40,7 @@ import {
   Pie,
   PieChart as RechartsPieChart,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -58,18 +54,17 @@ import {
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
-// Color palette for charts
 const CHART_COLORS = [
-  'hsl(var(--chart-1))',
-  'hsl(var(--chart-2))',
-  'hsl(var(--chart-3))',
-  'hsl(var(--chart-4))',
-  'hsl(var(--chart-5))',
+  '#3b82f6',
+  '#22c55e',
+  '#f59e0b',
+  '#ef4444',
   '#8b5cf6',
   '#ec4899',
   '#14b8a6',
   '#f97316',
   '#06b6d4',
+  '#84cc16',
 ];
 
 // Data type categories for grouping
@@ -170,15 +165,8 @@ const StatCard = memo(
     color = 'text-primary',
   }: StatCardProps) => {
     return (
-      <div className="bg-muted/50 rounded-lg p-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-muted-foreground text-sm">{label}</p>
-            <p className="text-2xl font-semibold">{value}</p>
-            {subValue && (
-              <p className="text-muted-foreground text-xs">{subValue}</p>
-            )}
-          </div>
+      <div className="bg-muted/50 rounded-lg p-3">
+        <div className="flex flex-col items-center gap-2 text-center">
           <div
             className={cn(
               'rounded-lg p-2',
@@ -186,6 +174,13 @@ const StatCard = memo(
             )}
           >
             <Icon className={cn('h-5 w-5', color)} />
+          </div>
+          <div>
+            <p className="text-muted-foreground text-xs">{label}</p>
+            <p className="text-xl font-semibold whitespace-nowrap">{value}</p>
+            {subValue && (
+              <p className="text-muted-foreground text-xs">{subValue}</p>
+            )}
           </div>
         </div>
       </div>
@@ -275,13 +270,6 @@ const TableSizeChart = memo(({ tables }: TableSizeChartProps) => {
       }));
   }, [tables]);
 
-  const chartConfig = {
-    rows: {
-      label: t('databaseDashboard.rowCountLabel'),
-      color: 'hsl(var(--chart-1))',
-    },
-  };
-
   if (chartData.length === 0) {
     return (
       <div className="text-muted-foreground flex h-64 items-center justify-center">
@@ -291,43 +279,47 @@ const TableSizeChart = memo(({ tables }: TableSizeChartProps) => {
   }
 
   return (
-    <ChartContainer config={chartConfig} className="h-64 w-full">
-      <BarChart data={chartData} layout="vertical" margin={{ left: 20 }}>
+    <ResponsiveContainer width="100%" height={280}>
+      <BarChart
+        data={chartData}
+        layout="vertical"
+        margin={{ top: 8, right: 24, bottom: 8, left: 8 }}
+        barCategoryGap="20%"
+      >
         <XAxis type="number" tickFormatter={formatNumber} />
         <YAxis
           dataKey="name"
           type="category"
           width={100}
-          tick={{ fontSize: 12 }}
+          tick={{ fontSize: 11 }}
+          tickMargin={4}
         />
-        <ChartTooltip
-          content={
-            <ChartTooltipContent
-              formatter={(value, _name, item) => {
-                const payload = item.payload as
-                  | { fullName?: string; size?: number }
-                  | undefined;
-                return (
-                  <div className="flex flex-col gap-1">
-                    <span className="font-medium">{payload?.fullName}</span>
-                    <span>
-                      {Number(value).toLocaleString()}{' '}
-                      {t('databaseDashboard.rows')}
-                    </span>
-                    {payload?.size && payload.size > 0 && (
-                      <span className="text-muted-foreground">
-                        {formatBytes(payload.size)}
-                      </span>
-                    )}
-                  </div>
-                );
-              }}
-            />
-          }
+        <Tooltip
+          content={({ active, payload }) => {
+            if (!active || !payload?.length) return null;
+            const data = payload[0].payload as {
+              fullName?: string;
+              rows?: number;
+              size?: number;
+            };
+            return (
+              <div className="bg-background rounded-lg border px-3 py-2 shadow-lg">
+                <p className="font-medium">{data.fullName}</p>
+                <p className="text-sm">
+                  {data.rows?.toLocaleString()} {t('databaseDashboard.rows')}
+                </p>
+                {data.size && data.size > 0 && (
+                  <p className="text-muted-foreground text-xs">
+                    {formatBytes(data.size)}
+                  </p>
+                )}
+              </div>
+            );
+          }}
         />
-        <Bar dataKey="rows" fill="var(--color-rows)" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="rows" fill="#3b82f6" radius={[0, 4, 4, 0]} />
       </BarChart>
-    </ChartContainer>
+    </ResponsiveContainer>
   );
 });
 
@@ -362,32 +354,36 @@ const DataTypeChart = memo(({ distribution }: DataTypeChartProps) => {
 
   if (chartData.length === 0) {
     return (
-      <div className="text-muted-foreground flex h-64 items-center justify-center">
+      <div className="text-muted-foreground flex h-72 items-center justify-center">
         {t('databaseDashboard.noDataTypeInfo')}
       </div>
     );
   }
 
   return (
-    <div className="flex h-64 items-center gap-4">
-      <ResponsiveContainer width="60%" height="100%">
-        <RechartsPieChart>
+    <div className="flex items-center gap-6">
+      <ResponsiveContainer width="55%" height={220}>
+        <RechartsPieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
           <Pie
             data={chartData}
             dataKey="value"
             nameKey="name"
             cx="50%"
             cy="50%"
-            innerRadius={40}
-            outerRadius={80}
+            innerRadius={50}
+            outerRadius={90}
             paddingAngle={2}
           >
             {chartData.map((entry) => (
               <Cell key={entry.name} fill={entry.fill} />
             ))}
           </Pie>
-          <ChartTooltip
-            content={({ active, payload }) => {
+          <Tooltip
+            content={(props: unknown) => {
+              const { active, payload } = props as {
+                active?: boolean;
+                payload?: Array<{ payload: { name: string; value: number } }>;
+              };
               if (!active || !payload?.length) return null;
               const data = payload[0].payload;
               const percentage = ((data.value / total) * 100).toFixed(1);
@@ -505,7 +501,7 @@ export const DatabaseDashboard = memo(
           // Count data types
           if (table.columns) {
             for (const col of table.columns) {
-              const type = col.type.toUpperCase();
+              const type = (col.type || 'UNKNOWN').toUpperCase();
               dataTypeMap.set(type, (dataTypeMap.get(type) || 0) + 1);
             }
           }
@@ -602,8 +598,11 @@ export const DatabaseDashboard = memo(
 
           {/* Dashboard Content */}
           {stats && (
-            <Tabs defaultValue="overview" className="flex-1">
-              <div className="flex items-center justify-between">
+            <Tabs
+              defaultValue="overview"
+              className="flex min-h-0 flex-1 flex-col"
+            >
+              <div className="flex shrink-0 items-center justify-between">
                 <TabsList>
                   <TabsTrigger value="overview">
                     {t('databaseDashboard.overview')}
@@ -629,82 +628,92 @@ export const DatabaseDashboard = memo(
               </div>
 
               {/* Overview Tab */}
-              <TabsContent value="overview" className="space-y-4">
-                {/* Summary Stats */}
-                <div className="grid grid-cols-5 gap-4">
-                  <StatCard
-                    label={t('databaseDashboard.tablesLabel')}
-                    value={stats.tableCount}
-                    icon={Layers}
-                    color="text-blue-500"
-                  />
-                  <StatCard
-                    label={t('databaseDashboard.totalRows')}
-                    value={formatNumber(stats.totalRows)}
-                    subValue={stats.totalRows.toLocaleString()}
-                    icon={Hash}
-                    color="text-green-500"
-                  />
-                  <StatCard
-                    label={t('databaseDashboard.columnsLabel')}
-                    value={stats.totalColumns}
-                    icon={FileText}
-                    color="text-purple-500"
-                  />
-                  <StatCard
-                    label={t('databaseDashboard.indexesLabel')}
-                    value={stats.totalIndexes}
-                    icon={TrendingUp}
-                    color="text-amber-500"
-                  />
-                  <StatCard
-                    label={t('databaseDashboard.totalSize')}
-                    value={formatBytes(stats.totalSizeBytes)}
-                    icon={HardDrive}
-                    color="text-rose-500"
-                  />
-                </div>
-
-                {/* Quick Charts */}
-                <div className="grid grid-cols-2 gap-4">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <Database className="h-4 w-4" />
-                        {t('databaseDashboard.topTablesByRowCount')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <TableSizeChart tables={stats.tables} />
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <PieChart className="h-4 w-4" />
-                        {t('databaseDashboard.dataTypeDistribution')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <DataTypeChart
-                        distribution={stats.dataTypeDistribution}
+              <TabsContent
+                value="overview"
+                className="mt-0 flex-1 overflow-hidden"
+              >
+                <ScrollArea className="h-full">
+                  <div className="space-y-6 p-1">
+                    {/* Summary Stats */}
+                    <div className="grid grid-cols-5 gap-4">
+                      <StatCard
+                        label={t('databaseDashboard.tablesLabel')}
+                        value={stats.tableCount}
+                        icon={Layers}
+                        color="text-blue-500"
                       />
-                    </CardContent>
-                  </Card>
-                </div>
+                      <StatCard
+                        label={t('databaseDashboard.totalRows')}
+                        value={formatNumber(stats.totalRows)}
+                        subValue={stats.totalRows.toLocaleString()}
+                        icon={Hash}
+                        color="text-green-500"
+                      />
+                      <StatCard
+                        label={t('databaseDashboard.columnsLabel')}
+                        value={stats.totalColumns}
+                        icon={FileText}
+                        color="text-purple-500"
+                      />
+                      <StatCard
+                        label={t('databaseDashboard.indexesLabel')}
+                        value={stats.totalIndexes}
+                        icon={TrendingUp}
+                        color="text-amber-500"
+                      />
+                      <StatCard
+                        label={t('databaseDashboard.totalSize')}
+                        value={formatBytes(stats.totalSizeBytes)}
+                        icon={HardDrive}
+                        color="text-rose-500"
+                      />
+                    </div>
 
-                {/* Analysis Info */}
-                <div className="text-muted-foreground text-center text-xs">
-                  {t('databaseDashboard.lastAnalyzed')}:{' '}
-                  {stats.analyzedAt.toLocaleString()}
-                </div>
+                    {/* Quick Charts */}
+                    <div className="grid grid-cols-2 gap-6">
+                      <Card>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="flex items-center gap-2 text-base">
+                            <Database className="h-4 w-4" />
+                            {t('databaseDashboard.topTablesByRowCount')}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <TableSizeChart tables={stats.tables} />
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="flex items-center gap-2 text-base">
+                            <PieChart className="h-4 w-4" />
+                            {t('databaseDashboard.dataTypeDistribution')}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <DataTypeChart
+                            distribution={stats.dataTypeDistribution}
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Analysis Info */}
+                    <div className="text-muted-foreground pb-2 text-center text-xs">
+                      {t('databaseDashboard.lastAnalyzed')}:{' '}
+                      {stats.analyzedAt.toLocaleString()}
+                    </div>
+                  </div>
+                </ScrollArea>
               </TabsContent>
 
               {/* Tables Tab */}
-              <TabsContent value="tables">
-                <Card>
-                  <CardHeader className="pb-2">
+              <TabsContent
+                value="tables"
+                className="mt-0 flex-1 overflow-hidden"
+              >
+                <Card className="flex h-full flex-col">
+                  <CardHeader className="shrink-0 pb-2">
                     <CardTitle className="text-base">
                       {t('databaseDashboard.allTables')}
                     </CardTitle>
@@ -712,8 +721,8 @@ export const DatabaseDashboard = memo(
                       {t('databaseDashboard.allTablesDescription')}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <ScrollArea className="h-96">
+                  <CardContent className="min-h-0 flex-1">
+                    <ScrollArea className="h-full">
                       <div className="space-y-1 pr-4">
                         {stats.tables.map((table, index) => (
                           <TableRow
@@ -731,59 +740,72 @@ export const DatabaseDashboard = memo(
               </TabsContent>
 
               {/* Charts Tab */}
-              <TabsContent value="charts" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">
-                      {t('databaseDashboard.tableSizeComparison')}
-                    </CardTitle>
-                    <CardDescription>
-                      {t('databaseDashboard.tableSizeComparisonDescription')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <TableSizeChart tables={stats.tables} />
-                  </CardContent>
-                </Card>
+              <TabsContent
+                value="charts"
+                className="mt-0 flex-1 overflow-hidden"
+              >
+                <ScrollArea className="h-full">
+                  <div className="space-y-6 p-1">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">
+                          {t('databaseDashboard.tableSizeComparison')}
+                        </CardTitle>
+                        <CardDescription>
+                          {t(
+                            'databaseDashboard.tableSizeComparisonDescription'
+                          )}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <TableSizeChart tables={stats.tables} />
+                      </CardContent>
+                    </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">
-                      {t('databaseDashboard.columnTypeAnalysis')}
-                    </CardTitle>
-                    <CardDescription>
-                      {t('databaseDashboard.columnTypeAnalysisDescription')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <DataTypeChart distribution={stats.dataTypeDistribution} />
-                  </CardContent>
-                </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">
+                          {t('databaseDashboard.columnTypeAnalysis')}
+                        </CardTitle>
+                        <CardDescription>
+                          {t('databaseDashboard.columnTypeAnalysisDescription')}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <DataTypeChart
+                          distribution={stats.dataTypeDistribution}
+                        />
+                      </CardContent>
+                    </Card>
 
-                {/* Data Type Details */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">
-                      {t('databaseDashboard.dataTypeDetails')}
-                    </CardTitle>
-                    <CardDescription>
-                      {t('databaseDashboard.dataTypeDetailsDescription')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-4 gap-2">
-                      {stats.dataTypeDistribution.map((item) => (
-                        <div
-                          key={item.type}
-                          className="bg-muted/50 flex items-center justify-between rounded-lg p-2"
-                        >
-                          <span className="font-mono text-sm">{item.type}</span>
-                          <Badge variant="secondary">{item.count}</Badge>
+                    {/* Data Type Details */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">
+                          {t('databaseDashboard.dataTypeDetails')}
+                        </CardTitle>
+                        <CardDescription>
+                          {t('databaseDashboard.dataTypeDetailsDescription')}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-4 gap-2">
+                          {stats.dataTypeDistribution.map((item) => (
+                            <div
+                              key={item.type}
+                              className="bg-muted/50 flex items-center justify-between rounded-lg p-2"
+                            >
+                              <span className="font-mono text-sm">
+                                {item.type}
+                              </span>
+                              <Badge variant="secondary">{item.count}</Badge>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </ScrollArea>
               </TabsContent>
             </Tabs>
           )}

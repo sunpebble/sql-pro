@@ -1134,7 +1134,7 @@ export const sqlProAPI = {
     ): Promise<ExecuteQueryResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.DB_EXECUTE_QUERY, {
         connectionId,
-        sql,
+        query: sql,
         params,
       }),
   },
