@@ -170,7 +170,7 @@ const StatCard = memo(
     return (
       <div
         className={cn(
-          'group relative overflow-hidden rounded-xl px-4 py-3',
+          'group relative overflow-hidden rounded-xl p-3',
           'from-background via-muted/30 to-muted/50 bg-gradient-to-br',
           'border-border/50 border',
           'shadow-sm hover:shadow-md',
@@ -184,10 +184,10 @@ const StatCard = memo(
             'bg-gradient-to-br from-transparent via-transparent to-current/[0.03]'
           )}
         />
-        <div className="relative flex items-center gap-3">
+        <div className="relative flex flex-col items-center gap-2 text-center">
           <div
             className={cn(
-              'shrink-0 rounded-lg p-2',
+              'rounded-lg p-2',
               'bg-gradient-to-br',
               'shadow-sm',
               'transition-transform duration-300 group-hover:scale-110',
@@ -213,18 +213,18 @@ const StatCard = memo(
               )}
             />
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-muted-foreground truncate text-[10px] font-medium tracking-wide uppercase">
+          <div className="w-full space-y-0.5">
+            <p className="text-lg leading-none font-bold tracking-tight">
+              {value}
+            </p>
+            {subValue && (
+              <p className="text-muted-foreground/60 text-[10px] leading-none">
+                {subValue}
+              </p>
+            )}
+            <p className="text-muted-foreground text-[10px] leading-tight font-medium">
               {label}
             </p>
-            <div className="flex items-baseline gap-1.5">
-              <p className="text-lg font-bold tracking-tight">{value}</p>
-              {subValue && (
-                <p className="text-muted-foreground/60 text-[10px] font-medium">
-                  {subValue}
-                </p>
-              )}
-            </div>
           </div>
         </div>
       </div>
