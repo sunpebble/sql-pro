@@ -763,7 +763,7 @@ export const DatabaseDashboard = memo(
 
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col">
+        <DialogContent className="flex max-h-[90vh] max-w-6xl flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
