@@ -169,7 +169,18 @@
     "columns": "columns",
     "rowCountLabel": "Row Count",
     "noTableData": "No table data available",
-    "noDataTypeInfo": "No data type information available"
+    "noDataTypeInfo": "No data type information available",
+    "insights": {
+      "title": "Insights",
+      "emptyTables": "Empty Tables Detected",
+      "emptyTablesDesc": "{{count}} table(s) have no data: {{tables}}",
+      "missingIndexes": "Missing Indexes",
+      "missingIndexesDesc": "{{count}} table(s) with 100+ rows have no indexes: {{tables}}",
+      "largeTable": "Large Table Detected",
+      "largeTableDesc": "{{table}} contains {{percentage}}% of all rows",
+      "healthy": "Database Healthy",
+      "healthyDesc": "No issues detected. Your database structure looks good."
+    }
   },
   "keyboardShortcuts": {
     "title": "Keyboard Shortcuts",

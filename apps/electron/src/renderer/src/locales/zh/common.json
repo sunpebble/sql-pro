@@ -169,7 +169,18 @@
     "columns": "列",
     "rowCountLabel": "行数",
     "noTableData": "无可用表数据",
-    "noDataTypeInfo": "无可用数据类型信息"
+    "noDataTypeInfo": "无可用数据类型信息",
+    "insights": {
+      "title": "分析洞察",
+      "emptyTables": "检测到空表",
+      "emptyTablesDesc": "{{count}} 个表没有数据：{{tables}}",
+      "missingIndexes": "缺少索引",
+      "missingIndexesDesc": "{{count}} 个超过100行的表没有索引：{{tables}}",
+      "largeTable": "检测到大表",
+      "largeTableDesc": "{{table}} 包含了 {{percentage}}% 的数据",
+      "healthy": "数据库健康",
+      "healthyDesc": "未检测到问题，数据库结构良好。"
+    }
   },
   "keyboardShortcuts": {
     "title": "键盘快捷键",

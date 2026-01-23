@@ -123,7 +123,6 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
     setTablePinned,
     getTableKey,
     getTableMetadata,
-    tableMetadata,
   } = useTableOrganizationStore();
 
   // i18n hook
@@ -557,7 +556,6 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
     connection?.path,
     getTableKey,
     getTableMetadata,
-    tableMetadata,
   ]);
 
   // Check if the database has any tables/views at all (before filtering)
