@@ -170,7 +170,7 @@ const StatCard = memo(
     return (
       <div
         className={cn(
-          'group relative overflow-hidden rounded-xl p-4',
+          'group relative overflow-hidden rounded-xl px-4 py-3',
           'from-background via-muted/30 to-muted/50 bg-gradient-to-br',
           'border-border/50 border',
           'shadow-sm hover:shadow-md',
@@ -184,10 +184,10 @@ const StatCard = memo(
             'bg-gradient-to-br from-transparent via-transparent to-current/[0.03]'
           )}
         />
-        <div className="relative flex flex-col items-center gap-3 text-center">
+        <div className="relative flex items-center gap-3">
           <div
             className={cn(
-              'rounded-xl p-2.5',
+              'shrink-0 rounded-lg p-2',
               'bg-gradient-to-br',
               'shadow-sm',
               'transition-transform duration-300 group-hover:scale-110',
@@ -207,24 +207,24 @@ const StatCard = memo(
           >
             <Icon
               className={cn(
-                'h-5 w-5 transition-all duration-300',
+                'h-4 w-4 transition-all duration-300',
                 color,
                 'drop-shadow-sm'
               )}
             />
           </div>
-          <div className="space-y-0.5">
-            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+          <div className="min-w-0 flex-1">
+            <p className="text-muted-foreground truncate text-[10px] font-medium tracking-wide uppercase">
               {label}
             </p>
-            <p className="text-xl font-bold tracking-tight whitespace-nowrap">
-              {value}
-            </p>
-            {subValue && (
-              <p className="text-muted-foreground/70 text-[10px] font-medium">
-                {subValue}
-              </p>
-            )}
+            <div className="flex items-baseline gap-1.5">
+              <p className="text-lg font-bold tracking-tight">{value}</p>
+              {subValue && (
+                <p className="text-muted-foreground/60 text-[10px] font-medium">
+                  {subValue}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -850,7 +850,7 @@ export const DatabaseDashboard = memo(
                 <ScrollArea className="h-full">
                   <div className="space-y-6 p-1">
                     {/* Summary Stats */}
-                    <div className="grid grid-cols-5 gap-4">
+                    <div className="grid grid-cols-5 gap-3">
                       <StatCard
                         label={t('databaseDashboard.tablesLabel')}
                         value={stats.tableCount}
