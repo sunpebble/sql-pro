@@ -843,11 +843,8 @@ export const DatabaseDashboard = memo(
               </div>
 
               {/* Overview Tab */}
-              <TabsContent
-                value="overview"
-                className="mt-0 flex-1 overflow-hidden"
-              >
-                <ScrollArea className="h-full">
+              <TabsContent value="overview" className="mt-0 min-h-0 flex-1">
+                <ScrollArea className="h-full pr-4">
                   <div className="space-y-6 p-1">
                     {/* Summary Stats */}
                     <div className="grid grid-cols-5 gap-3">
@@ -934,10 +931,7 @@ export const DatabaseDashboard = memo(
               </TabsContent>
 
               {/* Tables Tab */}
-              <TabsContent
-                value="tables"
-                className="mt-0 flex-1 overflow-hidden"
-              >
+              <TabsContent value="tables" className="mt-0 min-h-0 flex-1">
                 <Card className="border-border/50 flex h-full flex-col overflow-hidden shadow-sm">
                   <CardHeader className="shrink-0 pb-2">
                     <CardTitle className="flex items-center gap-2 text-base">
@@ -951,8 +945,8 @@ export const DatabaseDashboard = memo(
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="min-h-0 flex-1">
-                    <ScrollArea className="h-full">
-                      <div className="space-y-1.5 pr-4">
+                    <ScrollArea className="h-full pr-4">
+                      <div className="space-y-1.5">
                         {stats.tables.map((table, index) => (
                           <TableRow
                             key={table.name}
@@ -969,11 +963,8 @@ export const DatabaseDashboard = memo(
               </TabsContent>
 
               {/* Charts Tab */}
-              <TabsContent
-                value="charts"
-                className="mt-0 flex-1 overflow-hidden"
-              >
-                <ScrollArea className="h-full">
+              <TabsContent value="charts" className="mt-0 min-h-0 flex-1">
+                <ScrollArea className="h-full pr-4">
                   <div className="space-y-6 p-1">
                     <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                       <CardHeader>
