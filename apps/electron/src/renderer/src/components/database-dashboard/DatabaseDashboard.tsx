@@ -843,7 +843,7 @@ export const DatabaseDashboard = memo(
               </div>
 
               {/* Overview Tab */}
-              <TabsContent value="overview" className="mt-0 min-h-0 flex-1">
+              <TabsContent value="overview" className="mt-4 min-h-0 flex-1">
                 <ScrollArea className="h-full pr-4">
                   <div className="space-y-6 p-1">
                     {/* Summary Stats */}
@@ -931,7 +931,7 @@ export const DatabaseDashboard = memo(
               </TabsContent>
 
               {/* Tables Tab */}
-              <TabsContent value="tables" className="mt-0 min-h-0 flex-1">
+              <TabsContent value="tables" className="mt-4 min-h-0 flex-1">
                 <Card className="border-border/50 flex h-full flex-col overflow-hidden shadow-sm">
                   <CardHeader className="shrink-0 pb-2">
                     <CardTitle className="flex items-center gap-2 text-base">
@@ -963,7 +963,7 @@ export const DatabaseDashboard = memo(
               </TabsContent>
 
               {/* Charts Tab */}
-              <TabsContent value="charts" className="mt-0 min-h-0 flex-1">
+              <TabsContent value="charts" className="mt-4 min-h-0 flex-1">
                 <ScrollArea className="h-full pr-4">
                   <div className="space-y-6 p-1">
                     <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
@@ -1017,13 +1017,13 @@ export const DatabaseDashboard = memo(
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="grid grid-cols-4 gap-2">
+                        <div className="flex flex-wrap gap-3">
                           {stats.dataTypeDistribution.map((item, index) => (
                             <div
                               key={item.type}
                               style={{ animationDelay: `${index * 30}ms` }}
                               className={cn(
-                                'group/type border-border/50 flex items-center justify-between rounded-xl border p-2.5',
+                                'group/type border-border/50 flex items-center gap-2 rounded-xl border px-3 py-2',
                                 'from-muted/50 via-muted/30 bg-gradient-to-br to-transparent',
                                 'animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-both duration-200',
                                 'hover:border-border transition-all hover:scale-[1.02] hover:shadow-sm'
