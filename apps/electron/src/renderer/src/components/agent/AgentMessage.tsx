@@ -109,9 +109,11 @@ export const AgentMessage = memo(
 
     return (
       <Message from={message.role}>
-        <MessageAvatar>
-          {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-        </MessageAvatar>
+        {!isUser && (
+          <MessageAvatar>
+            <Bot className="h-4 w-4" />
+          </MessageAvatar>
+        )}
 
         <MessageContent>
           {reasoningContent && (
@@ -165,6 +167,12 @@ export const AgentMessage = memo(
             </Actions>
           )}
         </MessageContent>
+
+        {isUser && (
+          <MessageAvatar>
+            <User className="h-4 w-4" />
+          </MessageAvatar>
+        )}
       </Message>
     );
   }
