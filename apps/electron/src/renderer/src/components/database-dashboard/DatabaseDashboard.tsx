@@ -214,15 +214,15 @@ const StatCard = memo(
             />
           </div>
           <div className="w-full space-y-0.5">
-            <p className="text-lg leading-none font-bold tracking-tight">
+            <p className="text-lg leading-none font-bold tracking-tight whitespace-nowrap">
               {value}
             </p>
             {subValue && (
-              <p className="text-muted-foreground/60 text-[10px] leading-none">
+              <p className="text-muted-foreground/60 text-[10px] leading-none whitespace-nowrap">
                 {subValue}
               </p>
             )}
-            <p className="text-muted-foreground text-[10px] leading-tight font-medium">
+            <p className="text-muted-foreground text-[10px] leading-tight font-medium whitespace-nowrap">
               {label}
             </p>
           </div>
