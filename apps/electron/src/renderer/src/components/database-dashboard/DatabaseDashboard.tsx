@@ -845,175 +845,69 @@ export const DatabaseDashboard = memo(
               {/* Overview Tab */}
               <TabsContent
                 value="overview"
-                className="mt-4 flex-1 overflow-hidden"
+                className="mt-4 min-h-0 flex-1 overflow-hidden"
               >
-                <div className="h-full min-h-0">
-                  <ScrollArea className="h-full">
-                    <div className="space-y-6 p-1 pr-4">
-                      {/* Summary Stats */}
-                      <div className="grid grid-cols-5 gap-3">
-                        <StatCard
-                          label={t('databaseDashboard.tablesLabel')}
-                          value={stats.tableCount}
-                          icon={Layers}
-                          color="text-blue-500"
-                        />
-                        <StatCard
-                          label={t('databaseDashboard.totalRows')}
-                          value={formatNumber(stats.totalRows)}
-                          subValue={stats.totalRows.toLocaleString()}
-                          icon={Hash}
-                          color="text-green-500"
-                        />
-                        <StatCard
-                          label={t('databaseDashboard.columnsLabel')}
-                          value={stats.totalColumns}
-                          icon={FileText}
-                          color="text-purple-500"
-                        />
-                        <StatCard
-                          label={t('databaseDashboard.indexesLabel')}
-                          value={stats.totalIndexes}
-                          icon={TrendingUp}
-                          color="text-amber-500"
-                        />
-                        <StatCard
-                          label={t('databaseDashboard.totalSize')}
-                          value={formatBytes(stats.totalSizeBytes)}
-                          icon={HardDrive}
-                          color="text-rose-500"
-                        />
-                      </div>
-
-                      {/* Quick Charts */}
-                      <div className="grid grid-cols-2 gap-6">
-                        <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                          <CardHeader className="pb-2">
-                            <CardTitle className="flex items-center gap-2 text-base">
-                              <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
-                                <Database className="h-4 w-4 text-blue-500" />
-                              </div>
-                              {t('databaseDashboard.topTablesByRowCount')}
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <TableSizeChart tables={stats.tables} />
-                          </CardContent>
-                        </Card>
-
-                        <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                          <CardHeader className="pb-2">
-                            <CardTitle className="flex items-center gap-2 text-base">
-                              <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
-                                <PieChart className="h-4 w-4 text-purple-500" />
-                              </div>
-                              {t('databaseDashboard.dataTypeDistribution')}
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <DataTypeChart
-                              distribution={stats.dataTypeDistribution}
-                            />
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      <InsightsCard stats={stats} />
-
-                      <div className="flex items-center justify-center gap-2 pb-2 text-center text-xs">
-                        <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
-                        <span className="text-muted-foreground/70 font-medium">
-                          {t('databaseDashboard.lastAnalyzed')}:{' '}
-                          <span className="text-muted-foreground">
-                            {stats.analyzedAt.toLocaleString()}
-                          </span>
-                        </span>
-                        <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
-                      </div>
+                <ScrollArea className="h-full">
+                  <div className="space-y-6 p-1 pr-4">
+                    {/* Summary Stats */}
+                    <div className="grid grid-cols-5 gap-3">
+                      <StatCard
+                        label={t('databaseDashboard.tablesLabel')}
+                        value={stats.tableCount}
+                        icon={Layers}
+                        color="text-blue-500"
+                      />
+                      <StatCard
+                        label={t('databaseDashboard.totalRows')}
+                        value={formatNumber(stats.totalRows)}
+                        subValue={stats.totalRows.toLocaleString()}
+                        icon={Hash}
+                        color="text-green-500"
+                      />
+                      <StatCard
+                        label={t('databaseDashboard.columnsLabel')}
+                        value={stats.totalColumns}
+                        icon={FileText}
+                        color="text-purple-500"
+                      />
+                      <StatCard
+                        label={t('databaseDashboard.indexesLabel')}
+                        value={stats.totalIndexes}
+                        icon={TrendingUp}
+                        color="text-amber-500"
+                      />
+                      <StatCard
+                        label={t('databaseDashboard.totalSize')}
+                        value={formatBytes(stats.totalSizeBytes)}
+                        icon={HardDrive}
+                        color="text-rose-500"
+                      />
                     </div>
-                  </ScrollArea>
-                </div>
-              </TabsContent>
 
-              {/* Tables Tab */}
-              <TabsContent
-                value="tables"
-                className="mt-4 flex-1 overflow-hidden"
-              >
-                <div className="h-full min-h-0">
-                  <ScrollArea className="h-full">
-                    <div className="pr-4">
-                      <Card className="border-border/50 shadow-sm">
+                    {/* Quick Charts */}
+                    <div className="grid grid-cols-2 gap-6">
+                      <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                         <CardHeader className="pb-2">
                           <CardTitle className="flex items-center gap-2 text-base">
-                            <div className="rounded-lg bg-gradient-to-br from-indigo-500/15 to-indigo-600/10 p-1.5 shadow-sm">
-                              <Table2 className="h-4 w-4 text-indigo-500" />
-                            </div>
-                            {t('databaseDashboard.allTables')}
-                          </CardTitle>
-                          <CardDescription>
-                            {t('databaseDashboard.allTablesDescription')}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-1.5">
-                            {stats.tables.map((table, index) => (
-                              <TableRow
-                                key={table.name}
-                                table={table}
-                                maxRows={maxRows}
-                                maxSize={maxSize}
-                                index={index}
-                              />
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </ScrollArea>
-                </div>
-              </TabsContent>
-
-              {/* Charts Tab */}
-              <TabsContent
-                value="charts"
-                className="mt-4 flex-1 overflow-hidden"
-              >
-                <div className="h-full min-h-0">
-                  <ScrollArea className="h-full">
-                    <div className="space-y-6 p-1 pr-4">
-                      <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2 text-base">
                             <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
-                              <BarChart3 className="h-4 w-4 text-blue-500" />
+                              <Database className="h-4 w-4 text-blue-500" />
                             </div>
-                            {t('databaseDashboard.tableSizeComparison')}
+                            {t('databaseDashboard.topTablesByRowCount')}
                           </CardTitle>
-                          <CardDescription>
-                            {t(
-                              'databaseDashboard.tableSizeComparisonDescription'
-                            )}
-                          </CardDescription>
                         </CardHeader>
                         <CardContent>
                           <TableSizeChart tables={stats.tables} />
                         </CardContent>
                       </Card>
 
-                      <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                        <CardHeader>
+                      <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                        <CardHeader className="pb-2">
                           <CardTitle className="flex items-center gap-2 text-base">
                             <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
                               <PieChart className="h-4 w-4 text-purple-500" />
                             </div>
-                            {t('databaseDashboard.columnTypeAnalysis')}
+                            {t('databaseDashboard.dataTypeDistribution')}
                           </CardTitle>
-                          <CardDescription>
-                            {t(
-                              'databaseDashboard.columnTypeAnalysisDescription'
-                            )}
-                          </CardDescription>
                         </CardHeader>
                         <CardContent>
                           <DataTypeChart
@@ -1021,49 +915,147 @@ export const DatabaseDashboard = memo(
                           />
                         </CardContent>
                       </Card>
-
-                      <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2 text-base">
-                            <div className="rounded-lg bg-gradient-to-br from-cyan-500/15 to-cyan-600/10 p-1.5 shadow-sm">
-                              <Layers className="h-4 w-4 text-cyan-500" />
-                            </div>
-                            {t('databaseDashboard.dataTypeDetails')}
-                          </CardTitle>
-                          <CardDescription>
-                            {t('databaseDashboard.dataTypeDetailsDescription')}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex flex-wrap gap-3">
-                            {stats.dataTypeDistribution.map((item, index) => (
-                              <div
-                                key={item.type}
-                                style={{ animationDelay: `${index * 30}ms` }}
-                                className={cn(
-                                  'group/type border-border/50 flex items-center gap-2 rounded-xl border px-3 py-2',
-                                  'from-muted/50 via-muted/30 bg-gradient-to-br to-transparent',
-                                  'animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-both duration-200',
-                                  'hover:border-border transition-all hover:scale-[1.02] hover:shadow-sm'
-                                )}
-                              >
-                                <span className="font-mono text-sm font-medium">
-                                  {item.type}
-                                </span>
-                                <Badge
-                                  variant="secondary"
-                                  className="bg-primary/10 text-primary shadow-sm transition-transform group-hover/type:scale-105"
-                                >
-                                  {item.count}
-                                </Badge>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
                     </div>
-                  </ScrollArea>
-                </div>
+
+                    <InsightsCard stats={stats} />
+
+                    <div className="flex items-center justify-center gap-2 pb-2 text-center text-xs">
+                      <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
+                      <span className="text-muted-foreground/70 font-medium">
+                        {t('databaseDashboard.lastAnalyzed')}:{' '}
+                        <span className="text-muted-foreground">
+                          {stats.analyzedAt.toLocaleString()}
+                        </span>
+                      </span>
+                      <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
+                    </div>
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+
+              {/* Tables Tab */}
+              <TabsContent
+                value="tables"
+                className="mt-4 min-h-0 flex-1 overflow-hidden"
+              >
+                <ScrollArea className="h-full">
+                  <div className="pr-4">
+                    <Card className="border-border/50 shadow-sm">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <div className="rounded-lg bg-gradient-to-br from-indigo-500/15 to-indigo-600/10 p-1.5 shadow-sm">
+                            <Table2 className="h-4 w-4 text-indigo-500" />
+                          </div>
+                          {t('databaseDashboard.allTables')}
+                        </CardTitle>
+                        <CardDescription>
+                          {t('databaseDashboard.allTablesDescription')}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-1.5">
+                          {stats.tables.map((table, index) => (
+                            <TableRow
+                              key={table.name}
+                              table={table}
+                              maxRows={maxRows}
+                              maxSize={maxSize}
+                              index={index}
+                            />
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+
+              {/* Charts Tab */}
+              <TabsContent
+                value="charts"
+                className="mt-4 min-h-0 flex-1 overflow-hidden"
+              >
+                <ScrollArea className="h-full">
+                  <div className="space-y-6 p-1 pr-4">
+                    <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
+                            <BarChart3 className="h-4 w-4 text-blue-500" />
+                          </div>
+                          {t('databaseDashboard.tableSizeComparison')}
+                        </CardTitle>
+                        <CardDescription>
+                          {t(
+                            'databaseDashboard.tableSizeComparisonDescription'
+                          )}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <TableSizeChart tables={stats.tables} />
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
+                            <PieChart className="h-4 w-4 text-purple-500" />
+                          </div>
+                          {t('databaseDashboard.columnTypeAnalysis')}
+                        </CardTitle>
+                        <CardDescription>
+                          {t('databaseDashboard.columnTypeAnalysisDescription')}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <DataTypeChart
+                          distribution={stats.dataTypeDistribution}
+                        />
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <div className="rounded-lg bg-gradient-to-br from-cyan-500/15 to-cyan-600/10 p-1.5 shadow-sm">
+                            <Layers className="h-4 w-4 text-cyan-500" />
+                          </div>
+                          {t('databaseDashboard.dataTypeDetails')}
+                        </CardTitle>
+                        <CardDescription>
+                          {t('databaseDashboard.dataTypeDetailsDescription')}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex flex-wrap gap-3">
+                          {stats.dataTypeDistribution.map((item, index) => (
+                            <div
+                              key={item.type}
+                              style={{ animationDelay: `${index * 30}ms` }}
+                              className={cn(
+                                'group/type border-border/50 flex items-center gap-2 rounded-xl border px-3 py-2',
+                                'from-muted/50 via-muted/30 bg-gradient-to-br to-transparent',
+                                'animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-both duration-200',
+                                'hover:border-border transition-all hover:scale-[1.02] hover:shadow-sm'
+                              )}
+                            >
+                              <span className="font-mono text-sm font-medium">
+                                {item.type}
+                              </span>
+                              <Badge
+                                variant="secondary"
+                                className="bg-primary/10 text-primary shadow-sm transition-transform group-hover/type:scale-105"
+                              >
+                                {item.count}
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </ScrollArea>
               </TabsContent>
             </Tabs>
           )}
