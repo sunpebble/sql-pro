@@ -1,6 +1,14 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Code, GitCompare, GitFork, Search, Table } from 'lucide-react';
+import {
+  Code,
+  GitCompare,
+  GitFork,
+  PanelLeft,
+  PanelLeftClose,
+  Search,
+  Table,
+} from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
@@ -68,10 +76,21 @@ interface ActivityBarProps {
   badges?: Partial<Record<ViewType, number>>;
   /** Set of view IDs that should be visible (conditional items only shown if included) */
   visibleViews?: Set<ViewType>;
+  /** Whether the sidebar is collapsed */
+  sidebarCollapsed?: boolean;
+  /** Callback to toggle sidebar visibility */
+  onToggleSidebar?: () => void;
 }
 
 export const ActivityBar = memo(
-  ({ activeView, onViewChange, badges, visibleViews }: ActivityBarProps) => {
+  ({
+    activeView,
+    onViewChange,
+    badges,
+    visibleViews,
+    sidebarCollapsed,
+    onToggleSidebar,
+  }: ActivityBarProps) => {
     const { t } = useTranslation('common');
 
     const visibleItems = ACTIVITY_BAR_ITEMS.filter((item) => {
@@ -208,6 +227,42 @@ export const ActivityBar = memo(
 
         <div className="flex flex-col items-center gap-1 pb-1">
           <div className="from-primary/30 via-border/40 h-10 w-px bg-gradient-to-b to-transparent" />
+
+          {onToggleSidebar && (
+            <Tooltip>
+              <TooltipTrigger>
+                <button
+                  type="button"
+                  onClick={onToggleSidebar}
+                  className={cn(
+                    'group flex h-9 w-9 items-center justify-center rounded-lg',
+                    'transition-all duration-200 ease-out',
+                    'text-muted-foreground hover:text-foreground',
+                    'hover:from-muted/80 hover:to-muted/40 hover:bg-gradient-to-br',
+                    'hover:shadow-[0_2px_6px_rgba(0,0,0,0.08)]',
+                    'dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.25)]'
+                  )}
+                >
+                  {sidebarCollapsed ? (
+                    <PanelLeft className="h-[18px] w-[18px] transition-transform duration-200 group-hover:scale-110" />
+                  ) : (
+                    <PanelLeftClose className="h-[18px] w-[18px] transition-transform duration-200 group-hover:scale-110" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="right"
+                sideOffset={12}
+                className="bg-popover/95 border-border/60 flex items-center gap-2.5 shadow-lg backdrop-blur-sm"
+              >
+                <span className="font-medium tracking-tight">
+                  {sidebarCollapsed
+                    ? t('sidebar.show', { defaultValue: 'Show Sidebar' })
+                    : t('sidebar.hide', { defaultValue: 'Hide Sidebar' })}
+                </span>
+              </TooltipContent>
+            </Tooltip>
+          )}
         </div>
       </div>
     );

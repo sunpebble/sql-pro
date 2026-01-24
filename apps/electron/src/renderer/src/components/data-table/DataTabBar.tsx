@@ -1,4 +1,5 @@
 import type { DataTab } from '@/stores/data-tabs-store';
+import { Button } from '@sqlpro/ui/button';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -13,11 +14,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@sqlpro/ui/tooltip';
-import { Eye, Table, X } from 'lucide-react';
+import { Eye, PanelRightClose, PanelRightOpen, Table, X } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-// Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
 
@@ -102,6 +102,8 @@ function useTabKeyboardNavigation(
 
 interface DataTabBarProps {
   className?: string;
+  schemaDetailsOpen?: boolean;
+  onToggleSchemaDetails?: () => void;
 }
 
 interface TabItemProps {
@@ -213,58 +215,110 @@ const TabItem = memo(
 
 TabItem.displayName = 'DataTabItem';
 
-export const DataTabBar = memo(({ className }: DataTabBarProps) => {
-  const { activeConnectionId } = useConnectionStore();
-  const { tabsByConnection, closeTab, closeOtherTabs, setActiveTab } =
-    useDataTabsStore();
+export const DataTabBar = memo(
+  ({
+    className,
+    schemaDetailsOpen,
+    onToggleSchemaDetails,
+  }: DataTabBarProps) => {
+    const { t } = useTranslation('common');
+    const { activeConnectionId } = useConnectionStore();
+    const { tabsByConnection, closeTab, closeOtherTabs, setActiveTab } =
+      useDataTabsStore();
 
-  // Get tabs for current connection
-  const connectionTabState = activeConnectionId
-    ? tabsByConnection[activeConnectionId]
-    : null;
-  const tabs = connectionTabState?.tabs || [];
-  const activeTabId = connectionTabState?.activeTabId || null;
+    // Get tabs for current connection
+    const connectionTabState = activeConnectionId
+      ? tabsByConnection[activeConnectionId]
+      : null;
+    const tabs = connectionTabState?.tabs || [];
+    const activeTabId = connectionTabState?.activeTabId || null;
 
-  // Enable keyboard navigation between tabs
-  useTabKeyboardNavigation(
-    tabs,
-    activeTabId,
-    activeConnectionId,
-    setActiveTab,
-    closeOtherTabs
-  );
+    // Enable keyboard navigation between tabs
+    useTabKeyboardNavigation(
+      tabs,
+      activeTabId,
+      activeConnectionId,
+      setActiveTab,
+      closeOtherTabs
+    );
 
-  if (!activeConnectionId || tabs.length === 0) {
-    return null;
+    if (!activeConnectionId || tabs.length === 0) {
+      return null;
+    }
+
+    return (
+      <div
+        className={cn(
+          'bg-muted/20 border-border/50 flex h-8 shrink-0 items-center border-b',
+          className
+        )}
+        role="tablist"
+      >
+        <ScrollArea orientation="horizontal" className="h-8 flex-1">
+          <div className="flex h-8 items-center">
+            {tabs.map((tab, index) => (
+              <TabItem
+                key={tab.id}
+                tab={tab}
+                index={index}
+                isActive={tab.id === activeTabId}
+                connectionId={activeConnectionId}
+                onSelect={() => setActiveTab(activeConnectionId, tab.id)}
+                onClose={() => closeTab(activeConnectionId, tab.id)}
+                onCloseOthers={() => closeOtherTabs(activeConnectionId, tab.id)}
+                tabsCount={tabs.length}
+              />
+            ))}
+          </div>
+        </ScrollArea>
+
+        {onToggleSchemaDetails && (
+          <div className="border-border/30 flex shrink-0 items-center gap-1 border-l px-2">
+            <TooltipProvider delay={300}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      'h-6 w-6',
+                      'transition-all duration-200',
+                      schemaDetailsOpen
+                        ? [
+                            'text-primary',
+                            'from-primary/15 to-primary/8 bg-gradient-to-br',
+                            'ring-primary/25 ring-1',
+                          ]
+                        : [
+                            'text-muted-foreground hover:text-foreground',
+                            'hover:from-muted/80 hover:to-muted/50 hover:bg-gradient-to-br',
+                          ]
+                    )}
+                    onClick={onToggleSchemaDetails}
+                  >
+                    {schemaDetailsOpen ? (
+                      <PanelRightClose className="h-3.5 w-3.5" />
+                    ) : (
+                      <PanelRightOpen className="h-3.5 w-3.5" />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">
+                  {schemaDetailsOpen
+                    ? t('schemaDetails.hide', {
+                        defaultValue: 'Hide Schema Details',
+                      })
+                    : t('schemaDetails.show', {
+                        defaultValue: 'Show Schema Details',
+                      })}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
+      </div>
+    );
   }
-
-  return (
-    <div
-      className={cn(
-        'bg-muted/20 border-border/50 flex h-8 shrink-0 items-center border-b',
-        className
-      )}
-      role="tablist"
-    >
-      <ScrollArea orientation="horizontal" className="h-8 flex-1">
-        <div className="flex h-8 items-center">
-          {tabs.map((tab, index) => (
-            <TabItem
-              key={tab.id}
-              tab={tab}
-              index={index}
-              isActive={tab.id === activeTabId}
-              connectionId={activeConnectionId}
-              onSelect={() => setActiveTab(activeConnectionId, tab.id)}
-              onClose={() => closeTab(activeConnectionId, tab.id)}
-              onCloseOthers={() => closeOtherTabs(activeConnectionId, tab.id)}
-              tabsCount={tabs.length}
-            />
-          ))}
-        </div>
-      </ScrollArea>
-    </div>
-  );
-});
+);
 
 DataTabBar.displayName = 'DataTabBar';
