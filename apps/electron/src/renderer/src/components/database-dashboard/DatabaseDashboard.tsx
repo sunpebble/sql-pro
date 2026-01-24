@@ -15,7 +15,6 @@ import {
   CardTitle,
 } from '@sqlpro/ui/card';
 import { Progress } from '@sqlpro/ui/progress';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import {
   AlertTriangle,
@@ -157,6 +156,7 @@ interface StatCardProps {
   subValue?: string;
   icon: React.ElementType;
   color?: string;
+  index?: number;
 }
 
 const StatCard = memo(
@@ -166,16 +166,19 @@ const StatCard = memo(
     subValue,
     icon: Icon,
     color = 'text-primary',
+    index = 0,
   }: StatCardProps) => {
     return (
       <div
+        style={{ animationDelay: `${index * 50}ms` }}
         className={cn(
           'group relative overflow-hidden rounded-xl p-3',
           'from-background via-muted/30 to-muted/50 bg-gradient-to-br',
           'border-border/50 border',
           'shadow-sm hover:shadow-md',
           'transition-all duration-300 ease-out',
-          'hover:border-border hover:scale-[1.02]'
+          'hover:border-border hover:scale-[1.02]',
+          'animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-300'
         )}
       >
         <div
@@ -466,18 +469,26 @@ const DataTypeChart = memo(({ distribution }: DataTypeChartProps) => {
           />
         </RechartsPieChart>
       </ResponsiveContainer>
-      <div className="flex-1 space-y-2.5">
-        {chartData.map((item) => (
+      <div className="flex-1 space-y-2">
+        {chartData.map((item, index) => (
           <div
             key={item.name}
-            className="group/legend hover:bg-muted/50 flex items-center gap-2.5 rounded-lg p-1.5 transition-all"
+            style={{ animationDelay: `${index * 40}ms` }}
+            className={cn(
+              'group/legend flex items-center gap-2.5 rounded-lg p-2 transition-all duration-200',
+              'hover:bg-muted/60 hover:shadow-sm',
+              'animate-in fade-in-0 slide-in-from-right-2 fill-mode-both',
+              'cursor-default'
+            )}
           >
             <div
-              className="ring-background h-3 w-3 shrink-0 rounded-full shadow-sm ring-2 transition-transform group-hover/legend:scale-125"
+              className="ring-background h-3 w-3 shrink-0 rounded-full shadow-sm ring-2 transition-all duration-200 group-hover/legend:scale-125 group-hover/legend:shadow-md"
               style={{ backgroundColor: item.fill }}
             />
-            <span className="text-sm font-medium">{item.name}</span>
-            <span className="text-muted-foreground ml-auto text-sm font-semibold tabular-nums">
+            <span className="group-hover/legend:text-foreground text-sm font-medium transition-colors">
+              {item.name}
+            </span>
+            <span className="text-muted-foreground group-hover/legend:text-primary ml-auto text-sm font-semibold tabular-nums transition-colors">
               {item.value}
             </span>
           </div>
@@ -764,17 +775,25 @@ export const DatabaseDashboard = memo(
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="flex max-h-[90vh] max-w-6xl flex-col overflow-hidden">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              {t('databaseDashboard.title')}
+          <DialogHeader className="relative pb-4">
+            <div className="from-primary/[0.03] pointer-events-none absolute inset-0 -mx-6 -mt-6 bg-gradient-to-b via-transparent to-transparent" />
+            <DialogTitle className="relative flex items-center gap-2.5">
+              <div className="from-primary/15 to-primary/10 shadow-primary/10 rounded-lg bg-gradient-to-br p-1.5 shadow-sm">
+                <BarChart3 className="text-primary h-5 w-5" />
+              </div>
+              <span className="font-semibold tracking-tight">
+                {t('databaseDashboard.title')}
+              </span>
               {databaseName && (
-                <Badge variant="secondary" className="ml-2">
+                <Badge
+                  variant="secondary"
+                  className="from-muted/80 to-muted border-border/50 ml-1 border bg-gradient-to-r font-medium shadow-sm"
+                >
                   {databaseName}
                 </Badge>
               )}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-muted-foreground/80 relative">
               {t('databaseDashboard.description')}
             </DialogDescription>
           </DialogHeader>
@@ -818,14 +837,23 @@ export const DatabaseDashboard = memo(
               className="flex min-h-0 flex-1 flex-col"
             >
               <div className="flex shrink-0 items-center justify-between">
-                <TabsList>
-                  <TabsTrigger value="overview">
+                <TabsList className="bg-muted/50 border-border/30 border p-1 shadow-sm">
+                  <TabsTrigger
+                    value="overview"
+                    className="data-[state=active]:bg-background data-[state=active]:border-border/50 transition-all duration-200 data-[state=active]:shadow-sm"
+                  >
                     {t('databaseDashboard.overview')}
                   </TabsTrigger>
-                  <TabsTrigger value="tables">
+                  <TabsTrigger
+                    value="tables"
+                    className="data-[state=active]:bg-background data-[state=active]:border-border/50 transition-all duration-200 data-[state=active]:shadow-sm"
+                  >
                     {t('databaseDashboard.tables')}
                   </TabsTrigger>
-                  <TabsTrigger value="charts">
+                  <TabsTrigger
+                    value="charts"
+                    className="data-[state=active]:bg-background data-[state=active]:border-border/50 transition-all duration-200 data-[state=active]:shadow-sm"
+                  >
                     {t('databaseDashboard.charts')}
                   </TabsTrigger>
                 </TabsList>
@@ -845,168 +873,73 @@ export const DatabaseDashboard = memo(
               {/* Overview Tab */}
               <TabsContent
                 value="overview"
-                className="mt-4 min-h-0 flex-1 overflow-hidden"
+                className="mt-4 min-h-0 flex-1 overflow-auto"
               >
-                <ScrollArea className="h-full">
-                  <div className="space-y-6 p-1 pr-4">
-                    {/* Summary Stats */}
-                    <div className="grid grid-cols-5 gap-3">
-                      <StatCard
-                        label={t('databaseDashboard.tablesLabel')}
-                        value={stats.tableCount}
-                        icon={Layers}
-                        color="text-blue-500"
-                      />
-                      <StatCard
-                        label={t('databaseDashboard.totalRows')}
-                        value={formatNumber(stats.totalRows)}
-                        subValue={stats.totalRows.toLocaleString()}
-                        icon={Hash}
-                        color="text-green-500"
-                      />
-                      <StatCard
-                        label={t('databaseDashboard.columnsLabel')}
-                        value={stats.totalColumns}
-                        icon={FileText}
-                        color="text-purple-500"
-                      />
-                      <StatCard
-                        label={t('databaseDashboard.indexesLabel')}
-                        value={stats.totalIndexes}
-                        icon={TrendingUp}
-                        color="text-amber-500"
-                      />
-                      <StatCard
-                        label={t('databaseDashboard.totalSize')}
-                        value={formatBytes(stats.totalSizeBytes)}
-                        icon={HardDrive}
-                        color="text-rose-500"
-                      />
-                    </div>
-
-                    {/* Quick Charts */}
-                    <div className="grid grid-cols-2 gap-6">
-                      <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                        <CardHeader className="pb-2">
-                          <CardTitle className="flex items-center gap-2 text-base">
-                            <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
-                              <Database className="h-4 w-4 text-blue-500" />
-                            </div>
-                            {t('databaseDashboard.topTablesByRowCount')}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <TableSizeChart tables={stats.tables} />
-                        </CardContent>
-                      </Card>
-
-                      <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                        <CardHeader className="pb-2">
-                          <CardTitle className="flex items-center gap-2 text-base">
-                            <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
-                              <PieChart className="h-4 w-4 text-purple-500" />
-                            </div>
-                            {t('databaseDashboard.dataTypeDistribution')}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <DataTypeChart
-                            distribution={stats.dataTypeDistribution}
-                          />
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <InsightsCard stats={stats} />
-
-                    <div className="flex items-center justify-center gap-2 pb-2 text-center text-xs">
-                      <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
-                      <span className="text-muted-foreground/70 font-medium">
-                        {t('databaseDashboard.lastAnalyzed')}:{' '}
-                        <span className="text-muted-foreground">
-                          {stats.analyzedAt.toLocaleString()}
-                        </span>
-                      </span>
-                      <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
-                    </div>
+                <div className="space-y-6 p-1 pr-4">
+                  {/* Summary Stats */}
+                  <div className="grid grid-cols-5 gap-3">
+                    <StatCard
+                      label={t('databaseDashboard.tablesLabel')}
+                      value={stats.tableCount}
+                      icon={Layers}
+                      color="text-blue-500"
+                      index={0}
+                    />
+                    <StatCard
+                      label={t('databaseDashboard.totalRows')}
+                      value={formatNumber(stats.totalRows)}
+                      subValue={stats.totalRows.toLocaleString()}
+                      icon={Hash}
+                      color="text-green-500"
+                      index={1}
+                    />
+                    <StatCard
+                      label={t('databaseDashboard.columnsLabel')}
+                      value={stats.totalColumns}
+                      icon={FileText}
+                      color="text-purple-500"
+                      index={2}
+                    />
+                    <StatCard
+                      label={t('databaseDashboard.indexesLabel')}
+                      value={stats.totalIndexes}
+                      icon={TrendingUp}
+                      color="text-amber-500"
+                      index={3}
+                    />
+                    <StatCard
+                      label={t('databaseDashboard.totalSize')}
+                      value={formatBytes(stats.totalSizeBytes)}
+                      icon={HardDrive}
+                      color="text-rose-500"
+                      index={4}
+                    />
                   </div>
-                </ScrollArea>
-              </TabsContent>
 
-              {/* Tables Tab */}
-              <TabsContent
-                value="tables"
-                className="mt-4 min-h-0 flex-1 overflow-hidden"
-              >
-                <ScrollArea className="h-full">
-                  <div className="pr-4">
-                    <Card className="border-border/50 shadow-sm">
+                  {/* Quick Charts */}
+                  <div className="grid grid-cols-2 gap-6">
+                    <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                       <CardHeader className="pb-2">
                         <CardTitle className="flex items-center gap-2 text-base">
-                          <div className="rounded-lg bg-gradient-to-br from-indigo-500/15 to-indigo-600/10 p-1.5 shadow-sm">
-                            <Table2 className="h-4 w-4 text-indigo-500" />
-                          </div>
-                          {t('databaseDashboard.allTables')}
-                        </CardTitle>
-                        <CardDescription>
-                          {t('databaseDashboard.allTablesDescription')}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-1.5">
-                          {stats.tables.map((table, index) => (
-                            <TableRow
-                              key={table.name}
-                              table={table}
-                              maxRows={maxRows}
-                              maxSize={maxSize}
-                              index={index}
-                            />
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </ScrollArea>
-              </TabsContent>
-
-              {/* Charts Tab */}
-              <TabsContent
-                value="charts"
-                className="mt-4 min-h-0 flex-1 overflow-hidden"
-              >
-                <ScrollArea className="h-full">
-                  <div className="space-y-6 p-1 pr-4">
-                    <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-base">
                           <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
-                            <BarChart3 className="h-4 w-4 text-blue-500" />
+                            <Database className="h-4 w-4 text-blue-500" />
                           </div>
-                          {t('databaseDashboard.tableSizeComparison')}
+                          {t('databaseDashboard.topTablesByRowCount')}
                         </CardTitle>
-                        <CardDescription>
-                          {t(
-                            'databaseDashboard.tableSizeComparisonDescription'
-                          )}
-                        </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <TableSizeChart tables={stats.tables} />
                       </CardContent>
                     </Card>
 
-                    <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                      <CardHeader>
+                    <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                      <CardHeader className="pb-2">
                         <CardTitle className="flex items-center gap-2 text-base">
                           <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
                             <PieChart className="h-4 w-4 text-purple-500" />
                           </div>
-                          {t('databaseDashboard.columnTypeAnalysis')}
+                          {t('databaseDashboard.dataTypeDistribution')}
                         </CardTitle>
-                        <CardDescription>
-                          {t('databaseDashboard.columnTypeAnalysisDescription')}
-                        </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <DataTypeChart
@@ -1014,48 +947,140 @@ export const DatabaseDashboard = memo(
                         />
                       </CardContent>
                     </Card>
-
-                    <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-base">
-                          <div className="rounded-lg bg-gradient-to-br from-cyan-500/15 to-cyan-600/10 p-1.5 shadow-sm">
-                            <Layers className="h-4 w-4 text-cyan-500" />
-                          </div>
-                          {t('databaseDashboard.dataTypeDetails')}
-                        </CardTitle>
-                        <CardDescription>
-                          {t('databaseDashboard.dataTypeDetailsDescription')}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-3">
-                          {stats.dataTypeDistribution.map((item, index) => (
-                            <div
-                              key={item.type}
-                              style={{ animationDelay: `${index * 30}ms` }}
-                              className={cn(
-                                'group/type border-border/50 flex items-center gap-2 rounded-xl border px-3 py-2',
-                                'from-muted/50 via-muted/30 bg-gradient-to-br to-transparent',
-                                'animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-both duration-200',
-                                'hover:border-border transition-all hover:scale-[1.02] hover:shadow-sm'
-                              )}
-                            >
-                              <span className="font-mono text-sm font-medium">
-                                {item.type}
-                              </span>
-                              <Badge
-                                variant="secondary"
-                                className="bg-primary/10 text-primary shadow-sm transition-transform group-hover/type:scale-105"
-                              >
-                                {item.count}
-                              </Badge>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
                   </div>
-                </ScrollArea>
+
+                  <InsightsCard stats={stats} />
+
+                  <div className="flex items-center justify-center gap-2 pb-2 text-center text-xs">
+                    <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
+                    <span className="text-muted-foreground/70 font-medium">
+                      {t('databaseDashboard.lastAnalyzed')}:{' '}
+                      <span className="text-muted-foreground">
+                        {stats.analyzedAt.toLocaleString()}
+                      </span>
+                    </span>
+                    <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Tables Tab */}
+              <TabsContent
+                value="tables"
+                className="mt-4 min-h-0 flex-1 overflow-auto"
+              >
+                <div className="p-2 pr-4">
+                  <Card className="border-border/50 overflow-visible shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <div className="rounded-lg bg-gradient-to-br from-indigo-500/15 to-indigo-600/10 p-1.5 shadow-sm">
+                          <Table2 className="h-4 w-4 text-indigo-500" />
+                        </div>
+                        {t('databaseDashboard.allTables')}
+                      </CardTitle>
+                      <CardDescription>
+                        {t('databaseDashboard.allTablesDescription')}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-1.5">
+                        {stats.tables.map((table, index) => (
+                          <TableRow
+                            key={table.name}
+                            table={table}
+                            maxRows={maxRows}
+                            maxSize={maxSize}
+                            index={index}
+                          />
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              {/* Charts Tab */}
+              <TabsContent
+                value="charts"
+                className="mt-4 min-h-0 flex-1 overflow-auto"
+              >
+                <div className="space-y-6 p-1 pr-4">
+                  <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
+                          <BarChart3 className="h-4 w-4 text-blue-500" />
+                        </div>
+                        {t('databaseDashboard.tableSizeComparison')}
+                      </CardTitle>
+                      <CardDescription>
+                        {t('databaseDashboard.tableSizeComparisonDescription')}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <TableSizeChart tables={stats.tables} />
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
+                          <PieChart className="h-4 w-4 text-purple-500" />
+                        </div>
+                        {t('databaseDashboard.columnTypeAnalysis')}
+                      </CardTitle>
+                      <CardDescription>
+                        {t('databaseDashboard.columnTypeAnalysisDescription')}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <DataTypeChart
+                        distribution={stats.dataTypeDistribution}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <div className="rounded-lg bg-gradient-to-br from-cyan-500/15 to-cyan-600/10 p-1.5 shadow-sm">
+                          <Layers className="h-4 w-4 text-cyan-500" />
+                        </div>
+                        {t('databaseDashboard.dataTypeDetails')}
+                      </CardTitle>
+                      <CardDescription>
+                        {t('databaseDashboard.dataTypeDetailsDescription')}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-3">
+                        {stats.dataTypeDistribution.map((item, index) => (
+                          <div
+                            key={item.type}
+                            style={{ animationDelay: `${index * 30}ms` }}
+                            className={cn(
+                              'group/type border-border/50 flex items-center gap-2 rounded-xl border px-3 py-2',
+                              'from-muted/50 via-muted/30 bg-gradient-to-br to-transparent',
+                              'animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-both duration-200',
+                              'hover:border-border transition-all hover:scale-[1.02] hover:shadow-sm'
+                            )}
+                          >
+                            <span className="font-mono text-sm font-medium">
+                              {item.type}
+                            </span>
+                            <Badge
+                              variant="secondary"
+                              className="bg-primary/10 text-primary shadow-sm transition-transform group-hover/type:scale-105"
+                            >
+                              {item.count}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabsContent>
             </Tabs>
           )}

@@ -1,6 +1,7 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Code, GitCompare, GitFork, Search, Table } from 'lucide-react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { cn } from '@/lib/utils';
@@ -69,77 +70,146 @@ interface ActivityBarProps {
   visibleViews?: Set<ViewType>;
 }
 
-/**
- * Activity Bar for view navigation.
- * Provides a vertical icon bar on the left side for switching between views.
- * Clean, minimal design with subtle gold accents.
- */
-export function ActivityBar({
-  activeView,
-  onViewChange,
-  badges,
-  visibleViews,
-}: ActivityBarProps) {
-  const { t } = useTranslation('common');
+export const ActivityBar = memo(
+  ({ activeView, onViewChange, badges, visibleViews }: ActivityBarProps) => {
+    const { t } = useTranslation('common');
 
-  // Filter items based on visibility settings
-  const visibleItems = ACTIVITY_BAR_ITEMS.filter((item) => {
-    // Non-conditional items are always visible
-    if (!item.conditional) return true;
-    // Conditional items only shown if explicitly included in visibleViews
-    return visibleViews?.has(item.id);
-  });
+    const visibleItems = ACTIVITY_BAR_ITEMS.filter((item) => {
+      if (!item.conditional) return true;
+      return visibleViews?.has(item.id);
+    });
 
-  return (
-    <div className="border-border/50 bg-muted/30 flex h-full w-12 shrink-0 flex-col border-r py-2">
-      {/* Navigation Items */}
-      <div className="flex flex-1 flex-col items-center gap-0.5">
-        {visibleItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeView === item.id;
-          const badgeCount = badges?.[item.id];
+    return (
+      <div
+        className={cn(
+          'relative flex h-full w-12 shrink-0 flex-col py-3',
+          'from-muted/50 via-background to-muted/50 bg-gradient-to-b',
+          'border-border/30 border-r',
+          'animate-slide-in-left opacity-0'
+        )}
+      >
+        <div className="from-primary/25 via-primary/10 absolute top-0 right-0 h-full w-px bg-gradient-to-b to-transparent" />
+        <div className="from-primary/40 via-primary/20 absolute top-0 right-0 left-0 h-px bg-gradient-to-r to-transparent" />
+        <div className="noise-overlay absolute inset-0 opacity-[0.015] dark:opacity-[0.025]" />
 
-          return (
-            <Tooltip key={item.id}>
-              <TooltipTrigger>
-                <button
-                  data-tab={item.id}
-                  data-active={isActive ? '' : undefined}
-                  data-tour-target={item.tourTarget}
-                  onClick={() => onViewChange(item.id)}
+        <div className="flex flex-1 flex-col items-center gap-1">
+          {visibleItems.map((item, index) => {
+            const Icon = item.icon;
+            const isActive = activeView === item.id;
+            const badgeCount = badges?.[item.id];
+
+            return (
+              <Tooltip key={item.id}>
+                <TooltipTrigger>
+                  <button
+                    type="button"
+                    data-tab={item.id}
+                    data-active={isActive ? '' : undefined}
+                    data-tour-target={item.tourTarget}
+                    onClick={() => onViewChange(item.id)}
+                    className={cn(
+                      'group relative flex h-9 w-9 items-center justify-center rounded-lg',
+                      'transition-all duration-200 ease-out',
+                      'animate-fade-in-up opacity-0',
+                      index === 0 && 'stagger-1',
+                      index === 1 && 'stagger-2',
+                      index === 2 && 'stagger-3',
+                      index === 3 && 'stagger-4',
+                      index === 4 && 'stagger-5',
+                      isActive
+                        ? [
+                            'text-primary',
+                            'from-primary/20 via-primary/12 to-primary/5 bg-gradient-to-br',
+                            'shadow-[0_2px_8px_rgba(16,185,129,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]',
+                            'dark:shadow-[0_2px_10px_rgba(52,211,153,0.25),inset_0_1px_0_rgba(255,255,255,0.05)]',
+                            'ring-primary/20 dark:ring-primary/25 ring-1',
+                          ]
+                        : [
+                            'text-muted-foreground',
+                            'hover:text-foreground',
+                            'hover:from-muted/80 hover:to-muted/40 hover:bg-gradient-to-br',
+                            'hover:shadow-[0_2px_6px_rgba(0,0,0,0.08)]',
+                            'dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.25)]',
+                          ]
+                    )}
+                  >
+                    <Icon
+                      className={cn(
+                        'h-[18px] w-[18px] transition-all duration-200',
+                        'group-hover:scale-110 group-active:scale-95',
+                        isActive && [
+                          'drop-shadow-[0_0_6px_rgba(16,185,129,0.5)]',
+                          'dark:drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]',
+                        ]
+                      )}
+                    />
+
+                    {isActive && (
+                      <span
+                        className={cn(
+                          'absolute top-1/2 -left-px -translate-y-1/2',
+                          'h-6 w-[3px] rounded-full',
+                          'from-primary via-primary bg-gradient-to-b to-[var(--accent-cyan)]',
+                          'shadow-[0_0_10px_rgba(16,185,129,0.6),0_0_20px_rgba(16,185,129,0.3)]',
+                          'dark:shadow-[0_0_12px_rgba(52,211,153,0.7),0_0_24px_rgba(52,211,153,0.35)]',
+                          'animate-scale-in'
+                        )}
+                      />
+                    )}
+
+                    {badgeCount !== undefined && badgeCount > 0 && (
+                      <span
+                        className={cn(
+                          'absolute -top-1 -right-1',
+                          'flex h-4 min-w-4 items-center justify-center',
+                          'rounded-full px-1',
+                          'text-[10px] font-semibold',
+                          'bg-primary text-primary-foreground',
+                          'shadow-[0_0_6px_rgba(16,185,129,0.4)]',
+                          'border-background/50 border',
+                          'animate-scale-in'
+                        )}
+                      >
+                        {badgeCount > 99 ? '99+' : badgeCount}
+                      </span>
+                    )}
+
+                    <span
+                      className={cn(
+                        'absolute inset-0 rounded-lg',
+                        'opacity-0 transition-all duration-200',
+                        'ring-border/50 dark:ring-border/30 ring-1',
+                        'group-hover:ring-primary/25 group-hover:opacity-100',
+                        isActive && 'opacity-0'
+                      )}
+                    />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="right"
+                  sideOffset={12}
                   className={cn(
-                    'group relative flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-150',
-                    isActive
-                      ? 'text-primary bg-primary/10'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                    'flex items-center gap-2.5',
+                    'bg-popover/95 backdrop-blur-sm',
+                    'border-border/60 shadow-lg'
                   )}
                 >
-                  <Icon className="h-[18px] w-[18px]" />
-                  {/* Active indicator - subtle left border */}
-                  {isActive && (
-                    <span className="bg-primary absolute top-1/2 -left-0.5 h-4 w-0.5 -translate-y-1/2 rounded-full" />
+                  <span className="font-medium tracking-tight">
+                    {t(item.labelKey)}
+                  </span>
+                  {item.shortcutAction && (
+                    <ShortcutKbd action={item.shortcutAction} />
                   )}
-                  {badgeCount !== undefined && badgeCount > 0 && (
-                    <span className="bg-primary text-2xs text-background absolute -top-0.5 -right-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-0.5 font-medium">
-                      {badgeCount > 99 ? '99+' : badgeCount}
-                    </span>
-                  )}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="right"
-                sideOffset={8}
-                className="flex items-center gap-2"
-              >
-                <span className="font-medium">{t(item.labelKey)}</span>
-                {item.shortcutAction && (
-                  <ShortcutKbd action={item.shortcutAction} />
-                )}
-              </TooltipContent>
-            </Tooltip>
-          );
-        })}
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col items-center gap-1 pb-1">
+          <div className="from-primary/30 via-border/40 h-10 w-px bg-gradient-to-b to-transparent" />
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+);
