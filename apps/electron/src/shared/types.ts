@@ -3155,6 +3155,7 @@ export type ShortcutAction =
   | 'action.export-data'
   | 'action.focus-search'
   | 'action.open-agent'
+  | 'action.toggle-sql-log'
   // Connection
   | 'conn.new-connection'
   | 'conn.next-connection'
@@ -3261,7 +3262,7 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'action.refresh-schema': { key: 'r', modifiers: { cmd: true, shift: true } },
   'action.refresh-table': { key: 'r', modifiers: { cmd: true } },
   'action.execute-query': { key: 'Enter', modifiers: { cmd: true } },
-  'action.view-changes': { key: 'l', modifiers: { cmd: true } },
+  'action.view-changes': { key: 'd', modifiers: { cmd: true, shift: true } },
   'action.open-database': { key: 'o', modifiers: { cmd: true } },
   'action.new-window': { key: 'n', modifiers: { cmd: true, shift: true } },
   'action.close-database': { key: 'w', modifiers: { cmd: true } },
@@ -3271,7 +3272,8 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'action.delete-row': { key: 'Backspace', modifiers: { cmd: true } },
   'action.export-data': { key: 'e', modifiers: { cmd: true, shift: true } },
   'action.focus-search': { key: 'f', modifiers: { cmd: true } },
-  'action.open-agent': { key: 'j', modifiers: { cmd: true } },
+  'action.open-agent': { key: 'l', modifiers: { cmd: true } },
+  'action.toggle-sql-log': { key: 'j', modifiers: { cmd: true } },
   'conn.new-connection': { key: 't', modifiers: { cmd: true } },
   'conn.next-connection': { key: ']', modifiers: { cmd: true } },
   'conn.prev-connection': { key: '[', modifiers: { cmd: true } },

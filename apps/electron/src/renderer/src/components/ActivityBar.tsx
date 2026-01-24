@@ -6,13 +6,15 @@ import {
   GitFork,
   PanelLeft,
   PanelLeftClose,
+  ScrollText,
   Search,
   Table,
 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_FLEX } from '@/lib/utils';
+import { useSqlLogStore } from '@/stores/sql-log-store';
 
 export type ViewType =
   | 'data'
@@ -92,6 +94,8 @@ export const ActivityBar = memo(
     onToggleSidebar,
   }: ActivityBarProps) => {
     const { t } = useTranslation('common');
+    const { isVisible: sqlLogVisible, toggleVisible: toggleSqlLog } =
+      useSqlLogStore();
 
     const visibleItems = ACTIVITY_BAR_ITEMS.filter((item) => {
       if (!item.conditional) return true;
@@ -207,11 +211,7 @@ export const ActivityBar = memo(
                 <TooltipContent
                   side="right"
                   sideOffset={12}
-                  className={cn(
-                    'flex items-center gap-2.5',
-                    'bg-popover/95 backdrop-blur-sm',
-                    'border-border/60 shadow-lg'
-                  )}
+                  className={TOOLTIP_CONTENT_FLEX}
                 >
                   <span className="font-medium tracking-tight">
                     {t(item.labelKey)}
@@ -228,6 +228,49 @@ export const ActivityBar = memo(
         <div className="flex flex-col items-center gap-1 pb-1">
           <div className="from-primary/30 via-border/40 h-10 w-px bg-gradient-to-b to-transparent" />
 
+          {/* SQL Log Toggle */}
+          <Tooltip>
+            <TooltipTrigger>
+              <button
+                type="button"
+                onClick={toggleSqlLog}
+                className={cn(
+                  'group flex h-9 w-9 items-center justify-center rounded-lg',
+                  'transition-all duration-200 ease-out',
+                  sqlLogVisible
+                    ? [
+                        'text-primary',
+                        'from-primary/20 via-primary/12 to-primary/5 bg-gradient-to-br',
+                        'shadow-[0_2px_8px_rgba(16,185,129,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]',
+                        'dark:shadow-[0_2px_10px_rgba(52,211,153,0.25),inset_0_1px_0_rgba(255,255,255,0.05)]',
+                        'ring-primary/20 dark:ring-primary/25 ring-1',
+                      ]
+                    : [
+                        'text-muted-foreground hover:text-foreground',
+                        'hover:from-muted/80 hover:to-muted/40 hover:bg-gradient-to-br',
+                        'hover:shadow-[0_2px_6px_rgba(0,0,0,0.08)]',
+                        'dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.25)]',
+                      ]
+                )}
+              >
+                <ScrollText className="h-[18px] w-[18px] transition-transform duration-200 group-hover:scale-110" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="right"
+              sideOffset={12}
+              className={TOOLTIP_CONTENT_FLEX}
+            >
+              <span className="font-medium tracking-tight">
+                {sqlLogVisible
+                  ? t('toolbar.hideSqlLog', { defaultValue: 'Hide SQL Log' })
+                  : t('toolbar.showSqlLog', { defaultValue: 'Show SQL Log' })}
+              </span>
+              <ShortcutKbd action="action.toggle-sql-log" />
+            </TooltipContent>
+          </Tooltip>
+
+          {/* Sidebar Toggle */}
           {onToggleSidebar && (
             <Tooltip>
               <TooltipTrigger>
@@ -253,7 +296,7 @@ export const ActivityBar = memo(
               <TooltipContent
                 side="right"
                 sideOffset={12}
-                className="bg-popover/95 border-border/60 flex items-center gap-2.5 shadow-lg backdrop-blur-sm"
+                className={TOOLTIP_CONTENT_FLEX}
               >
                 <span className="font-medium tracking-tight">
                   {sidebarCollapsed

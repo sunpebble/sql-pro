@@ -187,7 +187,7 @@ export function useCommands() {
         return;
       }
 
-      // Open AI Agent shortcut (Cmd+J) - works everywhere
+      // Open AI Agent shortcut (Cmd+L) - works everywhere
       const openAgentBinding = getShortcut('action.open-agent');
       if (matchesBinding(e, openAgentBinding)) {
         e.preventDefault();
@@ -195,6 +195,16 @@ export function useCommands() {
         if (activeConnectionId && dialogStoreRef.current) {
           dialogStoreRef.current.toggleAgentSidebar(activeConnectionId);
         }
+        return;
+      }
+
+      // Toggle SQL Log shortcut (Cmd+J) - works everywhere
+      const toggleSqlLogBinding = getShortcut('action.toggle-sql-log');
+      if (matchesBinding(e, toggleSqlLogBinding)) {
+        e.preventDefault();
+        import('@/stores/sql-log-store').then(({ useSqlLogStore }) => {
+          useSqlLogStore.getState().toggleVisible();
+        });
         return;
       }
 
@@ -631,7 +641,7 @@ export function useCommands() {
     // Use capture phase to handle shortcuts before Monaco editor intercepts them
     window.addEventListener('keydown', handleKeyDown, true);
     return () => window.removeEventListener('keydown', handleKeyDown, true);
-  }, [toggle, openConnectionSwitcher]);
+  }, [toggle, openConnectionSwitcher, t]);
 
   // Register commands only once on mount
   useEffect(() => {
