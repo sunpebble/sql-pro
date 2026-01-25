@@ -68,6 +68,7 @@ export function useTheme() {
 
   useEffect(() => {
     const resolved = theme === 'system' ? getSystemTheme() : theme;
+    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync theme state */
     setResolvedTheme(resolved);
     applyTheme(theme);
   }, [theme]);

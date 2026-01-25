@@ -423,21 +423,19 @@ export function LicenseActivationDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5 text-amber-500" />
-            {view === 'manage'
-              ? t('pro.title', { defaultValue: 'SQL Pro License' })
-              : t('pro.getStarted', { defaultValue: 'Get SQL Pro' })}
-          </DialogTitle>
-          {view !== 'manage' && (
+        {view !== 'manage' && (
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-amber-500" />
+              {t('pro.getStarted', { defaultValue: 'Get SQL Pro' })}
+            </DialogTitle>
             <DialogDescription>
               {t('pro.description', {
                 defaultValue: 'Unlock all Pro features with a subscription',
               })}
             </DialogDescription>
-          )}
-        </DialogHeader>
+          </DialogHeader>
+        )}
 
         {/* Error display */}
         {error && (

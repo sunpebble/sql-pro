@@ -17,7 +17,7 @@ import {
 import { Eye, PanelRightClose, PanelRightOpen, Table, X } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_FLEX, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
 
@@ -182,7 +182,7 @@ const TabItem = memo(
                   </button>
                 </div>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
+              <TooltipContent side="bottom" className={TOOLTIP_CONTENT_FLEX}>
                 {tab.table.name}
                 {shortcutKey && (
                   <span className="text-muted-foreground ml-2">
@@ -303,7 +303,7 @@ export const DataTabBar = memo(
                     )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
+                <TooltipContent side="bottom" className={TOOLTIP_CONTENT_STYLE}>
                   {schemaDetailsOpen
                     ? t('schemaDetails.hide', {
                         defaultValue: 'Hide Schema Details',

@@ -27,7 +27,7 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { usePendingChanges } from '@/hooks/usePendingChanges';
 import { pendingChangesCollection } from '@/lib/collections';
 import { generateSQLScript } from '@/lib/sql-generator';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 
 interface DiffPreviewProps {
@@ -257,7 +257,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
               <span className="text-xs">{t('diffPreview.sql')}</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">
+          <TooltipContent side="left" className={TOOLTIP_CONTENT_STYLE}>
             {showSqlPreview
               ? t('pendingChanges.showDiffView')
               : t('pendingChanges.previewSqlStatements')}
@@ -288,7 +288,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
                   </span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="left">
+              <TooltipContent side="left" className={TOOLTIP_CONTENT_STYLE}>
                 {t('pendingChanges.copySqlToClipboard')}
               </TooltipContent>
             </Tooltip>
@@ -366,7 +366,10 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
                             <X className="h-3.5 w-3.5" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="left">
+                        <TooltipContent
+                          side="left"
+                          className={TOOLTIP_CONTENT_STYLE}
+                        >
                           Discard all changes to {group.table}
                         </TooltipContent>
                       </Tooltip>
@@ -535,7 +538,10 @@ function ChangeItem({
             <TooltipTrigger>
               <AlertCircle className="text-destructive h-3.5 w-3.5" />
             </TooltipTrigger>
-            <TooltipContent side="left" className="max-w-xs">
+            <TooltipContent
+              side="left"
+              className={cn(TOOLTIP_CONTENT_STYLE, 'max-w-xs')}
+            >
               {validationError ||
                 change.validationError ||
                 t('diffPreview.validationError')}
@@ -689,7 +695,7 @@ function DiffTable({ change }: { change: PendingChange }) {
 
       return null;
     },
-    []
+    [t]
   );
 
   // Start editing a field

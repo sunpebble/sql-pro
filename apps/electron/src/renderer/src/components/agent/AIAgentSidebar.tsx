@@ -109,6 +109,7 @@ export function AIAgentSidebar({
     }
     initializedRef.current = true;
     if (!isConfigured) {
+      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional initial state setup */
       setShowSettings(true);
     }
   }, [isConfigured, settings]);

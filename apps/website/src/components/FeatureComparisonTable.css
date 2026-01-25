@@ -148,6 +148,11 @@
     padding-top: 32px;
   }
 
+  .comparison-title {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+  }
+
   .comparison-table th,
   .comparison-table td {
     padding: 12px 8px;
@@ -169,5 +174,90 @@
 
   .plan-price {
     font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .comparison-table-wrapper {
+    margin-top: 40px;
+    padding-top: 24px;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .comparison-title {
+    font-size: 1.125rem;
+    margin-bottom: 20px;
+  }
+
+  .comparison-table {
+    font-size: 0.75rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 10px 6px;
+    font-size: 0.75rem;
+  }
+
+  .feature-header {
+    width: 100px;
+    min-width: 100px;
+    font-size: 0.625rem;
+  }
+
+  .plan-header {
+    min-width: 65px;
+  }
+
+  .featured-badge {
+    padding: 2px 6px;
+    font-size: 8px;
+    margin-bottom: 4px;
+  }
+
+  .plan-name {
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+  }
+
+  .plan-price {
+    font-size: 0.625rem;
+  }
+
+  .feature-name {
+    font-size: 0.75rem;
+  }
+
+  .feature-text {
+    font-size: 0.6875rem;
+  }
+
+  .check-icon svg,
+  .x-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .comparison-table th,
+  .comparison-table td {
+    padding: 8px 4px;
+  }
+
+  .feature-header {
+    width: 80px;
+    min-width: 80px;
+  }
+
+  .plan-header {
+    min-width: 55px;
+  }
+
+  .plan-name {
+    font-size: 0.6875rem;
   }
 }

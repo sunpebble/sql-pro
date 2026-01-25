@@ -218,6 +218,7 @@ export function ResizableTable({
   useEffect(() => {
     // Detect dark mode from document class
     const checkDarkMode = () => {
+      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync dark mode state */
       setIsDark(document.documentElement.classList.contains('dark'));
     };
 

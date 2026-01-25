@@ -12,7 +12,7 @@ import {
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getWarningMessage } from '@/lib/query-plan-analyzer';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 
 interface ExecutionPlanNodeProps {
   data: ExecutionPlanNodeData;
@@ -114,7 +114,7 @@ function ExecutionPlanNodeComponent({
                 className={cn('ml-auto h-4 w-4 shrink-0', warningStyle.text)}
               />
             </TooltipTrigger>
-            <TooltipContent side="right">
+            <TooltipContent side="right" className={TOOLTIP_CONTENT_STYLE}>
               <div className="space-y-1">
                 <div className="font-semibold">
                   {t(warningMessage.titleKey)}

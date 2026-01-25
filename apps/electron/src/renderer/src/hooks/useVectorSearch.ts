@@ -94,8 +94,10 @@ export function useVectorSearch(
   // Load background points for visualization when connection/collection changes
   useEffect(() => {
     if (!connectionId || !collection) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- State reset on dependency change */
       setBackgroundPoints([]);
       setVectorDimension(0);
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
       return;
     }
 

@@ -185,7 +185,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
     } finally {
       setIsComparing(false);
     }
-  }, [source, target, setIsComparing, setComparisonError]);
+  }, [source, target, setIsComparing, setComparisonError, t]);
 
   // Store handleCompare in ref for keyboard shortcuts
   useEffect(() => {

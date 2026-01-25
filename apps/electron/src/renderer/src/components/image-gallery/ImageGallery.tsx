@@ -683,6 +683,7 @@ export function ImageGallery({
 
   // Reset focused index when images change
   useEffect(() => {
+    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Reset on data change */
     setFocusedIndex(-1);
   }, [images]);
 

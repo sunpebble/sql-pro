@@ -1067,6 +1067,8 @@
     "sidebar": "侧边栏",
     "schemaDetails": "结构详情",
     "sqlLog": "SQL 日志",
+    "showSqlLog": "显示 SQL 日志",
+    "hideSqlLog": "隐藏 SQL 日志",
     "aiAgent": "AI 助手"
   },
   "commandPalette": {

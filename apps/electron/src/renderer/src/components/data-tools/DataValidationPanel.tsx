@@ -28,7 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 
 interface ColumnConstraint {
   name: string;
@@ -133,7 +133,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
                   NOT NULL
                 </Badge>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                 {t('dataValidation.notNullTooltip')}
               </TooltipContent>
             </Tooltip>
@@ -147,7 +147,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
                   UNIQUE
                 </Badge>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                 {t('dataValidation.uniqueTooltip')}
               </TooltipContent>
             </Tooltip>
@@ -161,7 +161,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
                   DEFAULT
                 </Badge>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                 {t('dataValidation.default')}: {constraint.defaultValue}
               </TooltipContent>
             </Tooltip>
@@ -360,7 +360,10 @@ export const DataValidationPanel = memo(
               </Button>
             </div>
           ) : (
-            <Tabs defaultValue="constraints" className="flex-1">
+            <Tabs
+              defaultValue="constraints"
+              className="flex min-h-0 flex-1 flex-col"
+            >
               <TabsList>
                 <TabsTrigger value="constraints" className="gap-1">
                   <Shield className="h-4 w-4" />
@@ -376,8 +379,8 @@ export const DataValidationPanel = memo(
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="constraints" className="mt-4">
-                <ScrollArea className="h-64">
+              <TabsContent value="constraints" className="mt-4 min-h-0 flex-1">
+                <ScrollArea className="h-full">
                   {constraints.length === 0 ? (
                     <div className="text-muted-foreground flex items-center justify-center py-12">
                       {t('dataValidation.noConstraints')}
@@ -395,8 +398,8 @@ export const DataValidationPanel = memo(
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="foreignKeys" className="mt-4">
-                <ScrollArea className="h-64">
+              <TabsContent value="foreignKeys" className="mt-4 min-h-0 flex-1">
+                <ScrollArea className="h-full">
                   {foreignKeys.length === 0 ? (
                     <div className="text-muted-foreground flex items-center justify-center py-12">
                       {t('dataValidation.noForeignKeys')}
@@ -415,8 +418,8 @@ export const DataValidationPanel = memo(
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="issues" className="mt-4">
-                <ScrollArea className="h-64">
+              <TabsContent value="issues" className="mt-4 min-h-0 flex-1">
+                <ScrollArea className="h-full">
                   {issues.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12">
                       <Check className="mb-2 h-12 w-12 text-green-500" />

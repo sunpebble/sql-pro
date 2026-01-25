@@ -1547,3 +1547,16 @@ th {
   border-left: none;
   border-top: none;
 }
+
+/* ============================================
+ * TOOLTIP KBD STYLING
+ * Override kbd colors when inside tooltip
+ * ============================================ */
+[data-slot='tooltip-content'] [data-slot='kbd'] {
+  background-color: oklch(0 0 0 / 10%);
+  color: var(--popover-foreground);
+}
+
+.dark [data-slot='tooltip-content'] [data-slot='kbd'] {
+  background-color: oklch(1 0 1 / 10%);
+}

@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Hash, Sparkles, Tag, X } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 
 interface QuickFilterTagsProps {
   columns: ColumnSchema[];
@@ -253,7 +253,7 @@ export const QuickFilterTags = memo(
                     </span>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
+                <TooltipContent side="bottom" className={TOOLTIP_CONTENT_STYLE}>
                   <div className="space-y-1">
                     <div>
                       <span className="font-medium">{suggestion.column}</span>

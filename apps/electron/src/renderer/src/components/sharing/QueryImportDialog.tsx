@@ -68,7 +68,7 @@ export function QueryImportDialog({
     } finally {
       setIsImporting(false);
     }
-  }, [onImportComplete]);
+  }, [onImportComplete, t]);
 
   // Reset dialog state on close
   const handleOpenChange = useCallback(

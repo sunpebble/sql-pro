@@ -505,6 +505,7 @@ export function useTableEditing({
       onRowDelete,
       onRowInsert,
       table,
+      containerRef,
     ]
   );
 
@@ -565,7 +566,7 @@ export function useTableEditing({
 
       return null;
     },
-    []
+    [t]
   );
 
   // Check if a cell is focused

@@ -96,7 +96,7 @@ export function SourceSelector({
         });
       }
     },
-    [availableConnections, onChange]
+    [availableConnections, onChange, t]
   );
 
   // Handle snapshot selection
@@ -176,7 +176,7 @@ export function SourceSelector({
     } finally {
       setIsCreatingSnapshot(false);
     }
-  }, [snapshotName, selectedConnectionForSnapshot, addSnapshot, onChange]);
+  }, [snapshotName, selectedConnectionForSnapshot, addSnapshot, onChange, t]);
 
   // Get display name for selected connection/snapshot
   const getDisplayName = () => {

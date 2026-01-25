@@ -1,15 +1,16 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import About from './components/About';
+import Account from './components/Account';
 import Download from './components/Download';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
-import LanguageSwitcher from './components/LanguageSwitcher';
+import LicenseModal from './components/LicenseModal';
 import Pricing from './components/Pricing';
 import SkipLink from './components/SkipLink';
 import Testimonials from './components/Testimonials';
-import ThemeSwitcher from './components/ThemeSwitcher';
+import TopBar from './components/TopBar';
 
 function Loading() {
   return (
@@ -22,12 +23,53 @@ function Loading() {
 
 export default function App() {
   const { t } = useTranslation();
+  const [showLicenseModal, setShowLicenseModal] = useState(false);
+  const [showAccount, setShowAccount] = useState(false);
+
+  // Check for checkout success and account page in URL params
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const checkoutStatus = params.get('checkout');
+    const page = params.get('page');
+
+    if (checkoutStatus === 'success') {
+      // Show the license lookup modal after successful purchase
+      setShowLicenseModal(true);
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+
+    if (page === 'account') {
+      setShowAccount(true);
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
+
+  // Listen for custom event to open account page
+  useEffect(() => {
+    function handleOpenAccount() {
+      setShowAccount(true);
+    }
+
+    window.addEventListener('openAccountPage', handleOpenAccount);
+    return () =>
+      window.removeEventListener('openAccountPage', handleOpenAccount);
+  }, []);
+
+  // Show Account page
+  if (showAccount) {
+    return (
+      <Suspense fallback={<Loading />}>
+        <Account onClose={() => setShowAccount(false)} />
+      </Suspense>
+    );
+  }
 
   return (
     <Suspense fallback={<Loading />}>
       <SkipLink />
-      <ThemeSwitcher />
-      <LanguageSwitcher />
+      <TopBar />
       <main id="main-content" role="main" aria-label={t('meta.title')}>
         <Hero />
         <About />
@@ -37,6 +79,12 @@ export default function App() {
         <Download />
       </main>
       <Footer />
+
+      {/* License lookup modal - shown after successful checkout */}
+      <LicenseModal
+        isOpen={showLicenseModal}
+        onClose={() => setShowLicenseModal(false)}
+      />
     </Suspense>
   );
 }

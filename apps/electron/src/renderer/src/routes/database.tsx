@@ -189,6 +189,7 @@ export function DatabasePage() {
       setIsLoadingSchema,
       setError,
       setRecentConnections,
+      t,
     ]
   );
 
@@ -375,6 +376,7 @@ export function DatabasePage() {
       setSchema,
       setIsLoadingSchema,
       setRecentConnections,
+      t,
     ]
   );
 

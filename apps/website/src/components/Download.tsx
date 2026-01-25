@@ -1,4 +1,4 @@
-import type { ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Download.css';
@@ -50,6 +50,7 @@ export default function Download() {
   const [platform, setPlatform] = useState<Platform>('unknown');
 
   useEffect(() => {
+    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Detect platform on mount */
     setPlatform(detectPlatform());
   }, []);
 

@@ -41,6 +41,7 @@ import { usePendingChanges } from '@/hooks/usePendingChanges';
 import { usePgNotify } from '@/hooks/usePgNotify';
 import { useTableData } from '@/hooks/useTableData';
 import { convertUIFiltersToAPIFilters } from '@/lib/filter-utils';
+import { TOOLTIP_CONTENT_FLEX } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
@@ -643,7 +644,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className={TOOLTIP_CONTENT_FLEX}>
                 {t('table.refreshData', { defaultValue: 'Refresh table data' })}{' '}
                 (
                 <ShortcutKbd action="action.refresh-table" />)
@@ -663,7 +664,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                   <Download className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className={TOOLTIP_CONTENT_FLEX}>
                 {t('table.exportData', { defaultValue: 'Export data' })} (
                 <ShortcutKbd action="action.export-data" />)
               </TooltipContent>
@@ -682,7 +683,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                     <Plus className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className={TOOLTIP_CONTENT_FLEX}>
                   {t('table.addRow', { defaultValue: 'Add row' })} (
                   <ShortcutKbd action="action.add-row" />)
                 </TooltipContent>
@@ -702,7 +703,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                     <span className="ml-1.5">{changeCount}</span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className={TOOLTIP_CONTENT_FLEX}>
                   {t('table.viewChanges', {
                     defaultValue: 'View pending changes',
                   })}{' '}
@@ -726,7 +727,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                     <Table2 className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className={TOOLTIP_CONTENT_FLEX}>
                   {t('table.dataView', { defaultValue: 'Data view' })}
                   {' ('}
                   <ShortcutKbd action="view.data-view" />
@@ -745,7 +746,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                     <ImageIcon className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className={TOOLTIP_CONTENT_FLEX}>
                   {t('table.mediaGallery')}
                   {' ('}
                   <ShortcutKbd action="view.gallery-view" />

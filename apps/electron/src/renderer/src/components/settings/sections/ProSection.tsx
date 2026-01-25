@@ -2,14 +2,21 @@ import { DecoFrame, GoldButton } from '@sqlpro/ui';
 import { Crown } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ProActivationDialog } from '@/components/pro/ProActivation';
+import { LicenseActivationDialog } from '@/components/LicenseActivationDialog';
 import { ProBadge } from '@/components/pro/ProBadge';
 import { cn } from '@/lib/utils';
-import { useProStore } from '@/stores/pro-store';
+import { useLicenseStore } from '@/stores/license-store';
 
 export function ProSection() {
   const { t } = useTranslation('settings');
-  const { isPro, activatedAt, features } = useProStore();
+  const { license, isValid } = useLicenseStore();
+
+  // Map license store to Pro status
+  const isPro = isValid;
+  const expiresAt = license?.expiresAt;
+  const features = license
+    ? ['advanced-export', 'plugin-system', 'query-optimizer']
+    : [];
 
   // Pro activation dialog state
   const [proDialogOpen, setProDialogOpen] = useState(false);
@@ -53,8 +60,8 @@ export function ProSection() {
                   ? t('pro.featuresUnlocked', {
                       count: features.length,
                     }) +
-                    (activatedAt
-                      ? ` • ${t('pro.activated', { date: new Date(activatedAt).toLocaleDateString() })}`
+                    (expiresAt
+                      ? ` • ${t('pro.expiresOn', { date: new Date(expiresAt).toLocaleDateString(), defaultValue: `Expires ${new Date(expiresAt).toLocaleDateString()}` })}`
                       : '')
                   : t('pro.unlockFeatures')}
               </p>
@@ -93,7 +100,7 @@ export function ProSection() {
       )}
 
       {/* Pro Activation Dialog */}
-      <ProActivationDialog
+      <LicenseActivationDialog
         open={proDialogOpen}
         onOpenChange={setProDialogOpen}
       />

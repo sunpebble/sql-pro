@@ -118,6 +118,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
     includeInserts,
     includeUpdates,
     includeDeletes,
+    t,
   ]);
 
   const handleCopyToClipboard = useCallback(async () => {
@@ -163,7 +164,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
       setSaveError(errorMessage);
       setTimeout(() => setSaveError(null), 5000);
     }
-  }, [syncSQL?.sql]);
+  }, [syncSQL?.sql, t]);
 
   const handleInsertIntoEditor = useCallback(() => {
     if (!syncSQL?.sql || !activeConnectionId) return;

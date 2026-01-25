@@ -71,7 +71,7 @@ import { useTranslation } from 'react-i18next';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
@@ -867,7 +867,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 )}
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <TooltipContent side="bottom" className={TOOLTIP_CONTENT_STYLE}>
               {isAllExpanded ? t('filter.collapseAll') : t('filter.expandAll')}
             </TooltipContent>
           </Tooltip>

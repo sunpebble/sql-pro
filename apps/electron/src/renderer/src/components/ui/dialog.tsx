@@ -72,8 +72,8 @@ function DialogContent({
       data-slot="dialog-content"
       className={cn(
         'bg-background data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-xl p-6 text-sm ring-1 duration-100 outline-none sm:max-w-md',
-        // Data Sanctum decorated style
-        decorated && 'ring-primary/30 dark:ring-primary/20 rounded-none',
+        // Data Sanctum decorated style - keep rounded corners
+        decorated && 'ring-primary/30 dark:ring-primary/20',
         className
       )}
       style={{
@@ -87,7 +87,7 @@ function DialogContent({
         <DecoFrame
           size="lg"
           variant="gold"
-          className="pointer-events-none absolute inset-0 rounded-none opacity-40"
+          className="pointer-events-none absolute inset-0 rounded-xl opacity-40"
         />
       )}
       {children}

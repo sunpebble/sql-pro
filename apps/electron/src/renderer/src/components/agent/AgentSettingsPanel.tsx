@@ -70,9 +70,11 @@ export function AgentSettingsPanel({
   // Sync form state when settings prop changes (async load)
   useEffect(() => {
     if (settings?.config) {
+      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync external state */
       setConfig(settings.config);
     }
     if (settings?.execution) {
+      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync external state */
       setExecution(settings.execution);
     }
   }, [settings]);

@@ -22,7 +22,7 @@ import {
 import { Columns2, Copy, FileCode, Plus, Rows2, X } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
@@ -145,7 +145,10 @@ const TabItem = memo(
                     <X className="h-3 w-3" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
+                <TooltipContent
+                  side="bottom"
+                  className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                >
                   {t('queryTabs.closeTab')}
                 </TooltipContent>
               </Tooltip>
@@ -259,7 +262,10 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom" className="text-xs">
+            <TooltipContent
+              side="bottom"
+              className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+            >
               {t('queryTabs.newQueryTab')}
             </TooltipContent>
           </Tooltip>
@@ -279,7 +285,10 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
                   <X className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
+              <TooltipContent
+                side="bottom"
+                className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+              >
                 {t('queryTabs.closeSplitView')}
               </TooltipContent>
             </Tooltip>
@@ -299,7 +308,10 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
                     </Button>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
+                <TooltipContent
+                  side="bottom"
+                  className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                >
                   {t('queryTabs.splitEditor')}
                 </TooltipContent>
               </Tooltip>

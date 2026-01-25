@@ -13,7 +13,7 @@ function Kbd({ className, ...props }: React.ComponentProps<'kbd'>) {
     <kbd
       data-slot="kbd"
       className={cn(
-        "bg-muted text-muted-foreground in-data-[slot=tooltip-content]:bg-background/20 in-data-[slot=tooltip-content]:text-background dark:in-data-[slot=tooltip-content]:bg-background/10 pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [&_svg:not([class*='size-'])]:size-3",
+        "bg-muted pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium text-inherit select-none [&_svg:not([class*='size-'])]:size-3",
         className
       )}
       {...props}
@@ -76,18 +76,24 @@ function ShortcutKbd({
   void activePreset;
   void customShortcuts;
 
+  const displayText = binding ? formatShortcutBinding(binding) : fallback;
+
   // Don't render if no binding and no fallback
   if (!binding && !fallback) {
     return null;
   }
 
-  const displayText = binding ? formatShortcutBinding(binding) : fallback;
-
   return (
     <kbd
       data-slot="kbd"
       className={cn(
-        "bg-muted text-muted-foreground in-data-[slot=tooltip-content]:bg-background/20 in-data-[slot=tooltip-content]:text-background dark:in-data-[slot=tooltip-content]:bg-background/10 pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [&_svg:not([class*='size-'])]:size-3",
+        // Base styles
+        'pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none',
+        // Default colors (outside tooltip)
+        'bg-muted text-muted-foreground',
+        // Tooltip-specific colors using CSS variables
+        '[.tooltip-kbd]:bg-current/15 [.tooltip-kbd]:text-inherit',
+        "[&_svg:not([class*='size-'])]:size-3",
         className
       )}
       {...props}

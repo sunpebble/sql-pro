@@ -122,6 +122,7 @@ export function QueryExportDialog({
     compress,
     isValid,
     onExportComplete,
+    t,
   ]);
 
   // Reset dialog state on close

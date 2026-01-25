@@ -103,6 +103,7 @@ export default function Testimonials() {
                 <div className="testimonial-rating">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <svg
+                      // eslint-disable-next-line react/no-array-index-key -- Stars are static, index combined with testimonial.id is unique
                       key={`star-${testimonial.id}-${i}`}
                       viewBox="0 0 24 24"
                       aria-hidden="true"

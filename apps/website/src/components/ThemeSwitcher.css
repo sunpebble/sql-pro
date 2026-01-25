@@ -1,7 +1,7 @@
 .theme-switcher {
   position: fixed;
   top: 20px;
-  right: 120px;
+  right: 170px;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -12,6 +12,13 @@
   border-radius: var(--border-radius-lg);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-sm);
+}
+
+/* When inside TopBar, reset positioning */
+.top-bar .theme-switcher {
+  position: static;
+  top: auto;
+  right: auto;
 }
 
 .theme-btn {
@@ -51,7 +58,7 @@
 @media (max-width: 768px) {
   .theme-switcher {
     top: 12px;
-    right: 100px;
+    right: 150px;
     padding: 3px;
   }
 
@@ -68,6 +75,6 @@
 
 @media (max-width: 480px) {
   .theme-switcher {
-    right: 90px;
+    right: 140px;
   }
 }

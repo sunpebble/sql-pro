@@ -170,6 +170,7 @@ export function ServerConnectionDialog({
   // or when dialog closes
   useEffect(() => {
     if (isConnecting || !open) {
+      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional state sync */
       setIsSubmitting(false);
     }
   }, [isConnecting, open]);

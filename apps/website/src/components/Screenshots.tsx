@@ -73,6 +73,7 @@ export default function Screenshots() {
           </button>
 
           <div className="carousel-track" aria-live="polite">
+            {/* eslint-disable react/no-array-index-key -- Static screenshot list */}
             {screenshots.map((shot, index) => {
               const offset = index - current;
               return (
@@ -104,6 +105,7 @@ export default function Screenshots() {
                 </div>
               );
             })}
+            {/* eslint-enable react/no-array-index-key */}
           </div>
 
           <button
@@ -131,6 +133,7 @@ export default function Screenshots() {
           role="tablist"
           aria-label={t('screenshots.title')}
         >
+          {/* eslint-disable react/no-array-index-key -- Static dot indicators */}
           {screenshots.map((_, index) => (
             <button
               key={index}

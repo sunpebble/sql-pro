@@ -157,7 +157,7 @@ export const BulkOperationsPanel = memo(
       } finally {
         setIsImporting(false);
       }
-    }, [importFile, importOptions, onImport]);
+    }, [importFile, importOptions, onImport, t]);
 
     const handleFileSelect = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {

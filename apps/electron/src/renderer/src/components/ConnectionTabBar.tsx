@@ -52,7 +52,7 @@ import { toast } from 'sonner';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { sqlPro } from '@/lib/api';
 import { queryClient } from '@/lib/query-client';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useChangesStore } from '@/stores/changes-store';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
@@ -122,6 +122,19 @@ const ConnectionTab = memo(
 
     // Refresh state
     const [isRefreshing, setIsRefreshing] = useState(false);
+
+    // Context menu state - used to disable tooltip when context menu is open
+    const [contextMenuOpen, setContextMenuOpen] = useState(false);
+    // Key to force tooltip remount when context menu closes
+    const [tooltipKey, setTooltipKey] = useState(0);
+
+    const handleContextMenuChange = useCallback((open: boolean) => {
+      setContextMenuOpen(open);
+      // Force tooltip to remount when context menu closes to reset its state
+      if (!open) {
+        setTooltipKey((k) => k + 1);
+      }
+    }, []);
 
     // Handle refresh schema
     const handleRefreshSchema = useCallback(async () => {
@@ -242,10 +255,10 @@ const ConnectionTab = memo(
     };
 
     return (
-      <ContextMenu>
+      <ContextMenu onOpenChange={handleContextMenuChange}>
         <ContextMenuTrigger>
           <TooltipProvider delay={300}>
-            <Tooltip>
+            <Tooltip key={tooltipKey}>
               <TooltipTrigger>
                 <div
                   ref={setNodeRef}
@@ -279,7 +292,10 @@ const ConnectionTab = memo(
                       <TooltipTrigger>
                         <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
                       </TooltipTrigger>
-                      <TooltipContent side="bottom" className="text-xs">
+                      <TooltipContent
+                        side="bottom"
+                        className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                      >
                         {t('connection.unsavedChanges')}
                       </TooltipContent>
                     </Tooltip>
@@ -313,20 +329,28 @@ const ConnectionTab = memo(
                         <X className="h-3 w-3" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom" className="text-xs">
+                    <TooltipContent
+                      side="bottom"
+                      className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                    >
                       {t('connection.closeConnection')}
                     </TooltipContent>
                   </Tooltip>
                 </div>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="max-w-80 text-xs">
-                <div className="flex flex-col gap-1">
-                  <div className="font-medium">{connection.filename}</div>
-                  <div className="text-muted-foreground font-mono text-xs break-all">
-                    {connection.path}
+              {!contextMenuOpen && (
+                <TooltipContent
+                  side="bottom"
+                  className={cn('max-w-80 text-xs', TOOLTIP_CONTENT_STYLE)}
+                >
+                  <div className="flex flex-col gap-1">
+                    <div className="font-medium">{connection.filename}</div>
+                    <div className="text-muted-foreground font-mono text-xs break-all">
+                      {connection.path}
+                    </div>
                   </div>
-                </div>
-              </TooltipContent>
+                </TooltipContent>
+              )}
             </Tooltip>
           </TooltipProvider>
         </ContextMenuTrigger>

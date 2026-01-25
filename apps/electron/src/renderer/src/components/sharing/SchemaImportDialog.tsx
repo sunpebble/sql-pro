@@ -73,7 +73,7 @@ export function SchemaImportDialog({
     } finally {
       setIsImporting(false);
     }
-  }, [onImportComplete]);
+  }, [onImportComplete, t]);
 
   // Reset dialog state on close
   const handleOpenChange = useCallback(

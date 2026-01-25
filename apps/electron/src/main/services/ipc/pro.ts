@@ -18,6 +18,15 @@ export function setupProHandlers(): void {
     })
   );
 
+  // Pro: Deactivate
+  ipcMain.handle(
+    IPC_CHANNELS.PRO_DEACTIVATE,
+    createHandler(async () => {
+      clearProStatus();
+      return { success: true };
+    })
+  );
+
   // Pro: Get Status
   ipcMain.handle(
     IPC_CHANNELS.PRO_GET_STATUS,

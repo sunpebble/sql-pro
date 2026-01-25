@@ -1,0 +1,26 @@
+{
+  "name": "@sqlpro/cloudflare",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SQL Pro Website + License API (Cloudflare Workers + D1)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:production": "wrangler deploy --env production",
+    "typecheck": "tsc --noEmit",
+    "db:create": "wrangler d1 create sqlpro-db",
+    "db:migrate": "wrangler d1 migrations apply sqlpro-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply sqlpro-db --remote"
+  },
+  "dependencies": {
+    "hono": "^4.11.5",
+    "nanoid": "^5.1.6",
+    "stripe": "^20.2.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260123.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.60.0"
+  }
+}

@@ -162,6 +162,7 @@ export function QueryBundleExportDialog({
     isValid,
     getQueryMetadata,
     onExportComplete,
+    t,
   ]);
 
   // Reset dialog state on close

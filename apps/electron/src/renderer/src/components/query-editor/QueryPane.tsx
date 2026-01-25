@@ -102,7 +102,14 @@ export const QueryPane = memo(
       } finally {
         setTabExecuting(connectionId, tab.id, false);
       }
-    }, [tab, connectionId, setTabExecuting, updateTabError, updateTabResults]);
+    }, [
+      tab,
+      connectionId,
+      setTabExecuting,
+      updateTabError,
+      updateTabResults,
+      t,
+    ]);
 
     const handleAnalyze = useCallback(
       async (query: string) => {
@@ -123,7 +130,7 @@ export const QueryPane = memo(
           suggestions,
         };
       },
-      [connectionId]
+      [connectionId, t]
     );
 
     const handleTabSelect = useCallback(

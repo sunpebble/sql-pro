@@ -303,6 +303,7 @@ export const ActivityBar = memo(
                     ? t('sidebar.show', { defaultValue: 'Show Sidebar' })
                     : t('sidebar.hide', { defaultValue: 'Hide Sidebar' })}
                 </span>
+                <ShortcutKbd action="nav.toggle-sidebar" />
               </TooltipContent>
             </Tooltip>
           )}

@@ -42,7 +42,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import {
   TEMPLATE_CATEGORIES,
   useQueryTemplatesStore,
@@ -134,7 +134,7 @@ const TemplateCard = memo(
                   <Copy className="h-3.5 w-3.5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                 {t('queryTemplates.duplicateTemplate')}
               </TooltipContent>
             </Tooltip>
@@ -155,7 +155,7 @@ const TemplateCard = memo(
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                   {t('queryTemplates.deleteTemplate')}
                 </TooltipContent>
               </Tooltip>
@@ -173,7 +173,7 @@ interface NewTemplateDialogProps {
   initialQuery?: string;
 }
 
-function NewTemplateDialog({
+export function NewTemplateDialog({
   open,
   onOpenChange,
   initialQuery = '',

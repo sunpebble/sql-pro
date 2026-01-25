@@ -112,12 +112,11 @@ const config = {
 
   npmRebuild: true,
 
-  // Auto-update configuration
+  // Auto-update configuration - Cloudflare R2
   publish: {
-    provider: 'github',
-    owner: 'kunish-homelab',
-    repo: 'sql-pro',
-    releaseType: 'release',
+    provider: 'generic',
+    url: 'https://pub-6f495fdfb8a34d15a9195bccedc15b91.r2.dev',
+    channel: 'latest',
   },
 
   // After all artifacts are built, create DMG manually using hdiutil

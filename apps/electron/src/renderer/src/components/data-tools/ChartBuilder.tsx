@@ -264,7 +264,7 @@ export const ChartBuilder = memo(
         });
         onOpenChange(false);
       }
-    }, [config, onCreateChart, onOpenChange]);
+    }, [config, onCreateChart, onOpenChange, t]);
 
     const canCreate =
       config.xAxis && (config.yAxis || config.aggregation === 'count');

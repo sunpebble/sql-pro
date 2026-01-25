@@ -39,7 +39,7 @@ export async function sendLicenseEmail(
     return { success: false, error: error.message };
   }
 
-  console.log('License email sent successfully:', data?.id);
+  console.warn('License email sent successfully:', data?.id);
   return { success: true };
 }
 

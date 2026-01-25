@@ -105,7 +105,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
     return () => {
       cancelled = true;
     };
-  }, [comparisonResult, reverse, includeDropStatements]);
+  }, [comparisonResult, reverse, includeDropStatements, t]);
 
   const handleCopyToClipboard = useCallback(async () => {
     if (!migrationSQL?.sql) return;
@@ -150,7 +150,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
       setSaveError(errorMessage);
       setTimeout(() => setSaveError(null), 5000);
     }
-  }, [migrationSQL?.sql]);
+  }, [migrationSQL?.sql, t]);
 
   const handleInsertIntoEditor = useCallback(() => {
     if (!migrationSQL?.sql || !activeConnectionId) return;

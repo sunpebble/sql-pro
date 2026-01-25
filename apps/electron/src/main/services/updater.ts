@@ -4,10 +4,14 @@ import type {
   UpdateDownloadedEvent,
   UpdateInfo,
 } from 'electron-updater';
+import process from 'node:process';
 import { app, BrowserWindow, dialog } from 'electron';
 import log from 'electron-log';
 // Static import so Vite can bundle electron-updater and its dependencies
 import { autoUpdater as electronAutoUpdater } from 'electron-updater';
+
+// Cloudflare R2 release URL
+const UPDATE_SERVER_URL = 'https://pub-6f495fdfb8a34d15a9195bccedc15b91.r2.dev';
 
 let _autoUpdater: AppUpdater | null = null;
 let _autoUpdaterInitialized = false;
@@ -15,6 +19,13 @@ let _autoUpdaterInitialized = false;
 function getAutoUpdater(): AppUpdater {
   if (!_autoUpdater) {
     _autoUpdater = electronAutoUpdater;
+
+    // Configure for generic provider with Cloudflare R2
+    _autoUpdater.setFeedURL({
+      provider: 'generic',
+      url: UPDATE_SERVER_URL,
+      channel: 'latest',
+    });
   }
   return _autoUpdater as AppUpdater;
 }
@@ -55,14 +66,25 @@ export function initAutoUpdater(): AppUpdater {
 
   // Configure logging for auto-updater
   autoUpdater.logger = log;
+  (autoUpdater.logger as typeof log).transports.file.level = 'info';
+
+  // Log update server configuration
+  log.info('Auto-updater initialized');
+  log.info(`  Update server: ${UPDATE_SERVER_URL}`);
+  log.info(`  Current version: ${app.getVersion()}`);
+  log.info(`  Platform: ${process.platform}`);
 
   // Auto-updater configuration
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = true;
 
+  // Allow downloading pre-release versions if current version is pre-release
+  autoUpdater.allowPrerelease = app.getVersion().includes('-');
+
   // Check for updates error
   autoUpdater.on('error', (error: Error) => {
-    log.error('Auto-updater error:', error);
+    log.error('Auto-updater error:', error.message);
+    log.error('  Stack:', error.stack);
     notifyUpdateStatus({ status: 'error', error });
   });
 
@@ -180,13 +202,19 @@ export function initAutoUpdater(): AppUpdater {
  * @param silent - If true, don't show dialog when no update is available
  */
 export async function checkForUpdates(silent = false): Promise<void> {
+  log.info(`Checking for updates... (silent: ${silent})`);
+  log.info(`  Fetching from: ${UPDATE_SERVER_URL}/latest-mac.yml`);
+
   try {
     const result = await getAutoUpdater().checkForUpdates();
 
-    if (!silent && result?.updateInfo) {
+    if (result?.updateInfo) {
+      log.info(`  Server version: ${result.updateInfo.version}`);
+      log.info(`  Current version: ${app.getVersion()}`);
+
       const isUpdateAvailable = result.updateInfo.version !== app.getVersion();
 
-      if (!isUpdateAvailable) {
+      if (!silent && !isUpdateAvailable) {
         const windows = BrowserWindow.getAllWindows();
         const focusedWindow = BrowserWindow.getFocusedWindow() || windows[0];
 
@@ -200,9 +228,14 @@ export async function checkForUpdates(silent = false): Promise<void> {
           });
         }
       }
+    } else {
+      log.warn('  No update info received from server');
     }
   } catch (error) {
-    log.error('Failed to check for updates:', error);
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    log.error('Failed to check for updates:', errorMessage);
+
     if (!silent) {
       const windows = BrowserWindow.getAllWindows();
       const focusedWindow = BrowserWindow.getFocusedWindow() || windows[0];
@@ -212,7 +245,7 @@ export async function checkForUpdates(silent = false): Promise<void> {
           type: 'error',
           title: 'Update Error',
           message: 'Failed to check for updates.',
-          detail: error instanceof Error ? error.message : 'Unknown error',
+          detail: `${errorMessage}\n\nUpdate server: ${UPDATE_SERVER_URL}`,
           buttons: ['OK'],
         });
       }

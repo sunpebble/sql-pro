@@ -375,6 +375,7 @@ function formatToolOutput(
                 </tr>
               </thead>
               <tbody>
+                {/* eslint-disable react/no-array-index-key -- Table rows have no stable unique ID */}
                 {rows.slice(0, 10).map((row, i) => (
                   <tr key={i}>
                     {Object.values(row as object).map((val, j) => (
@@ -390,6 +391,7 @@ function formatToolOutput(
                     ))}
                   </tr>
                 ))}
+                {/* eslint-enable react/no-array-index-key */}
               </tbody>
             </table>
             {rows.length > 10 && (
@@ -617,6 +619,7 @@ export function MessageContent({
   return (
     <div className={cn('text-sm', className)}>
       {parts.length === 0 && isStreaming && <Shimmer />}
+      {/* eslint-disable react/no-array-index-key -- Parts have no stable unique ID */}
       {parts.map((part, index) => {
         const isLastPart = index === parts.length - 1;
         const partIsStreaming = isStreaming && isLastPart;

@@ -157,13 +157,35 @@
     "close": "Close",
     "emailLabel": "Email Address",
     "emailPlaceholder": "you@example.com",
-    "emailHint": "Your license key will be sent to this email",
+    "emailHint": "You can retrieve your license using this email after purchase",
     "submit": "Continue to Payment",
     "processing": "Processing...",
     "secure": "Secure checkout",
     "guarantee": "30-day guarantee",
     "error": "Something went wrong. Please try again.",
     "networkError": "Network error. Please check your connection."
+  },
+  "license": {
+    "close": "Close",
+    "lookupTitle": "Retrieve Your License",
+    "lookupSubtitle": "Enter the email you used during purchase to retrieve your license key.",
+    "successTitle": "Your License Key",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "lookup": "Find My License",
+    "searching": "Searching...",
+    "notFound": "No license found for this email. Please check and try again.",
+    "networkError": "Network error. Please check your connection.",
+    "keyLabel": "Your License Key",
+    "copy": "Copy to clipboard",
+    "plan": "Plan",
+    "status": "Status",
+    "devices": "Max Devices",
+    "howToActivate": "How to Activate",
+    "step1": "Open SQL Pro on your computer",
+    "step2": "Go to Settings → License",
+    "step3": "Enter your email and paste the license key",
+    "done": "Done"
   },
   "a11y": {
     "skipToContent": "Skip to main content",
@@ -177,5 +199,14 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "auth": {
+    "loading": "Loading...",
+    "login": "Sign in",
+    "loginWithGithub": "Sign in with GitHub",
+    "logout": "Sign out",
+    "accountMenu": "Account menu",
+    "myLicenses": "My Licenses",
+    "expires": "Expires"
   }
 }

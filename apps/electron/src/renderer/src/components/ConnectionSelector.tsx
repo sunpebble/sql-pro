@@ -22,7 +22,7 @@ import {
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useChangesStore } from '@/stores/changes-store';
 import { useConnectionStore } from '@/stores/connection-store';
@@ -149,6 +149,7 @@ export function ConnectionSelector({
     getChangesForConnection,
     clearChangesForConnection,
     setActiveConnection,
+    t,
   ]);
 
   const handleDiscardAndSwitch = useCallback(() => {
@@ -210,6 +211,7 @@ export function ConnectionSelector({
     getChangesForConnection,
     clearChangesForConnection,
     removeConnection,
+    t,
   ]);
 
   const handleDiscardAndClose = useCallback(() => {
@@ -315,7 +317,7 @@ export function ConnectionSelector({
                   <TooltipTrigger>
                     <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                     {t('connectionSelector.unsavedChanges')}
                   </TooltipContent>
                 </Tooltip>
@@ -366,7 +368,7 @@ export function ConnectionSelector({
                       <TooltipTrigger>
                         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
                       </TooltipTrigger>
-                      <TooltipContent>
+                      <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                         {t('connectionSelector.unsavedChanges')}
                       </TooltipContent>
                     </Tooltip>
@@ -384,7 +386,7 @@ export function ConnectionSelector({
                       <TooltipTrigger>
                         <KeyRound className="h-3 w-3 text-green-500" />
                       </TooltipTrigger>
-                      <TooltipContent>
+                      <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                         {t('connectionSelector.encryptedDatabase')}
                       </TooltipContent>
                     </Tooltip>
@@ -435,7 +437,7 @@ export function ConnectionSelector({
                       <TooltipTrigger>
                         <KeyRound className="h-3 w-3 shrink-0 text-green-500" />
                       </TooltipTrigger>
-                      <TooltipContent>
+                      <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                         {t('connectionSelector.encryptedDatabase')}
                       </TooltipContent>
                     </Tooltip>

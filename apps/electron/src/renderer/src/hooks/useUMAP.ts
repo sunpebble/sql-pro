@@ -78,6 +78,7 @@ export function useUMAP(
   useEffect(() => {
     // Don't compute if disabled or not enough vectors
     if (!enabled || vectors.length < MIN_VECTORS) {
+      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- State reset on condition change */
       setEmbedding(null);
       setIsComputing(false);
       setError(
@@ -89,6 +90,7 @@ export function useUMAP(
           : null
       );
       setProgress(null);
+      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
       return;
     }
 
@@ -106,9 +108,11 @@ export function useUMAP(
     workerRef.current = worker;
 
     // Reset state for new computation
+    /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- State reset for new computation */
     setIsComputing(true);
     setError(null);
     setProgress(null);
+    /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
 
     // Handle worker responses
     worker.onmessage = (event: MessageEvent<UMAPResponse>) => {

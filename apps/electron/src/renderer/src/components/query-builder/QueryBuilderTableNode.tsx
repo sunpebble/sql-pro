@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useQueryBuilderStore } from '@/stores/query-builder-store';
 
 /**
@@ -144,7 +144,7 @@ function QueryBuilderTableNodeComponent({
       }
     }
     return { pkColumnsList: pk, regularColumnsList: regular };
-  }, [table.columns, pkColumns]);
+  }, [pkColumns, table]);
 
   const handleToggleColumn = useCallback(
     (columnName: string) => {
@@ -244,7 +244,9 @@ function QueryBuilderTableNodeComponent({
               {typeInfo.icon}
             </span>
           </TooltipTrigger>
-          <TooltipContent side="left">{column.type}</TooltipContent>
+          <TooltipContent side="left" className={TOOLTIP_CONTENT_STYLE}>
+            {column.type}
+          </TooltipContent>
         </Tooltip>
 
         {isPK && (
@@ -252,7 +254,9 @@ function QueryBuilderTableNodeComponent({
             <TooltipTrigger>
               <Key className="h-3 w-3 shrink-0 text-amber-500" />
             </TooltipTrigger>
-            <TooltipContent>{t('queryBuilder.primaryKey')}</TooltipContent>
+            <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+              {t('queryBuilder.primaryKey')}
+            </TooltipContent>
           </Tooltip>
         )}
 
@@ -261,7 +265,9 @@ function QueryBuilderTableNodeComponent({
             <TooltipTrigger>
               <Link2 className="h-3 w-3 shrink-0 text-blue-500" />
             </TooltipTrigger>
-            <TooltipContent>{t('queryBuilder.foreignKey')}</TooltipContent>
+            <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+              {t('queryBuilder.foreignKey')}
+            </TooltipContent>
           </Tooltip>
         )}
 
@@ -336,7 +342,9 @@ function QueryBuilderTableNodeComponent({
               <X className="h-3.5 w-3.5" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{t('queryBuilder.removeTable')}</TooltipContent>
+          <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+            {t('queryBuilder.removeTable')}
+          </TooltipContent>
         </Tooltip>
       </div>
 

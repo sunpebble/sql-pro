@@ -1220,6 +1220,8 @@
     "sidebar": "Sidebar",
     "schemaDetails": "Schema Details",
     "sqlLog": "SQL Log",
+    "showSqlLog": "Show SQL Log",
+    "hideSqlLog": "Hide SQL Log",
     "aiAgent": "AI Agent"
   },
   "commandPalette": {

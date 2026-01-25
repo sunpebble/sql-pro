@@ -10,8 +10,10 @@ interface CheckoutModalProps {
   onClose: () => void;
 }
 
+// When deployed to the same origin via Cloudflare Workers, use relative path
+// Otherwise, use the configured API URL or default to the production URL
 const API_URL =
-  import.meta.env.VITE_LICENSE_API_URL || 'https://license.sqlpro.dev';
+  (import.meta.env.VITE_LICENSE_API_URL as string | undefined) || '';
 
 const PLAN_FEATURES: Record<Plan, string[]> = {
   monthly: ['All Pro features', '3 devices', 'Priority support'],
@@ -152,6 +154,7 @@ export default function CheckoutModal({
 
           {/* Feature list */}
           <ul className="checkout-features">
+            {/* eslint-disable react/no-array-index-key -- Static feature list */}
             {features.map((feature, index) => (
               <li key={index}>
                 <svg

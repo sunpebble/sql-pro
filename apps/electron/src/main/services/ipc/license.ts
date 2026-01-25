@@ -12,7 +12,8 @@ import { machineIdSync } from 'node-machine-id';
 import { createHandler } from './utils';
 
 // License API configuration
-const LICENSE_API_URL = process.env.LICENSE_API_URL || 'http://localhost:8787';
+const LICENSE_API_URL =
+  process.env.LICENSE_API_URL || 'https://sqlpro-dev.kunish-butt.workers.dev';
 
 // Local license storage
 interface LicenseCache {

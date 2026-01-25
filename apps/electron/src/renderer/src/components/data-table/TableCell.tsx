@@ -180,7 +180,7 @@ export const TableCell = memo(
         }
         return null;
       },
-      [columnSchema, columnType]
+      [columnSchema, columnType, t]
     );
 
     // Stable save handler using refs - no dependency on editValue

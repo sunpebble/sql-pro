@@ -1,0 +1,98 @@
+# SQL Pro - Website + License API
+# Cloudflare Workers with Static Assets + D1 Database
+#
+# Environments:
+#   - dev (default): Development/testing
+#   - staging: Pre-production testing
+#   - production: Live production
+#
+# Deploy commands:
+#   pnpm wrangler deploy              # deploys to dev (default)
+#   pnpm wrangler deploy -e staging   # deploys to staging
+#   pnpm wrangler deploy -e production # deploys to production
+
+name = "sqlpro-dev"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Static Assets configuration (for hosting the website)
+[assets]
+directory = "public"
+
+[vars]
+ENVIRONMENT = "development"
+
+# Development Database
+[[d1_databases]]
+binding = "DB"
+database_name = "sqlpro-db"
+database_id = "6e0a7893-cd55-4c63-81a4-62e85dc80582"
+
+# ============================================
+# Staging Environment
+# ============================================
+[env.staging]
+name = "sqlpro-staging"
+
+[env.staging.assets]
+directory = "public"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "sqlpro-db-staging"
+database_id = "88d85872-62a8-4ade-a9d0-d9291fbeab7f"
+
+# ============================================
+# Production Environment
+# ============================================
+[env.production]
+name = "sqlpro"
+
+[env.production.assets]
+directory = "public"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "sqlpro-db-production"
+database_id = "c26c3c29-c924-4ca3-a5a1-26703d2027da"
+
+# Custom domain for production (uncomment when ready)
+# [env.production.routes]
+# routes = [
+#   { pattern = "api.sqlpro.app", zone_name = "sqlpro.app" }
+# ]
+
+# ============================================
+# Required Secrets (set per environment)
+# ============================================
+# Run these for each environment:
+#
+# Development (default):
+#   wrangler secret put STRIPE_SECRET_KEY
+#   wrangler secret put STRIPE_WEBHOOK_SECRET
+#   wrangler secret put GITHUB_CLIENT_ID
+#   wrangler secret put GITHUB_CLIENT_SECRET
+#
+# Staging:
+#   wrangler secret put STRIPE_SECRET_KEY -e staging
+#   wrangler secret put STRIPE_WEBHOOK_SECRET -e staging
+#   wrangler secret put GITHUB_CLIENT_ID -e staging
+#   wrangler secret put GITHUB_CLIENT_SECRET -e staging
+#
+# Production:
+#   wrangler secret put STRIPE_SECRET_KEY -e production
+#   wrangler secret put STRIPE_WEBHOOK_SECRET -e production
+#   wrangler secret put GITHUB_CLIENT_ID -e production
+#   wrangler secret put GITHUB_CLIENT_SECRET -e production
+
+# ============================================
+# Cron Triggers (optional, for cleanup tasks)
+# ============================================
+# [triggers]
+# crons = ["0 0 * * *"]  # Daily at midnight

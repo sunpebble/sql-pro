@@ -100,8 +100,10 @@ export function ERDiagram() {
   // Update nodes when schema or layout changes
   useEffect(() => {
     // Always update nodes and edges when layoutedNodes changes
+    /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Sync external layout state */
     setNodes(layoutedNodes);
     setEdges(rawEdges);
+    /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
 
     // Save positions if this is a fresh layout (no stored positions)
     if (layoutedNodes.length > 0) {

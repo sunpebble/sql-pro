@@ -92,7 +92,7 @@ export function ImportExportDialog({
     } finally {
       setIsProcessing(false);
     }
-  }, [selectedProfileIds, selectedFolderIds]);
+  }, [selectedProfileIds, selectedFolderIds, t]);
 
   // Handle import
   const handleImport = useCallback(async () => {
@@ -119,7 +119,7 @@ export function ImportExportDialog({
     } finally {
       setIsProcessing(false);
     }
-  }, [importMerge, onImportComplete]);
+  }, [importMerge, onImportComplete, t]);
 
   // Toggle profile selection
   const toggleProfile = useCallback((profileId: string) => {

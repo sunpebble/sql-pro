@@ -399,7 +399,7 @@ export function EditableDataGrid({
       console.error('Failed to copy to clipboard:', err);
       toast.error(t('dataTable.failedToCopy'));
     }
-  }, [focusedCell, displayRows, columns]);
+  }, [focusedCell, displayRows, columns, t]);
 
   // Handle paste (Ctrl+V) - paste into focused cell
   const handlePaste = useCallback(async () => {

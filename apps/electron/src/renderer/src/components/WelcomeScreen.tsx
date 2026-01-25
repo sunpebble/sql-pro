@@ -43,7 +43,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { sqlPro } from '@/lib/api';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
@@ -77,7 +77,9 @@ function HasSavedPasswordIndicator({ path }: { path: string }) {
       <TooltipTrigger>
         <KeyRound className="h-3 w-3 text-green-500" />
       </TooltipTrigger>
-      <TooltipContent>{t('welcomeScreen.passwordSaved')}</TooltipContent>
+      <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+        {t('welcomeScreen.passwordSaved')}
+      </TooltipContent>
     </Tooltip>
   );
 }
@@ -359,6 +361,7 @@ export function WelcomeScreen() {
       setSchema,
       setIsLoadingSchema,
       setRecentConnections,
+      t,
     ]
   );
 
@@ -591,6 +594,7 @@ export function WelcomeScreen() {
       setSchema,
       setIsLoadingSchema,
       setRecentConnections,
+      t,
     ]
   );
 
@@ -738,6 +742,7 @@ export function WelcomeScreen() {
       setSchema,
       setIsLoadingSchema,
       setRecentConnections,
+      t,
     ]
   );
 
@@ -827,7 +832,7 @@ export function WelcomeScreen() {
         );
       }
     },
-    [profileToSave, setError]
+    [profileToSave, setError, t]
   );
 
   // Handle database type selection
@@ -911,6 +916,7 @@ export function WelcomeScreen() {
       setSchema,
       setIsLoadingSchema,
       setRecentConnections,
+      t,
     ]
   );
 
@@ -970,7 +976,7 @@ export function WelcomeScreen() {
               <Database className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
             {showProfiles
               ? t('welcome.hideProfiles')
               : t('welcome.showProfiles')}
@@ -1104,7 +1110,11 @@ export function WelcomeScreen() {
                                         )}
                                       />
                                     </TooltipTrigger>
-                                    <TooltipContent>{label}</TooltipContent>
+                                    <TooltipContent
+                                      className={TOOLTIP_CONTENT_STYLE}
+                                    >
+                                      {label}
+                                    </TooltipContent>
                                   </Tooltip>
                                 );
                               })()}
@@ -1119,7 +1129,9 @@ export function WelcomeScreen() {
                                         <TooltipTrigger>
                                           <Eye className="text-muted-foreground h-3 w-3" />
                                         </TooltipTrigger>
-                                        <TooltipContent>
+                                        <TooltipContent
+                                          className={TOOLTIP_CONTENT_STYLE}
+                                        >
                                           {t('welcome.readOnly')}
                                         </TooltipContent>
                                       </Tooltip>

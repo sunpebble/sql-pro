@@ -20,7 +20,7 @@ import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useQueryBuilderStore } from '@/stores/query-builder-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
@@ -69,10 +69,12 @@ export function QueryBuilder() {
 
   // Sync nodes/edges from store
   useEffect(() => {
+    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync store state */
     setNodes(storeNodes);
   }, [storeNodes, setNodes]);
 
   useEffect(() => {
+    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync store state */
     setEdges(storeEdges);
   }, [storeEdges, setEdges]);
 
@@ -323,7 +325,7 @@ export function QueryBuilder() {
                       <Copy className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                     {t('queryBuilder.copySQL', 'Copy SQL')}
                   </TooltipContent>
                 </Tooltip>
@@ -337,7 +339,7 @@ export function QueryBuilder() {
                       <Code className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
                     {t('queryBuilder.openInEditor', 'Open in Query Editor')}
                   </TooltipContent>
                 </Tooltip>

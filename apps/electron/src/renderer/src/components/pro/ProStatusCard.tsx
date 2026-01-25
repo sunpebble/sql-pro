@@ -1,19 +1,11 @@
 /**
  * Pro Status Card Component
  * Displays the current Pro license status with management options
- * Uses Fresh Modern primary color system
+ * Compact, informative design with visual polish
  */
 
-import { DecoFrame, GoldButton, GradientText } from '@sqlpro/ui';
 import { Badge } from '@sqlpro/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@sqlpro/ui/card';
+import { Button } from '@sqlpro/ui/button';
 import {
   Calendar,
   Check,
@@ -21,8 +13,11 @@ import {
   CloudOff,
   Crown,
   ExternalLink,
+  Laptop,
   Loader2,
   Settings,
+  Sparkles,
+  Zap,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -42,12 +37,11 @@ interface ProStatusCardProps {
   className?: string;
 }
 
-const STATUS_VARIANTS: Record<string, 'default' | 'destructive' | 'outline'> = {
-  active: 'default',
-  canceled: 'destructive',
-  expired: 'destructive',
-  past_due: 'destructive',
-};
+const PRO_FEATURES = [
+  { key: 'ai', icon: Sparkles },
+  { key: 'optimizer', icon: Zap },
+  { key: 'export', icon: Check },
+] as const;
 
 export function ProStatusCard({
   license,
@@ -64,14 +58,15 @@ export function ProStatusCard({
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric',
     });
   };
 
   const isLifetime = license.plan === 'lifetime';
+  const isActive = license.status === 'active';
 
-  // Calculate days until expiry using date-only comparison for accuracy
+  // Calculate days until expiry
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const expiryDate = new Date(license.expiresAt);
@@ -79,114 +74,151 @@ export function ProStatusCard({
   const daysUntilExpiry = Math.ceil(
     (expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
   );
-
   const isExpiringSoon =
     !isLifetime && daysUntilExpiry <= 7 && daysUntilExpiry > 0;
 
   return (
-    <Card
-      className={cn(
-        'relative overflow-hidden',
-        'border-[var(--primary)]/30 bg-gradient-to-br from-[var(--primary-subtle)] to-[var(--primary-subtle)]',
-        className
-      )}
-    >
-      {/* Decorative gradient */}
-      <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-[var(--primary)]/20 to-[var(--primary)]/20 blur-2xl" />
-
-      <CardHeader className="relative pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <DecoFrame
-              size="sm"
-              variant="gold"
-              className="flex h-8 w-8 items-center justify-center"
-            >
-              <Crown className="text-primary h-4 w-4" />
-            </DecoFrame>
-            <GradientText variant="primary">{t('pro.proLicense')}</GradientText>
-          </CardTitle>
-          <Badge variant={STATUS_VARIANTS[license.status] || 'outline'}>
-            {license.status === 'active' && <Check className="mr-1 h-3 w-3" />}
-            {t(`pro.status.${license.status}`, {
-              defaultValue: license.status,
-            })}
-          </Badge>
-        </div>
-        <CardDescription className="flex items-center gap-1.5">
-          {license.email}
-          {(isCached || isOffline) && (
-            <span className="text-muted-foreground ml-2 flex items-center gap-1 text-xs">
-              {isOffline ? (
-                <>
-                  <CloudOff className="h-3 w-3" />
-                  {t('pro.offline')}
-                </>
-              ) : (
-                <>
-                  <Cloud className="h-3 w-3" />
-                  {t('pro.cached')}
-                </>
-              )}
-            </span>
-          )}
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="relative space-y-3 pt-0">
-        {/* Plan info */}
-        <div className="flex items-center justify-between rounded-lg bg-[var(--primary-subtle)] p-3 dark:bg-[var(--primary-subtle)]">
-          <div>
-            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-              {t('pro.currentPlan')}
-            </p>
-            <p className="text-lg font-semibold text-[var(--primary)]">
-              {t(`pro.plans.${license.plan}`, { defaultValue: license.plan })}
-            </p>
+    <div className={cn('space-y-4', className)}>
+      {/* Header: Status + Email */}
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/25">
+              <Crown className="h-6 w-6 text-white" />
+            </div>
+            {isActive && (
+              <div className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-green-500 dark:border-gray-900">
+                <Check className="h-3 w-3 text-white" />
+              </div>
+            )}
           </div>
-          {!isLifetime && (
-            <div className="text-right">
-              <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-                {isExpiringSoon ? t('pro.renewsSoon') : t('pro.renews')}
-              </p>
-              <p
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold">SQL Pro</h3>
+              <Badge
+                variant={isActive ? 'default' : 'destructive'}
                 className={cn(
-                  'flex items-center gap-1.5 text-sm font-medium',
-                  isExpiringSoon && 'text-[var(--primary)]'
+                  'text-xs',
+                  isActive &&
+                    'bg-green-500/10 text-green-600 hover:bg-green-500/20 dark:text-green-400'
                 )}
               >
-                <Calendar className="h-3.5 w-3.5" />
-                {formatDate(license.expiresAt)}
-              </p>
+                {t(`pro.status.${license.status}`, {
+                  defaultValue: license.status,
+                })}
+              </Badge>
             </div>
-          )}
-          {isLifetime && (
-            <Badge
-              variant="outline"
-              className="border-[var(--primary)]/50 text-[var(--primary)]"
-            >
-              {t('pro.forever')}
-            </Badge>
-          )}
-        </div>
-
-        {/* Expiring soon warning */}
-        {isExpiringSoon && (
-          <div className="rounded-lg border border-[var(--primary)]/30 bg-[var(--primary-subtle)] p-3">
-            <p className="text-sm text-[var(--primary-dark)] dark:text-[var(--primary)]">
-              {t('pro.renewsInDays', {
-                days: daysUntilExpiry,
-                count: daysUntilExpiry,
-              })}
+            <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
+              {license.email}
+              {(isCached || isOffline) && (
+                <span className="text-muted-foreground/60 inline-flex items-center gap-0.5 text-xs">
+                  {isOffline ? (
+                    <CloudOff className="h-3 w-3" />
+                  ) : (
+                    <Cloud className="h-3 w-3" />
+                  )}
+                </span>
+              )}
             </p>
           </div>
-        )}
-      </CardContent>
+        </div>
+      </div>
 
-      <CardFooter className="relative flex gap-2 pt-0">
-        <GoldButton
+      {/* Plan & Expiry Info */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-lg border bg-gradient-to-br from-amber-50/50 to-transparent p-3 dark:from-amber-950/20">
+          <p className="text-muted-foreground mb-0.5 text-xs font-medium tracking-wide uppercase">
+            {t('pro.currentPlan')}
+          </p>
+          <p className="flex items-center gap-1.5 font-semibold text-amber-600 dark:text-amber-400">
+            {t(`pro.plans.${license.plan}`, { defaultValue: license.plan })}
+            {isLifetime && <Sparkles className="h-3.5 w-3.5" />}
+          </p>
+        </div>
+
+        <div className="rounded-lg border bg-gradient-to-br from-gray-50/50 to-transparent p-3 dark:from-gray-900/50">
+          <p className="text-muted-foreground mb-0.5 text-xs font-medium tracking-wide uppercase">
+            {isLifetime
+              ? t('pro.validity', { defaultValue: 'Validity' })
+              : t('pro.renews')}
+          </p>
+          <p
+            className={cn(
+              'flex items-center gap-1.5 font-semibold',
+              isExpiringSoon
+                ? 'text-amber-600 dark:text-amber-400'
+                : 'text-foreground'
+            )}
+          >
+            {isLifetime ? (
+              <>
+                <Check className="h-3.5 w-3.5 text-green-500" />
+                {t('pro.forever')}
+              </>
+            ) : (
+              <>
+                <Calendar className="h-3.5 w-3.5" />
+                {formatDate(license.expiresAt)}
+              </>
+            )}
+          </p>
+        </div>
+      </div>
+
+      {/* Expiring Soon Warning */}
+      {isExpiringSoon && (
+        <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-50 p-3 dark:bg-amber-950/30">
+          <Calendar className="h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-400" />
+          <p className="text-sm text-amber-700 dark:text-amber-300">
+            {t('pro.renewsInDays', {
+              days: daysUntilExpiry,
+              count: daysUntilExpiry,
+              defaultValue: `Renews in ${daysUntilExpiry} days`,
+            })}
+          </p>
+        </div>
+      )}
+
+      {/* Pro Features */}
+      <div className="rounded-lg border p-3">
+        <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wide uppercase">
+          {t('pro.activeFeatures', { defaultValue: 'Active Features' })}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {PRO_FEATURES.map((feature) => (
+            <div
+              key={feature.key}
+              className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-1 text-xs font-medium text-green-700 dark:text-green-400"
+            >
+              <feature.icon className="h-3 w-3" />
+              {t(`pro.featureShort.${feature.key}`, {
+                defaultValue:
+                  feature.key === 'ai'
+                    ? 'AI Assistant'
+                    : feature.key === 'optimizer'
+                      ? 'Query Optimizer'
+                      : 'Advanced Export',
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Device Info */}
+      <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
+        <Laptop className="h-3.5 w-3.5" />
+        <span>
+          {t('pro.activatedOnDevice', {
+            defaultValue: 'License activated on this device',
+          })}
+        </span>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col gap-2">
+        <Button
           variant="outline"
-          className="flex-1"
+          className="w-full border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-950/30"
           onClick={onManageSubscription}
           disabled={isLoading}
         >
@@ -196,23 +228,22 @@ export function ProStatusCard({
             <Settings className="mr-2 h-4 w-4" />
           )}
           {t('pro.manageSubscription', { defaultValue: 'Manage Subscription' })}
-          <ExternalLink className="ml-1.5 h-3 w-3 opacity-50" />
-        </GoldButton>
-      </CardFooter>
+          <ExternalLink className="ml-auto h-3.5 w-3.5 opacity-50" />
+        </Button>
 
-      {/* Deactivate option */}
-      {onDeactivate && (
-        <div className="border-t border-[var(--primary)]/10 px-6 py-3">
-          <GoldButton
+        {onDeactivate && (
+          <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground hover:text-destructive w-full text-xs"
+            className="text-muted-foreground hover:text-destructive text-xs"
             onClick={onDeactivate}
           >
-            {t('pro.deactivateDevice')}
-          </GoldButton>
-        </div>
-      )}
-    </Card>
+            {t('pro.deactivateDevice', {
+              defaultValue: 'Deactivate on this device',
+            })}
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }

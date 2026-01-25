@@ -9,7 +9,7 @@ import {
 import { Redo2, Undo2 } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useUndoRedoStore } from '@/stores/undo-redo-store';
 
 interface UndoRedoControlsProps {
@@ -94,7 +94,7 @@ export const UndoRedoControls = memo(
                 <Undo2 className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <TooltipContent side="bottom" className={TOOLTIP_CONTENT_STYLE}>
               {hasUndo ? (
                 <div className="flex flex-col gap-0.5">
                   <span>
@@ -124,7 +124,7 @@ export const UndoRedoControls = memo(
                 <Redo2 className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <TooltipContent side="bottom" className={TOOLTIP_CONTENT_STYLE}>
               {hasRedo ? (
                 <div className="flex flex-col gap-0.5">
                   <span>

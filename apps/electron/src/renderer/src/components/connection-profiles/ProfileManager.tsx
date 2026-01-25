@@ -166,7 +166,7 @@ export function ProfileManager({
     } finally {
       setIsLoading(false);
     }
-  }, [setProfiles, setFolders]);
+  }, [setProfiles, setFolders, t]);
 
   // Load profiles and folders on mount
   useEffect(() => {
@@ -257,7 +257,7 @@ export function ProfileManager({
         setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
-    [addProfile, missingDbPaths, keychainAvailable]
+    [addProfile, missingDbPaths, keychainAvailable, t]
   );
 
   // Handle profile delete - show confirmation dialog
@@ -295,7 +295,13 @@ export function ProfileManager({
     } finally {
       setPendingDeleteProfileId(null);
     }
-  }, [pendingDeleteProfileId, selectedProfileId, deleteProfile, selectProfile]);
+  }, [
+    pendingDeleteProfileId,
+    selectedProfileId,
+    deleteProfile,
+    selectProfile,
+    t,
+  ]);
 
   // Handle profile form submit
   const handleProfileFormSubmit = useCallback(
@@ -327,7 +333,7 @@ export function ProfileManager({
         setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
-    [editingProfile, updateProfile]
+    [editingProfile, updateProfile, t]
   );
 
   // Handle folder create
@@ -431,6 +437,7 @@ export function ProfileManager({
     deleteFolder,
     updateFolder,
     updateProfile,
+    t,
   ]);
 
   // Handle folder dialog submit
@@ -528,6 +535,7 @@ export function ProfileManager({
       folders,
       addFolder,
       updateFolder,
+      t,
     ]
   );
 
@@ -555,7 +563,7 @@ export function ProfileManager({
         setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
-    [profiles, updateProfile]
+    [profiles, updateProfile, t]
   );
 
   // Handle add connection - open file dialog
@@ -625,7 +633,7 @@ export function ProfileManager({
         setError(err instanceof Error ? err.message : t('common.unknownError'));
       }
     },
-    [pendingNewConnection, addProfile]
+    [pendingNewConnection, addProfile, t]
   );
 
   // Get selected profile for details panel

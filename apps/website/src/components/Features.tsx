@@ -1,5 +1,5 @@
-import type {ReactNode} from 'react';
-import {  useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Features.css';
 
@@ -22,7 +22,7 @@ const features: Feature[] = [
     title: 'AI Guidance',
     description:
       'Get intelligent query suggestions and optimization tips powered by AI.',
-    variant: 'large',
+    variant: 'default',
     hasList: true,
     listItems: ['Smart autocomplete', 'Query optimization', 'Error detection'],
   },
@@ -32,7 +32,7 @@ const features: Feature[] = [
     title: 'Clarity Meets Compliance',
     description:
       "We make sure you're 100% safe while keeping things 100% clear without doubt.",
-    variant: 'dark tall',
+    variant: 'dark',
     hasVisual: true,
   },
   {
@@ -145,7 +145,9 @@ const icons: Record<string, ReactNode> = {
 
 export default function Features() {
   const { t } = useTranslation();
-  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
+  const [visibleCards, setVisibleCards] = useState<Set<number>>(
+    () => new Set()
+  );
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -226,6 +228,7 @@ export default function Features() {
 
                   {feature.hasList && feature.listItems && (
                     <div className="feature-card-list">
+                      {/* eslint-disable react/no-array-index-key -- Static list items */}
                       {feature.listItems.map((item, i) => (
                         <div key={i} className="feature-card-list-item">
                           <svg

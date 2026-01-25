@@ -196,7 +196,7 @@ export function PluginMarketplace({
         isOffline,
       }));
     }
-  }, []);
+  }, [t]);
 
   // Fetch marketplace data when dialog opens
   React.useEffect(() => {
@@ -261,7 +261,7 @@ export function PluginMarketplace({
         setInstallingPluginId(null);
       }
     },
-    [state.plugins, selectedPlugin, onPluginInstalled]
+    [state.plugins, selectedPlugin, onPluginInstalled, t]
   );
 
   /**

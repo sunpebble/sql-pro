@@ -39,6 +39,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useQueryBuilderStore } from '@/stores/query-builder-store';
 
@@ -330,7 +331,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             <LayoutGrid className="h-4 w-4" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
           {t('queryBuilder.autoLayout', 'Auto Layout')}
         </TooltipContent>
       </Tooltip>
@@ -346,7 +347,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             <RefreshCw className="h-4 w-4" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
           {t('queryBuilder.clear', 'Clear query')}
         </TooltipContent>
       </Tooltip>

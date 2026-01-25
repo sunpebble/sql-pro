@@ -9,6 +9,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Database, Monitor, Moon, Settings, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
@@ -91,7 +92,7 @@ export function Titlebar() {
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
               {t('theme.tooltip', {
                 theme: getThemeLabel(),
                 defaultValue: 'Theme: {{theme}}',
@@ -146,7 +147,7 @@ export function Titlebar() {
               <Settings className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
             {t('theme.settings', { defaultValue: 'Settings' })}
           </TooltipContent>
         </Tooltip>

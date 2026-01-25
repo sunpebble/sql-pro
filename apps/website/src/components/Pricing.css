@@ -370,40 +370,138 @@
 @media (max-width: 1024px) {
   .pricing-grid {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 700px;
+    max-width: 720px;
   }
 
+  /* Reorder cards: Monthly (1), Yearly/Featured (2), Lifetime (3) */
+  .pricing-card:nth-child(1) {
+    order: 1;
+  }
   .pricing-card.featured {
+    order: 2;
+  }
+  .pricing-card:nth-child(3) {
+    order: 3;
     grid-column: span 2;
     max-width: 350px;
     justify-self: center;
   }
 }
 
-@media (max-width: 768px) {
-  .pricing-grid {
-    grid-template-columns: 1fr;
-    max-width: 400px;
+@media (max-width: 640px) {
+  .pricing-header {
+    margin-bottom: 48px;
   }
 
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    gap: 20px;
+    padding: 0 4px;
+  }
+
+  /* Reset order for single column - Featured first */
   .pricing-card.featured {
+    order: -1;
+  }
+  .pricing-card:nth-child(1) {
+    order: 1;
+  }
+  .pricing-card:nth-child(3) {
+    order: 2;
     grid-column: span 1;
     max-width: none;
   }
 
   .pricing-card {
-    padding: 28px;
+    padding: 24px 20px;
+  }
+
+  .pricing-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+  }
+
+  .pricing-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .pricing-plan-title {
+    font-size: 1.125rem;
+  }
+
+  .pricing-amount {
+    font-size: 2rem;
+  }
+
+  .pricing-description {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .pricing-features {
+    margin-bottom: 24px;
+  }
+
+  .pricing-features li {
+    padding: 8px 0;
+    font-size: 13px;
+    gap: 10px;
+  }
+
+  .pricing-features li svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .pricing-cta {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .pricing-note {
+    margin-top: 32px;
+    font-size: 13px;
   }
 
   .pricing-trust {
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+
+  .trust-badge {
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .trust-badge svg {
+    width: 18px;
+    height: 18px;
   }
 
   .pricing-toggle {
     flex-wrap: wrap;
     gap: 12px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .pricing-card {
+    padding: 20px 16px;
+  }
+
+  .pricing-amount {
+    font-size: 1.75rem;
+  }
+
+  .pricing-plan-title {
+    font-size: 1rem;
   }
 }
 

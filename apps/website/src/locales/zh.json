@@ -157,13 +157,35 @@
     "close": "关闭",
     "emailLabel": "邮箱地址",
     "emailPlaceholder": "you@example.com",
-    "emailHint": "您的许可证密钥将发送到此邮箱",
+    "emailHint": "购买后可使用此邮箱查询您的许可证",
     "submit": "继续付款",
     "processing": "处理中...",
     "secure": "安全结账",
     "guarantee": "30 天退款保证",
     "error": "出现错误，请重试。",
     "networkError": "网络错误，请检查您的网络连接。"
+  },
+  "license": {
+    "close": "关闭",
+    "lookupTitle": "查询您的许可证",
+    "lookupSubtitle": "输入购买时使用的邮箱来查询您的许可证密钥。",
+    "successTitle": "您的许可证密钥",
+    "emailLabel": "邮箱地址",
+    "emailPlaceholder": "you@example.com",
+    "lookup": "查询许可证",
+    "searching": "查询中...",
+    "notFound": "未找到此邮箱对应的许可证，请检查后重试。",
+    "networkError": "网络错误，请检查您的网络连接。",
+    "keyLabel": "您的许可证密钥",
+    "copy": "复制到剪贴板",
+    "plan": "订阅方案",
+    "status": "状态",
+    "devices": "最大设备数",
+    "howToActivate": "如何激活",
+    "step1": "在您的电脑上打开 SQL Pro",
+    "step2": "进入 设置 → 许可证",
+    "step3": "输入您的邮箱并粘贴许可证密钥",
+    "done": "完成"
   },
   "a11y": {
     "skipToContent": "跳转到主要内容",
@@ -177,5 +199,14 @@
     "light": "浅色",
     "dark": "深色",
     "system": "跟随系统"
+  },
+  "auth": {
+    "loading": "加载中...",
+    "login": "登录",
+    "loginWithGithub": "使用 GitHub 登录",
+    "logout": "退出登录",
+    "accountMenu": "账户菜单",
+    "myLicenses": "我的许可证",
+    "expires": "到期时间"
   }
 }

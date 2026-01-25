@@ -1,4 +1,4 @@
-import type { ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckoutModal from './CheckoutModal';
@@ -134,6 +134,7 @@ export default function Pricing() {
               </p>
 
               <ul className="pricing-features">
+                {/* eslint-disable react/no-array-index-key -- Static translated features */}
                 {(
                   t(`pricing.plans.${plan}.features`, {
                     returnObjects: true,

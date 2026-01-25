@@ -1,0 +1,42 @@
+/* =========================================
+   TopBar - Unified top navigation bar
+   Contains theme switcher, language selector, and user menu
+   ========================================= */
+
+.top-bar {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Reset child component positioning since they're now in a flex container */
+.top-bar .theme-switcher {
+  position: static;
+}
+
+.top-bar .language-switcher {
+  position: static;
+}
+
+.top-bar .user-menu {
+  position: static;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .top-bar {
+    top: 12px;
+    right: 12px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-bar {
+    gap: 4px;
+  }
+}
