@@ -58,11 +58,12 @@ Plans:
 
 1. User can distinguish three text levels at a glance: primary (bright), secondary (dimmed), muted (subtle)
 2. Text contrast meets WCAG 4.5:1 ratio against dark backgrounds
-   **Plans**: TBD
+
+**Plans**: 1 plan
 
 Plans:
 
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Three-level text hierarchy tokens (primary/secondary/muted)
 
 ### Phase 3: Navigation Shell
 
@@ -221,8 +222,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase                      | Plans Complete | Status            | Completed |
 | -------------------------- | -------------- | ----------------- | --------- |
-| 1. Design Foundation       | 0/4            | Planning complete | -         |
-| 2. Typography & Text       | 0/TBD          | Not started       | -         |
+| 1. Design Foundation       | 4/4            | Complete          | -         |
+| 2. Typography & Text       | 0/1            | Planning complete | -         |
 | 3. Navigation Shell        | 0/TBD          | Not started       | -         |
 | 4. Core Components         | 0/TBD          | Not started       | -         |
 | 5. Interaction System      | 0/TBD          | Not started       | -         |
