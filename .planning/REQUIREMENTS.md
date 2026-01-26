@@ -34,9 +34,9 @@
 
 ### App Navigation (Navigation)
 
-- [ ] **NAVI-01**: Flattened sidebar visual (reduced nesting decoration)
-- [ ] **NAVI-02**: Pill-style tab bar (background highlight, not underline)
-- [ ] **NAVI-03**: Icon-only Activity Bar (minimal, no labels)
+- [x] **NAVI-01**: Flattened sidebar visual (reduced nesting decoration)
+- [x] **NAVI-02**: Pill-style tab bar (background highlight, not underline)
+- [x] **NAVI-03**: Icon-only Activity Bar (minimal, no labels)
 
 ### Monaco Editor (Editor)
 
@@ -94,9 +94,9 @@
 | FOUND-05    | Phase 1  | Complete |
 | FOUND-06    | Phase 1  | Complete |
 | VISL-01     | Phase 2  | Complete |
-| NAVI-01     | Phase 3  | Pending  |
-| NAVI-02     | Phase 3  | Pending  |
-| NAVI-03     | Phase 3  | Pending  |
+| NAVI-01     | Phase 3  | Complete |
+| NAVI-02     | Phase 3  | Complete |
+| NAVI-03     | Phase 3  | Complete |
 | VISL-02     | Phase 4  | Pending  |
 | VISL-03     | Phase 4  | Pending  |
 | INTR-01     | Phase 5  | Pending  |

@@ -1,8 +1,12 @@
 # Phase 3 Verification: Navigation Shell
 
-**Status:** gaps_found
-**Score:** 3/4 must-haves verified
+**Status:** PASSED
+**Score:** 4/4 must-haves verified
 **Verified:** 2026-01-27
+
+## VERIFICATION PASSED - all must-haves verified
+
+---
 
 ## Must-Have Verification
 
@@ -12,8 +16,11 @@
 
 Evidence from `ActivityBar.tsx`:
 
-- Line 148: `'text-primary bg-accent'` - simple flat active state
-- Line 149: `'text-muted-foreground hover:text-foreground hover:bg-muted/50'` - subtle hover
+- Line 117: Fixed width `w-12` (48px) - icon-only column
+- Line 139: Button size `h-9 w-9` with `rounded-lg` - clean icon containers
+- Line 148-149: Active state uses `'text-primary bg-accent'` - flat pill styling
+- Line 149: Inactive uses `'text-muted-foreground hover:text-foreground hover:bg-muted/50'` - subtle hover
+- Lines 181-192: Tooltips provide labels on hover (no inline labels)
 - No gradient backgrounds (`bg-gradient-to-*`) found
 - No glow effects (`drop-shadow-*`) found
 
@@ -24,45 +31,79 @@ Evidence from `ActivityBar.tsx`:
 Evidence from `Sidebar.tsx`:
 
 - No `border-l pl-2` patterns found (vertical connector lines removed)
-- Section headers use `bg-muted/50` hover (not `bg-accent/30`)
-- No `uppercase` or `tracking-wider` in section headers
+- Line 1191, 1254, 1318: Minimal indent with `ml-2 min-w-0` for nested items
+- Section headers use consistent `hover:bg-muted/50` hover styling (not heavy backgrounds)
+- Line 1158, 1178, 1241, 1305: Section buttons use `rounded-md` with subtle hover
+- No `uppercase` or `tracking-wider` found in section headers
+- Table items at Line 1394-1398: Use pill-style selection `'bg-primary/15 text-primary'`
 
 ### 3. Tab bar uses pill/background highlight for active state (not underlines)
 
-**PARTIAL - GAP FOUND**
+**PASS**
 
-Main tab bars - PASS:
+All three tab bars verified:
 
-- `ConnectionTabBar.tsx:270`: `'bg-accent text-foreground rounded-md'`
-- `DataTabBar.tsx:156`: `'bg-accent text-foreground rounded-md'`
-- `QueryTabBar.tsx:111`: `'bg-accent text-foreground rounded-md'`
+| Component              | Line | Active State Styling                     |
+| ---------------------- | ---- | ---------------------------------------- |
+| `ConnectionTabBar.tsx` | 270  | `'bg-accent text-foreground rounded-md'` |
+| `DataTabBar.tsx`       | 156  | `'bg-accent text-foreground rounded-md'` |
+| `QueryTabBar.tsx`      | 111  | `'bg-accent text-foreground rounded-md'` |
 
-Gap found in `Sidebar.tsx`:
+No underline patterns found:
 
-- Line 1661: `'border-primary text-foreground border-b-2'` (filter tab)
-- Line 1672: `'border-primary text-foreground border-b-2'` (manage tab)
+- No `border-b-2` in navigation components
+- No `border-b-gold` patterns
+- No `shadow-[inset_0_-2px...` inset shadows
 
-The filter/manage tags tabs in the Sidebar popover still use underline style.
+Previous gap (filter/manage tabs in Sidebar popover) has been fixed:
+
+- Line 1661: Now uses `'bg-accent text-foreground'` pill style
+- Line 1672: Now uses `'bg-accent text-foreground'` pill style
 
 ### 4. Navigation elements feel cohesive with the new dark color system
 
 **PASS**
 
-All navigation elements use consistent tokens:
+Consistent token usage across all navigation elements:
 
-- Active: `bg-accent`, `text-primary` or `text-foreground`
-- Hover: `bg-muted/50`, `hover:text-foreground`
-- Rounded corners: `rounded-md` throughout
+| Token                       | Usage                            |
+| --------------------------- | -------------------------------- |
+| `bg-accent`                 | Active/selected state background |
+| `text-primary`              | Active item text color           |
+| `text-foreground`           | Active tab text                  |
+| `text-muted-foreground`     | Inactive item text               |
+| `hover:bg-muted/50`         | Consistent hover background      |
+| `hover:text-foreground`     | Hover text color                 |
+| `rounded-md` / `rounded-lg` | Consistent pill/button corners   |
 
-## Gaps Summary
+Border consistency:
 
-| Gap    | Location              | Issue                                                               |
-| ------ | --------------------- | ------------------------------------------------------------------- |
-| GAP-01 | Sidebar.tsx:1661,1672 | Filter/manage tabs use `border-b-2` underline instead of pill style |
+- Activity Bar: `border-border/30 border-r` - subtle separator
+- Tab bars: `border-border/50 border-b` - subtle bottom border
+- Sidebar sections: No heavy borders, uses spacing and subtle backgrounds
 
-## Recommendation
+---
 
-Create gap closure plan to update the filter/manage tabs in Sidebar.tsx to use pill styling consistent with other tab bars.
+## Files Verified
+
+| File                                                                     | Status |
+| ------------------------------------------------------------------------ | ------ |
+| `apps/electron/src/renderer/src/components/ActivityBar.tsx`              | PASS   |
+| `apps/electron/src/renderer/src/components/Sidebar.tsx`                  | PASS   |
+| `apps/electron/src/renderer/src/components/ConnectionTabBar.tsx`         | PASS   |
+| `apps/electron/src/renderer/src/components/data-table/DataTabBar.tsx`    | PASS   |
+| `apps/electron/src/renderer/src/components/query-editor/QueryTabBar.tsx` | PASS   |
+
+---
+
+## Summary
+
+Phase 03-navigation-shell has successfully transformed the app's navigation chrome to a minimal, flat Linear-style interface. All four success criteria have been met:
+
+1. Activity Bar is now icon-only with tooltips for labels
+2. Sidebar uses flattened visual hierarchy with minimal nesting decoration
+3. All tab bars use pill/background highlights instead of underlines
+4. Navigation elements use consistent color tokens from the dark design system
 
 ---
 
