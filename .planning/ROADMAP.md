@@ -95,11 +95,15 @@ Plans:
 1. Buttons appear simpler with less decoration (no heavy shadows or gradients)
 2. Input fields and forms look refined against dark backgrounds
 3. Primary actions use orange accent appropriately without overwhelming
-   **Plans**: TBD
+
+**Plans**: 4 plans in 1 wave (all parallel)
 
 Plans:
 
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md — Button components simplification (button.tsx, gold-button.tsx)
+- [ ] 04-02-PLAN.md — Input components shadow removal (input.tsx, textarea.tsx, select.tsx)
+- [ ] 04-03-PLAN.md — Form controls cleanup (checkbox.tsx, switch.tsx, radio-group.tsx)
+- [ ] 04-04-PLAN.md — Secondary components verification (toggle, combobox, input-otp, groups)
 
 ### Phase 5: Interaction System
 
