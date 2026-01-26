@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Design Foundation** - OKLCH color system, dark-first CSS variables, spacing and radius tokens
 - [x] **Phase 2: Typography & Text** - Text hierarchy system with primary/secondary/muted levels
-- [ ] **Phase 3: Navigation Shell** - Activity Bar, Sidebar, and Tab Bars visual refresh
+- [x] **Phase 3: Navigation Shell** - Activity Bar, Sidebar, and Tab Bars visual refresh (3/4 verified, minor gap)
 - [ ] **Phase 4: Core Components** - Buttons, inputs, and form controls refinement
 - [ ] **Phase 5: Interaction System** - Command palette, transitions, keyboard focus
 - [ ] **Phase 6: Dialog & Overlay Polish** - Glassmorphism, hover states, loading states
@@ -80,7 +80,9 @@ Plans:
 
 Plans:
 
-- [ ] 03-01: TBD
+- [x] 03-01-PLAN.md — Pill-style tab bars (ConnectionTabBar, DataTabBar, QueryTabBar)
+- [x] 03-02-PLAN.md — Minimal Activity Bar (flat styling, no gradients/glow)
+- [x] 03-03-PLAN.md — Flattened Sidebar (removed border-left lines, simplified headers)
 
 ### Phase 4: Core Components
 
@@ -224,7 +226,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | -------------------------- | -------------- | ----------- | ---------- |
 | 1. Design Foundation       | 4/4            | Complete    | 2026-01-26 |
 | 2. Typography & Text       | 1/1            | Complete    | 2026-01-26 |
-| 3. Navigation Shell        | 0/TBD          | Not started | -          |
+| 3. Navigation Shell        | 3/3            | Complete    | 2026-01-27 |
 | 4. Core Components         | 0/TBD          | Not started | -          |
 | 5. Interaction System      | 0/TBD          | Not started | -          |
 | 6. Dialog & Overlay Polish | 0/TBD          | Not started | -          |
