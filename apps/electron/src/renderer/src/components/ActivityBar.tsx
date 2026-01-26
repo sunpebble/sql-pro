@@ -115,15 +115,11 @@ export const ActivityBar = memo(
       <div
         className={cn(
           'relative flex h-full w-12 shrink-0 flex-col py-3',
-          'from-muted/50 via-background to-muted/50 bg-gradient-to-b',
+          'bg-background',
           'border-border/30 border-r',
           'animate-slide-in-left opacity-0'
         )}
       >
-        <div className="from-primary/25 via-primary/10 absolute top-0 right-0 h-full w-px bg-gradient-to-b to-transparent" />
-        <div className="from-primary/40 via-primary/20 absolute top-0 right-0 left-0 h-px bg-gradient-to-r to-transparent" />
-        <div className="noise-overlay absolute inset-0 opacity-[0.015] dark:opacity-[0.025]" />
-
         <div className="flex flex-1 flex-col items-center gap-1">
           {visibleItems.map((item, index) => {
             const Icon = item.icon;
