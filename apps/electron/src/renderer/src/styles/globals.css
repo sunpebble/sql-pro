@@ -59,7 +59,15 @@
   --popover: var(--slate-800);
   --popover-foreground: var(--slate-100);
   --secondary: var(--slate-700);
-  --secondary-foreground: var(--slate-100);
+  /* === TEXT HIERARCHY ===
+   * Primary (--foreground): Bright, main content - Slate-100 / Slate-900
+   * Secondary (--secondary-foreground): Dimmed, descriptions - Slate-300 / Slate-600
+   * Muted (--muted-foreground): Subtle, metadata - Slate-400 / Slate-500
+   * All levels meet WCAG AA 4.5:1 contrast ratio
+   */
+  --secondary-foreground: var(
+    --slate-300
+  ); /* L=0.869, ~10:1 on Slate 900 - middle tier for descriptions/labels */
   --muted: var(--slate-700);
   --muted-foreground: var(--slate-400);
   --accent: oklch(0.75 0.183 55.934 / 15%);
@@ -139,7 +147,10 @@
   --popover: white;
   --popover-foreground: var(--slate-900);
   --secondary: var(--slate-100);
-  --secondary-foreground: var(--slate-800);
+  /* === TEXT HIERARCHY (Light Mode) === */
+  --secondary-foreground: var(
+    --slate-600
+  ); /* L=0.446, ~7:1 on Slate 50 - middle tier for descriptions/labels */
   --muted: var(--slate-100);
   --muted-foreground: var(--slate-500);
   --accent: oklch(0.646 0.222 41.116 / 8%);
