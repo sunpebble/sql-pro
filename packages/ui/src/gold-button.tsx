@@ -27,13 +27,11 @@ const brandButtonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary - solid with subtle shadow
+        // Primary - solid flat design
         default: [
           'bg-primary',
           'text-primary-foreground',
-          'shadow-md shadow-primary/25',
-          'hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30',
-          'active:shadow-sm',
+          'hover:bg-primary/90',
         ],
 
         // Outline - bordered with primary accents
@@ -57,13 +55,11 @@ const brandButtonVariants = cva(
           'light:hover:bg-primary/15',
         ],
 
-        // Pulse - animated glow for download/CTA
+        // Pulse - flat design (same as default)
         pulse: [
           'bg-primary',
           'text-primary-foreground',
-          'shadow-lg shadow-primary/30',
-          'animate-pulse',
-          'hover:shadow-xl hover:shadow-primary/40',
+          'hover:bg-primary/90',
         ],
       },
 
