@@ -143,11 +143,20 @@
   --void-base: var(--bg-subtle);
   --void-elevated: var(--bg-light);
 
-  /* Text Palette (Dark Mode) */
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
-  --text-inverse: #0f172a;
+  /* === TEXT HIERARCHY (Dark Mode) ===
+   * Primary: Bright, main content - Slate 100
+   * Secondary: Dimmed, descriptions - Slate 300
+   * Muted: Subtle, metadata - Slate 400
+   */
+  --text-primary: oklch(0.968 0.007 247.896); /* Slate 100 */
+  --text-secondary: oklch(0.869 0.022 252.894); /* Slate 300 */
+  --text-muted: oklch(0.704 0.04 256.788); /* Slate 400 */
+  --text-inverse: oklch(0.208 0.042 265.755); /* Slate 900 */
+
+  /* App-compatible aliases */
+  --foreground: var(--text-primary);
+  --secondary-foreground: var(--text-secondary);
+  --muted-foreground: var(--text-muted);
 
   /* Legacy Ivory aliases */
   --ivory: var(--text-primary);
@@ -241,11 +250,16 @@
   --void-base: var(--bg-light);
   --void-elevated: var(--bg-elevated);
 
-  /* Text Palette */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --text-inverse: #ffffff;
+  /* === TEXT HIERARCHY (Light Mode) === */
+  --text-primary: oklch(0.208 0.042 265.755); /* Slate 900 */
+  --text-secondary: oklch(0.446 0.043 257.281); /* Slate 600 */
+  --text-muted: oklch(0.554 0.046 257.417); /* Slate 500 */
+  --text-inverse: oklch(0.984 0.003 247.858); /* Slate 50 */
+
+  /* App-compatible aliases */
+  --foreground: var(--text-primary);
+  --secondary-foreground: var(--text-secondary);
+  --muted-foreground: var(--text-muted);
 
   /* Legacy Ivory aliases */
   --ivory: var(--text-primary);
