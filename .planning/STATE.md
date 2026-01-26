@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Visual and interaction experience at Linear/Raycast level of polish
-**Current focus:** Phase 2 - Typography & Text (in progress)
+**Current focus:** Phase 3 - Navigation Shell (ready to plan)
 
 ## Current Position
 
-Phase: 2 of 11 (Typography & Text)
-Plan: 1 of TBD in current phase
-Status: In progress
-Last activity: 2026-01-26 — Completed 02-01-PLAN.md (Text Hierarchy Tokens)
+Phase: 3 of 11 (Navigation Shell)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-01-26 — Completed Phase 2 (Typography & Text)
 
-Progress: [██░░░░░░░░] ~14%
+Progress: [██░░░░░░░░] ~18%
 
 ## Performance Metrics
 
@@ -52,13 +52,15 @@ Recent decisions affecting current work:
 - ✅ Implemented: Website CSS aligned with orange primary
 - Pending: Website de-marketized (minimal, product-focused)
 
-### Phase 2 Progress
+### Phase 2 Completion Summary
 
 Plan 02-01 complete:
 
 - Text hierarchy tokens (primary/secondary/muted) with WCAG-compliant contrast
 - Slate-300 (dark) / Slate-600 (light) for secondary text level
 - App-compatible aliases in all CSS files
+
+Verification: All 2/2 must-haves verified ✓
 
 ### Phase 1 Completion Summary
 

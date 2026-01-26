@@ -7,12 +7,12 @@
 
 ### Design Foundation (Foundation)
 
-- [ ] **FOUND-01**: Dark-first design system (dark mode as default CSS variables)
-- [ ] **FOUND-02**: OKLCH color system migration with Slate neutral palette
-- [ ] **FOUND-03**: Orange accent color tuned for dark background vibrancy
-- [ ] **FOUND-04**: Border radius reduced from 20px+ to 8-12px
-- [ ] **FOUND-05**: Subtle transparent borders (6-10% opacity)
-- [ ] **FOUND-06**: Dark mode shadow system (minimal, appropriate)
+- [x] **FOUND-01**: Dark-first design system (dark mode as default CSS variables)
+- [x] **FOUND-02**: OKLCH color system migration with Slate neutral palette
+- [x] **FOUND-03**: Orange accent color tuned for dark background vibrancy
+- [x] **FOUND-04**: Border radius reduced from 20px+ to 8-12px
+- [x] **FOUND-05**: Subtle transparent borders (6-10% opacity)
+- [x] **FOUND-06**: Dark mode shadow system (minimal, appropriate)
 
 ### Interaction System (Interaction)
 
@@ -24,7 +24,7 @@
 
 ### Visual Polish (Visual)
 
-- [ ] **VISL-01**: Three-level text hierarchy (primary/secondary/muted)
+- [x] **VISL-01**: Three-level text hierarchy (primary/secondary/muted)
 - [ ] **VISL-02**: Simplified button design (less decoration)
 - [ ] **VISL-03**: Refined input/form styling for dark mode
 - [ ] **VISL-04**: Glassmorphism on dialogs (backdrop-filter: blur)
@@ -85,39 +85,39 @@
 
 ## Traceability
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| FOUND-01    | Phase 1  | Pending |
-| FOUND-02    | Phase 1  | Pending |
-| FOUND-03    | Phase 1  | Pending |
-| FOUND-04    | Phase 1  | Pending |
-| FOUND-05    | Phase 1  | Pending |
-| FOUND-06    | Phase 1  | Pending |
-| VISL-01     | Phase 2  | Pending |
-| NAVI-01     | Phase 3  | Pending |
-| NAVI-02     | Phase 3  | Pending |
-| NAVI-03     | Phase 3  | Pending |
-| VISL-02     | Phase 4  | Pending |
-| VISL-03     | Phase 4  | Pending |
-| INTR-01     | Phase 5  | Pending |
-| INTR-02     | Phase 5  | Pending |
-| INTR-03     | Phase 5  | Pending |
-| INTR-04     | Phase 5  | Pending |
-| INTR-05     | Phase 5  | Pending |
-| VISL-04     | Phase 6  | Pending |
-| VISL-05     | Phase 6  | Pending |
-| VISL-06     | Phase 6  | Pending |
-| VISL-07     | Phase 7  | Pending |
-| EDIT-01     | Phase 8  | Pending |
-| EDIT-02     | Phase 8  | Pending |
-| WEB-08      | Phase 9  | Pending |
-| WEB-01      | Phase 10 | Pending |
-| WEB-02      | Phase 10 | Pending |
-| WEB-03      | Phase 10 | Pending |
-| WEB-04      | Phase 10 | Pending |
-| WEB-06      | Phase 10 | Pending |
-| WEB-07      | Phase 10 | Pending |
-| WEB-05      | Phase 11 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| FOUND-01    | Phase 1  | Complete |
+| FOUND-02    | Phase 1  | Complete |
+| FOUND-03    | Phase 1  | Complete |
+| FOUND-04    | Phase 1  | Complete |
+| FOUND-05    | Phase 1  | Complete |
+| FOUND-06    | Phase 1  | Complete |
+| VISL-01     | Phase 2  | Complete |
+| NAVI-01     | Phase 3  | Pending  |
+| NAVI-02     | Phase 3  | Pending  |
+| NAVI-03     | Phase 3  | Pending  |
+| VISL-02     | Phase 4  | Pending  |
+| VISL-03     | Phase 4  | Pending  |
+| INTR-01     | Phase 5  | Pending  |
+| INTR-02     | Phase 5  | Pending  |
+| INTR-03     | Phase 5  | Pending  |
+| INTR-04     | Phase 5  | Pending  |
+| INTR-05     | Phase 5  | Pending  |
+| VISL-04     | Phase 6  | Pending  |
+| VISL-05     | Phase 6  | Pending  |
+| VISL-06     | Phase 6  | Pending  |
+| VISL-07     | Phase 7  | Pending  |
+| EDIT-01     | Phase 8  | Pending  |
+| EDIT-02     | Phase 8  | Pending  |
+| WEB-08      | Phase 9  | Pending  |
+| WEB-01      | Phase 10 | Pending  |
+| WEB-02      | Phase 10 | Pending  |
+| WEB-03      | Phase 10 | Pending  |
+| WEB-04      | Phase 10 | Pending  |
+| WEB-06      | Phase 10 | Pending  |
+| WEB-07      | Phase 10 | Pending  |
+| WEB-05      | Phase 11 | Pending  |
 
 **Coverage:**
 

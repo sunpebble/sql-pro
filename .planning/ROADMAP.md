@@ -13,8 +13,8 @@ This project transforms SQL Pro from a "Warm Modern" design (orange/warm white, 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Design Foundation** - OKLCH color system, dark-first CSS variables, spacing and radius tokens
-- [ ] **Phase 2: Typography & Text** - Text hierarchy system with primary/secondary/muted levels
+- [x] **Phase 1: Design Foundation** - OKLCH color system, dark-first CSS variables, spacing and radius tokens
+- [x] **Phase 2: Typography & Text** - Text hierarchy system with primary/secondary/muted levels
 - [ ] **Phase 3: Navigation Shell** - Activity Bar, Sidebar, and Tab Bars visual refresh
 - [ ] **Phase 4: Core Components** - Buttons, inputs, and form controls refinement
 - [ ] **Phase 5: Interaction System** - Command palette, transitions, keyboard focus
@@ -63,7 +63,7 @@ Plans:
 
 Plans:
 
-- [ ] 02-01-PLAN.md — Three-level text hierarchy tokens (primary/secondary/muted)
+- [x] 02-01-PLAN.md — Three-level text hierarchy tokens (primary/secondary/muted)
 
 ### Phase 3: Navigation Shell
 
@@ -220,19 +220,19 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11
 
-| Phase                      | Plans Complete | Status            | Completed |
-| -------------------------- | -------------- | ----------------- | --------- |
-| 1. Design Foundation       | 4/4            | Complete          | -         |
-| 2. Typography & Text       | 0/1            | Planning complete | -         |
-| 3. Navigation Shell        | 0/TBD          | Not started       | -         |
-| 4. Core Components         | 0/TBD          | Not started       | -         |
-| 5. Interaction System      | 0/TBD          | Not started       | -         |
-| 6. Dialog & Overlay Polish | 0/TBD          | Not started       | -         |
-| 7. Data Views              | 0/TBD          | Not started       | -         |
-| 8. Monaco Editor           | 0/TBD          | Not started       | -         |
-| 9. Website Foundation      | 0/TBD          | Not started       | -         |
-| 10. Website Content        | 0/TBD          | Not started       | -         |
-| 11. Website Polish         | 0/TBD          | Not started       | -         |
+| Phase                      | Plans Complete | Status      | Completed  |
+| -------------------------- | -------------- | ----------- | ---------- |
+| 1. Design Foundation       | 4/4            | Complete    | 2026-01-26 |
+| 2. Typography & Text       | 1/1            | Complete    | 2026-01-26 |
+| 3. Navigation Shell        | 0/TBD          | Not started | -          |
+| 4. Core Components         | 0/TBD          | Not started | -          |
+| 5. Interaction System      | 0/TBD          | Not started | -          |
+| 6. Dialog & Overlay Polish | 0/TBD          | Not started | -          |
+| 7. Data Views              | 0/TBD          | Not started | -          |
+| 8. Monaco Editor           | 0/TBD          | Not started | -          |
+| 9. Website Foundation      | 0/TBD          | Not started | -          |
+| 10. Website Content        | 0/TBD          | Not started | -          |
+| 11. Website Polish         | 0/TBD          | Not started | -          |
 
 ---
 
