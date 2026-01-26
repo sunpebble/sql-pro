@@ -1175,12 +1175,12 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(tablesKey)}
-                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[0.75em] font-medium tracking-wider uppercase"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
               >
                 {tablesExpanded ? (
-                  <ChevronDown className="h-3 w-3" />
+                  <ChevronDown className="h-2.5 w-2.5 transition-transform" />
                 ) : (
-                  <ChevronRight className="h-3 w-3" />
+                  <ChevronRight className="h-2.5 w-2.5 transition-transform" />
                 )}
                 {t('schema.tables')}
                 <span className="text-muted-foreground/60 font-normal">
@@ -1238,12 +1238,12 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(viewsKey)}
-                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-[0.75em] font-medium tracking-wider uppercase"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
               >
                 {viewsExpanded ? (
-                  <ChevronDown className="h-3 w-3" />
+                  <ChevronDown className="h-2.5 w-2.5 transition-transform" />
                 ) : (
-                  <ChevronRight className="h-3 w-3" />
+                  <ChevronRight className="h-2.5 w-2.5 transition-transform" />
                 )}
                 {t('schema.views')}
                 <span className="text-muted-foreground/60 font-normal">
@@ -1302,12 +1302,12 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(triggersKey)}
-                className="text-muted-foreground/80 hover:text-muted-foreground hover:bg-accent/30 flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-xs font-medium tracking-wider uppercase"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
               >
                 {triggersExpanded ? (
-                  <ChevronDown className="h-3 w-3" />
+                  <ChevronDown className="h-2.5 w-2.5 transition-transform" />
                 ) : (
-                  <ChevronRight className="h-3 w-3" />
+                  <ChevronRight className="h-2.5 w-2.5 transition-transform" />
                 )}
                 {t('schema.triggers')}
                 <span className="text-muted-foreground/60 font-normal">
