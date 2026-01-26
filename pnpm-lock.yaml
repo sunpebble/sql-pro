@@ -468,18 +468,12 @@ importers:
 
   packages/cloudflare:
     dependencies:
-      '@libsql/client':
-        specifier: ^0.17.0
-        version: 0.17.0(encoding@0.1.13)
       hono:
         specifier: ^4.11.5
         version: 4.11.5
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
-      resend:
-        specifier: ^6.8.0
-        version: 6.8.0(@react-email/render@1.1.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
       stripe:
         specifier: ^20.2.0
         version: 20.2.0(@types/node@25.0.10)

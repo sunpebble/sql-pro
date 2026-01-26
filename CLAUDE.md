@@ -7,48 +7,50 @@ SQL Pro is a professional, cross-platform database management application built 
 - **Desktop App**: Electron + React + TypeScript + Tailwind CSS + shadcn/ui
 - **Website**: React + TypeScript + Vite
 
-## Design System: Fresh Modern
+## Design System: Warm Modern
 
-The visual identity follows a **"Fresh Modern"** design philosophy - a clean, bright, professional aesthetic inspired by modern SaaS applications like TaxMate. The design communicates trust, clarity, and efficiency.
+The visual identity follows a **"Warm Modern"** design philosophy - a friendly, approachable, and inviting aesthetic inspired by Linear and Raycast. The design communicates creativity, warmth, and trustworthiness.
 
 ### Core Aesthetic Principles
 
-1. **Clean & Professional**: Bright backgrounds, clear typography, generous whitespace
-2. **Distinctive Identity**: Vibrant green accent color, modern sans-serif typography
+1. **Warm & Inviting**: Soft backgrounds, warm orange accents, welcoming atmosphere
+2. **Soft Modern**: Large rounded corners (16-24px), gentle shadows, smooth transitions
 3. **User-Focused**: High readability, intuitive interactions, accessible design
 
 ### Color Palette
 
 #### Light Mode
 
-| Token              | Value                   | Usage                                 |
-| ------------------ | ----------------------- | ------------------------------------- |
-| `--primary`        | `#10B981` (Emerald 500) | Primary brand color, CTAs, highlights |
-| `--primary-dark`   | `#059669` (Emerald 600) | Hover states, emphasis                |
-| `--primary-50`     | `#ECFDF5`               | Subtle backgrounds, badges            |
-| `--accent-cyan`    | `#06B6D4` (Cyan 500)    | Secondary accent, gradients           |
-| `--bg-white`       | `#FFFFFF`               | Primary background                    |
-| `--bg-subtle`      | `#F8FAFC` (Slate 50)    | Secondary background                  |
-| `--text-primary`   | `#0F172A` (Slate 900)   | Primary text                          |
-| `--text-secondary` | `#475569` (Slate 600)   | Secondary text                        |
-| `--text-muted`     | `#94A3B8` (Slate 400)   | Muted text, placeholders              |
-| `--border-light`   | `#E2E8F0` (Slate 200)   | Light borders                         |
-| `--border-medium`  | `#CBD5E1` (Slate 300)   | Medium borders                        |
-| `--success`        | `#22C55E` (Green 500)   | Success states                        |
-| `--warning`        | `#F59E0B` (Amber 500)   | Warning states                        |
-| `--error`          | `#EF4444` (Red 500)     | Error states                          |
+| Token              | Value                  | Usage                                 |
+| ------------------ | ---------------------- | ------------------------------------- |
+| `--primary`        | `#F97316` (Orange 500) | Primary brand color, CTAs, highlights |
+| `--primary-dark`   | `#EA580C` (Orange 600) | Hover states, emphasis                |
+| `--primary-light`  | `#FB923C` (Orange 400) | Lighter accents                       |
+| `--primary-50`     | `#FFF7ED`              | Subtle backgrounds, badges            |
+| `--primary-100`    | `#FFEDD5`              | Light backgrounds                     |
+| `--accent`         | `#FDBA74` (Orange 300) | Secondary accent, gradients           |
+| `--bg-white`       | `#FFFBF7`              | Primary background (warm white)       |
+| `--bg-subtle`      | `#FEF3E7`              | Secondary background                  |
+| `--text-primary`   | `#1C1917` (Stone 900)  | Primary text                          |
+| `--text-secondary` | `#57534E` (Stone 600)  | Secondary text                        |
+| `--text-muted`     | `#A8A29E` (Stone 400)  | Muted text, placeholders              |
+| `--border-light`   | `#F5F0EB`              | Light borders (warm)                  |
+| `--border-medium`  | `#E7E0D9`              | Medium borders                        |
+| `--success`        | `#22C55E` (Green 500)  | Success states                        |
+| `--warning`        | `#F59E0B` (Amber 500)  | Warning states                        |
+| `--error`          | `#EF4444` (Red 500)    | Error states                          |
 
 #### Dark Mode
 
-| Token              | Value                   | Usage                          |
-| ------------------ | ----------------------- | ------------------------------ |
-| `--primary`        | `#34D399` (Emerald 400) | Primary brand color (brighter) |
-| `--primary-dark`   | `#10B981` (Emerald 500) | Hover states                   |
-| `--bg-dark`        | `#0F172A` (Slate 900)   | Primary background             |
-| `--bg-card`        | `#1E293B` (Slate 800)   | Card backgrounds               |
-| `--text-primary`   | `#F8FAFC` (Slate 50)    | Primary text                   |
-| `--text-secondary` | `#CBD5E1` (Slate 300)   | Secondary text                 |
-| `--border-dark`    | `#334155` (Slate 700)   | Borders                        |
+| Token              | Value                  | Usage                          |
+| ------------------ | ---------------------- | ------------------------------ |
+| `--primary`        | `#FB923C` (Orange 400) | Primary brand color (brighter) |
+| `--primary-dark`   | `#F97316` (Orange 500) | Hover states                   |
+| `--bg-dark`        | `#1C1917` (Stone 900)  | Primary background             |
+| `--bg-card`        | `#292524` (Stone 800)  | Card backgrounds               |
+| `--text-primary`   | `#FAFAF9` (Stone 50)   | Primary text                   |
+| `--text-secondary` | `#D6D3D1` (Stone 300)  | Secondary text                 |
+| `--border-dark`    | `#44403C` (Stone 700)  | Borders                        |
 
 ### Typography
 
@@ -60,22 +62,22 @@ The visual identity follows a **"Fresh Modern"** design philosophy - a clean, br
 
 ### Signature Design Elements
 
-1. **Gradient Text** (`.pricing-title-gradient`, `.download-title-gradient`)
-   - Primary to cyan gradient for emphasis
+1. **Gradient Text** (`.text-gradient-primary`)
+   - Primary orange gradient for emphasis
    - Use on key headlines and CTAs
 
-2. **Pill Badges** (`.pricing-label`, `.download-label`)
+2. **Pill Badges** (`.badge-primary`)
    - Rounded full badges with primary-50 background
    - Icon + text combination
 
 3. **Card Design**
-   - Rounded corners (16px-24px border-radius)
-   - Subtle shadows (`--shadow-card`)
-   - Hover lift effect with enhanced shadow
+   - Large rounded corners (20px-28px border-radius)
+   - Warm, soft shadows with orange tint
+   - Hover lift effect with enhanced glow
 
-4. **Bento Box Grid**
-   - Asymmetric grid layouts for features
-   - Card variants: large, tall, dark, accent
+4. **Soft Shadows**
+   - Use warm-tinted shadows (orange/amber undertones)
+   - Larger blur radius for softer appearance
 
 5. **Stats Display**
    - Large numbers with gradient text
@@ -85,34 +87,37 @@ The visual identity follows a **"Fresh Modern"** design philosophy - a clean, br
 
 ```css
 :root {
-  /* Primary Colors */
-  --primary: #10b981;
-  --primary-dark: #059669;
-  --primary-50: #ecfdf5;
-  --accent-cyan: #06b6d4;
+  /* Primary Colors - Orange Palette */
+  --primary: #f97316;
+  --primary-dark: #ea580c;
+  --primary-light: #fb923c;
+  --primary-50: #fff7ed;
+  --primary-100: #ffedd5;
+  --accent: #fdba74;
 
-  /* Backgrounds */
-  --bg-white: #ffffff;
-  --bg-subtle: #f8fafc;
+  /* Backgrounds - Warm Whites */
+  --bg-white: #fffbf7;
+  --bg-subtle: #fef3e7;
 
-  /* Text */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  /* Text - Stone Palette */
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
   --text-inverse: #ffffff;
 
-  /* Borders */
-  --border-light: #e2e8f0;
-  --border-medium: #cbd5e1;
+  /* Borders - Warm */
+  --border-light: #f5f0eb;
+  --border-medium: #e7e0d9;
 
-  /* Shadows */
-  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-card-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  /* Shadows - Warm Tinted */
+  --shadow-card: 0 4px 20px -4px rgba(249, 115, 22, 0.1);
+  --shadow-card-hover: 0 20px 40px -8px rgba(249, 115, 22, 0.15);
 
-  /* Border Radius */
-  --border-radius-lg: 12px;
-  --border-radius-xl: 16px;
-  --border-radius-2xl: 24px;
+  /* Border Radius - Larger for Soft Modern */
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 20px;
+  --border-radius-2xl: 28px;
   --border-radius-full: 9999px;
 
   /* Typography */
@@ -134,20 +139,21 @@ The visual identity follows a **"Fresh Modern"** design philosophy - a clean, br
 
 **DO:**
 
-- Use the green primary color for CTAs and interactive elements
-- Maintain generous whitespace and clean layouts
-- Use rounded corners consistently (12px-24px)
-- Apply subtle shadows for depth
+- Use the orange primary color for CTAs and interactive elements
+- Maintain generous whitespace and warm, inviting layouts
+- Use large rounded corners consistently (16px-28px)
+- Apply warm-tinted shadows for depth and softness
 - Use gradient text sparingly for emphasis
 - Support both light and dark modes
+- Use Stone color palette for neutrals (warmer than Slate)
 
 **DON'T:**
 
-- Use gold/Art Deco styling (legacy design)
-- Use dark backgrounds in light mode
-- Overuse gradients - keep them for key elements
-- Use sharp corners - prefer rounded edges
+- Use cold colors (blue, cyan) as primary accents
+- Use sharp corners - prefer large rounded edges
+- Use harsh black shadows - prefer warm-tinted shadows
 - Neglect dark mode support
+- Overuse gradients - keep them for key elements
 
 ### Component Patterns
 
