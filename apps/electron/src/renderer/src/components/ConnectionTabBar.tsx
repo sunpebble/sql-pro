@@ -265,26 +265,28 @@ const ConnectionTab = memo(
                   ref={setNodeRef}
                   aria-selected={isActive}
                   className={cn(
-                    'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 border-r px-1.5 text-sm transition-all',
+                    'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-1.5 text-sm transition-all',
                     isActive
-                      ? 'bg-background text-foreground'
-                      : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground',
+                      ? 'bg-accent text-foreground rounded-md'
+                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground rounded-md bg-transparent',
                     isDragging &&
                       'ring-primary/50 z-50 scale-105 cursor-grabbing opacity-90 shadow-lg ring-2'
                   )}
                   style={{
                     transform: CSS.Transform.toString(transform),
                     transition,
-                    borderBottomWidth: '2px',
-                    borderBottomStyle: 'solid',
-                    borderBottomColor: isActive
-                      ? connectionColor
-                      : 'transparent',
                   }}
                   onClick={handleClick}
                   {...attributes}
                   {...listeners}
                 >
+                  {/* Connection color indicator */}
+                  {isActive && (
+                    <span
+                      className="absolute top-1/2 left-0 h-4 w-1 -translate-y-1/2 rounded-full"
+                      style={{ backgroundColor: connectionColor }}
+                    />
+                  )}
                   <StatusIcon
                     className={cn('h-3.5 w-3.5 shrink-0', statusColorClass)}
                   />
