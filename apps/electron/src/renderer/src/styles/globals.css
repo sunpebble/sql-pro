@@ -1246,7 +1246,7 @@ th {
   transform: translateX(-50%);
   z-index: 50;
   padding: 6px 12px;
-  border-radius: 16px;
+  border-radius: var(--radius-xl); /* 12px - capped */
   display: flex;
   align-items: center;
   gap: 4px;
