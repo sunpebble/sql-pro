@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Visual and interaction experience at Linear/Raycast level of polish
-**Current focus:** Phase 4 - Core Components (in progress)
+**Current focus:** Phase 4 - Core Components (complete)
 
 ## Current Position
 
 Phase: 4 of 11 (Core Components)
-Plan: 3 of 4 in current phase
-Status: In progress
-Last activity: 2026-01-27 - Completed 04-03-PLAN.md (Form Controls Shadow Removal)
+Plan: 4 of 4 in current phase
+Status: Phase complete
+Last activity: 2026-01-27 - Completed 04-04-PLAN.md (Secondary Form Components Shadow Removal)
 
-Progress: [████░░░░░░] ~35%
+Progress: [████░░░░░░] ~38%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Recent decisions affecting current work:
 - Implemented: Subtle scale-105 hover effect (not 110)
 - Implemented: Flattened sidebar with removed border-left lines
 - Implemented: Flat form controls (no shadow-xs on checkbox, switch, radio)
+- Implemented: Flat form inputs (no shadow-xs on input, textarea, select)
 - Pending: Website de-marketized (minimal, product-focused)
 
 ### Phase 4 Progress Summary
@@ -137,8 +138,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-27T17:47:07Z
-Stopped at: Completed 04-03-PLAN.md (Form Controls Shadow Removal)
+Last session: 2026-01-27T17:50:00Z
+Stopped at: Completed 04-02-PLAN.md (Form Input Shadows Removal)
 Resume file: None
 
 ---
