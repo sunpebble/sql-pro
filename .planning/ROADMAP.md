@@ -39,11 +39,15 @@ Decimal phases appear between their surrounding integers in numeric order.
 3. Orange accent color appears vibrant against dark backgrounds without being neon
 4. Border radius throughout app measures 8-12px (not 20px+)
 5. Borders appear subtle (6-10% opacity) rather than solid lines
-   **Plans**: TBD
+
+**Plans**: 4 plans in 2 waves
 
 Plans:
 
-- [ ] 01-01: TBD
+- [ ] 01-01-PLAN.md — Core CSS variable structure (dark-first inversion, orange primary)
+- [ ] 01-02-PLAN.md — Border, radius, and shadow token system
+- [ ] 01-03-PLAN.md — Website CSS alignment with app design tokens
+- [ ] 01-04-PLAN.md — Shared UI package dark-first update
 
 ### Phase 2: Typography & Text
 
@@ -215,19 +219,19 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11
 
-| Phase                      | Plans Complete | Status      | Completed |
-| -------------------------- | -------------- | ----------- | --------- |
-| 1. Design Foundation       | 0/TBD          | Not started | -         |
-| 2. Typography & Text       | 0/TBD          | Not started | -         |
-| 3. Navigation Shell        | 0/TBD          | Not started | -         |
-| 4. Core Components         | 0/TBD          | Not started | -         |
-| 5. Interaction System      | 0/TBD          | Not started | -         |
-| 6. Dialog & Overlay Polish | 0/TBD          | Not started | -         |
-| 7. Data Views              | 0/TBD          | Not started | -         |
-| 8. Monaco Editor           | 0/TBD          | Not started | -         |
-| 9. Website Foundation      | 0/TBD          | Not started | -         |
-| 10. Website Content        | 0/TBD          | Not started | -         |
-| 11. Website Polish         | 0/TBD          | Not started | -         |
+| Phase                      | Plans Complete | Status            | Completed |
+| -------------------------- | -------------- | ----------------- | --------- |
+| 1. Design Foundation       | 0/4            | Planning complete | -         |
+| 2. Typography & Text       | 0/TBD          | Not started       | -         |
+| 3. Navigation Shell        | 0/TBD          | Not started       | -         |
+| 4. Core Components         | 0/TBD          | Not started       | -         |
+| 5. Interaction System      | 0/TBD          | Not started       | -         |
+| 6. Dialog & Overlay Polish | 0/TBD          | Not started       | -         |
+| 7. Data Views              | 0/TBD          | Not started       | -         |
+| 8. Monaco Editor           | 0/TBD          | Not started       | -         |
+| 9. Website Foundation      | 0/TBD          | Not started       | -         |
+| 10. Website Content        | 0/TBD          | Not started       | -         |
+| 11. Website Polish         | 0/TBD          | Not started       | -         |
 
 ---
 
