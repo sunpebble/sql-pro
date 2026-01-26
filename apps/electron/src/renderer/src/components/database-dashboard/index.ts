@@ -1,1 +1,0 @@
-export { DatabaseDashboard } from './DatabaseDashboard';

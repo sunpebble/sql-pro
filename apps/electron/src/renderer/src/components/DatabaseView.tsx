@@ -12,6 +12,7 @@ import { useDialogStore } from '@/stores/dialog-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { ActivityBar } from './ActivityBar';
 import { CompareView } from './CompareView';
+import { DashboardView } from './DashboardView';
 import { DataTabBar } from './data-table';
 import { DiffPreview } from './DiffPreview';
 import { EmptyView } from './EmptyView';
@@ -220,6 +221,8 @@ export function DatabaseView() {
               connectionId={activeConnectionId || undefined}
             />
           )}
+
+          {activeView === 'dashboard' && <DashboardView />}
         </div>
 
         {showChangesPanel && hasChanges() && (

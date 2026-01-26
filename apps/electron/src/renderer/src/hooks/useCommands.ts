@@ -1,6 +1,7 @@
 import type { GetSchemaResponse } from '@shared/types';
 import type { Command } from '@/stores/command-palette-store';
 import {
+  BarChart3,
   Bot,
   Code,
   FileDown,
@@ -263,6 +264,16 @@ export function useCommands() {
         e.preventDefault();
         document
           .querySelector<HTMLButtonElement>('[data-tab="dataDiff"]')
+          ?.click();
+        return;
+      }
+
+      // Dashboard shortcut
+      const dashboardBinding = getShortcut('nav.dashboard');
+      if (matchesBinding(e, dashboardBinding)) {
+        e.preventDefault();
+        document
+          .querySelector<HTMLButtonElement>('[data-tab="dashboard"]')
           ?.click();
         return;
       }
@@ -724,6 +735,19 @@ export function useCommands() {
         action: () => {
           document
             .querySelector<HTMLButtonElement>('[data-tab="diagram"]')
+            ?.click();
+        },
+      },
+      {
+        id: 'nav.dashboard',
+        label: t('commands.openDashboard', { defaultValue: 'Open Dashboard' }),
+        shortcut: getShortcutDisplay('nav.dashboard'),
+        icon: BarChart3,
+        category: 'navigation',
+        keywords: ['dashboard', 'statistics', 'stats', 'overview', 'metrics'],
+        action: () => {
+          document
+            .querySelector<HTMLButtonElement>('[data-tab="dashboard"]')
             ?.click();
         },
       },

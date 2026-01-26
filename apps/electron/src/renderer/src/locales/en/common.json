@@ -763,7 +763,8 @@
     "compare": "Compare",
     "schemaCompare": "Schema Compare",
     "dataDiff": "Data Diff",
-    "vectorSearch": "Vector Search"
+    "vectorSearch": "Vector Search",
+    "dashboard": "Dashboard"
   },
   "vectorSearch": {
     "title": "Vector Search",

@@ -610,7 +610,8 @@
     "compare": "对比",
     "schemaCompare": "结构对比",
     "dataDiff": "数据对比",
-    "vectorSearch": "向量搜索"
+    "vectorSearch": "向量搜索",
+    "dashboard": "仪表盘"
   },
   "vectorSearch": {
     "title": "向量搜索",

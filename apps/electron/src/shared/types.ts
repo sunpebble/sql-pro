@@ -3131,6 +3131,7 @@ export type ShortcutAction =
   | 'nav.schema-compare'
   | 'nav.er-diagram'
   | 'nav.data-diff'
+  | 'nav.dashboard'
   | 'nav.toggle-sidebar'
   // View
   | 'view.toggle-history'
@@ -3236,6 +3237,7 @@ export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'nav.schema-compare': { key: '4', modifiers: { cmd: true, ctrl: true } },
   'nav.er-diagram': { key: '3', modifiers: { cmd: true, ctrl: true } },
   'nav.data-diff': { key: '5', modifiers: { cmd: true, ctrl: true } },
+  'nav.dashboard': { key: '6', modifiers: { cmd: true, ctrl: true } },
   'nav.toggle-sidebar': { key: 'b', modifiers: { cmd: true } },
   'view.toggle-history': { key: 'h', modifiers: { cmd: true } },
   'view.toggle-schema-details': {

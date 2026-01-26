@@ -10,7 +10,6 @@ import { AboutDialog } from './AboutDialog';
 import { BackupRestoreDialog } from './backup';
 import { ChangePasswordDialog } from './ChangePasswordDialog';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
-import { DatabaseDashboard } from './database-dashboard';
 import { KeyboardShortcutsSettings } from './KeyboardShortcutsSettings';
 import { SettingsDialog } from './SettingsDialog';
 import { UpdateCheckDialog } from './UpdateCheckDialog';
@@ -55,12 +54,6 @@ export function GlobalDialogs() {
   // Backup dialog state from store
   const backupDialogOpen = useDialogStore((s) => s.backupDialogOpen);
   const closeBackupDialog = useDialogStore((s) => s.closeBackupDialog);
-
-  // Dashboard dialog state from store
-  const dashboardOpen = useDialogStore((s) => s.dashboardOpen);
-  const dashboardConnectionId = useDialogStore((s) => s.dashboardConnectionId);
-  const dashboardDatabaseName = useDialogStore((s) => s.dashboardDatabaseName);
-  const closeDashboard = useDialogStore((s) => s.closeDashboard);
 
   // Computed properties for connection settings dialog
   const [editFilename, setEditFilename] = useState('');
@@ -188,16 +181,6 @@ export function GlobalDialogs() {
         onOpenChange={(open) => {
           if (!open) closeBackupDialog();
         }}
-      />
-
-      {/* Database Dashboard Dialog */}
-      <DatabaseDashboard
-        open={dashboardOpen}
-        onOpenChange={(open) => {
-          if (!open) closeDashboard();
-        }}
-        connectionId={dashboardConnectionId || undefined}
-        databaseName={dashboardDatabaseName || undefined}
       />
     </>
   );

@@ -80,13 +80,6 @@ interface DialogState {
   openBackupDialog: () => void;
   closeBackupDialog: () => void;
 
-  // Database Dashboard dialog
-  dashboardOpen: boolean;
-  dashboardConnectionId: string | null;
-  dashboardDatabaseName: string | null;
-  openDashboard: (connectionId: string, databaseName?: string) => void;
-  closeDashboard: () => void;
-
   // AI Agent sidebar
   agentSidebarOpen: boolean;
   agentConnectionId: string | null;
@@ -177,23 +170,6 @@ export const useDialogStore = create<DialogState>((set) => ({
   backupDialogOpen: false,
   openBackupDialog: () => set({ backupDialogOpen: true }),
   closeBackupDialog: () => set({ backupDialogOpen: false }),
-
-  // Database Dashboard dialog
-  dashboardOpen: false,
-  dashboardConnectionId: null,
-  dashboardDatabaseName: null,
-  openDashboard: (connectionId, databaseName) =>
-    set({
-      dashboardOpen: true,
-      dashboardConnectionId: connectionId,
-      dashboardDatabaseName: databaseName || null,
-    }),
-  closeDashboard: () =>
-    set({
-      dashboardOpen: false,
-      dashboardConnectionId: null,
-      dashboardDatabaseName: null,
-    }),
 
   // AI Agent sidebar
   agentSidebarOpen: false,
