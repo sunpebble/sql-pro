@@ -1169,11 +1169,7 @@ function SchemaSection({
 
       {/* Schema Content */}
       {isSchemaExpanded && (
-        <div
-          className={
-            showSchemaHeader ? 'border-border/40 ml-3 border-l pl-2' : ''
-          }
-        >
+        <div className={showSchemaHeader ? 'ml-2' : ''}>
           {/* Tables Section */}
           {schemaInfo.tables.length > 0 && (
             <div>
@@ -1192,7 +1188,7 @@ function SchemaSection({
                 </span>
               </button>
               {tablesExpanded && (
-                <div className="border-border/40 ml-1.5 min-w-0 border-l pl-2">
+                <div className="ml-2 min-w-0">
                   {schemaInfo.tables.map((table, idx) => {
                     const itemIdx = getItemIndex(schemaInfo.name, 'table', idx);
                     const tableKey = getTableKey(
@@ -1255,7 +1251,7 @@ function SchemaSection({
                 </span>
               </button>
               {viewsExpanded && (
-                <div className="border-border/40 ml-1.5 border-l pl-2">
+                <div className="ml-2 min-w-0">
                   {schemaInfo.views.map((view, idx) => {
                     const itemIdx = getItemIndex(schemaInfo.name, 'view', idx);
                     const tableKey = getTableKey(
@@ -1319,7 +1315,7 @@ function SchemaSection({
                 </span>
               </button>
               {triggersExpanded && (
-                <div className="border-border/40 ml-1.5 border-l pl-2">
+                <div className="ml-2 min-w-0">
                   {schemaInfo.triggers.map((trigger) => (
                     <TriggerItem
                       key={`${schemaInfo.name}:${trigger.name}`}
