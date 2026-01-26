@@ -145,20 +145,8 @@ export const ActivityBar = memo(
                       index === 3 && 'stagger-4',
                       index === 4 && 'stagger-5',
                       isActive
-                        ? [
-                            'text-primary',
-                            'from-primary/20 via-primary/12 to-primary/5 bg-gradient-to-br',
-                            'shadow-[0_2px_8px_rgba(16,185,129,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]',
-                            'dark:shadow-[0_2px_10px_rgba(52,211,153,0.25),inset_0_1px_0_rgba(255,255,255,0.05)]',
-                            'ring-primary/20 dark:ring-primary/25 ring-1',
-                          ]
-                        : [
-                            'text-muted-foreground',
-                            'hover:text-foreground',
-                            'hover:from-muted/80 hover:to-muted/40 hover:bg-gradient-to-br',
-                            'hover:shadow-[0_2px_6px_rgba(0,0,0,0.08)]',
-                            'dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.25)]',
-                          ]
+                        ? 'text-primary bg-accent'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                     )}
                   >
                     <Icon
