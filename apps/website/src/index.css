@@ -65,11 +65,27 @@
   --bg-light: oklch(0.97 0.003 250);
   --bg-subtle: oklch(0.18 0.02 255); /* Dark mode default */
 
-  /* Text Colors */
-  --text-primary: oklch(0.97 0.002 250); /* #F8FAFC - Slate 50 */
-  --text-secondary: oklch(0.7 0.01 250); /* #94A3B8 - Slate 400 */
-  --text-muted: oklch(0.55 0.015 250); /* #64748B - Slate 500 */
-  --text-inverse: oklch(0.13 0.02 255);
+  /* === TEXT HIERARCHY (Dark Mode) ===
+   * Primary: Bright, main content - Slate 100
+   * Secondary: Dimmed, descriptions - Slate 300
+   * Muted: Subtle, metadata - Slate 400
+   * All levels meet WCAG AA 4.5:1 contrast ratio
+   */
+  --text-primary: oklch(
+    0.968 0.007 247.896
+  ); /* Slate 100, L=0.968, ~15:1 on Slate 900 */
+  --text-secondary: oklch(
+    0.869 0.022 252.894
+  ); /* Slate 300, L=0.869, ~10:1 on Slate 900 */
+  --text-muted: oklch(
+    0.704 0.04 256.788
+  ); /* Slate 400, L=0.704, ~5:1 on Slate 900 */
+  --text-inverse: oklch(0.208 0.042 265.755); /* Slate 900 */
+
+  /* App-compatible aliases (for shared component compatibility) */
+  --foreground: var(--text-primary);
+  --secondary-foreground: var(--text-secondary);
+  --muted-foreground: var(--text-muted);
 
   /* Borders */
   --border-subtle: oklch(1 0 0 / 6%);
@@ -972,11 +988,22 @@ select:focus-visible {
   --bg-elevated: oklch(0.985 0.002 250);
   --bg-subtle: oklch(0.95 0.005 250);
 
-  /* Text Colors */
-  --text-primary: oklch(0.15 0.02 255); /* Slate 900 */
-  --text-secondary: oklch(0.45 0.02 255); /* Slate 600 */
-  --text-muted: oklch(0.55 0.015 255); /* Slate 500 */
-  --text-inverse: oklch(0.985 0.002 250);
+  /* === TEXT HIERARCHY (Light Mode) === */
+  --text-primary: oklch(
+    0.208 0.042 265.755
+  ); /* Slate 900, L=0.208, ~15:1 on Slate 50 */
+  --text-secondary: oklch(
+    0.446 0.043 257.281
+  ); /* Slate 600, L=0.446, ~7:1 on Slate 50 */
+  --text-muted: oklch(
+    0.554 0.046 257.417
+  ); /* Slate 500, L=0.554, ~5:1 on Slate 50 */
+  --text-inverse: oklch(0.984 0.003 247.858); /* Slate 50 */
+
+  /* App-compatible aliases */
+  --foreground: var(--text-primary);
+  --secondary-foreground: var(--text-secondary);
+  --muted-foreground: var(--text-muted);
 
   /* Borders */
   --border-subtle: oklch(0 0 0 / 5%);
