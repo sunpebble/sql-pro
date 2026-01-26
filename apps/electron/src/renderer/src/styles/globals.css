@@ -1641,3 +1641,19 @@ th {
 .light [data-slot='tooltip-content'] [data-slot='kbd'] {
   background-color: oklch(0 0 0 / 10%);
 }
+
+/* ============================================
+ * TAB BAR PILL STYLES
+ * Linear/Raycast style pill tabs
+ * ============================================ */
+
+/* Tab bar pill styles */
+.tab-pill {
+  @apply rounded-md transition-colors;
+}
+.tab-pill-active {
+  @apply bg-accent text-foreground;
+}
+.tab-pill-inactive {
+  @apply text-muted-foreground hover:bg-muted/50 hover:text-foreground;
+}
