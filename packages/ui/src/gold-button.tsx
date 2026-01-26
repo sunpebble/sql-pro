@@ -56,11 +56,7 @@ const brandButtonVariants = cva(
         ],
 
         // Pulse - flat design (same as default)
-        pulse: [
-          'bg-primary',
-          'text-primary-foreground',
-          'hover:bg-primary/90',
-        ],
+        pulse: ['bg-primary', 'text-primary-foreground', 'hover:bg-primary/90'],
       },
 
       size: {
@@ -120,7 +116,7 @@ function BrandButton({
 
 // Legacy exports for backward compatibility
 export type GoldButtonProps = BrandButtonProps;
- 
+
 export const GoldButton = BrandButton;
 // eslint-disable-next-line react-refresh/only-export-components
 export const goldButtonVariants = brandButtonVariants;
