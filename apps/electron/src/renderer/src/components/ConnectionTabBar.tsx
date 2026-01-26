@@ -118,7 +118,6 @@ const ConnectionTab = memo(
     );
     const openChangePassword = useDialogStore((s) => s.openChangePassword);
     const openBackupDialog = useDialogStore((s) => s.openBackupDialog);
-    const openDashboard = useDialogStore((s) => s.openDashboard);
 
     // Refresh state
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -203,10 +202,12 @@ const ConnectionTab = memo(
       openBackupDialog();
     }, [openBackupDialog]);
 
-    // Handle dashboard
+    // Handle dashboard - navigate to dashboard view
     const handleDashboard = useCallback(() => {
-      openDashboard(connection.id, connection.filename);
-    }, [connection.id, connection.filename, openDashboard]);
+      document
+        .querySelector<HTMLButtonElement>('[data-tab="dashboard"]')
+        ?.click();
+    }, []);
 
     // Set up drag and drop for this tab with activation constraint
     const {

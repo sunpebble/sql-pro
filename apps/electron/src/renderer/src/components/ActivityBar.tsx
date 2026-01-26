@@ -1,6 +1,7 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
+  BarChart3,
   Code,
   GitCompare,
   GitFork,
@@ -21,7 +22,8 @@ export type ViewType =
   | 'query'
   | 'diagram'
   | 'compare'
-  | 'vectorSearch';
+  | 'vectorSearch'
+  | 'dashboard';
 
 interface ActivityBarItem {
   id: ViewType;
@@ -61,6 +63,13 @@ const ACTIVITY_BAR_ITEMS: ActivityBarItem[] = [
     labelKey: 'navigation.compare',
     shortcutAction: 'nav.schema-compare',
     tourTarget: 'compare-tab',
+  },
+  {
+    id: 'dashboard',
+    icon: BarChart3,
+    labelKey: 'navigation.dashboard',
+    shortcutAction: 'nav.dashboard',
+    tourTarget: 'dashboard-tab',
   },
   {
     id: 'vectorSearch',
