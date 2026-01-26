@@ -1155,14 +1155,14 @@ function SchemaSection({
       {showSchemaHeader && (
         <button
           onClick={onToggleSchema}
-          className="text-muted-foreground hover:bg-accent/50 flex w-full items-center gap-1.5 rounded-sm px-1.5 py-0.5 text-xs font-medium tracking-wide uppercase"
+          className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-2 rounded-md px-2 py-1 text-sm font-medium"
         >
           {isSchemaExpanded ? (
-            <ChevronDown className="h-3 w-3" />
+            <ChevronDown className="h-2.5 w-2.5 transition-transform" />
           ) : (
-            <ChevronRight className="h-3 w-3" />
+            <ChevronRight className="h-2.5 w-2.5 transition-transform" />
           )}
-          <Database className="h-3 w-3" />
+          <Database className="h-3.5 w-3.5" />
           <span>{schemaInfo.name}</span>
         </button>
       )}
