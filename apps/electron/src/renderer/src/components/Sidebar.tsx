@@ -1391,10 +1391,10 @@ function TableItem({
         <button
           onClick={onClick}
           className={cn(
-            'flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded px-1.5 py-0.5 transition-colors',
+            'flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded-md px-2 py-0.5 transition-colors',
             isSelected
               ? 'bg-primary/15 text-primary font-medium'
-              : 'hover:bg-accent/50 text-foreground/90',
+              : 'hover:bg-muted/50 text-foreground',
             isFocused && !isSelected && 'ring-primary/50 ring-1 ring-inset'
           )}
         >
@@ -1585,7 +1585,7 @@ interface TriggerItemProps {
 
 function TriggerItem({ trigger }: TriggerItemProps) {
   return (
-    <div className="text-foreground/90 hover:bg-accent/50 flex w-full items-center gap-1.5 rounded px-1.5 py-0.5 text-[13px] transition-colors">
+    <div className="text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-0.5 text-[13px] transition-colors">
       <Zap className="text-muted-foreground/70 h-3.5 w-3.5 shrink-0" />
       <span className="truncate">{trigger.name}</span>
       <span className="text-muted-foreground/60 ml-auto text-xs">
