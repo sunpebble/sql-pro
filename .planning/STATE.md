@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Visual and interaction experience at Linear/Raycast level of polish
-**Current focus:** Phase 3 - Navigation Shell (100% complete)
+**Current focus:** Phase 4 - Core Components (in progress)
 
 ## Current Position
 
-Phase: 3 of 11 (Navigation Shell)
-Plan: 4 of 4 in current phase
-Status: Phase complete
-Last activity: 2026-01-27 - Completed 03-04-PLAN.md (Gap Closure - Sidebar Tabs Pill Style)
+Phase: 4 of 11 (Core Components)
+Plan: 3 of 4 in current phase
+Status: In progress
+Last activity: 2026-01-27 - Completed 04-03-PLAN.md (Form Controls Shadow Removal)
 
-Progress: [████░░░░░░] ~32%
+Progress: [████░░░░░░] ~35%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 9
-- Average duration: 6 min
-- Total execution time: 1.0 hours
+- Total plans completed: 12
+- Average duration: 5 min
+- Total execution time: 1.1 hours
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [████░░░░░░] ~32%
 | 01    | 4     | 35 min | 9 min    |
 | 02    | 1     | 4 min  | 4 min    |
 | 03    | 4     | 14 min | 3.5 min  |
+| 04    | 3     | 9 min  | 3 min    |
 
 **Recent Trend:**
 
-- Last 5 plans: 02-01 (4 min), 03-01 (4 min), 03-02 (4 min), 03-03 (4 min), 03-04 (2 min)
+- Last 5 plans: 03-02 (4 min), 03-03 (4 min), 03-04 (2 min), 04-01 (3 min), 04-03 (3 min)
 - Trend: Consistent fast execution for styling tasks
 
 _Updated after each plan completion_
@@ -55,7 +56,24 @@ Recent decisions affecting current work:
 - Implemented: bg-muted/50 for hover states
 - Implemented: Subtle scale-105 hover effect (not 110)
 - Implemented: Flattened sidebar with removed border-left lines
+- Implemented: Flat form controls (no shadow-xs on checkbox, switch, radio)
 - Pending: Website de-marketized (minimal, product-focused)
+
+### Phase 4 Progress Summary
+
+Plan 04-02 complete:
+
+- Removed shadow-xs from Input component
+- Removed shadow-xs from Textarea component
+- Removed shadow-xs from SelectTrigger component
+- Pattern: Flat form inputs for minimal aesthetic
+
+Plan 04-03 complete:
+
+- Removed shadow-xs from Checkbox component
+- Removed shadow-xs from Switch component
+- Removed shadow-xs from RadioGroup items
+- Pattern: Flat form controls for minimal aesthetic
 
 ### Phase 3 Completion Summary
 
@@ -119,8 +137,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-27T17:02:38Z
-Stopped at: Completed 03-04-PLAN.md (Gap Closure - Sidebar Tabs Pill Style)
+Last session: 2026-01-27T17:47:07Z
+Stopped at: Completed 04-03-PLAN.md (Form Controls Shadow Removal)
 Resume file: None
 
 ---
