@@ -191,6 +191,19 @@
 
   /* Accent color - Cyan for gradients */
   --accent-cyan: oklch(0.75 0.15 195);
+
+  /* Shadows - Light mode (lower opacity) */
+  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 5%);
+  --shadow-sm:
+    0 1px 3px 0 oklch(0 0 0 / 10%), 0 1px 2px -1px oklch(0 0 0 / 10%);
+  --shadow-md:
+    0 4px 6px -1px oklch(0 0 0 / 10%), 0 2px 4px -2px oklch(0 0 0 / 10%);
+  --shadow-lg:
+    0 10px 15px -3px oklch(0 0 0 / 12%), 0 4px 6px -4px oklch(0 0 0 / 10%);
+  --shadow-card: 0 4px 24px oklch(0 0 0 / 10%);
+  --shadow-card-hover: 0 20px 40px -8px oklch(0 0 0 / 15%);
+  --shadow-glow: 0 0 40px oklch(0.646 0.222 41.116 / 15%);
+  --shadow-primary: 0 8px 24px oklch(0.646 0.222 41.116 / 20%);
 }
 
 @theme inline {
@@ -282,16 +295,20 @@
   --spacing-10: 40px;
   --spacing-12: 48px;
 
-  /* Shadow hierarchy */
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  /* Shadow hierarchy - Dark mode (higher opacity for visibility) */
+  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 20%);
+  --shadow-sm:
+    0 1px 3px 0 oklch(0 0 0 / 30%), 0 1px 2px -1px oklch(0 0 0 / 20%);
+  --shadow-md:
+    0 4px 6px -1px oklch(0 0 0 / 35%), 0 2px 4px -2px oklch(0 0 0 / 25%);
   --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-card:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-card-hover:
-    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    0 10px 15px -3px oklch(0 0 0 / 40%), 0 4px 6px -4px oklch(0 0 0 / 30%);
+  --shadow-card: 0 4px 24px oklch(0 0 0 / 40%);
+  --shadow-card-hover: 0 20px 40px -8px oklch(0 0 0 / 50%);
+
+  /* Primary glow - uses orange accent */
+  --shadow-glow: 0 0 40px oklch(0.75 0.183 55.934 / 20%);
+  --shadow-primary: 0 8px 24px oklch(0.75 0.183 55.934 / 30%);
 
   /* Transition durations */
   --duration-fast: 100ms;
