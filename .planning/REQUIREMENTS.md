@@ -25,8 +25,8 @@
 ### Visual Polish (Visual)
 
 - [x] **VISL-01**: Three-level text hierarchy (primary/secondary/muted)
-- [ ] **VISL-02**: Simplified button design (less decoration)
-- [ ] **VISL-03**: Refined input/form styling for dark mode
+- [x] **VISL-02**: Simplified button design (less decoration)
+- [x] **VISL-03**: Refined input/form styling for dark mode
 - [ ] **VISL-04**: Glassmorphism on dialogs (backdrop-filter: blur)
 - [ ] **VISL-05**: Subtle hover states (background change, no lift)
 - [ ] **VISL-06**: Minimal loading/skeleton states
@@ -97,8 +97,8 @@
 | NAVI-01     | Phase 3  | Complete |
 | NAVI-02     | Phase 3  | Complete |
 | NAVI-03     | Phase 3  | Complete |
-| VISL-02     | Phase 4  | Pending  |
-| VISL-03     | Phase 4  | Pending  |
+| VISL-02     | Phase 4  | Complete |
+| VISL-03     | Phase 4  | Complete |
 | INTR-01     | Phase 5  | Pending  |
 | INTR-02     | Phase 5  | Pending  |
 | INTR-03     | Phase 5  | Pending  |

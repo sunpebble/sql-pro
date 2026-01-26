@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Design Foundation** - OKLCH color system, dark-first CSS variables, spacing and radius tokens
 - [x] **Phase 2: Typography & Text** - Text hierarchy system with primary/secondary/muted levels
 - [x] **Phase 3: Navigation Shell** - Activity Bar, Sidebar, and Tab Bars visual refresh (4/4 verified)
-- [ ] **Phase 4: Core Components** - Buttons, inputs, and form controls refinement
+- [x] **Phase 4: Core Components** - Buttons, inputs, and form controls refinement
 - [ ] **Phase 5: Interaction System** - Command palette, transitions, keyboard focus
 - [ ] **Phase 6: Dialog & Overlay Polish** - Glassmorphism, hover states, loading states
 - [ ] **Phase 7: Data Views** - Table view contrast and density optimization
@@ -100,10 +100,10 @@ Plans:
 
 Plans:
 
-- [ ] 04-01-PLAN.md — Button components simplification (button.tsx, gold-button.tsx)
-- [ ] 04-02-PLAN.md — Input components shadow removal (input.tsx, textarea.tsx, select.tsx)
-- [ ] 04-03-PLAN.md — Form controls cleanup (checkbox.tsx, switch.tsx, radio-group.tsx)
-- [ ] 04-04-PLAN.md — Secondary components verification (toggle, combobox, input-otp, groups)
+- [x] 04-01-PLAN.md — Button components simplification (button.tsx, gold-button.tsx)
+- [x] 04-02-PLAN.md — Input components shadow removal (input.tsx, textarea.tsx, select.tsx)
+- [x] 04-03-PLAN.md — Form controls cleanup (checkbox.tsx, switch.tsx, radio-group.tsx)
+- [x] 04-04-PLAN.md — Secondary components verification (toggle, combobox, input-otp, groups)
 
 ### Phase 5: Interaction System
 
@@ -232,7 +232,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. Design Foundation       | 4/4            | Complete    | 2026-01-26 |
 | 2. Typography & Text       | 1/1            | Complete    | 2026-01-26 |
 | 3. Navigation Shell        | 4/4            | Complete    | 2026-01-27 |
-| 4. Core Components         | 0/TBD          | Not started | -          |
+| 4. Core Components         | 4/4            | Complete    | 2026-01-27 |
 | 5. Interaction System      | 0/TBD          | Not started | -          |
 | 6. Dialog & Overlay Polish | 0/TBD          | Not started | -          |
 | 7. Data Views              | 0/TBD          | Not started | -          |
