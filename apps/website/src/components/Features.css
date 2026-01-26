@@ -1,11 +1,10 @@
 /* =========================================
-   Features Section - Modern Bento Box Design
+   Features Section - Developer Professional
    Clean grid layout with varied card sizes
    ========================================= */
 
 .features {
   padding: var(--section-gap) 0;
-  background: var(--bg-white);
   position: relative;
   overflow: hidden;
 }
@@ -25,11 +24,14 @@
   gap: 8px;
   padding: 8px 16px;
   background: var(--primary-50);
-  color: var(--primary-dark);
+  border: 1px solid oklch(0.723 0.191 142.5 / 20%);
+  color: var(--primary);
   font-size: 13px;
   font-weight: 600;
   border-radius: var(--border-radius-full);
   margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .features-label svg {
@@ -81,8 +83,10 @@
    ═══════════════════════════════════════ */
 
 .feature-card {
-  background: var(--bg-white);
-  border: 1px solid var(--border-light);
+  background: oklch(1 0 0 / 3%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-xl);
   padding: 32px;
   display: flex;
@@ -96,41 +100,30 @@
 }
 
 .feature-card:hover {
-  border-color: var(--border-medium);
+  border-color: var(--border-light);
   box-shadow: var(--shadow-card-hover);
   transform: translateY(-4px);
 }
 
-/* Dark Card Variant */
+/* Dark Card Variant - for emphasis */
 .feature-card.dark {
-  background: var(--secondary);
-  border-color: var(--secondary);
+  background: var(--bg-card);
+  border-color: var(--border-light);
 }
 
 .feature-card.dark:hover {
-  border-color: var(--secondary-light);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-glow);
 }
 
-.feature-card.dark .feature-card-title {
-  color: var(--text-inverse);
-}
-
-.feature-card.dark .feature-card-description {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.feature-card.dark .feature-card-icon {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--primary-light);
-}
-
+/* Accent Card Variant - highlighted */
 .feature-card.accent {
   background: var(--primary-50);
-  border-color: var(--primary-100);
+  border-color: oklch(0.723 0.191 142.5 / 20%);
 }
 
 .feature-card.accent:hover {
-  border-color: var(--primary-light);
+  border-color: var(--primary);
 }
 
 /* Icon */
@@ -141,6 +134,7 @@
   align-items: center;
   justify-content: center;
   background: var(--primary-50);
+  border: 1px solid oklch(0.723 0.191 142.5 / 20%);
   border-radius: var(--border-radius-lg);
   color: var(--primary);
   transition: all var(--duration-normal) var(--ease-out);
@@ -150,6 +144,7 @@
   background: var(--primary);
   color: var(--text-inverse);
   transform: scale(1.05);
+  box-shadow: var(--shadow-glow);
 }
 
 .feature-card-icon svg {
@@ -176,7 +171,7 @@
 .feature-card-description {
   font-size: 15px;
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -203,27 +198,16 @@
   flex-shrink: 0;
 }
 
-.feature-card.dark .feature-card-list-item {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.feature-card.dark .feature-card-list-item svg {
-  color: var(--primary-light);
-}
-
 /* Visual Preview */
 .feature-card-visual {
   margin-top: auto;
-  background: var(--bg-subtle);
+  background: oklch(1 0 0 / 5%);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-md);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.feature-card.dark .feature-card-visual {
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .feature-card-visual-row {
@@ -243,10 +227,6 @@
   height: 8px;
   border-radius: 4px;
   background: var(--border-light);
-}
-
-.feature-card.dark .feature-card-visual-line {
-  background: rgba(255, 255, 255, 0.2);
 }
 
 .feature-card-visual-line.short {
@@ -378,4 +358,28 @@
     transform: none;
     transition: none;
   }
+}
+
+/* ═══════════════════════════════════════
+   LIGHT MODE ADJUSTMENTS
+   ═══════════════════════════════════════ */
+
+.light .feature-card {
+  background: oklch(1 0 0 / 80%);
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.light .feature-card:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.light .feature-card.dark {
+  background: oklch(0.98 0.005 250);
+}
+
+.light .feature-card-visual {
+  background: oklch(0.97 0.005 250);
+  border-color: var(--border-light);
 }

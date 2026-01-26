@@ -261,3 +261,32 @@
     font-size: 0.6875rem;
   }
 }
+
+/* ═══════════════════════════════════════
+   LIGHT MODE ADJUSTMENTS
+   ═══════════════════════════════════════ */
+
+.light .comparison-table-wrapper {
+  border-top-color: var(--border-medium);
+}
+
+.light .comparison-table th {
+  background: var(--bg-subtle);
+}
+
+.light .comparison-table th,
+.light .comparison-table td {
+  border-bottom-color: var(--border-medium);
+}
+
+.light .plan-header-featured {
+  background: linear-gradient(
+    180deg,
+    var(--primary-100) 0%,
+    var(--primary-50) 100%
+  ) !important;
+}
+
+.light .feature-value-featured {
+  background: var(--primary-50);
+}

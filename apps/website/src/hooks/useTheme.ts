@@ -29,9 +29,11 @@ function applyTheme(theme: Theme) {
   root.classList.add('theme-transition');
 
   if (resolvedTheme === 'dark') {
+    root.classList.remove('light');
     root.classList.add('dark');
   } else {
     root.classList.remove('dark');
+    root.classList.add('light');
   }
 
   requestAnimationFrame(() => {

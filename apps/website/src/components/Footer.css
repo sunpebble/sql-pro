@@ -1,12 +1,12 @@
 /* =========================================
-   Footer - Modern Fresh Design
+   Footer - Developer Professional
    Clean, organized, professional
    ========================================= */
 
 .footer {
   padding: 80px 0 40px;
-  background: var(--secondary);
-  color: var(--text-inverse);
+  background: var(--bg-darker);
+  color: var(--text-primary);
   position: relative;
 }
 
@@ -20,12 +20,8 @@
   justify-content: space-between;
   gap: 32px;
   padding: 40px;
-  background: linear-gradient(
-    135deg,
-    rgba(16, 185, 129, 0.15) 0%,
-    rgba(6, 182, 212, 0.1) 100%
-  );
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: oklch(0.723 0.191 142.5 / 8%);
+  border: 1px solid oklch(0.723 0.191 142.5 / 20%);
   border-radius: var(--border-radius-xl);
   margin-bottom: 64px;
 }
@@ -40,13 +36,13 @@
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-inverse);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .footer-cta-description {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -68,7 +64,7 @@
 .footer-cta-btn:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+  box-shadow: var(--shadow-primary);
 }
 
 .footer-cta-btn svg {
@@ -85,7 +81,7 @@
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   gap: 48px;
   padding-bottom: 48px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* Brand Column */
@@ -102,7 +98,7 @@
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-inverse);
+  color: var(--text-primary);
   text-decoration: none;
 }
 
@@ -114,7 +110,7 @@
 .footer-tagline {
   font-size: 15px;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   max-width: 280px;
   margin: 0;
 }
@@ -132,10 +128,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: oklch(1 0 0 / 5%);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-md);
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
   text-decoration: none;
   transition: all var(--duration-fast) var(--ease-out);
 }
@@ -162,7 +158,7 @@
 .footer-column-title {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-inverse);
+  color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0 0 8px;
@@ -179,7 +175,7 @@
 
 .footer-link {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   text-decoration: none;
   transition: color var(--duration-fast);
   display: flex;
@@ -219,7 +215,7 @@
 
 .footer-copyright {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   margin: 0;
 }
 
@@ -230,13 +226,13 @@
 
 .footer-legal-link {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   text-decoration: none;
   transition: color var(--duration-fast);
 }
 
 .footer-legal-link:hover {
-  color: var(--text-inverse);
+  color: var(--text-primary);
 }
 
 /* ═══════════════════════════════════════
@@ -322,4 +318,26 @@
     flex-direction: column;
     gap: 12px;
   }
+}
+
+/* ═══════════════════════════════════════
+   LIGHT MODE ADJUSTMENTS
+   ═══════════════════════════════════════ */
+
+.light .footer {
+  background: oklch(0.97 0.005 250);
+}
+
+.light .footer-cta {
+  background: oklch(1 0 0);
+  border-color: var(--border-medium);
+}
+
+.light .footer-social-link {
+  background: oklch(1 0 0);
+  border-color: var(--border-light);
+}
+
+.light .footer-grid {
+  border-bottom-color: var(--border-medium);
 }

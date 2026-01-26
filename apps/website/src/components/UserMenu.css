@@ -200,7 +200,7 @@
 }
 
 .user-subscription-badge.status-active {
-  background: oklch(0.696 0.17 162.48 / 15%);
+  background: oklch(0.723 0.191 142.5 / 15%);
   color: var(--success);
 }
 
@@ -305,7 +305,7 @@
 }
 
 .license-status-active {
-  background: oklch(0.696 0.17 162.48 / 15%);
+  background: oklch(0.723 0.191 142.5 / 15%);
   color: var(--success);
 }
 

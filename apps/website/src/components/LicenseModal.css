@@ -151,7 +151,7 @@
   width: 64px;
   height: 64px;
   margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -244,7 +244,7 @@
 }
 
 .license-status-active {
-  color: #10b981;
+  color: #22c55e;
 }
 
 .license-status-canceled {

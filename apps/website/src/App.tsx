@@ -1,6 +1,5 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import About from './components/About';
 import Account from './components/Account';
 import Download from './components/Download';
 import Features from './components/Features';
@@ -9,7 +8,6 @@ import Hero from './components/Hero';
 import LicenseModal from './components/LicenseModal';
 import Pricing from './components/Pricing';
 import SkipLink from './components/SkipLink';
-import Testimonials from './components/Testimonials';
 import TopBar from './components/TopBar';
 
 function Loading() {
@@ -72,9 +70,7 @@ export default function App() {
       <TopBar />
       <main id="main-content" role="main" aria-label={t('meta.title')}>
         <Hero />
-        <About />
         <Features />
-        <Testimonials />
         <Pricing />
         <Download />
       </main>
