@@ -45,13 +45,13 @@
 
 ### Website (Website)
 
-- [ ] **WEB-01**: Simplified Hero with prominent product screenshot
-- [ ] **WEB-02**: Concise marketing copy (core value focus)
-- [ ] **WEB-03**: Embedded product demo (video/animation)
-- [ ] **WEB-04**: Bento grid Features layout
+- [x] **WEB-01**: Simplified Hero with prominent product screenshot
+- [x] **WEB-02**: Concise marketing copy (core value focus)
+- [x] **WEB-03**: Embedded product demo (video/animation)
+- [x] **WEB-04**: Bento grid Features layout
 - [ ] **WEB-05**: Scroll-triggered fade-up animations
-- [ ] **WEB-06**: Streamlined Download section
-- [ ] **WEB-07**: Minimal Footer with essential links only
+- [x] **WEB-06**: Streamlined Download section
+- [x] **WEB-07**: Minimal Footer with essential links only
 - [x] **WEB-08**: Website colors unified with app dark theme
 
 ## v2 Requirements
@@ -111,12 +111,12 @@
 | EDIT-01     | Phase 8  | Complete |
 | EDIT-02     | Phase 8  | Complete |
 | WEB-08      | Phase 9  | Complete |
-| WEB-01      | Phase 10 | Pending  |
-| WEB-02      | Phase 10 | Pending  |
-| WEB-03      | Phase 10 | Pending  |
-| WEB-04      | Phase 10 | Pending  |
-| WEB-06      | Phase 10 | Pending  |
-| WEB-07      | Phase 10 | Pending  |
+| WEB-01      | Phase 10 | Complete |
+| WEB-02      | Phase 10 | Complete |
+| WEB-03      | Phase 10 | Complete |
+| WEB-04      | Phase 10 | Complete |
+| WEB-06      | Phase 10 | Complete |
+| WEB-07      | Phase 10 | Complete |
 | WEB-05      | Phase 11 | Pending  |
 
 **Coverage:**
