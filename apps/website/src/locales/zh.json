@@ -6,7 +6,7 @@
   "hero": {
     "title": "SQL Pro",
     "subtitle": "专业的 SQLite 数据库管理工具",
-    "description": "支持 SQLCipher 加密、可视化差异预览、强大的查询工具。跨平台、现代化、高效能。",
+    "description": "开发者喜爱的数据库管理工具。",
     "download": "立即下载",
     "github": "GitHub",
     "scrollHint": "向下滚动"

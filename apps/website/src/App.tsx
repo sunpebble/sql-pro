@@ -6,7 +6,6 @@ import Features from './components/Features';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import LicenseModal from './components/LicenseModal';
-import Pricing from './components/Pricing';
 import SkipLink from './components/SkipLink';
 import TopBar from './components/TopBar';
 
@@ -71,7 +70,6 @@ export default function App() {
       <main id="main-content" role="main" aria-label={t('meta.title')}>
         <Hero />
         <Features />
-        <Pricing />
         <Download />
       </main>
       <Footer />
