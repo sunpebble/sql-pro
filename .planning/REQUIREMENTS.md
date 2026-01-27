@@ -16,11 +16,11 @@
 
 ### Interaction System (Interaction)
 
-- [ ] **INTR-01**: Command palette (Cmd+K) with Linear-style visual treatment
-- [ ] **INTR-02**: Contextual commands based on current view
-- [ ] **INTR-03**: Keyboard shortcuts displayed inline with menu items
-- [ ] **INTR-04**: Standardized transitions (100-200ms + ease-out)
-- [ ] **INTR-05**: Focus rings only on keyboard navigation (:focus-visible)
+- [x] **INTR-01**: Command palette (Cmd+K) with Linear-style visual treatment
+- [x] **INTR-02**: Contextual commands based on current view
+- [x] **INTR-03**: Keyboard shortcuts displayed inline with menu items
+- [x] **INTR-04**: Standardized transitions (100-200ms + ease-out)
+- [x] **INTR-05**: Focus rings only on keyboard navigation (:focus-visible)
 
 ### Visual Polish (Visual)
 
@@ -99,11 +99,11 @@
 | NAVI-03     | Phase 3  | Complete |
 | VISL-02     | Phase 4  | Complete |
 | VISL-03     | Phase 4  | Complete |
-| INTR-01     | Phase 5  | Pending  |
-| INTR-02     | Phase 5  | Pending  |
-| INTR-03     | Phase 5  | Pending  |
-| INTR-04     | Phase 5  | Pending  |
-| INTR-05     | Phase 5  | Pending  |
+| INTR-01     | Phase 5  | Complete |
+| INTR-02     | Phase 5  | Complete |
+| INTR-03     | Phase 5  | Complete |
+| INTR-04     | Phase 5  | Complete |
+| INTR-05     | Phase 5  | Complete |
 | VISL-04     | Phase 6  | Pending  |
 | VISL-05     | Phase 6  | Pending  |
 | VISL-06     | Phase 6  | Pending  |

@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Typography & Text** - Text hierarchy system with primary/secondary/muted levels
 - [x] **Phase 3: Navigation Shell** - Activity Bar, Sidebar, and Tab Bars visual refresh (4/4 verified)
 - [x] **Phase 4: Core Components** - Buttons, inputs, and form controls refinement
-- [ ] **Phase 5: Interaction System** - Command palette, transitions, keyboard focus
+- [x] **Phase 5: Interaction System** - Command palette, transitions, keyboard focus (5/5 verified)
 - [ ] **Phase 6: Dialog & Overlay Polish** - Glassmorphism, hover states, loading states
 - [ ] **Phase 7: Data Views** - Table view contrast and density optimization
 - [ ] **Phase 8: Monaco Editor** - SQL editor theme coordination with design system
@@ -122,10 +122,10 @@ Plans:
 
 Plans:
 
-- [ ] 05-01-PLAN.md — Focus rings audit and transition standardization (INTR-04, INTR-05)
-- [ ] 05-02-PLAN.md — Command palette visual polish with height animation (INTR-01)
-- [ ] 05-03-PLAN.md — Inline keyboard shortcuts in dropdown menus (INTR-03)
-- [ ] 05-04-PLAN.md — Contextual commands based on current view (INTR-02)
+- [x] 05-01-PLAN.md — Focus rings audit and transition standardization (INTR-04, INTR-05)
+- [x] 05-02-PLAN.md — Command palette visual polish with height animation (INTR-01)
+- [x] 05-03-PLAN.md — Inline keyboard shortcuts in dropdown menus (INTR-03)
+- [x] 05-04-PLAN.md — Contextual commands based on current view (INTR-02)
 
 ### Phase 6: Dialog & Overlay Polish
 
@@ -237,7 +237,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 2. Typography & Text       | 1/1            | Complete    | 2026-01-26 |
 | 3. Navigation Shell        | 4/4            | Complete    | 2026-01-27 |
 | 4. Core Components         | 4/4            | Complete    | 2026-01-27 |
-| 5. Interaction System      | 0/TBD          | Not started | -          |
+| 5. Interaction System      | 4/4            | Complete    | 2026-01-27 |
 | 6. Dialog & Overlay Polish | 0/TBD          | Not started | -          |
 | 7. Data Views              | 0/TBD          | Not started | -          |
 | 8. Monaco Editor           | 0/TBD          | Not started | -          |
