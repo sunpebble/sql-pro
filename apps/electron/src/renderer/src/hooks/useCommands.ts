@@ -833,7 +833,7 @@ export function useCommands() {
           connectionStoreRef.current!.connectionTabOrder.length <= 1,
       },
 
-      // Table commands
+      // Table commands (data view specific)
       {
         id: 'action.refresh-table',
         label: t('commands.refreshTable', { defaultValue: 'Refresh Table' }),
@@ -841,6 +841,7 @@ export function useCommands() {
         icon: RefreshCw,
         category: 'table',
         keywords: ['refresh', 'table', 'data', 'reload', 'invalidate'],
+        visibleInViews: ['data'],
         action: () => {
           const { activeConnectionId } = connectionStoreRef.current!;
           if (activeConnectionId) {
@@ -855,6 +856,7 @@ export function useCommands() {
         icon: Save,
         category: 'table',
         keywords: ['save', 'changes', 'commit', 'apply', 'database'],
+        visibleInViews: ['data'],
         action: () => {
           const saveButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="save-changes"]'
@@ -872,6 +874,7 @@ export function useCommands() {
         icon: Undo2,
         category: 'table',
         keywords: ['discard', 'changes', 'cancel', 'revert', 'database'],
+        visibleInViews: ['data'],
         action: () => {
           const discardButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="discard-changes"]'
@@ -887,6 +890,7 @@ export function useCommands() {
         icon: Plus,
         category: 'table',
         keywords: ['add', 'row', 'insert', 'new', 'table'],
+        visibleInViews: ['data'],
         action: () => {
           const addRowButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="add-row"]'
@@ -901,6 +905,7 @@ export function useCommands() {
         icon: Trash2,
         category: 'table',
         keywords: ['delete', 'row', 'remove', 'table'],
+        visibleInViews: ['data'],
         action: () => {
           const deleteRowButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="delete-row"]'
@@ -915,6 +920,7 @@ export function useCommands() {
         icon: FileDown,
         category: 'table',
         keywords: ['export', 'data', 'download', 'csv', 'table'],
+        visibleInViews: ['data'],
         action: () => {
           const exportButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="export-data"]'
@@ -923,7 +929,7 @@ export function useCommands() {
         },
       },
 
-      // View commands
+      // View commands (data view specific)
       {
         id: 'view.toggle-schema-details',
         label: t('commands.toggleSchemaDetails', {
@@ -933,6 +939,7 @@ export function useCommands() {
         icon: Monitor,
         category: 'view',
         keywords: ['toggle', 'schema', 'details', 'columns', 'info'],
+        visibleInViews: ['data'],
         action: () => {
           settingsStoreRef.current!.toggleSchemaDetails();
         },
@@ -967,7 +974,7 @@ export function useCommands() {
         },
       },
 
-      // History commands
+      // History commands (query view specific)
       {
         id: 'history.clear',
         label: t('commands.clearHistory', { defaultValue: 'Clear History' }),
@@ -975,6 +982,7 @@ export function useCommands() {
         icon: Trash2,
         category: 'history',
         keywords: ['clear', 'history', 'delete', 'remove', 'sql', 'query'],
+        visibleInViews: ['query'],
         action: () => {
           const clearHistoryButton = document.querySelector<HTMLButtonElement>(
             'button[data-action="clear-history"]'

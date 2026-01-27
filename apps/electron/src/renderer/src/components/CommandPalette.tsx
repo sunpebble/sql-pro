@@ -17,6 +17,7 @@ import {
   useCommandPaletteStore,
 } from '@/stores/command-palette-store';
 import { useUIFont } from '@/stores/settings-store';
+import { useActiveView } from '@/stores/view-context-store';
 
 const categoryOrder = ['actions', 'navigation', 'view', 'settings', 'help'];
 
@@ -52,10 +53,13 @@ export function CommandPalette() {
   // Get UI font settings
   const uiFont = useUIFont();
 
+  // Get active view for contextual command filtering
+  const activeView = useActiveView();
+
   // Memoize filtered commands to prevent recalculation on every render
   const filteredCommands = useMemo(
-    () => getFilteredCommands(commands, search),
-    [commands, search]
+    () => getFilteredCommands(commands, search, activeView),
+    [commands, search, activeView]
   );
 
   // Memoize grouped commands

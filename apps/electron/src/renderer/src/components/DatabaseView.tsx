@@ -10,6 +10,7 @@ import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
 import { useDialogStore } from '@/stores/dialog-store';
 import { useSettingsStore } from '@/stores/settings-store';
+import { setActiveView as setGlobalActiveView } from '@/stores/view-context-store';
 import { ActivityBar } from './ActivityBar';
 import { CompareView } from './CompareView';
 import { DashboardView } from './DashboardView';
@@ -65,6 +66,12 @@ export function DatabaseView() {
       setDataTabsActiveConnection(activeConnectionId);
     }
   }, [activeConnectionId, setDataTabsActiveConnection]);
+
+  // Sync activeView to global view context store for command palette filtering
+  useEffect(() => {
+    setGlobalActiveView(activeView);
+    return () => setGlobalActiveView(null);
+  }, [activeView]);
 
   const prevActiveDataTabIdRef = useRef<string | null>(null);
   useEffect(() => {
