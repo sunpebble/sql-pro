@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Visual and interaction experience at Linear/Raycast level of polish
-**Current focus:** Phase 8 - Monaco Editor (complete)
+**Current focus:** Phase 9 - Website Foundation (in progress)
 
 ## Current Position
 
-Phase: 8 of 11 (Monaco Editor)
-Plan: 1 of 1 in current phase (complete)
-Status: Phase 8 complete
-Last activity: 2026-01-27 - Completed 08-01-PLAN.md (Monaco Theme Coordination)
+Phase: 9 of 11 (Website Foundation)
+Plan: 1 of 2 in current phase (complete)
+Status: In progress
+Last activity: 2026-01-27 - Completed 09-01-PLAN.md (Core Token System Migration)
 
-Progress: [████████░░] ~73%
+Progress: [████████░░] ~77%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 22
+- Total plans completed: 23
 - Average duration: 5 min
-- Total execution time: 1.9 hours
+- Total execution time: 1.95 hours
 
 **By Phase:**
 
@@ -36,10 +36,11 @@ Progress: [████████░░] ~73%
 | 06    | 3     | 6 min  | 2 min    |
 | 07    | 1     | 4 min  | 4 min    |
 | 08    | 1     | 5 min  | 5 min    |
+| 09    | 1     | 3 min  | 3 min    |
 
 **Recent Trend:**
 
-- Last 5 plans: 06-02 (2 min), 06-03 (2 min), 07-01 (4 min), 08-01 (5 min)
+- Last 5 plans: 06-03 (2 min), 07-01 (4 min), 08-01 (5 min), 09-01 (3 min)
 - Trend: Consistent fast execution for styling and interaction tasks
 
 _Updated after each plan completion_
@@ -72,7 +73,20 @@ Recent decisions affecting current work:
 - Implemented: Card hover uses ring color change only (no scale/shadow lift)
 - Implemented: Row hover with group/group-hover pattern for pinned columns
 - Implemented: Monaco themes coordinated with Slate/Orange design system
+- Implemented: Website primitive palette (Slate/Orange) matching app tokens
 - Pending: Website de-marketized (minimal, product-focused)
+
+### Phase 9 Progress
+
+Plan 09-01 complete:
+
+- Migrated website index.css to app's primitive palette tokens
+- Added Slate scale (--slate-50 through --slate-950)
+- Added Orange scale (--orange-300 through --orange-700)
+- Semantic tokens now reference primitives via var()
+- Added shadcn/ui-compatible tokens (--card, --popover, --ring, etc.)
+- Added @theme inline block with color/radius mappings for Tailwind
+- Pattern: Primitive-then-semantic token architecture
 
 ### Phase 8 Progress
 
@@ -256,8 +270,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-27T10:04:49Z
-Stopped at: Completed 07-01-PLAN.md (Row Hover States)
+Last session: 2026-01-27T12:38:44Z
+Stopped at: Completed 09-01-PLAN.md (Core Token System Migration)
 Resume file: None
 
 ---
