@@ -222,7 +222,7 @@ Plans:
 
 ### Phase 11: Website Polish
 
-**Goal**: Add refined animations and ensure cohesive user experience
+**Goal**: Add scroll-triggered animations for polished, premium user experience
 **Depends on**: Phase 10
 **Requirements**: WEB-05
 **Success Criteria** (what must be TRUE):
@@ -230,11 +230,12 @@ Plans:
 1. Sections animate in with fade-up effect on scroll
 2. Animations respect reduced-motion preferences
 3. Overall website feels polished and premium
-   **Plans**: TBD
+
+**Plans**: 1 plan in 1 wave
 
 Plans:
 
-- [ ] 11-01: TBD
+- [ ] 11-01-PLAN.md — Scroll-triggered fade-up animations (Download section, Features header)
 
 ## Progress
 
@@ -253,7 +254,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 8. Monaco Editor           | 1/1            | Complete    | 2026-01-27 |
 | 9. Website Foundation      | 2/2            | Complete    | 2026-01-27 |
 | 10. Website Content        | 3/3            | Complete    | 2026-01-27 |
-| 11. Website Polish         | 0/TBD          | Not started | -          |
+| 11. Website Polish         | 0/1            | Not started | -          |
 
 ---
 
