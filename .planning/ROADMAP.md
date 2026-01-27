@@ -190,11 +190,13 @@ Plans:
 1. Website uses the same dark color palette as the app
 2. Typography and text hierarchy match app styling
 3. Brand feels consistent when switching between app and website
-   **Plans**: TBD
+
+**Plans**: 2 plans in 2 waves
 
 Plans:
 
-- [ ] 09-01: TBD
+- [ ] 09-01-PLAN.md — Core token system migration (primitive palette + semantic tokens)
+- [ ] 09-02-PLAN.md — Component CSS token updates (15 component files)
 
 ### Phase 10: Website Content
 
@@ -246,7 +248,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. Dialog & Overlay Polish | 3/3            | Complete    | 2026-01-27 |
 | 7. Data Views              | 1/1            | Complete    | 2026-01-27 |
 | 8. Monaco Editor           | 1/1            | Complete    | 2026-01-27 |
-| 9. Website Foundation      | 0/TBD          | Not started | -          |
+| 9. Website Foundation      | 0/2            | Planned     | -          |
 | 10. Website Content        | 0/TBD          | Not started | -          |
 | 11. Website Polish         | 0/TBD          | Not started | -          |
 
