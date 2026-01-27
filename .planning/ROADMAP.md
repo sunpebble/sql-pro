@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Core Components** - Buttons, inputs, and form controls refinement
 - [x] **Phase 5: Interaction System** - Command palette, transitions, keyboard focus (5/5 verified)
 - [x] **Phase 6: Dialog & Overlay Polish** - Glassmorphism, hover states, loading states (3/3 verified)
-- [ ] **Phase 7: Data Views** - Table view contrast and density optimization
+- [x] **Phase 7: Data Views** - Table view contrast and density optimization (1/1 verified)
 - [ ] **Phase 8: Monaco Editor** - SQL editor theme coordination with design system
 - [ ] **Phase 9: Website Foundation** - Color system and typography alignment with app
 - [ ] **Phase 10: Website Content** - Hero, features, pricing, download sections
@@ -161,7 +161,7 @@ Plans:
 
 Plans:
 
-- [ ] 07-01-PLAN.md — Row hover states and pinned column hover inheritance
+- [x] 07-01-PLAN.md — Row hover states and pinned column hover inheritance
 
 ### Phase 8: Monaco Editor
 
@@ -243,7 +243,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Core Components         | 4/4            | Complete    | 2026-01-27 |
 | 5. Interaction System      | 4/4            | Complete    | 2026-01-27 |
 | 6. Dialog & Overlay Polish | 3/3            | Complete    | 2026-01-27 |
-| 7. Data Views              | 0/1            | Not started | -          |
+| 7. Data Views              | 1/1            | Complete    | 2026-01-27 |
 | 8. Monaco Editor           | 0/TBD          | Not started | -          |
 | 9. Website Foundation      | 0/TBD          | Not started | -          |
 | 10. Website Content        | 0/TBD          | Not started | -          |

@@ -30,7 +30,7 @@
 - [x] **VISL-04**: Glassmorphism on dialogs (backdrop-filter: blur)
 - [x] **VISL-05**: Subtle hover states (background change, no lift)
 - [x] **VISL-06**: Minimal loading/skeleton states
-- [ ] **VISL-07**: High-contrast table view for dark mode
+- [x] **VISL-07**: High-contrast table view for dark mode
 
 ### App Navigation (Navigation)
 
@@ -107,7 +107,7 @@
 | VISL-04     | Phase 6  | Complete |
 | VISL-05     | Phase 6  | Complete |
 | VISL-06     | Phase 6  | Complete |
-| VISL-07     | Phase 7  | Pending  |
+| VISL-07     | Phase 7  | Complete |
 | EDIT-01     | Phase 8  | Pending  |
 | EDIT-02     | Phase 8  | Pending  |
 | WEB-08      | Phase 9  | Pending  |
