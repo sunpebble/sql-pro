@@ -69,22 +69,6 @@ export default function Download() {
     >
       <div className="container">
         <div className="download-content">
-          {/* Label */}
-          <div className="download-label">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download
-          </div>
-
           {/* Title */}
           <h2 id="download-title" className="download-title">
             {t('download.title')}{' '}
@@ -92,11 +76,10 @@ export default function Download() {
               {t('download.titleHighlight')}
             </span>
           </h2>
-          <p className="download-subtitle">{t('download.subtitle')}</p>
 
           {/* Main Download Button */}
           <a
-            href="https://github.com/anthropics/sql-pro/releases/latest"
+            href="https://github.com/kunish-homelab/sql-pro/releases/latest"
             target="_blank"
             rel="noopener noreferrer"
             className="download-main"
@@ -120,7 +103,7 @@ export default function Download() {
             {otherPlatforms.map((p) => (
               <a
                 key={p}
-                href="https://github.com/anthropics/sql-pro/releases/latest"
+                href="https://github.com/kunish-homelab/sql-pro/releases/latest"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="download-link"
@@ -131,58 +114,6 @@ export default function Download() {
               </a>
             ))}
           </nav>
-
-          {/* Note */}
-          <p className="download-note">
-            {t('download.buildGuide')}{' '}
-            <a
-              href="https://github.com/kunish-homelab/sql-pro#build-from-source"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t('download.buildGuideLink')}
-            </a>
-          </p>
-
-          {/* Features */}
-          <div className="download-features">
-            <div className="download-feature">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-              <span>Secure & Private</span>
-            </div>
-            <div className="download-feature">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              <span>Free Updates</span>
-            </div>
-            <div className="download-feature">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <span>Open Source</span>
-            </div>
-          </div>
         </div>
       </div>
     </section>

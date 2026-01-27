@@ -1,6 +1,6 @@
 /* =========================================
-   Download Section - Developer Professional
-   Clean, professional download CTA
+   Download Section - Streamlined CTA
+   Clean, focused single-action download
    ========================================= */
 
 .download {
@@ -40,9 +40,9 @@
 .download-content {
   position: relative;
   text-align: center;
-  max-width: 720px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 56px 48px;
+  padding: 48px 40px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--border-radius-xl);
@@ -50,38 +50,17 @@
 }
 
 /* ═══════════════════════════════════════
-   HEADER
+   TITLE
    ═══════════════════════════════════════ */
-
-.download-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: var(--primary-50);
-  border: 1px solid oklch(0.723 0.191 142.5 / 20%);
-  color: var(--primary);
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: var(--border-radius-full);
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.download-label svg {
-  width: 16px;
-  height: 16px;
-}
 
 .download-title {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--foreground);
-  margin: 0 0 12px;
+  margin: 0 0 28px;
 }
 
 .download-title-gradient {
@@ -93,14 +72,6 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.download-subtitle {
-  font-size: 1rem;
-  color: var(--secondary-foreground);
-  max-width: 400px;
-  margin: 0 auto 32px;
-  line-height: 1.6;
 }
 
 /* ═══════════════════════════════════════
@@ -206,64 +177,12 @@
 }
 
 /* ═══════════════════════════════════════
-   NOTE
-   ═══════════════════════════════════════ */
-
-.download-note {
-  margin-top: 32px;
-  font-size: 13px;
-  color: var(--muted-foreground);
-}
-
-.download-note a {
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color var(--duration-fast);
-}
-
-.download-note a:hover {
-  color: var(--primary-dark);
-  text-decoration: underline;
-}
-
-/* ═══════════════════════════════════════
-   FEATURES ROW
-   ═══════════════════════════════════════ */
-
-.download-features {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 40px;
-  padding-top: 28px;
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-
-.download-feature {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--secondary-foreground);
-  font-weight: 500;
-}
-
-.download-feature svg {
-  width: 18px;
-  height: 18px;
-  color: var(--primary);
-  flex-shrink: 0;
-}
-
-/* ═══════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════ */
 
 @media (max-width: 768px) {
   .download-content {
-    padding: 40px 24px;
+    padding: 36px 24px;
     margin: 0 16px;
   }
 
@@ -293,21 +212,11 @@
     min-width: 140px;
     justify-content: center;
   }
-
-  .download-features {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
 }
 
 @media (max-width: 480px) {
   .download-content {
-    padding: 32px 20px;
-  }
-
-  .download-features {
-    gap: 10px;
+    padding: 28px 20px;
   }
 }
 
@@ -351,8 +260,4 @@
 
 .light .download-link:hover {
   background: var(--primary-50);
-}
-
-.light .download-features {
-  border-top-color: var(--border-medium);
 }
