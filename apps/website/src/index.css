@@ -36,62 +36,91 @@
 
 :root {
   /* ═══════════════════════════════════════
-     DEVELOPER PROFESSIONAL PALETTE
-     Deep, dark, trustworthy
-     Slate base with orange accents
+     PRIMITIVE PALETTE TOKENS
+     Raw OKLCH values from Tailwind CSS v4
+     Matches app globals.css
      ═══════════════════════════════════════ */
 
+  /* Slate Neutral Scale */
+  --slate-50: oklch(0.984 0.003 247.858);
+  --slate-100: oklch(0.968 0.007 247.896);
+  --slate-200: oklch(0.929 0.013 255.508);
+  --slate-300: oklch(0.869 0.022 252.894);
+  --slate-400: oklch(0.704 0.04 256.788);
+  --slate-500: oklch(0.554 0.046 257.417);
+  --slate-600: oklch(0.446 0.043 257.281);
+  --slate-700: oklch(0.372 0.044 257.287);
+  --slate-800: oklch(0.279 0.041 260.031);
+  --slate-900: oklch(0.208 0.042 265.755);
+  --slate-950: oklch(0.129 0.042 264.695);
+
+  /* Orange Accent Scale */
+  --orange-300: oklch(0.837 0.128 66.29);
+  --orange-400: oklch(0.75 0.183 55.934);
+  --orange-500: oklch(0.705 0.213 47.604);
+  --orange-600: oklch(0.646 0.222 41.116);
+  --orange-700: oklch(0.553 0.195 38.402);
+
+  /* ═══════════════════════════════════════
+     SEMANTIC UI COLORS - Dark Mode (Default)
+     ═══════════════════════════════════════ */
+  color-scheme: dark;
+
   /* Primary - Orange (dark mode: Orange 400) */
-  --primary: oklch(0.75 0.183 55.934); /* Orange 400 */
-  --primary-light: oklch(0.792 0.162 56.518); /* Orange 300 */
-  --primary-dark: oklch(0.646 0.222 41.116); /* Orange 600 */
+  --primary: var(--orange-400);
+  --primary-foreground: oklch(0.266 0.079 36.259);
+  --primary-light: var(--orange-300);
+  --primary-dark: var(--orange-500);
   --primary-50: oklch(0.75 0.183 55.934 / 10%);
   --primary-100: oklch(0.75 0.183 55.934 / 20%);
   --primary-glow: oklch(0.75 0.183 55.934 / 25%);
 
-  /* Secondary - Deep Slate */
-  --secondary: oklch(0.21 0.02 255); /* #1E293B - Slate 800 */
-  --secondary-light: oklch(0.28 0.02 255); /* #334155 - Slate 700 */
-  --secondary-muted: oklch(0.35 0.02 255); /* #475569 - Slate 600 */
-
-  /* Backgrounds - Dark */
-  --bg-dark: oklch(0.13 0.02 255); /* #0F172A - Slate 900 */
-  --bg-darker: oklch(0.08 0.015 255); /* Near black */
-  --bg-card: oklch(0.18 0.02 255); /* Card background */
-  --bg-elevated: oklch(0.23 0.02 255); /* Elevated surfaces */
-
-  /* Light mode backgrounds */
-  --bg-white: oklch(0.985 0.002 250);
-  --bg-light: oklch(0.97 0.003 250);
-  --bg-subtle: oklch(0.18 0.02 255); /* Dark mode default */
-
+  /* Core semantic tokens (shadcn/ui compatible) */
+  --background: var(--slate-900);
+  --foreground: var(--slate-100);
+  --card: var(--slate-800);
+  --card-foreground: var(--slate-100);
+  --popover: var(--slate-800);
+  --popover-foreground: var(--slate-100);
+  --secondary: var(--slate-700);
   /* === TEXT HIERARCHY (Dark Mode) ===
-   * Primary: Bright, main content - Slate 100
-   * Secondary: Dimmed, descriptions - Slate 300
-   * Muted: Subtle, metadata - Slate 400
+   * Primary (--foreground): Bright, main content - Slate-100
+   * Secondary (--secondary-foreground): Dimmed, descriptions - Slate-300
+   * Muted (--muted-foreground): Subtle, metadata - Slate-400
    * All levels meet WCAG AA 4.5:1 contrast ratio
    */
-  --text-primary: oklch(
-    0.968 0.007 247.896
-  ); /* Slate 100, L=0.968, ~15:1 on Slate 900 */
-  --text-secondary: oklch(
-    0.869 0.022 252.894
-  ); /* Slate 300, L=0.869, ~10:1 on Slate 900 */
-  --text-muted: oklch(
-    0.704 0.04 256.788
-  ); /* Slate 400, L=0.704, ~5:1 on Slate 900 */
-  --text-inverse: oklch(0.208 0.042 265.755); /* Slate 900 */
+  --secondary-foreground: var(--slate-300);
+  --muted: var(--slate-700);
+  --muted-foreground: var(--slate-400);
+  --accent: oklch(0.75 0.183 55.934 / 15%);
+  --accent-foreground: var(--orange-300);
+  --ring: var(--orange-400);
+  --input: oklch(1 0 0 / 10%);
+  --border: oklch(1 0 0 / 8%);
+  --destructive: oklch(0.704 0.191 22.216);
 
-  /* App-compatible aliases (for shared component compatibility) */
-  --foreground: var(--text-primary);
-  --secondary-foreground: var(--text-secondary);
-  --muted-foreground: var(--text-muted);
+  /* Backward-compatible aliases (legacy tokens) */
+  --bg-dark: var(--background);
+  --bg-darker: var(--slate-950);
+  --bg-card: var(--card);
+  --bg-elevated: oklch(0.23 0.02 255); /* Elevated surfaces */
+  --bg-white: oklch(0.985 0.002 250);
+  --bg-light: oklch(0.97 0.003 250);
+  --bg-subtle: var(--slate-800);
+  --text-primary: var(--foreground);
+  --text-secondary: var(--secondary-foreground);
+  --text-muted: var(--muted-foreground);
+  --text-inverse: var(--slate-900);
 
-  /* Borders */
+  /* Additional borders */
   --border-subtle: oklch(1 0 0 / 6%);
   --border-light: oklch(1 0 0 / 10%);
   --border-medium: oklch(1 0 0 / 15%);
   --border-strong: oklch(1 0 0 / 25%);
+
+  /* Secondary colors (legacy, for existing components) */
+  --secondary-light: var(--slate-700);
+  --secondary-muted: var(--slate-600);
 
   /* Accent Colors */
   --accent-blue: oklch(0.65 0.2 255);
@@ -973,39 +1002,48 @@ select:focus-visible {
    ═══════════════════════════════════════ */
 
 .light {
+  color-scheme: light;
+
   /* Primary - Orange (light mode: Orange 600) */
-  --primary: oklch(0.646 0.222 41.116); /* Orange 600 */
-  --primary-light: oklch(0.702 0.209 41.144); /* Orange 500 */
-  --primary-dark: oklch(0.553 0.195 38.402); /* Orange 700 */
+  --primary: var(--orange-600);
+  --primary-foreground: oklch(0.98 0.016 73.684);
+  --primary-light: var(--orange-500);
+  --primary-dark: var(--orange-700);
   --primary-50: oklch(0.646 0.222 41.116 / 8%);
   --primary-100: oklch(0.646 0.222 41.116 / 15%);
   --primary-glow: oklch(0.646 0.222 41.116 / 20%);
 
-  /* Backgrounds - Light */
-  --bg-dark: oklch(0.985 0.002 250);
+  /* Core semantic tokens (shadcn/ui compatible) */
+  --background: var(--slate-50);
+  --foreground: var(--slate-900);
+  --card: white;
+  --card-foreground: var(--slate-900);
+  --popover: white;
+  --popover-foreground: var(--slate-900);
+  --secondary: var(--slate-100);
+  /* === TEXT HIERARCHY (Light Mode) === */
+  --secondary-foreground: var(--slate-600);
+  --muted: var(--slate-100);
+  --muted-foreground: var(--slate-500);
+  --accent: oklch(0.646 0.222 41.116 / 8%);
+  --accent-foreground: var(--orange-700);
+  --ring: var(--orange-600);
+  --input: oklch(0 0 0 / 8%);
+  --border: oklch(0 0 0 / 8%);
+  --destructive: oklch(0.577 0.245 27.33);
+
+  /* Backward-compatible aliases (legacy tokens) */
+  --bg-dark: var(--background);
   --bg-darker: oklch(0.97 0.003 250);
-  --bg-card: oklch(1 0 0);
+  --bg-card: var(--card);
   --bg-elevated: oklch(0.985 0.002 250);
   --bg-subtle: oklch(0.95 0.005 250);
+  --text-primary: var(--foreground);
+  --text-secondary: var(--secondary-foreground);
+  --text-muted: var(--muted-foreground);
+  --text-inverse: var(--slate-50);
 
-  /* === TEXT HIERARCHY (Light Mode) === */
-  --text-primary: oklch(
-    0.208 0.042 265.755
-  ); /* Slate 900, L=0.208, ~15:1 on Slate 50 */
-  --text-secondary: oklch(
-    0.446 0.043 257.281
-  ); /* Slate 600, L=0.446, ~7:1 on Slate 50 */
-  --text-muted: oklch(
-    0.554 0.046 257.417
-  ); /* Slate 500, L=0.554, ~5:1 on Slate 50 */
-  --text-inverse: oklch(0.984 0.003 247.858); /* Slate 50 */
-
-  /* App-compatible aliases */
-  --foreground: var(--text-primary);
-  --secondary-foreground: var(--text-secondary);
-  --muted-foreground: var(--text-muted);
-
-  /* Borders */
+  /* Additional borders */
   --border-subtle: oklch(0 0 0 / 5%);
   --border-light: oklch(0 0 0 / 8%);
   --border-medium: oklch(0 0 0 / 12%);
