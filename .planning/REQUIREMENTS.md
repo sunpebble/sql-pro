@@ -40,8 +40,8 @@
 
 ### Monaco Editor (Editor)
 
-- [ ] **EDIT-01**: SQL editor theme coordinated with design system
-- [ ] **EDIT-02**: Editor cursor and selection with orange accent
+- [x] **EDIT-01**: SQL editor theme coordinated with design system
+- [x] **EDIT-02**: Editor cursor and selection with orange accent
 
 ### Website (Website)
 
@@ -108,8 +108,8 @@
 | VISL-05     | Phase 6  | Complete |
 | VISL-06     | Phase 6  | Complete |
 | VISL-07     | Phase 7  | Complete |
-| EDIT-01     | Phase 8  | Pending  |
-| EDIT-02     | Phase 8  | Pending  |
+| EDIT-01     | Phase 8  | Complete |
+| EDIT-02     | Phase 8  | Complete |
 | WEB-08      | Phase 9  | Pending  |
 | WEB-01      | Phase 10 | Pending  |
 | WEB-02      | Phase 10 | Pending  |

@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Visual and interaction experience at Linear/Raycast level of polish
-**Current focus:** Phase 7 - Data Views (complete)
+**Current focus:** Phase 8 - Monaco Editor (complete)
 
 ## Current Position
 
-Phase: 7 of 11 (Data Views)
+Phase: 8 of 11 (Monaco Editor)
 Plan: 1 of 1 in current phase (complete)
-Status: Phase 7 complete
-Last activity: 2026-01-27 - Completed 07-01-PLAN.md (Row Hover States)
+Status: Phase 8 complete
+Last activity: 2026-01-27 - Completed 08-01-PLAN.md (Monaco Theme Coordination)
 
-Progress: [███████░░░] ~64%
+Progress: [████████░░] ~73%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 21
+- Total plans completed: 22
 - Average duration: 5 min
-- Total execution time: 1.8 hours
+- Total execution time: 1.9 hours
 
 **By Phase:**
 
@@ -35,10 +35,11 @@ Progress: [███████░░░] ~64%
 | 05    | 4     | 20 min | 5 min    |
 | 06    | 3     | 6 min  | 2 min    |
 | 07    | 1     | 4 min  | 4 min    |
+| 08    | 1     | 5 min  | 5 min    |
 
 **Recent Trend:**
 
-- Last 5 plans: 05-04 (8 min), 06-01 (2 min), 06-02 (2 min), 06-03 (2 min), 07-01 (4 min)
+- Last 5 plans: 06-02 (2 min), 06-03 (2 min), 07-01 (4 min), 08-01 (5 min)
 - Trend: Consistent fast execution for styling and interaction tasks
 
 _Updated after each plan completion_
@@ -70,7 +71,19 @@ Recent decisions affecting current work:
 - Implemented: visibleInViews for command visibility scoping
 - Implemented: Card hover uses ring color change only (no scale/shadow lift)
 - Implemented: Row hover with group/group-hover pattern for pinned columns
+- Implemented: Monaco themes coordinated with Slate/Orange design system
 - Pending: Website de-marketized (minimal, product-focused)
+
+### Phase 8 Progress
+
+Plan 08-01 complete:
+
+- Updated Monaco themes with design system colors
+- Dark theme: Slate-900 background, Orange-400 cursor/selection/highlights
+- Light theme: Warm white background, Orange-600 cursor/accents
+- Added complete token rules for all SQL syntax types
+- Added complete UI colors for suggest widget, bracket matching, scrollbar
+- Pattern: Pre-computed hex colors (Monaco doesn't support CSS variables)
 
 ### Phase 7 Progress
 
