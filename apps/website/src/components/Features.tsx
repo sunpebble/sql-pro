@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useInView } from '../hooks/useInView';
 import './Features.css';
 
 type FeatureSize = 'large' | 'wide' | 'tall' | 'default';
@@ -106,6 +107,7 @@ const icons: Record<string, ReactNode> = {
 
 export default function Features() {
   const { t } = useTranslation();
+  const { ref: headerRef, isInView: headerVisible } = useInView<HTMLElement>();
   const [visibleCards, setVisibleCards] = useState<Set<number>>(
     () => new Set()
   );
@@ -138,7 +140,10 @@ export default function Features() {
       aria-labelledby="features-title"
     >
       <div className="container">
-        <header className="features-header">
+        <header
+          ref={headerRef}
+          className={`features-header${headerVisible ? 'visible' : ''}`}
+        >
           <span className="features-label">
             <svg
               viewBox="0 0 24 24"

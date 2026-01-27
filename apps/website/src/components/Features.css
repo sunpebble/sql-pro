@@ -16,6 +16,16 @@
 .features-header {
   text-align: center;
   margin-bottom: 64px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+
+.features-header.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .features-label {
@@ -290,6 +300,12 @@
    ═══════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
+  .features-header {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   .bento-item {
     opacity: 1;
     transform: none;
