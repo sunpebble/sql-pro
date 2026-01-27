@@ -62,14 +62,17 @@ Recent decisions affecting current work:
 - Implemented: Flat secondary form components (no shadow-xs on toggle, combobox, input-otp, input-group, button-group)
 - Implemented: Command palette height animation (--cmdk-list-height CSS variable)
 - Implemented: Command item transitions (transition-colors duration-100)
+- Implemented: 100ms ease-out transitions for interactive elements (buttons, menu items)
 - Pending: Website de-marketized (minimal, product-focused)
 
 ### Phase 5 Progress
 
 Plan 05-01 complete:
 
-- Added transition utility classes to globals.css
-- Pattern: Smooth transitions for polished interactions
+- Added transition utility classes to globals.css (.transition-fast, .transition-normal, .transition-slow, .transition-colors-fast)
+- Standardized 100ms ease-out transitions on Button, DropdownMenu, Command components
+- Verified focus-visible rules correctly hide focus rings on mouse clicks
+- Pattern: 100ms ease-out for interactive element micro-interactions
 
 Plan 05-02 complete:
 
