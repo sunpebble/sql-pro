@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { ViewType } from './view-context-store';
 import { create } from 'zustand';
 
 export interface Command {
@@ -20,6 +21,7 @@ export interface Command {
   keywords?: string[]; // Additional search terms
   action: () => void;
   disabled?: () => boolean;
+  visibleInViews?: ViewType[]; // Only show when in these views (show always if undefined)
 }
 
 interface CommandPaletteState {
@@ -129,12 +131,20 @@ export const useCommandPaletteStore = create<CommandPaletteState>()(
 // Category order for consistent sorting (must match UI)
 const CATEGORY_ORDER = ['actions', 'navigation', 'view', 'settings', 'help'];
 
-// Helper function to filter commands based on search
+// Helper function to filter commands based on search and active view
 export function getFilteredCommands(
   commands: Command[],
-  search: string
+  search: string,
+  activeView?: ViewType | null
 ): Command[] {
-  const filtered = commands.filter((c) => !c.disabled?.());
+  let filtered = commands.filter((c) => !c.disabled?.());
+
+  // Filter by active view if specified
+  if (activeView) {
+    filtered = filtered.filter(
+      (c) => !c.visibleInViews || c.visibleInViews.includes(activeView)
+    );
+  }
 
   let matched: Command[];
 

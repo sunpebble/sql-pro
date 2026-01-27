@@ -9,6 +9,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Database, Monitor, Moon, Settings, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { ShortcutKbd } from '@/components/ui/kbd';
 import { TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
@@ -148,7 +149,10 @@ export function Titlebar() {
             </Button>
           </TooltipTrigger>
           <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
-            {t('theme.settings', { defaultValue: 'Settings' })}
+            <span className="tooltip-kbd flex items-center gap-2">
+              {t('theme.settings', { defaultValue: 'Settings' })}
+              <ShortcutKbd action="settings.open" />
+            </span>
           </TooltipContent>
         </Tooltip>
       </div>
