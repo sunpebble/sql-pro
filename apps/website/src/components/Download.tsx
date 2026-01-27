@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useInView } from '../hooks/useInView';
 import './Download.css';
 
 type Platform = 'mac' | 'windows' | 'linux' | 'unknown';
@@ -48,6 +49,7 @@ const platformIcons: Record<Platform, ReactNode> = {
 export default function Download() {
   const { t } = useTranslation();
   const [platform, setPlatform] = useState<Platform>('unknown');
+  const { ref: contentRef, isInView } = useInView<HTMLDivElement>();
 
   useEffect(() => {
     /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Detect platform on mount */
@@ -68,7 +70,10 @@ export default function Download() {
       aria-labelledby="download-title"
     >
       <div className="container">
-        <div className="download-content">
+        <div
+          ref={contentRef}
+          className={`download-content${isInView ? 'visible' : ''}`}
+        >
           {/* Title */}
           <h2 id="download-title" className="download-title">
             {t('download.title')}{' '}
