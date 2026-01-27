@@ -257,7 +257,8 @@ export const TableCell = memo(
     }, [isPinned, pinnedOffset]);
 
     const pinnedClassName = cn(
-      isPinned && 'bg-background',
+      isPinned &&
+        'bg-background group-hover:bg-muted/50 transition-colors duration-100',
       isLastPinned &&
         'after:bg-border after:absolute after:top-0 after:right-0 after:bottom-0 after:w-px after:shadow-[2px_0_4px_rgba(0,0,0,0.1)]'
     );

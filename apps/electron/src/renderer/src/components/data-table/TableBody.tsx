@@ -260,7 +260,7 @@ const DataRow = memo(
           {/* Selection cell */}
           {enableSelection && (
             <td
-              className="bg-background sticky left-0 z-10 cursor-default border-r px-2 select-none"
+              className="bg-background group-hover:bg-muted/50 sticky left-0 z-10 cursor-default border-r px-2 transition-colors duration-100 select-none"
               onClick={stopPropagation}
               onMouseDown={handleDragStart}
             >
