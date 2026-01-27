@@ -225,7 +225,7 @@ body {
   font-family: var(--font-body);
   font-weight: 400;
   background: var(--bg-dark);
-  color: var(--text-primary);
+  color: var(--foreground);
   min-height: 100vh;
   line-height: 1.6;
   letter-spacing: -0.01em;
@@ -296,7 +296,7 @@ h6 {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 h1 {
@@ -314,7 +314,7 @@ h3 {
 }
 
 p {
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   line-height: 1.7;
 }
 
@@ -408,7 +408,7 @@ pre {
 /* Secondary Button - Outline */
 .btn-secondary {
   background: transparent;
-  color: var(--text-primary);
+  color: var(--foreground);
   border: 1px solid var(--border-medium);
 }
 
@@ -421,7 +421,7 @@ pre {
 /* Dark Button */
 .btn-dark {
   background: var(--secondary);
-  color: var(--text-primary);
+  color: var(--foreground);
   border: 1px solid var(--border-light);
 }
 
@@ -435,13 +435,13 @@ pre {
 /* Ghost Button */
 .btn-ghost {
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   padding: 10px 16px;
 }
 
 .btn-ghost:hover {
   background: oklch(1 0 0 / 5%);
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 /* Pill Button (Tag style) */
@@ -451,7 +451,7 @@ pre {
   font-weight: 500;
   border-radius: var(--border-radius-full);
   background: oklch(1 0 0 / 5%);
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   border: 1px solid var(--border-subtle);
 }
 
@@ -475,13 +475,13 @@ pre {
   border-radius: var(--border-radius-md);
   background: oklch(1 0 0 / 5%);
   border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
 }
 
 .btn-icon:hover {
   background: oklch(1 0 0 / 10%);
   border-color: var(--border-light);
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 /* ═══════════════════════════════════════
@@ -545,7 +545,7 @@ pre {
   font-weight: 600;
   border-radius: var(--border-radius-full);
   background: oklch(1 0 0 / 5%);
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   border: 1px solid var(--border-subtle);
 }
 
@@ -582,7 +582,7 @@ pre {
   font-size: 2.5rem;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--text-primary);
+  color: var(--foreground);
   line-height: 1;
 }
 
@@ -592,7 +592,7 @@ pre {
 
 .stat-label {
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   font-weight: 500;
 }
 
@@ -663,7 +663,7 @@ pre {
 
 .section-subtitle {
   font-size: 1.125rem;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.7;
@@ -713,7 +713,7 @@ pre {
 .testimonial-quote {
   font-size: 1.125rem;
   line-height: 1.7;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin-bottom: 24px;
   font-style: italic;
 }
@@ -731,12 +731,12 @@ pre {
 
 .testimonial-author-name {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .testimonial-author-role {
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 /* ═══════════════════════════════════════
@@ -901,7 +901,7 @@ pre {
 
 ::selection {
   background: var(--primary-100);
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 ::-webkit-scrollbar {
@@ -1125,7 +1125,7 @@ select:focus-visible {
 
 .light ::selection {
   background: oklch(0.646 0.222 41.116 / 20%);
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .light .card {
@@ -1135,7 +1135,7 @@ select:focus-visible {
 
 .light .btn-dark {
   background: oklch(0.97 0.003 250);
-  color: var(--text-primary);
+  color: var(--foreground);
   border: 1px solid var(--border-light);
 }
 
@@ -1170,7 +1170,7 @@ html.theme-transition *::after {
   padding: 20px;
   font-family: var(--font-mono);
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   overflow-x: auto;
 }
 
@@ -1187,7 +1187,7 @@ html.theme-transition *::after {
 }
 
 .code-block .comment {
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   font-style: italic;
 }
 
@@ -1236,7 +1236,7 @@ html.theme-transition *::after {
   text-align: center;
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .terminal-content {
@@ -1257,9 +1257,9 @@ html.theme-transition *::after {
 }
 
 .terminal-command {
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .terminal-output {
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
 }
