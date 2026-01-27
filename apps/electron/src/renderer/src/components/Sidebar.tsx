@@ -68,6 +68,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ShortcutKbd } from '@/components/ui/kbd';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { sqlPro } from '@/lib/api';
@@ -1553,6 +1554,7 @@ function TableItem({
         <ContextMenuItem onClick={onExportSchema}>
           <FileDown className="size-4" />
           {t('contextMenu.exportSchema', { defaultValue: 'Export Schema' })}
+          <ShortcutKbd action="action.export-data" className="ml-auto" />
         </ContextMenuItem>
         {!isView && (
           <ContextMenuItem onClick={onGenerateMockData}>

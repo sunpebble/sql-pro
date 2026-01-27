@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ShortcutKbd } from '@/components/ui/kbd';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
@@ -456,6 +457,7 @@ export function ConnectionSelector({
           >
             <Plus className="h-4 w-4" />
             <span>{t('connectionSelector.openDatabase')}</span>
+            <ShortcutKbd action="action.open-database" className="ml-auto" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
