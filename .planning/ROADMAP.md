@@ -137,11 +137,14 @@ Plans:
 1. Dialogs and popovers display subtle glassmorphism (backdrop blur)
 2. Hover states show gentle background changes (no lift/scale effects)
 3. Loading and skeleton states appear minimal and refined
-   **Plans**: TBD
+
+**Plans**: 3 plans in 1 wave (all parallel)
 
 Plans:
 
-- [ ] 06-01: TBD
+- [ ] 06-01-PLAN.md — Glassmorphism on dialogs (alert-dialog, sheet)
+- [ ] 06-02-PLAN.md — Glassmorphism on popovers (popover, dropdown-menu, context-menu, tooltip, hover-card)
+- [ ] 06-03-PLAN.md — Card hover cleanup and loading state verification
 
 ### Phase 7: Data Views
 
@@ -238,7 +241,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. Navigation Shell        | 4/4            | Complete    | 2026-01-27 |
 | 4. Core Components         | 4/4            | Complete    | 2026-01-27 |
 | 5. Interaction System      | 4/4            | Complete    | 2026-01-27 |
-| 6. Dialog & Overlay Polish | 0/TBD          | Not started | -          |
+| 6. Dialog & Overlay Polish | 0/3            | Planned     | -          |
 | 7. Data Views              | 0/TBD          | Not started | -          |
 | 8. Monaco Editor           | 0/TBD          | Not started | -          |
 | 9. Website Foundation      | 0/TBD          | Not started | -          |
