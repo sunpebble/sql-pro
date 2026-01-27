@@ -173,11 +173,12 @@ Plans:
 1. SQL syntax highlighting colors harmonize with dark theme (no jarring contrasts)
 2. Editor cursor and selection use orange accent appropriately
 3. Complex SQL (JOINs, CTEs, subqueries) remains readable
-   **Plans**: TBD
+
+**Plans**: 1 plan
 
 Plans:
 
-- [ ] 08-01: TBD
+- [ ] 08-01-PLAN.md — Monaco theme definitions with design system colors
 
 ### Phase 9: Website Foundation
 
@@ -244,7 +245,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. Interaction System      | 4/4            | Complete    | 2026-01-27 |
 | 6. Dialog & Overlay Polish | 3/3            | Complete    | 2026-01-27 |
 | 7. Data Views              | 1/1            | Complete    | 2026-01-27 |
-| 8. Monaco Editor           | 0/TBD          | Not started | -          |
+| 8. Monaco Editor           | 0/1            | Not started | -          |
 | 9. Website Foundation      | 0/TBD          | Not started | -          |
 | 10. Website Content        | 0/TBD          | Not started | -          |
 | 11. Website Polish         | 0/TBD          | Not started | -          |
