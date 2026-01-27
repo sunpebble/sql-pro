@@ -6,7 +6,7 @@
 .footer {
   padding: 80px 0 40px;
   background: var(--bg-darker);
-  color: var(--text-primary);
+  color: var(--foreground);
   position: relative;
 }
 
@@ -36,13 +36,13 @@
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin: 0;
 }
 
 .footer-cta-description {
   font-size: 15px;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   margin: 0;
 }
 
@@ -52,7 +52,7 @@
   gap: 10px;
   padding: 14px 28px;
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   font-size: 15px;
   font-weight: 600;
   border-radius: var(--border-radius-lg);
@@ -98,7 +98,7 @@
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   text-decoration: none;
 }
 
@@ -110,7 +110,7 @@
 .footer-tagline {
   font-size: 15px;
   line-height: 1.7;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   max-width: 280px;
   margin: 0;
 }
@@ -131,7 +131,7 @@
   background: oklch(1 0 0 / 5%);
   border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-md);
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   text-decoration: none;
   transition: all var(--duration-fast) var(--ease-out);
 }
@@ -139,7 +139,7 @@
 .footer-social-link:hover {
   background: var(--primary);
   border-color: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   transform: translateY(-2px);
 }
 
@@ -158,7 +158,7 @@
 .footer-column-title {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0 0 8px;
@@ -175,7 +175,7 @@
 
 .footer-link {
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   text-decoration: none;
   transition: color var(--duration-fast);
   display: flex;
@@ -215,7 +215,7 @@
 
 .footer-copyright {
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   margin: 0;
 }
 
@@ -226,13 +226,13 @@
 
 .footer-legal-link {
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   text-decoration: none;
   transition: color var(--duration-fast);
 }
 
 .footer-legal-link:hover {
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 /* ═══════════════════════════════════════
@@ -335,7 +335,7 @@
 
 .light .footer-social-link {
   background: oklch(1 0 0);
-  border-color: var(--border-light);
+  border-color: var(--border);
 }
 
 .light .footer-grid {

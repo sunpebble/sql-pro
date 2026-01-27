@@ -45,7 +45,7 @@
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin: 0 0 16px;
 }
 
@@ -62,7 +62,7 @@
 
 .features-subtitle {
   font-size: 1.125rem;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.7;
@@ -100,15 +100,15 @@
 }
 
 .feature-card:hover {
-  border-color: var(--border-light);
+  border-color: var(--border);
   box-shadow: var(--shadow-card-hover);
   transform: translateY(-4px);
 }
 
 /* Dark Card Variant - for emphasis */
 .feature-card.dark {
-  background: var(--bg-card);
-  border-color: var(--border-light);
+  background: var(--card);
+  border-color: var(--border);
 }
 
 .feature-card.dark:hover {
@@ -142,7 +142,7 @@
 
 .feature-card:hover .feature-card-icon {
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   transform: scale(1.05);
   box-shadow: var(--shadow-glow);
 }
@@ -164,14 +164,14 @@
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin: 0;
 }
 
 .feature-card-description {
   font-size: 15px;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   margin: 0;
 }
 
@@ -188,7 +188,7 @@
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
 }
 
 .feature-card-list-item svg {
@@ -226,7 +226,7 @@
 .feature-card-visual-line {
   height: 8px;
   border-radius: 4px;
-  background: var(--border-light);
+  background: var(--border);
 }
 
 .feature-card-visual-line.short {
@@ -248,7 +248,7 @@
   right: 20px;
   padding: 6px 12px;
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   font-size: 11px;
   font-weight: 600;
   border-radius: var(--border-radius-full);
@@ -366,7 +366,7 @@
 
 .light .feature-card {
   background: oklch(1 0 0 / 80%);
-  border-color: var(--border-light);
+  border-color: var(--border);
   box-shadow: var(--shadow-sm);
 }
 
@@ -381,5 +381,5 @@
 
 .light .feature-card-visual {
   background: oklch(0.97 0.005 250);
-  border-color: var(--border-light);
+  border-color: var(--border);
 }

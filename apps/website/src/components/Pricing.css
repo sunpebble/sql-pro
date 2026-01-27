@@ -45,7 +45,7 @@
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin: 0 0 16px;
 }
 
@@ -62,7 +62,7 @@
 
 .pricing-subtitle {
   font-size: 1.125rem;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.7;
@@ -83,20 +83,20 @@
 .pricing-toggle-label {
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   cursor: pointer;
   transition: color var(--duration-fast);
 }
 
 .pricing-toggle-label.active {
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .pricing-toggle-switch {
   width: 56px;
   height: 28px;
   background: var(--bg-subtle);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   border-radius: var(--border-radius-full);
   position: relative;
   cursor: pointer;
@@ -172,7 +172,7 @@
 /* Featured Card */
 .pricing-card.featured {
   border-color: var(--primary);
-  background: var(--bg-card);
+  background: var(--card);
   box-shadow: var(--shadow-glow);
 }
 
@@ -190,7 +190,7 @@
   transform: translateX(-50%);
   padding: 6px 16px;
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   font-size: 12px;
   font-weight: 600;
   border-radius: var(--border-radius-full);
@@ -214,7 +214,7 @@
 
 .pricing-card:hover .pricing-icon {
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   transform: scale(1.05);
   box-shadow: var(--shadow-glow);
 }
@@ -229,7 +229,7 @@
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin: 0 0 8px;
 }
 
@@ -244,19 +244,19 @@
   font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   letter-spacing: -0.02em;
   line-height: 1;
 }
 
 .pricing-period {
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .pricing-description {
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   line-height: 1.6;
   margin-bottom: 24px;
 }
@@ -275,8 +275,8 @@
   gap: 12px;
   padding: 10px 0;
   font-size: 14px;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-light);
+  color: var(--secondary-foreground);
+  border-bottom: 1px solid var(--border);
 }
 
 .pricing-features li:last-child {
@@ -307,7 +307,7 @@
 
 .pricing-cta-primary {
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
 }
 
 .pricing-cta-primary:hover {
@@ -318,7 +318,7 @@
 
 .pricing-cta-outline {
   background: transparent;
-  color: var(--text-primary);
+  color: var(--foreground);
   border: 1px solid var(--border-medium);
 }
 
@@ -336,7 +336,7 @@
   text-align: center;
   margin-top: 48px;
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 /* ═══════════════════════════════════════
@@ -349,7 +349,7 @@
   gap: 32px;
   margin-top: 48px;
   padding-top: 32px;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--border);
 }
 
 .trust-badge {
@@ -357,7 +357,7 @@
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   font-weight: 500;
 }
 
@@ -547,7 +547,7 @@
 
 .light .pricing-card {
   background: oklch(1 0 0 / 80%);
-  border-color: var(--border-light);
+  border-color: var(--border);
 }
 
 .light .pricing-card.featured {

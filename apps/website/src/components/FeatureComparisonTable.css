@@ -6,7 +6,7 @@
 .comparison-table-wrapper {
   margin-top: 64px;
   padding-top: 48px;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--border);
 }
 
 .comparison-title {
@@ -15,7 +15,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 32px;
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .comparison-table-container {
@@ -35,19 +35,19 @@
 .comparison-table td {
   padding: 16px;
   text-align: center;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
 }
 
 .comparison-table th {
   background: var(--bg-subtle);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .feature-header {
   text-align: left !important;
   width: 200px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -84,7 +84,7 @@
   display: inline-block;
   padding: 4px 10px;
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   font-size: 10px;
   font-weight: 600;
   border-radius: var(--border-radius-full);
@@ -98,24 +98,24 @@
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin-bottom: 4px;
 }
 
 .plan-price {
   display: block;
   font-size: 0.875rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .feature-name {
   text-align: left !important;
-  color: var(--text-primary);
+  color: var(--foreground);
   font-weight: 500;
 }
 
 .feature-value {
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
 }
 
 .feature-value-featured {
@@ -135,7 +135,7 @@
 
 .feature-text {
   font-size: 0.8125rem;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
 }
 
 /* ═══════════════════════════════════════

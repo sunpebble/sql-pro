@@ -11,7 +11,7 @@
   width: calc(100% - 32px);
   max-height: calc(100vh - 64px);
   padding: 0;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   border-radius: var(--border-radius-xl);
   background: var(--bg-white);
   box-shadow: var(--shadow-2xl);
@@ -39,7 +39,7 @@
   justify-content: center;
   border: none;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   cursor: pointer;
   border-radius: var(--border-radius-md);
   transition: all var(--duration-fast) var(--ease-out);
@@ -47,14 +47,14 @@
 
 .checkout-close:hover {
   background: var(--bg-subtle);
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .checkout-title {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   margin-bottom: 24px;
   padding-right: 40px;
 }
@@ -77,12 +77,12 @@
 
 .checkout-plan-name {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
 }
 
 .checkout-plan-description {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   max-width: 200px;
 }
 
@@ -100,7 +100,7 @@
 .checkout-plan-price small {
   font-size: 0.75rem;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 /* Order summary */
@@ -115,7 +115,7 @@
   list-style: none;
   padding: 12px 16px;
   margin: 0;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--border);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
@@ -126,7 +126,7 @@
   align-items: center;
   gap: 6px;
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
 }
 
 .checkout-features li svg {
@@ -136,7 +136,7 @@
 
 .checkout-email-hint {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   margin: -8px 0 0;
 }
 
@@ -149,7 +149,7 @@
 .checkout-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--secondary-foreground);
   margin-bottom: -8px;
 }
 
@@ -158,10 +158,10 @@
   padding: 14px 16px;
   font-family: var(--font-body);
   font-size: 1rem;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   border-radius: var(--border-radius-md);
   background: var(--bg-white);
-  color: var(--text-primary);
+  color: var(--foreground);
   transition: all var(--duration-fast) var(--ease-out);
 }
 
@@ -177,7 +177,7 @@
 }
 
 .checkout-input::placeholder {
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .checkout-error {
@@ -196,7 +196,7 @@
   font-size: 1rem;
   margin-top: 8px;
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   border: none;
   border-radius: var(--border-radius-lg);
   font-weight: 600;
@@ -240,7 +240,7 @@
   justify-content: center;
   gap: 8px;
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .checkout-secure svg {
@@ -253,7 +253,7 @@
   gap: 24px;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--border);
 }
 
 .checkout-guarantee {
@@ -261,7 +261,7 @@
   align-items: center;
   gap: 6px;
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .checkout-guarantee svg {

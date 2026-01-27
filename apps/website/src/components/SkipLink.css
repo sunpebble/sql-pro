@@ -11,7 +11,7 @@
   z-index: 9999;
   padding: 14px 28px;
   background: var(--primary);
-  color: var(--text-inverse);
+  color: var(--primary-foreground);
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
