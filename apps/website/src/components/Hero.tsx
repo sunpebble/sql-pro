@@ -26,11 +26,7 @@ export default function Hero() {
           </div>
 
           <h1 id="hero-title" className="hero-title">
-            Professional
-            <br />
-            <span className="hero-title-gradient">Database</span>
-            <br />
-            Management
+            {t('hero.title')}
           </h1>
 
           <p className="hero-description">{t('hero.description')}</p>
@@ -70,154 +66,13 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Product Preview Card */}
-        <div className="hero-preview">
-          <div className="hero-preview-card">
-            <div className="hero-preview-header">
-              <div className="hero-preview-dots">
-                <span className="hero-preview-dot red" />
-                <span className="hero-preview-dot yellow" />
-                <span className="hero-preview-dot green" />
-              </div>
-              <span className="hero-preview-title">
-                SQL Pro — Database Manager
-              </span>
-            </div>
-
-            <div className="hero-preview-content">
-              <div className="hero-preview-sidebar">
-                <div className="hero-preview-sidebar-item active">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                    <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-                    <path d="M3 12A9 3 0 0 0 21 12" />
-                  </svg>
-                  PostgreSQL
-                </div>
-                <div className="hero-preview-sidebar-item">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                    <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-                    <path d="M3 12A9 3 0 0 0 21 12" />
-                  </svg>
-                  MySQL
-                </div>
-                <div className="hero-preview-sidebar-item">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                    <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-                    <path d="M3 12A9 3 0 0 0 21 12" />
-                  </svg>
-                  SQLite
-                </div>
-                <div className="hero-preview-sidebar-item">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                    <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-                    <path d="M3 12A9 3 0 0 0 21 12" />
-                  </svg>
-                  MongoDB
-                </div>
-              </div>
-
-              <div className="hero-preview-main">
-                <div className="hero-preview-table-header">
-                  <span className="hero-preview-table-col">Column</span>
-                  <span className="hero-preview-table-col">Type</span>
-                  <span className="hero-preview-table-col">Nullable</span>
-                </div>
-                <div className="hero-preview-table-row">
-                  <span className="hero-preview-table-cell code">id</span>
-                  <span className="hero-preview-table-cell">SERIAL</span>
-                  <span className="hero-preview-table-cell">NO</span>
-                </div>
-                <div className="hero-preview-table-row">
-                  <span className="hero-preview-table-cell code">name</span>
-                  <span className="hero-preview-table-cell">VARCHAR(255)</span>
-                  <span className="hero-preview-table-cell">NO</span>
-                </div>
-                <div className="hero-preview-table-row">
-                  <span className="hero-preview-table-cell code">email</span>
-                  <span className="hero-preview-table-cell">VARCHAR(255)</span>
-                  <span className="hero-preview-table-cell">NO</span>
-                </div>
-                <div className="hero-preview-table-row">
-                  <span className="hero-preview-table-cell code">
-                    created_at
-                  </span>
-                  <span className="hero-preview-table-cell">TIMESTAMP</span>
-                  <span className="hero-preview-table-cell">YES</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tags */}
-        <div className="hero-tags">
-          <a href="#features" className="hero-tag">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <ellipse cx="12" cy="5" rx="9" ry="3" />
-              <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-              <path d="M3 12A9 3 0 0 0 21 12" />
-            </svg>
-            Multi-Database
-          </a>
-          <a href="#features" className="hero-tag">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            AI Assistant
-          </a>
-          <a href="#features" className="hero-tag">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            Local First
-          </a>
+        {/* Product Screenshot */}
+        <div className="hero-screenshot">
+          <img
+            src="/screenshots/query-dark.png"
+            alt="SQL Pro query editor interface showing SQL syntax highlighting and database sidebar"
+            className="hero-screenshot-img"
+          />
         </div>
       </div>
     </section>

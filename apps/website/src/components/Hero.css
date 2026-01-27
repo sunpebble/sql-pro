@@ -1,6 +1,6 @@
 /* =========================================
-   Hero Section - Developer Professional
-   Deep, dark, terminal-inspired design
+   Hero Section - Product-Focused Design
+   Screenshot-first, minimal marketing copy
    ========================================= */
 
 .hero {
@@ -83,17 +83,6 @@
   margin: 0;
 }
 
-.hero-title-gradient {
-  background: linear-gradient(
-    135deg,
-    var(--primary) 0%,
-    var(--accent-cyan) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 /* Description */
 .hero-description {
   font-size: 1.25rem;
@@ -170,27 +159,26 @@
 }
 
 /* ═══════════════════════════════════════
-   TERMINAL PREVIEW
+   PRODUCT SCREENSHOT
    ═══════════════════════════════════════ */
 
-.hero-preview {
+.hero-screenshot {
   position: relative;
   width: 100%;
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-.hero-preview-card {
-  background: var(--bg-darker);
-  border: 1px solid var(--border);
+.hero-screenshot-img {
+  width: 100%;
+  height: auto;
   border-radius: var(--border-radius-xl);
-  overflow: hidden;
   box-shadow: var(--shadow-2xl);
-  position: relative;
+  border: 1px solid var(--border);
 }
 
-/* Glow effect behind the card */
-.hero-preview::before {
+/* Glow effect behind the screenshot */
+.hero-screenshot::before {
   content: '';
   position: absolute;
   inset: -50px;
@@ -203,180 +191,13 @@
   filter: blur(40px);
 }
 
-/* Preview Header */
-.hero-preview-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 20px;
-  background: var(--card);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.hero-preview-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.hero-preview-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.hero-preview-dot.red {
-  background: #ff5f56;
-}
-
-.hero-preview-dot.yellow {
-  background: #ffbd2e;
-}
-
-.hero-preview-dot.green {
-  background: #27ca40;
-}
-
-.hero-preview-title {
-  flex: 1;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--muted-foreground);
-}
-
-/* Preview Content */
-.hero-preview-content {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  min-height: 320px;
-}
-
-/* Sidebar simulation */
-.hero-preview-sidebar {
-  background: var(--card);
-  border-right: 1px solid var(--border-subtle);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.hero-preview-sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--border-radius-md);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--secondary-foreground);
-  transition: all var(--duration-fast);
-}
-
-.hero-preview-sidebar-item.active {
-  background: var(--primary-50);
-  color: var(--primary);
-  border: 1px solid oklch(0.723 0.191 142.5 / 15%);
-}
-
-.hero-preview-sidebar-item svg {
-  width: 16px;
-  height: 16px;
-  color: var(--muted-foreground);
-}
-
-.hero-preview-sidebar-item.active svg {
-  color: var(--primary);
-}
-
-/* Main area simulation */
-.hero-preview-main {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.hero-preview-table-header {
-  display: flex;
-  gap: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.hero-preview-table-col {
-  flex: 1;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--muted-foreground);
-}
-
-.hero-preview-table-row {
-  display: flex;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.hero-preview-table-cell {
-  flex: 1;
-  font-size: 13px;
-  color: var(--secondary-foreground);
-}
-
-.hero-preview-table-cell.code {
-  font-family: var(--font-mono);
-  color: var(--primary);
-}
-
-/* ═══════════════════════════════════════
-   PILL TAGS
-   ═══════════════════════════════════════ */
-
-.hero-tags {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 32px;
-}
-
-.hero-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  background: oklch(1 0 0 / 5%);
-  color: var(--secondary-foreground);
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: var(--border-radius-full);
-  border: 1px solid var(--border-subtle);
-  text-decoration: none;
-  transition: all var(--duration-fast) var(--ease-out);
-}
-
-.hero-tag:hover {
-  background: var(--primary-50);
-  border-color: oklch(0.723 0.191 142.5 / 30%);
-  color: var(--primary);
-}
-
-.hero-tag svg {
-  width: 14px;
-  height: 14px;
-}
-
 /* ═══════════════════════════════════════
    ANIMATIONS
    ═══════════════════════════════════════ */
 
 .hero-header,
 .hero-actions,
-.hero-preview,
-.hero-tags {
+.hero-screenshot {
   opacity: 0;
   animation: fade-up 0.8s var(--ease-out) forwards;
 }
@@ -389,23 +210,13 @@
   animation-delay: 0.2s;
 }
 
-.hero-preview {
+.hero-screenshot {
   animation-delay: 0.3s;
-}
-
-.hero-tags {
-  animation-delay: 0.4s;
 }
 
 /* ═══════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════ */
-
-@media (max-width: 1024px) {
-  .hero-preview-content {
-    grid-template-columns: 180px 1fr;
-  }
-}
 
 @media (max-width: 768px) {
   .hero {
@@ -418,14 +229,6 @@
 
   .hero-description {
     font-size: 1.1rem;
-  }
-
-  .hero-preview-content {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-preview-sidebar {
-    display: none;
   }
 
   .hero-actions {
@@ -447,17 +250,8 @@
     font-size: 2rem;
   }
 
-  .hero-preview-card {
+  .hero-screenshot-img {
     border-radius: var(--border-radius-lg);
-  }
-
-  .hero-tags {
-    gap: 8px;
-  }
-
-  .hero-tag {
-    padding: 8px 12px;
-    font-size: 12px;
   }
 }
 
@@ -468,8 +262,7 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-header,
   .hero-actions,
-  .hero-preview,
-  .hero-tags {
+  .hero-screenshot {
     animation: none;
     opacity: 1;
   }
@@ -484,24 +277,6 @@
   border-color: var(--border);
 }
 
-.light .hero-preview-card {
-  background: oklch(1 0 0);
+.light .hero-screenshot-img {
   border-color: var(--border-medium);
-}
-
-.light .hero-preview-header {
-  background: oklch(0.98 0.005 250);
-}
-
-.light .hero-preview-sidebar {
-  background: oklch(0.98 0.005 250);
-}
-
-.light .hero-tag {
-  background: oklch(0.97 0.005 250);
-  border-color: var(--border);
-}
-
-.light .hero-tag:hover {
-  background: var(--primary-50);
 }
