@@ -2900,69 +2900,173 @@ function addSnippetSuggestions(
  * (US2: Theme-Aware Editor, US3: SQL Syntax Highlighting)
  */
 export function defineCustomThemes(monaco: typeof Monaco): void {
-  // Light theme matching app colors
+  // Light theme - warm white background with orange accents
   monaco.editor.defineTheme('sql-pro-light', {
     base: 'vs',
     inherit: true,
     rules: [
-      // SQL syntax highlighting (US3)
-      { token: 'keyword', foreground: '0000FF', fontStyle: 'bold' },
-      { token: 'keyword.sql', foreground: '0000FF', fontStyle: 'bold' },
-      { token: 'string', foreground: 'A31515' },
-      { token: 'string.sql', foreground: 'A31515' },
-      { token: 'number', foreground: '098658' },
-      { token: 'number.sql', foreground: '098658' },
-      { token: 'comment', foreground: '008000', fontStyle: 'italic' },
-      { token: 'comment.sql', foreground: '008000', fontStyle: 'italic' },
-      { token: 'operator', foreground: '000000' },
-      { token: 'operator.sql', foreground: '000000' },
-      { token: 'identifier', foreground: '001080' },
+      // Keywords - blue-700, bold for structure
+      { token: 'keyword', foreground: '1D4ED8', fontStyle: 'bold' },
+      { token: 'keyword.sql', foreground: '1D4ED8', fontStyle: 'bold' },
+      { token: 'keyword.block', foreground: '1D4ED8', fontStyle: 'bold' },
+      { token: 'keyword.choice', foreground: '1D4ED8' },
+
+      // Strings - green-700
+      { token: 'string', foreground: '15803D' },
+      { token: 'string.sql', foreground: '15803D' },
+
+      // Numbers - amber-700
+      { token: 'number', foreground: 'B45309' },
+      { token: 'number.sql', foreground: 'B45309' },
+
+      // Comments - slate-500, italic
+      { token: 'comment', foreground: '64748B', fontStyle: 'italic' },
+      { token: 'comment.sql', foreground: '64748B', fontStyle: 'italic' },
+      { token: 'comment.quote', foreground: '64748B', fontStyle: 'italic' },
+
+      // Operators - slate-900
+      { token: 'operator', foreground: '0F172A' },
+      { token: 'operator.sql', foreground: '0F172A' },
+
+      // Identifiers - slate-800
+      { token: 'identifier', foreground: '1E293B' },
+      { token: 'identifier.quote', foreground: '1E293B' },
+
+      // Built-in functions - orange-600
+      { token: 'predefined', foreground: 'EA580C' },
+
+      // Delimiters - slate-500
+      { token: 'delimiter', foreground: '64748B' },
     ],
     colors: {
-      'editor.background': '#FFFFFF',
-      'editor.foreground': '#000000',
-      'editorLineNumber.foreground': '#6E7781',
-      'editorLineNumber.activeForeground': '#000000',
-      'editor.selectionBackground': '#ADD6FF',
-      'editor.lineHighlightBackground': '#F5F5F5',
-      'editorCursor.foreground': '#000000',
-      'editor.inactiveSelectionBackground': '#E5EBF1',
-      'editorSuggestWidget.background': '#FFFFFF',
-      'editorSuggestWidget.border': '#E0E0E0',
-      'editorSuggestWidget.selectedBackground': '#E8E8E8',
+      // Editor background/foreground (warm white)
+      'editor.background': '#FFFBF7',
+      'editor.foreground': '#1C1917',
+
+      // Cursor - orange accent
+      'editorCursor.foreground': '#EA580C',
+
+      // Selection - orange with opacity
+      'editor.selectionBackground': '#FB923C40',
+      'editor.inactiveSelectionBackground': '#FB923C25',
+      'editor.selectionHighlightBackground': '#FB923C20',
+
+      // Line highlight
+      'editor.lineHighlightBackground': '#FEF3E7',
+
+      // Line numbers
+      'editorLineNumber.foreground': '#A8A29E',
+      'editorLineNumber.activeForeground': '#57534E',
+
+      // Suggest widget
+      'editorSuggestWidget.background': '#FFFBF7',
+      'editorSuggestWidget.border': '#E7E0D9',
+      'editorSuggestWidget.foreground': '#1C1917',
+      'editorSuggestWidget.selectedBackground': '#FFEDD5',
+      'editorSuggestWidget.highlightForeground': '#EA580C',
+      'editorSuggestWidget.focusHighlightForeground': '#EA580C',
+
+      // Bracket matching
+      'editorBracketMatch.background': '#FB923C30',
+      'editorBracketMatch.border': '#EA580C',
+
+      // Find matches
+      'editor.findMatchBackground': '#FB923C50',
+      'editor.findMatchHighlightBackground': '#FB923C25',
+
+      // Hover widget
+      'editorHoverWidget.background': '#FFFBF7',
+      'editorHoverWidget.border': '#E7E0D9',
+
+      // Scrollbar
+      'scrollbarSlider.background': '#A8A29E40',
+      'scrollbarSlider.hoverBackground': '#A8A29E60',
+      'scrollbarSlider.activeBackground': '#EA580C60',
     },
   });
 
-  // Dark theme matching app colors
+  // Dark theme - Slate-900 background with orange accents
   monaco.editor.defineTheme('sql-pro-dark', {
     base: 'vs-dark',
     inherit: true,
     rules: [
-      // SQL syntax highlighting (US3)
-      { token: 'keyword', foreground: '569CD6', fontStyle: 'bold' },
-      { token: 'keyword.sql', foreground: '569CD6', fontStyle: 'bold' },
-      { token: 'string', foreground: 'CE9178' },
-      { token: 'string.sql', foreground: 'CE9178' },
-      { token: 'number', foreground: 'B5CEA8' },
-      { token: 'number.sql', foreground: 'B5CEA8' },
-      { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
-      { token: 'comment.sql', foreground: '6A9955', fontStyle: 'italic' },
-      { token: 'operator', foreground: 'D4D4D4' },
-      { token: 'operator.sql', foreground: 'D4D4D4' },
-      { token: 'identifier', foreground: '9CDCFE' },
+      // Keywords - warm blue, bold for structure
+      { token: 'keyword', foreground: '93C5FD', fontStyle: 'bold' },
+      { token: 'keyword.sql', foreground: '93C5FD', fontStyle: 'bold' },
+      { token: 'keyword.block', foreground: '93C5FD', fontStyle: 'bold' },
+      { token: 'keyword.choice', foreground: '93C5FD' },
+
+      // Strings - warm green
+      { token: 'string', foreground: '86EFAC' },
+      { token: 'string.sql', foreground: '86EFAC' },
+
+      // Numbers - amber
+      { token: 'number', foreground: 'FCD34D' },
+      { token: 'number.sql', foreground: 'FCD34D' },
+
+      // Comments - muted slate, italic
+      { token: 'comment', foreground: '64748B', fontStyle: 'italic' },
+      { token: 'comment.sql', foreground: '64748B', fontStyle: 'italic' },
+      { token: 'comment.quote', foreground: '64748B', fontStyle: 'italic' },
+
+      // Operators - neutral slate
+      { token: 'operator', foreground: 'CBD5E1' },
+      { token: 'operator.sql', foreground: 'CBD5E1' },
+
+      // Identifiers - primary text
+      { token: 'identifier', foreground: 'F1F5F9' },
+      { token: 'identifier.quote', foreground: 'F1F5F9' },
+
+      // Built-in functions - orange accent
+      { token: 'predefined', foreground: 'FDBA74' },
+
+      // Delimiters - subtle
+      { token: 'delimiter', foreground: '94A3B8' },
     ],
     colors: {
-      'editor.background': '#1E1E1E',
-      'editor.foreground': '#D4D4D4',
-      'editorLineNumber.foreground': '#858585',
-      'editorLineNumber.activeForeground': '#C6C6C6',
-      'editor.selectionBackground': '#264F78',
-      'editor.lineHighlightBackground': '#2A2A2A',
-      'editorCursor.foreground': '#FFFFFF',
-      'editor.inactiveSelectionBackground': '#3A3D41',
-      'editorSuggestWidget.background': '#252526',
-      'editorSuggestWidget.border': '#454545',
-      'editorSuggestWidget.selectedBackground': '#04395E',
+      // Editor background/foreground (Slate-900/Slate-100)
+      'editor.background': '#0F172A',
+      'editor.foreground': '#F1F5F9',
+
+      // Cursor - orange accent
+      'editorCursor.foreground': '#FB923C',
+
+      // Selection - orange with opacity
+      'editor.selectionBackground': '#FB923C40',
+      'editor.inactiveSelectionBackground': '#FB923C25',
+      'editor.selectionHighlightBackground': '#FB923C20',
+
+      // Line highlight (Slate-800)
+      'editor.lineHighlightBackground': '#1E293B',
+
+      // Line numbers (Slate-400/Slate-300)
+      'editorLineNumber.foreground': '#94A3B8',
+      'editorLineNumber.activeForeground': '#CBD5E1',
+
+      // Suggest widget (Slate-800/Slate-700)
+      'editorSuggestWidget.background': '#1E293B',
+      'editorSuggestWidget.border': '#334155',
+      'editorSuggestWidget.foreground': '#F1F5F9',
+      'editorSuggestWidget.selectedBackground': '#334155',
+      'editorSuggestWidget.highlightForeground': '#FB923C',
+      'editorSuggestWidget.focusHighlightForeground': '#FB923C',
+
+      // Bracket matching - orange tint
+      'editorBracketMatch.background': '#FB923C30',
+      'editorBracketMatch.border': '#FB923C',
+
+      // Find matches
+      'editor.findMatchBackground': '#FB923C50',
+      'editor.findMatchHighlightBackground': '#FB923C25',
+
+      // Hover widget
+      'editorHoverWidget.background': '#1E293B',
+      'editorHoverWidget.border': '#334155',
+
+      // Scrollbar
+      'scrollbarSlider.background': '#94A3B840',
+      'scrollbarSlider.hoverBackground': '#94A3B860',
+      'scrollbarSlider.activeBackground': '#FB923C60',
     },
   });
 }
