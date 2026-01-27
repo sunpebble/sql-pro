@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Monaco Editor** - SQL editor theme coordination with design system
 - [x] **Phase 9: Website Foundation** - Color system and typography alignment with app (2/2 verified)
 - [x] **Phase 10: Website Content** - Hero, features, pricing, download sections (3/3 verified)
-- [ ] **Phase 11: Website Polish** - Scroll animations and product demos
+- [x] **Phase 11: Website Polish** - Scroll animations and product demos (1/1 verified)
 
 ## Phase Details
 
@@ -235,26 +235,26 @@ Plans:
 
 Plans:
 
-- [ ] 11-01-PLAN.md — Scroll-triggered fade-up animations (Download section, Features header)
+- [x] 11-01-PLAN.md — Scroll-triggered fade-up animations (Download section, Features header)
 
 ## Progress
 
 **Execution Order:**
 Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11
 
-| Phase                      | Plans Complete | Status      | Completed  |
-| -------------------------- | -------------- | ----------- | ---------- |
-| 1. Design Foundation       | 4/4            | Complete    | 2026-01-26 |
-| 2. Typography & Text       | 1/1            | Complete    | 2026-01-26 |
-| 3. Navigation Shell        | 4/4            | Complete    | 2026-01-27 |
-| 4. Core Components         | 4/4            | Complete    | 2026-01-27 |
-| 5. Interaction System      | 4/4            | Complete    | 2026-01-27 |
-| 6. Dialog & Overlay Polish | 3/3            | Complete    | 2026-01-27 |
-| 7. Data Views              | 1/1            | Complete    | 2026-01-27 |
-| 8. Monaco Editor           | 1/1            | Complete    | 2026-01-27 |
-| 9. Website Foundation      | 2/2            | Complete    | 2026-01-27 |
-| 10. Website Content        | 3/3            | Complete    | 2026-01-27 |
-| 11. Website Polish         | 0/1            | Not started | -          |
+| Phase                      | Plans Complete | Status   | Completed  |
+| -------------------------- | -------------- | -------- | ---------- |
+| 1. Design Foundation       | 4/4            | Complete | 2026-01-26 |
+| 2. Typography & Text       | 1/1            | Complete | 2026-01-26 |
+| 3. Navigation Shell        | 4/4            | Complete | 2026-01-27 |
+| 4. Core Components         | 4/4            | Complete | 2026-01-27 |
+| 5. Interaction System      | 4/4            | Complete | 2026-01-27 |
+| 6. Dialog & Overlay Polish | 3/3            | Complete | 2026-01-27 |
+| 7. Data Views              | 1/1            | Complete | 2026-01-27 |
+| 8. Monaco Editor           | 1/1            | Complete | 2026-01-27 |
+| 9. Website Foundation      | 2/2            | Complete | 2026-01-27 |
+| 10. Website Content        | 3/3            | Complete | 2026-01-27 |
+| 11. Website Polish         | 1/1            | Complete | 2026-01-28 |
 
 ---
 

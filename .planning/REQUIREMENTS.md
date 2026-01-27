@@ -49,7 +49,7 @@
 - [x] **WEB-02**: Concise marketing copy (core value focus)
 - [x] **WEB-03**: Embedded product demo (video/animation)
 - [x] **WEB-04**: Bento grid Features layout
-- [ ] **WEB-05**: Scroll-triggered fade-up animations
+- [x] **WEB-05**: Scroll-triggered fade-up animations
 - [x] **WEB-06**: Streamlined Download section
 - [x] **WEB-07**: Minimal Footer with essential links only
 - [x] **WEB-08**: Website colors unified with app dark theme
@@ -117,7 +117,7 @@
 | WEB-04      | Phase 10 | Complete |
 | WEB-06      | Phase 10 | Complete |
 | WEB-07      | Phase 10 | Complete |
-| WEB-05      | Phase 11 | Pending  |
+| WEB-05      | Phase 11 | Complete |
 
 **Coverage:**
 
