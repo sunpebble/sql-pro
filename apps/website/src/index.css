@@ -133,9 +133,6 @@
   --bg-white: oklch(0.985 0.002 250);
   --bg-light: oklch(0.97 0.003 250);
   --bg-subtle: var(--slate-800);
-  --text-primary: var(--foreground);
-  --text-secondary: var(--secondary-foreground);
-  --text-muted: var(--muted-foreground);
   --text-inverse: var(--slate-900);
 
   /* Additional borders */
@@ -1064,9 +1061,6 @@ select:focus-visible {
   --bg-card: var(--card);
   --bg-elevated: oklch(0.985 0.002 250);
   --bg-subtle: oklch(0.95 0.005 250);
-  --text-primary: var(--foreground);
-  --text-secondary: var(--secondary-foreground);
-  --text-muted: var(--muted-foreground);
   --text-inverse: var(--slate-50);
 
   /* Additional borders */
