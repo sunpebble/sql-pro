@@ -54,7 +54,11 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        'no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none',
+        'no-scrollbar scroll-py-1 overflow-x-hidden overflow-y-auto outline-none',
+        // Height animation for smooth filtering (uses cmdk's --cmdk-list-height CSS variable)
+        '[height:var(--cmdk-list-height)] transition-[height] duration-100 ease-out',
+        // Scroll padding for better UX
+        'scroll-pt-2 scroll-pb-2',
         className
       )}
       {...props}
@@ -113,7 +117,20 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "data-selected:bg-muted data-selected:text-foreground data-selected:**:[svg]:text-foreground group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [[data-slot=dialog-content]_&]:rounded-lg!",
+        // Base styles
+        'group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none',
+        // Smooth transition for state changes
+        'transition-colors duration-100 ease-out',
+        // Hover state (subtle)
+        'hover:bg-muted/50',
+        // Selected state (orange-tinted, matching Phase 3 pattern)
+        'data-selected:bg-accent data-selected:text-foreground data-selected:**:[svg]:text-foreground',
+        // Disabled state
+        'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
+        // SVG sizing
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        // Dialog context override
+        '[[data-slot=dialog-content]_&]:rounded-lg!',
         className
       )}
       {...props}
