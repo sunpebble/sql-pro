@@ -200,7 +200,7 @@ Plans:
 
 ### Phase 10: Website Content
 
-**Goal**: Rebuild website sections with minimal, product-focused content
+**Goal**: Minimal, product-focused website with screenshot-first hero and streamlined sections
 **Depends on**: Phase 9
 **Requirements**: WEB-01, WEB-02, WEB-03, WEB-04, WEB-06, WEB-07
 **Success Criteria** (what must be TRUE):
@@ -208,14 +208,17 @@ Plans:
 1. Hero section prominently displays product screenshot/demo
 2. Marketing copy is concise, focusing on core value proposition
 3. Features section uses bento grid layout
-4. Product demo (video or animation) is embedded and plays smoothly
-5. Download section is streamlined and clear
-6. Footer contains only essential links
-   **Plans**: TBD
+4. Download section is streamlined and clear
+5. Footer contains only essential links
+6. Pricing section is removed from page
+
+**Plans**: 3 plans in 1 wave (all parallel)
 
 Plans:
 
-- [ ] 10-01: TBD
+- [ ] 10-01-PLAN.md — Hero section simplification with product screenshot
+- [ ] 10-02-PLAN.md — Features bento grid conversion
+- [ ] 10-03-PLAN.md — Download and Footer streamlining
 
 ### Phase 11: Website Polish
 
@@ -249,7 +252,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 7. Data Views              | 1/1            | Complete    | 2026-01-27 |
 | 8. Monaco Editor           | 1/1            | Complete    | 2026-01-27 |
 | 9. Website Foundation      | 2/2            | Complete    | 2026-01-27 |
-| 10. Website Content        | 0/TBD          | Not started | -          |
+| 10. Website Content        | 0/3            | Planned     | -          |
 | 11. Website Polish         | 0/TBD          | Not started | -          |
 
 ---
