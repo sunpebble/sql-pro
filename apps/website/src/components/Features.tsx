@@ -142,7 +142,9 @@ export default function Features() {
       <div className="container">
         <header
           ref={headerRef}
-          className={`features-header${headerVisible ? 'visible' : ''}`}
+          className={['features-header', headerVisible && 'visible']
+            .filter(Boolean)
+            .join(' ')}
         >
           <span className="features-label">
             <svg

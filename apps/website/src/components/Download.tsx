@@ -72,7 +72,9 @@ export default function Download() {
       <div className="container">
         <div
           ref={contentRef}
-          className={`download-content${isInView ? 'visible' : ''}`}
+          className={['download-content', isInView && 'visible']
+            .filter(Boolean)
+            .join(' ')}
         >
           {/* Title */}
           <h2 id="download-title" className="download-title">
