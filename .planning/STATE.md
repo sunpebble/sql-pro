@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Visual and interaction experience at Linear/Raycast level of polish
-**Current focus:** Phase 10 - Website Content (next)
+**Current focus:** Phase 10 - Website Content
 
 ## Current Position
 
-Phase: 9 of 11 (Website Foundation) - COMPLETE
-Plan: 2 of 2 in current phase (verified)
-Status: Ready for Phase 10
-Last activity: 2026-01-27 - Phase 9 verified (gap fixed: base styles token migration)
+Phase: 10 of 11 (Website Content)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-01-27 - Completed 10-01-PLAN.md (Hero Simplification)
 
-Progress: [████████░░] ~80%
+Progress: [████████░░] ~82%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 24
+- Total plans completed: 25
 - Average duration: 5 min
-- Total execution time: 2 hours
+- Total execution time: 2h 4min
 
 **By Phase:**
 
@@ -37,11 +37,12 @@ Progress: [████████░░] ~80%
 | 07    | 1     | 4 min  | 4 min    |
 | 08    | 1     | 5 min  | 5 min    |
 | 09    | 2     | 8 min  | 4 min    |
+| 10    | 1     | 4 min  | 4 min    |
 
 **Recent Trend:**
 
-- Last 5 plans: 07-01 (4 min), 08-01 (5 min), 09-01 (3 min), 09-02 (4 min)
-- Trend: Consistent fast execution for styling and interaction tasks
+- Last 5 plans: 08-01 (5 min), 09-01 (3 min), 09-02 (4 min), 10-01 (4 min)
+- Trend: Consistent fast execution for website content tasks
 
 _Updated after each plan completion_
 
@@ -75,30 +76,20 @@ Recent decisions affecting current work:
 - Implemented: Monaco themes coordinated with Slate/Orange design system
 - Implemented: Website primitive palette (Slate/Orange) matching app tokens
 - Implemented: shadcn/ui-compatible tokens in website components
-- Pending: Website de-marketized (minimal, product-focused)
+- Implemented: Screenshot-first hero with actual product image
+- Implemented: Simplified hero tagline (concise copy vs paragraph)
+- Implemented: Pricing section removed from page
 
-### Phase 9 Progress
+### Phase 10 Progress
 
-Plan 09-01 complete:
+Plan 10-01 complete:
 
-- Migrated website index.css to app's primitive palette tokens
-- Added Slate scale (--slate-50 through --slate-950)
-- Added Orange scale (--orange-300 through --orange-700)
-- Semantic tokens now reference primitives via var()
-- Added shadcn/ui-compatible tokens (--card, --popover, --ring, etc.)
-- Added @theme inline block with color/radius mappings for Tailwind
-- Pattern: Primitive-then-semantic token architecture
-
-Plan 09-02 complete:
-
-- Migrated 13 component CSS files to standardized token names
-- --text-primary -> --foreground, --text-secondary -> --secondary-foreground
-- --text-muted -> --muted-foreground, --text-inverse -> --primary-foreground
-- --bg-card -> --card, --border-light -> --border
-- Removed deprecated token aliases from index.css
-- Kept --text-inverse as semantic token for inverted text
-- **Fixed gap:** Migrated 25 base style usages in index.css
-- Pattern: shadcn/ui-compatible tokens throughout website
+- Replaced simulated preview card with actual product screenshot (query-dark.png)
+- Simplified hero title to single-line "SQL Pro" using translation key
+- Removed feature tags section from hero (redundant with Features section)
+- Removed Pricing section from App.tsx page structure
+- Updated hero.description to concise tagline in en.json and zh.json
+- Pattern: Screenshot-first hero design (Linear/Raycast style)
 
 ### Phase 9 Completion Summary
 
@@ -128,31 +119,6 @@ Plan 07-01 complete:
 - Added transition-colors duration-100 for smooth feedback
 - Pattern: group on tr, group-hover on pinned cells for parent-child hover
 
-### Phase 6 Progress
-
-Plan 06-01 complete:
-
-- Added glassmorphism to AlertDialogContent
-- Pattern: backdrop-blur-xl with translucent background
-
-Plan 06-02 complete:
-
-- Added glassmorphism to PopoverContent (bg-popover/90 backdrop-blur-md)
-- Added glassmorphism to DropdownMenuContent and DropdownMenuSubContent
-- Added glassmorphism to ContextMenuContent
-- Added glassmorphism to TooltipContent (bg-popover/95 backdrop-blur-sm for crispness)
-- Added glassmorphism to HoverCardContent
-- Pattern: backdrop-blur-md for popover overlays, backdrop-blur-sm for tooltips
-
-Plan 06-03 complete:
-
-- Removed hover:scale-[1.01] from Card component
-- Removed hover:shadow-md from Card component
-- Changed transition-all to transition-colors
-- Verified Skeleton uses bg-muted + animate-pulse (minimal)
-- Verified Spinner uses animate-spin (minimal)
-- Pattern: Subtle ring color hover states for professional aesthetic
-
 ### Phase 6 Completion Summary
 
 All 3 plans executed successfully:
@@ -161,102 +127,32 @@ All 3 plans executed successfully:
 - 06-02: Popover and DropdownMenu glassmorphism
 - 06-03: Card hover cleanup and loading state verification
 
-### Phase 5 Progress
-
-Plan 05-01 complete:
-
-- Added transition utility classes to globals.css (.transition-fast, .transition-normal, .transition-slow, .transition-colors-fast)
-- Standardized 100ms ease-out transitions on Button, DropdownMenu, Command components
-- Verified focus-visible rules correctly hide focus rings on mouse clicks
-- Pattern: 100ms ease-out for interactive element micro-interactions
-
-Plan 05-02 complete:
-
-- CommandList height animates smoothly using --cmdk-list-height
-- CommandItem has hover:bg-muted/50 and data-selected:bg-accent
-- Pattern: Premium command palette with Linear-style polish
-
-Plan 05-03 complete:
-
-- Added ShortcutKbd to Titlebar settings button tooltip
-- Added ShortcutKbd to Sidebar Export Schema context menu item
-- Added ShortcutKbd to ConnectionSelector Open Database menu item
-- Pattern: ShortcutKbd with className="ml-auto" for right-aligned shortcuts
-
-Plan 05-04 complete:
-
-- Created view-context-store.ts for global view tracking
-- Added visibleInViews to Command interface for view-scoped commands
-- DatabaseView syncs activeView to global store
-- CommandPalette filters commands by active view
-- Table commands (add row, delete row, export, etc.) only in data view
-- History commands (clear history) only in query view
-- Pattern: visibleInViews undefined = global command
-
 ### Phase 5 Completion Summary
 
 All 4 plans executed successfully:
 
+- 05-01: Transition utility classes and standardization
+- 05-02: Command palette height animation
+- 05-03: ShortcutKbd in menus
+- 05-04: View context store for command scoping
+
+### Phase 4 Completion Summary
+
 All 4 plans executed successfully:
 
-Plan 04-01 complete:
-
-- Removed shadow-xs from Button outline variant
-- Removed shadow-xs from BrandButton default and pulse variants
-- Pattern: Flat buttons for minimal aesthetic
-
-Plan 04-02 complete:
-
-- Removed shadow-xs from Input component
-- Removed shadow-xs from Textarea component
-- Removed shadow-xs from SelectTrigger component
-- Pattern: Flat form inputs for minimal aesthetic
-
-Plan 04-03 complete:
-
-- Removed shadow-xs from Checkbox component
-- Removed shadow-xs from Switch component
-- Removed shadow-xs from RadioGroup items
-- Pattern: Flat form controls for minimal aesthetic
-
-Plan 04-04 complete:
-
-- Toggle and Combobox already cleaned in 04-01
-- Removed shadow-xs from InputOTPSlot component
-- Removed shadow-xs from InputGroup wrapper component
-- Removed shadow-xs from ButtonGroupText component
-- Pattern: All secondary form components now flat
+- 04-01: Flat buttons
+- 04-02: Flat form inputs
+- 04-03: Flat form controls
+- 04-04: Flat secondary form components
 
 ### Phase 3 Completion Summary
 
 All 4 plans executed successfully:
 
-Plan 03-01 complete:
-
-- Tab pill utility classes added to globals.css
-- ConnectionTabBar, DataTabBar, QueryTabBar updated to pill-style
-
-Plan 03-02 complete:
-
-- Activity Bar simplified to flat, minimal styling
-- Removed all gradients, shadows, glow effects
-- Active indicator simplified to 2px solid bar
-- Pattern established: bg-accent active, bg-muted/50 hover
-
-Plan 03-03 complete:
-
-- Removed border-left lines from sidebar sections
-- Simplified section headers (non-uppercase, text-xs)
-- Simplified schema headers (text-sm for hierarchy)
-- Consistent hover states (bg-muted/50)
-- Smaller chevrons (h-2.5 w-2.5) with transitions
-
-Plan 03-04 complete (Gap Closure):
-
-- Filter/manage tabs in Sidebar TagFilterPopover updated to pill style
-- Replaced border-b-2 underline with bg-accent rounded-md
-- Added hover:bg-muted/50 for consistent hover states
-- GAP-01 resolved, all 4/4 must-haves now verified
+- 03-01: Tab pill utility classes
+- 03-02: Activity Bar simplification
+- 03-03: Sidebar section cleanup
+- 03-04: Gap closure (TagFilterPopover tabs)
 
 ### Phase 2 Completion Summary
 
@@ -266,8 +162,6 @@ Plan 02-01 complete:
 - Slate-300 (dark) / Slate-600 (light) for secondary text level
 - App-compatible aliases in all CSS files
 
-Verification: All 2/2 must-haves verified
-
 ### Phase 1 Completion Summary
 
 All 4 plans executed successfully:
@@ -276,8 +170,6 @@ All 4 plans executed successfully:
 - 01-02: Border, radius, shadow token system (globals.css)
 - 01-03: Website CSS alignment (index.css)
 - 01-04: Shared UI package update (sanctum.css)
-
-Verification: All 5/5 must-haves verified
 
 ### Pending Todos
 
@@ -289,8 +181,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-27T12:46:30Z
-Stopped at: Completed 09-02-PLAN.md (Component CSS Token Updates)
+Last session: 2026-01-27T13:33:00Z
+Stopped at: Completed 10-01-PLAN.md (Hero Simplification)
 Resume file: None
 
 ---
