@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Navigation Shell** - Activity Bar, Sidebar, and Tab Bars visual refresh (4/4 verified)
 - [x] **Phase 4: Core Components** - Buttons, inputs, and form controls refinement
 - [x] **Phase 5: Interaction System** - Command palette, transitions, keyboard focus (5/5 verified)
-- [ ] **Phase 6: Dialog & Overlay Polish** - Glassmorphism, hover states, loading states
+- [x] **Phase 6: Dialog & Overlay Polish** - Glassmorphism, hover states, loading states (3/3 verified)
 - [ ] **Phase 7: Data Views** - Table view contrast and density optimization
 - [ ] **Phase 8: Monaco Editor** - SQL editor theme coordination with design system
 - [ ] **Phase 9: Website Foundation** - Color system and typography alignment with app
@@ -142,9 +142,9 @@ Plans:
 
 Plans:
 
-- [ ] 06-01-PLAN.md — Glassmorphism on dialogs (alert-dialog, sheet)
-- [ ] 06-02-PLAN.md — Glassmorphism on popovers (popover, dropdown-menu, context-menu, tooltip, hover-card)
-- [ ] 06-03-PLAN.md — Card hover cleanup and loading state verification
+- [x] 06-01-PLAN.md — Glassmorphism on dialogs (alert-dialog, sheet)
+- [x] 06-02-PLAN.md — Glassmorphism on popovers (popover, dropdown-menu, context-menu, tooltip, hover-card)
+- [x] 06-03-PLAN.md — Card hover cleanup and loading state verification
 
 ### Phase 7: Data Views
 
@@ -241,7 +241,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. Navigation Shell        | 4/4            | Complete    | 2026-01-27 |
 | 4. Core Components         | 4/4            | Complete    | 2026-01-27 |
 | 5. Interaction System      | 4/4            | Complete    | 2026-01-27 |
-| 6. Dialog & Overlay Polish | 0/3            | Planned     | -          |
+| 6. Dialog & Overlay Polish | 3/3            | Complete    | 2026-01-27 |
 | 7. Data Views              | 0/TBD          | Not started | -          |
 | 8. Monaco Editor           | 0/TBD          | Not started | -          |
 | 9. Website Foundation      | 0/TBD          | Not started | -          |

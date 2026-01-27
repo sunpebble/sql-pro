@@ -27,9 +27,9 @@
 - [x] **VISL-01**: Three-level text hierarchy (primary/secondary/muted)
 - [x] **VISL-02**: Simplified button design (less decoration)
 - [x] **VISL-03**: Refined input/form styling for dark mode
-- [ ] **VISL-04**: Glassmorphism on dialogs (backdrop-filter: blur)
-- [ ] **VISL-05**: Subtle hover states (background change, no lift)
-- [ ] **VISL-06**: Minimal loading/skeleton states
+- [x] **VISL-04**: Glassmorphism on dialogs (backdrop-filter: blur)
+- [x] **VISL-05**: Subtle hover states (background change, no lift)
+- [x] **VISL-06**: Minimal loading/skeleton states
 - [ ] **VISL-07**: High-contrast table view for dark mode
 
 ### App Navigation (Navigation)
@@ -104,9 +104,9 @@
 | INTR-03     | Phase 5  | Complete |
 | INTR-04     | Phase 5  | Complete |
 | INTR-05     | Phase 5  | Complete |
-| VISL-04     | Phase 6  | Pending  |
-| VISL-05     | Phase 6  | Pending  |
-| VISL-06     | Phase 6  | Pending  |
+| VISL-04     | Phase 6  | Complete |
+| VISL-05     | Phase 6  | Complete |
+| VISL-06     | Phase 6  | Complete |
 | VISL-07     | Phase 7  | Pending  |
 | EDIT-01     | Phase 8  | Pending  |
 | EDIT-02     | Phase 8  | Pending  |
