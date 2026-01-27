@@ -118,7 +118,7 @@ export function CommandPalette() {
             value={search}
             onValueChange={setSearch}
           />
-          <CommandList className="max-h-75">
+          <CommandList className="max-h-75 overflow-hidden">
             <CommandEmpty>
               {t('commandPalette.noCommands', {
                 defaultValue: 'No commands found',
@@ -136,7 +136,7 @@ export function CommandPalette() {
                       key={command.id}
                       value={command.id}
                       onSelect={() => executeCommand(command.id)}
-                      className="gap-3"
+                      className="data-selected:bg-accent gap-3"
                     >
                       {command.icon ? (
                         <command.icon className="text-muted-foreground h-4 w-4 shrink-0" />
@@ -155,7 +155,7 @@ export function CommandPalette() {
               ))}
           </CommandList>
           {/* Footer */}
-          <div className="text-muted-foreground flex items-center justify-between border-t px-4 py-2 text-xs">
+          <div className="text-muted-foreground border-border/50 flex items-center justify-between border-t px-4 py-2 text-xs">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">
