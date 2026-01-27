@@ -117,11 +117,15 @@ Plans:
 3. Menu items and actions display their keyboard shortcuts inline
 4. Transitions throughout app complete in 100-200ms with ease-out timing
 5. Focus rings only appear during keyboard navigation (not mouse clicks)
-   **Plans**: TBD
+
+**Plans**: 4 plans in 2 waves
 
 Plans:
 
-- [ ] 05-01: TBD
+- [ ] 05-01-PLAN.md — Focus rings audit and transition standardization (INTR-04, INTR-05)
+- [ ] 05-02-PLAN.md — Command palette visual polish with height animation (INTR-01)
+- [ ] 05-03-PLAN.md — Inline keyboard shortcuts in dropdown menus (INTR-03)
+- [ ] 05-04-PLAN.md — Contextual commands based on current view (INTR-02)
 
 ### Phase 6: Dialog & Overlay Polish
 
