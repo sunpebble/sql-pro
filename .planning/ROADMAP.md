@@ -156,11 +156,12 @@ Plans:
 1. Table rows remain distinguishable at 500+ row result sets
 2. Row hover states provide clear visual feedback
 3. Data remains readable with proper contrast against dark backgrounds
-   **Plans**: TBD
+
+**Plans**: 1 plan
 
 Plans:
 
-- [ ] 07-01: TBD
+- [ ] 07-01-PLAN.md — Row hover states and pinned column hover inheritance
 
 ### Phase 8: Monaco Editor
 
@@ -242,7 +243,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Core Components         | 4/4            | Complete    | 2026-01-27 |
 | 5. Interaction System      | 4/4            | Complete    | 2026-01-27 |
 | 6. Dialog & Overlay Polish | 3/3            | Complete    | 2026-01-27 |
-| 7. Data Views              | 0/TBD          | Not started | -          |
+| 7. Data Views              | 0/1            | Not started | -          |
 | 8. Monaco Editor           | 0/TBD          | Not started | -          |
 | 9. Website Foundation      | 0/TBD          | Not started | -          |
 | 10. Website Content        | 0/TBD          | Not started | -          |
