@@ -14,34 +14,34 @@
   "features": {
     "title": "强大功能，",
     "titleHighlight": "专业体验",
-    "subtitle": "SQL Pro 提供完整的 SQLite 数据库管理解决方案",
+    "subtitle": "数据库管理所需的一切",
     "database": {
-      "title": "数据库管理",
-      "description": "支持 SQLite 和 SQLCipher 加密数据库，安全密码存储，多连接标签页界面"
+      "title": "多数据库支持",
+      "description": "SQLite、SQLCipher 加密、多连接标签页"
     },
     "query": {
-      "title": "查询工具",
-      "description": "Monaco 编辑器语法高亮，智能自动补全，Vim 模式，查询历史搜索"
+      "title": "智能查询编辑器",
+      "description": "Monaco 编辑器、自动补全、Vim 模式、历史记录"
     },
     "data": {
-      "title": "数据操作",
-      "description": "表格内联编辑，应用前差异预览，批量操作，多列高级过滤"
+      "title": "可视化数据编辑",
+      "description": "行内编辑、差异预览、批量操作"
     },
     "compare": {
       "title": "结构与数据对比",
-      "description": "对比不同连接间的数据库结构和表数据，自动生成迁移脚本"
+      "description": "对比连接间的结构和数据"
     },
     "visualization": {
-      "title": "可视化",
-      "description": "ER 图关系展示，结构视图浏览，深色/浅色主题自动切换"
+      "title": "结构可视化",
+      "description": "ER 图、结构浏览器、关系展示"
     },
     "security": {
-      "title": "安全加密",
-      "description": "SQLCipher 支持，加密数据库无缝集成，系统密钥链安全存储"
+      "title": "加密数据库",
+      "description": "SQLCipher 支持、系统密钥链存储"
     },
     "crossPlatform": {
       "title": "跨平台",
-      "description": "macOS、Windows、Linux 原生支持，统一体验，高性能"
+      "description": "macOS、Windows、Linux 原生应用"
     }
   },
   "screenshots": {
@@ -56,13 +56,10 @@
     "goTo": "跳转到第 {{number}} 张"
   },
   "download": {
-    "title": "立即开始使用",
+    "title": "下载",
     "titleHighlight": "SQL Pro",
-    "subtitle": "免费下载，跨平台支持",
     "downloadFor": "下载 {{platform}} 版本",
     "otherPlatforms": "其他平台：",
-    "buildGuide": "需要源码编译？查看",
-    "buildGuideLink": "构建指南",
     "platforms": {
       "mac": "macOS",
       "windows": "Windows",
@@ -77,13 +74,11 @@
     }
   },
   "footer": {
-    "docs": "文档",
     "github": "GitHub",
     "releases": "发布记录",
-    "issues": "问题反馈",
+    "docs": "文档",
     "discussions": "讨论区",
-    "copyright": "© {{year}} SQL Pro Team. 基于 MIT 协议开源。",
-    "techStack": "技术栈："
+    "copyright": "© {{year}} SQL Pro. 基于 MIT 协议开源。"
   },
   "pricing": {
     "title": "简单，",

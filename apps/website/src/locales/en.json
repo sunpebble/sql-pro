@@ -14,34 +14,34 @@
   "features": {
     "title": "Powerful Features,",
     "titleHighlight": "Professional Experience",
-    "subtitle": "SQL Pro provides a complete SQLite database management solution",
+    "subtitle": "Everything you need for database management",
     "database": {
-      "title": "Database Management",
-      "description": "SQLite and SQLCipher encrypted database support, secure password storage, multi-connection tabbed interface"
+      "title": "Multi-Database Support",
+      "description": "SQLite, SQLCipher encryption, multi-connection tabs"
     },
     "query": {
-      "title": "Query Tools",
-      "description": "Monaco editor with syntax highlighting, intelligent autocomplete, Vim mode, query history search"
+      "title": "Smart Query Editor",
+      "description": "Monaco editor, autocomplete, Vim mode, history"
     },
     "data": {
-      "title": "Data Operations",
-      "description": "Inline table editing, diff preview before applying, bulk operations, advanced multi-column filtering"
+      "title": "Visual Data Editing",
+      "description": "Inline editing, diff preview, bulk operations"
     },
     "compare": {
       "title": "Schema & Data Compare",
-      "description": "Compare database schemas and table data between connections, generate migration scripts automatically"
+      "description": "Compare schemas and data between connections"
     },
     "visualization": {
-      "title": "Visualization",
-      "description": "ER diagram relationships, structure view browsing, automatic dark/light theme switching"
+      "title": "Schema Visualization",
+      "description": "ER diagrams, structure browser, relationships"
     },
     "security": {
-      "title": "Secure Encryption",
-      "description": "SQLCipher support, seamless encrypted database integration, secure keychain storage"
+      "title": "Encrypted Databases",
+      "description": "SQLCipher support, secure keychain storage"
     },
     "crossPlatform": {
       "title": "Cross-Platform",
-      "description": "Native support for macOS, Windows, Linux with unified experience and high performance"
+      "description": "macOS, Windows, Linux native apps"
     }
   },
   "screenshots": {
@@ -56,13 +56,10 @@
     "goTo": "Go to slide {{number}}"
   },
   "download": {
-    "title": "Start using",
+    "title": "Download",
     "titleHighlight": "SQL Pro",
-    "subtitle": "Free download, cross-platform support",
     "downloadFor": "Download for {{platform}}",
     "otherPlatforms": "Other platforms:",
-    "buildGuide": "Need to build from source? Check the",
-    "buildGuideLink": "build guide",
     "platforms": {
       "mac": "macOS",
       "windows": "Windows",
@@ -77,13 +74,11 @@
     }
   },
   "footer": {
-    "docs": "Documentation",
     "github": "GitHub",
     "releases": "Releases",
-    "issues": "Issues",
+    "docs": "Documentation",
     "discussions": "Discussions",
-    "copyright": "© {{year}} SQL Pro Team. Open source under MIT license.",
-    "techStack": "Tech stack:"
+    "copyright": "© {{year}} SQL Pro. Open source under MIT license."
   },
   "pricing": {
     "title": "Simple,",
