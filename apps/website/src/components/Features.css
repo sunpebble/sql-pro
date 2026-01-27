@@ -1,6 +1,6 @@
 /* =========================================
-   Features Section - Developer Professional
-   Clean grid layout with varied card sizes
+   Features Section - Bento Grid Layout
+   Asymmetric grid with varied card sizes
    ========================================= */
 
 .features {
@@ -72,64 +72,69 @@
    BENTO GRID
    ═══════════════════════════════════════ */
 
-.features-grid {
+.bento-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 160px;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* ═══════════════════════════════════════
-   FEATURE CARDS
+   BENTO ITEMS
    ═══════════════════════════════════════ */
 
-.feature-card {
+.bento-item {
   background: oklch(1 0 0 / 3%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-xl);
-  padding: 32px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   transition: all var(--duration-normal) var(--ease-out);
   position: relative;
   overflow: hidden;
-  width: 100%;
-  min-height: 280px;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.feature-card:hover {
-  border-color: var(--border);
+.bento-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bento-item:hover {
+  border-color: var(--primary);
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-4px);
 }
 
-/* Dark Card Variant - for emphasis */
-.feature-card.dark {
-  background: var(--card);
-  border-color: var(--border);
+/* Size variants */
+.bento-large {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 32px;
 }
 
-.feature-card.dark:hover {
-  border-color: var(--primary);
-  box-shadow: var(--shadow-glow);
+.bento-wide {
+  grid-column: span 2;
 }
 
-/* Accent Card Variant - highlighted */
-.feature-card.accent {
-  background: var(--primary-50);
-  border-color: oklch(0.723 0.191 142.5 / 20%);
+.bento-tall {
+  grid-row: span 2;
 }
 
-.feature-card.accent:hover {
-  border-color: var(--primary);
+.bento-default {
+  /* 1x1, no span needed */
 }
 
 /* Icon */
-.feature-card-icon {
-  width: 56px;
-  height: 56px;
+.bento-item-icon {
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,141 +142,61 @@
   border: 1px solid oklch(0.723 0.191 142.5 / 20%);
   border-radius: var(--border-radius-lg);
   color: var(--primary);
+  flex-shrink: 0;
   transition: all var(--duration-normal) var(--ease-out);
 }
 
-.feature-card:hover .feature-card-icon {
+.bento-large .bento-item-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.bento-item:hover .bento-item-icon {
   background: var(--primary);
   color: var(--primary-foreground);
   transform: scale(1.05);
   box-shadow: var(--shadow-glow);
 }
 
-.feature-card-icon svg {
+.bento-item-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.bento-large .bento-item-icon svg {
   width: 28px;
   height: 28px;
 }
 
 /* Content */
-.feature-card-content {
+.bento-item-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   flex: 1;
 }
 
-.feature-card-title {
+.bento-item-title {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: var(--foreground);
   margin: 0;
 }
 
-.feature-card-description {
-  font-size: 15px;
+.bento-large .bento-item-title {
+  font-size: 1.375rem;
+}
+
+.bento-item-description {
+  font-size: 14px;
   line-height: 1.6;
   color: var(--secondary-foreground);
   margin: 0;
 }
 
-/* Feature List */
-.feature-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: auto;
-}
-
-.feature-card-list-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: var(--secondary-foreground);
-}
-
-.feature-card-list-item svg {
-  width: 18px;
-  height: 18px;
-  color: var(--primary);
-  flex-shrink: 0;
-}
-
-/* Visual Preview */
-.feature-card-visual {
-  margin-top: auto;
-  background: oklch(1 0 0 / 5%);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--border-radius-md);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.feature-card-visual-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.feature-card-visual-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--primary);
-}
-
-.feature-card-visual-line {
-  height: 8px;
-  border-radius: 4px;
-  background: var(--border);
-}
-
-.feature-card-visual-line.short {
-  width: 40%;
-}
-
-.feature-card-visual-line.medium {
-  width: 60%;
-}
-
-.feature-card-visual-line.long {
-  width: 80%;
-}
-
-/* Badge */
-.feature-card-badge {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 6px 12px;
-  background: var(--primary);
-  color: var(--primary-foreground);
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: var(--border-radius-full);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* ═══════════════════════════════════════
-   ANIMATIONS
-   ═══════════════════════════════════════ */
-
-.feature-card-wrapper {
-  display: flex;
-  opacity: 0;
-  transform: translateY(30px);
-  transition:
-    opacity 0.6s var(--ease-out),
-    transform 0.6s var(--ease-out);
-}
-
-.feature-card-wrapper.visible {
-  opacity: 1;
-  transform: translateY(0);
+.bento-large .bento-item-description {
+  font-size: 15px;
 }
 
 /* ═══════════════════════════════════════
@@ -279,12 +204,26 @@
    ═══════════════════════════════════════ */
 
 @media (max-width: 1024px) {
-  .features-grid {
+  .bento-grid {
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 140px;
   }
 
-  .feature-card {
-    min-height: 260px;
+  .bento-large {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .bento-tall {
+    grid-row: span 1;
+  }
+
+  .bento-item {
+    padding: 20px;
+  }
+
+  .bento-large {
+    padding: 24px;
   }
 }
 
@@ -293,58 +232,56 @@
     margin-bottom: 40px;
   }
 
-  .features-grid {
+  .bento-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    grid-auto-rows: auto;
+    gap: 12px;
   }
 
-  .feature-card {
-    padding: 24px;
+  .bento-large,
+  .bento-wide {
+    grid-column: span 1;
+  }
+
+  .bento-item {
+    padding: 20px;
     min-height: auto;
-    gap: 16px;
   }
 
-  .feature-card-icon {
+  .bento-item-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .bento-large .bento-item-icon {
     width: 48px;
     height: 48px;
   }
 
-  .feature-card-icon svg {
+  .bento-item-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .bento-large .bento-item-icon svg {
     width: 24px;
     height: 24px;
   }
 
-  .feature-card-title {
+  .bento-item-title {
+    font-size: 1rem;
+  }
+
+  .bento-large .bento-item-title {
     font-size: 1.125rem;
   }
 
-  .feature-card-description {
-    font-size: 14px;
-  }
-
-  .feature-card-list {
-    gap: 8px;
-  }
-
-  .feature-card-list-item {
+  .bento-item-description {
     font-size: 13px;
-    gap: 10px;
   }
 
-  .feature-card-list-item svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .feature-card-visual {
-    padding: 12px;
-  }
-
-  .feature-card-badge {
-    top: 16px;
-    right: 16px;
-    padding: 4px 10px;
-    font-size: 10px;
+  .bento-large .bento-item-description {
+    font-size: 14px;
   }
 }
 
@@ -353,7 +290,7 @@
    ═══════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
-  .feature-card-wrapper {
+  .bento-item {
     opacity: 1;
     transform: none;
     transition: none;
@@ -364,22 +301,13 @@
    LIGHT MODE ADJUSTMENTS
    ═══════════════════════════════════════ */
 
-.light .feature-card {
+.light .bento-item {
   background: oklch(1 0 0 / 80%);
   border-color: var(--border);
   box-shadow: var(--shadow-sm);
 }
 
-.light .feature-card:hover {
-  border-color: var(--border-medium);
+.light .bento-item:hover {
+  border-color: var(--primary);
   box-shadow: var(--shadow-card-hover);
-}
-
-.light .feature-card.dark {
-  background: oklch(0.98 0.005 250);
-}
-
-.light .feature-card-visual {
-  background: oklch(0.97 0.005 250);
-  border-color: var(--border);
 }

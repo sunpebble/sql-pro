@@ -3,39 +3,21 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Features.css';
 
+type FeatureSize = 'large' | 'wide' | 'tall' | 'default';
+
 interface Feature {
   key: string;
   icon: string;
-  title: string;
-  description: string;
-  variant: string;
+  size: FeatureSize;
 }
 
 const features: Feature[] = [
-  {
-    key: 'multi',
-    icon: 'database',
-    title: 'Multi-Database Support',
-    description:
-      'Connect to PostgreSQL, MySQL, SQLite, MongoDB and more. One tool for all your databases.',
-    variant: 'default',
-  },
-  {
-    key: 'ai',
-    icon: 'sparkles',
-    title: 'AI-Powered Assistant',
-    description:
-      'Get intelligent query suggestions, natural language to SQL, and smart autocomplete.',
-    variant: 'accent',
-  },
-  {
-    key: 'secure',
-    icon: 'lock',
-    title: 'Local First & Secure',
-    description:
-      'Your data never leaves your machine. All connections are stored locally with encryption.',
-    variant: 'default',
-  },
+  { key: 'database', icon: 'database', size: 'large' },
+  { key: 'query', icon: 'code', size: 'wide' },
+  { key: 'security', icon: 'lock', size: 'default' },
+  { key: 'crossPlatform', icon: 'devices', size: 'tall' },
+  { key: 'visualization', icon: 'diagram', size: 'default' },
+  { key: 'data', icon: 'table', size: 'wide' },
 ];
 
 const icons: Record<string, ReactNode> = {
@@ -52,7 +34,7 @@ const icons: Record<string, ReactNode> = {
       <path d="M3 12A9 3 0 0 0 21 12" />
     </svg>
   ),
-  sparkles: (
+  code: (
     <svg
       viewBox="0 0 24 24"
       fill="none"
@@ -60,7 +42,8 @@ const icons: Record<string, ReactNode> = {
       strokeWidth="2"
       aria-hidden="true"
     >
-      <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
     </svg>
   ),
   lock: (
@@ -73,6 +56,50 @@ const icons: Record<string, ReactNode> = {
     >
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  ),
+  devices: (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+  ),
+  diagram: (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <line x1="10" y1="6.5" x2="14" y2="6.5" />
+      <line x1="6.5" y1="10" x2="6.5" y2="14" />
+      <line x1="17.5" y1="10" x2="17.5" y2="14" />
+    </svg>
+  ),
+  table: (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <line x1="3" y1="9" x2="21" y2="9" />
+      <line x1="3" y1="15" x2="21" y2="15" />
+      <line x1="9" y1="3" x2="9" y2="21" />
     </svg>
   ),
 };
@@ -132,7 +159,7 @@ export default function Features() {
           <p className="features-subtitle">{t('features.subtitle')}</p>
         </header>
 
-        <div className="features-grid" role="list">
+        <div className="bento-grid" role="list">
           {features.map((feature, index) => (
             <div
               key={feature.key}
@@ -140,21 +167,18 @@ export default function Features() {
                 cardsRef.current[index] = el;
               }}
               data-index={index}
-              className={`feature-card-wrapper ${visibleCards.has(index) ? 'visible' : ''}`}
+              className={`bento-item bento-${feature.size} ${visibleCards.has(index) ? 'visible' : ''}`}
               style={{ transitionDelay: `${index * 100}ms` }}
+              role="listitem"
             >
-              <div
-                className={`feature-card ${feature.variant}`}
-                role="listitem"
-              >
-                <div className="feature-card-icon">{icons[feature.icon]}</div>
-
-                <div className="feature-card-content">
-                  <h3 className="feature-card-title">{feature.title}</h3>
-                  <p className="feature-card-description">
-                    {feature.description}
-                  </p>
-                </div>
+              <div className="bento-item-icon">{icons[feature.icon]}</div>
+              <div className="bento-item-content">
+                <h3 className="bento-item-title">
+                  {t(`features.${feature.key}.title`)}
+                </h3>
+                <p className="bento-item-description">
+                  {t(`features.${feature.key}.description`)}
+                </p>
               </div>
             </div>
           ))}
