@@ -17,7 +17,7 @@
    THEME CONFIGURATION
    ═══════════════════════════════════════ */
 
-@theme {
+@theme inline {
   /* Smooth button hover animation */
   --animate-button-hover: button-hover 0.3s ease-out;
 
@@ -32,6 +32,32 @@
       transform: translateY(0);
     }
   }
+
+  /* Color token mappings for Tailwind utility classes */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Radius tokens for rounded-* utilities */
+  --radius-sm: var(--border-radius-sm);
+  --radius-md: var(--border-radius-md);
+  --radius-lg: var(--border-radius-lg);
+  --radius-xl: var(--border-radius-xl);
 }
 
 :root {
