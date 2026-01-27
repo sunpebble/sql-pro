@@ -235,11 +235,13 @@ const DataRow = memo(
 
     // Build row className
     const rowClassName = cn(
-      'border-border h-6 border-b',
+      'group border-border h-6 border-b',
+      'transition-colors duration-100',
       isEven ? 'bg-background' : 'bg-muted/20',
+      'hover:bg-muted/50',
       isDeleted && 'bg-destructive/10 line-through opacity-50',
       isNewRow && 'bg-green-500/10',
-      isSelected && 'bg-primary/10',
+      isSelected && 'bg-primary/10 hover:bg-primary/15',
       isInDragRange && !isSelected && 'bg-primary/5'
     );
 
