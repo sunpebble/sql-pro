@@ -334,6 +334,30 @@
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ============================================
+ * TRANSITION UTILITIES
+ * Reusable transition classes using design tokens
+ * ============================================ */
+
+/* All-property transitions */
+.transition-fast {
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.transition-normal {
+  transition: all var(--duration-normal) var(--ease-out);
+}
+.transition-slow {
+  transition: all var(--duration-slow) var(--ease-out);
+}
+
+/* Color-only transitions (lighter, for backgrounds) */
+.transition-colors-fast {
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
