@@ -52,7 +52,7 @@
 - [ ] **WEB-05**: Scroll-triggered fade-up animations
 - [ ] **WEB-06**: Streamlined Download section
 - [ ] **WEB-07**: Minimal Footer with essential links only
-- [ ] **WEB-08**: Website colors unified with app dark theme
+- [x] **WEB-08**: Website colors unified with app dark theme
 
 ## v2 Requirements
 
@@ -110,7 +110,7 @@
 | VISL-07     | Phase 7  | Complete |
 | EDIT-01     | Phase 8  | Complete |
 | EDIT-02     | Phase 8  | Complete |
-| WEB-08      | Phase 9  | Pending  |
+| WEB-08      | Phase 9  | Complete |
 | WEB-01      | Phase 10 | Pending  |
 | WEB-02      | Phase 10 | Pending  |
 | WEB-03      | Phase 10 | Pending  |
