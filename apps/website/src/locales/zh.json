@@ -203,5 +203,68 @@
     "accountMenu": "账户菜单",
     "myLicenses": "我的许可证",
     "expires": "到期时间"
+  },
+  "stats": {
+    "title": "SQL Pro 数据统计",
+    "databases": "数据库类型",
+    "platforms": "支持平台",
+    "queries": "查询次数",
+    "license": "开源协议"
+  },
+  "testimonials": {
+    "label": "用户评价",
+    "title": "深受",
+    "titleHighlight": "开发者喜爱",
+    "subtitle": "看看全球开发者对 SQL Pro 的评价。",
+    "quotes": {
+      "developer": "SQL Pro 彻底改变了我使用 SQLite 数据库的方式。带有自动补全的 Monaco 编辑器是真正的效率利器。",
+      "datascientist": "终于有一个真正好用的数据库工具了。可视化差异预览每周都能为我节省数小时的时间。",
+      "indie": "作为独立开发者，我需要快速可靠的工具。SQL Pro 正是如此——简洁、强大、精美。"
+    }
+  },
+  "opensource": {
+    "label": "开源项目",
+    "title": "公开构建，",
+    "titleHighlight": "由开发者驱动",
+    "description": "SQL Pro 基于 MIT 协议完全开源。您可以审查代码、贡献功能，或将其 fork 用于自己的需求。",
+    "features": {
+      "secure": "安全可审计",
+      "community": "社区驱动",
+      "extensible": "完全可扩展"
+    },
+    "viewOnGithub": "在 GitHub 查看",
+    "starOnGithub": "Star 项目"
+  },
+  "faq": {
+    "label": "常见问题",
+    "title": "常见",
+    "titleHighlight": "问题解答",
+    "subtitle": "关于 SQL Pro 您需要了解的一切。",
+    "items": {
+      "free": {
+        "question": "SQL Pro 可以免费使用吗？",
+        "answer": "是的！SQL Pro 基于 MIT 协议开源且免费使用。您可以免费下载并用于个人和商业项目。"
+      },
+      "platforms": {
+        "question": "支持哪些平台？",
+        "answer": "SQL Pro 原生运行于 macOS（Intel 和 Apple Silicon）、Windows（x64）和 Linux（x64）。我们为 Mac 提供 Universal 二进制包，为 Linux 提供 AppImage/deb 安装包。"
+      },
+      "sqlite": {
+        "question": "支持哪些 SQLite 功能？",
+        "answer": "SQL Pro 支持所有标准 SQLite 功能，包括视图、触发器、索引、外键、虚拟表和全文搜索。我们还支持 WAL 模式和并发连接。"
+      },
+      "encryption": {
+        "question": "数据库加密如何工作？",
+        "answer": "SQL Pro 支持 SQLCipher 加密数据库。您的加密密钥安全地存储在系统密钥链中（macOS 钥匙串、Windows 凭据管理器或 Linux Secret Service）。"
+      },
+      "updates": {
+        "question": "如何获取更新？",
+        "answer": "SQL Pro 内置自动更新检查。当有新版本可用时，您会收到通知并可以一键更新。您也可以从 GitHub Releases 手动下载更新。"
+      },
+      "support": {
+        "question": "在哪里可以获得帮助？",
+        "answer": "您可以通过 GitHub Discussions 获得社区支持，通过 GitHub Issues 报告 bug，或查阅我们的文档获取指南和教程。"
+      }
+    }
   }
 }

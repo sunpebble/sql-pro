@@ -66,13 +66,23 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Product Screenshot */}
+        {/* Product Video */}
         <div className="hero-screenshot">
-          <img
-            src="/screenshots/query-dark.png"
-            alt="SQL Pro query editor interface showing SQL syntax highlighting and database sidebar"
+          <video
+            src="/promo.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
             className="hero-screenshot-img"
-          />
+            aria-label="SQL Pro product demonstration video showing query editor, data editing, and multi-database support"
+          >
+            {/* Fallback for browsers that don't support video */}
+            <img
+              src="/screenshots/query-dark.png"
+              alt="SQL Pro query editor interface showing SQL syntax highlighting and database sidebar"
+            />
+          </video>
         </div>
       </div>
     </section>

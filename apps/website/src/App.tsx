@@ -2,11 +2,16 @@ import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Account from './components/Account';
 import Download from './components/Download';
+import FAQ from './components/FAQ';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import LicenseModal from './components/LicenseModal';
+import OpenSource from './components/OpenSource';
+import Screenshots from './components/Screenshots';
 import SkipLink from './components/SkipLink';
+import Stats from './components/Stats';
+import Testimonials from './components/Testimonials';
 import TopBar from './components/TopBar';
 
 function Loading() {
@@ -69,7 +74,12 @@ export default function App() {
       <TopBar />
       <main id="main-content" role="main" aria-label={t('meta.title')}>
         <Hero />
+        <Stats />
         <Features />
+        <Screenshots />
+        <Testimonials />
+        <OpenSource />
+        <FAQ />
         <Download />
       </main>
       <Footer />

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useInView } from '../hooks/useInView';
 import './Features.css';
 
-type FeatureSize = 'large' | 'wide' | 'tall' | 'default';
+type FeatureSize = 'featured' | 'wide' | 'default';
 
 interface Feature {
   key: string;
@@ -13,10 +13,10 @@ interface Feature {
 }
 
 const features: Feature[] = [
-  { key: 'database', icon: 'database', size: 'large' },
-  { key: 'query', icon: 'code', size: 'wide' },
+  { key: 'database', icon: 'database', size: 'featured' },
+  { key: 'query', icon: 'code', size: 'featured' },
   { key: 'security', icon: 'lock', size: 'default' },
-  { key: 'crossPlatform', icon: 'devices', size: 'tall' },
+  { key: 'crossPlatform', icon: 'devices', size: 'default' },
   { key: 'visualization', icon: 'diagram', size: 'default' },
   { key: 'data', icon: 'table', size: 'wide' },
 ];

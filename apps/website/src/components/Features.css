@@ -1,6 +1,6 @@
 /* =========================================
-   Features Section - Bento Grid Layout
-   Asymmetric grid with varied card sizes
+   Features Section - Balanced Bento Grid
+   3-column layout with featured cards
    ========================================= */
 
 .features {
@@ -34,7 +34,7 @@
   gap: 8px;
   padding: 8px 16px;
   background: var(--primary-50);
-  border: 1px solid oklch(0.723 0.191 142.5 / 20%);
+  border: 1px solid oklch(0.75 0.183 55.934 / 20%);
   color: var(--primary);
   font-size: 13px;
   font-weight: 600;
@@ -79,15 +79,14 @@
 }
 
 /* ═══════════════════════════════════════
-   BENTO GRID
+   BENTO GRID - 3 Column Layout
    ═══════════════════════════════════════ */
 
 .bento-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 160px;
-  gap: 16px;
-  max-width: 1200px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -101,15 +100,16 @@
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-xl);
-  padding: 24px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   transition: all var(--duration-normal) var(--ease-out);
   position: relative;
   overflow: hidden;
   opacity: 0;
   transform: translateY(30px);
+  min-height: 180px;
 }
 
 .bento-item.visible {
@@ -120,43 +120,56 @@
 .bento-item:hover {
   border-color: var(--primary);
   box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+}
+
+.bento-item.visible:hover {
+  transform: translateY(-4px);
 }
 
 /* Size variants */
-.bento-large {
-  grid-column: span 2;
-  grid-row: span 2;
+.bento-featured {
+  /* Spans 1.5 columns worth - first row featured cards */
+  min-height: 200px;
   padding: 32px;
 }
 
 .bento-wide {
-  grid-column: span 2;
+  grid-column: span 3;
+  flex-direction: row;
+  align-items: center;
+  min-height: auto;
+  padding: 32px 40px;
 }
 
-.bento-tall {
-  grid-row: span 2;
+.bento-wide .bento-item-icon {
+  flex-shrink: 0;
+}
+
+.bento-wide .bento-item-content {
+  flex: 1;
 }
 
 .bento-default {
-  /* 1x1, no span needed */
+  /* Standard 1x1 card */
 }
 
 /* Icon */
 .bento-item-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--primary-50);
-  border: 1px solid oklch(0.723 0.191 142.5 / 20%);
+  border: 1px solid oklch(0.75 0.183 55.934 / 20%);
   border-radius: var(--border-radius-lg);
   color: var(--primary);
   flex-shrink: 0;
   transition: all var(--duration-normal) var(--ease-out);
 }
 
-.bento-large .bento-item-icon {
+.bento-featured .bento-item-icon {
   width: 56px;
   height: 56px;
 }
@@ -169,11 +182,11 @@
 }
 
 .bento-item-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
 }
 
-.bento-large .bento-item-icon svg {
+.bento-featured .bento-item-icon svg {
   width: 28px;
   height: 28px;
 }
@@ -194,8 +207,8 @@
   margin: 0;
 }
 
-.bento-large .bento-item-title {
-  font-size: 1.375rem;
+.bento-featured .bento-item-title {
+  font-size: 1.25rem;
 }
 
 .bento-item-description {
@@ -205,8 +218,9 @@
   margin: 0;
 }
 
-.bento-large .bento-item-description {
+.bento-featured .bento-item-description {
   font-size: 15px;
+  line-height: 1.7;
 }
 
 /* ═══════════════════════════════════════
@@ -216,24 +230,25 @@
 @media (max-width: 1024px) {
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 140px;
+    gap: 16px;
   }
 
-  .bento-large {
+  .bento-wide {
     grid-column: span 2;
-    grid-row: span 1;
-  }
-
-  .bento-tall {
-    grid-row: span 1;
   }
 
   .bento-item {
-    padding: 20px;
+    padding: 24px;
+    min-height: 160px;
   }
 
-  .bento-large {
-    padding: 24px;
+  .bento-featured {
+    min-height: 180px;
+    padding: 28px;
+  }
+
+  .bento-wide {
+    padding: 28px 32px;
   }
 }
 
@@ -244,45 +259,54 @@
 
   .bento-grid {
     grid-template-columns: 1fr;
-    grid-auto-rows: auto;
     gap: 12px;
   }
 
-  .bento-large,
   .bento-wide {
     grid-column: span 1;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .bento-item {
-    padding: 20px;
+    padding: 24px;
     min-height: auto;
   }
 
-  .bento-item-icon {
-    width: 44px;
-    height: 44px;
+  .bento-featured {
+    min-height: auto;
+    padding: 24px;
   }
 
-  .bento-large .bento-item-icon {
+  .bento-wide {
+    padding: 24px;
+  }
+
+  .bento-item-icon {
     width: 48px;
     height: 48px;
   }
 
-  .bento-item-icon svg {
-    width: 22px;
-    height: 22px;
+  .bento-featured .bento-item-icon {
+    width: 52px;
+    height: 52px;
   }
 
-  .bento-large .bento-item-icon svg {
+  .bento-item-icon svg {
     width: 24px;
     height: 24px;
+  }
+
+  .bento-featured .bento-item-icon svg {
+    width: 26px;
+    height: 26px;
   }
 
   .bento-item-title {
     font-size: 1rem;
   }
 
-  .bento-large .bento-item-title {
+  .bento-featured .bento-item-title {
     font-size: 1.125rem;
   }
 
@@ -290,7 +314,7 @@
     font-size: 13px;
   }
 
-  .bento-large .bento-item-description {
+  .bento-featured .bento-item-description {
     font-size: 14px;
   }
 }
@@ -310,6 +334,10 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .bento-item:hover {
+    transform: none;
   }
 }
 

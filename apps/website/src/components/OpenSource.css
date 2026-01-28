@@ -1,0 +1,252 @@
+/* OpenSource Section */
+.opensource {
+  padding: var(--section-gap) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background decoration */
+.opensource::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 80% 50%,
+    oklch(0.75 0.183 55.934 / 5%) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.opensource-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+
+.opensource-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Info Section */
+.opensource-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.opensource-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+  background: var(--primary-50);
+  border: 1px solid oklch(0.75 0.183 55.934 / 20%);
+  border-radius: var(--border-radius-full);
+  width: fit-content;
+}
+
+.opensource-label svg {
+  width: 16px;
+  height: 16px;
+}
+
+.opensource-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.2;
+}
+
+.opensource-title-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--accent-cyan) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.opensource-description {
+  font-size: 1.125rem;
+  color: var(--secondary-foreground);
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+/* Features */
+.opensource-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.opensource-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: oklch(1 0 0 / 5%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-full);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--secondary-foreground);
+  transition: all 0.2s ease;
+}
+
+.opensource-feature:hover {
+  border-color: var(--border-light);
+  color: var(--foreground);
+}
+
+.opensource-feature svg {
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+}
+
+/* Actions */
+.opensource-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.opensource-btn-primary,
+.opensource-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--border-radius-lg);
+  transition: all 0.25s var(--ease-out);
+  cursor: pointer;
+}
+
+.opensource-btn-primary {
+  background: var(--primary);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-md);
+}
+
+.opensource-btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 20px var(--primary-glow);
+}
+
+.opensource-btn-primary svg {
+  width: 20px;
+  height: 20px;
+}
+
+.opensource-btn-secondary {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border-medium);
+}
+
+.opensource-btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-50);
+}
+
+.opensource-btn-secondary svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Visual - Terminal */
+.opensource-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.opensource .terminal-window {
+  width: 100%;
+  max-width: 520px;
+  transition: all 0.3s ease;
+}
+
+.opensource .terminal-window:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2xl);
+}
+
+.terminal-success {
+  color: var(--success) !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .opensource-content {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    text-align: center;
+  }
+
+  .opensource-info {
+    align-items: center;
+  }
+
+  .opensource-description {
+    max-width: 600px;
+  }
+
+  .opensource-features {
+    justify-content: center;
+  }
+
+  .opensource-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .opensource-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .opensource-btn-primary,
+  .opensource-btn-secondary {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .opensource .terminal-window {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .opensource-features {
+    flex-direction: column;
+  }
+
+  .opensource-feature {
+    width: 100%;
+    justify-content: center;
+  }
+}
