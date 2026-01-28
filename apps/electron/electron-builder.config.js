@@ -11,6 +11,11 @@ const config = {
   productName: 'SQL Pro',
   copyright: 'Copyright © 2025 kunish',
 
+  // Override scoped package name to avoid @ symbol issues with 7-Zip
+  extraMetadata: {
+    name: 'sqlpro',
+  },
+
   directories: {
     buildResources: 'build',
   },
@@ -21,7 +26,8 @@ const config = {
       to: '.',
       filter: ['package.json', 'out/**/*', '!out/**/*.map'],
     },
-    // Include workspace root node_modules (where hoisted dependencies live)
+    // Include workspace root node_modules with pnpm virtual store
+    // pnpm uses symlinks that point to .pnpm, so we need to include both
     {
       from: '../../node_modules',
       to: 'node_modules',
@@ -40,8 +46,7 @@ const config = {
         '!**/__tests__/**',
         '!**/example/**',
         '!**/examples/**',
-        // Exclude pnpm's virtual store (handled separately)
-        '!.pnpm/**',
+        // Don't exclude .pnpm - it contains the actual package files
       ],
     },
   ],
@@ -73,10 +78,10 @@ const config = {
     notarize: false,
     // Skip code signing - we'll handle it manually if needed
     identity: null,
-    // Only build zip - DMG will be created manually with hdiutil to avoid 7za @ prefix issues
+    // Build dir first, then create zip manually to avoid 7za @ prefix issues
     target: [
       {
-        target: 'zip',
+        target: 'dir',
         arch: ['arm64', 'x64'],
       },
     ],
@@ -111,6 +116,45 @@ const config = {
   },
 
   npmRebuild: true,
+
+  // Fix readable-stream compatibility for lazystream/archiver
+  // readable-stream v3 removed passthrough.js, but lazystream expects it
+  afterPack: async (context) => {
+    const appOutDir = context.appOutDir;
+    const resourcesDir = path.join(appOutDir, 'Contents', 'Resources');
+
+    // For non-asar builds, fix the readable-stream directly
+    const nodeModulesPath = path.join(
+      resourcesDir,
+      'app',
+      'node_modules',
+      'readable-stream'
+    );
+
+    if (fs.existsSync(nodeModulesPath)) {
+      // Create passthrough.js shim for readable-stream v3
+      const passthroughShim = `module.exports = require('./lib/_stream_passthrough.js');`;
+      const duplexShim = `module.exports = require('./lib/_stream_duplex.js');`;
+      const transformShim = `module.exports = require('./lib/_stream_transform.js');`;
+
+      const passthroughPath = path.join(nodeModulesPath, 'passthrough.js');
+      const duplexPath = path.join(nodeModulesPath, 'duplex.js');
+      const transformPath = path.join(nodeModulesPath, 'transform.js');
+
+      if (!fs.existsSync(passthroughPath)) {
+        fs.writeFileSync(passthroughPath, passthroughShim);
+        console.log('Created readable-stream/passthrough.js shim');
+      }
+      if (!fs.existsSync(duplexPath)) {
+        fs.writeFileSync(duplexPath, duplexShim);
+        console.log('Created readable-stream/duplex.js shim');
+      }
+      if (!fs.existsSync(transformPath)) {
+        fs.writeFileSync(transformPath, transformShim);
+        console.log('Created readable-stream/transform.js shim');
+      }
+    }
+  },
 
   // Auto-update configuration - Cloudflare R2
   publish: {

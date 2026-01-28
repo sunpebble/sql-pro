@@ -10,12 +10,12 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "nx run @sqlpro/app:build",
-    "build:mac": "nx run @sqlpro/app:build:mac",
-    "build:win": "nx run @sqlpro/app:build:win",
-    "build:linux": "nx run @sqlpro/app:build:linux",
-    "dev": "nx run @sqlpro/app:dev",
-    "dev:mock": "nx run @sqlpro/app:dev:mock",
+    "build": "nx run sqlpro-app:build",
+    "build:mac": "nx run sqlpro-app:build:mac",
+    "build:win": "nx run sqlpro-app:build:win",
+    "build:linux": "nx run sqlpro-app:build:linux",
+    "dev": "nx run sqlpro-app:dev",
+    "dev:mock": "nx run sqlpro-app:dev:mock",
     "docs:build": "nx run @sqlpro/docs:build",
     "docs:dev": "nx run @sqlpro/docs:dev",
     "docs:preview": "nx run @sqlpro/docs:preview",
@@ -25,10 +25,10 @@
     "format": "nx format:write",
     "lint": "nx run-many -t lint",
     "prepare": "husky",
-    "test": "nx run @sqlpro/app:test",
-    "test:coverage": "nx run @sqlpro/app:test:coverage",
-    "test:run": "nx run @sqlpro/app:test:run",
-    "typecheck": "nx run @sqlpro/app:typecheck"
+    "test": "nx run sqlpro-app:test",
+    "test:coverage": "nx run sqlpro-app:test:coverage",
+    "test:run": "nx run sqlpro-app:test:run",
+    "typecheck": "nx run sqlpro-app:typecheck"
   },
   "dependencies": {
     "@types/react-resizable": "^3.0.8",
