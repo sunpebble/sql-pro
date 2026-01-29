@@ -93,7 +93,7 @@ export function useTableNavigation() {
           table.name
         );
         const metadata = getTableMetadata(key);
-        return metadata.tags.includes(activeTagFilter);
+        return metadata.tagIds.includes(activeTagFilter);
       });
     };
 

@@ -1,3 +1,4 @@
+import type {TableMetadata, TagDefinition} from '@/stores/table-organization-store';
 import type { SchemaInfo, TableSchema, TriggerSchema } from '@/types/database';
 import {
   AlertDialog,
@@ -78,7 +79,11 @@ import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
 import { useSettingsStore, useTableFont } from '@/stores/settings-store';
-import { useTableOrganizationStore } from '@/stores/table-organization-store';
+import {
+  
+  
+  useTableOrganizationStore
+} from '@/stores/table-organization-store';
 import { MockDataGeneratorDialog } from './mock-data-generator';
 import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
@@ -114,7 +119,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   const {
     sortOption,
     setSortOption,
-    availableTags,
+    tags,
     addTag,
     removeTag,
     activeTagFilter,
@@ -124,6 +129,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
     setTablePinned,
     getTableKey,
     getTableMetadata,
+    getTagsByIds,
   } = useTableOrganizationStore();
 
   // i18n hook
@@ -505,7 +511,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
           table.name
         );
         const metadata = getTableMetadata(key);
-        return metadata.tags.includes(activeTagFilter);
+        return metadata.tagIds.includes(activeTagFilter);
       });
     };
 
@@ -845,7 +851,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
 
           {/* Filter & Tags Combined */}
           <FilterTagsPopover
-            availableTags={availableTags}
+            tags={tags}
             activeTagFilter={activeTagFilter}
             onSetActiveTagFilter={setActiveTagFilter}
             onAddTag={addTag}
@@ -929,9 +935,10 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                   onDropTable={handleDropTableRequest}
                   onGenerateMockData={handleGenerateMockData}
                   connectionPath={connection?.path || ''}
-                  availableTags={availableTags}
+                  tags={tags}
                   getTableMetadata={getTableMetadata}
                   getTableKey={getTableKey}
+                  getTagsByIds={getTagsByIds}
                   onAddTableTag={addTableTag}
                   onRemoveTableTag={removeTableTag}
                   onTogglePinned={setTablePinned}
@@ -1103,13 +1110,14 @@ interface SchemaSectionProps {
   onGenerateMockData: (table: TableSchema) => void;
   // Tag and organization props
   connectionPath: string;
-  availableTags: string[];
-  getTableMetadata: (tableKey: string) => { tags: string[]; pinned?: boolean };
+  tags: TagDefinition[];
+  getTableMetadata: (tableKey: string) => TableMetadata;
   getTableKey: (
     connectionPath: string,
     schemaName: string,
     tableName: string
   ) => string;
+  getTagsByIds: (ids: string[]) => TagDefinition[];
   onAddTableTag: (tableKey: string, tag: string) => void;
   onRemoveTableTag: (tableKey: string, tag: string) => void;
   onTogglePinned: (tableKey: string, pinned: boolean) => void;
@@ -1135,9 +1143,10 @@ function SchemaSection({
   onDropTable,
   onGenerateMockData,
   connectionPath,
-  availableTags,
+  tags,
   getTableMetadata,
   getTableKey,
+  getTagsByIds,
   onAddTableTag,
   onRemoveTableTag,
   onTogglePinned,
@@ -1218,11 +1227,13 @@ function SchemaSection({
                         onDropTable={() => onDropTable(table)}
                         onGenerateMockData={() => onGenerateMockData(table)}
                         tableKey={tableKey}
-                        tags={metadata.tags}
+                        tableTags={getTagsByIds(metadata.tagIds)}
                         isPinned={metadata.pinned}
-                        availableTags={availableTags}
-                        onAddTag={(tag) => onAddTableTag(tableKey, tag)}
-                        onRemoveTag={(tag) => onRemoveTableTag(tableKey, tag)}
+                        allTags={tags}
+                        onAddTag={(tagName) => onAddTableTag(tableKey, tagName)}
+                        onRemoveTag={(tagName) =>
+                          onRemoveTableTag(tableKey, tagName)
+                        }
                         onTogglePinned={() =>
                           onTogglePinned(tableKey, !metadata.pinned)
                         }
@@ -1282,11 +1293,13 @@ function SchemaSection({
                         onGenerateMockData={() => onGenerateMockData(view)}
                         isView
                         tableKey={tableKey}
-                        tags={metadata.tags}
+                        tableTags={getTagsByIds(metadata.tagIds)}
                         isPinned={metadata.pinned}
-                        availableTags={availableTags}
-                        onAddTag={(tag) => onAddTableTag(tableKey, tag)}
-                        onRemoveTag={(tag) => onRemoveTableTag(tableKey, tag)}
+                        allTags={tags}
+                        onAddTag={(tagName) => onAddTableTag(tableKey, tagName)}
+                        onRemoveTag={(tagName) =>
+                          onRemoveTableTag(tableKey, tagName)
+                        }
                         onTogglePinned={() =>
                           onTogglePinned(tableKey, !metadata.pinned)
                         }
@@ -1348,11 +1361,11 @@ interface TableItemProps {
   isView?: boolean;
   // Tag and organization props
   tableKey: string;
-  tags: string[];
+  tableTags: TagDefinition[];
   isPinned?: boolean;
-  availableTags: string[];
-  onAddTag: (tag: string) => void;
-  onRemoveTag: (tag: string) => void;
+  allTags: TagDefinition[];
+  onAddTag: (tagName: string) => void;
+  onRemoveTag: (tagName: string) => void;
   onTogglePinned: () => void;
 }
 
@@ -1369,9 +1382,9 @@ function TableItem({
   onDropTable,
   onGenerateMockData,
   isView,
-  tags,
+  tableTags,
   isPinned,
-  availableTags,
+  allTags,
   onAddTag,
   onRemoveTag,
   onTogglePinned,
@@ -1418,20 +1431,21 @@ function TableItem({
           <span className="min-w-0 flex-1 truncate text-left">
             {table.name}
           </span>
-          {tags.length > 0 && (
+          {tableTags.length > 0 && (
             <div className="flex shrink-0 gap-0.5">
-              {tags.slice(0, 2).map((tag) => (
+              {tableTags.slice(0, 2).map((tag) => (
                 <Badge
-                  key={tag}
+                  key={tag.id}
                   variant="outline"
                   className="text-2xs h-4 px-1"
+                  style={{ borderColor: tag.color, color: tag.color }}
                 >
-                  {tag}
+                  {tag.name}
                 </Badge>
               ))}
-              {tags.length > 2 && (
+              {tableTags.length > 2 && (
                 <Badge variant="outline" className="text-2xs h-4 px-1">
-                  +{tags.length - 2}
+                  +{tableTags.length - 2}
                 </Badge>
               )}
             </div>
@@ -1475,34 +1489,41 @@ function TableItem({
             {t('contextMenu.tags', { defaultValue: 'Tags' })}
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
-            {tags.length > 0 && (
+            {tableTags.length > 0 && (
               <>
                 <div className="text-muted-foreground px-2 py-1 text-xs font-medium">
                   {t('contextMenu.currentTags', {
                     defaultValue: 'Current Tags',
                   })}
                 </div>
-                {tags.map((tag) => (
-                  <ContextMenuItem key={tag} onClick={() => onRemoveTag(tag)}>
+                {tableTags.map((tag) => (
+                  <ContextMenuItem
+                    key={tag.id}
+                    onClick={() => onRemoveTag(tag.name)}
+                  >
                     <X className="text-destructive size-4" />
-                    {tag}
+                    <span style={{ color: tag.color }}>{tag.name}</span>
                   </ContextMenuItem>
                 ))}
                 <ContextMenuSeparator />
               </>
             )}
             {/* Available tags to add */}
-            {availableTags.filter((t) => !tags.includes(t)).length > 0 && (
+            {allTags.filter((t) => !tableTags.some((tt) => tt.id === t.id))
+              .length > 0 && (
               <>
                 <div className="text-muted-foreground px-2 py-1 text-xs font-medium">
                   {t('contextMenu.addTag', { defaultValue: 'Add Tag' })}
                 </div>
-                {availableTags
-                  .filter((t) => !tags.includes(t))
+                {allTags
+                  .filter((t) => !tableTags.some((tt) => tt.id === t.id))
                   .map((tag) => (
-                    <ContextMenuItem key={tag} onClick={() => onAddTag(tag)}>
-                      <Tag className="size-4" />
-                      {tag}
+                    <ContextMenuItem
+                      key={tag.id}
+                      onClick={() => onAddTag(tag.name)}
+                    >
+                      <Tag className="size-4" style={{ color: tag.color }} />
+                      {tag.name}
                     </ContextMenuItem>
                   ))}
                 <ContextMenuSeparator />
@@ -1599,15 +1620,15 @@ function TriggerItem({ trigger }: TriggerItemProps) {
 
 // Combined Filter & Tags Popover Component
 interface FilterTagsPopoverProps {
-  availableTags: string[];
+  tags: TagDefinition[];
   activeTagFilter: string | null;
-  onSetActiveTagFilter: (tag: string | null) => void;
+  onSetActiveTagFilter: (tagId: string | null) => void;
   onAddTag: (tag: string) => void;
   onRemoveTag: (tag: string) => void;
 }
 
 function FilterTagsPopover({
-  availableTags,
+  tags,
   activeTagFilter,
   onSetActiveTagFilter,
   onAddTag,
@@ -1645,9 +1666,9 @@ function FilterTagsPopover({
             ) : (
               <span className="text-xs">{t('filter.filter')}</span>
             )}
-            {!activeTagFilter && availableTags.length > 0 && (
+            {!activeTagFilter && tags.length > 0 && (
               <Badge variant="outline" className="text-2xs h-4 px-1">
-                {availableTags.length}
+                {tags.length}
               </Badge>
             )}
           </Button>
@@ -1684,7 +1705,7 @@ function FilterTagsPopover({
         <div className="p-2">
           {activeTab === 'filter' ? (
             <div className="space-y-1">
-              {availableTags.length === 0 ? (
+              {tags.length === 0 ? (
                 <div className="text-muted-foreground py-2 text-center text-xs">
                   {t('filter.noTags')}
                   <br />
@@ -1703,21 +1724,23 @@ function FilterTagsPopover({
                       {t('filter.clearFilter')}
                     </Button>
                   )}
-                  {availableTags.map((tag) => (
+                  {tags.map((tag) => (
                     <Button
-                      key={tag}
-                      variant={activeTagFilter === tag ? 'secondary' : 'ghost'}
+                      key={tag.id}
+                      variant={
+                        activeTagFilter === tag.id ? 'secondary' : 'ghost'
+                      }
                       size="sm"
                       className="h-7 w-full justify-start gap-2 px-2 text-xs"
                       onClick={() =>
                         onSetActiveTagFilter(
-                          activeTagFilter === tag ? null : tag
+                          activeTagFilter === tag.id ? null : tag.id
                         )
                       }
                     >
-                      <Tag className="h-3 w-3" />
-                      {tag}
-                      {activeTagFilter === tag && (
+                      <Tag className="h-3 w-3" style={{ color: tag.color }} />
+                      {tag.name}
+                      {activeTagFilter === tag.id && (
                         <Check className="ml-auto h-3 w-3" />
                       )}
                     </Button>
@@ -1754,23 +1777,26 @@ function FilterTagsPopover({
               </div>
 
               {/* Existing tags */}
-              {availableTags.length > 0 ? (
+              {tags.length > 0 ? (
                 <ScrollArea className="h-32">
                   <div className="space-y-0.5">
-                    {availableTags.map((tag) => (
+                    {tags.map((tag) => (
                       <div
-                        key={tag}
+                        key={tag.id}
                         className="hover:bg-destructive/10 group flex items-center justify-between rounded px-2 py-1"
                       >
                         <div className="flex items-center gap-2">
-                          <Tag className="text-muted-foreground h-3 w-3" />
-                          <span className="text-sm">{tag}</span>
+                          <Tag
+                            className="h-3 w-3"
+                            style={{ color: tag.color }}
+                          />
+                          <span className="text-sm">{tag.name}</span>
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
                           className="text-muted-foreground hover:text-destructive h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
-                          onClick={() => onRemoveTag(tag)}
+                          onClick={() => onRemoveTag(tag.name)}
                         >
                           <X className="h-3 w-3" />
                         </Button>
