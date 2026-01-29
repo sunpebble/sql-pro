@@ -17,6 +17,14 @@ SQL Pro v2.0 closes competitive gaps with TablePlus and DB Pro by adding four ke
 
 **Dependencies:** None (builds on existing table-organization-store)
 
+**Plans:** 3 plans in 2 waves
+
+Plans:
+
+- [ ] 12-01-PLAN.md — Upgrade store to TagDefinition with id, name, color
+- [ ] 12-02-PLAN.md — Create ColorPicker, ColoredTagBadge, TagDialog components
+- [ ] 12-03-PLAN.md — Add persistence, command palette integration, update Sidebar
+
 **Requirements:**
 
 - TAG-01: User can create custom tags (name + color)
