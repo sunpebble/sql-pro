@@ -55,9 +55,9 @@ Plans:
 
 Plans:
 
-- [ ] 13-01-PLAN.md — Create saved-queries-store with types and persistence
-- [ ] 13-02-PLAN.md — Create UI components (dialogs, browser, cards)
-- [ ] 13-03-PLAN.md — Integrate toolbar, command palette, and i18n
+- [x] 13-01-PLAN.md — Create saved-queries-store with types and persistence
+- [x] 13-02-PLAN.md — Create UI components (dialogs, browser, cards)
+- [x] 13-03-PLAN.md — Integrate toolbar, command palette, and i18n
 
 **Requirements:**
 
@@ -137,7 +137,7 @@ Plans:
 | Phase | Name                | Requirements | Status   |
 | ----- | ------------------- | ------------ | -------- |
 | 12    | Table Tags          | 7            | Complete |
-| 13    | Saved Queries       | 8            | Pending  |
+| 13    | Saved Queries       | 8            | Complete |
 | 14    | SSH Tunnels         | 8            | Pending  |
 | 15    | AI Natural Language | 6            | Pending  |
 
