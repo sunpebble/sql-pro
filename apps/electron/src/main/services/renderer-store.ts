@@ -11,6 +11,7 @@ import type {
   RendererDiagramState,
   RendererOnboardingState,
   RendererPanelWidths,
+  RendererSavedQueriesState,
   RendererSettingsState,
   RendererStoreSchema,
   RendererTableOrganizationState,
@@ -63,6 +64,11 @@ const DEFAULT_TABLE_ORGANIZATION: RendererTableOrganizationState = {
   tableMetadata: {},
 };
 
+const DEFAULT_SAVED_QUERIES: RendererSavedQueriesState = {
+  queries: [],
+  folders: [],
+};
+
 // ============ Store Instance ============
 
 let _rendererStore: Store<RendererStoreSchema> | null = null;
@@ -78,6 +84,7 @@ function getRendererStore(): Store<RendererStoreSchema> {
         connectionUi: DEFAULT_CONNECTION_UI,
         onboarding: DEFAULT_ONBOARDING,
         tableOrganization: DEFAULT_TABLE_ORGANIZATION,
+        savedQueries: DEFAULT_SAVED_QUERIES,
       },
       // Enable schema migration for future updates
       migrations: {
@@ -107,6 +114,7 @@ export function getRendererState<K extends keyof RendererStoreSchema>(
     connectionUi: DEFAULT_CONNECTION_UI,
     onboarding: DEFAULT_ONBOARDING,
     tableOrganization: DEFAULT_TABLE_ORGANIZATION,
+    savedQueries: DEFAULT_SAVED_QUERIES,
   };
   const result = getRendererStore().get(key, defaults[key]);
   return result;
@@ -146,6 +154,7 @@ export function resetRendererState<K extends keyof RendererStoreSchema>(
     connectionUi: DEFAULT_CONNECTION_UI,
     onboarding: DEFAULT_ONBOARDING,
     tableOrganization: DEFAULT_TABLE_ORGANIZATION,
+    savedQueries: DEFAULT_SAVED_QUERIES,
   };
   getRendererStore().set(key, defaults[key]);
 }

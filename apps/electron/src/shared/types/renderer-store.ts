@@ -2,6 +2,7 @@
 // This module defines types for persisting renderer (UI) state via IPC to electron-store
 
 import type { FontSettings } from './font';
+import type { QueryFolder, SavedQuery } from './saved-query';
 import type { TableMetadata, TagDefinition } from './tag';
 
 // ============ Diagram Types (shared for persistence) ============
@@ -76,6 +77,15 @@ export interface RendererTableOrganizationState {
   tableMetadata: Record<string, TableMetadata>;
 }
 
+// ============ Saved Queries Store ============
+
+export interface RendererSavedQueriesState {
+  /** All saved queries */
+  queries: SavedQuery[];
+  /** All query folders */
+  folders: QueryFolder[];
+}
+
 // ============ Combined Renderer Store Schema ============
 
 export interface RendererStoreSchema {
@@ -85,6 +95,7 @@ export interface RendererStoreSchema {
   connectionUi: RendererConnectionState;
   onboarding: RendererOnboardingState;
   tableOrganization: RendererTableOrganizationState;
+  savedQueries: RendererSavedQueriesState;
 }
 
 // ============ IPC Request/Response Types ============
