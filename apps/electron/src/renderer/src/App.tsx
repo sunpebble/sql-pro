@@ -1,14 +1,16 @@
 import type { PendingChangeInfo, RecentConnection } from '@shared/types';
+import type { SavedQuery } from '@shared/types/saved-query';
 import type { PendingChange } from '@/types/database';
 import { TooltipProvider } from '@sqlpro/ui/tooltip';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AppQuitDialog } from '@/components/AppQuitDialog';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { WelcomeDialog } from '@/components/onboarding';
 import { SqlLogPanel } from '@/components/SqlLogPanel';
 import { useFileWatcher } from '@/hooks/useFileWatcher';
+import { useSavedQueryCommands } from '@/hooks/useSavedQueryCommands';
 import { useTagCommands } from '@/hooks/useTagCommands';
 import { sqlPro } from '@/lib/api';
 import { withRetryOrDefault } from '@/lib/ipc-retry';
@@ -21,6 +23,10 @@ import { useConnectionStore } from '@/stores/connection-store';
 import { useOnboardingStore } from '@/stores/onboarding-store';
 import { useProStore } from '@/stores/pro-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
+import {
+  initializeSavedQueriesStore,
+  useSavedQueriesStore,
+} from '@/stores/saved-queries-store';
 import { useTableDataStore } from '@/stores/table-data-store';
 import { useThemeStore } from '@/stores/theme-store';
 
@@ -64,6 +70,38 @@ function App(): React.JSX.Element {
 
   // Register tag filter commands in command palette
   useTagCommands();
+
+  // Get saved queries store functions for command palette
+  const { recordExecution } = useSavedQueriesStore();
+
+  // Handler for running saved queries from command palette
+  const handleRunSavedQuery = useCallback(
+    (query: SavedQuery, hasParams: boolean) => {
+      // Navigate to database view if not already there
+      router.navigate({ to: '/database' });
+
+      // The QueryEditor component will handle parameter dialogs and execution
+      // We emit a custom event that QueryEditor can listen to
+      const event = new CustomEvent('run-saved-query', {
+        detail: { query, hasParams },
+      });
+      window.dispatchEvent(event);
+
+      // If no params, record execution immediately
+      if (!hasParams) {
+        recordExecution(query.id);
+      }
+    },
+    [recordExecution]
+  );
+
+  // Register saved query commands in command palette
+  useSavedQueryCommands(handleRunSavedQuery);
+
+  // Initialize saved queries store on mount
+  useEffect(() => {
+    initializeSavedQueriesStore();
+  }, []);
 
   // Load theme from store on mount
   useEffect(() => {
