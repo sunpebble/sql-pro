@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Milestone: v2.0 - 功能对齐
-Phase: 13 - Saved Queries (in progress)
-Plan: 1/3 complete
-Status: Completed 13-01-PLAN.md
+Phase: 13 - Saved Queries (complete)
+Plan: 3/3 complete
+Status: Phase 13 complete
 
-Progress: [███░░░░░░░] 30%
+Progress: [████░░░░░░] 40%
 
 ### Phase Overview
 
-| Phase | Name                | Requirements | Status      |
-| ----- | ------------------- | ------------ | ----------- |
-| 12    | Table Tags          | 7            | Complete    |
-| 13    | Saved Queries       | 8            | In progress |
-| 14    | SSH Tunnels         | 8            | Pending     |
-| 15    | AI Natural Language | 6            | Pending     |
+| Phase | Name                | Requirements | Status   |
+| ----- | ------------------- | ------------ | -------- |
+| 12    | Table Tags          | 7            | Complete |
+| 13    | Saved Queries       | 8            | Complete |
+| 14    | SSH Tunnels         | 8            | Pending  |
+| 15    | AI Natural Language | 6            | Pending  |
 
 ## Target Features (v2.0)
 
 - [x] Table Tags — 自定义标签组织表 (Phase 12) ✓
-- [ ] Saved Queries — 保存常用查询 (Phase 13)
+- [x] Saved Queries — 保存常用查询 (Phase 13) ✓
 - [ ] SSH Tunnels — 安全连接远程数据库 (Phase 14)
 - [ ] AI 自然语言查询 — 自然语言转 SQL (Phase 15)
 
@@ -60,10 +60,12 @@ Phase 12 decisions:
 
 Phase 13 decisions:
 
-| ID               | Decision                             | Rationale                                            |
-| ---------------- | ------------------------------------ | ---------------------------------------------------- |
-| query-size-limit | 50KB max with toast notification     | Prevents storage bloat while providing user feedback |
-| parameter-syntax | Support {{name:type=default}} format | Flexible syntax allowing type hints and defaults     |
+| ID                  | Decision                             | Rationale                                            |
+| ------------------- | ------------------------------------ | ---------------------------------------------------- |
+| query-size-limit    | 50KB max with toast notification     | Prevents storage bloat while providing user feedback |
+| parameter-syntax    | Support {{name:type=default}} format | Flexible syntax allowing type hints and defaults     |
+| cmd-palette-pattern | Follow useTagCommands pattern        | Consistency across command registration hooks        |
+| toolbar-placement   | Save/Saved buttons before Side Panel | Visual grouping of query-related actions             |
 
 ### Pending Todos
 
@@ -75,10 +77,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-29
-Stopped at: Completed 13-01-PLAN.md
-Resume with: `/gsd:execute-phase 13` for 13-02-PLAN.md
+Last session: 2026-01-30
+Stopped at: Completed Phase 13 (Saved Queries)
+Resume with: `/gsd:plan-phase 14` for SSH Tunnels phase
 
 ---
 
-_State updated: 2026-01-29_
+_State updated: 2026-01-30_
