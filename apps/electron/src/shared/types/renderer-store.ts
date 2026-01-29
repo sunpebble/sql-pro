@@ -2,6 +2,7 @@
 // This module defines types for persisting renderer (UI) state via IPC to electron-store
 
 import type { FontSettings } from './font';
+import type { TableMetadata, TagDefinition } from './tag';
 
 // ============ Diagram Types (shared for persistence) ============
 
@@ -66,6 +67,15 @@ export interface RendererOnboardingState {
   isTourVisible: boolean;
 }
 
+// ============ Table Organization Store ============
+
+export interface RendererTableOrganizationState {
+  /** All available tags with color support */
+  tags: TagDefinition[];
+  /** Metadata for each table, keyed by "connectionPath:schemaName:tableName" */
+  tableMetadata: Record<string, TableMetadata>;
+}
+
 // ============ Combined Renderer Store Schema ============
 
 export interface RendererStoreSchema {
@@ -74,6 +84,7 @@ export interface RendererStoreSchema {
   panelWidths: RendererPanelWidths;
   connectionUi: RendererConnectionState;
   onboarding: RendererOnboardingState;
+  tableOrganization: RendererTableOrganizationState;
 }
 
 // ============ IPC Request/Response Types ============

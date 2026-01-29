@@ -13,6 +13,7 @@ import type {
   RendererPanelWidths,
   RendererSettingsState,
   RendererStoreSchema,
+  RendererTableOrganizationState,
 } from '@shared/types/renderer-store';
 import Store from 'electron-store';
 
@@ -57,6 +58,11 @@ const DEFAULT_ONBOARDING: RendererOnboardingState = {
   isTourVisible: false,
 };
 
+const DEFAULT_TABLE_ORGANIZATION: RendererTableOrganizationState = {
+  tags: [],
+  tableMetadata: {},
+};
+
 // ============ Store Instance ============
 
 let _rendererStore: Store<RendererStoreSchema> | null = null;
@@ -71,6 +77,7 @@ function getRendererStore(): Store<RendererStoreSchema> {
         panelWidths: DEFAULT_PANEL_WIDTHS,
         connectionUi: DEFAULT_CONNECTION_UI,
         onboarding: DEFAULT_ONBOARDING,
+        tableOrganization: DEFAULT_TABLE_ORGANIZATION,
       },
       // Enable schema migration for future updates
       migrations: {
@@ -99,6 +106,7 @@ export function getRendererState<K extends keyof RendererStoreSchema>(
     panelWidths: DEFAULT_PANEL_WIDTHS,
     connectionUi: DEFAULT_CONNECTION_UI,
     onboarding: DEFAULT_ONBOARDING,
+    tableOrganization: DEFAULT_TABLE_ORGANIZATION,
   };
   const result = getRendererStore().get(key, defaults[key]);
   return result;
@@ -137,6 +145,7 @@ export function resetRendererState<K extends keyof RendererStoreSchema>(
     panelWidths: DEFAULT_PANEL_WIDTHS,
     connectionUi: DEFAULT_CONNECTION_UI,
     onboarding: DEFAULT_ONBOARDING,
+    tableOrganization: DEFAULT_TABLE_ORGANIZATION,
   };
   getRendererStore().set(key, defaults[key]);
 }

@@ -7,6 +7,6 @@
     },
     "types": ["@testing-library/jest-dom", "vitest/globals"]
   },
-  "include": ["src/renderer/src/**/*"],
+  "include": ["src/renderer/src/**/*", "src/shared/**/*"],
   "exclude": ["src/renderer/src/**/*.test.ts", "src/renderer/src/**/*.test.tsx"]
 }
