@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Milestone: v2.0 - 功能对齐
-Phase: 12 - Table Tags (not started)
-Plan: None
-Status: Roadmap complete, ready for phase planning
+Phase: 12 - Table Tags (in progress)
+Plan: 01 of 7 complete
+Status: Plan 01 complete, ready for Plan 02
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 10%
 
 ### Phase Overview
 
-| Phase | Name                | Requirements | Status  |
-| ----- | ------------------- | ------------ | ------- |
-| 12    | Table Tags          | 7            | Pending |
-| 13    | Saved Queries       | 8            | Pending |
-| 14    | SSH Tunnels         | 8            | Pending |
-| 15    | AI Natural Language | 6            | Pending |
+| Phase | Name                | Requirements | Status      |
+| ----- | ------------------- | ------------ | ----------- |
+| 12    | Table Tags          | 7            | In Progress |
+| 13    | Saved Queries       | 8            | Pending     |
+| 14    | SSH Tunnels         | 8            | Pending     |
+| 15    | AI Natural Language | 6            | Pending     |
 
 ## Target Features (v2.0)
 
@@ -50,6 +50,12 @@ v2.0 decisions:
 - SSH Tunnels: Use ssh2 library (pure JS, no native binaries)
 - Credentials: Use existing password-storage.ts pattern with safeStorage API
 
+Phase 12 decisions:
+
+| ID            | Decision                            | Rationale                                                        |
+| ------------- | ----------------------------------- | ---------------------------------------------------------------- |
+| tag-id-format | Use crypto.randomUUID() for tag IDs | Stable references that survive renames, no external dependencies |
+
 ### Pending Todos
 
 None yet.
@@ -61,8 +67,8 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-29
-Stopped at: Roadmap created, ready for phase 12 planning
-Resume with: `/gsd:plan-phase 12`
+Stopped at: Completed 12-01-PLAN.md (TagDefinition Type and Store Upgrade)
+Resume with: `/gsd:execute-phase` for Plan 02
 
 ---
 
