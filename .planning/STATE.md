@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Milestone: v2.0 - 功能对齐
-Phase: 12 - Table Tags (complete)
-Plan: 3/3 complete
-Status: Phase 12 verified, ready for Phase 13
+Phase: 13 - Saved Queries (in progress)
+Plan: 1/3 complete
+Status: Completed 13-01-PLAN.md
 
-Progress: [██░░░░░░░░] 25%
+Progress: [███░░░░░░░] 30%
 
 ### Phase Overview
 
-| Phase | Name                | Requirements | Status   |
-| ----- | ------------------- | ------------ | -------- |
-| 12    | Table Tags          | 7            | Complete |
-| 13    | Saved Queries       | 8            | Pending  |
-| 14    | SSH Tunnels         | 8            | Pending  |
-| 15    | AI Natural Language | 6            | Pending  |
+| Phase | Name                | Requirements | Status      |
+| ----- | ------------------- | ------------ | ----------- |
+| 12    | Table Tags          | 7            | Complete    |
+| 13    | Saved Queries       | 8            | In progress |
+| 14    | SSH Tunnels         | 8            | Pending     |
+| 15    | AI Natural Language | 6            | Pending     |
 
 ## Target Features (v2.0)
 
@@ -58,6 +58,13 @@ Phase 12 decisions:
 | persistence-delay  | Debounced persistence (500ms)       | Prevents excessive IPC calls during rapid tag/metadata changes   |
 | command-reg-global | Global command registration in App  | Ensures commands registered once at app level, not per-component |
 
+Phase 13 decisions:
+
+| ID               | Decision                             | Rationale                                            |
+| ---------------- | ------------------------------------ | ---------------------------------------------------- |
+| query-size-limit | 50KB max with toast notification     | Prevents storage bloat while providing user feedback |
+| parameter-syntax | Support {{name:type=default}} format | Flexible syntax allowing type hints and defaults     |
+
 ### Pending Todos
 
 None yet.
@@ -68,10 +75,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-30
-Stopped at: Phase 12 complete, verified
-Resume with: `/gsd:discuss-phase 13` or `/gsd:plan-phase 13`
+Last session: 2026-01-29
+Stopped at: Completed 13-01-PLAN.md
+Resume with: `/gsd:execute-phase 13` for 13-02-PLAN.md
 
 ---
 
-_State updated: 2026-01-30_
+_State updated: 2026-01-29_
