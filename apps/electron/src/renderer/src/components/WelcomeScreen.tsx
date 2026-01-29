@@ -985,217 +985,220 @@ export function WelcomeScreen() {
       </div>
 
       {/* Main Content - Asymmetric Layout for visual interest */}
-      <div className="flex flex-1 items-stretch overflow-hidden">
-        {/* Left Column - Feature Showcase (wider) */}
-        <div className="border-border/50 flex w-[55%] items-center justify-center border-r p-10">
-          <div className="h-full w-full max-w-lg">
-            <FeatureShowcase
-              onStartTour={handleStartWelcomeTour}
-              disabled={isConnecting || isLoadingSchema || connections.size > 0}
-            />
+      <div className="flex flex-1 items-center justify-center overflow-hidden">
+        <div className="flex h-full max-h-[700px] w-full items-center">
+          {/* Left Column - Feature Showcase (wider) */}
+          <div className="border-border/50 flex w-[55%] justify-center border-r p-10">
+            <div className="w-full max-w-lg">
+              <FeatureShowcase
+                onStartTour={handleStartWelcomeTour}
+                disabled={
+                  isConnecting || isLoadingSchema || connections.size > 0
+                }
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Right Column - Connection Area (focused) */}
-        <div className="relative flex w-[45%] items-center justify-center p-10">
-          <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
-            {/* Logo & Title - refined, minimal */}
-            <div className="shrink-0 text-center">
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[var(--primary)]/20 bg-[var(--primary)]/5 shadow-sm transition-all duration-300 hover:border-[var(--primary)]/40 hover:shadow-[0_4px_20px_var(--primary-subtle)]">
-                <Database className="h-7 w-7 text-[var(--primary)]" />
-              </div>
-              <h1 className="text-foreground text-2xl font-semibold tracking-tight">
-                {t('app.name')}
-              </h1>
-              <p className="text-muted-foreground mt-1.5 text-sm">
-                {t('welcome.subtitle', {
-                  defaultValue: 'Professional Database Manager',
-                })}
-              </p>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="border-destructive/30 bg-destructive/5 text-destructive flex items-center gap-2.5 rounded-lg border p-3 text-sm">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            {/* Connection Buttons - clean, professional */}
-            <div className="shrink-0 space-y-3">
-              <Button
-                variant={isConnecting ? 'outline' : 'default'}
-                size="lg"
-                className="text-background w-full bg-[var(--primary)] font-medium shadow-sm transition-all hover:bg-[var(--primary-dark)] hover:shadow-md"
-                onClick={handleOpenDatabase}
-                disabled={isConnecting}
-                data-action="open-database"
-              >
-                <FolderOpen className="mr-2 h-4 w-4" />
-                {isConnecting
-                  ? t('status.connecting')
-                  : t('welcome.openSqlite', {
-                      defaultValue: 'Open SQLite Database',
-                    })}
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-border/80 w-full transition-colors hover:border-[var(--primary)]/50 hover:bg-[var(--primary)]/5"
-                onClick={() => setDbTypeSelectorOpen(true)}
-                disabled={isConnecting}
-                data-action="connect-server"
-              >
-                <Server className="mr-2 h-4 w-4" />
-                {t('welcome.connectServer', {
-                  defaultValue: 'Connect to Server',
-                })}
-              </Button>
-              <p className="text-muted-foreground text-center text-xs">
-                {t('welcome.supportsDb', {
-                  defaultValue:
-                    'Supports MySQL, PostgreSQL, Supabase, and Turso',
-                })}
-              </p>
-            </div>
-
-            {/* Recent Connections / Profile Manager */}
-            <div>
-              {showProfiles ? (
-                <div className="border-border/50 bg-card/50 max-h-64 overflow-hidden rounded-lg border backdrop-blur-sm">
-                  <ProfileManager
-                    onConnect={handleConnectFromProfile}
-                    compact={true}
-                  />
+          {/* Right Column - Connection Area (focused) */}
+          <div className="relative flex w-[45%] justify-center p-10">
+            <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
+              {/* Logo & Title - refined, minimal */}
+              <div className="shrink-0 text-center">
+                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[var(--primary)]/20 bg-[var(--primary)]/5 shadow-sm transition-all duration-300 hover:border-[var(--primary)]/40 hover:shadow-[0_4px_20px_var(--primary-subtle)]">
+                  <Database className="h-7 w-7 text-[var(--primary)]" />
                 </div>
-              ) : (
-                recentConnections.length > 0 && (
-                  <div
-                    className="flex flex-col space-y-3"
-                    data-tour-target="recent-connections"
-                  >
-                    <div className="flex shrink-0 items-center justify-between px-1">
-                      <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        {t('welcome.recentConnections', {
-                          defaultValue: 'Recent Connections',
-                        })}
-                      </span>
-                      <Clock className="text-muted-foreground h-3.5 w-3.5" />
-                    </div>
-                    <ScrollArea className="h-48">
-                      <div className="space-y-1 pr-2">
-                        {recentConnections.map((conn) => (
-                          <div
-                            key={conn.path}
-                            className="group flex items-center gap-1"
-                          >
-                            <Button
-                              variant="ghost"
-                              className="h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
-                              onClick={() => handleRecentClick(conn)}
-                              disabled={isConnecting}
+                <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+                  {t('app.name')}
+                </h1>
+                <p className="text-muted-foreground mt-1.5 text-sm">
+                  {t('welcome.subtitle', {
+                    defaultValue: 'Professional Database Manager',
+                  })}
+                </p>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="border-destructive/30 bg-destructive/5 text-destructive flex items-center gap-2.5 rounded-lg border p-3 text-sm">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {/* Connection Buttons - clean, professional */}
+              <div className="shrink-0 space-y-3">
+                <Button
+                  variant={isConnecting ? 'outline' : 'default'}
+                  size="lg"
+                  className="text-background w-full bg-[var(--primary)] font-medium shadow-sm transition-all hover:bg-[var(--primary-dark)] hover:shadow-md"
+                  onClick={handleOpenDatabase}
+                  disabled={isConnecting}
+                  data-action="open-database"
+                >
+                  <FolderOpen className="mr-2 h-4 w-4" />
+                  {isConnecting
+                    ? t('status.connecting')
+                    : t('welcome.openSqlite', {
+                        defaultValue: 'Open SQLite Database',
+                      })}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-border/80 w-full transition-colors hover:border-[var(--primary)]/50 hover:bg-[var(--primary)]/5"
+                  onClick={() => setDbTypeSelectorOpen(true)}
+                  disabled={isConnecting}
+                  data-action="connect-server"
+                >
+                  <Server className="mr-2 h-4 w-4" />
+                  {t('welcome.connectServer', {
+                    defaultValue: 'Connect to Server',
+                  })}
+                </Button>
+                <p className="text-muted-foreground text-center text-xs">
+                  {t('welcome.supportsDb', {
+                    defaultValue:
+                      'Supports MySQL, PostgreSQL, Supabase, and Turso',
+                  })}
+                </p>
+              </div>
+
+              {/* Recent Connections / Profile Manager */}
+              <div>
+                {showProfiles ? (
+                  <div className="border-border/50 bg-card/50 max-h-64 overflow-hidden rounded-lg border backdrop-blur-sm">
+                    <ProfileManager
+                      onConnect={handleConnectFromProfile}
+                      compact={true}
+                    />
+                  </div>
+                ) : (
+                  recentConnections.length > 0 && (
+                    <div
+                      className="flex flex-col space-y-3"
+                      data-tour-target="recent-connections"
+                    >
+                      <div className="flex shrink-0 items-center justify-between px-1">
+                        <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                          {t('welcome.recentConnections', {
+                            defaultValue: 'Recent Connections',
+                          })}
+                        </span>
+                        <Clock className="text-muted-foreground h-3.5 w-3.5" />
+                      </div>
+                      <ScrollArea className="h-48">
+                        <div className="space-y-1 pr-2">
+                          {recentConnections.map((conn) => (
+                            <div
+                              key={conn.path}
+                              className="group flex items-center gap-1"
                             >
-                              {(() => {
-                                const { Icon, color, label } = getDatabaseIcon(
-                                  conn.databaseType
-                                );
-                                return (
-                                  <Tooltip>
-                                    <TooltipTrigger>
-                                      <Icon
-                                        className={cn(
-                                          'mr-2 h-4 w-4 shrink-0',
-                                          color
-                                        )}
+                              <Button
+                                variant="ghost"
+                                className="h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
+                                onClick={() => handleRecentClick(conn)}
+                                disabled={isConnecting}
+                              >
+                                {(() => {
+                                  const { Icon, color, label } =
+                                    getDatabaseIcon(conn.databaseType);
+                                  return (
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <Icon
+                                          className={cn(
+                                            'mr-2 h-4 w-4 shrink-0',
+                                            color
+                                          )}
+                                        />
+                                      </TooltipTrigger>
+                                      <TooltipContent
+                                        className={TOOLTIP_CONTENT_STYLE}
+                                      >
+                                        {label}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  );
+                                })()}
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="truncate text-sm font-medium">
+                                      {conn.displayName || conn.filename}
+                                    </span>
+                                    <div className="flex shrink-0 items-center gap-1">
+                                      {conn.readOnly && (
+                                        <Tooltip>
+                                          <TooltipTrigger>
+                                            <Eye className="text-muted-foreground h-3 w-3" />
+                                          </TooltipTrigger>
+                                          <TooltipContent
+                                            className={TOOLTIP_CONTENT_STYLE}
+                                          >
+                                            {t('welcome.readOnly')}
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      )}
+                                      <HasSavedPasswordIndicator
+                                        path={conn.path}
                                       />
-                                    </TooltipTrigger>
-                                    <TooltipContent
-                                      className={TOOLTIP_CONTENT_STYLE}
-                                    >
-                                      {label}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                );
-                              })()}
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="truncate text-sm font-medium">
-                                    {conn.displayName || conn.filename}
-                                  </span>
-                                  <div className="flex shrink-0 items-center gap-1">
-                                    {conn.readOnly && (
-                                      <Tooltip>
-                                        <TooltipTrigger>
-                                          <Eye className="text-muted-foreground h-3 w-3" />
-                                        </TooltipTrigger>
-                                        <TooltipContent
-                                          className={TOOLTIP_CONTENT_STYLE}
-                                        >
-                                          {t('welcome.readOnly')}
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    )}
-                                    <HasSavedPasswordIndicator
-                                      path={conn.path}
-                                    />
+                                    </div>
+                                  </div>
+                                  <div className="text-muted-foreground truncate font-mono text-xs">
+                                    {conn.path}
                                   </div>
                                 </div>
-                                <div className="text-muted-foreground truncate font-mono text-xs">
-                                  {conn.path}
-                                </div>
-                              </div>
-                            </Button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100"
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100"
+                                  >
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                  align="end"
+                                  side="bottom"
+                                  className="w-auto"
                                 >
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent
-                                align="end"
-                                side="bottom"
-                                className="w-auto"
-                              >
-                                <DropdownMenuItem
-                                  onClick={() => handleEditConnection(conn)}
-                                  className="whitespace-nowrap"
-                                >
-                                  <Pencil className="mr-2 h-4 w-4" />
-                                  <span>{t('actions.edit')}</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleSaveAsProfile(conn)}
-                                  className="whitespace-nowrap"
-                                >
-                                  <BookmarkPlus className="mr-2 h-4 w-4" />
-                                  <span>
-                                    {t('welcome.saveAsProfile', {
-                                      defaultValue: 'Save as Profile',
-                                    })}
-                                  </span>
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => handleRemoveConnection(conn)}
-                                  className="text-destructive focus:text-destructive whitespace-nowrap"
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  <span>{t('actions.remove')}</span>
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  </div>
-                )
-              )}
+                                  <DropdownMenuItem
+                                    onClick={() => handleEditConnection(conn)}
+                                    className="whitespace-nowrap"
+                                  >
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    <span>{t('actions.edit')}</span>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => handleSaveAsProfile(conn)}
+                                    className="whitespace-nowrap"
+                                  >
+                                    <BookmarkPlus className="mr-2 h-4 w-4" />
+                                    <span>
+                                      {t('welcome.saveAsProfile', {
+                                        defaultValue: 'Save as Profile',
+                                      })}
+                                    </span>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    onClick={() => handleRemoveConnection(conn)}
+                                    className="text-destructive focus:text-destructive whitespace-nowrap"
+                                  >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    <span>{t('actions.remove')}</span>
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          ))}
+                        </div>
+                      </ScrollArea>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>

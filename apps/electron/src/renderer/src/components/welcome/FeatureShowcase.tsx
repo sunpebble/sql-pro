@@ -82,7 +82,7 @@ export function FeatureShowcase({
   return (
     <div
       className={cn(
-        'flex h-full flex-col justify-center transition-opacity',
+        'flex flex-col transition-opacity',
         disabled && 'pointer-events-none opacity-50'
       )}
     >
