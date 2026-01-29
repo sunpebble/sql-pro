@@ -51,6 +51,14 @@ Plans:
 
 **Dependencies:** None (independent of Phase 12)
 
+**Plans:** 3 plans in 2 waves
+
+Plans:
+
+- [ ] 13-01-PLAN.md — Create saved-queries-store with types and persistence
+- [ ] 13-02-PLAN.md — Create UI components (dialogs, browser, cards)
+- [ ] 13-03-PLAN.md — Integrate toolbar, command palette, and i18n
+
 **Requirements:**
 
 - QUERY-01: User can save current query (name + description)
