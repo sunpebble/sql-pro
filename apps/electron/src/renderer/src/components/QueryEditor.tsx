@@ -1,4 +1,8 @@
-import type {QueryTemplate, TemplateCategory} from '@/stores/query-templates-store';
+import type { QueryParameter, SavedQuery } from '@shared/types/saved-query';
+import type {
+  QueryTemplate,
+  TemplateCategory,
+} from '@/stores/query-templates-store';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
 import { GoldButton } from '@sqlpro/ui/gold-button';
@@ -32,12 +36,14 @@ import {
   FileDown,
   FileText,
   FileUp,
+  FolderOpen,
   History,
   Loader2,
   PanelRightClose,
   PanelRightOpen,
   Play,
   Plus,
+  Save,
   Search,
   Share2,
   Square,
@@ -74,11 +80,14 @@ import { useQueryHistoryStore } from '@/stores/query-history-store';
 import { useQueryStore } from '@/stores/query-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
 import {
-  
   TEMPLATE_CATEGORIES,
-  
-  useQueryTemplatesStore
+  useQueryTemplatesStore,
 } from '@/stores/query-templates-store';
+import {
+  parseParameters,
+  substituteParameters,
+  useSavedQueriesStore,
+} from '@/stores/saved-queries-store';
 import { QueryOptimizerPanel } from './data-tools/QueryOptimizerPanel';
 import { MonacoSqlEditor } from './MonacoSqlEditor';
 import { QueryHistoryFilters } from './query-editor/QueryHistoryFilters';
@@ -88,6 +97,11 @@ import { NewTemplateDialog } from './query-editor/QueryTemplatesPicker';
 import { SkeletonQueryResults } from './query-editor/SkeletonQueryResults';
 import { QueryResults } from './QueryResults';
 import { ResizablePanel } from './ResizablePanel';
+import {
+  ParameterInputDialog,
+  SavedQueriesBrowser,
+  SaveQueryDialog,
+} from './saved-queries';
 
 /** Side panel tab options */
 type SidePanelTab = 'share' | 'templates' | 'history';
@@ -285,6 +299,14 @@ export function QueryEditor() {
     () => new Set()
   );
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Saved queries state
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [browserOpen, setBrowserOpen] = useState(false);
+  const [paramDialogOpen, setParamDialogOpen] = useState(false);
+  const [pendingQuery, setPendingQuery] = useState<SavedQuery | null>(null);
+  const [pendingParams, setPendingParams] = useState<QueryParameter[]>([]);
+  const { recordExecution } = useSavedQueriesStore();
 
   // Query templates store
   const {
@@ -503,6 +525,64 @@ export function QueryEditor() {
     setShowQueryBundleExport(true);
   };
 
+  // Saved queries handlers
+  const handleSelectSavedQuery = useCallback(
+    (query: SavedQuery) => {
+      handleQueryChange(query.query);
+    },
+    [handleQueryChange]
+  );
+
+  const handleRunSavedQuery = useCallback(
+    (query: SavedQuery) => {
+      const params = parseParameters(query.query);
+      if (params.length > 0) {
+        // Has parameters - show parameter dialog
+        setPendingQuery(query);
+        setPendingParams(params);
+        setParamDialogOpen(true);
+      } else {
+        // No parameters - load and execute directly
+        handleQueryChange(query.query);
+        recordExecution(query.id);
+        // Execute after state update
+        setTimeout(() => {
+          const executeBtn = document.querySelector(
+            '[data-action="execute-query"]'
+          );
+          if (executeBtn instanceof HTMLButtonElement) {
+            executeBtn.click();
+          }
+        }, 0);
+      }
+    },
+    [handleQueryChange, recordExecution]
+  );
+
+  const handleParameterSubmit = useCallback(
+    (values: Record<string, string>) => {
+      if (!pendingQuery) return;
+
+      const substitutedQuery = substituteParameters(pendingQuery.query, values);
+      handleQueryChange(substitutedQuery);
+      recordExecution(pendingQuery.id);
+
+      // Execute after state update
+      setTimeout(() => {
+        const executeBtn = document.querySelector(
+          '[data-action="execute-query"]'
+        );
+        if (executeBtn instanceof HTMLButtonElement) {
+          executeBtn.click();
+        }
+      }, 0);
+
+      setPendingQuery(null);
+      setPendingParams([]);
+    },
+    [pendingQuery, handleQueryChange, recordExecution]
+  );
+
   const handleAnalyze = useCallback(
     async (query: string) => {
       if (!connection) {
@@ -543,6 +623,48 @@ export function QueryEditor() {
           </span>
         </div>
         <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-1">
+          {/* Saved Queries Buttons */}
+          <TooltipProvider delay={200}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSaveDialogOpen(true)}
+                  disabled={!tabQuery.trim()}
+                  className="gap-1"
+                >
+                  <Save className="h-4 w-4" />
+                  <span className="hidden sm:inline">
+                    {t('savedQueries.save', { defaultValue: 'Save' })}
+                  </span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+                {t('savedQueries.saveTitle', { defaultValue: 'Save Query' })}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider delay={200}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setBrowserOpen(true)}
+                  className="gap-1"
+                >
+                  <FolderOpen className="h-4 w-4" />
+                  <span className="hidden sm:inline">
+                    {t('savedQueries.browse', { defaultValue: 'Saved' })}
+                  </span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+                {t('savedQueries.title', { defaultValue: 'Saved Queries' })}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           {/* Side Panel Toggle */}
           <Button
             variant="ghost"
@@ -1203,6 +1325,30 @@ export function QueryEditor() {
           setHistorySelectionMode(false);
           setSelectedHistoryIds(new Set());
         }}
+      />
+
+      {/* Save Query Dialog */}
+      <SaveQueryDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        initialQuery={tabQuery}
+      />
+
+      {/* Saved Queries Browser */}
+      <SavedQueriesBrowser
+        open={browserOpen}
+        onOpenChange={setBrowserOpen}
+        onSelect={handleSelectSavedQuery}
+        onRun={handleRunSavedQuery}
+      />
+
+      {/* Parameter Input Dialog */}
+      <ParameterInputDialog
+        open={paramDialogOpen}
+        onOpenChange={setParamDialogOpen}
+        parameters={pendingParams}
+        queryName={pendingQuery?.name || ''}
+        onSubmit={handleParameterSubmit}
       />
     </div>
   );
