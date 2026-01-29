@@ -16,15 +16,15 @@
 - [ ] **SSH-07**: 网络中断后隧道自动重连
 - [ ] **SSH-08**: 支持通过跳板机 (Jump Host) 连接目标数据库
 
-### Table Tags (TAG)
+### Table Tags (TAG) ✓
 
-- [ ] **TAG-01**: 用户可以创建自定义标签（名称 + 颜色）
-- [ ] **TAG-02**: 用户可以编辑和删除已有标签
-- [ ] **TAG-03**: 用户可以为表分配一个或多个标签
-- [ ] **TAG-04**: 侧边栏表列表可按标签过滤
-- [ ] **TAG-05**: 标签数据持久化到 electron-store
-- [ ] **TAG-06**: 每个标签可自定义显示颜色
-- [ ] **TAG-07**: 命令面板 (Cmd+K) 中可搜索和跳转到标签
+- [x] **TAG-01**: 用户可以创建自定义标签（名称 + 颜色）
+- [x] **TAG-02**: 用户可以编辑和删除已有标签
+- [x] **TAG-03**: 用户可以为表分配一个或多个标签
+- [x] **TAG-04**: 侧边栏表列表可按标签过滤
+- [x] **TAG-05**: 标签数据持久化到 electron-store
+- [x] **TAG-06**: 每个标签可自定义显示颜色
+- [x] **TAG-07**: 命令面板 (Cmd+K) 中可搜索和跳转到标签
 
 ### Saved Queries (QUERY)
 
@@ -77,37 +77,37 @@
 
 ## Traceability
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| TAG-01      | 12    | Pending |
-| TAG-02      | 12    | Pending |
-| TAG-03      | 12    | Pending |
-| TAG-04      | 12    | Pending |
-| TAG-05      | 12    | Pending |
-| TAG-06      | 12    | Pending |
-| TAG-07      | 12    | Pending |
-| QUERY-01    | 13    | Pending |
-| QUERY-02    | 13    | Pending |
-| QUERY-03    | 13    | Pending |
-| QUERY-04    | 13    | Pending |
-| QUERY-05    | 13    | Pending |
-| QUERY-06    | 13    | Pending |
-| QUERY-07    | 13    | Pending |
-| QUERY-08    | 13    | Pending |
-| SSH-01      | 14    | Pending |
-| SSH-02      | 14    | Pending |
-| SSH-03      | 14    | Pending |
-| SSH-04      | 14    | Pending |
-| SSH-05      | 14    | Pending |
-| SSH-06      | 14    | Pending |
-| SSH-07      | 14    | Pending |
-| SSH-08      | 14    | Pending |
-| AI-01       | 15    | Pending |
-| AI-02       | 15    | Pending |
-| AI-03       | 15    | Pending |
-| AI-04       | 15    | Pending |
-| AI-05       | 15    | Pending |
-| AI-06       | 15    | Pending |
+| Requirement | Phase | Status   |
+| ----------- | ----- | -------- |
+| TAG-01      | 12    | Complete |
+| TAG-02      | 12    | Complete |
+| TAG-03      | 12    | Complete |
+| TAG-04      | 12    | Complete |
+| TAG-05      | 12    | Complete |
+| TAG-06      | 12    | Complete |
+| TAG-07      | 12    | Complete |
+| QUERY-01    | 13    | Pending  |
+| QUERY-02    | 13    | Pending  |
+| QUERY-03    | 13    | Pending  |
+| QUERY-04    | 13    | Pending  |
+| QUERY-05    | 13    | Pending  |
+| QUERY-06    | 13    | Pending  |
+| QUERY-07    | 13    | Pending  |
+| QUERY-08    | 13    | Pending  |
+| SSH-01      | 14    | Pending  |
+| SSH-02      | 14    | Pending  |
+| SSH-03      | 14    | Pending  |
+| SSH-04      | 14    | Pending  |
+| SSH-05      | 14    | Pending  |
+| SSH-06      | 14    | Pending  |
+| SSH-07      | 14    | Pending  |
+| SSH-08      | 14    | Pending  |
+| AI-01       | 15    | Pending  |
+| AI-02       | 15    | Pending  |
+| AI-03       | 15    | Pending  |
+| AI-04       | 15    | Pending  |
+| AI-05       | 15    | Pending  |
+| AI-06       | 15    | Pending  |
 
 **Coverage:**
 
@@ -118,4 +118,4 @@
 ---
 
 _Requirements defined: 2026-01-29_
-_Last updated: 2026-01-29 after roadmap creation_
+_Last updated: 2026-01-30 after Phase 12 completion_

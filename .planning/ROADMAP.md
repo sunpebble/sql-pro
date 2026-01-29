@@ -21,9 +21,9 @@ SQL Pro v2.0 closes competitive gaps with TablePlus and DB Pro by adding four ke
 
 Plans:
 
-- [ ] 12-01-PLAN.md — Upgrade store to TagDefinition with id, name, color
-- [ ] 12-02-PLAN.md — Create ColorPicker, ColoredTagBadge, TagDialog components
-- [ ] 12-03-PLAN.md — Add persistence, command palette integration, update Sidebar
+- [x] 12-01-PLAN.md — Upgrade store to TagDefinition with id, name, color
+- [x] 12-02-PLAN.md — Create ColorPicker, ColoredTagBadge, TagDialog components
+- [x] 12-03-PLAN.md — Add persistence, command palette integration, update Sidebar
 
 **Requirements:**
 
@@ -126,12 +126,12 @@ Plans:
 
 ## Progress
 
-| Phase | Name                | Requirements | Status  |
-| ----- | ------------------- | ------------ | ------- |
-| 12    | Table Tags          | 7            | Pending |
-| 13    | Saved Queries       | 8            | Pending |
-| 14    | SSH Tunnels         | 8            | Pending |
-| 15    | AI Natural Language | 6            | Pending |
+| Phase | Name                | Requirements | Status   |
+| ----- | ------------------- | ------------ | -------- |
+| 12    | Table Tags          | 7            | Complete |
+| 13    | Saved Queries       | 8            | Pending  |
+| 14    | SSH Tunnels         | 8            | Pending  |
+| 15    | AI Natural Language | 6            | Pending  |
 
 **Total:** 29 requirements across 4 phases
 
@@ -159,4 +159,4 @@ See [MILESTONES.md](MILESTONES.md) for completed milestone history.
 ---
 
 _Roadmap created: 2026-01-29_
-_Last updated: 2026-01-29_
+_Last updated: 2026-01-30_
