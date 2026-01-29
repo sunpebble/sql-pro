@@ -9,6 +9,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { WelcomeDialog } from '@/components/onboarding';
 import { SqlLogPanel } from '@/components/SqlLogPanel';
 import { useFileWatcher } from '@/hooks/useFileWatcher';
+import { useTagCommands } from '@/hooks/useTagCommands';
 import { sqlPro } from '@/lib/api';
 import { withRetryOrDefault } from '@/lib/ipc-retry';
 import { initMockMode, isMockMode } from '@/lib/mock-api';
@@ -60,6 +61,9 @@ function App(): React.JSX.Element {
 
   // Set up file watcher for database file changes
   useFileWatcher();
+
+  // Register tag filter commands in command palette
+  useTagCommands();
 
   // Load theme from store on mount
   useEffect(() => {
