@@ -11,10 +11,10 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 
 Milestone: v2.0 - 功能对齐
 Phase: 12 - Table Tags (in progress)
-Plan: 01 of 7 complete
-Status: Plan 01 complete, ready for Plan 02
+Plan: 03 of 7 complete
+Status: Plan 03 complete, ready for Plan 04
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [███░░░░░░░] 30%
 
 ### Phase Overview
 
@@ -52,9 +52,11 @@ v2.0 decisions:
 
 Phase 12 decisions:
 
-| ID            | Decision                            | Rationale                                                        |
-| ------------- | ----------------------------------- | ---------------------------------------------------------------- |
-| tag-id-format | Use crypto.randomUUID() for tag IDs | Stable references that survive renames, no external dependencies |
+| ID                 | Decision                            | Rationale                                                        |
+| ------------------ | ----------------------------------- | ---------------------------------------------------------------- |
+| tag-id-format      | Use crypto.randomUUID() for tag IDs | Stable references that survive renames, no external dependencies |
+| persistence-delay  | Debounced persistence (500ms)       | Prevents excessive IPC calls during rapid tag/metadata changes   |
+| command-reg-global | Global command registration in App  | Ensures commands registered once at app level, not per-component |
 
 ### Pending Todos
 
@@ -66,10 +68,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-29
-Stopped at: Completed 12-01-PLAN.md (TagDefinition Type and Store Upgrade)
-Resume with: `/gsd:execute-phase` for Plan 02
+Last session: 2026-01-30
+Stopped at: Completed 12-03-PLAN.md (Integration & Persistence)
+Resume with: `/gsd:execute-phase` for Plan 04
 
 ---
 
-_State updated: 2026-01-29_
+_State updated: 2026-01-30_
