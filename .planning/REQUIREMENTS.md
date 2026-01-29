@@ -79,43 +79,43 @@
 
 | Requirement | Phase | Status  |
 | ----------- | ----- | ------- |
-| SSH-01      | TBD   | Pending |
-| SSH-02      | TBD   | Pending |
-| SSH-03      | TBD   | Pending |
-| SSH-04      | TBD   | Pending |
-| SSH-05      | TBD   | Pending |
-| SSH-06      | TBD   | Pending |
-| SSH-07      | TBD   | Pending |
-| SSH-08      | TBD   | Pending |
-| TAG-01      | TBD   | Pending |
-| TAG-02      | TBD   | Pending |
-| TAG-03      | TBD   | Pending |
-| TAG-04      | TBD   | Pending |
-| TAG-05      | TBD   | Pending |
-| TAG-06      | TBD   | Pending |
-| TAG-07      | TBD   | Pending |
-| QUERY-01    | TBD   | Pending |
-| QUERY-02    | TBD   | Pending |
-| QUERY-03    | TBD   | Pending |
-| QUERY-04    | TBD   | Pending |
-| QUERY-05    | TBD   | Pending |
-| QUERY-06    | TBD   | Pending |
-| QUERY-07    | TBD   | Pending |
-| QUERY-08    | TBD   | Pending |
-| AI-01       | TBD   | Pending |
-| AI-02       | TBD   | Pending |
-| AI-03       | TBD   | Pending |
-| AI-04       | TBD   | Pending |
-| AI-05       | TBD   | Pending |
-| AI-06       | TBD   | Pending |
+| TAG-01      | 12    | Pending |
+| TAG-02      | 12    | Pending |
+| TAG-03      | 12    | Pending |
+| TAG-04      | 12    | Pending |
+| TAG-05      | 12    | Pending |
+| TAG-06      | 12    | Pending |
+| TAG-07      | 12    | Pending |
+| QUERY-01    | 13    | Pending |
+| QUERY-02    | 13    | Pending |
+| QUERY-03    | 13    | Pending |
+| QUERY-04    | 13    | Pending |
+| QUERY-05    | 13    | Pending |
+| QUERY-06    | 13    | Pending |
+| QUERY-07    | 13    | Pending |
+| QUERY-08    | 13    | Pending |
+| SSH-01      | 14    | Pending |
+| SSH-02      | 14    | Pending |
+| SSH-03      | 14    | Pending |
+| SSH-04      | 14    | Pending |
+| SSH-05      | 14    | Pending |
+| SSH-06      | 14    | Pending |
+| SSH-07      | 14    | Pending |
+| SSH-08      | 14    | Pending |
+| AI-01       | 15    | Pending |
+| AI-02       | 15    | Pending |
+| AI-03       | 15    | Pending |
+| AI-04       | 15    | Pending |
+| AI-05       | 15    | Pending |
+| AI-06       | 15    | Pending |
 
 **Coverage:**
 
 - v2.0 requirements: 29 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 29
+- Mapped to phases: 29
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-01-29_
-_Last updated: 2026-01-29 after milestone v2.0 scoping_
+_Last updated: 2026-01-29 after roadmap creation_
