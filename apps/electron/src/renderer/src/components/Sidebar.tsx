@@ -1,4 +1,7 @@
-import type {TableMetadata, TagDefinition} from '@/stores/table-organization-store';
+import type {
+  TableMetadata,
+  TagDefinition,
+} from '@/stores/table-organization-store';
 import type { SchemaInfo, TableSchema, TriggerSchema } from '@/types/database';
 import {
   AlertDialog,
@@ -53,12 +56,14 @@ import {
   Copy,
   Database,
   Dices,
+  Edit2,
   Eye,
   FileDown,
   FileSearch,
   Filter,
   Pin,
   PinOff,
+  Plus,
   Search,
   SortAsc,
   Table,
@@ -69,6 +74,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ColoredTagBadge, CreateTagDialog, EditTagDialog, TagColorDot  } from '@/components/tags';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
@@ -79,11 +85,7 @@ import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
 import { useSettingsStore, useTableFont } from '@/stores/settings-store';
-import {
-  
-  
-  useTableOrganizationStore
-} from '@/stores/table-organization-store';
+import { useTableOrganizationStore } from '@/stores/table-organization-store';
 import { MockDataGeneratorDialog } from './mock-data-generator';
 import { SchemaExportDialog } from './sharing/SchemaExportDialog';
 
@@ -120,8 +122,9 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
     sortOption,
     setSortOption,
     tags,
-    addTag,
-    removeTag,
+    createTag,
+    updateTag,
+    deleteTag,
     activeTagFilter,
     setActiveTagFilter,
     addTableTag,
@@ -854,8 +857,9 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
             tags={tags}
             activeTagFilter={activeTagFilter}
             onSetActiveTagFilter={setActiveTagFilter}
-            onAddTag={addTag}
-            onRemoveTag={removeTag}
+            onCreateTag={createTag}
+            onUpdateTag={updateTag}
+            onDeleteTag={deleteTag}
           />
 
           {/* Expand/Collapse All Toggle */}
@@ -1434,14 +1438,7 @@ function TableItem({
           {tableTags.length > 0 && (
             <div className="flex shrink-0 gap-0.5">
               {tableTags.slice(0, 2).map((tag) => (
-                <Badge
-                  key={tag.id}
-                  variant="outline"
-                  className="text-2xs h-4 px-1"
-                  style={{ borderColor: tag.color, color: tag.color }}
-                >
-                  {tag.name}
-                </Badge>
+                <ColoredTagBadge key={tag.id} tag={tag} size="sm" />
               ))}
               {tableTags.length > 2 && (
                 <Badge variant="outline" className="text-2xs h-4 px-1">
@@ -1502,7 +1499,8 @@ function TableItem({
                     onClick={() => onRemoveTag(tag.name)}
                   >
                     <X className="text-destructive size-4" />
-                    <span style={{ color: tag.color }}>{tag.name}</span>
+                    <TagColorDot color={tag.color} className="mr-1" />
+                    {tag.name}
                   </ContextMenuItem>
                 ))}
                 <ContextMenuSeparator />
@@ -1522,7 +1520,7 @@ function TableItem({
                       key={tag.id}
                       onClick={() => onAddTag(tag.name)}
                     >
-                      <Tag className="size-4" style={{ color: tag.color }} />
+                      <TagColorDot color={tag.color} className="mr-1" />
                       {tag.name}
                     </ContextMenuItem>
                   ))}
@@ -1623,196 +1621,216 @@ interface FilterTagsPopoverProps {
   tags: TagDefinition[];
   activeTagFilter: string | null;
   onSetActiveTagFilter: (tagId: string | null) => void;
-  onAddTag: (tag: string) => void;
-  onRemoveTag: (tag: string) => void;
+  onCreateTag: (name: string, color?: string) => string;
+  onUpdateTag: (id: string, updates: { name?: string; color?: string }) => void;
+  onDeleteTag: (id: string) => void;
 }
 
 function FilterTagsPopover({
   tags,
   activeTagFilter,
   onSetActiveTagFilter,
-  onAddTag,
-  onRemoveTag,
+  onCreateTag,
+  onUpdateTag,
+  onDeleteTag,
 }: FilterTagsPopoverProps) {
   const { t } = useTranslation('sidebar');
-  const [newTagInput, setNewTagInput] = useState('');
   const [activeTab, setActiveTab] = useState<'filter' | 'manage'>('filter');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [editingTag, setEditingTag] = useState<TagDefinition | null>(null);
 
-  const handleAddTag = () => {
-    if (newTagInput.trim()) {
-      onAddTag(newTagInput.trim());
-      setNewTagInput('');
-    }
+  // Get active tag name for display
+  const activeTag = tags.find((t) => t.id === activeTagFilter);
+
+  const handleCreateTag = (name: string, color: string) => {
+    onCreateTag(name, color);
+  };
+
+  const handleUpdateTag = (
+    id: string,
+    updates: { name?: string; color?: string }
+  ) => {
+    onUpdateTag(id, updates);
+  };
+
+  const handleDeleteTag = (id: string) => {
+    onDeleteTag(id);
   };
 
   return (
-    <Popover>
-      <PopoverTrigger
-        nativeButton
-        render={
-          <Button
-            variant={activeTagFilter ? 'secondary' : 'ghost'}
-            size="sm"
-            className="h-7 shrink-0 gap-1 px-2"
-          >
-            <Filter className="h-3.5 w-3.5 shrink-0" />
-            {activeTagFilter ? (
-              <Badge
-                variant="secondary"
-                className="h-5 max-w-15 truncate px-1 text-xs"
-              >
-                {activeTagFilter}
-              </Badge>
-            ) : (
-              <span className="text-xs">{t('filter.filter')}</span>
-            )}
-            {!activeTagFilter && tags.length > 0 && (
-              <Badge variant="outline" className="text-2xs h-4 px-1">
-                {tags.length}
-              </Badge>
-            )}
-          </Button>
-        }
-      />
-      <PopoverContent align="start" className="w-56 p-0">
-        {/* Tab Header */}
-        <div className="flex gap-1 p-1">
-          <button
-            className={cn(
-              'flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
-              activeTab === 'filter'
-                ? 'bg-accent text-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-            )}
-            onClick={() => setActiveTab('filter')}
-          >
-            {t('filter.filter')}
-          </button>
-          <button
-            className={cn(
-              'flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
-              activeTab === 'manage'
-                ? 'bg-accent text-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-            )}
-            onClick={() => setActiveTab('manage')}
-          >
-            {t('filter.manageTags')}
-          </button>
-        </div>
-
-        {/* Tab Content */}
-        <div className="p-2">
-          {activeTab === 'filter' ? (
-            <div className="space-y-1">
-              {tags.length === 0 ? (
-                <div className="text-muted-foreground py-2 text-center text-xs">
-                  {t('filter.noTags')}
-                  <br />
-                  {t('filter.goToManageTags')}
-                </div>
-              ) : (
-                <>
-                  {activeTagFilter && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 w-full justify-start gap-2 px-2 text-xs"
-                      onClick={() => onSetActiveTagFilter(null)}
-                    >
-                      <X className="h-3 w-3" />
-                      {t('filter.clearFilter')}
-                    </Button>
-                  )}
-                  {tags.map((tag) => (
-                    <Button
-                      key={tag.id}
-                      variant={
-                        activeTagFilter === tag.id ? 'secondary' : 'ghost'
-                      }
-                      size="sm"
-                      className="h-7 w-full justify-start gap-2 px-2 text-xs"
-                      onClick={() =>
-                        onSetActiveTagFilter(
-                          activeTagFilter === tag.id ? null : tag.id
-                        )
-                      }
-                    >
-                      <Tag className="h-3 w-3" style={{ color: tag.color }} />
-                      {tag.name}
-                      {activeTagFilter === tag.id && (
-                        <Check className="ml-auto h-3 w-3" />
-                      )}
-                    </Button>
-                  ))}
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {/* Add new tag */}
-              <div className="flex gap-1">
-                <Input
-                  placeholder={t('filter.newTagPlaceholder')}
-                  value={newTagInput}
-                  onChange={(e) => setNewTagInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    e.stopPropagation();
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleAddTag();
-                    }
-                  }}
-                  className="h-7 text-xs"
-                />
-                <Button
-                  size="sm"
+    <>
+      <Popover>
+        <PopoverTrigger
+          nativeButton
+          render={
+            <Button
+              variant={activeTagFilter ? 'secondary' : 'ghost'}
+              size="sm"
+              className="h-7 shrink-0 gap-1 px-2"
+            >
+              <Filter className="h-3.5 w-3.5 shrink-0" />
+              {activeTag ? (
+                <Badge
                   variant="secondary"
-                  className="h-7 px-2"
-                  onClick={handleAddTag}
-                  disabled={!newTagInput.trim()}
+                  className="h-5 max-w-15 gap-1 truncate px-1 text-xs"
                 >
-                  <Check className="h-3 w-3" />
-                </Button>
-              </div>
-
-              {/* Existing tags */}
-              {tags.length > 0 ? (
-                <ScrollArea className="h-32">
-                  <div className="space-y-0.5">
-                    {tags.map((tag) => (
-                      <div
-                        key={tag.id}
-                        className="hover:bg-destructive/10 group flex items-center justify-between rounded px-2 py-1"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Tag
-                            className="h-3 w-3"
-                            style={{ color: tag.color }}
-                          />
-                          <span className="text-sm">{tag.name}</span>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-muted-foreground hover:text-destructive h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
-                          onClick={() => onRemoveTag(tag.name)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
+                  <TagColorDot
+                    color={activeTag.color}
+                    className="h-1.5 w-1.5"
+                  />
+                  {activeTag.name}
+                </Badge>
               ) : (
-                <div className="text-muted-foreground text-xs">
-                  {t('filter.noTagsYet')}
-                </div>
+                <span className="text-xs">{t('filter.filter')}</span>
               )}
-            </div>
-          )}
-        </div>
-      </PopoverContent>
-    </Popover>
+              {!activeTagFilter && tags.length > 0 && (
+                <Badge variant="outline" className="text-2xs h-4 px-1">
+                  {tags.length}
+                </Badge>
+              )}
+            </Button>
+          }
+        />
+        <PopoverContent align="start" className="w-56 p-0">
+          {/* Tab Header */}
+          <div className="flex gap-1 p-1">
+            <button
+              className={cn(
+                'flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+                activeTab === 'filter'
+                  ? 'bg-accent text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              )}
+              onClick={() => setActiveTab('filter')}
+            >
+              {t('filter.filter')}
+            </button>
+            <button
+              className={cn(
+                'flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+                activeTab === 'manage'
+                  ? 'bg-accent text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              )}
+              onClick={() => setActiveTab('manage')}
+            >
+              {t('filter.manageTags')}
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="p-2">
+            {activeTab === 'filter' ? (
+              <div className="space-y-1">
+                {tags.length === 0 ? (
+                  <div className="text-muted-foreground py-2 text-center text-xs">
+                    {t('filter.noTags')}
+                    <br />
+                    {t('filter.goToManageTags')}
+                  </div>
+                ) : (
+                  <>
+                    {activeTagFilter && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-full justify-start gap-2 px-2 text-xs"
+                        onClick={() => onSetActiveTagFilter(null)}
+                      >
+                        <X className="h-3 w-3" />
+                        {t('filter.clearFilter')}
+                      </Button>
+                    )}
+                    {tags.map((tag) => (
+                      <Button
+                        key={tag.id}
+                        variant={
+                          activeTagFilter === tag.id ? 'secondary' : 'ghost'
+                        }
+                        size="sm"
+                        className="h-7 w-full justify-start gap-2 px-2 text-xs"
+                        onClick={() =>
+                          onSetActiveTagFilter(
+                            activeTagFilter === tag.id ? null : tag.id
+                          )
+                        }
+                      >
+                        <TagColorDot color={tag.color} />
+                        {tag.name}
+                        {activeTagFilter === tag.id && (
+                          <Check className="ml-auto h-3 w-3" />
+                        )}
+                      </Button>
+                    ))}
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {/* Create new tag button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 w-full justify-start gap-2 text-xs"
+                  onClick={() => setShowCreateDialog(true)}
+                >
+                  <Plus className="h-3 w-3" />
+                  {t('tags.createTag', { defaultValue: 'Create Tag' })}
+                </Button>
+
+                {/* Existing tags */}
+                {tags.length > 0 ? (
+                  <ScrollArea className="h-32">
+                    <div className="space-y-0.5">
+                      {tags.map((tag) => (
+                        <div
+                          key={tag.id}
+                          className="hover:bg-muted/50 group flex items-center justify-between rounded px-2 py-1"
+                        >
+                          <div className="flex items-center gap-2">
+                            <TagColorDot color={tag.color} />
+                            <span className="text-sm">{tag.name}</span>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-muted-foreground hover:text-foreground h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
+                            onClick={() => setEditingTag(tag)}
+                          >
+                            <Edit2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                ) : (
+                  <div className="text-muted-foreground text-xs">
+                    {t('filter.noTagsYet')}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
+
+      {/* Create Tag Dialog */}
+      <CreateTagDialog
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+        onCreateTag={handleCreateTag}
+        existingTagNames={tags.map((t) => t.name.toLowerCase())}
+      />
+
+      {/* Edit Tag Dialog */}
+      <EditTagDialog
+        open={!!editingTag}
+        onOpenChange={(open) => !open && setEditingTag(null)}
+        tag={editingTag}
+        onUpdateTag={handleUpdateTag}
+        onDeleteTag={handleDeleteTag}
+        existingTagNames={tags.map((t) => t.name.toLowerCase())}
+      />
+    </>
   );
 }
