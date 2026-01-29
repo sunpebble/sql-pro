@@ -4,11 +4,12 @@ import App from './App';
 // Import storage utilities
 import { hydrateStores, initializeStorage } from './lib/storage';
 
+import { initializeTableOrganizationStore } from './stores/table-organization-store';
+
 import './styles/globals.css';
 
 // Initialize i18n (must be before any components that use translations)
 import './lib/i18n';
-
 // Initialize stores (they register their hydrators on import)
 import './stores/connection-store';
 import './stores/diagram-store';
@@ -23,6 +24,9 @@ async function bootstrap() {
 
     // Hydrate Zustand stores with persisted data
     hydrateStores();
+
+    // Initialize table organization store (separate from hydration system)
+    await initializeTableOrganizationStore();
   } catch (error) {
     console.error('Failed to initialize:', error);
   }

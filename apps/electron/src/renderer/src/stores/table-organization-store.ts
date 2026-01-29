@@ -2,6 +2,8 @@ import type { TableMetadata, TagDefinition } from '@shared/types/tag';
 import { DEFAULT_TAG_COLOR, PRESET_TAG_COLORS } from '@shared/types/tag';
 
 import { create } from 'zustand';
+import { sqlPro } from '@/lib/api';
+import { isElectronEnvironment } from '@/lib/storage';
 
 // Re-export types for consumers
 export type { TableMetadata, TagDefinition } from '@shared/types/tag';
@@ -409,3 +411,90 @@ export const useTagById = (id: string) =>
 
 export const useActiveTagFilter = () =>
   useTableOrganizationStore((s) => s.activeTagFilter);
+
+// ============ Persistence ============
+
+/**
+ * Debounce helper for persistence
+ */
+function debounce<T extends (...args: Parameters<T>) => void>(
+  fn: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      fn(...args);
+      timeoutId = null;
+    }, delay);
+  };
+}
+
+/**
+ * Persist state to electron-store via IPC (debounced)
+ */
+const persistState = debounce(
+  (state: {
+    tags: TagDefinition[];
+    tableMetadata: Record<string, TableMetadata>;
+  }) => {
+    if (!isElectronEnvironment()) return;
+    sqlPro.rendererStore
+      .set({
+        key: 'tableOrganization',
+        value: {
+          tags: state.tags,
+          tableMetadata: state.tableMetadata,
+        },
+      })
+      .catch((error: unknown) => {
+        console.error('Failed to persist table organization state:', error);
+      });
+  },
+  500
+);
+
+// Subscribe to state changes and persist
+useTableOrganizationStore.subscribe((state) => {
+  persistState({ tags: state.tags, tableMetadata: state.tableMetadata });
+});
+
+/**
+ * Initialize table organization store from persisted state.
+ * Call this early in app startup.
+ */
+export async function initializeTableOrganizationStore(): Promise<void> {
+  if (!isElectronEnvironment()) return;
+
+  try {
+    const result = await sqlPro.rendererStore.get({ key: 'tableOrganization' });
+    if (result.success && result.data) {
+      const { tags, tableMetadata } = result.data as {
+        tags?: TagDefinition[] | string[];
+        tableMetadata?: Record<string, TableMetadata>;
+      };
+
+      // Handle migration from old string[] format if needed
+      let migratedTags: TagDefinition[] = [];
+      if (Array.isArray(tags) && tags.length > 0) {
+        if (typeof tags[0] === 'string') {
+          // Old format: string[]
+          migratedTags = migrateOldTags(tags as unknown as string[]);
+        } else {
+          // New format: TagDefinition[]
+          migratedTags = tags as TagDefinition[];
+        }
+      }
+
+      useTableOrganizationStore.setState({
+        tags: migratedTags,
+        tableMetadata: tableMetadata || {},
+      });
+    }
+  } catch (error) {
+    console.error('Failed to initialize table organization store:', error);
+  }
+}
