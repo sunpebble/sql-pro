@@ -298,3 +298,417 @@ The marketing website requires slightly different treatment:
 | Anti-Features      | HIGH   | Clear contrast with current "Warm Modern" design |
 | Component Patterns | HIGH   | cmdk documentation is comprehensive              |
 | MVP Phases         | MEDIUM | Prioritization is opinion-based                  |
+
+---
+
+---
+
+# Feature Research: SQL Pro v2.0 New Features
+
+**Domain:** Database Client (Desktop Application)
+**Researched:** 2026-01-29
+**Confidence:** MEDIUM
+**Focus:** SSH Tunnels, Table Tags, Saved Queries, AI Natural Language Query
+
+## Executive Summary
+
+This research covers four features that SQL Pro is missing compared to competitors like DB Pro and TablePlus. Each feature has established UX patterns in the database client ecosystem. SSH Tunnels and Saved Queries are table stakes for professional users. Table Tags is a moderate differentiator for organization. AI Natural Language Query is an emerging differentiator with significant complexity and security considerations.
+
+---
+
+## Feature 1: SSH Tunnels
+
+### Table Stakes (Users Expect These)
+
+| Feature                                           | Why Expected                                                                 | Complexity | Notes                                             |
+| ------------------------------------------------- | ---------------------------------------------------------------------------- | ---------- | ------------------------------------------------- |
+| Integrated SSH configuration in connection dialog | Users expect to configure SSH alongside database credentials, not separately | MEDIUM     | Single form with SSH tab/toggle                   |
+| SSH toggle/checkbox activation                    | Clear "Use SSH Tunnel" or "Over SSH" option                                  | LOW        | Prominent placement in connection UI              |
+| Password authentication                           | Basic SSH auth method everyone supports                                      | LOW        | Store in keychain like DB password                |
+| Private key authentication                        | Power users expect key-based auth                                            | MEDIUM     | File picker + passphrase support                  |
+| Automatic tunnel lifecycle management             | Tunnel starts/stops with connection                                          | MEDIUM     | No manual tunnel management required              |
+| Test tunnel configuration                         | Verify SSH settings before full connection                                   | LOW        | "Test SSH" button separate from "Test Connection" |
+| Localhost redirection                             | When tunnel active, DB connects to localhost:localPort                       | LOW        | Auto-configure or clearly document                |
+
+### Differentiators (Competitive Advantage)
+
+| Feature                               | Value Proposition                             | Complexity | Notes                                |
+| ------------------------------------- | --------------------------------------------- | ---------- | ------------------------------------ |
+| Jump server / bastion host support    | Enterprise users with multi-hop SSH needs     | HIGH       | DBeaver has this, TablePlus does not |
+| SSH tunnel sharing across connections | Multiple DBs on same server share one tunnel  | MEDIUM     | DBeaver does this for efficiency     |
+| SSH agent authentication              | Use system SSH agent for keys                 | MEDIUM     | Convenience for users with ssh-agent |
+| Connection templates with SSH presets | Save SSH configs separately, reuse across DBs | MEDIUM     | Reduces repetitive configuration     |
+
+### Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature                              | Why Requested                | Why Problematic                  | Alternative                                      |
+| ------------------------------------ | ---------------------------- | -------------------------------- | ------------------------------------------------ |
+| Manual port forwarding configuration | Power users want control     | Confuses most users, error-prone | Auto-assign local ports, show in connection info |
+| Persistent background tunnels        | "Keep tunnel alive" requests | Resource leak, security concern  | Tunnel lives only while connection active        |
+| SSH config file import               | "Use my ~/.ssh/config"       | Complex parsing, edge cases      | Manual entry with clear UI                       |
+
+### Implementation Notes
+
+**Expected UX Flow:**
+
+1. User opens connection dialog
+2. Toggles "Use SSH Tunnel" checkbox/tab
+3. Enters SSH host, port (default 22), username
+4. Chooses auth method: Password or Private Key
+5. If Private Key: file picker + optional passphrase
+6. "Test SSH" button validates tunnel independently
+7. Database host field accepts remote host (the tunnel handles forwarding)
+
+**Technical Considerations:**
+
+- Electron: Use `ssh2` npm package for SSH connections
+- Store SSH passwords/passphrases in system keychain (already have password-storage.ts)
+- Tunnel must be established before database connection attempt
+- Handle tunnel failures gracefully with clear error messages
+
+**Dependencies on Existing Features:**
+
+- Connection profiles (already exists) - extend schema
+- Password storage (already exists) - reuse for SSH credentials
+- Connection dialog UI (already exists) - add SSH section
+
+---
+
+## Feature 2: Table Tags
+
+### Table Stakes (Users Expect These)
+
+| Feature                           | Why Expected                    | Complexity | Notes                              |
+| --------------------------------- | ------------------------------- | ---------- | ---------------------------------- |
+| Assign tags to tables             | Core functionality              | LOW        | Right-click menu or inline UI      |
+| Multiple tags per table           | Flexible categorization         | LOW        | Tag picker with multi-select       |
+| Filter sidebar by tag             | Find tagged tables quickly      | LOW        | Dropdown or chip filter in sidebar |
+| Predefined color palette for tags | Visual distinction              | LOW        | 8-12 preset colors                 |
+| Tag persistence across sessions   | Tags should survive app restart | LOW        | Store in local profile/settings    |
+
+### Differentiators (Competitive Advantage)
+
+| Feature                          | Value Proposition                           | Complexity | Notes                                       |
+| -------------------------------- | ------------------------------------------- | ---------- | ------------------------------------------- |
+| Smart tag suggestions            | Suggest tags based on table name patterns   | MEDIUM     | "users\_\*" tables auto-suggest "Users" tag |
+| Tag-based grouping in sidebar    | Group tables by tag instead of alphabetical | MEDIUM     | Toggle between views                        |
+| Tag search in command palette    | Cmd+K to find tables by tag                 | LOW        | Integrate with existing command palette     |
+| Export/import tag configurations | Share organization across team              | LOW        | JSON export/import                          |
+| Connection-scoped vs global tags | Some tags apply to all connections          | MEDIUM     | Tag scope selector                          |
+
+### Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature                             | Why Requested            | Why Problematic                            | Alternative                       |
+| ----------------------------------- | ------------------------ | ------------------------------------------ | --------------------------------- |
+| Hierarchical tag trees              | "I want folders of tags" | Over-engineering, complex UI               | Flat tags with search are simpler |
+| Auto-sync tags to database comments | "Store in DB metadata"   | Requires write access, cross-DB complexity | Keep tags local to client         |
+| Tag sharing via cloud sync          | "Team sees my tags"      | Requires cloud infrastructure, privacy     | Export/import JSON files          |
+
+### Implementation Notes
+
+**Expected UX Flow:**
+
+1. Right-click table in sidebar -> "Add Tag"
+2. Tag picker shows existing tags + "Create new tag" option
+3. New tag: enter name, pick color
+4. Tagged tables show colored dot/badge in sidebar
+5. Filter dropdown at top of sidebar to show only tagged tables
+
+**Data Model:**
+
+```typescript
+interface TableTag {
+  id: string;
+  name: string;
+  color: string; // hex color
+  connectionId?: string; // null = global tag
+}
+
+interface TableTagAssignment {
+  tableId: string; // "schema.tablename"
+  tagId: string;
+  connectionId: string;
+}
+```
+
+**Dependencies on Existing Features:**
+
+- Sidebar table list (already exists) - add tag badges
+- Local storage/store (already exists) - persist tags
+- Command palette (already exists) - add tag search
+
+---
+
+## Feature 3: Saved Queries
+
+### Table Stakes (Users Expect These)
+
+| Feature                                 | Why Expected                               | Complexity | Notes                          |
+| --------------------------------------- | ------------------------------------------ | ---------- | ------------------------------ |
+| Save query from editor                  | Right-click or Cmd+S to save current query | LOW        | Name + optional description    |
+| Favorites/saved queries list in sidebar | Dedicated section for saved queries        | LOW        | Collapsible sidebar section    |
+| Run saved query                         | Execute directly from list                 | LOW        | Double-click or context menu   |
+| Insert saved query into editor          | Copy into current editor tab               | LOW        | Context menu option            |
+| Edit saved query                        | Modify name, content                       | LOW        | Opens in editor or inline edit |
+| Delete saved query                      | Remove from list                           | LOW        | Context menu with confirmation |
+| Query naming                            | Descriptive names for findability          | LOW        | Required field on save         |
+
+### Differentiators (Competitive Advantage)
+
+| Feature                       | Value Proposition                      | Complexity | Notes                                  |
+| ----------------------------- | -------------------------------------- | ---------- | -------------------------------------- |
+| Keyword binding (snippets)    | Type keyword + Enter to insert query   | MEDIUM     | TablePlus has this, very popular       |
+| Query parameters/placeholders | `{{user_id}}` prompts for value on run | MEDIUM     | Enables reusable parameterized queries |
+| Organize into folders         | Group related queries                  | LOW        | Simple folder structure                |
+| Tag saved queries             | Consistent with table tags feature     | LOW        | Reuse tag system                       |
+| Search saved queries          | Find by name or content                | LOW        | Filter input in sidebar                |
+| Export as .sql file           | Save to filesystem                     | LOW        | Standard file export                   |
+| Import .sql files             | Load external queries                  | LOW        | File picker                            |
+| Query sharing URL             | Share query via link                   | HIGH       | Requires cloud infrastructure          |
+
+### Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature                         | Why Requested                   | Why Problematic           | Alternative                                |
+| ------------------------------- | ------------------------------- | ------------------------- | ------------------------------------------ |
+| Auto-save all executed queries  | "Save everything automatically" | Clutter, storage bloat    | Query history is separate (already exists) |
+| Version history per saved query | "Track changes over time"       | Complex, storage overhead | Git-based workflow for teams               |
+| Collaborative real-time editing | "Edit together"                 | Massive complexity        | Export/import for sharing                  |
+
+### Implementation Notes
+
+**Expected UX Flow:**
+
+1. Write query in editor
+2. Cmd+S or right-click -> "Save to Favorites"
+3. Dialog: Enter name, optional description, optional keyword binding
+4. Query appears in "Saved Queries" sidebar section
+5. Double-click to run, or right-click for options
+
+**Data Model:**
+
+```typescript
+interface SavedQuery {
+  id: string;
+  name: string;
+  description?: string;
+  sql: string;
+  keyword?: string; // for snippet expansion
+  folderId?: string;
+  tags?: string[];
+  connectionId?: string; // null = available in all connections
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+**Dependencies on Existing Features:**
+
+- Query editor (already exists) - add save action
+- Query history (already exists) - "Save to Favorites" from history
+- Sidebar (already exists) - add Saved Queries section
+- Command palette (already exists) - search saved queries
+
+---
+
+## Feature 4: AI Natural Language Query
+
+### Table Stakes (Users Expect These)
+
+| Feature                      | Why Expected                               | Complexity | Notes                           |
+| ---------------------------- | ------------------------------------------ | ---------- | ------------------------------- |
+| Natural language input field | Text box to type question                  | LOW        | Separate from SQL editor        |
+| Schema-aware SQL generation  | AI knows table/column names                | MEDIUM     | Send schema metadata to LLM     |
+| Generated SQL preview        | Show SQL before execution                  | LOW        | Critical for trust and learning |
+| Edit generated SQL           | User can modify before running             | LOW        | Insert into editor for tweaking |
+| Explain what query does      | Plain English explanation of generated SQL | MEDIUM     | Helps users learn SQL           |
+
+### Differentiators (Competitive Advantage)
+
+| Feature                            | Value Proposition                                  | Complexity | Notes                                   |
+| ---------------------------------- | -------------------------------------------------- | ---------- | --------------------------------------- |
+| Query suggestions based on schema  | "Try asking: How many users signed up last month?" | MEDIUM     | Contextual prompts                      |
+| Conversation history               | Follow-up questions refine query                   | MEDIUM     | "Now filter by active users only"       |
+| Learn from corrections             | User edits improve future generations              | HIGH       | Requires feedback loop                  |
+| Semantic layer / business glossary | Define "active user" = users.last_login > 30 days  | HIGH       | Enterprise feature                      |
+| Offline/local LLM option           | Privacy-conscious users                            | HIGH       | Run local model, significant complexity |
+
+### Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature                                       | Why Requested                | Why Problematic                                  | Alternative                                     |
+| --------------------------------------------- | ---------------------------- | ------------------------------------------------ | ----------------------------------------------- |
+| Auto-execute generated SQL                    | "Just run it"                | Security risk, incorrect queries can damage data | Always require user confirmation                |
+| Send actual data to LLM                       | "Analyze my data with AI"    | Privacy violation, data leak risk                | Only send schema, never row data                |
+| AI-generated DDL/DML (CREATE, UPDATE, DELETE) | "AI should manage my schema" | Extremely dangerous, data loss risk              | Read-only SELECT queries only                   |
+| Unlimited query complexity                    | "AI can write any query"     | LLMs produce incorrect SQL 20%+ of the time      | Warn on complex queries, suggest simplification |
+
+### Implementation Notes
+
+**Security Requirements (CRITICAL):**
+
+1. **Never send actual data to LLM** - only schema metadata
+2. **SELECT only** - do not generate INSERT, UPDATE, DELETE, DROP
+3. **User must confirm** - always show generated SQL before execution
+4. **Read-only mode recommended** - suggest read-only connection for AI queries
+5. **Query validation** - parse and validate SQL before allowing execution
+6. **Timeout limits** - prevent runaway queries
+
+**Expected UX Flow:**
+
+1. User clicks "Ask AI" button or opens AI panel
+2. Types natural language question: "How many orders were placed last week?"
+3. App sends schema (table names, column names, types) + question to LLM API
+4. LLM returns SQL query
+5. App displays: Generated SQL + Plain English explanation
+6. User clicks "Run" to execute, or "Edit" to modify first
+7. Results display in normal results panel
+
+**LLM API Options:**
+
+- OpenAI API (GPT-4)
+- Anthropic API (Claude)
+- Local models via Ollama (privacy-focused option)
+
+**Data sent to LLM:**
+
+```typescript
+interface SchemaContext {
+  tables: {
+    name: string;
+    columns: { name: string; type: string; nullable: boolean }[];
+  }[];
+  // NO actual row data
+}
+```
+
+**Dependencies on Existing Features:**
+
+- Schema introspection (already exists) - extract table/column metadata
+- Query editor (already exists) - insert generated SQL
+- Query execution (already exists) - run the result
+- Settings (already exists) - API key configuration
+
+**Complexity Assessment:** HIGH
+
+- Requires LLM API integration
+- Security considerations are significant
+- Error handling for incorrect SQL
+- User trust/transparency is critical
+
+---
+
+## Feature Dependencies
+
+```
+[SSH Tunnels]
+    └──extends──> [Connection Profiles] (existing)
+    └──uses──> [Password Storage] (existing)
+
+[Table Tags]
+    └──enhances──> [Sidebar Table List] (existing)
+    └──integrates──> [Command Palette] (existing)
+
+[Saved Queries]
+    └──extends──> [Query Editor] (existing)
+    └──similar-to──> [Query History] (existing)
+    └──integrates──> [Command Palette] (existing)
+    └──can-use──> [Table Tags] (new - if built first)
+
+[AI Natural Language Query]
+    └──requires──> [Schema Introspection] (existing)
+    └──uses──> [Query Editor] (existing)
+    └──uses──> [Query Execution] (existing)
+    └──optional──> [Saved Queries] (new - save AI-generated queries)
+```
+
+### Dependency Notes
+
+- **SSH Tunnels** is independent, can be built anytime
+- **Table Tags** is independent, foundational for organization
+- **Saved Queries** benefits from Table Tags (can tag queries)
+- **AI NLQ** should be built last (benefits from saved queries for storing good generations)
+
+---
+
+## Feature Prioritization Matrix
+
+| Feature                   | User Value | Implementation Cost | Risk   | Priority |
+| ------------------------- | ---------- | ------------------- | ------ | -------- |
+| SSH Tunnels               | HIGH       | MEDIUM              | LOW    | P1       |
+| Saved Queries             | HIGH       | LOW                 | LOW    | P1       |
+| Table Tags                | MEDIUM     | LOW                 | LOW    | P2       |
+| AI Natural Language Query | HIGH       | HIGH                | MEDIUM | P2       |
+
+**Priority Rationale:**
+
+- **P1 - SSH Tunnels:** Table stakes for enterprise/professional users. Many databases are behind SSH. Missing this blocks adoption.
+- **P1 - Saved Queries:** Table stakes feature. TablePlus, DBeaver, every competitor has this. Relatively simple to implement.
+- **P2 - Table Tags:** Nice organization feature but not blocking. Lower urgency than connectivity and query management.
+- **P2 - AI NLQ:** High user value and differentiator, but high complexity and security considerations. Build after core features are solid.
+
+---
+
+## Competitor Feature Analysis
+
+| Feature       | TablePlus                        | DBeaver                                  | DB Pro     | Our Approach                                                |
+| ------------- | -------------------------------- | ---------------------------------------- | ---------- | ----------------------------------------------------------- |
+| SSH Tunnels   | Integrated, auto-managed         | Integrated, tunnel sharing, jump servers | Integrated | Integrated with test button, start with password + key auth |
+| Saved Queries | "Favorites" with keyword binding | Projects + Scripts, Query Manager        | Favorites  | Favorites with folders, keyword snippets, tags              |
+| Table Tags    | Not native (requested feature)   | Bookmarks for objects                    | Tags       | Full tagging with colors, filtering, grouping               |
+| AI NLQ        | Not available                    | Not native                               | Available  | Schema-aware, SELECT-only, always preview                   |
+
+---
+
+## v2.0 MVP Definition
+
+### v2.0 Launch With
+
+- [x] **SSH Tunnels** - Password + Private Key auth, integrated in connection dialog
+- [x] **Saved Queries** - Save, name, organize, run from sidebar
+- [x] **Table Tags** - Assign tags, filter sidebar, colored badges
+
+### v2.1 Add After Validation
+
+- [ ] **AI Natural Language Query** - Basic implementation with OpenAI
+- [ ] **SSH Jump Servers** - Based on user demand
+- [ ] **Query Parameters/Placeholders** - `{{variable}}` syntax
+
+### Future Consideration (v2.x+)
+
+- [ ] **AI Conversation History** - Multi-turn query refinement
+- [ ] **Local LLM Support** - Ollama integration for privacy
+- [ ] **Tag Cloud Sync** - Team tag sharing
+
+---
+
+## Sources
+
+### SSH Tunnels
+
+- [TablePlus SSH Documentation](https://tableplus.com) - Integrated SSH configuration patterns
+- [DBeaver SSH Tunnel Guide](https://dbeaver.com) - Tunnel sharing, jump server support
+- [Stack Overflow SSH Tunnel Discussions](https://stackoverflow.com) - Community patterns
+
+### Saved Queries
+
+- [TablePlus Favorites Feature](https://tableplus.com) - Keyword binding, favorites management
+- [DBeaver Query Manager](https://dbeaver.com) - Query history, projects, bookmarks
+- [Sherloq Data Best Practices](https://sherloqdata.io) - Saved queries implementation patterns
+
+### AI Natural Language Query
+
+- [Amazon Bedrock Knowledge Bases](https://amazon.com) - NL to SQL for Redshift
+- [Querio AI](https://querio.ai) - Conversational analytics platform
+- [arXiv Security Research](https://arxiv.org) - Text-to-SQL security vulnerabilities
+- [AI Multiple LLM Risks](https://aimultiple.com) - Prompt injection, data privacy
+
+### Table Tags / Organization
+
+- [Eleken UX Patterns](https://eleken.co) - Data table tagging UX
+- [UX Design CC](https://uxdesign.cc) - Table organization patterns
+- [UX StackExchange](https://stackexchange.com) - Tag UI discussions
+
+---
+
+_Feature research for: SQL Pro v2.0_
+_Researched: 2026-01-29_
+_Confidence: MEDIUM - Based on WebSearch findings verified against multiple sources_
