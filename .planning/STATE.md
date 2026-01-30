@@ -10,26 +10,26 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Milestone: v2.0 - 功能对齐
-Phase: 14 - SSH Tunnels (in progress)
-Plan: 1/3 complete
-Status: Plan 01 complete, ready for Plan 02
+Phase: 14 - SSH Tunnels (complete)
+Plan: 3/3 complete
+Status: Phase 14 complete, ready for Phase 15
 
-Progress: [█████░░░░░] 52%
+Progress: [██████░░░░] 60%
 
 ### Phase Overview
 
-| Phase | Name                | Requirements | Status      |
-| ----- | ------------------- | ------------ | ----------- |
-| 12    | Table Tags          | 7            | Complete    |
-| 13    | Saved Queries       | 8            | Complete    |
-| 14    | SSH Tunnels         | 8            | In Progress |
-| 15    | AI Natural Language | 6            | Pending     |
+| Phase | Name                | Requirements | Status   |
+| ----- | ------------------- | ------------ | -------- |
+| 12    | Table Tags          | 7            | Complete |
+| 13    | Saved Queries       | 8            | Complete |
+| 14    | SSH Tunnels         | 8            | Complete |
+| 15    | AI Natural Language | 6            | Pending  |
 
 ## Target Features (v2.0)
 
 - [x] Table Tags — 自定义标签组织表 (Phase 12) ✓
 - [x] Saved Queries — 保存常用查询 (Phase 13) ✓
-- [ ] SSH Tunnels — 安全连接远程数据库 (Phase 14)
+- [x] SSH Tunnels — 安全连接远程数据库 (Phase 14) ✓
 - [ ] AI 自然语言查询 — 自然语言转 SQL (Phase 15)
 
 ## Accumulated Context
@@ -77,6 +77,8 @@ Phase 14 decisions:
 | ssh-port-dynamic    | Port 0 for dynamic allocation              | Avoids port conflicts, OS assigns available port            |
 | ssh-reconnect-limit | 5 max attempts with exponential backoff    | Balances reliability with avoiding infinite loops           |
 
+| ssh-tunnel-id-mgmt | Recreate tunnel with actual connection ID | Database adapters generate IDs, temp tunnel recreated with proper ID |
+
 ### Pending Todos
 
 None yet.
@@ -88,8 +90,8 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Completed 14-01-PLAN.md (SSH Tunnel Infrastructure)
-Resume with: Execute 14-02-PLAN.md for SSH tunnel IPC integration
+Stopped at: Completed 14-03-PLAN.md (SSH Tunnel Integration)
+Resume with: Execute Phase 15 for AI Natural Language features
 
 ---
 
