@@ -90,9 +90,9 @@ Plans:
 
 Plans:
 
-- [ ] 14-01-PLAN.md — Create SSH tunnel infrastructure (TunnelManager, credential store, types)
-- [ ] 14-02-PLAN.md — Create SSH tunnel UI configuration component
-- [ ] 14-03-PLAN.md — Integrate SSH tunnels with database adapters and add status indicator
+- [x] 14-01-PLAN.md — Create SSH tunnel infrastructure (TunnelManager, credential store, types)
+- [x] 14-02-PLAN.md — Create SSH tunnel UI configuration component
+- [x] 14-03-PLAN.md — Integrate SSH tunnels with database adapters and add status indicator
 
 **Requirements:**
 
@@ -146,7 +146,7 @@ Plans:
 | ----- | ------------------- | ------------ | -------- |
 | 12    | Table Tags          | 7            | Complete |
 | 13    | Saved Queries       | 8            | Complete |
-| 14    | SSH Tunnels         | 8            | Pending  |
+| 14    | SSH Tunnels         | 8            | Complete |
 | 15    | AI Natural Language | 6            | Pending  |
 
 **Total:** 29 requirements across 4 phases

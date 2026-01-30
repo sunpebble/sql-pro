@@ -5,16 +5,16 @@
 
 ## v2.0 Requirements
 
-### SSH Tunnels (SSH)
+### SSH Tunnels (SSH) ✓
 
-- [ ] **SSH-01**: 用户可以使用密码认证建立 SSH 隧道连接
-- [ ] **SSH-02**: 用户可以使用 SSH 密钥认证建立隧道连接
-- [ ] **SSH-03**: SSH 凭据使用 Electron safeStorage 安全存储
-- [ ] **SSH-04**: 连接配置界面显示 SSH 隧道选项
-- [ ] **SSH-05**: 隧道自动进行端口转发（动态分配本地端口）
-- [ ] **SSH-06**: 连接状态 UI 显示隧道状态指示
-- [ ] **SSH-07**: 网络中断后隧道自动重连
-- [ ] **SSH-08**: 支持通过跳板机 (Jump Host) 连接目标数据库
+- [x] **SSH-01**: 用户可以使用密码认证建立 SSH 隧道连接
+- [x] **SSH-02**: 用户可以使用 SSH 密钥认证建立隧道连接
+- [x] **SSH-03**: SSH 凭据使用 Electron safeStorage 安全存储
+- [x] **SSH-04**: 连接配置界面显示 SSH 隧道选项
+- [x] **SSH-05**: 隧道自动进行端口转发（动态分配本地端口）
+- [x] **SSH-06**: 连接状态 UI 显示隧道状态指示
+- [x] **SSH-07**: 网络中断后隧道自动重连
+- [x] **SSH-08**: 支持通过跳板机 (Jump Host) 连接目标数据库
 
 ### Table Tags (TAG) ✓
 
@@ -26,16 +26,16 @@
 - [x] **TAG-06**: 每个标签可自定义显示颜色
 - [x] **TAG-07**: 命令面板 (Cmd+K) 中可搜索和跳转到标签
 
-### Saved Queries (QUERY)
+### Saved Queries (QUERY) ✓
 
-- [ ] **QUERY-01**: 用户可以保存当前查询（名称 + 描述）
-- [ ] **QUERY-02**: 用户可以浏览已保存的查询列表
-- [ ] **QUERY-03**: 用户可以快速运行已保存的查询
-- [ ] **QUERY-04**: 用户可以编辑和删除已保存的查询
-- [ ] **QUERY-05**: 用户可以用文件夹组织已保存的查询
-- [ ] **QUERY-06**: 查询支持参数变量 `{{variable}}` 语法
-- [ ] **QUERY-07**: 运行参数化查询时弹出变量输入对话框
-- [ ] **QUERY-08**: 命令面板 (Cmd+K) 中可搜索和运行已保存查询
+- [x] **QUERY-01**: 用户可以保存当前查询（名称 + 描述）
+- [x] **QUERY-02**: 用户可以浏览已保存的查询列表
+- [x] **QUERY-03**: 用户可以快速运行已保存的查询
+- [x] **QUERY-04**: 用户可以编辑和删除已保存的查询
+- [x] **QUERY-05**: 用户可以用文件夹组织已保存的查询
+- [x] **QUERY-06**: 查询支持参数变量 `{{variable}}` 语法
+- [x] **QUERY-07**: 运行参数化查询时弹出变量输入对话框
+- [x] **QUERY-08**: 命令面板 (Cmd+K) 中可搜索和运行已保存查询
 
 ### AI Natural Language Query (AI)
 
@@ -86,22 +86,22 @@
 | TAG-05      | 12    | Complete |
 | TAG-06      | 12    | Complete |
 | TAG-07      | 12    | Complete |
-| QUERY-01    | 13    | Pending  |
-| QUERY-02    | 13    | Pending  |
-| QUERY-03    | 13    | Pending  |
-| QUERY-04    | 13    | Pending  |
-| QUERY-05    | 13    | Pending  |
-| QUERY-06    | 13    | Pending  |
-| QUERY-07    | 13    | Pending  |
-| QUERY-08    | 13    | Pending  |
-| SSH-01      | 14    | Pending  |
-| SSH-02      | 14    | Pending  |
-| SSH-03      | 14    | Pending  |
-| SSH-04      | 14    | Pending  |
-| SSH-05      | 14    | Pending  |
-| SSH-06      | 14    | Pending  |
-| SSH-07      | 14    | Pending  |
-| SSH-08      | 14    | Pending  |
+| QUERY-01    | 13    | Complete |
+| QUERY-02    | 13    | Complete |
+| QUERY-03    | 13    | Complete |
+| QUERY-04    | 13    | Complete |
+| QUERY-05    | 13    | Complete |
+| QUERY-06    | 13    | Complete |
+| QUERY-07    | 13    | Complete |
+| QUERY-08    | 13    | Complete |
+| SSH-01      | 14    | Complete |
+| SSH-02      | 14    | Complete |
+| SSH-03      | 14    | Complete |
+| SSH-04      | 14    | Complete |
+| SSH-05      | 14    | Complete |
+| SSH-06      | 14    | Complete |
+| SSH-07      | 14    | Complete |
+| SSH-08      | 14    | Complete |
 | AI-01       | 15    | Pending  |
 | AI-02       | 15    | Pending  |
 | AI-03       | 15    | Pending  |
