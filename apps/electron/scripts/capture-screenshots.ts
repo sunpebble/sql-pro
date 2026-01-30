@@ -367,7 +367,7 @@ async function openQueryEditor(page: Page): Promise<boolean> {
       await monaco.click({ force: true });
       await page.waitForTimeout(500);
 
-      // Use Monaco API to set content directly - more reliable than keyboard input
+      // Use Monaco API to set content AND theme directly - more reliable than keyboard input
       const query = 'SELECT * FROM sqlite_master LIMIT 10;';
       const contentSet = await page.evaluate((queryText) => {
         // Find Monaco editor instance
@@ -382,11 +382,15 @@ async function openQueryEditor(page: Page): Promise<boolean> {
                 setValue: (value: string) => void;
                 getValue: () => string;
               }>;
+              setTheme: (theme: string) => void;
             };
           };
         };
 
         if (monacoWindow.monaco?.editor) {
+          // Set the dark theme FIRST before setting content
+          monacoWindow.monaco.editor.setTheme('sql-pro-dark');
+
           const editors = monacoWindow.monaco.editor.getEditors();
           if (editors.length > 0) {
             editors[0].setValue(queryText);
