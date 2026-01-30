@@ -24,7 +24,7 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import {
@@ -91,11 +91,15 @@ export function BackupRestoreDialog({
     }
   }, []);
 
-  // Load backups on mount
+  // Track if we've initialized for this dialog session
+  const dialogSessionRef = useRef<boolean>(false);
+
+  // Load backups and set default name when dialog opens (combined effect)
   useEffect(() => {
-    if (open) {
+    if (open && !dialogSessionRef.current) {
+      dialogSessionRef.current = true;
       loadBackups();
-      // Set default backup name
+
       if (connection) {
         const filename =
           connection.path?.split('/').pop() ||
@@ -104,6 +108,9 @@ export function BackupRestoreDialog({
         // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on dialog open
         setBackupName(filename.replace(/\.[^/.]+$/, ''));
       }
+    } else if (!open) {
+      // Reset session tracking when dialog closes
+      dialogSessionRef.current = false;
     }
   }, [open, connection, loadBackups]);
 

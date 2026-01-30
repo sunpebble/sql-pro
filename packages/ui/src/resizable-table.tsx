@@ -1,7 +1,7 @@
 import type { Variants } from 'framer-motion';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Download } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Resizable } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 
@@ -197,7 +197,6 @@ export function ResizableTable({
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const [isDark, setIsDark] = useState(false);
 
   const shouldReduceMotion = useReducedMotion();
 
@@ -215,26 +214,23 @@ export function ResizableTable({
 
   const ITEMS_PER_PAGE = 10;
 
+  // Subscribe to dark mode changes using useSyncExternalStore
+  const isDark = useSyncExternalStore(
+    (callback) => {
+      const observer = new MutationObserver(callback);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+      return () => observer.disconnect();
+    },
+    () => document.documentElement.classList.contains('dark'),
+    () => false // Server-side snapshot
+  );
+
   useEffect(() => {
-    // Detect dark mode from document class
-    const checkDarkMode = () => {
-      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync dark mode state */
-      setIsDark(document.documentElement.classList.contains('dark'));
-    };
-
-    // Set mounted and check dark mode on initial render
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional initialization on mount
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional mount state for hydration/SSR safety
     setMounted(true);
-    checkDarkMode();
-
-    // Listen for theme changes
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
-    return () => observer.disconnect();
   }, []);
 
   const handleEmployeeSelect = (employeeId: string) => {

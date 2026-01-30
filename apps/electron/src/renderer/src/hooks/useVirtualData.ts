@@ -339,16 +339,23 @@ export function useVirtualData<T extends VirtualRowData>(
   }, [enabled, allRows, retainedRange, minRowsInMemory, maxMemoryBytes]);
 
   // Update retained range when visible range changes
-  // Synchronous updates to prevent flickering - no debounce
-  // This useEffect is intentionally calling setState based on prop changes,
-  // which is a valid pattern for derived state from props
+  // Uses ref to track previous values and avoid unnecessary setState calls
+  const previousDesiredRangeRef = useRef(desiredRange);
+
   useEffect(() => {
     if (!enabled) return;
+
+    const prevDesiredRange = previousDesiredRangeRef.current;
+    const hasDesiredRangeChanged =
+      prevDesiredRange.start !== desiredRange.start ||
+      prevDesiredRange.end !== desiredRange.end;
+
+    previousDesiredRangeRef.current = desiredRange;
 
     // Don't update if the dataset is small enough
     if (allRows.length <= minRowsInMemory) {
       if (retainedRange.start !== 0 || retainedRange.end !== allRows.length) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync update for small datasets
         setRetainedRange({ start: 0, end: allRows.length });
       }
       return;
@@ -361,11 +368,11 @@ export function useVirtualData<T extends VirtualRowData>(
     if (newStart !== retainedRange.start || newEnd !== retainedRange.end) {
       // Synchronous update to prevent flickering during fast scrolling
       if (aggressiveRelease) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync update for aggressive release mode
         setRetainedRange({ start: newStart, end: newEnd });
       } else {
         // Keep the range expanded (don't shrink, only grow)
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync update to prevent flickering
         setRetainedRange((prev) => ({
           start: Math.min(prev.start, newStart),
           end: Math.max(prev.end, newEnd),
@@ -373,7 +380,7 @@ export function useVirtualData<T extends VirtualRowData>(
       }
 
       // Notify if rows are needed that might have been released
-      if (onRowsNeeded && aggressiveRelease) {
+      if (onRowsNeeded && aggressiveRelease && hasDesiredRangeChanged) {
         if (newStart < retainedRange.start || newEnd > retainedRange.end) {
           onRowsNeeded(newStart, newEnd);
         }
@@ -382,8 +389,7 @@ export function useVirtualData<T extends VirtualRowData>(
   }, [
     enabled,
     allRows.length,
-    desiredRange.start,
-    desiredRange.end,
+    desiredRange,
     retainedRange.start,
     retainedRange.end,
     minRowsInMemory,

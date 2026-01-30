@@ -52,7 +52,6 @@ export default function Download() {
   const { ref: contentRef, isInView } = useInView<HTMLDivElement>();
 
   useEffect(() => {
-    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Detect platform on mount */
     setPlatform(detectPlatform());
   }, []);
 

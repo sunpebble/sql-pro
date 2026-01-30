@@ -74,23 +74,48 @@ export function useUMAP(
   const [progress, setProgress] = useState<number | null>(null);
 
   const workerRef = useRef<Worker | null>(null);
+  const previousStateRef = useRef({
+    embedding: null as number[][] | null,
+    isComputing: false,
+    error: null as string | null,
+    progress: null as number | null,
+  });
 
   useEffect(() => {
+    // Track state changes via refs to batch updates
+    const shouldReset = !enabled || vectors.length < MIN_VECTORS;
+
     // Don't compute if disabled or not enough vectors
-    if (!enabled || vectors.length < MIN_VECTORS) {
-      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- State reset on condition change */
-      setEmbedding(null);
-      setIsComputing(false);
-      setError(
+    if (shouldReset) {
+      const newError =
         vectors.length < MIN_VECTORS && vectors.length > 0
           ? t('umap.needMinVectors', {
               min: MIN_VECTORS,
               count: vectors.length,
             })
-          : null
-      );
-      setProgress(null);
-      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
+          : null;
+
+      // Only update if values actually changed
+      if (previousStateRef.current.embedding !== null) {
+        previousStateRef.current.embedding = null;
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+        setEmbedding(null);
+      }
+      if (previousStateRef.current.isComputing !== false) {
+        previousStateRef.current.isComputing = false;
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+        setIsComputing(false);
+      }
+      if (previousStateRef.current.error !== newError) {
+        previousStateRef.current.error = newError;
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+        setError(newError);
+      }
+      if (previousStateRef.current.progress !== null) {
+        previousStateRef.current.progress = null;
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+        setProgress(null);
+      }
       return;
     }
 
@@ -107,41 +132,88 @@ export function useUMAP(
     );
     workerRef.current = worker;
 
-    // Reset state for new computation
-    /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- State reset for new computation */
-    setIsComputing(true);
-    setError(null);
-    setProgress(null);
-    /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
+    // Reset state for new computation (batched in single render)
+    if (previousStateRef.current.isComputing !== true) {
+      previousStateRef.current.isComputing = true;
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional update for worker setup
+      setIsComputing(true);
+    }
+    if (previousStateRef.current.error !== null) {
+      previousStateRef.current.error = null;
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional update for worker setup
+      setError(null);
+    }
+    if (previousStateRef.current.progress !== null) {
+      previousStateRef.current.progress = null;
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional update for worker setup
+      setProgress(null);
+    }
 
     // Handle worker responses
     worker.onmessage = (event: MessageEvent<UMAPResponse>) => {
       const response = event.data;
 
       switch (response.type) {
-        case 'result':
-          setEmbedding(response.data ?? null);
-          setIsComputing(false);
-          setProgress(1);
+        case 'result': {
+          const newEmbedding = response.data ?? null;
+          if (previousStateRef.current.embedding !== newEmbedding) {
+            previousStateRef.current.embedding = newEmbedding;
+            setEmbedding(newEmbedding);
+          }
+          if (previousStateRef.current.isComputing !== false) {
+            previousStateRef.current.isComputing = false;
+            setIsComputing(false);
+          }
+          if (previousStateRef.current.progress !== 1) {
+            previousStateRef.current.progress = 1;
+            setProgress(1);
+          }
           break;
+        }
 
-        case 'error':
-          setError(response.error ?? 'Unknown UMAP error');
-          setIsComputing(false);
-          setEmbedding(null);
+        case 'error': {
+          const newError = response.error ?? 'Unknown UMAP error';
+          if (previousStateRef.current.error !== newError) {
+            previousStateRef.current.error = newError;
+            setError(newError);
+          }
+          if (previousStateRef.current.isComputing !== false) {
+            previousStateRef.current.isComputing = false;
+            setIsComputing(false);
+          }
+          if (previousStateRef.current.embedding !== null) {
+            previousStateRef.current.embedding = null;
+            setEmbedding(null);
+          }
           break;
+        }
 
-        case 'progress':
-          setProgress(response.progress ?? null);
+        case 'progress': {
+          const newProgress = response.progress ?? null;
+          if (previousStateRef.current.progress !== newProgress) {
+            previousStateRef.current.progress = newProgress;
+            setProgress(newProgress);
+          }
           break;
+        }
       }
     };
 
     // Handle worker errors
     worker.onerror = (event) => {
-      setError(event.message || t('umap.workerError'));
-      setIsComputing(false);
-      setEmbedding(null);
+      const newError = event.message || t('umap.workerError');
+      if (previousStateRef.current.error !== newError) {
+        previousStateRef.current.error = newError;
+        setError(newError);
+      }
+      if (previousStateRef.current.isComputing !== false) {
+        previousStateRef.current.isComputing = false;
+        setIsComputing(false);
+      }
+      if (previousStateRef.current.embedding !== null) {
+        previousStateRef.current.embedding = null;
+        setEmbedding(null);
+      }
     };
 
     // Send vectors to worker

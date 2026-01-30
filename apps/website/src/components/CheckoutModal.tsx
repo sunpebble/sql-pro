@@ -154,9 +154,8 @@ export default function CheckoutModal({
 
           {/* Feature list */}
           <ul className="checkout-features">
-            {/* eslint-disable react/no-array-index-key -- Static feature list */}
-            {features.map((feature, index) => (
-              <li key={index}>
+            {features.map((feature) => (
+              <li key={feature}>
                 <svg
                   width="16"
                   height="16"

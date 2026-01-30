@@ -134,13 +134,12 @@ export default function Pricing() {
               </p>
 
               <ul className="pricing-features">
-                {/* eslint-disable react/no-array-index-key -- Static translated features */}
                 {(
                   t(`pricing.plans.${plan}.features`, {
                     returnObjects: true,
                   }) as string[]
-                ).map((feature, index) => (
-                  <li key={index}>
+                ).map((feature) => (
+                  <li key={feature}>
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"

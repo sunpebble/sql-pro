@@ -81,13 +81,8 @@ export function AIAgentDialog({
     return () => clearTimeout(timer);
   }, [open]);
 
-  // Show settings if not configured
-  useEffect(() => {
-    if (open && !isConfigured) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional conditional show on dialog open
-      setShowSettings(true);
-    }
-  }, [open, isConfigured]);
+  // Show settings if not configured - use key to remount when dialog opens
+  const shouldShowSettings = open && !isConfigured;
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -111,7 +106,7 @@ export function AIAgentDialog({
     [handleSubmit]
   );
 
-  if (showSettings) {
+  if (showSettings || shouldShowSettings) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-2xl">

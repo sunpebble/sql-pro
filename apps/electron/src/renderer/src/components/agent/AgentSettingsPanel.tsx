@@ -19,7 +19,7 @@ import {
 import { Switch } from '@sqlpro/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { Eye, EyeOff } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface AgentSettingsPanelProps {
@@ -37,25 +37,27 @@ export function AgentSettingsPanel({
   const [isSaving, setIsSaving] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
 
-  // Config state
+  // Lazy initialization from settings prop
   const [config, setConfig] = useState<AgentConfig>(
-    settings?.config || {
-      baseUrl: '',
-      apiKey: '',
-      model: '',
-    }
+    () =>
+      settings?.config || {
+        baseUrl: '',
+        apiKey: '',
+        model: '',
+      }
   );
 
-  // Execution settings state
+  // Execution settings state with lazy initialization
   const [execution, setExecution] = useState<AgentExecutionSettings>(
-    settings?.execution || {
-      autoExecuteSelect: true,
-      autoExecuteInsert: false,
-      autoExecuteUpdate: false,
-      autoExecuteDelete: false,
-      confirmDDL: true,
-      queryTimeout: 30000,
-    }
+    () =>
+      settings?.execution || {
+        autoExecuteSelect: true,
+        autoExecuteInsert: false,
+        autoExecuteUpdate: false,
+        autoExecuteDelete: false,
+        confirmDDL: true,
+        queryTimeout: 30000,
+      }
   );
 
   const handleSave = useCallback(async () => {
@@ -67,17 +69,24 @@ export function AgentSettingsPanel({
     }
   }, [config, execution, onSave]);
 
-  // Sync form state when settings prop changes (async load)
-  useEffect(() => {
-    if (settings?.config) {
-      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync external state */
+  // Track if settings have been loaded to avoid re-syncing on every render
+  const prevSettingsRef = useRef<AgentSettings | null>(settings);
+  if (settings && settings !== prevSettingsRef.current) {
+    prevSettingsRef.current = settings;
+    // Direct state update during render for settings sync
+    if (
+      settings.config &&
+      JSON.stringify(settings.config) !== JSON.stringify(config)
+    ) {
       setConfig(settings.config);
     }
-    if (settings?.execution) {
-      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync external state */
+    if (
+      settings.execution &&
+      JSON.stringify(settings.execution) !== JSON.stringify(execution)
+    ) {
       setExecution(settings.execution);
     }
-  }, [settings]);
+  }
 
   return (
     <div className="space-y-6">

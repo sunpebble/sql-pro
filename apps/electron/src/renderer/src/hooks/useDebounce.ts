@@ -83,8 +83,7 @@ export function useDebounce<T>(
       isFirstRender.current = false;
       if (leading) {
         // Leading edge: update immediately on first render
-        // This is intentional - we want to sync state on mount
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional immediate update for leading edge debounce
         setDebouncedValue(value);
       }
       if (!trailing) {

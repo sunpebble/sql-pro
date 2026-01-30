@@ -15,7 +15,7 @@ import type {
   QdrantSearchFilter,
   VectorSearchResult,
 } from '@shared/types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
 
@@ -91,13 +91,25 @@ export function useVectorSearch(
     undefined
   );
 
+  // Track previous values to avoid unnecessary setState calls
+  const previousValuesRef = useRef({
+    backgroundPoints: [] as PointWithVector[],
+    vectorDimension: 0,
+  });
+
   // Load background points for visualization when connection/collection changes
   useEffect(() => {
     if (!connectionId || !collection) {
-      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- State reset on dependency change */
-      setBackgroundPoints([]);
-      setVectorDimension(0);
-      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
+      if (previousValuesRef.current.backgroundPoints.length !== 0) {
+        previousValuesRef.current.backgroundPoints = [];
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset on connection change
+        setBackgroundPoints([]);
+      }
+      if (previousValuesRef.current.vectorDimension !== 0) {
+        previousValuesRef.current.vectorDimension = 0;
+        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset on connection change
+        setVectorDimension(0);
+      }
       return;
     }
 
@@ -114,8 +126,21 @@ export function useVectorSearch(
         if (cancelled) return;
 
         if (response.success) {
-          setBackgroundPoints(response.points);
-          setVectorDimension(response.vectorDimension);
+          if (
+            JSON.stringify(previousValuesRef.current.backgroundPoints) !==
+            JSON.stringify(response.points)
+          ) {
+            previousValuesRef.current.backgroundPoints = response.points;
+            setBackgroundPoints(response.points);
+          }
+          if (
+            previousValuesRef.current.vectorDimension !==
+            response.vectorDimension
+          ) {
+            previousValuesRef.current.vectorDimension =
+              response.vectorDimension;
+            setVectorDimension(response.vectorDimension);
+          }
         } else {
           console.error('Failed to load background points:', response.error);
         }

@@ -28,21 +28,18 @@ interface UseVectorSearchHistoryReturn {
  * Hook for managing vector search history with localStorage persistence.
  */
 export function useVectorSearchHistory(): UseVectorSearchHistoryReturn {
-  const [history, setHistory] = useState<VectorSearchHistoryEntry[]>([]);
-
-  // Load history from localStorage on mount
-  useEffect(() => {
+  // Initialize state from localStorage directly
+  const [history, setHistory] = useState<VectorSearchHistoryEntry[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored) as VectorSearchHistoryEntry[];
-        /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Load from localStorage on mount */
-        setHistory(parsed);
+        return JSON.parse(stored) as VectorSearchHistoryEntry[];
       }
     } catch (err) {
       console.error('Failed to load vector search history:', err);
     }
-  }, []);
+    return [];
+  });
 
   // Save history to localStorage whenever it changes
   useEffect(() => {

@@ -375,23 +375,24 @@ function formatToolOutput(
                 </tr>
               </thead>
               <tbody>
-                {/* eslint-disable react/no-array-index-key -- Table rows have no stable unique ID */}
-                {rows.slice(0, 10).map((row, i) => (
-                  <tr key={i}>
-                    {Object.values(row as object).map((val, j) => (
-                      <td key={j} className="border px-2 py-1 font-mono">
-                        {val === null ? (
-                          <span className="text-muted-foreground italic">
-                            NULL
-                          </span>
-                        ) : (
-                          String(val)
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-                {/* eslint-enable react/no-array-index-key */}
+                {rows.slice(0, 10).map((row, i) => {
+                  const rowKey = `row-${i}-${JSON.stringify(Object.values(row as object).slice(0, 2))}`;
+                  return (
+                    <tr key={rowKey}>
+                      {Object.entries(row as object).map(([colKey, val]) => (
+                        <td key={colKey} className="border px-2 py-1 font-mono">
+                          {val === null ? (
+                            <span className="text-muted-foreground italic">
+                              NULL
+                            </span>
+                          ) : (
+                            String(val)
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             {rows.length > 10 && (
@@ -619,20 +620,19 @@ export function MessageContent({
   return (
     <div className={cn('text-sm', className)}>
       {parts.length === 0 && isStreaming && <Shimmer />}
-      {/* eslint-disable react/no-array-index-key -- Parts have no stable unique ID */}
       {parts.map((part, index) => {
         const isLastPart = index === parts.length - 1;
         const partIsStreaming = isStreaming && isLastPart;
+        const partKey = part.toolCallId || `${part.type}-${index}`;
 
         switch (part.type) {
           case 'text':
             if (!part.text) {
-              // Empty text part while streaming - show shimmer
-              return partIsStreaming ? <Shimmer key={index} /> : null;
+              return partIsStreaming ? <Shimmer key={partKey} /> : null;
             }
             return (
               <TextResponse
-                key={index}
+                key={partKey}
                 text={part.text}
                 isStreaming={partIsStreaming}
               />
@@ -642,7 +642,7 @@ export function MessageContent({
             if (!part.text) return null;
             return (
               <Reasoning
-                key={index}
+                key={partKey}
                 text={part.text}
                 isStreaming={partIsStreaming}
               />
@@ -650,7 +650,11 @@ export function MessageContent({
 
           case 'tool-call':
             return (
-              <ToolCall key={index} part={part} isStreaming={partIsStreaming} />
+              <ToolCall
+                key={partKey}
+                part={part}
+                isStreaming={partIsStreaming}
+              />
             );
 
           default:

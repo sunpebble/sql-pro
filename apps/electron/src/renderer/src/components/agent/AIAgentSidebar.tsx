@@ -103,16 +103,14 @@ export function AIAgentSidebar({
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (settings === null || initializedRef.current) {
-      return;
-    }
+  // Compute whether to show settings without useEffect
+  const shouldShowSettings =
+    !initializedRef.current && settings !== null && !isConfigured;
+
+  // Mark as initialized when settings panel would be shown
+  if (shouldShowSettings && !initializedRef.current) {
     initializedRef.current = true;
-    if (!isConfigured) {
-      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional initial state setup */
-      setShowSettings(true);
-    }
-  }, [isConfigured, settings]);
+  }
 
   const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current;
@@ -203,7 +201,7 @@ export function AIAgentSidebar({
     },
   ];
 
-  if (showSettings) {
+  if (showSettings || shouldShowSettings) {
     return (
       <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
         <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
