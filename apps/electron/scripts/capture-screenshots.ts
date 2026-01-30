@@ -367,14 +367,15 @@ async function openQueryEditor(page: Page): Promise<boolean> {
       await monaco.click({ force: true });
       await page.waitForTimeout(500);
 
-      // Use Monaco API to set content AND theme directly - more reliable than keyboard input
+      // Use Monaco API to set content directly - more reliable than keyboard input
       const query = 'SELECT * FROM sqlite_master LIMIT 10;';
       const contentSet = await page.evaluate((queryText) => {
         // Find Monaco editor instance
         const editorElement = document.querySelector('.monaco-editor');
-        if (!editorElement) return false;
+        if (!editorElement) return { success: false, method: 'none' };
 
-        // Access Monaco's internal API via the editor container
+        // Try multiple ways to access Monaco
+        // Method 1: window.monaco (if exposed globally)
         const monacoWindow = window as typeof window & {
           monaco?: {
             editor: {
@@ -388,32 +389,69 @@ async function openQueryEditor(page: Page): Promise<boolean> {
         };
 
         if (monacoWindow.monaco?.editor) {
-          // Set the dark theme FIRST before setting content
           monacoWindow.monaco.editor.setTheme('sql-pro-dark');
-
           const editors = monacoWindow.monaco.editor.getEditors();
           if (editors.length > 0) {
             editors[0].setValue(queryText);
-            return true;
+            return { success: true, method: 'window.monaco' };
           }
         }
 
-        // Fallback: try to find the editor via data attribute or model
+        // Method 2: Try to find monaco instance via require (AMD loader)
+        const requireWindow = window as typeof window & {
+          require?: (
+            modules: string[],
+            callback: (monaco: unknown) => void
+          ) => void;
+        };
+
+        if (requireWindow.require) {
+          return new Promise<{ success: boolean; method: string }>(
+            (resolve) => {
+              requireWindow.require!(
+                ['vs/editor/editor.main'],
+                (monacoModule: {
+                  editor: {
+                    getEditors: () => Array<{ setValue: (v: string) => void }>;
+                    setTheme: (theme: string) => void;
+                  };
+                }) => {
+                  if (monacoModule?.editor) {
+                    monacoModule.editor.setTheme('sql-pro-dark');
+                    const editors = monacoModule.editor.getEditors();
+                    if (editors.length > 0) {
+                      editors[0].setValue(queryText);
+                      resolve({ success: true, method: 'require' });
+                      return;
+                    }
+                  }
+                  resolve({ success: false, method: 'require-failed' });
+                }
+              );
+            }
+          );
+        }
+
+        // Method 3: Fallback to textarea manipulation
         const textArea = document.querySelector('.monaco-editor textarea');
         if (textArea) {
           (textArea as HTMLTextAreaElement).focus();
           document.execCommand('selectAll', false);
           document.execCommand('insertText', false, queryText);
-          return true;
+          return { success: true, method: 'textarea' };
         }
 
-        return false;
+        return { success: false, method: 'none' };
       }, query);
 
-      if (contentSet) {
-        console.log('Query set via Monaco API');
-      } else {
-        console.log('Monaco API not available, falling back to keyboard input');
+      const result = await contentSet;
+      console.log(`Query set result: ${JSON.stringify(result)}`);
+
+      // Wait for theme to apply
+      await page.waitForTimeout(500);
+
+      if (!result.success) {
+        console.log('Falling back to keyboard input');
         await page.keyboard.press('Meta+a');
         await page.waitForTimeout(200);
         await page.keyboard.press('Backspace');

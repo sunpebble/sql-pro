@@ -34,6 +34,9 @@ globalThis.MonacoEnvironment = {
   },
 };
 
+// Expose monaco to window for external access (e.g., screenshot automation)
+(window as typeof window & { monaco?: typeof monaco }).monaco = monaco;
+
 loader.config({ monaco });
 
 /**
