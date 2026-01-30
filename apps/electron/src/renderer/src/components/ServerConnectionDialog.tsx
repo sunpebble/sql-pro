@@ -24,6 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { SSHTunnelConfig } from './SSHTunnelConfig';
 
 const DEFAULT_PORTS: Record<DatabaseType, number> = {
   sqlite: 0,
@@ -153,6 +154,29 @@ export function ServerConnectionDialog({
   const [tursoDatabase, setTursoDatabase] = useState('');
   const [tursoBranch, setTursoBranch] = useState('');
 
+  // SSH Tunnel state (only for mysql/postgresql)
+  const [sshEnabled, setSshEnabled] = useState(false);
+  const [sshHost, setSshHost] = useState('');
+  const [sshPort, setSshPort] = useState('22');
+  const [sshUsername, setSshUsername] = useState('');
+  const [sshAuthMethod, setSshAuthMethod] = useState<'password' | 'privateKey'>(
+    'password'
+  );
+  const [sshPassword, setSshPassword] = useState('');
+  const [sshPrivateKeyPath, setSshPrivateKeyPath] = useState('');
+  const [sshPassphrase, setSshPassphrase] = useState('');
+  // Jump host state
+  const [showJumpHost, setShowJumpHost] = useState(false);
+  const [jumpHost, setJumpHost] = useState('');
+  const [jumpPort, setJumpPort] = useState('22');
+  const [jumpUsername, setJumpUsername] = useState('');
+  const [jumpAuthMethod, setJumpAuthMethod] = useState<
+    'password' | 'privateKey'
+  >('password');
+  const [jumpPassword, setJumpPassword] = useState('');
+  const [jumpPrivateKeyPath, setJumpPrivateKeyPath] = useState('');
+  const [jumpPassphrase, setJumpPassphrase] = useState('');
+
   // Test connection state
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<TestConnectionResponse | null>(
@@ -211,6 +235,24 @@ export function ServerConnectionDialog({
         setTursoOrganization(initialConfig.tursoOrganization || '');
         setTursoDatabase(initialConfig.tursoDatabase || '');
         setTursoBranch(initialConfig.tursoBranch || '');
+        // SSH Tunnel - load from config
+        setSshEnabled(initialConfig.ssh?.enabled || false);
+        setSshHost(initialConfig.ssh?.host || '');
+        setSshPort(initialConfig.ssh?.port?.toString() || '22');
+        setSshUsername(initialConfig.ssh?.username || '');
+        setSshAuthMethod(initialConfig.ssh?.authMethod || 'password');
+        setSshPassword(initialConfig.ssh?.password || '');
+        setSshPrivateKeyPath(initialConfig.ssh?.privateKeyPath || '');
+        setSshPassphrase(initialConfig.ssh?.passphrase || '');
+        // Jump host - load from config
+        setShowJumpHost(!!initialConfig.sshJumpHost?.enabled);
+        setJumpHost(initialConfig.sshJumpHost?.host || '');
+        setJumpPort(initialConfig.sshJumpHost?.port?.toString() || '22');
+        setJumpUsername(initialConfig.sshJumpHost?.username || '');
+        setJumpAuthMethod(initialConfig.sshJumpHost?.authMethod || 'password');
+        setJumpPassword(initialConfig.sshJumpHost?.password || '');
+        setJumpPrivateKeyPath(initialConfig.sshJumpHost?.privateKeyPath || '');
+        setJumpPassphrase(initialConfig.sshJumpHost?.passphrase || '');
       } else {
         // Reset for new connection
         setHost('');
@@ -233,6 +275,23 @@ export function ServerConnectionDialog({
         setTursoOrganization('');
         setTursoDatabase('');
         setTursoBranch('');
+        // SSH Tunnel - reset to defaults
+        setSshEnabled(false);
+        setSshHost('');
+        setSshPort('22');
+        setSshUsername('');
+        setSshAuthMethod('password');
+        setSshPassword('');
+        setSshPrivateKeyPath('');
+        setSshPassphrase('');
+        setShowJumpHost(false);
+        setJumpHost('');
+        setJumpPort('22');
+        setJumpUsername('');
+        setJumpAuthMethod('password');
+        setJumpPassword('');
+        setJumpPrivateKeyPath('');
+        setJumpPassphrase('');
       }
       setTestResult(null);
       /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
@@ -296,10 +355,50 @@ export function ServerConnectionDialog({
       config.username = username;
       config.password = password;
       config.ssl = useSSL;
+
+      // Add SSH tunnel config for MySQL/PostgreSQL
+      if (
+        sshEnabled &&
+        (databaseType === 'mysql' || databaseType === 'postgresql')
+      ) {
+        config.ssh = {
+          enabled: true,
+          host: sshHost,
+          port: Number.parseInt(sshPort, 10) || 22,
+          username: sshUsername,
+          authMethod: sshAuthMethod,
+          password: sshAuthMethod === 'password' ? sshPassword : undefined,
+          privateKeyPath:
+            sshAuthMethod === 'privateKey' ? sshPrivateKeyPath : undefined,
+          passphrase:
+            sshAuthMethod === 'privateKey' ? sshPassphrase : undefined,
+        };
+
+        // Add jump host config if enabled
+        if (showJumpHost) {
+          config.sshJumpHost = {
+            enabled: true,
+            host: jumpHost,
+            port: Number.parseInt(jumpPort, 10) || 22,
+            username: jumpUsername,
+            authMethod: jumpAuthMethod,
+            password: jumpAuthMethod === 'password' ? jumpPassword : undefined,
+            privateKeyPath:
+              jumpAuthMethod === 'privateKey' ? jumpPrivateKeyPath : undefined,
+            passphrase:
+              jumpAuthMethod === 'privateKey' ? jumpPassphrase : undefined,
+          };
+        }
+      }
     }
 
     onConnect(config);
   };
+
+  // Form validation - include SSH validation for MySQL/PostgreSQL
+  const isSshValid =
+    !sshEnabled ||
+    (sshHost && sshUsername && (!showJumpHost || (jumpHost && jumpUsername)));
 
   const isFormValid = isSupabase
     ? supabaseUrl && supabaseKey
@@ -307,7 +406,7 @@ export function ServerConnectionDialog({
       ? qdrantHost
       : isTurso
         ? tursoAuthToken && tursoOrganization && tursoDatabase
-        : host && database;
+        : host && database && isSshValid;
 
   return (
     <Dialog
@@ -383,7 +482,6 @@ export function ServerConnectionDialog({
                   />
                 </div>
               )}
-
               {/* Display name (optional) */}
               <div className="space-y-2">
                 <Label htmlFor="displayName">
@@ -396,7 +494,6 @@ export function ServerConnectionDialog({
                   onChange={(e) => setDisplayName(e.target.value)}
                 />
               </div>
-
               {isQdrant ? (
                 <>
                   {/* Qdrant Host */}
@@ -723,7 +820,46 @@ export function ServerConnectionDialog({
                   </div>
                 </>
               )}
-
+              \{/* SSH Tunnel Configuration - only for MySQL/PostgreSQL */}
+              {(databaseType === 'mysql' || databaseType === 'postgresql') && (
+                <div className="pt-2">
+                  <SSHTunnelConfig
+                    enabled={sshEnabled}
+                    onEnabledChange={setSshEnabled}
+                    sshHost={sshHost}
+                    onSshHostChange={setSshHost}
+                    sshPort={sshPort}
+                    onSshPortChange={setSshPort}
+                    sshUsername={sshUsername}
+                    onSshUsernameChange={setSshUsername}
+                    sshAuthMethod={sshAuthMethod}
+                    onSshAuthMethodChange={setSshAuthMethod}
+                    sshPassword={sshPassword}
+                    onSshPasswordChange={setSshPassword}
+                    sshPrivateKeyPath={sshPrivateKeyPath}
+                    onSshPrivateKeyPathChange={setSshPrivateKeyPath}
+                    sshPassphrase={sshPassphrase}
+                    onSshPassphraseChange={setSshPassphrase}
+                    showJumpHost={showJumpHost}
+                    onShowJumpHostChange={setShowJumpHost}
+                    jumpHost={jumpHost}
+                    onJumpHostChange={setJumpHost}
+                    jumpPort={jumpPort}
+                    onJumpPortChange={setJumpPort}
+                    jumpUsername={jumpUsername}
+                    onJumpUsernameChange={setJumpUsername}
+                    jumpAuthMethod={jumpAuthMethod}
+                    onJumpAuthMethodChange={setJumpAuthMethod}
+                    jumpPassword={jumpPassword}
+                    onJumpPasswordChange={setJumpPassword}
+                    jumpPrivateKeyPath={jumpPrivateKeyPath}
+                    onJumpPrivateKeyPathChange={setJumpPrivateKeyPath}
+                    jumpPassphrase={jumpPassphrase}
+                    onJumpPassphraseChange={setJumpPassphrase}
+                    disabled={isBlocked}
+                  />
+                </div>
+              )}
               {/* Read-only */}
               <div className="flex items-center gap-2">
                 <Checkbox
@@ -735,7 +871,6 @@ export function ServerConnectionDialog({
                   {t('connection.readOnly')}
                 </Label>
               </div>
-
               {/* Error message */}
               {error && (
                 <div className="border-destructive/50 bg-destructive/10 text-destructive rounded-md border p-3 text-sm">
