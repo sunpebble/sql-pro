@@ -11,10 +11,10 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 
 Milestone: v2.0 - 功能对齐
 Phase: 14 - SSH Tunnels (in progress)
-Plan: 2/3 complete
-Status: Plan 02 complete, ready for Plan 03
+Plan: 1/3 complete
+Status: Plan 01 complete, ready for Plan 02
 
-Progress: [██████░░░░] 55%
+Progress: [█████░░░░░] 52%
 
 ### Phase Overview
 
@@ -69,10 +69,13 @@ Phase 13 decisions:
 
 Phase 14 decisions:
 
-| ID              | Decision                                   | Rationale                                       |
-| --------------- | ------------------------------------------ | ----------------------------------------------- |
-| ssh-ui-pattern  | Controlled component with individual props | Full control from parent, easy state management |
-| ssh-conditional | SSH section only for MySQL/PostgreSQL      | Other DB types don't need SSH tunnels           |
+| ID                  | Decision                                   | Rationale                                                   |
+| ------------------- | ------------------------------------------ | ----------------------------------------------------------- |
+| ssh-ui-pattern      | Controlled component with individual props | Full control from parent, easy state management             |
+| ssh-conditional     | SSH section only for MySQL/PostgreSQL      | Other DB types don't need SSH tunnels                       |
+| ssh-cred-inline     | Include credential fields in config type   | Backward compatibility with existing ServerConnectionDialog |
+| ssh-port-dynamic    | Port 0 for dynamic allocation              | Avoids port conflicts, OS assigns available port            |
+| ssh-reconnect-limit | 5 max attempts with exponential backoff    | Balances reliability with avoiding infinite loops           |
 
 ### Pending Todos
 
@@ -85,8 +88,8 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Completed 14-02-PLAN.md (SSH Tunnel UI)
-Resume with: Execute 14-03-PLAN.md for SSH tunnel service implementation
+Stopped at: Completed 14-01-PLAN.md (SSH Tunnel Infrastructure)
+Resume with: Execute 14-02-PLAN.md for SSH tunnel IPC integration
 
 ---
 
