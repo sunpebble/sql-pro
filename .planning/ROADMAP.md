@@ -86,6 +86,14 @@ Plans:
 
 **Dependencies:** None (independent infrastructure feature)
 
+**Plans:** 3 plans in 2 waves
+
+Plans:
+
+- [ ] 14-01-PLAN.md — Create SSH tunnel infrastructure (TunnelManager, credential store, types)
+- [ ] 14-02-PLAN.md — Create SSH tunnel UI configuration component
+- [ ] 14-03-PLAN.md — Integrate SSH tunnels with database adapters and add status indicator
+
 **Requirements:**
 
 - SSH-01: User can establish SSH tunnel with password authentication
