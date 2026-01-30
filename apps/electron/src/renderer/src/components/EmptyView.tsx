@@ -42,7 +42,7 @@ export const EmptyView = memo(
     return (
       <div
         className={cn(
-          'bg-grid-dot flex h-full flex-1 items-center justify-center p-8',
+          'bg-grid-dot flex h-full w-full flex-1 items-center justify-center p-8',
           className
         )}
       >

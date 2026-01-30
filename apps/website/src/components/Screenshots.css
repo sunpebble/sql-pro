@@ -65,6 +65,7 @@
   width: 100%;
   max-width: 1000px;
   aspect-ratio: 16 / 10;
+  margin-bottom: 60px; /* Space for caption below */
 }
 
 /* === SLIDES === */
@@ -75,11 +76,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Centers only the screenshot-frame */
   transition: all 0.6s var(--ease-out);
   pointer-events: none;
-  /* Reserve space for caption so frame stays centered */
-  padding-bottom: 60px;
 }
 
 .carousel-slide.active {
@@ -105,56 +104,6 @@
   border-color: var(--primary);
 }
 
-/* === WINDOW CHROME === */
-
-.screenshot-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 20px;
-  background: linear-gradient(
-    180deg,
-    var(--bg-subtle) 0%,
-    var(--bg-light) 100%
-  );
-  border-bottom: 1px solid var(--border);
-}
-
-.screenshot-dots {
-  display: flex;
-  gap: 8px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  position: relative;
-}
-
-/* Window control colors */
-.dot.red {
-  background: linear-gradient(180deg, #ff6b6b, #e84545);
-}
-
-.dot.yellow {
-  background: linear-gradient(180deg, #ffd93d, #e5b82d);
-}
-
-.dot.green {
-  background: linear-gradient(180deg, #6bcb77, #4aae55);
-}
-
-.screenshot-title {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--muted-foreground);
-  flex: 1;
-  text-align: center;
-  letter-spacing: 0.02em;
-  margin-right: 52px;
-}
-
 .screenshot-frame img {
   width: 100%;
   max-width: 1000px;
@@ -164,7 +113,10 @@
 /* === CAPTION === */
 
 .screenshot-caption {
-  margin-top: 24px;
+  position: absolute;
+  bottom: -50px; /* Position below the carousel-track */
+  left: 0;
+  right: 0;
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 500;
@@ -292,7 +244,7 @@
 
   .screenshot-caption {
     font-size: 0.875rem;
-    margin-top: 20px;
+    bottom: -40px;
     padding: 0 16px;
   }
 }
@@ -302,18 +254,9 @@
     display: none;
   }
 
-  .screenshot-header {
-    padding: 10px 14px;
-  }
-
-  .dot {
-    width: 10px;
-    height: 10px;
-  }
-
   .screenshot-caption {
     font-size: 0.875rem;
-    margin-top: 16px;
+    bottom: -35px;
   }
 
   .carousel-dot.active {

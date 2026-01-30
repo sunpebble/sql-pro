@@ -90,14 +90,6 @@ export default function Screenshots() {
                   aria-hidden={offset !== 0}
                 >
                   <div className="screenshot-frame">
-                    <div className="screenshot-header" aria-hidden="true">
-                      <div className="screenshot-dots">
-                        <span className="dot red" />
-                        <span className="dot yellow" />
-                        <span className="dot green" />
-                      </div>
-                      <span className="screenshot-title">SQL Pro</span>
-                    </div>
                     <img src={shot.src} alt={shot.alt} loading="lazy" />
                   </div>
                   <p className="screenshot-caption">{shot.caption}</p>

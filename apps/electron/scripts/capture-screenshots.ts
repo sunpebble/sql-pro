@@ -4,15 +4,11 @@
  * Requires: pnpm run build (builds the Electron app first)
  */
 
-import type {ElectronApplication, Page} from 'playwright';
+import type { ElectronApplication, Page } from 'playwright';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as process from 'node:process';
-import {
-  _electron as electron
-  
-  
-} from 'playwright';
+import { _electron as electron } from 'playwright';
 
 const SCREENSHOT_WIDTH = 1440;
 const SCREENSHOT_HEIGHT = 900;
@@ -355,15 +351,71 @@ async function openQueryEditor(page: Page): Promise<boolean> {
     }
 
     if (monaco) {
-      console.log('Monaco editor found, typing query...');
+      console.log('Monaco editor found, setting query via Monaco API...');
       await monaco.click({ force: true });
-      await page.waitForTimeout(300);
-      await page.keyboard.type('SELECT * FROM sqlite_master LIMIT 10;');
       await page.waitForTimeout(500);
+
+      // Use Monaco API to set content directly - more reliable than keyboard input
+      const query = 'SELECT * FROM sqlite_master LIMIT 10;';
+      const contentSet = await page.evaluate((queryText) => {
+        // Find Monaco editor instance
+        const editorElement = document.querySelector('.monaco-editor');
+        if (!editorElement) return false;
+
+        // Access Monaco's internal API via the editor container
+        const monacoWindow = window as typeof window & {
+          monaco?: {
+            editor: {
+              getEditors: () => Array<{
+                setValue: (value: string) => void;
+                getValue: () => string;
+              }>;
+            };
+          };
+        };
+
+        if (monacoWindow.monaco?.editor) {
+          const editors = monacoWindow.monaco.editor.getEditors();
+          if (editors.length > 0) {
+            editors[0].setValue(queryText);
+            return true;
+          }
+        }
+
+        // Fallback: try to find the editor via data attribute or model
+        const textArea = document.querySelector('.monaco-editor textarea');
+        if (textArea) {
+          (textArea as HTMLTextAreaElement).focus();
+          document.execCommand('selectAll', false);
+          document.execCommand('insertText', false, queryText);
+          return true;
+        }
+
+        return false;
+      }, query);
+
+      if (contentSet) {
+        console.log('Query set via Monaco API');
+      } else {
+        console.log('Monaco API not available, falling back to keyboard input');
+        await page.keyboard.press('Meta+a');
+        await page.waitForTimeout(200);
+        await page.keyboard.press('Backspace');
+        await page.waitForTimeout(300);
+        // Type with extra leading space to avoid first char being lost
+        await page.keyboard.type(` ${  query}`, { delay: 30 });
+        await page.waitForTimeout(200);
+        // Go to start and delete the extra space
+        await page.keyboard.press('Meta+Home');
+        await page.waitForTimeout(100);
+        await page.keyboard.press('Delete');
+      }
+
+      await page.waitForTimeout(800);
 
       console.log('Executing query...');
       await page.keyboard.press('Meta+Enter');
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(2500);
       return true;
     }
 
