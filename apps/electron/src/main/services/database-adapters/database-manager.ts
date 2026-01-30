@@ -17,11 +17,13 @@ import type {
   TableInfo,
   ValidationResult,
 } from '@shared/types';
+import type { SSHCredential, SSHTunnelConfig } from '../ssh/types';
 import type {
   AdapterConnectionInfo,
   DatabaseAdapter,
   OpenResult,
 } from './types';
+import { sshCredentialStore, tunnelManager } from '../ssh';
 import { MySQLAdapter } from './mysql-adapter';
 import { PostgreSQLAdapter } from './postgresql-adapter';
 import { qdrantAdapter } from './qdrant-adapter';
@@ -35,6 +37,8 @@ interface ManagedConnection {
   id: string;
   type: DatabaseType;
   adapter: DatabaseAdapter;
+  /** Whether this connection uses an SSH tunnel */
+  hasSSHTunnel?: boolean;
 }
 
 /**
@@ -76,6 +80,7 @@ class DatabaseManager {
 
   /**
    * Open a database connection
+   * If SSH tunnel is enabled, creates tunnel before connecting
    */
   async open(
     pathOrConfig: string | DatabaseConnectionConfig,
@@ -98,15 +103,168 @@ class DatabaseManager {
     const type = config.type || 'sqlite';
     const adapter = this.getAdapter(type);
 
+    // Check if SSH tunnel is enabled (only for MySQL/PostgreSQL/Supabase)
+    let hasSSHTunnel = false;
+    let tunnelConnectionId: string | undefined;
+    let originalHost: string | undefined;
+    let originalPort: number | undefined;
+
+    if (
+      config.ssh?.enabled &&
+      (type === 'mysql' || type === 'postgresql' || type === 'supabase')
+    ) {
+      try {
+        // Generate a unique profile ID for credential lookup
+        // Use connection name or a timestamp-based ID
+        const profileId = config.name || `ssh-${Date.now()}`;
+        const storedCredentials = sshCredentialStore.getCredential(profileId);
+
+        // Build credentials from stored or inline values
+        // Note: privateKey comes from stored credentials (the actual key content)
+        // while config.ssh.privateKeyPath is just the path
+        const credentials: SSHCredential = {
+          profileId,
+          password: storedCredentials?.password || config.ssh.password,
+          privateKey: storedCredentials?.privateKey,
+          passphrase: storedCredentials?.passphrase || config.ssh.passphrase,
+          jumpHostPassword:
+            storedCredentials?.jumpHostPassword || config.sshJumpHost?.password,
+          jumpHostPrivateKey: storedCredentials?.jumpHostPrivateKey,
+          jumpHostPassphrase:
+            storedCredentials?.jumpHostPassphrase ||
+            config.sshJumpHost?.passphrase,
+        };
+
+        // Store original host/port for tunnel config
+        originalHost = config.host || 'localhost';
+        originalPort = config.port || (type === 'mysql' ? 3306 : 5432);
+
+        // Build SSH tunnel configuration
+        const tunnelConfig: SSHTunnelConfig = {
+          ssh: {
+            enabled: true,
+            host: config.ssh.host,
+            port: config.ssh.port || 22,
+            username: config.ssh.username,
+            authMethod: config.ssh.authMethod,
+          },
+          remoteHost: originalHost,
+          remotePort: originalPort,
+          localPort: 0, // Dynamic allocation
+        };
+
+        // Add jump host if configured
+        if (config.sshJumpHost?.enabled) {
+          tunnelConfig.jumpHost = {
+            enabled: true,
+            host: config.sshJumpHost.host,
+            port: config.sshJumpHost.port || 22,
+            username: config.sshJumpHost.username,
+            authMethod: config.sshJumpHost.authMethod,
+          };
+        }
+
+        // Generate a temporary connection ID for the tunnel
+        tunnelConnectionId = `ssh-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+        // Create the SSH tunnel
+        const tunnelLocalPort = await tunnelManager.createTunnel(
+          tunnelConnectionId,
+          tunnelConfig,
+          credentials
+        );
+
+        // Modify the config to route through the tunnel
+        config = {
+          ...config,
+          host: '127.0.0.1',
+          port: tunnelLocalPort,
+        };
+
+        hasSSHTunnel = true;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'SSH tunnel failed';
+        return {
+          success: false,
+          error: `SSH tunnel failed: ${errorMessage}`,
+        };
+      }
+    }
+
     const result = await adapter.open(config);
 
     if (result.success && result.connection) {
+      const actualConnectionId = result.connection.id;
+
+      // If we created a tunnel with a temp ID, rename it to the actual connection ID
+      if (hasSSHTunnel && tunnelConnectionId) {
+        // Close the temp-named tunnel and recreate with proper ID
+        const tunnel = tunnelManager.getTunnel(tunnelConnectionId);
+        const currentStatus = tunnel?.status;
+        const currentLocalPort = currentStatus?.localPort;
+
+        await tunnelManager.closeTunnel(tunnelConnectionId);
+
+        // Recreate with the actual connection ID if we had a valid tunnel
+        if (currentLocalPort && config.ssh) {
+          const profileId = config.name || `ssh-${Date.now()}`;
+          const storedCredentials = sshCredentialStore.getCredential(profileId);
+          const credentials: SSHCredential = {
+            profileId,
+            password: storedCredentials?.password || config.ssh.password,
+            privateKey: storedCredentials?.privateKey,
+            passphrase: storedCredentials?.passphrase || config.ssh.passphrase,
+            jumpHostPassword:
+              storedCredentials?.jumpHostPassword ||
+              config.sshJumpHost?.password,
+            jumpHostPrivateKey: storedCredentials?.jumpHostPrivateKey,
+            jumpHostPassphrase:
+              storedCredentials?.jumpHostPassphrase ||
+              config.sshJumpHost?.passphrase,
+          };
+
+          const tunnelConfig: SSHTunnelConfig = {
+            ssh: {
+              enabled: true,
+              host: config.ssh.host,
+              port: config.ssh.port || 22,
+              username: config.ssh.username,
+              authMethod: config.ssh.authMethod,
+            },
+            remoteHost: originalHost || 'localhost',
+            remotePort: originalPort || (type === 'mysql' ? 3306 : 5432),
+            localPort: currentLocalPort, // Reuse the same port
+          };
+
+          if (config.sshJumpHost?.enabled) {
+            tunnelConfig.jumpHost = {
+              enabled: true,
+              host: config.sshJumpHost.host,
+              port: config.sshJumpHost.port || 22,
+              username: config.sshJumpHost.username,
+              authMethod: config.sshJumpHost.authMethod,
+            };
+          }
+
+          await tunnelManager.createTunnel(
+            actualConnectionId,
+            tunnelConfig,
+            credentials
+          );
+        }
+      }
+
       // Track this connection
-      this.connections.set(result.connection.id, {
-        id: result.connection.id,
+      this.connections.set(actualConnectionId, {
+        id: actualConnectionId,
         type,
         adapter,
+        hasSSHTunnel,
       });
+    } else if (hasSSHTunnel && tunnelConnectionId) {
+      // Connection failed, clean up the tunnel
+      await tunnelManager.closeTunnel(tunnelConnectionId);
     }
 
     return result;
@@ -135,10 +293,12 @@ class DatabaseManager {
 
   /**
    * Close a database connection
+   * Also closes associated SSH tunnel if one exists
    */
   close(
     connectionId: string
   ): { success: true } | { success: false; error: string } {
+    const managed = this.connections.get(connectionId);
     const adapter = this.getConnectionAdapter(connectionId);
     if (!adapter) {
       return { success: false, error: 'Connection not found' };
@@ -147,6 +307,16 @@ class DatabaseManager {
     const result = adapter.close(connectionId);
     if (result.success) {
       this.connections.delete(connectionId);
+
+      // Close SSH tunnel if one exists for this connection
+      if (managed?.hasSSHTunnel) {
+        tunnelManager.closeTunnel(connectionId).catch((error) => {
+          console.error(
+            `Failed to close SSH tunnel for ${connectionId}:`,
+            error
+          );
+        });
+      }
     }
     return result;
   }
@@ -619,12 +789,16 @@ class DatabaseManager {
 
   /**
    * Close all connections
+   * Also closes all SSH tunnels
    */
   closeAll(): void {
     for (const adapter of this.adapters.values()) {
       adapter.closeAll();
     }
     this.connections.clear();
+
+    // Close all SSH tunnels
+    tunnelManager.closeAllTunnels();
   }
 
   /**
