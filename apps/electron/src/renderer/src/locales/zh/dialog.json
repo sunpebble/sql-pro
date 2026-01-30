@@ -103,6 +103,29 @@
       "passwordPlaceholder": "您的数据库密码",
       "passwordHint": "创建项目时设置的密码"
     },
+    "ssh": {
+      "title": "SSH 隧道",
+      "enable": "使用 SSH 隧道",
+      "host": "SSH 主机",
+      "hostPlaceholder": "ssh.example.com",
+      "port": "SSH 端口",
+      "username": "SSH 用户名",
+      "usernamePlaceholder": "ubuntu",
+      "authMethod": "认证方式",
+      "password": "密码",
+      "privateKey": "私钥",
+      "privateKeyPath": "私钥文件",
+      "privateKeyPlaceholder": "~/.ssh/id_rsa",
+      "browse": "浏览",
+      "passphrase": "密钥密码",
+      "passphrasePlaceholder": "如私钥未加密请留空",
+      "jumpHost": {
+        "enable": "使用跳板机 (Bastion)",
+        "title": "跳板机配置",
+        "host": "跳板机主机",
+        "hostPlaceholder": "bastion.example.com"
+      }
+    },
     "recommended": "推荐"
   },
   "settings": {

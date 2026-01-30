@@ -103,6 +103,29 @@
       "passwordPlaceholder": "Your database password",
       "passwordHint": "The password you set when creating the project"
     },
+    "ssh": {
+      "title": "SSH Tunnel",
+      "enable": "Use SSH Tunnel",
+      "host": "SSH Host",
+      "hostPlaceholder": "ssh.example.com",
+      "port": "SSH Port",
+      "username": "SSH Username",
+      "usernamePlaceholder": "ubuntu",
+      "authMethod": "Authentication Method",
+      "password": "Password",
+      "privateKey": "Private Key",
+      "privateKeyPath": "Private Key File",
+      "privateKeyPlaceholder": "~/.ssh/id_rsa",
+      "browse": "Browse",
+      "passphrase": "Key Passphrase",
+      "passphrasePlaceholder": "Leave empty if key is not encrypted",
+      "jumpHost": {
+        "enable": "Use Jump Host (Bastion)",
+        "title": "Jump Host Configuration",
+        "host": "Jump Host",
+        "hostPlaceholder": "bastion.example.com"
+      }
+    },
     "recommended": "recommended"
   },
   "settings": {
