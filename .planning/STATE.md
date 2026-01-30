@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Milestone: v2.0 - 功能对齐
-Phase: 13 - Saved Queries (complete)
-Plan: 3/3 complete
-Status: Phase 13 verified, ready for Phase 14
+Phase: 14 - SSH Tunnels (in progress)
+Plan: 2/3 complete
+Status: Plan 02 complete, ready for Plan 03
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 55%
 
 ### Phase Overview
 
-| Phase | Name                | Requirements | Status   |
-| ----- | ------------------- | ------------ | -------- |
-| 12    | Table Tags          | 7            | Complete |
-| 13    | Saved Queries       | 8            | Complete |
-| 14    | SSH Tunnels         | 8            | Pending  |
-| 15    | AI Natural Language | 6            | Pending  |
+| Phase | Name                | Requirements | Status      |
+| ----- | ------------------- | ------------ | ----------- |
+| 12    | Table Tags          | 7            | Complete    |
+| 13    | Saved Queries       | 8            | Complete    |
+| 14    | SSH Tunnels         | 8            | In Progress |
+| 15    | AI Natural Language | 6            | Pending     |
 
 ## Target Features (v2.0)
 
@@ -67,6 +67,13 @@ Phase 13 decisions:
 | cmd-palette-pattern | Follow useTagCommands pattern        | Consistency across command registration hooks        |
 | toolbar-placement   | Save/Saved buttons before Side Panel | Visual grouping of query-related actions             |
 
+Phase 14 decisions:
+
+| ID              | Decision                                   | Rationale                                       |
+| --------------- | ------------------------------------------ | ----------------------------------------------- |
+| ssh-ui-pattern  | Controlled component with individual props | Full control from parent, easy state management |
+| ssh-conditional | SSH section only for MySQL/PostgreSQL      | Other DB types don't need SSH tunnels           |
+
 ### Pending Todos
 
 None yet.
@@ -78,8 +85,8 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Completed Phase 13 (Saved Queries)
-Resume with: `/gsd:plan-phase 14` for SSH Tunnels phase
+Stopped at: Completed 14-02-PLAN.md (SSH Tunnel UI)
+Resume with: Execute 14-03-PLAN.md for SSH tunnel service implementation
 
 ---
 
