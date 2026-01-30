@@ -50,6 +50,10 @@ async function captureWithTheme(
 ): Promise<void> {
   console.log(`Capturing: ${name} - ${description}`);
 
+  // Ensure dark mode is properly set (including Monaco editor theme)
+  await page.evaluate(SET_DARK_MODE_SCRIPT);
+  await page.waitForTimeout(300);
+
   await page.screenshot({
     path: path.join(OUTPUT_DIR, `${name}-dark.png`),
     type: 'png',
