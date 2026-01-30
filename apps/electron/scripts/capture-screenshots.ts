@@ -27,12 +27,20 @@ const SET_LIGHT_MODE_SCRIPT = `
   document.documentElement.classList.remove('dark');
   document.documentElement.classList.add('light');
   document.documentElement.style.colorScheme = 'light';
+  // Also update Monaco editor theme if available
+  if (window.monaco?.editor) {
+    window.monaco.editor.setTheme('sql-pro-light');
+  }
 `;
 
 const SET_DARK_MODE_SCRIPT = `
   document.documentElement.classList.remove('light');
   document.documentElement.classList.add('dark');
   document.documentElement.style.colorScheme = 'dark';
+  // Also update Monaco editor theme if available
+  if (window.monaco?.editor) {
+    window.monaco.editor.setTheme('sql-pro-dark');
+  }
 `;
 
 async function captureWithTheme(
@@ -403,7 +411,7 @@ async function openQueryEditor(page: Page): Promise<boolean> {
         await page.keyboard.press('Backspace');
         await page.waitForTimeout(300);
         // Type with extra leading space to avoid first char being lost
-        await page.keyboard.type(` ${  query}`, { delay: 30 });
+        await page.keyboard.type(` ${query}`, { delay: 30 });
         await page.waitForTimeout(200);
         // Go to start and delete the extra space
         await page.keyboard.press('Meta+Home');
