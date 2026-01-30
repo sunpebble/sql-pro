@@ -22,6 +22,7 @@ import {
 } from './renderer-store';
 import { setupSchemaHandlers } from './schema';
 import { setupSqlLogHandlers } from './sql-log';
+import { cleanupSSHHandlers, setupSSHHandlers } from './ssh';
 import { setupSystemHandlers } from './system';
 import { setupUpdatesHandlers } from './updates';
 
@@ -47,6 +48,7 @@ export function setupIpcHandlers(): void {
   setupPgNotifyHandlers();
   setupImageHandlers();
   setupBackupHandlers();
+  setupSSHHandlers();
 }
 
 export function cleanupIpcHandlers(): void {
@@ -63,4 +65,6 @@ export function cleanupIpcHandlers(): void {
   cleanupImageHandlers();
   // Clean up agent handlers
   cleanupAgentHandlers();
+  // Clean up SSH tunnels
+  cleanupSSHHandlers();
 }

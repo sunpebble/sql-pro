@@ -1186,6 +1186,90 @@ export const sqlProAPI = {
     ): Promise<GenerateMigrationSQLResponse> =>
       ipcRenderer.invoke(IPC_CHANNELS.GENERATE_MIGRATION_SQL, request),
   },
+
+  // SSH tunnel operations
+  ssh: {
+    saveCredentials: (
+      profileId: string,
+      credentials: {
+        password?: string;
+        privateKey?: string;
+        passphrase?: string;
+        jumpHostPassword?: string;
+        jumpHostPrivateKey?: string;
+        jumpHostPassphrase?: string;
+      }
+    ): Promise<{ success: boolean }> =>
+      ipcRenderer.invoke('ssh:save-credentials', profileId, credentials),
+    hasCredentials: (profileId: string): Promise<{ hasCredentials: boolean }> =>
+      ipcRenderer.invoke('ssh:has-credentials', profileId),
+    getCredentials: (
+      profileId: string
+    ): Promise<{
+      success: boolean;
+      credentials?: {
+        profileId: string;
+        password?: string;
+        privateKey?: string;
+        passphrase?: string;
+        jumpHostPassword?: string;
+        jumpHostPrivateKey?: string;
+        jumpHostPassphrase?: string;
+      };
+    }> => ipcRenderer.invoke('ssh:get-credentials', profileId),
+    removeCredentials: (profileId: string): Promise<{ success: boolean }> =>
+      ipcRenderer.invoke('ssh:remove-credentials', profileId),
+    getTunnelStatus: (
+      connectionId: string
+    ): Promise<{
+      success: boolean;
+      status: {
+        state:
+          | 'disconnected'
+          | 'connecting'
+          | 'connected'
+          | 'reconnecting'
+          | 'error';
+        localPort?: number;
+        error?: string;
+        reconnectAttempts?: number;
+      } | null;
+    }> => ipcRenderer.invoke('ssh:get-tunnel-status', connectionId),
+    closeTunnel: (connectionId: string): Promise<{ success: boolean }> =>
+      ipcRenderer.invoke('ssh:close-tunnel', connectionId),
+    testConnection: (
+      config: {
+        ssh: {
+          enabled: boolean;
+          host: string;
+          port?: number;
+          username: string;
+          authMethod: 'password' | 'privateKey';
+        };
+        jumpHost?: {
+          enabled: boolean;
+          host: string;
+          port?: number;
+          username: string;
+          authMethod: 'password' | 'privateKey';
+        };
+        remoteHost: string;
+        remotePort: number;
+        localPort?: number;
+      },
+      credentials: {
+        password?: string;
+        privateKey?: string;
+        passphrase?: string;
+        jumpHostPassword?: string;
+        jumpHostPrivateKey?: string;
+        jumpHostPassphrase?: string;
+      }
+    ): Promise<{ success: boolean; message?: string; error?: string }> =>
+      ipcRenderer.invoke('ssh:test-connection', config, credentials),
+    hasTunnel: (connectionId: string): Promise<{ hasTunnel: boolean }> =>
+      ipcRenderer.invoke('ssh:has-tunnel', connectionId),
+  },
 };
 
 contextBridge.exposeInMainWorld('sqlPro', sqlProAPI);
