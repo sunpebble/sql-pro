@@ -139,6 +139,57 @@ export interface DatabaseConnectionConfig {
   tursoDatabase?: string;
   /** Turso-specific: selected branch name (default: 'main') */
   tursoBranch?: string;
+
+  // ============ SSH Tunnel Configuration ============
+
+  /**
+   * SSH tunnel configuration for secure remote database connections.
+   * When enabled, the connection will be routed through an SSH tunnel.
+   *
+   * Note: Credentials stored here are for UI state only. For secure storage,
+   * credentials should be encrypted via sshCredentialStore before persisting.
+   */
+  ssh?: {
+    /** Whether SSH tunnel is enabled for this connection */
+    enabled: boolean;
+    /** SSH server hostname or IP address */
+    host: string;
+    /** SSH server port (default: 22) */
+    port?: number;
+    /** SSH username for authentication */
+    username: string;
+    /** Authentication method: password or private key */
+    authMethod: 'password' | 'privateKey';
+    /** Password for password authentication (UI state, encrypt before storage) */
+    password?: string;
+    /** Path to private key file for key authentication */
+    privateKeyPath?: string;
+    /** Passphrase for encrypted private keys (UI state, encrypt before storage) */
+    passphrase?: string;
+  };
+
+  /**
+   * SSH jump host (bastion) configuration for multi-hop connections.
+   * Used when the target SSH server is not directly accessible.
+   */
+  sshJumpHost?: {
+    /** Whether jump host is enabled */
+    enabled: boolean;
+    /** Jump host hostname or IP address */
+    host: string;
+    /** Jump host port (default: 22) */
+    port?: number;
+    /** Jump host username */
+    username: string;
+    /** Authentication method for jump host */
+    authMethod: 'password' | 'privateKey';
+    /** Password for password authentication (UI state, encrypt before storage) */
+    password?: string;
+    /** Path to private key file for key authentication */
+    privateKeyPath?: string;
+    /** Passphrase for encrypted private keys (UI state, encrypt before storage) */
+    passphrase?: string;
+  };
 }
 
 // ============ Qdrant Vector Search Types ============
