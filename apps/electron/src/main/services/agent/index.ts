@@ -7,6 +7,9 @@ import type {
   GetHistoryResponse,
   GetSessionsResponse,
   GetSettingsResponse,
+  NLExplainSQLResponse,
+  NLGenerateSQLResponse,
+  NLOptimizeSQLResponse,
   SaveSettingsResponse,
 } from '@shared/types/agent';
 import type { UIMessage } from 'ai';
@@ -15,6 +18,7 @@ import { BrowserWindow, ipcMain } from 'electron';
 import { createHandler } from '../ipc/utils';
 import { handleChat } from './chat-handler';
 import { agentHistoryStore } from './history-store';
+import { explainSQL, generateSQL, optimizeSQL } from './nl-query-handler';
 import { agentSettingsStore } from './settings-store';
 
 // Track active chat streams for cancellation
@@ -270,6 +274,102 @@ export function setupAgentHandlers(): void {
           activeStreams.delete(streamId);
         }
         return {};
+      }
+    )
+  );
+
+  // Natural Language Query handlers
+  ipcMain.handle(
+    AGENT_IPC_CHANNELS.NL_GENERATE_SQL,
+    createHandler(
+      async (request: {
+        connectionId: string;
+        naturalLanguage: string;
+      }): Promise<NLGenerateSQLResponse> => {
+        const settings = agentSettingsStore.getSettings();
+
+        if (!agentSettingsStore.isConfigured()) {
+          return { success: false, error: 'Agent not configured' };
+        }
+
+        try {
+          const result = await generateSQL({
+            connectionId: request.connectionId,
+            naturalLanguage: request.naturalLanguage,
+            settings,
+          });
+          return { success: true, result };
+        } catch (error) {
+          return {
+            success: false,
+            error:
+              error instanceof Error ? error.message : 'SQL generation failed',
+          };
+        }
+      }
+    )
+  );
+
+  ipcMain.handle(
+    AGENT_IPC_CHANNELS.NL_EXPLAIN_SQL,
+    createHandler(
+      async (request: {
+        connectionId: string;
+        sql: string;
+      }): Promise<NLExplainSQLResponse> => {
+        const settings = agentSettingsStore.getSettings();
+
+        if (!agentSettingsStore.isConfigured()) {
+          return { success: false, error: 'Agent not configured' };
+        }
+
+        try {
+          const result = await explainSQL({
+            connectionId: request.connectionId,
+            sql: request.sql,
+            settings,
+          });
+          return { success: true, result };
+        } catch (error) {
+          return {
+            success: false,
+            error:
+              error instanceof Error ? error.message : 'SQL explanation failed',
+          };
+        }
+      }
+    )
+  );
+
+  ipcMain.handle(
+    AGENT_IPC_CHANNELS.NL_OPTIMIZE_SQL,
+    createHandler(
+      async (request: {
+        connectionId: string;
+        sql: string;
+      }): Promise<NLOptimizeSQLResponse> => {
+        const settings = agentSettingsStore.getSettings();
+
+        if (!agentSettingsStore.isConfigured()) {
+          return { success: false, error: 'Agent not configured' };
+        }
+
+        try {
+          const result = await optimizeSQL({
+            connectionId: request.connectionId,
+            sql: request.sql,
+            settings,
+          });
+          return { success: true, result };
+        } catch (error) {
+          return {
+            success: false,
+            error:
+              error instanceof Error
+                ? error.message
+                : 'SQL optimization failed',
+          };
+        }
       }
     )
   );

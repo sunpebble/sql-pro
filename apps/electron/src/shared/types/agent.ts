@@ -109,6 +109,11 @@ export const AGENT_IPC_CHANNELS = {
   HISTORY_GET_SESSIONS: 'agent:history:get-sessions',
   HISTORY_DELETE_SESSION: 'agent:history:delete-session',
   HISTORY_CLEAR: 'agent:history:clear',
+
+  // Natural Language Query
+  NL_GENERATE_SQL: 'agent:nl:generate-sql',
+  NL_EXPLAIN_SQL: 'agent:nl:explain-sql',
+  NL_OPTIMIZE_SQL: 'agent:nl:optimize-sql',
 } as const;
 
 export type AgentIpcChannel =
@@ -166,4 +171,100 @@ export interface DeleteSessionRequest {
 
 export interface ClearHistoryRequest {
   connectionId: string;
+}
+
+// ============ Natural Language Query Types ============
+
+export interface GeneratedSQL {
+  /** The SQL query to execute */
+  sql: string;
+  /** What this query does in plain English */
+  explanation: string;
+  /** Tables referenced in the query */
+  referencedTables: string[];
+  /** Whether query modifies data (UPDATE/DELETE/INSERT/DDL) */
+  isDestructive: boolean;
+  /** Dialect used (mysql/postgresql) */
+  dialect: 'mysql' | 'postgresql';
+}
+
+export interface SQLExplanation {
+  /** Overall summary of what the query does */
+  summary: string;
+  /** Breakdown of query components */
+  components: {
+    type:
+      | 'select'
+      | 'from'
+      | 'join'
+      | 'where'
+      | 'group'
+      | 'order'
+      | 'limit'
+      | 'other';
+    description: string;
+  }[];
+  /** Tables involved and their roles */
+  tables: { name: string; role: string }[];
+  /** Performance considerations */
+  performanceNotes?: string;
+}
+
+export interface OptimizationSuggestion {
+  /** Type of optimization */
+  type: 'index' | 'rewrite' | 'schema' | 'query-structure';
+  /** Severity: info, warning, critical */
+  severity: 'info' | 'warning' | 'critical';
+  /** Description of the issue */
+  issue: string;
+  /** Suggested fix */
+  suggestion: string;
+  /** Example SQL if applicable */
+  exampleSQL?: string;
+}
+
+export interface QueryOptimization {
+  /** Original query */
+  originalQuery: string;
+  /** Optimized query if rewrite suggested */
+  optimizedQuery?: string;
+  /** List of suggestions */
+  suggestions: OptimizationSuggestion[];
+  /** Estimated improvement description */
+  estimatedImprovement?: string;
+}
+
+// ============ NL Query Request/Response Types ============
+
+export interface NLGenerateSQLRequest {
+  connectionId: string;
+  naturalLanguage: string;
+}
+
+export interface NLGenerateSQLResponse {
+  success: boolean;
+  result?: GeneratedSQL;
+  error?: string;
+}
+
+export interface NLExplainSQLRequest {
+  connectionId: string;
+  sql: string;
+}
+
+export interface NLExplainSQLResponse {
+  success: boolean;
+  result?: SQLExplanation;
+  error?: string;
+}
+
+export interface NLOptimizeSQLRequest {
+  connectionId: string;
+  sql: string;
+}
+
+export interface NLOptimizeSQLResponse {
+  success: boolean;
+  result?: QueryOptimization;
+  error?: string;
 }

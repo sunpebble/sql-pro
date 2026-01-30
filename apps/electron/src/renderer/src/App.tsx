@@ -5,6 +5,7 @@ import { TooltipProvider } from '@sqlpro/ui/tooltip';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
+import { SQLExplanationPopover, SQLPreviewDialog } from '@/components/ai';
 import { AppQuitDialog } from '@/components/AppQuitDialog';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { WelcomeDialog } from '@/components/onboarding';
@@ -286,6 +287,9 @@ function App(): React.JSX.Element {
               // Dialog will close via store actions (startTour/skipTour)
             }}
           />
+          {/* AI Components */}
+          <SQLPreviewDialog />
+          <SQLExplanationPopover />
         </TooltipProvider>
       </QueryClientProvider>
     </ErrorBoundary>

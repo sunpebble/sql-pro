@@ -3,7 +3,7 @@
 
 import type { AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import type { AgentSettings } from '@shared/types/agent';
-import type { UIMessage } from 'ai';
+import type { StreamTextResult, UIMessage } from 'ai';
 import { convertToModelMessages, stepCountIs, streamText } from 'ai';
 import { getCurrentLanguage } from '../menu';
 import { createChatModel } from './model';
@@ -75,7 +75,9 @@ export interface ChatHandlerOptions {
 /**
  * Handle a chat request with streaming response
  */
-export async function handleChat(options: ChatHandlerOptions) {
+export async function handleChat(
+  options: ChatHandlerOptions
+): Promise<StreamTextResult<any, any>> {
   const { connectionId, messages, settings, signal } = options;
 
   // Create model and tools

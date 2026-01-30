@@ -171,6 +171,9 @@ import type {
   GetHistoryResponse,
   GetSessionsResponse,
   GetSettingsResponse,
+  NLExplainSQLResponse,
+  NLGenerateSQLResponse,
+  NLOptimizeSQLResponse,
   SaveSettingsResponse,
 } from '@shared/types/agent';
 import type {
@@ -531,6 +534,32 @@ export const sqlProAPI = {
       connectionId: string;
     }): Promise<Record<string, never>> =>
       ipcRenderer.invoke(AGENT_IPC_CHANNELS.HISTORY_CLEAR, request),
+
+    // Natural Language Query
+    nlGenerateSQL: (
+      connectionId: string,
+      naturalLanguage: string
+    ): Promise<NLGenerateSQLResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.NL_GENERATE_SQL, {
+        connectionId,
+        naturalLanguage,
+      }),
+    nlExplainSQL: (
+      connectionId: string,
+      sql: string
+    ): Promise<NLExplainSQLResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.NL_EXPLAIN_SQL, {
+        connectionId,
+        sql,
+      }),
+    nlOptimizeSQL: (
+      connectionId: string,
+      sql: string
+    ): Promise<NLOptimizeSQLResponse> =>
+      ipcRenderer.invoke(AGENT_IPC_CHANNELS.NL_OPTIMIZE_SQL, {
+        connectionId,
+        sql,
+      }),
   },
 
   // Pro tier operations
