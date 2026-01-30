@@ -35,3 +35,5 @@ coverage
 packages/docs/.vitepress/cache
 packages/license-api/.dev.vars
 .worktrees/
+
+.omc
