@@ -2513,5 +2513,17 @@
       "deleteWithQueries": "Delete folder and all queries inside",
       "moveToRoot": "Move queries to root and delete folder"
     }
+  },
+  "ssh": {
+    "tunnel": "SSH",
+    "tunnelActive": "SSH Tunnel Active",
+    "tunnelConnecting": "Connecting SSH Tunnel...",
+    "tunnelReconnecting": "Reconnecting SSH Tunnel...",
+    "tunnelError": "SSH Tunnel Error",
+    "tunnelDisconnected": "SSH Tunnel Disconnected",
+    "reconnecting": "Reconnecting",
+    "error": "Error",
+    "localPort": "Local port: {{port}}",
+    "reconnectAttempts": "Reconnect attempts: {{count}}"
   }
 }

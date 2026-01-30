@@ -2513,5 +2513,17 @@
       "deleteWithQueries": "删除文件夹及其中所有查询",
       "moveToRoot": "将查询移至根目录并删除文件夹"
     }
+  },
+  "ssh": {
+    "tunnel": "SSH",
+    "tunnelActive": "SSH 隧道已连接",
+    "tunnelConnecting": "正在连接 SSH 隧道...",
+    "tunnelReconnecting": "正在重新连接 SSH 隧道...",
+    "tunnelError": "SSH 隧道错误",
+    "tunnelDisconnected": "SSH 隧道已断开",
+    "reconnecting": "重连中",
+    "error": "错误",
+    "localPort": "本地端口: {{port}}",
+    "reconnectAttempts": "重连次数: {{count}}"
   }
 }

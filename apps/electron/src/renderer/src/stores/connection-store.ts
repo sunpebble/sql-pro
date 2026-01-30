@@ -20,6 +20,13 @@ import {
 } from '@/lib/storage';
 import { useChangesStore } from './changes-store';
 
+interface TunnelStatus {
+  state: 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error';
+  localPort?: number;
+  error?: string;
+  reconnectAttempts?: number;
+}
+
 interface ConnectionState {
   // Multiple connections support
   connections: Map<string, DatabaseConnection>;
@@ -30,6 +37,9 @@ interface ConnectionState {
 
   // Connection colors for visual distinction (connectionId -> hex color)
   connectionColors: Record<string, string>;
+
+  // SSH tunnel status per connection (connectionId -> TunnelStatus)
+  tunnelStatuses: Record<string, TunnelStatus>;
 
   // Schema per connection
   schemas: Map<string, DatabaseSchema>;
@@ -110,6 +120,12 @@ interface ConnectionState {
   // Error Actions
   setError: (error: string | null) => void;
 
+  // SSH Tunnel Actions
+  setTunnelStatus: (connectionId: string, status: TunnelStatus | null) => void;
+  getTunnelStatus: (connectionId: string) => TunnelStatus | undefined;
+  pollTunnelStatus: (connectionId: string) => void;
+  stopPollingTunnelStatus: (connectionId: string) => void;
+
   // Reset
   reset: () => void;
 
@@ -143,6 +159,7 @@ const initialState = {
   activeConnectionId: null,
   connectionTabOrder: [],
   connectionColors: {},
+  tunnelStatuses: {},
   schemas: new Map<string, DatabaseSchema>(),
   selectedTable: null,
   selectedSchemaObject: null,
@@ -651,6 +668,64 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
   // Error Actions
   setError: (error) => set({ error }),
 
+  // SSH Tunnel Actions
+  setTunnelStatus: (connectionId, status) =>
+    set((state) => {
+      if (status === null) {
+        const { [connectionId]: _, ...rest } = state.tunnelStatuses;
+        return { tunnelStatuses: rest };
+      }
+      return {
+        tunnelStatuses: {
+          ...state.tunnelStatuses,
+          [connectionId]: status,
+        },
+      };
+    }),
+
+  getTunnelStatus: (connectionId) => {
+    return get().tunnelStatuses[connectionId];
+  },
+
+  pollTunnelStatus: (connectionId) => {
+    // Poll tunnel status from main process
+    const poll = async () => {
+      try {
+        const result = await window.sqlPro.ssh.getTunnelStatus(connectionId);
+        if (result.success && result.status) {
+          get().setTunnelStatus(connectionId, result.status);
+        }
+      } catch {
+        // Ignore errors during polling
+      }
+    };
+
+    // Initial poll
+    poll();
+
+    // Set up interval polling (every 5 seconds)
+    const intervalId = setInterval(poll, 5000);
+
+    // Store interval ID for cleanup (using a simple approach with window)
+    (window as unknown as Record<string, unknown>)[
+      `tunnelPoll_${connectionId}`
+    ] = intervalId;
+  },
+
+  stopPollingTunnelStatus: (connectionId) => {
+    const intervalId = (window as unknown as Record<string, unknown>)[
+      `tunnelPoll_${connectionId}`
+    ] as NodeJS.Timeout | undefined;
+    if (intervalId) {
+      clearInterval(intervalId);
+      delete (window as unknown as Record<string, unknown>)[
+        `tunnelPoll_${connectionId}`
+      ];
+    }
+    // Clear the status
+    get().setTunnelStatus(connectionId, null);
+  },
+
   // Reset - clears all state and performs memory cleanup
   reset: () => {
     // Clean up all memory caches
@@ -661,6 +736,7 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
       activeConnectionId: null,
       connectionTabOrder: [],
       connectionColors: {},
+      tunnelStatuses: {},
       schemas: new Map(),
       selectedTable: null,
       selectedSchemaObject: null,
