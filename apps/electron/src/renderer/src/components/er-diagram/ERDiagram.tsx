@@ -8,12 +8,12 @@ import {
   useNodesState,
 } from '@xyflow/react';
 import { Database, GitFork } from 'lucide-react';
-import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EmptyView } from '@/components/EmptyView';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDiagramStore } from '@/stores/diagram-store';
+import { useThemeStore } from '@/stores/theme-store';
 import { ERControls } from './ERControls';
 import { ERRelationshipEdge as ERRelationshipEdgeComponent } from './ERRelationshipEdge';
 import { ERTableNode as ERTableNodeComponent } from './ERTableNode';
@@ -32,7 +32,13 @@ const edgeTypes = {
 
 export function ERDiagram() {
   const { schema, connection, setSelectedTable } = useConnectionStore();
-  const { resolvedTheme } = useTheme();
+  const { theme } = useThemeStore();
+  const resolvedTheme =
+    theme === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : theme;
   const {
     nodePositionsMap,
     setNodePosition,

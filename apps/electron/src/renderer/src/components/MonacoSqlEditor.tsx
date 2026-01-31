@@ -139,6 +139,15 @@ export function MonacoSqlEditor({
       window.matchMedia('(prefers-color-scheme: dark)').matches);
   const editorTheme = isDark ? 'sql-pro-dark' : 'sql-pro-light';
 
+  // Sync Monaco theme when theme changes (US2: Theme-Aware Editor)
+  // Monaco Editor doesn't automatically respond to theme prop changes after mount,
+  // so we need to call monaco.editor.setTheme() manually when the theme changes.
+  useEffect(() => {
+    if (monacoRef.current) {
+      monacoRef.current.editor.setTheme(editorTheme);
+    }
+  }, [editorTheme]);
+
   // Keep callback refs up to date
   useEffect(() => {
     onExecuteRef.current = onExecute;

@@ -160,60 +160,40 @@ const StatCard = memo(
       <div
         style={{ animationDelay: `${index * 50}ms` }}
         className={cn(
-          'group relative overflow-hidden rounded-xl p-4',
-          'from-background via-muted/30 to-muted/50 bg-gradient-to-br',
-          'border-border/50 border',
-          'shadow-sm hover:shadow-md',
-          'transition-all duration-300 ease-out',
-          'hover:border-border hover:scale-[1.02]',
+          'group relative overflow-hidden rounded-lg p-3',
+          'bg-muted/30',
+          'border-border/40 border',
+          'transition-all duration-200 ease-out',
+          'hover:bg-muted/50',
           'animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-300'
         )}
       >
-        <div
-          className={cn(
-            'pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100',
-            'bg-gradient-to-br from-transparent via-transparent to-current/[0.03]'
-          )}
-        />
-        <div className="relative flex items-center gap-4">
+        <div className="relative flex items-center gap-3">
           <div
             className={cn(
-              'rounded-lg p-3',
+              'rounded-md p-2',
               'bg-gradient-to-br',
-              'shadow-sm',
-              'transition-transform duration-300 group-hover:scale-110',
-              color === 'text-blue-500' &&
-                'from-blue-500/15 to-blue-600/10 shadow-blue-500/10',
-              color === 'text-green-500' &&
-                'from-green-500/15 to-green-600/10 shadow-green-500/10',
+              color === 'text-blue-500' && 'from-blue-500/15 to-blue-600/10',
+              color === 'text-green-500' && 'from-green-500/15 to-green-600/10',
               color === 'text-purple-500' &&
-                'from-purple-500/15 to-purple-600/10 shadow-purple-500/10',
-              color === 'text-amber-500' &&
-                'from-amber-500/15 to-amber-600/10 shadow-amber-500/10',
-              color === 'text-rose-500' &&
-                'from-rose-500/15 to-rose-600/10 shadow-rose-500/10',
-              color === 'text-primary' &&
-                'from-primary/15 to-primary/10 shadow-primary/10'
+                'from-purple-500/15 to-purple-600/10',
+              color === 'text-amber-500' && 'from-amber-500/15 to-amber-600/10',
+              color === 'text-rose-500' && 'from-rose-500/15 to-rose-600/10',
+              color === 'text-primary' && 'from-primary/15 to-primary/10'
             )}
           >
-            <Icon
-              className={cn(
-                'h-5 w-5 transition-all duration-300',
-                color,
-                'drop-shadow-sm'
-              )}
-            />
+            <Icon className={cn('h-4 w-4', color)} />
           </div>
-          <div className="flex-1 space-y-1">
-            <p className="text-2xl leading-none font-bold tracking-tight">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xl leading-none font-semibold tabular-nums">
               {value}
             </p>
             {subValue && (
-              <p className="text-muted-foreground/60 text-xs leading-none">
+              <p className="text-muted-foreground/60 truncate text-xs">
                 {subValue}
               </p>
             )}
-            <p className="text-muted-foreground text-sm font-medium">{label}</p>
+            <p className="text-muted-foreground truncate text-xs">{label}</p>
           </div>
         </div>
       </div>

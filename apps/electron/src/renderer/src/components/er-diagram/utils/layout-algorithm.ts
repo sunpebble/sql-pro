@@ -9,9 +9,9 @@ const MIN_NODE_HEIGHT = 100;
 const PADDING = 20;
 
 // Layout spacing - compact but readable
-const NODE_SEPARATION = 80; // Horizontal space between nodes
-const RANK_SEPARATION = 100; // Space between ranks (levels)
-const MARGIN = 50; // Margin around the entire graph
+const NODE_SEPARATION = 40; // Horizontal space between nodes
+const RANK_SEPARATION = 60; // Space between ranks (levels)
+const MARGIN = 30; // Margin around the entire graph
 
 /**
  * Calculates the height of a table node based on column count
