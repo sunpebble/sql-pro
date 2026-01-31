@@ -20,6 +20,7 @@ import type {
 } from '@shared/types';
 import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
+import { logger } from '../../lib/logger';
 import { databaseManager, databaseService } from '../database';
 import { qdrantAdapter } from '../database-adapters';
 import { fileWatcherService } from '../file-watcher';
@@ -31,7 +32,22 @@ export function setupDatabaseHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.DB_TEST_CONNECTION,
     async (_event, request: TestConnectionRequest) => {
-      return databaseManager.testConnection(request.config);
+      logger.info('Testing database connection', {
+        databaseType: request.config.type,
+        hasPassword: !!request.config.password,
+      });
+      const result = await databaseManager.testConnection(request.config);
+      if (result.success) {
+        logger.info('Database connection test successful', {
+          databaseType: request.config.type,
+        });
+      } else {
+        logger.error('Database connection test failed', undefined, {
+          databaseType: request.config.type,
+          error: result.error,
+        });
+      }
+      return result;
     }
   );
 
@@ -41,9 +57,19 @@ export function setupDatabaseHandlers(): void {
     async (_event, request: OpenDatabaseRequest) => {
       // Check if this is a new-style connection with config
       if (request.config) {
+        logger.info('Opening database', {
+          databaseType: request.config.type,
+          hasPassword: !!request.config.password,
+          readOnly: request.config.readOnly,
+        });
         const result = await databaseManager.open(request.config);
 
         if (result.success && result.connection) {
+          logger.info('Database opened successfully', {
+            connectionId: result.connection.id,
+            databaseType: result.connection.databaseType,
+            isEncrypted: result.connection.isEncrypted,
+          });
           addRecentConnection(
             result.connection.path,
             result.connection.filename,
@@ -72,6 +98,11 @@ export function setupDatabaseHandlers(): void {
               request.config
             );
           }
+        } else if (!result.success) {
+          logger.error('Failed to open database', undefined, {
+            databaseType: request.config.type,
+            error: result.error,
+          });
         }
 
         return result;
@@ -79,12 +110,19 @@ export function setupDatabaseHandlers(): void {
 
       // Legacy SQLite connection (backward compatibility)
       if (!request.path) {
+        logger.error('Database path is required for legacy connection');
         return {
           success: false,
           error: 'Database path is required',
           errorCode: 'CONNECTION_ERROR',
         };
       }
+
+      logger.info('Opening legacy SQLite database', {
+        path: request.path,
+        hasPassword: !!request.password,
+        readOnly: request.readOnly,
+      });
 
       const result = await databaseService.open(
         request.path,
@@ -93,6 +131,10 @@ export function setupDatabaseHandlers(): void {
       );
 
       if (result.success) {
+        logger.info('Legacy database opened successfully', {
+          connectionId: result.connection.id,
+          path: request.path,
+        });
         addRecentConnection(
           request.path,
           result.connection.filename,
@@ -102,6 +144,11 @@ export function setupDatabaseHandlers(): void {
 
         // Start watching the database file for external changes
         fileWatcherService.watch(result.connection.id, request.path);
+      } else {
+        logger.error('Failed to open legacy database', undefined, {
+          path: request.path,
+          error: result.error,
+        });
       }
 
       return result;
@@ -112,6 +159,8 @@ export function setupDatabaseHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.DB_CLOSE,
     async (_event, request: CloseDatabaseRequest) => {
+      logger.info('Closing database', { connectionId: request.connectionId });
+
       // Stop watching the file before closing the connection
       fileWatcherService.unwatch(request.connectionId);
 
@@ -121,11 +170,25 @@ export function setupDatabaseHandlers(): void {
       // Try database manager first (for new connections)
       const managerResult = databaseManager.close(request.connectionId);
       if (managerResult.success) {
+        logger.info('Database closed successfully', {
+          connectionId: request.connectionId,
+        });
         return managerResult;
       }
 
       // Fall back to legacy database service
-      return databaseService.close(request.connectionId);
+      const result = databaseService.close(request.connectionId);
+      if (result.success) {
+        logger.info('Legacy database closed successfully', {
+          connectionId: request.connectionId,
+        });
+      } else {
+        logger.error('Failed to close database', undefined, {
+          connectionId: request.connectionId,
+          error: result.error,
+        });
+      }
+      return result;
     }
   );
 
@@ -361,6 +424,12 @@ export function setupDatabaseHandlers(): void {
         /^\s*(?:INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|REPLACE)/i;
       const isModifying = modifyingKeywords.test(request.query);
 
+      logger.info('Executing query', {
+        connectionId: request.connectionId,
+        queryLength: request.query.length,
+        isModifying,
+      });
+
       // Ignore file changes during our own writes
       if (isModifying) {
         const connection = databaseService.getConnection(request.connectionId);
@@ -372,7 +441,7 @@ export function setupDatabaseHandlers(): void {
       const startTime = Date.now();
 
       // Check if connection is async (MySQL/PostgreSQL)
-      let result;
+      let result: any;
       if (databaseManager.isAsyncConnection(request.connectionId)) {
         result = await databaseManager.executeQueryAsync(
           request.connectionId,
@@ -399,6 +468,11 @@ export function setupDatabaseHandlers(): void {
 
       // Map internal field names to API response format
       if (result.success) {
+        logger.info('Query executed successfully', {
+          connectionId: request.connectionId,
+          executionTime,
+          rowsAffected: 'changes' in result ? result.changes : undefined,
+        });
         return {
           success: true,
           columns: 'columns' in result ? result.columns : undefined,
@@ -416,6 +490,13 @@ export function setupDatabaseHandlers(): void {
             'totalChanges' in result ? result.totalChanges : undefined,
         };
       }
+
+      logger.error('Query execution failed', undefined, {
+        connectionId: request.connectionId,
+        executionTime,
+        error: result.error,
+        errorCode: 'errorCode' in result ? result.errorCode : undefined,
+      });
 
       return {
         success: false,
