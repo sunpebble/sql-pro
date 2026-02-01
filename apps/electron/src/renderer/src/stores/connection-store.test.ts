@@ -185,15 +185,15 @@ describe('connection-store', () => {
       expect(connection).toBeNull();
     });
 
-    it('should clear error when connection is set', () => {
-      const { setError, setConnection } = useConnectionStore.getState();
+    it('should clear error when connection is set via addConnection', () => {
+      const { setError, addConnection } = useConnectionStore.getState();
 
       // Set an error first
       setError('Some error');
       expect(useConnectionStore.getState().error).toBe('Some error');
 
-      // Setting connection should clear the error
-      setConnection(createMockConnection());
+      // Adding connection should clear the error
+      addConnection(createMockConnection());
       expect(useConnectionStore.getState().error).toBeNull();
     });
 
@@ -490,7 +490,7 @@ describe('connection-store', () => {
       expect(state.schema).toBeNull();
       expect(state.selectedTable).toBeNull();
       expect(state.selectedSchemaObject).toBeNull();
-      expect(state.recentConnections).toHaveLength(1); // Recent connections are preserved
+      expect(state.recentConnections).toHaveLength(0); // Recent connections are cleared on reset
       expect(state.isConnecting).toBe(false);
       expect(state.isLoadingSchema).toBe(false);
       expect(state.error).toBeNull();
@@ -1809,8 +1809,8 @@ describe('connection-store', () => {
 
   describe('hasUnsavedChanges', () => {
     beforeEach(() => {
-      // Clear changes store before each test
-      useChangesStore.setState({ changes: [] });
+      // Clear changes store before each test (must reset both changes array and changeIndex)
+      useChangesStore.setState({ changes: [], changeIndex: new Map() });
     });
 
     it('should return true when changes exist for connection', () => {
@@ -1967,7 +1967,7 @@ describe('connection-store', () => {
       });
       expect(hasUnsavedChanges('conn-1')).toBe(true);
 
-      useChangesStore.setState({ changes: [] });
+      useChangesStore.setState({ changes: [], changeIndex: new Map() });
 
       // Test delete
       addChange({

@@ -11,7 +11,8 @@
  */
 
 import type { ConnectionProfile, ProfileFolder } from '@shared/types';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import {
   exportProfiles,
   importProfiles,
@@ -26,6 +27,52 @@ import {
   saveFolder,
   saveProfile,
 } from '../store';
+
+// Mock electron-store before importing store functions
+vi.mock('electron-store', () => {
+  const mockStore = new Map<string, unknown>();
+  return {
+    default: class MockElectronStore {
+      private defaults: Record<string, unknown>;
+
+      constructor(options?: { defaults?: Record<string, unknown> }) {
+        this.defaults = options?.defaults || {};
+        // Initialize with defaults
+        for (const [key, value] of Object.entries(this.defaults)) {
+          if (!mockStore.has(key)) {
+            mockStore.set(key, JSON.parse(JSON.stringify(value)));
+          }
+        }
+      }
+
+      get(key: string, defaultValue?: unknown): unknown {
+        if (mockStore.has(key)) {
+          return mockStore.get(key);
+        }
+        if (defaultValue !== undefined) {
+          return defaultValue;
+        }
+        return this.defaults[key];
+      }
+
+      set(key: string, value: unknown): void {
+        mockStore.set(key, JSON.parse(JSON.stringify(value)));
+      }
+
+      delete(key: string): void {
+        mockStore.delete(key);
+      }
+
+      clear(): void {
+        mockStore.clear();
+      }
+
+      static clear(): void {
+        mockStore.clear();
+      }
+    },
+  };
+});
 
 describe('profile Lifecycle E2E', () => {
   let testProfile: ConnectionProfile;
@@ -223,6 +270,9 @@ describe('profile Lifecycle E2E', () => {
 
   describe('step 8: Import Profiles', () => {
     it('should parse valid import data', () => {
+      // Must save the profile first before exporting
+      saveProfile(testProfile);
+
       const exportData = exportProfiles([testProfile.id], [testFolder.id]);
       const jsonString = serializeExportData(exportData, false);
 

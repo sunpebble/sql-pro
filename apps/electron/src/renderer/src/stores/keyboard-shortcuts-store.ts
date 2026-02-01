@@ -295,6 +295,21 @@ export const SHORTCUT_ACTIONS: ShortcutActionMeta[] = [
     category: 'settings',
     scope: 'global',
   },
+  // Onboarding
+  {
+    id: 'onboarding.skip',
+    label: 'Skip Onboarding',
+    description: 'Skip the current onboarding step',
+    category: 'actions',
+    scope: 'global',
+  },
+  {
+    id: 'onboarding.next',
+    label: 'Next Onboarding Step',
+    description: 'Proceed to the next onboarding step',
+    category: 'actions',
+    scope: 'global',
+  },
 ];
 
 // Re-export DEFAULT_SHORTCUTS from shared

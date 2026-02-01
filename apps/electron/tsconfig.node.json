@@ -3,14 +3,23 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/main/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@core/*": ["./src/main/core/*"],
+      "@database/*": ["./src/main/database/*"],
+      "@agent/*": ["./src/main/agent/*"],
+      "@observability/*": ["./src/main/observability/*"],
+      "@features/*": ["./src/main/features/*"],
+      "@ipc/*": ["./src/main/ipc/*"],
+      "@sqlpro/ipc-contracts": ["../../packages/ipc-contracts/src/index.ts"],
+      "@sqlpro/ipc-contracts/*": ["../../packages/ipc-contracts/src/*"]
     }
   },
   "include": [
     "electron.vite.config.*",
     "src/main/**/*",
     "src/preload/**/*",
-    "src/shared/**/*"
+    "src/shared/**/*",
+    "../../packages/ipc-contracts/src/**/*"
   ],
   "exclude": ["scripts/**/*"]
 }

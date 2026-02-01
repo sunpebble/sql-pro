@@ -480,8 +480,11 @@ describe('profile Import/Export Service', () => {
 
       expect(result.success).toBe(true);
       expect(result.importedCount).toBe(1);
-      expect(result.errors.length).toBeGreaterThan(0);
-      expect(result.errors[0]).toContain('references non-existent folder');
+      // Invalid folder reference is a warning, not an error - profile is still imported at root level
+      expect(result.warnings.length).toBeGreaterThan(0);
+      expect(
+        result.warnings.some((w) => w.includes('non-existent folder'))
+      ).toBe(true);
     });
 
     it('should maintain folder hierarchy on import', () => {
@@ -559,7 +562,7 @@ describe('profile Import/Export Service', () => {
     });
 
     it('should handle import errors gracefully', () => {
-      // Force an error by providing invalid data after validation
+      // Empty profiles and folders array - nothing to import
       const exportData = {
         version: '1.0.0',
         exportedAt: '2024-01-01T00:00:00.000Z',
@@ -567,12 +570,13 @@ describe('profile Import/Export Service', () => {
         folders: [],
       };
 
-      // This should succeed since data is valid
+      // When nothing is imported, success should be false (nothing was accomplished)
       const result = importProfiles(exportData);
 
-      expect(result.success).toBe(true);
+      expect(result.success).toBe(false);
       expect(result.importedCount).toBe(0);
       expect(result.skippedCount).toBe(0);
+      expect(result.errors.length).toBeGreaterThan(0);
     });
   });
 

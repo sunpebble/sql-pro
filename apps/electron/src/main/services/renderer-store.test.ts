@@ -59,6 +59,7 @@ describe('renderer-store Service', () => {
         pageSize: 100,
         restoreSession: true,
         sidebarCollapsed: false,
+        showSchemaDetails: false,
       });
     });
 

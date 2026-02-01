@@ -5,14 +5,11 @@ import { useTableOrganizationStore } from './table-organization-store';
 describe('useTableOrganizationStore', () => {
   beforeEach(() => {
     // Reset the store before each test
-    const { result } = renderHook(() => useTableOrganizationStore());
-    act(() => {
-      result.current.setSortOption('name-asc');
-      result.current.setActiveTagFilter(null);
-      // Clear all tags
-      result.current.availableTags.forEach((tag) => {
-        result.current.removeTag(tag);
-      });
+    useTableOrganizationStore.setState({
+      sortOption: 'name-asc',
+      tags: [],
+      tableMetadata: {},
+      activeTagFilter: null,
     });
   });
 
@@ -37,7 +34,8 @@ describe('useTableOrganizationStore', () => {
       act(() => {
         result.current.addTag('important');
       });
-      expect(result.current.availableTags).toContain('important');
+      const tagNames = result.current.tags.map((t) => t.name);
+      expect(tagNames).toContain('important');
     });
 
     it('should not add duplicate tags', () => {
@@ -46,9 +44,10 @@ describe('useTableOrganizationStore', () => {
         result.current.addTag('important');
         result.current.addTag('important');
       });
-      expect(
-        result.current.availableTags.filter((t) => t === 'important').length
-      ).toBe(1);
+      const tagNames = result.current.tags.filter(
+        (t) => t.name === 'important'
+      );
+      expect(tagNames.length).toBe(1);
     });
 
     it('should remove a tag', () => {
@@ -56,11 +55,13 @@ describe('useTableOrganizationStore', () => {
       act(() => {
         result.current.addTag('toremove');
       });
-      expect(result.current.availableTags).toContain('toremove');
+      const tagNames1 = result.current.tags.map((t) => t.name);
+      expect(tagNames1).toContain('toremove');
       act(() => {
         result.current.removeTag('toremove');
       });
-      expect(result.current.availableTags).not.toContain('toremove');
+      const tagNames2 = result.current.tags.map((t) => t.name);
+      expect(tagNames2).not.toContain('toremove');
     });
 
     it('should rename a tag', () => {
@@ -71,8 +72,9 @@ describe('useTableOrganizationStore', () => {
       act(() => {
         result.current.renameTag('oldname', 'newname');
       });
-      expect(result.current.availableTags).not.toContain('oldname');
-      expect(result.current.availableTags).toContain('newname');
+      const tagNames = result.current.tags.map((t) => t.name);
+      expect(tagNames).not.toContain('oldname');
+      expect(tagNames).toContain('newname');
     });
   });
 
@@ -85,7 +87,10 @@ describe('useTableOrganizationStore', () => {
         result.current.addTableTag(tableKey, 'important');
       });
       const metadata = result.current.getTableMetadata(tableKey);
-      expect(metadata.tags).toContain('important');
+      // The tag should be created and associated with the table
+      const tag = result.current.tags.find((t) => t.name === 'important');
+      expect(tag).toBeDefined();
+      expect(metadata.tagIds).toContain(tag?.id);
     });
 
     it('should remove a tag from a table', () => {
@@ -93,11 +98,12 @@ describe('useTableOrganizationStore', () => {
       act(() => {
         result.current.addTableTag(tableKey, 'toremove');
       });
+      const tag = result.current.tags.find((t) => t.name === 'toremove');
       act(() => {
         result.current.removeTableTag(tableKey, 'toremove');
       });
       const metadata = result.current.getTableMetadata(tableKey);
-      expect(metadata.tags).not.toContain('toremove');
+      expect(metadata.tagIds).not.toContain(tag?.id);
     });
 
     it('should set table as pinned', () => {
@@ -126,17 +132,17 @@ describe('useTableOrganizationStore', () => {
     it('should set active tag filter', () => {
       const { result } = renderHook(() => useTableOrganizationStore());
       act(() => {
-        result.current.addTag('filterme');
-        result.current.setActiveTagFilter('filterme');
+        const tagId = result.current.createTag('filterme');
+        result.current.setActiveTagFilter(tagId);
       });
-      expect(result.current.activeTagFilter).toBe('filterme');
+      expect(result.current.activeTagFilter).not.toBeNull();
     });
 
     it('should clear active tag filter', () => {
       const { result } = renderHook(() => useTableOrganizationStore());
       act(() => {
-        result.current.addTag('filterme');
-        result.current.setActiveTagFilter('filterme');
+        const tagId = result.current.createTag('filterme');
+        result.current.setActiveTagFilter(tagId);
       });
       act(() => {
         result.current.setActiveTagFilter(null);

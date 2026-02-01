@@ -19,8 +19,12 @@ describe('keyboard-shortcuts-store', () => {
   });
 
   describe('formatShortcutBinding', () => {
-    it('should return "Not set" for null binding', () => {
-      expect(formatShortcutBinding(null)).toBe('Not set');
+    it('should return empty string for null binding', () => {
+      expect(formatShortcutBinding(null)).toBe('');
+    });
+
+    it('should return custom fallback for null binding', () => {
+      expect(formatShortcutBinding(null, 'Not set')).toBe('Not set');
     });
 
     it('should format simple key binding', () => {

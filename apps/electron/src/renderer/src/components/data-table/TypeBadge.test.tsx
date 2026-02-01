@@ -103,8 +103,12 @@ describe('typeBadge', () => {
 
   describe('edge cases', () => {
     it('should handle empty type string', () => {
-      render(<TypeBadge type="" typeCategory="unknown" />);
-      expect(screen.getByTitle('Data type: ')).toBeDefined();
+      const { container } = render(
+        <TypeBadge type="" typeCategory="unknown" />
+      );
+      const badge = container.querySelector('span[title="Data type: "]');
+      expect(badge).toBeDefined();
+      expect(badge).not.toBeNull();
     });
 
     it('should handle long type names', () => {

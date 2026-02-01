@@ -7,18 +7,29 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Import after mocks are set up
+// Import component after mocks are set up
 import { MemoryMonitorPanel } from './MemoryMonitorPanel';
 
-// Mock all dependencies before importing the component
-const mockSubscribe = vi.fn();
-const mockUnsubscribe = vi.fn();
-const mockTriggerGC = vi.fn().mockResolvedValue(true);
-const mockRefreshRendererMetrics = vi.fn();
-const mockFetchStats = vi.fn();
-const mockClearTableDataCache = vi.fn();
-const mockClearResultsCache = vi.fn();
-const mockClearSchemaCache = vi.fn();
+// Define mock functions using vi.hoisted to ensure they're available when vi.mock runs
+const {
+  mockSubscribe,
+  mockUnsubscribe,
+  mockTriggerGC,
+  mockRefreshRendererMetrics,
+  mockFetchStats,
+  mockClearTableDataCache,
+  mockClearResultsCache,
+  mockClearSchemaCache,
+} = vi.hoisted(() => ({
+  mockSubscribe: vi.fn(),
+  mockUnsubscribe: vi.fn(),
+  mockTriggerGC: vi.fn().mockResolvedValue(true),
+  mockRefreshRendererMetrics: vi.fn(),
+  mockFetchStats: vi.fn(),
+  mockClearTableDataCache: vi.fn(),
+  mockClearResultsCache: vi.fn(),
+  mockClearSchemaCache: vi.fn(),
+}));
 
 vi.mock('@/hooks/useMemoryMonitor', () => ({
   useMemoryMonitor: () => ({
