@@ -47,7 +47,8 @@ import { TableHeader } from './TableHeader';
 
 // Row height constant for virtualization
 const ROW_HEIGHT = 24; // h-6 = 24px
-const VIRTUALIZATION_OVERSCAN = 10;
+const HEADER_HEIGHT = 33; // thead height (h-8 = 32px + 1px border)
+const VIRTUALIZATION_OVERSCAN = 15; // Increased overscan for smoother scrolling
 
 export interface DataTableProps {
   // Data
@@ -484,6 +485,8 @@ export const DataTable = function DataTable({
     getScrollElement: () => scrollElement,
     estimateSize: () => ROW_HEIGHT,
     overscan: VIRTUALIZATION_OVERSCAN,
+    // Account for sticky header height when calculating scroll position
+    scrollMargin: HEADER_HEIGHT,
   });
 
   // Calculate visible range from virtualizer for useVirtualData integration
