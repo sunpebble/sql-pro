@@ -349,115 +349,115 @@ export class TursoAdapter implements DatabaseAdapter {
         "SELECT name, sql FROM sqlite_master WHERE type='view' ORDER BY name"
       );
 
-      const tables: TableInfo[] = [];
-      for (const row of tablesResult.rows) {
-        const tableName = row.name as string;
-        const tableSql = (row.sql as string) || '';
+      const tables: TableInfo[] = await Promise.all(
+        tablesResult.rows.map(async (row) => {
+          const tableName = row.name as string;
+          const tableSql = (row.sql as string) || '';
 
-        // Get column info
-        const tableInfoResult = await conn.client.execute(
-          `PRAGMA table_info('${tableName}')`
-        );
+          // Execute parallel requests for table metadata
+          const [
+            tableInfoResult,
+            fkResult,
+            indexResult,
+            triggerResult,
+            countResult,
+          ] = await Promise.all([
+            conn.client.execute(`PRAGMA table_info('${tableName}')`),
+            conn.client.execute(`PRAGMA foreign_key_list('${tableName}')`),
+            conn.client.execute(`PRAGMA index_list('${tableName}')`),
+            conn.client.execute(
+              `SELECT name, sql FROM sqlite_master WHERE type='trigger' AND tbl_name='${tableName}'`
+            ),
+            conn.client.execute(`SELECT COUNT(*) as count FROM "${tableName}"`),
+          ]);
 
-        const columns: ColumnInfo[] = tableInfoResult.rows.map((col) => ({
-          name: col.name as string,
-          type: col.type as string,
-          nullable: col.notnull === 0,
-          defaultValue: col.dflt_value as string | null,
-          isPrimaryKey: (col.pk as number) > 0,
-        }));
+          const columns: ColumnInfo[] = tableInfoResult.rows.map((col) => ({
+            name: col.name as string,
+            type: col.type as string,
+            nullable: col.notnull === 0,
+            defaultValue: col.dflt_value as string | null,
+            isPrimaryKey: (col.pk as number) > 0,
+          }));
 
-        // Get primary key columns
-        const primaryKey = columns
-          .filter((c) => c.isPrimaryKey)
-          .map((c) => c.name);
+          // Get primary key columns
+          const primaryKey = columns
+            .filter((c) => c.isPrimaryKey)
+            .map((c) => c.name);
 
-        // Get foreign keys
-        const fkResult = await conn.client.execute(
-          `PRAGMA foreign_key_list('${tableName}')`
-        );
-        const foreignKeys: ForeignKeyInfo[] = fkResult.rows.map((fk) => ({
-          column: fk.from as string,
-          referencedTable: fk.table as string,
-          referencedColumn: fk.to as string,
-          onDelete: fk.on_delete as string,
-          onUpdate: fk.on_update as string,
-        }));
+          const foreignKeys: ForeignKeyInfo[] = fkResult.rows.map((fk) => ({
+            column: fk.from as string,
+            referencedTable: fk.table as string,
+            referencedColumn: fk.to as string,
+            onDelete: fk.on_delete as string,
+            onUpdate: fk.on_update as string,
+          }));
 
-        // Get indexes
-        const indexResult = await conn.client.execute(
-          `PRAGMA index_list('${tableName}')`
-        );
-        const indexes: IndexInfo[] = [];
-        for (const idx of indexResult.rows) {
-          const indexName = idx.name as string;
-          const indexInfoResult = await conn.client.execute(
-            `PRAGMA index_info('${indexName}')`
+          // Process indexes in parallel
+          const indexes: IndexInfo[] = await Promise.all(
+            indexResult.rows.map(async (idx) => {
+              const indexName = idx.name as string;
+              const [indexInfoResult, indexSqlResult] = await Promise.all([
+                conn.client.execute(`PRAGMA index_info('${indexName}')`),
+                conn.client.execute(
+                  `SELECT sql FROM sqlite_master WHERE type='index' AND name='${indexName}'`
+                ),
+              ]);
+
+              const indexColumns = indexInfoResult.rows.map(
+                (col) => col.name as string
+              );
+
+              // Get index SQL
+              const indexSql =
+                (indexSqlResult.rows[0]?.sql as string) ||
+                `CREATE INDEX "${indexName}" ON "${tableName}" (${indexColumns.map((c) => `"${c}"`).join(', ')})`;
+
+              return {
+                name: indexName,
+                columns: indexColumns,
+                isUnique: idx.unique === 1,
+                sql: indexSql,
+              };
+            })
           );
-          const indexColumns = indexInfoResult.rows.map(
-            (col) => col.name as string
-          );
 
-          // Get index SQL
-          const indexSqlResult = await conn.client.execute(
-            `SELECT sql FROM sqlite_master WHERE type='index' AND name='${indexName}'`
-          );
-          const indexSql =
-            (indexSqlResult.rows[0]?.sql as string) ||
-            `CREATE INDEX "${indexName}" ON "${tableName}" (${indexColumns.map((c) => `"${c}"`).join(', ')})`;
+          const triggers: TriggerInfo[] = triggerResult.rows.map((trig) => {
+            const trigSql = (trig.sql as string) || '';
+            // Parse timing and event from SQL
+            const upperSql = trigSql.toUpperCase();
+            let timing: 'BEFORE' | 'AFTER' | 'INSTEAD OF' = 'AFTER';
+            if (upperSql.includes('BEFORE')) timing = 'BEFORE';
+            else if (upperSql.includes('INSTEAD OF')) timing = 'INSTEAD OF';
 
-          indexes.push({
-            name: indexName,
-            columns: indexColumns,
-            isUnique: idx.unique === 1,
-            sql: indexSql,
+            let event: 'INSERT' | 'UPDATE' | 'DELETE' = 'INSERT';
+            if (upperSql.includes('UPDATE')) event = 'UPDATE';
+            else if (upperSql.includes('DELETE')) event = 'DELETE';
+
+            return {
+              name: trig.name as string,
+              tableName,
+              timing,
+              event,
+              sql: trigSql,
+            };
           });
-        }
 
-        // Get triggers
-        const triggerResult = await conn.client.execute(
-          `SELECT name, sql FROM sqlite_master WHERE type='trigger' AND tbl_name='${tableName}'`
-        );
-        const triggers: TriggerInfo[] = triggerResult.rows.map((trig) => {
-          const trigSql = (trig.sql as string) || '';
-          // Parse timing and event from SQL
-          const upperSql = trigSql.toUpperCase();
-          let timing: 'BEFORE' | 'AFTER' | 'INSTEAD OF' = 'AFTER';
-          if (upperSql.includes('BEFORE')) timing = 'BEFORE';
-          else if (upperSql.includes('INSTEAD OF')) timing = 'INSTEAD OF';
-
-          let event: 'INSERT' | 'UPDATE' | 'DELETE' = 'INSERT';
-          if (upperSql.includes('UPDATE')) event = 'UPDATE';
-          else if (upperSql.includes('DELETE')) event = 'DELETE';
+          const rowCount = Number(countResult.rows[0]?.count || 0);
 
           return {
-            name: trig.name as string,
-            tableName,
-            timing,
-            event,
-            sql: trigSql,
+            name: tableName,
+            schema: 'main',
+            type: 'table',
+            columns,
+            primaryKey,
+            foreignKeys,
+            indexes,
+            triggers,
+            rowCount,
+            sql: tableSql,
           };
-        });
-
-        // Get row count estimate
-        const countResult = await conn.client.execute(
-          `SELECT COUNT(*) as count FROM "${tableName}"`
-        );
-        const rowCount = Number(countResult.rows[0]?.count || 0);
-
-        tables.push({
-          name: tableName,
-          schema: 'main',
-          type: 'table',
-          columns,
-          primaryKey,
-          foreignKeys,
-          indexes,
-          triggers,
-          rowCount,
-          sql: tableSql,
-        });
-      }
+        })
+      );
 
       const views: TableInfo[] = viewsResult.rows.map((row) => ({
         name: row.name as string,
