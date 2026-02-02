@@ -544,7 +544,13 @@ export const TableBody = memo(
 
     // Virtualized rendering using padding spacers (not absolute positioning)
     // This preserves table layout and column widths
-    if (rowVirtualizer && virtualItems.length > 0) {
+    if (rowVirtualizer) {
+      // If virtualItems is empty but we have rows, it means virtualizer hasn't
+      // calculated yet (e.g., scroll element not ready). Render nothing to avoid flicker.
+      if (virtualItems.length === 0 && rows.length > 0) {
+        return <tbody />;
+      }
+
       // Calculate padding before and after visible rows
       const firstItem = virtualItems[0];
       const lastItem = virtualItems[virtualItems.length - 1];
