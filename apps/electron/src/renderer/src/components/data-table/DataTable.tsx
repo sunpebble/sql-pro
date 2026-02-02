@@ -480,6 +480,11 @@ export const DataTable = function DataTable({
     setScrollElement(node);
   }, []);
 
+  // Track data identity to detect table switches
+  const dataRef = useRef(data);
+  const isDataChanged = dataRef.current !== data;
+  dataRef.current = data;
+
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollElement,
@@ -488,6 +493,17 @@ export const DataTable = function DataTable({
     // Account for sticky header height when calculating scroll position
     scrollMargin: HEADER_HEIGHT,
   });
+
+  // Reset virtualizer when data changes (e.g., switching tables)
+  // This clears the measurement cache and scroll position
+  useLayoutEffect(() => {
+    if (isDataChanged && scrollElement) {
+      // Reset scroll position to top
+      scrollElement.scrollTop = 0;
+      // Force virtualizer to recalculate
+      rowVirtualizer.measure();
+    }
+  }, [isDataChanged, scrollElement, rowVirtualizer]);
 
   // Calculate visible range from virtualizer for useVirtualData integration
   const virtualItems = rowVirtualizer.getVirtualItems();
