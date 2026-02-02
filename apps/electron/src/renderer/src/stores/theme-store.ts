@@ -5,26 +5,42 @@ type Theme = 'light' | 'dark' | 'system';
 
 interface ThemeState {
   theme: Theme;
+  /** 实际解析后的主题 (light 或 dark)，用于 Monaco Editor 等组件同步 */
+  resolvedTheme: 'light' | 'dark';
   isLoading: boolean;
   setTheme: (theme: Theme) => Promise<void>;
   loadTheme: () => Promise<void>;
   toggleTheme: () => void;
 }
 
+// 计算解析后的主题
+function getResolvedTheme(theme: Theme): 'light' | 'dark' {
+  if (theme === 'system') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+  return theme;
+}
+
 // Apply theme to document
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
-  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const resolved = getResolvedTheme(theme);
 
-  if (theme === 'dark' || (theme === 'system' && systemDark)) {
+  if (resolved === 'dark') {
     root.classList.add('dark');
   } else {
     root.classList.remove('dark');
   }
+
+  return resolved;
 }
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
   theme: 'system',
+  resolvedTheme:
+    typeof window !== 'undefined' ? getResolvedTheme('system') : 'light',
   isLoading: false,
 
   loadTheme: async () => {
@@ -34,8 +50,8 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
       if (result.success && result.preferences) {
         const prefs = result.preferences as { theme?: Theme };
         const theme = prefs.theme || 'system';
-        applyTheme(theme);
-        set({ theme, isLoading: false });
+        const resolvedTheme = applyTheme(theme);
+        set({ theme, resolvedTheme, isLoading: false });
       } else {
         set({ isLoading: false });
       }
@@ -47,8 +63,8 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
   setTheme: async (theme) => {
     // Optimistically update UI
-    applyTheme(theme);
-    set({ theme });
+    const resolvedTheme = applyTheme(theme);
+    set({ theme, resolvedTheme });
 
     // Persist to main process
     try {
@@ -58,7 +74,8 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
       if (!result.success) {
         // Revert on failure
         const currentTheme = get().theme;
-        applyTheme(currentTheme);
+        const revertedResolved = applyTheme(currentTheme);
+        set({ resolvedTheme: revertedResolved });
         console.error('Failed to save theme:', result.error);
       }
     } catch (error) {
@@ -80,7 +97,9 @@ if (typeof window !== 'undefined') {
     .addEventListener('change', () => {
       const { theme } = useThemeStore.getState();
       if (theme === 'system') {
-        applyTheme('system');
+        const resolvedTheme = applyTheme('system');
+        // 触发状态更新，让订阅组件重新渲染
+        useThemeStore.setState({ resolvedTheme });
       }
     });
 }

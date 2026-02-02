@@ -97,7 +97,7 @@ export function MonacoSqlEditor({
   onScrollPositionChange,
 }: MonacoSqlEditorProps) {
   const { t } = useTranslation('common');
-  const { theme } = useThemeStore();
+  const { resolvedTheme } = useThemeStore();
   const { editorVimMode, tabSize } = useSettingsStore();
   const editorFont = useEditorFont();
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -132,12 +132,9 @@ export function MonacoSqlEditor({
   const [editorHeight, setEditorHeight] = useState(defaultHeight);
   const [isResizing, setIsResizing] = useState(false);
 
-  // Compute effective theme (US2: Theme-Aware Editor)
-  const isDark =
-    theme === 'dark' ||
-    (theme === 'system' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const editorTheme = isDark ? 'sql-pro-dark' : 'sql-pro-light';
+  // 使用 store 中的 resolvedTheme (US2: Theme-Aware Editor)
+  const editorTheme =
+    resolvedTheme === 'dark' ? 'sql-pro-dark' : 'sql-pro-light';
 
   // Sync Monaco theme when theme changes (US2: Theme-Aware Editor)
   // Monaco Editor doesn't automatically respond to theme prop changes after mount,
