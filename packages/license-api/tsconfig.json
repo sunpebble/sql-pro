@@ -1,17 +1,5 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "types": ["@cloudflare/workers-types"],
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "skipLibCheck": true
-  },
+  "extends": "@sqlpro/tsconfig/cloudflare.json",
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
