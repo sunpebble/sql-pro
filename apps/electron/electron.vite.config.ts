@@ -69,5 +69,33 @@ export default defineConfig({
       },
     },
     plugins: [react(), tailwindcss()],
+    build: {
+      target: 'es2020',
+      // 代码分割优化 (vercel-react-best-practices: bundle-dynamic-imports)
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            // React 核心独立分割
+            if (
+              id.includes('node_modules/react-dom') ||
+              id.includes('node_modules/react/')
+            ) {
+              return 'vendor-react';
+            }
+            // UI 组件库独立分割
+            if (id.includes('@sqlpro/ui')) {
+              return 'vendor-ui';
+            }
+            // 代码编辑器相关
+            if (
+              id.includes('node_modules/@codemirror') ||
+              id.includes('node_modules/@lezer')
+            ) {
+              return 'vendor-codemirror';
+            }
+          },
+        },
+      },
+    },
   },
 });

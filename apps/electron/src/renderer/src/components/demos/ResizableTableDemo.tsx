@@ -11,8 +11,9 @@
  * - Dark/light theme support
  */
 
-import type { Employee } from '@sqlpro/ui';
-import { ResizableTable } from '@sqlpro/ui';
+// 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
+import type { Employee } from '@sqlpro/ui/resizable-table';
+import { ResizableTable } from '@sqlpro/ui/resizable-table';
 
 // Sample employee data for demonstration
 const sampleEmployees: Employee[] = [

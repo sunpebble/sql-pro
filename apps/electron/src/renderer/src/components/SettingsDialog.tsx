@@ -1,6 +1,7 @@
 import type { SettingsSection } from './settings/SettingsNav';
-import { GradientText } from '@sqlpro/ui';
+// 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { GradientText } from '@sqlpro/ui/typography';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {

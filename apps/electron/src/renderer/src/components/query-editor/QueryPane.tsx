@@ -1,7 +1,8 @@
 import type { SplitPane } from '@/stores/query-tabs-store';
 import type { DatabaseSchema } from '@/types/database';
-import { GoldButton } from '@sqlpro/ui';
+// 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { Button } from '@sqlpro/ui/button';
+import { GoldButton } from '@sqlpro/ui/gold-button';
 import { AlertCircle, Clock, Loader2, Play, X, Zap } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';

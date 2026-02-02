@@ -1,5 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
-import { DecoFrame, GoldButton } from '@sqlpro/ui';
+// 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
+import { DecoFrame } from '@sqlpro/ui/decorations';
+import { GoldButton } from '@sqlpro/ui/gold-button';
 import { memo } from 'react';
 import { cn } from '@/lib/utils';
 

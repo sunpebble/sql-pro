@@ -1,4 +1,6 @@
-import { DecoFrame, GoldDivider, GradientText } from '@sqlpro/ui';
+// 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
+import { DecoFrame, GoldDivider } from '@sqlpro/ui/decorations';
+import { GradientText } from '@sqlpro/ui/typography';
 import { Database } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {

@@ -6,6 +6,21 @@ nodeLinker: hoisted
 
 neverBuiltDependencies: []
 
+# pnpm catalogs: 集中管理依赖版本 (pnpm skill: features-catalogs)
+# 使用方式: "react": "catalog:" 在 package.json 中
+catalogs:
+  default:
+    # React 生态
+    react: ^19.2.3
+    react-dom: ^19.2.3
+    # 开发工具
+    typescript: ^5.9.3
+    # UI 库
+    lucide-react: ^0.562.0
+    tailwind-merge: ^3.4.0
+    class-variance-authority: ^0.7.1
+    clsx: ^2.1.1
+
 overrides:
   '@img/sharp-darwin-arm64': 0.34.5
   '@img/sharp-libvips-darwin-arm64': 1.2.4
