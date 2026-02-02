@@ -25,17 +25,6 @@ const SESSION_COOKIE = 'sqlpro_session';
 
 const auth = new Hono<{ Bindings: Env }>();
 
-// Debug endpoint - test GitHub token exchange (remove in production)
-auth.get('/debug/test', async (c) => {
-  return c.json({
-    message: 'Auth routes working',
-    hasGitHubClientId: !!c.env.GITHUB_CLIENT_ID,
-    hasGitHubClientSecret: !!c.env.GITHUB_CLIENT_SECRET,
-    clientIdPrefix: `${c.env.GITHUB_CLIENT_ID?.substring(0, 8)  }...`,
-  });
-});
-
-
 // ============================================
 // GitHub OAuth
 // ============================================
@@ -163,7 +152,7 @@ auth.get('/github/callback', async (c) => {
         });
       }
       return c.redirect(
-        `/?error=no_email&user=${  encodeURIComponent(githubUser.login)}`
+        `/?error=no_email&user=${encodeURIComponent(githubUser.login)}`
       );
     }
 
