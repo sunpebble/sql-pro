@@ -301,47 +301,66 @@ export async function restoreBackup(
       let tablesRestored = 0;
       let rowsRestored = 0;
 
-      for (const statement of statements) {
-        if (!statement) continue;
+      // Start transaction for better performance
+      databaseService.execute(request.connectionId, 'BEGIN TRANSACTION');
 
-        // Skip transaction control if we're managing our own
-        if (
-          statement.toUpperCase() === 'BEGIN TRANSACTION' ||
-          statement.toUpperCase() === 'COMMIT'
-        ) {
-          continue;
-        }
+      try {
+        for (const statement of statements) {
+          if (!statement) continue;
 
-        // Check if this is a DROP statement and dropExisting is false
-        if (
-          !request.dropExisting &&
-          statement.toUpperCase().startsWith('DROP TABLE')
-        ) {
-          continue;
-        }
-
-        // Filter by table if specified
-        if (request.tables && request.tables.length > 0) {
-          const tableMatch = statement.match(
-            /(?:CREATE TABLE|INSERT INTO|DROP TABLE IF EXISTS)\s+"?(\w+)"?/i
-          );
-          if (tableMatch && !request.tables.includes(tableMatch[1])) {
+          // Skip transaction control if we're managing our own
+          if (
+            statement.toUpperCase() === 'BEGIN TRANSACTION' ||
+            statement.toUpperCase() === 'COMMIT'
+          ) {
             continue;
           }
-        }
 
-        const result = databaseService.execute(request.connectionId, statement);
+          // Check if this is a DROP statement and dropExisting is false
+          if (
+            !request.dropExisting &&
+            statement.toUpperCase().startsWith('DROP TABLE')
+          ) {
+            continue;
+          }
 
-        if (!result.success) {
-          // Log error but continue with other statements
-          console.error(`Failed to execute: ${statement}`, result.error);
-        } else {
-          if (statement.toUpperCase().startsWith('CREATE TABLE')) {
-            tablesRestored++;
-          } else if (statement.toUpperCase().startsWith('INSERT')) {
-            rowsRestored++;
+          // Filter by table if specified
+          if (request.tables && request.tables.length > 0) {
+            const tableMatch = statement.match(
+              /(?:CREATE TABLE|INSERT INTO|DROP TABLE IF EXISTS)\s+"?(\w+)"?/i
+            );
+            if (tableMatch && !request.tables.includes(tableMatch[1])) {
+              continue;
+            }
+          }
+
+          const result = databaseService.execute(
+            request.connectionId,
+            statement
+          );
+
+          if (!result.success) {
+            // Log error but continue with other statements
+            console.error(`Failed to execute: ${statement}`, result.error);
+          } else {
+            if (statement.toUpperCase().startsWith('CREATE TABLE')) {
+              tablesRestored++;
+            } else if (statement.toUpperCase().startsWith('INSERT')) {
+              rowsRestored++;
+            }
           }
         }
+
+        // Commit transaction
+        databaseService.execute(request.connectionId, 'COMMIT');
+      } catch (error) {
+        // Rollback on unexpected error
+        try {
+          databaseService.execute(request.connectionId, 'ROLLBACK');
+        } catch {
+          // Ignore rollback error
+        }
+        throw error;
       }
 
       return { success: true, tablesRestored, rowsRestored };
