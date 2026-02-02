@@ -169,6 +169,14 @@ export function MonacoSqlEditor({
       editorRef.current = editor;
       monacoRef.current = monacoInstance;
 
+      // 立即设置正确的主题 (US2: Theme-Aware Editor)
+      // 因为 useEffect 在 mount 时 monacoRef 还是 null，需要在这里设置
+      const currentTheme =
+        useThemeStore.getState().resolvedTheme === 'dark'
+          ? 'sql-pro-dark'
+          : 'sql-pro-light';
+      monacoInstance.editor.setTheme(currentTheme);
+
       // US4: Register Cmd/Ctrl+Enter shortcut for query execution
       editor.addCommand(
         monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Enter,
