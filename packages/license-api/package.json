@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",
-    "hono": "^4.11.5",
+    "hono": "^4.11.7",
     "nanoid": "^5.1.6",
-    "resend": "^6.8.0",
-    "stripe": "^20.2.0"
+    "resend": "^6.9.1",
+    "stripe": "^20.3.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260123.0",
+    "@cloudflare/workers-types": "^4.20260131.0",
     "typescript": "^5.9.3",
-    "wrangler": "^4.60.0"
+    "wrangler": "^4.61.1"
   }
 }
