@@ -924,7 +924,11 @@ export class TursoAdapter implements DatabaseAdapter {
     }
 
     try {
-      let appliedCount = 0;
+      if (changes.length === 0) {
+        return { success: true, appliedCount: 0 };
+      }
+
+      const statements: { sql: string; args: any[] }[] = [];
 
       for (const change of changes) {
         const schema = change.schema || 'main';
@@ -934,8 +938,7 @@ export class TursoAdapter implements DatabaseAdapter {
           const values = Object.values(change.newValues);
           const placeholders = columns.map(() => '?').join(', ');
           const sql = `INSERT INTO "${schema}"."${change.table}" ("${columns.join('", "')}") VALUES (${placeholders})`;
-          await conn.client.execute({ sql, args: values as any[] });
-          appliedCount++;
+          statements.push({ sql, args: values as any[] });
         } else if (
           change.type === 'update' &&
           change.newValues &&
@@ -945,16 +948,18 @@ export class TursoAdapter implements DatabaseAdapter {
           const setClause = columns.map((col) => `"${col}" = ?`).join(', ');
           const values = [...Object.values(change.newValues), change.rowId];
           const sql = `UPDATE "${schema}"."${change.table}" SET ${setClause} WHERE "${change.primaryKeyColumn}" = ?`;
-          await conn.client.execute({ sql, args: values as any[] });
-          appliedCount++;
+          statements.push({ sql, args: values as any[] });
         } else if (change.type === 'delete' && change.primaryKeyColumn) {
           const sql = `DELETE FROM "${schema}"."${change.table}" WHERE "${change.primaryKeyColumn}" = ?`;
-          await conn.client.execute({ sql, args: [change.rowId as any] });
-          appliedCount++;
+          statements.push({ sql, args: [change.rowId as any] });
         }
       }
 
-      return { success: true, appliedCount };
+      if (statements.length > 0) {
+        await conn.client.batch(statements, 'write');
+      }
+
+      return { success: true, appliedCount: statements.length };
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
