@@ -25,7 +25,8 @@ export const MONOSPACE_FONTS = [
 export type AppFontCategory = 'editor' | 'table' | 'ui';
 
 // Page size options for data browser
-export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200] as const;
+// -1 represents "no pagination" (show all rows)
+export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200, -1] as const;
 export type PageSizeOption = (typeof PAGE_SIZE_OPTIONS)[number];
 
 interface SettingsState {

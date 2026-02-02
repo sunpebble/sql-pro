@@ -1219,9 +1219,13 @@ export class SQLiteAdapter implements DatabaseAdapter {
         rowCount: 1,
       });
 
-      const offset = (page - 1) * pageSize;
-      sql += ` LIMIT ? OFFSET ?`;
-      params.push(pageSize, offset);
+      // Only add LIMIT/OFFSET if pageSize is positive (not "all" mode)
+      if (pageSize > 0) {
+        const offset = (page - 1) * pageSize;
+        sql += ` LIMIT ? OFFSET ?`;
+        params.push(pageSize, offset);
+      }
+      // When pageSize is -1 (or <= 0), fetch all rows without LIMIT
 
       const dataStartTime = performance.now();
       const rows = conn.db.prepare(sql).all(...params) as Array<

@@ -2525,5 +2525,8 @@
     "error": "Error",
     "localPort": "Local port: {{port}}",
     "reconnectAttempts": "Reconnect attempts: {{count}}"
+  },
+  "pagination": {
+    "all": "All"
   }
 }

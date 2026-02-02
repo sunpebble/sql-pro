@@ -952,13 +952,17 @@ export function TableView({ tableOverride }: TableViewProps) {
               value={String(pageSize)}
               onValueChange={handlePageSizeChange}
             >
-              <SelectTrigger size="sm" className="h-7 w-16">
-                <SelectValue />
+              <SelectTrigger size="sm" className="h-7 w-[4.5rem]">
+                <SelectValue>
+                  {pageSize === -1
+                    ? t('pagination.all')
+                    : pageSize.toLocaleString()}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent align="center">
                 {PAGE_SIZE_OPTIONS.map((size) => (
                   <SelectItem key={size} value={String(size)}>
-                    {size.toLocaleString()}
+                    {size === -1 ? t('pagination.all') : size.toLocaleString()}
                   </SelectItem>
                 ))}
               </SelectContent>

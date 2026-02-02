@@ -2525,5 +2525,8 @@
     "error": "错误",
     "localPort": "本地端口: {{port}}",
     "reconnectAttempts": "重连次数: {{count}}"
+  },
+  "pagination": {
+    "all": "全部"
   }
 }
