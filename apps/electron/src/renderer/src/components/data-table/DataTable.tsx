@@ -793,8 +793,8 @@ export const DataTable = function DataTable({
           onCopyRowAsSQL={handleCopyRowAsSQL}
           onCopyRow={handleCopyRow}
           onDeleteRow={handleDeleteRow}
-          // Virtualization props
-          rowVirtualizer={rowVirtualizer}
+          // Virtualization props - only pass when scroll element is ready
+          rowVirtualizer={scrollElement ? rowVirtualizer : undefined}
         />
       </table>
 
