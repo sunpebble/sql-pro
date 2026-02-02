@@ -20,6 +20,7 @@ import {
   EmptyTitle,
 } from '@sqlpro/ui/empty';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { Filter, Inbox, SearchX } from 'lucide-react';
 import {
   useCallback,
@@ -28,6 +29,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
@@ -42,6 +44,10 @@ import { useTableCore } from './hooks/useTableCore';
 import { useTableEditing } from './hooks/useTableEditing';
 import { TableBody } from './TableBody';
 import { TableHeader } from './TableHeader';
+
+// Row height constant for virtualization
+const ROW_HEIGHT = 24; // h-6 = 24px
+const VIRTUALIZATION_OVERSCAN = 10;
 
 export interface DataTableProps {
   // Data
@@ -457,10 +463,40 @@ export const DataTable = function DataTable({
     [rows, onRowDelete]
   );
 
-  // Calculate visible range for all rows (no virtualization)
+  // Row virtualization for performance with large datasets
+  // Use state to track scroll element - this ensures virtualizer re-initializes
+  // when the ScrollArea viewport becomes available
+  const [scrollElement, setScrollElement] = useState<HTMLDivElement | null>(
+    null
+  );
+
+  // Callback ref to capture the scroll element from ScrollArea
+  const setContainerRef = useCallback((node: HTMLDivElement | null) => {
+    // Update the ref for other usages
+    (containerRef as React.MutableRefObject<HTMLDivElement | null>).current =
+      node;
+    // Also update the state for virtualizer
+    setScrollElement(node);
+  }, []);
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => ROW_HEIGHT,
+    overscan: VIRTUALIZATION_OVERSCAN,
+  });
+
+  // Calculate visible range from virtualizer for useVirtualData integration
+  const virtualItems = rowVirtualizer.getVirtualItems();
   const visibleRange = useMemo(() => {
-    return { startIndex: 0, endIndex: rows.length - 1 };
-  }, [rows.length]);
+    if (virtualItems.length === 0) {
+      return { startIndex: 0, endIndex: 0 };
+    }
+    return {
+      startIndex: virtualItems[0].index,
+      endIndex: virtualItems[virtualItems.length - 1].index,
+    };
+  }, [virtualItems]);
 
   // Auto-scroll to focused cell when navigating via keyboard
   useEffect(() => {
@@ -624,19 +660,24 @@ export const DataTable = function DataTable({
   // Expose imperative methods
   useImperativeHandle(ref, () => ({
     scrollToRow: (rowIndex: number, highlight = true) => {
-      const row = containerRef.current?.querySelector(
-        `[data-row-index="${rowIndex}"]`
-      );
-      if (row) {
-        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (highlight) {
-          // Add highlight animation class
-          row.classList.add('row-highlight-animation');
-          // Remove the class after animation completes
-          setTimeout(() => {
-            row.classList.remove('row-highlight-animation');
-          }, 2000);
-        }
+      // Use virtualizer for smooth scrolling
+      rowVirtualizer.scrollToIndex(rowIndex, { align: 'center' });
+
+      // Wait for scroll to complete, then apply highlight
+      if (highlight) {
+        requestAnimationFrame(() => {
+          const row = containerRef.current?.querySelector(
+            `[data-row-index="${rowIndex}"]`
+          );
+          if (row) {
+            // Add highlight animation class
+            row.classList.add('row-highlight-animation');
+            // Remove the class after animation completes
+            setTimeout(() => {
+              row.classList.remove('row-highlight-animation');
+            }, 2000);
+          }
+        });
       }
     },
     focus: () => {
@@ -653,7 +694,7 @@ export const DataTable = function DataTable({
 
   return (
     <ScrollArea
-      viewportRef={containerRef}
+      viewportRef={setContainerRef}
       data-component="data-table"
       className={cn(
         'bg-background rounded-md outline-none',
@@ -709,7 +750,7 @@ export const DataTable = function DataTable({
           ghostLineRef={ghostLineRef}
         />
 
-        {/* Table body - no virtualization */}
+        {/* Table body - with row virtualization */}
         <TableBody
           rows={rows}
           editable={editable}
@@ -733,6 +774,8 @@ export const DataTable = function DataTable({
           onCopyRowAsSQL={handleCopyRowAsSQL}
           onCopyRow={handleCopyRow}
           onDeleteRow={handleDeleteRow}
+          // Virtualization props
+          rowVirtualizer={rowVirtualizer}
         />
       </table>
 

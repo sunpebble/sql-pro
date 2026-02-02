@@ -1,4 +1,5 @@
 import type { Row } from '@tanstack/react-table';
+import type { Virtualizer } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema, PendingChange } from '@/types/database';
 import { Checkbox } from '@sqlpro/ui/checkbox';
@@ -380,6 +381,8 @@ interface TableBodyProps {
   onCopyRow?: (rowId: string) => void;
   /** Handler to delete row */
   onDeleteRow?: (rowId: string) => void;
+  /** Row virtualizer instance for virtualized rendering */
+  rowVirtualizer?: Virtualizer<HTMLDivElement, Element>;
 }
 
 export const TableBody = memo(
@@ -405,6 +408,7 @@ export const TableBody = memo(
     onCopyRowAsSQL,
     onCopyRow,
     onDeleteRow,
+    rowVirtualizer,
   }: TableBodyProps) => {
     const { t } = useTranslation('common');
 
@@ -473,68 +477,106 @@ export const TableBody = memo(
       return rows.filter((row) => row.getIsSelected()).length;
     }, [rows]);
 
+    // Get virtual items from virtualizer
+    const virtualItems = rowVirtualizer?.getVirtualItems() ?? [];
+    const totalSize = rowVirtualizer?.getTotalSize() ?? 0;
+
+    // Helper to render a single row
+    const renderRow = (dataIndex: number) => {
+      const row = rows[dataIndex];
+      if (!row) return null;
+
+      const isGroupRow = row.getIsGrouped?.() ?? false;
+      const rowData = row.original as TableRowData;
+      const rowId = rowData.__rowId ?? row.id;
+      const isDeleted = rowData.__deleted ?? false;
+      const isNewRow = rowData.__isNew ?? false;
+
+      // Get change for this row
+      const change = changes?.get(rowId);
+
+      if (isGroupRow) {
+        return (
+          <GroupRow
+            key={`group-${rowId}`}
+            row={row}
+            isExpanded={row.getIsExpanded()}
+          />
+        );
+      }
+
+      // Use pre-computed row IDs for faster comparison
+      const rowFocusedCellKey = focusedRowId === row.id ? focusedCellKey : null;
+      const rowEditingCellKey = editingRowId === row.id ? editingCellKey : null;
+
+      return (
+        <DataRow
+          key={rowId}
+          row={row}
+          dataIndex={dataIndex}
+          isDeleted={isDeleted}
+          isNewRow={isNewRow}
+          isSelected={row.getIsSelected()}
+          change={change}
+          editable={editable}
+          onCellClick={onCellClick}
+          onCellDoubleClick={onCellDoubleClick}
+          onCellSave={onCellSave}
+          stopEditing={stopEditing}
+          isCellFocused={isCellFocused}
+          isCellEditing={isCellEditing}
+          focusedCellKey={rowFocusedCellKey}
+          editingCellKey={rowEditingCellKey}
+          pinnedColumns={pinnedColumns}
+          pinnedOffsets={pinnedOffsets}
+          enableSelection={enableSelection}
+          onDragStart={onDragStart}
+          isInDragRange={dragRangeByIndex?.get(dataIndex) ?? false}
+          onToggleSelected={getToggleHandler(row)}
+          selectedRowCount={selectedRowCount}
+          onCopyRowAsSQL={onCopyRowAsSQL}
+          onCopyRow={onCopyRow}
+          onDeleteRow={onDeleteRow}
+          t={t}
+        />
+      );
+    };
+
+    // Virtualized rendering using padding spacers (not absolute positioning)
+    // This preserves table layout and column widths
+    if (rowVirtualizer && virtualItems.length > 0) {
+      // Calculate padding before and after visible rows
+      const firstItem = virtualItems[0];
+      const lastItem = virtualItems[virtualItems.length - 1];
+      const paddingTop = firstItem ? firstItem.start : 0;
+      const paddingBottom = totalSize - (lastItem ? lastItem.end : 0);
+
+      return (
+        <tbody>
+          {/* Top spacer row */}
+          {paddingTop > 0 && (
+            <tr style={{ height: paddingTop }}>
+              <td colSpan={999} style={{ padding: 0, border: 'none' }} />
+            </tr>
+          )}
+
+          {/* Visible rows */}
+          {virtualItems.map((virtualRow) => renderRow(virtualRow.index))}
+
+          {/* Bottom spacer row */}
+          {paddingBottom > 0 && (
+            <tr style={{ height: paddingBottom }}>
+              <td colSpan={999} style={{ padding: 0, border: 'none' }} />
+            </tr>
+          )}
+        </tbody>
+      );
+    }
+
+    // Non-virtualized fallback
     return (
       <tbody>
-        {rowsToRender.map(({ index: dataIndex, row }) => {
-          if (!row) return null;
-
-          const isGroupRow = row.getIsGrouped?.() ?? false;
-          const rowData = row.original as TableRowData;
-          const rowId = rowData.__rowId ?? row.id;
-          const isDeleted = rowData.__deleted ?? false;
-          const isNewRow = rowData.__isNew ?? false;
-
-          // Get change for this row
-          const change = changes?.get(rowId);
-
-          if (isGroupRow) {
-            return (
-              <GroupRow
-                key={`group-${rowId}`}
-                row={row}
-                isExpanded={row.getIsExpanded()}
-              />
-            );
-          }
-
-          // Use pre-computed row IDs for faster comparison
-          const rowFocusedCellKey =
-            focusedRowId === row.id ? focusedCellKey : null;
-          const rowEditingCellKey =
-            editingRowId === row.id ? editingCellKey : null;
-
-          return (
-            <DataRow
-              key={rowId}
-              row={row}
-              dataIndex={dataIndex}
-              isDeleted={isDeleted}
-              isNewRow={isNewRow}
-              isSelected={row.getIsSelected()}
-              change={change}
-              editable={editable}
-              onCellClick={onCellClick}
-              onCellDoubleClick={onCellDoubleClick}
-              onCellSave={onCellSave}
-              stopEditing={stopEditing}
-              isCellFocused={isCellFocused}
-              isCellEditing={isCellEditing}
-              focusedCellKey={rowFocusedCellKey}
-              editingCellKey={rowEditingCellKey}
-              pinnedColumns={pinnedColumns}
-              pinnedOffsets={pinnedOffsets}
-              enableSelection={enableSelection}
-              onDragStart={onDragStart}
-              isInDragRange={dragRangeByIndex?.get(dataIndex) ?? false}
-              onToggleSelected={getToggleHandler(row)}
-              selectedRowCount={selectedRowCount}
-              onCopyRowAsSQL={onCopyRowAsSQL}
-              onCopyRow={onCopyRow}
-              onDeleteRow={onDeleteRow}
-              t={t}
-            />
-          );
-        })}
+        {rowsToRender.map(({ index: dataIndex }) => renderRow(dataIndex))}
       </tbody>
     );
   }
