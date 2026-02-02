@@ -29,8 +29,10 @@ function applyTheme(theme: Theme) {
   const resolved = getResolvedTheme(theme);
 
   if (resolved === 'dark') {
+    root.classList.remove('light');
     root.classList.add('dark');
   } else {
+    root.classList.add('light');
     root.classList.remove('dark');
   }
 

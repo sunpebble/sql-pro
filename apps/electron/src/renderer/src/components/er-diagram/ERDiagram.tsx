@@ -32,13 +32,7 @@ const edgeTypes = {
 
 export function ERDiagram() {
   const { schema, connection, setSelectedTable } = useConnectionStore();
-  const { theme } = useThemeStore();
-  const resolvedTheme =
-    theme === 'system'
-      ? window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      : theme;
+  const { resolvedTheme } = useThemeStore();
   const {
     nodePositionsMap,
     setNodePosition,
@@ -231,7 +225,7 @@ export function ERDiagram() {
   }
 
   return (
-    <div className="h-full w-full">
+    <div className="bg-background h-full w-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -248,13 +242,14 @@ export function ERDiagram() {
         minZoom={0.1}
         maxZoom={2}
         proOptions={{ hideAttribution: true }}
+        className="!bg-background"
       >
         <Background />
         <MiniMap
           nodeStrokeWidth={3}
           zoomable
           pannable
-          className="bg-background! border-border!"
+          className="!bg-background !border-border"
         />
         <ERControls onResetLayout={handleResetLayout} />
       </ReactFlow>

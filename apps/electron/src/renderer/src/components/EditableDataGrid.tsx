@@ -1,3 +1,4 @@
+import type { GhostResizeLineRef } from './GhostResizeLine';
 import type { ColumnSchema, PendingChange, SortState } from '@/types/database';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowDown, ArrowUp, Key, Trash2 } from 'lucide-react';
@@ -11,6 +12,7 @@ import { useChangesStore } from '@/stores/changes-store';
 import { ColumnResizeHandle } from './ColumnResizeHandle';
 import { TypeBadge } from './data-table/TypeBadge';
 import { EditableCell } from './EditableCell';
+import { GhostResizeLine } from './GhostResizeLine';
 
 interface EditableDataGridProps {
   connectionId: string;
@@ -35,6 +37,7 @@ export function EditableDataGrid({
 }: EditableDataGridProps) {
   const { t } = useTranslation();
   const parentRef = useRef<HTMLDivElement>(null);
+  const ghostLineRef = useRef<GhostResizeLineRef>(null);
   const { changes, addChange, getChangeForRow } = useChangesStore();
   const [editingCell, setEditingCell] = useState<{
     rowIndex: number;
@@ -120,7 +123,7 @@ export function EditableDataGrid({
     overscan: 10,
   });
 
-  // Resizable columns
+  // Resizable columns with ghost resize support
   const {
     columnWidths: dataColumnWidths,
     totalWidth: dataTotalWidth,
@@ -128,10 +131,12 @@ export function EditableDataGrid({
     handleResizeDoubleClick,
     isResizing,
     resizingColumn,
+    isResizeLocked,
   } = useResizableColumns({
     columns,
     rows,
     minWidth: 50,
+    ghostLineRef,
   });
 
   // Add width for actions column
@@ -450,12 +455,14 @@ export function EditableDataGrid({
     <div
       ref={parentRef}
       className={cn(
-        'h-full w-full overflow-auto outline-none',
+        'relative h-full w-full overflow-auto outline-none',
         isResizing && 'select-none'
       )}
       tabIndex={0}
       onKeyDown={handleGridKeyDown}
     >
+      {/* Ghost resize line for smooth column resize preview */}
+      <GhostResizeLine ref={ghostLineRef} />
       <div style={{ minWidth: totalWidth }}>
         {/* Header */}
         <div className="bg-muted/50 sticky top-0 z-10 flex border-b backdrop-blur-sm">
@@ -472,7 +479,12 @@ export function EditableDataGrid({
                 }}
               >
                 <button
-                  onClick={() => onSort(col.name)}
+                  type="button"
+                  onClick={() => {
+                    // Prevent sort if resize just completed
+                    if (isResizeLocked()) return;
+                    onSort(col.name);
+                  }}
                   className="hover:text-foreground flex flex-1 items-center gap-1 text-left text-sm font-medium"
                 >
                   {col.isPrimaryKey && (

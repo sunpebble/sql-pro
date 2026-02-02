@@ -107,8 +107,6 @@ auth.get('/github/callback', async (c) => {
       return c.redirect('/?error=oauth_failed');
     }
 
-    console.log('Got access token, fetching user...');
-
     // Get user info from GitHub
     const githubUser = await getGitHubUser(tokenResult.accessToken);
     if (!githubUser) {
@@ -117,17 +115,9 @@ auth.get('/github/callback', async (c) => {
       return c.redirect('/?error=github_user_failed');
     }
 
-    console.log(
-      'GitHub user fetched:',
-      githubUser.login,
-      'public email:',
-      githubUser.email
-    );
-
     // Get primary email
     let email = githubUser.email;
     if (!email) {
-      console.log('No public email, fetching from emails API...');
       email = await getGitHubPrimaryEmail(tokenResult.accessToken);
     }
 
@@ -156,8 +146,6 @@ auth.get('/github/callback', async (c) => {
       );
     }
 
-    console.log('Using email:', email);
-
     // Find or create user
     let user = await getUserByProvider(c.env, 'github', String(githubUser.id));
 
@@ -180,10 +168,7 @@ auth.get('/github/callback', async (c) => {
       });
 
       // Link any existing licenses to this user
-      const linkedCount = await linkLicensesByEmail(c.env, user.id, email);
-      if (linkedCount > 0) {
-        console.log(`Linked ${linkedCount} license(s) to user ${user.id}`);
-      }
+      await linkLicensesByEmail(c.env, user.id, email);
     }
 
     // Create session

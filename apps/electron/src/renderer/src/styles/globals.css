@@ -736,27 +736,54 @@ textarea,
 }
 
 /* React Flow theme customization */
+/* ReactFlow's colorMode prop adds 'light' or 'dark' class to the container.
+   Our design system is dark-first (:root = dark, .light = light override).
+   So we need to explicitly set variables for both modes on the .react-flow element. */
 .react-flow {
-  --xy-background-color-default: var(--background);
-  --xy-background-pattern-color-default: var(--grid-color);
-  --xy-node-background-color-default: var(--card);
-  --xy-node-border-color-default: var(--border);
-  --xy-node-color-default: var(--card-foreground);
-  --xy-edge-stroke-default: var(--muted-foreground);
+  /* Base variables that work for both modes */
   --xy-edge-stroke-width-default: 1.5;
   --xy-handle-background-color-default: var(--primary);
   --xy-handle-border-color-default: var(--border);
-  --xy-minimap-background-color-default: var(--background);
-  --xy-minimap-mask-background-color-default: var(--muted);
-  --xy-controls-button-background-color-default: var(--card);
-  --xy-controls-button-border-color-default: var(--border);
-  --xy-controls-button-color-default: var(--foreground);
 }
 
+/* Dark mode - ReactFlow adds .dark class when colorMode="dark" */
+.react-flow.dark {
+  --xy-background-color-default: var(--slate-900);
+  --xy-background-pattern-color-default: oklch(1 0 0 / 6%);
+  --xy-node-background-color-default: var(--slate-800);
+  --xy-node-border-color-default: oklch(1 0 0 / 8%);
+  --xy-node-color-default: var(--slate-100);
+  --xy-edge-stroke-default: var(--slate-400);
+  --xy-minimap-background-color-default: var(--slate-900);
+  --xy-minimap-mask-background-color-default: var(--slate-700);
+  --xy-controls-button-background-color-default: var(--slate-800);
+  --xy-controls-button-border-color-default: oklch(1 0 0 / 8%);
+  --xy-controls-button-color-default: var(--slate-100);
+  background-color: var(--slate-900) !important;
+}
+
+.react-flow.dark .react-flow__background {
+  background-color: var(--slate-900) !important;
+}
+
+/* Light mode - ReactFlow adds .light class when colorMode="light" */
 .react-flow.light {
-  --xy-background-color-default: var(--background);
-  --xy-node-background-color-default: var(--card);
-  --xy-controls-button-background-color-default: var(--card);
+  --xy-background-color-default: var(--slate-50);
+  --xy-background-pattern-color-default: oklch(0 0 0 / 4%);
+  --xy-node-background-color-default: white;
+  --xy-node-border-color-default: oklch(0 0 0 / 8%);
+  --xy-node-color-default: var(--slate-900);
+  --xy-edge-stroke-default: var(--slate-500);
+  --xy-minimap-background-color-default: var(--slate-50);
+  --xy-minimap-mask-background-color-default: var(--slate-100);
+  --xy-controls-button-background-color-default: white;
+  --xy-controls-button-border-color-default: oklch(0 0 0 / 8%);
+  --xy-controls-button-color-default: var(--slate-900);
+  background-color: var(--slate-50) !important;
+}
+
+.react-flow.light .react-flow__background {
+  background-color: var(--slate-50) !important;
 }
 
 /* Query Builder node styles */

@@ -1,3 +1,4 @@
+import type { GhostResizeLineRef } from '../GhostResizeLine';
 import type { TableRowData } from './hooks/useTableCore';
 import type {
   VirtualDataConfig,
@@ -35,6 +36,7 @@ import { useVirtualData } from '@/hooks/useVirtualData';
 import { generateSQLInsert } from '@/lib/sql-insert-generator';
 import { cn } from '@/lib/utils';
 import { useTableFont } from '@/stores/settings-store';
+import { GhostResizeLine } from '../GhostResizeLine';
 import { useDragSelection } from './hooks/useDragSelection';
 import { useTableCore } from './hooks/useTableCore';
 import { useTableEditing } from './hooks/useTableEditing';
@@ -182,6 +184,7 @@ export const DataTable = function DataTable({
   tableName,
 }: DataTableProps & { ref?: React.RefObject<DataTableRef | null> }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const ghostLineRef = useRef<GhostResizeLineRef>(null);
   const tableFont = useTableFont();
 
   // Initialize TanStack Table
@@ -661,6 +664,8 @@ export const DataTable = function DataTable({
       onKeyDown={handleKeyDown}
       onFocus={handleContainerFocus}
     >
+      {/* Ghost resize line for smooth column resize preview */}
+      <GhostResizeLine ref={ghostLineRef} />
       <table
         ref={tableRef}
         className="bg-background w-max min-w-full border-separate border-spacing-0"
@@ -701,6 +706,7 @@ export const DataTable = function DataTable({
           onFilterRemove={onFilterRemove}
           pinnedColumns={pinnedColumns}
           enableSelection={enableSelection}
+          ghostLineRef={ghostLineRef}
         />
 
         {/* Table body - no virtualization */}

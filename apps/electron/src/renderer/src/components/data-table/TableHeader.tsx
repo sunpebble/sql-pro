@@ -1,4 +1,5 @@
 import type { Header, Table } from '@tanstack/react-table';
+import type { GhostResizeLineRef } from '../GhostResizeLine';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnTypeCategory, UIFilterState } from '@/lib/filter-utils';
 import type { ColumnSchema } from '@/types/database';
@@ -44,6 +45,8 @@ interface HeaderCellProps {
   pinnedOffset?: number;
   /** Whether this is the last pinned column */
   isLastPinned?: boolean;
+  /** Ref to ghost resize line for smooth column resize preview */
+  ghostLineRef?: React.RefObject<GhostResizeLineRef | null>;
 }
 
 const HeaderCell = memo(
@@ -61,6 +64,7 @@ const HeaderCell = memo(
     isPinned,
     pinnedOffset,
     isLastPinned,
+    ghostLineRef,
   }: HeaderCellProps) => {
     const { t } = useTranslation();
     // State for filter popover
@@ -301,16 +305,62 @@ const HeaderCell = memo(
               'before:absolute before:inset-y-0 before:-right-2 before:-left-2 before:cursor-col-resize before:content-[""]',
               // Default visible indicator - subtle border color
               'bg-border/50',
-              // Visual indicator on hover/active
-              'hover:bg-primary/60 active:bg-primary/80 hover:w-1.5',
+              // Visual indicator on hover (but hide during resize since we show ghost line)
+              !isResizing &&
+                'hover:bg-primary/60 active:bg-primary/80 hover:w-1.5',
               'transition-all duration-75',
-              isResizing && 'bg-primary/80 w-1.5'
+              // Hide the resize handle indicator during resize - ghost line is shown instead
+              isResizing && 'bg-transparent'
             )}
             style={{
               touchAction: 'none',
             }}
             onMouseDown={(e) => {
               resizeHandleClickedRef.current = true;
+
+              // Get the resize handle's position for accurate ghost line placement
+              const handleElement = e.currentTarget as HTMLElement;
+              const handleRect = handleElement.getBoundingClientRect();
+              // Use the right edge of the resize handle as the initial position
+              const initialLeft = handleRect.right;
+              const startX = e.clientX;
+
+              // Find the ScrollArea container (data-component="data-table") to get bounds
+              const scrollContainer = handleElement.closest(
+                '[data-component="data-table"]'
+              );
+              const containerRect = scrollContainer?.getBoundingClientRect();
+
+              // Track if ghost line has been shown (only show after mouse moves)
+              let ghostLineShown = false;
+
+              // Set up mousemove and mouseup handlers for ghost line
+              const handleMouseMove = (moveEvent: MouseEvent) => {
+                // Only show ghost line after mouse has moved (to avoid showing on double-click)
+                if (!ghostLineShown && ghostLineRef?.current) {
+                  const bounds = containerRect
+                    ? { top: containerRect.top, height: containerRect.height }
+                    : undefined;
+                  ghostLineRef.current.show(initialLeft, bounds);
+                  ghostLineShown = true;
+                }
+
+                // Calculate delta from initial mouse position
+                const delta = moveEvent.clientX - startX;
+                ghostLineRef?.current?.setPosition(initialLeft + delta);
+              };
+
+              const handleMouseUp = () => {
+                if (ghostLineShown) {
+                  ghostLineRef?.current?.hide();
+                }
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+              };
+
+              document.addEventListener('mousemove', handleMouseMove);
+              document.addEventListener('mouseup', handleMouseUp);
+
               header.getResizeHandler()(e.nativeEvent);
             }}
             onTouchStart={(e) => {
@@ -354,6 +404,8 @@ interface TableHeaderProps {
   pinnedColumns?: string[];
   /** Enable row selection */
   enableSelection?: boolean;
+  /** Ref to ghost resize line for smooth column resize preview */
+  ghostLineRef?: React.RefObject<GhostResizeLineRef | null>;
 }
 
 export const TableHeader = memo(
@@ -371,6 +423,7 @@ export const TableHeader = memo(
     onFilterRemove,
     pinnedColumns = [],
     enableSelection = false,
+    ghostLineRef,
   }: TableHeaderProps) => {
     const { t } = useTranslation();
     // Create a map of column id to existing filter for quick lookup
@@ -453,6 +506,7 @@ export const TableHeader = memo(
                     isPinned ? pinnedOffsets[header.column.id] : undefined
                   }
                   isLastPinned={isLastPinned}
+                  ghostLineRef={ghostLineRef}
                 />
               );
             })}

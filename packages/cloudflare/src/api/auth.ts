@@ -279,7 +279,6 @@ export async function getGitHubUser(
     }
 
     const user = (await response.json()) as GitHubUser;
-    console.log('GitHub user:', user.login, 'email:', user.email);
     return user;
   } catch (error) {
     console.error('GitHub user fetch error:', error);
@@ -307,7 +306,6 @@ export async function getGitHubEmails(
     }
 
     const emails = (await response.json()) as GitHubEmail[];
-    console.log('GitHub emails response:', JSON.stringify(emails));
     return { emails };
   } catch (error) {
     console.error('GitHub emails fetch error:', error);
@@ -320,31 +318,18 @@ export async function getGitHubPrimaryEmail(
 ): Promise<string | null> {
   const result = await getGitHubEmails(accessToken);
   const emails = result.emails;
-  console.log(
-    'Finding primary email from:',
-    emails.length,
-    'emails',
-    'error:',
-    result.error,
-    'status:',
-    result.status
-  );
   const primary = emails.find((e) => e.primary && e.verified);
   if (primary) {
-    console.log('Found primary verified email:', primary.email);
     return primary.email;
   }
   const verified = emails.find((e) => e.verified);
   if (verified) {
-    console.log('Found verified email:', verified.email);
     return verified.email;
   }
   // Fallback: return any email
   if (emails.length > 0) {
-    console.log('Fallback to first email:', emails[0].email);
     return emails[0].email;
   }
-  console.log('No email found');
   return null;
 }
 

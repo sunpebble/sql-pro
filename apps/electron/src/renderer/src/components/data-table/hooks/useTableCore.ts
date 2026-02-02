@@ -251,7 +251,7 @@ export function useTableCore({
     getGroupedRowModel: getGroupedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    columnResizeMode: 'onChange',
+    columnResizeMode: 'onEnd',
     enableGrouping: true,
     enableExpanding: true,
     enableSorting: true,

@@ -11,7 +11,6 @@ export function getStripe(env: Env): Stripe {
 }
 
 // Stripe Price IDs for SQL Pro subscriptions
-// TODO: Update these with your actual Stripe Price IDs
 export const PRICE_IDS = {
   monthly: 'price_1SoR4VCoPJQxyAtwW0vaj2T9',
   yearly: 'price_1SoR4rCoPJQxyAtwv4xKqnCQ',

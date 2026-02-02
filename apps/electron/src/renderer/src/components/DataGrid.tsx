@@ -1,3 +1,4 @@
+import type { GhostResizeLineRef } from './GhostResizeLine';
 import type { ColumnSchema, SortState } from '@/types/database';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowDown, ArrowUp, Key } from 'lucide-react';
@@ -6,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { cn } from '@/lib/utils';
 import { ColumnResizeHandle } from './ColumnResizeHandle';
+import { GhostResizeLine } from './GhostResizeLine';
 
 interface CellValueProps {
   value: unknown;
@@ -55,6 +57,7 @@ interface DataGridProps {
 export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
   const { t } = useTranslation('common');
   const parentRef = useRef<HTMLDivElement>(null);
+  const ghostLineRef = useRef<GhostResizeLineRef>(null);
 
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
@@ -63,7 +66,7 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
     overscan: 10,
   });
 
-  // Resizable columns
+  // Resizable columns with ghost resize support
   const {
     columnWidths,
     totalWidth,
@@ -71,10 +74,12 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
     handleResizeDoubleClick,
     isResizing,
     resizingColumn,
+    isResizeLocked,
   } = useResizableColumns({
     columns,
     rows,
     minWidth: 50,
+    ghostLineRef,
   });
 
   if (columns.length === 0) {
@@ -88,11 +93,16 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
   return (
     <div
       ref={parentRef}
-      className={cn('h-full overflow-auto', isResizing && 'select-none')}
+      className={cn(
+        'relative h-full overflow-auto',
+        isResizing && 'select-none'
+      )}
       role="grid"
       aria-rowcount={rows.length}
       aria-colcount={columns.length}
     >
+      {/* Ghost resize line for smooth column resize preview */}
+      <GhostResizeLine ref={ghostLineRef} />
       <div style={{ minWidth: totalWidth }}>
         {/* Header */}
         <div
@@ -116,7 +126,12 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
               }
             >
               <button
-                onClick={() => onSort(col.name)}
+                type="button"
+                onClick={() => {
+                  // Prevent sort if resize just completed
+                  if (isResizeLocked()) return;
+                  onSort(col.name);
+                }}
                 className="hover:text-foreground flex flex-1 items-center gap-1 text-left text-sm font-medium"
                 aria-label={t('dataGrid.sortBy', {
                   column: col.name,

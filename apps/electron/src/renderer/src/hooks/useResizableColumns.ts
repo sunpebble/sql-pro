@@ -1,3 +1,4 @@
+import type { GhostResizeLineRef } from '@/components/GhostResizeLine';
 import type { ColumnSchema } from '@/types/database';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
@@ -6,6 +7,8 @@ interface UseResizableColumnsOptions {
   rows: Record<string, unknown>[];
   minWidth?: number;
   maxWidth?: number; // undefined = no limit
+  /** Ref to the ghost resize line component for zero-rerender drag preview */
+  ghostLineRef?: React.RefObject<GhostResizeLineRef | null>;
 }
 
 interface UseResizableColumnsReturn {
@@ -15,6 +18,8 @@ interface UseResizableColumnsReturn {
   handleResizeDoubleClick: (columnIndex: number) => void;
   isResizing: boolean;
   resizingColumn: number | null;
+  /** Returns true if a resize operation just completed (within 100ms) - use to block click events */
+  isResizeLocked: () => boolean;
 }
 
 /**
@@ -56,6 +61,7 @@ export function useResizableColumns({
   rows,
   minWidth = 50,
   maxWidth, // undefined = no limit
+  ghostLineRef,
 }: UseResizableColumnsOptions): UseResizableColumnsReturn {
   // Calculate initial widths based on content (scan all rows for accuracy)
   const initialWidths = useMemo(() => {
@@ -73,6 +79,10 @@ export function useResizableColumns({
   const dragStartWidth = useRef(0);
   const currentColumnIndex = useRef<number | null>(null);
 
+  // Lock mechanism to prevent accidental sort trigger after resize
+  const resizeLockTimeoutRef = useRef<number | null>(null);
+  const isResizeLockedRef = useRef(false);
+
   // Track the last initialWidths reference to detect changes
   const prevInitialWidthsRef = useRef(initialWidths);
 
@@ -83,37 +93,65 @@ export function useResizableColumns({
     setColumnWidths(initialWidths);
   }
 
-  // Handle mouse move during resize
+  // Check if resize is locked (within 100ms after resize ended)
+  const isResizeLocked = useCallback(() => isResizeLockedRef.current, []);
+
+  // Handle mouse move during resize - update ghost line position only (no setState)
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
       if (currentColumnIndex.current === null) return;
 
+      // Calculate new position for ghost line (using clientX for fixed positioning)
+      if (ghostLineRef?.current) {
+        ghostLineRef.current.setPosition(event.clientX);
+      }
+    },
+    [ghostLineRef]
+  );
+
+  // Handle mouse up to end resize
+  const handleMouseUp = useCallback(
+    (event: MouseEvent) => {
+      if (currentColumnIndex.current === null) return;
+
+      // Calculate final width based on drag distance
       const delta = event.clientX - dragStartX.current;
       let newWidth = Math.max(dragStartWidth.current + delta, minWidth);
       if (maxWidth) {
         newWidth = Math.min(newWidth, maxWidth);
       }
 
+      // Update state once at the end (single rerender)
       setColumnWidths((prev) => {
         const next = [...prev];
         next[currentColumnIndex.current!] = newWidth;
         return next;
       });
+
+      // Hide ghost line
+      ghostLineRef?.current?.hide();
+
+      setIsResizing(false);
+      setResizingColumn(null);
+      currentColumnIndex.current = null;
+
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+
+      // Set lock to prevent accidental click events (like sort) for 100ms
+      isResizeLockedRef.current = true;
+      if (resizeLockTimeoutRef.current) {
+        window.clearTimeout(resizeLockTimeoutRef.current);
+      }
+      resizeLockTimeoutRef.current = window.setTimeout(() => {
+        isResizeLockedRef.current = false;
+        resizeLockTimeoutRef.current = null;
+      }, 100);
     },
-    [minWidth, maxWidth]
+    [handleMouseMove, minWidth, maxWidth, ghostLineRef]
   );
-
-  // Handle mouse up to end resize
-  const handleMouseUp = useCallback(() => {
-    setIsResizing(false);
-    setResizingColumn(null);
-    currentColumnIndex.current = null;
-
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-  }, [handleMouseMove]);
 
   // Start resize operation
   const handleResizeStart = useCallback(
@@ -128,12 +166,17 @@ export function useResizableColumns({
       setIsResizing(true);
       setResizingColumn(columnIndex);
 
+      // Show ghost line at initial position (using clientX for fixed positioning)
+      if (ghostLineRef?.current) {
+        ghostLineRef.current.show(event.clientX);
+      }
+
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       document.body.style.cursor = 'col-resize';
       document.body.style.userSelect = 'none';
     },
-    [columnWidths, handleMouseMove, handleMouseUp]
+    [columnWidths, handleMouseMove, handleMouseUp, ghostLineRef]
   );
 
   // Double-click to auto-fit column width (scans ALL rows for accurate width)
@@ -163,5 +206,6 @@ export function useResizableColumns({
     handleResizeDoubleClick,
     isResizing,
     resizingColumn,
+    isResizeLocked,
   };
 }

@@ -21,15 +21,14 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
     <div
       className={cn(
         'bg-card text-card-foreground relative min-w-50 rounded-lg border shadow-sm',
-        'dark:border-zinc-700 dark:bg-zinc-900',
-        selected && 'ring-gold ring-2'
+        selected && 'ring-primary ring-2'
       )}
     >
       {/* Header */}
       <div
         className={cn(
           'flex items-center gap-2 rounded-t-lg border-b px-3 py-2',
-          'bg-muted/50 dark:bg-zinc-800/50',
+          'bg-muted/50',
           isView ? 'text-blue-600 dark:text-blue-400' : 'text-foreground'
         )}
       >

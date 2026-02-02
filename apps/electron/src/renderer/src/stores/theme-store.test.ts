@@ -48,6 +48,7 @@ describe('theme-store', () => {
     mockMatchesDark = false;
     mockMatchMediaListeners.length = 0;
     document.documentElement.classList.remove('dark');
+    document.documentElement.classList.remove('light');
     vi.clearAllMocks();
 
     // Default mock implementations
@@ -67,6 +68,7 @@ describe('theme-store', () => {
 
   afterEach(() => {
     document.documentElement.classList.remove('dark');
+    document.documentElement.classList.remove('light');
   });
 
   describe('initial state', () => {
@@ -99,6 +101,7 @@ describe('theme-store', () => {
       const { theme } = useThemeStore.getState();
       expect(theme).toBe('dark');
       expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('light')).toBe(false);
     });
 
     it('should set isLoading during load', async () => {
@@ -245,6 +248,7 @@ describe('theme-store', () => {
       await setTheme('light');
 
       expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('light')).toBe(true);
     });
 
     it('should add "dark" class when theme is "system" and system prefers dark', async () => {
@@ -269,10 +273,12 @@ describe('theme-store', () => {
       await setTheme('system');
 
       expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('light')).toBe(false);
     });
 
     it('should remove "dark" class when theme is "system" and system prefers light', async () => {
       document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
       mockMatchesDark = false;
       // Re-mock matchMedia with updated value
       Object.defineProperty(window, 'matchMedia', {
@@ -294,6 +300,7 @@ describe('theme-store', () => {
       await setTheme('system');
 
       expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('light')).toBe(true);
     });
   });
 
@@ -303,9 +310,11 @@ describe('theme-store', () => {
 
       await setTheme('light');
       expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('light')).toBe(true);
 
       await setTheme('dark');
       expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('light')).toBe(false);
     });
 
     it('should correctly transition from dark to light', async () => {
@@ -313,9 +322,11 @@ describe('theme-store', () => {
 
       await setTheme('dark');
       expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('light')).toBe(false);
 
       await setTheme('light');
       expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('light')).toBe(true);
     });
 
     it('should correctly handle multiple theme changes', async () => {
@@ -323,6 +334,7 @@ describe('theme-store', () => {
 
       await setTheme('dark');
       expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('light')).toBe(false);
       expect(useThemeStore.getState().theme).toBe('dark');
 
       await setTheme('light');
