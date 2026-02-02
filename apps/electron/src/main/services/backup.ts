@@ -289,66 +289,90 @@ export async function restoreBackup(
         return { success: false, error: 'Connection not found' };
       }
 
-      // Read SQL file
-      const sqlContent = fs.readFileSync(request.backupPath, 'utf-8');
-
-      // Split into statements and execute
-      const statements = sqlContent
-        .split(';')
-        .map((s) => s.trim())
-        .filter((s) => s && !s.startsWith('--'));
-
       let tablesRestored = 0;
       let rowsRestored = 0;
+
+      // Create a read stream to process the file in chunks
+      // distinct from fs.readFileSync which loads the entire file into memory
+      const stream = fs.createReadStream(request.backupPath, {
+        encoding: 'utf-8',
+        highWaterMark: 64 * 1024, // 64KB chunks
+      });
+
+      let buffer = '';
+
+      const processStatement = (statement: string) => {
+        if (!statement) return;
+
+        // Skip transaction control if we're managing our own
+        if (
+          statement.toUpperCase() === 'BEGIN TRANSACTION' ||
+          statement.toUpperCase() === 'COMMIT'
+        ) {
+          return;
+        }
+
+        // Check if this is a DROP statement and dropExisting is false
+        if (
+          !request.dropExisting &&
+          statement.toUpperCase().startsWith('DROP TABLE')
+        ) {
+          return;
+        }
+
+        // Filter by table if specified
+        if (request.tables && request.tables.length > 0) {
+          const tableMatch = statement.match(
+            /(?:CREATE TABLE|INSERT INTO|DROP TABLE IF EXISTS)\s+"?(\w+)"?/i
+          );
+          if (tableMatch && tableMatch[1]) {
+            const reqTables = request.tables as string[];
+            if (!reqTables.includes(tableMatch[1])) {
+              return;
+            }
+          }
+        }
+
+        const result = databaseService.execute(
+          request.connectionId!,
+          statement
+        );
+
+        if (!result.success) {
+          // Log error but continue with other statements
+          console.error(`Failed to execute: ${statement}`, result.error);
+        } else {
+          if (statement.toUpperCase().startsWith('CREATE TABLE')) {
+            tablesRestored++;
+          } else if (statement.toUpperCase().startsWith('INSERT')) {
+            rowsRestored++;
+          }
+        }
+      };
 
       // Start transaction for better performance
       databaseService.execute(request.connectionId, 'BEGIN TRANSACTION');
 
       try {
-        for (const statement of statements) {
-          if (!statement) continue;
+        for await (const chunk of stream) {
+          buffer += chunk;
 
-          // Skip transaction control if we're managing our own
-          if (
-            statement.toUpperCase() === 'BEGIN TRANSACTION' ||
-            statement.toUpperCase() === 'COMMIT'
-          ) {
-            continue;
-          }
+          // Process all complete statements in the buffer
+          let index = buffer.indexOf(';');
+          while (index !== -1) {
+            const statement = buffer.substring(0, index).trim();
+            buffer = buffer.substring(index + 1);
 
-          // Check if this is a DROP statement and dropExisting is false
-          if (
-            !request.dropExisting &&
-            statement.toUpperCase().startsWith('DROP TABLE')
-          ) {
-            continue;
-          }
-
-          // Filter by table if specified
-          if (request.tables && request.tables.length > 0) {
-            const tableMatch = statement.match(
-              /(?:CREATE TABLE|INSERT INTO|DROP TABLE IF EXISTS)\s+"?(\w+)"?/i
-            );
-            if (tableMatch && !request.tables.includes(tableMatch[1])) {
-              continue;
+            if (statement && !statement.startsWith('--')) {
+              processStatement(statement);
             }
           }
+        }
 
-          const result = databaseService.execute(
-            request.connectionId,
-            statement
-          );
-
-          if (!result.success) {
-            // Log error but continue with other statements
-            console.error(`Failed to execute: ${statement}`, result.error);
-          } else {
-            if (statement.toUpperCase().startsWith('CREATE TABLE')) {
-              tablesRestored++;
-            } else if (statement.toUpperCase().startsWith('INSERT')) {
-              rowsRestored++;
-            }
-          }
+        // Process any remaining content in the buffer
+        const lastStmt = buffer.trim();
+        if (lastStmt && !lastStmt.startsWith('--')) {
+          processStatement(lastStmt);
         }
 
         // Commit transaction
