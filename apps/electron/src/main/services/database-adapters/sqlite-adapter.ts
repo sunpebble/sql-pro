@@ -1832,33 +1832,37 @@ export class SQLiteAdapter implements DatabaseAdapter {
       let appliedCount = 0;
       const schemaPrefix = (s?: string) => (s ? `"${s}".` : '');
 
-      for (const change of changes) {
-        const prefix = schemaPrefix(change.schema);
+      const apply = conn.db.transaction((changes: PendingChangeInfo[]) => {
+        for (const change of changes) {
+          const prefix = schemaPrefix(change.schema);
 
-        if (change.type === 'insert' && change.newValues) {
-          const columns = Object.keys(change.newValues);
-          const values = Object.values(change.newValues);
-          const placeholders = columns.map(() => '?').join(', ');
-          const sql = `INSERT INTO ${prefix}"${change.table}" ("${columns.join('", "')}") VALUES (${placeholders})`;
-          conn.db.prepare(sql).run(...values);
-          appliedCount++;
-        } else if (
-          change.type === 'update' &&
-          change.newValues &&
-          change.primaryKeyColumn
-        ) {
-          const columns = Object.keys(change.newValues);
-          const setClause = columns.map((col) => `"${col}" = ?`).join(', ');
-          const values = [...Object.values(change.newValues), change.rowId];
-          const sql = `UPDATE ${prefix}"${change.table}" SET ${setClause} WHERE "${change.primaryKeyColumn}" = ?`;
-          conn.db.prepare(sql).run(...values);
-          appliedCount++;
-        } else if (change.type === 'delete' && change.primaryKeyColumn) {
-          const sql = `DELETE FROM ${prefix}"${change.table}" WHERE "${change.primaryKeyColumn}" = ?`;
-          conn.db.prepare(sql).run(change.rowId);
-          appliedCount++;
+          if (change.type === 'insert' && change.newValues) {
+            const columns = Object.keys(change.newValues);
+            const values = Object.values(change.newValues);
+            const placeholders = columns.map(() => '?').join(', ');
+            const sql = `INSERT INTO ${prefix}"${change.table}" ("${columns.join('", "')}") VALUES (${placeholders})`;
+            conn.db.prepare(sql).run(...values);
+            appliedCount++;
+          } else if (
+            change.type === 'update' &&
+            change.newValues &&
+            change.primaryKeyColumn
+          ) {
+            const columns = Object.keys(change.newValues);
+            const setClause = columns.map((col) => `"${col}" = ?`).join(', ');
+            const values = [...Object.values(change.newValues), change.rowId];
+            const sql = `UPDATE ${prefix}"${change.table}" SET ${setClause} WHERE "${change.primaryKeyColumn}" = ?`;
+            conn.db.prepare(sql).run(...values);
+            appliedCount++;
+          } else if (change.type === 'delete' && change.primaryKeyColumn) {
+            const sql = `DELETE FROM ${prefix}"${change.table}" WHERE "${change.primaryKeyColumn}" = ?`;
+            conn.db.prepare(sql).run(change.rowId);
+            appliedCount++;
+          }
         }
-      }
+      });
+
+      apply(changes);
 
       return { success: true as const, appliedCount };
     } catch (error) {
