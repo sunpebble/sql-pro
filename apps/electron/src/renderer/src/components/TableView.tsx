@@ -793,8 +793,6 @@ export function TableView({ tableOverride }: TableViewProps) {
             </div>
           ) : (
             <DataTable
-              // Key forces remount when table changes, resetting virtualizer state
-              key={`${activeConnectionId}-${selectedTable.schema}-${selectedTable.name}`}
               ref={dataTableRef}
               columns={columns}
               data={searchFilteredRows}

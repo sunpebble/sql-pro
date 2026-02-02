@@ -4,9 +4,7 @@ import * as React from 'react';
 import { cn } from './lib/utils';
 
 interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
-  viewportRef?:
-    | React.RefObject<HTMLDivElement | null>
-    | ((node: HTMLDivElement | null) => void);
+  viewportRef?: React.RefObject<HTMLDivElement | null>;
   /** Scroll orientation: 'vertical', 'horizontal', or 'both' (default) */
   orientation?: 'vertical' | 'horizontal' | 'both';
   /** Tab index for keyboard focus - applied to viewport for proper focus handling */
@@ -34,19 +32,6 @@ function ScrollArea({
     }
   }, [orientation]);
 
-  // Handle both RefObject and callback ref
-  const handleRef = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      if (typeof viewportRef === 'function') {
-        viewportRef(node);
-      } else if (viewportRef) {
-        (viewportRef as React.MutableRefObject<HTMLDivElement | null>).current =
-          node;
-      }
-    },
-    [viewportRef]
-  );
-
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
@@ -54,7 +39,7 @@ function ScrollArea({
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
-        ref={handleRef}
+        ref={viewportRef}
         tabIndex={tabIndex}
         data-slot="scroll-area-viewport"
         className="focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
