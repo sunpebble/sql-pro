@@ -35,43 +35,6 @@ auth.get('/debug/test', async (c) => {
   });
 });
 
-// Debug callback - shows detailed info instead of redirecting
-auth.get('/debug/callback', async (c) => {
-  const code = c.req.query('code');
-  const _state = c.req.query('state');
-
-  if (!code) {
-    return c.json({ error: 'No code provided' }, 400);
-  }
-
-  // Exchange code for access token
-  const tokenResult = await exchangeGitHubCode(c.env, code);
-  if ('error' in tokenResult) {
-    return c.json({ step: 'token_exchange', error: tokenResult.error }, 400);
-  }
-
-  // Get user info
-  const githubUser = await getGitHubUser(tokenResult.accessToken);
-  if (!githubUser) {
-    return c.json({ step: 'get_user', error: 'Failed to get user' }, 400);
-  }
-
-  // Get emails
-  const emails = await getGitHubEmails(tokenResult.accessToken);
-
-  return c.json({
-    success: true,
-    user: {
-      id: githubUser.id,
-      login: githubUser.login,
-      name: githubUser.name,
-      email: githubUser.email,
-      avatar_url: githubUser.avatar_url,
-    },
-    emails,
-    tokenPrefix: `${tokenResult.accessToken.substring(0, 10)  }...`,
-  });
-});
 
 // ============================================
 // GitHub OAuth
