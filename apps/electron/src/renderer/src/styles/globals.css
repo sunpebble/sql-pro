@@ -5,256 +5,59 @@
 /* Include @sqlpro/ui package classes in Tailwind scanning */
 @source '../../../../../../packages/ui/src';
 
-@custom-variant dark (&:is(:not(.light) *));
-@custom-variant light (&:is(.light *));
+@custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(:not(.dark) *));
 
-/* ============================================
- * DEVELOPER PROFESSIONAL DESIGN SYSTEM
- * Deep, focused, professional with orange accent
- * Dark-first: :root = dark, .light = light override
- * ============================================ */
-
-:root {
-  /* ============================================
-   * PRIMITIVE PALETTE TOKENS
-   * Raw OKLCH values from Tailwind CSS v4
-   * ============================================ */
-
-  /* Slate Neutral Scale */
-  --slate-50: oklch(0.984 0.003 247.858);
-  --slate-100: oklch(0.968 0.007 247.896);
-  --slate-200: oklch(0.929 0.013 255.508);
-  --slate-300: oklch(0.869 0.022 252.894);
-  --slate-400: oklch(0.704 0.04 256.788);
-  --slate-500: oklch(0.554 0.046 257.417);
-  --slate-600: oklch(0.446 0.043 257.281);
-  --slate-700: oklch(0.372 0.044 257.287);
-  --slate-800: oklch(0.279 0.041 260.031);
-  --slate-900: oklch(0.208 0.042 265.755);
-  --slate-950: oklch(0.129 0.042 264.695);
-
-  /* Orange Accent Scale */
-  --orange-300: oklch(0.837 0.128 66.29);
-  --orange-400: oklch(0.75 0.183 55.934);
-  --orange-500: oklch(0.705 0.213 47.604);
-  --orange-600: oklch(0.646 0.222 41.116);
-  --orange-700: oklch(0.553 0.195 38.402);
-
-  /* ============================================
-   * SEMANTIC UI COLORS - Dark Mode (Default)
-   * ============================================ */
-  color-scheme: dark;
-
-  --primary: var(--orange-400); /* oklch(0.75 0.183 55.934) */
-  --primary-foreground: oklch(0.266 0.079 36.259);
-  --primary-dark: var(--orange-500);
-  --primary-light: var(--orange-300);
-  --primary-50: oklch(0.75 0.183 55.934 / 10%);
-  --primary-100: oklch(0.75 0.183 55.934 / 20%);
-
-  --background: var(--slate-900);
-  --foreground: var(--slate-100);
-  --card: var(--slate-800);
-  --card-foreground: var(--slate-100);
-  --popover: var(--slate-800);
-  --popover-foreground: var(--slate-100);
-  --secondary: var(--slate-700);
-  /* === TEXT HIERARCHY ===
-   * Primary (--foreground): Bright, main content - Slate-100 / Slate-900
-   * Secondary (--secondary-foreground): Dimmed, descriptions - Slate-300 / Slate-600
-   * Muted (--muted-foreground): Subtle, metadata - Slate-400 / Slate-500
-   * All levels meet WCAG AA 4.5:1 contrast ratio
-   */
-  --secondary-foreground: var(
-    --slate-300
-  ); /* L=0.869, ~10:1 on Slate 900 - middle tier for descriptions/labels */
-  --muted: var(--slate-700);
-  --muted-foreground: var(--slate-400);
-  --accent: oklch(0.75 0.183 55.934 / 15%);
-  --accent-foreground: var(--orange-300);
-  --destructive: oklch(0.704 0.191 22.216);
-
-  /* Border opacity scale - Dark mode uses white with opacity */
-  --border: oklch(1 0 0 / 8%);
-  --border-subtle: oklch(1 0 0 / 6%);
-  --border-strong: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 10%);
-  --input-focus: oklch(1 0 0 / 15%);
-  --ring: var(--orange-400);
-
-  /* Chart colors - Orange-based palette */
-  --chart-1: var(--orange-400);
-  --chart-2: oklch(0.78 0.13 195); /* Cyan */
-  --chart-3: oklch(0.7 0.16 255); /* Blue */
-  --chart-4: oklch(0.7 0.14 300); /* Purple */
-  --chart-5: oklch(0.82 0.15 70); /* Amber */
-
-  --radius: 0.5rem; /* 8px base - reduced for professional look */
-
-  /* Sidebar - Dark */
-  --sidebar: var(--slate-800);
-  --sidebar-foreground: var(--slate-100);
-  --sidebar-primary: var(--orange-400);
-  --sidebar-primary-foreground: var(--slate-100);
-  --sidebar-accent: var(--slate-700);
-  --sidebar-accent-foreground: var(--slate-100);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: var(--slate-500);
-  --grid-color: oklch(1 0 0 / 6%);
-
-  /* Semantic status colors - dark mode */
-  --success: oklch(0.792 0.209 151.7); /* Green 400 */
-  --success-foreground: oklch(0.25 0.05 142);
-  --warning: oklch(0.82 0.15 70); /* Amber */
-  --warning-foreground: oklch(0.35 0.1 70);
-  --info: oklch(0.7 0.16 255); /* Blue */
-  --info-foreground: oklch(0.98 0 0);
-
-  /* Type category colors (for TypeBadge, etc.) - dark mode */
-  --type-numeric: oklch(0.7 0.17 255);
-  --type-numeric-bg: oklch(0.7 0.17 255 / 10%);
-  --type-date: oklch(0.7 0.17 300);
-  --type-date-bg: oklch(0.7 0.17 300 / 10%);
-  --type-boolean: oklch(0.792 0.209 151.7);
-  --type-boolean-bg: oklch(0.792 0.209 151.7 / 10%);
-  --type-text: var(--slate-400);
-  --type-text-bg: oklch(0.704 0.04 256.788 / 10%);
-  --type-unknown: oklch(0.65 0 0);
-  --type-unknown-bg: oklch(0.65 0 0 / 10%);
-
-  /* Accent color - Cyan for gradients */
-  --accent-cyan: oklch(0.78 0.13 195);
-}
-
-/* ============================================
- * LIGHT MODE OVERRIDE
- * Applied via .light class on html element
- * ============================================ */
-.light {
-  color-scheme: light;
-
-  --primary: var(--orange-600);
-  --primary-foreground: oklch(0.98 0.016 73.684);
-  --primary-dark: var(--orange-700);
-  --primary-light: var(--orange-500);
-  --primary-50: oklch(0.646 0.222 41.116 / 8%);
-  --primary-100: oklch(0.646 0.222 41.116 / 15%);
-
-  --background: var(--slate-50);
-  --foreground: var(--slate-900);
-  --card: white;
-  --card-foreground: var(--slate-900);
-  --popover: white;
-  --popover-foreground: var(--slate-900);
-  --secondary: var(--slate-100);
-  /* === TEXT HIERARCHY (Light Mode) === */
-  --secondary-foreground: var(
-    --slate-600
-  ); /* L=0.446, ~7:1 on Slate 50 - middle tier for descriptions/labels */
-  --muted: var(--slate-100);
-  --muted-foreground: var(--slate-500);
-  --accent: oklch(0.646 0.222 41.116 / 8%);
-  --accent-foreground: var(--orange-700);
-  --destructive: oklch(0.577 0.245 27.33);
-
-  /* Border opacity scale - Light mode uses black with opacity */
-  --border: oklch(0 0 0 / 8%);
-  --border-subtle: oklch(0 0 0 / 6%);
-  --border-strong: oklch(0 0 0 / 12%);
-  --input: oklch(0 0 0 / 8%);
-  --input-focus: oklch(0 0 0 / 12%);
-  --ring: var(--orange-600);
-
-  /* Chart colors - Light mode */
-  --chart-1: var(--orange-600);
-  --chart-2: oklch(0.75 0.15 195); /* Cyan */
-  --chart-3: oklch(0.65 0.18 255); /* Blue */
-  --chart-4: oklch(0.65 0.15 300); /* Purple */
-  --chart-5: oklch(0.769 0.188 70.08); /* Amber */
-
-  /* Sidebar - Light */
-  --sidebar: var(--slate-50);
-  --sidebar-foreground: var(--slate-900);
-  --sidebar-primary: var(--orange-600);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: var(--slate-100);
-  --sidebar-accent-foreground: var(--slate-800);
-  --sidebar-border: oklch(0 0 0 / 8%);
-  --sidebar-ring: var(--orange-600);
-  --grid-color: oklch(0 0 0 / 4%);
-
-  /* Semantic status colors - light mode */
-  --success: oklch(0.723 0.191 142.5); /* Green 500 */
-  --warning: oklch(0.769 0.188 70.08); /* Amber */
-  --info: oklch(0.65 0.18 255); /* Blue */
-
-  /* Type category colors - light mode */
-  --type-numeric: oklch(0.55 0.18 255);
-  --type-numeric-bg: oklch(0.55 0.18 255 / 10%);
-  --type-date: oklch(0.55 0.18 300);
-  --type-date-bg: oklch(0.55 0.18 300 / 10%);
-  --type-boolean: oklch(0.723 0.191 142.5);
-  --type-boolean-bg: oklch(0.723 0.191 142.5 / 10%);
-  --type-text: var(--slate-500);
-  --type-text-bg: oklch(0.554 0.046 257.417 / 10%);
-  --type-unknown: oklch(0.45 0 0);
-  --type-unknown-bg: oklch(0.55 0 0 / 10%);
-
-  /* Accent color - Cyan for gradients */
-  --accent-cyan: oklch(0.75 0.15 195);
-
-  /* Shadows - Light mode (lower opacity) */
-  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 5%);
-  --shadow-sm:
-    0 1px 3px 0 oklch(0 0 0 / 10%), 0 1px 2px -1px oklch(0 0 0 / 10%);
-  --shadow-md:
-    0 4px 6px -1px oklch(0 0 0 / 10%), 0 2px 4px -2px oklch(0 0 0 / 10%);
-  --shadow-lg:
-    0 10px 15px -3px oklch(0 0 0 / 12%), 0 4px 6px -4px oklch(0 0 0 / 10%);
-  --shadow-card: 0 4px 24px oklch(0 0 0 / 10%);
-  --shadow-card-hover: 0 20px 40px -8px oklch(0 0 0 / 15%);
-  --shadow-glow: 0 0 40px oklch(0.646 0.222 41.116 / 15%);
-  --shadow-primary: 0 8px 24px oklch(0.646 0.222 41.116 / 20%);
-}
+/* ═══════════════════════════════════════
+   NEOBRUTALISM DESIGN SYSTEM - SQL Pro App
+   Bold borders, offset shadows, flat colors
+   ═══════════════════════════════════════ */
 
 @theme inline {
-  --font-sans: 'Noto Sans Variable', sans-serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
+  --font-sans: 'Noto Sans Variable', 'Inter', sans-serif;
+
+  /* Neobrutalism core design tokens */
+  --color-main: var(--main);
+  --color-main-foreground: var(--main-foreground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-secondary-background: var(--secondary-background);
+  --color-overlay: var(--overlay);
+  --color-border: var(--border);
   --color-ring: var(--ring);
   --color-input: var(--input);
-  --color-input-focus: var(--input-focus);
-  --color-border: var(--border);
-  --color-border-subtle: var(--border-subtle);
-  --color-border-strong: var(--border-strong);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
 
-  /* Semantic status colors */
+  /* Sidebar tokens */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Chart colors */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Status colors */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
@@ -262,7 +65,7 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
 
-  /* Type category colors */
+  /* Type colors for data tables */
   --color-type-numeric: var(--type-numeric);
   --color-type-numeric-bg: var(--type-numeric-bg);
   --color-type-date: var(--type-date);
@@ -274,23 +77,19 @@
   --color-type-unknown: var(--type-unknown);
   --color-type-unknown-bg: var(--type-unknown-bg);
 
-  --radius-sm: calc(var(--radius) - 2px); /* 6px */
-  --radius-md: calc(var(--radius)); /* 8px */
-  --radius-lg: calc(var(--radius) + 2px); /* 10px */
-  --radius-xl: calc(var(--radius) + 4px); /* 12px - MAX */
-  --radius-2xl: calc(var(--radius) + 4px); /* 12px - capped same as xl */
-  --radius-3xl: calc(var(--radius) + 4px); /* 12px - capped */
-  --radius-4xl: calc(var(--radius) + 4px); /* 12px - capped */
+  /* Border radius - neobrutalism uses smaller, consistent radii */
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-3xl: 12px;
+  --radius-4xl: 12px;
 
   /* Extended font sizes */
   --font-size-2xs: 10px;
 
-  /* =============================================
-   * DESIGN SYSTEM TOKENS
-   * Unified spacing, shadows, and transitions
-   * ============================================= */
-
-  /* Spacing scale (based on 4px grid) */
+  /* Spacing scale */
   --spacing-px: 1px;
   --spacing-0: 0px;
   --spacing-0\.5: 2px;
@@ -306,21 +105,6 @@
   --spacing-10: 40px;
   --spacing-12: 48px;
 
-  /* Shadow hierarchy - Dark mode (higher opacity for visibility) */
-  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 20%);
-  --shadow-sm:
-    0 1px 3px 0 oklch(0 0 0 / 30%), 0 1px 2px -1px oklch(0 0 0 / 20%);
-  --shadow-md:
-    0 4px 6px -1px oklch(0 0 0 / 35%), 0 2px 4px -2px oklch(0 0 0 / 25%);
-  --shadow-lg:
-    0 10px 15px -3px oklch(0 0 0 / 40%), 0 4px 6px -4px oklch(0 0 0 / 30%);
-  --shadow-card: 0 4px 24px oklch(0 0 0 / 40%);
-  --shadow-card-hover: 0 20px 40px -8px oklch(0 0 0 / 50%);
-
-  /* Primary glow - uses orange accent */
-  --shadow-glow: 0 0 40px oklch(0.75 0.183 55.934 / 20%);
-  --shadow-primary: 0 8px 24px oklch(0.75 0.183 55.934 / 30%);
-
   /* Transition durations */
   --duration-fast: 100ms;
   --duration-normal: 150ms;
@@ -334,58 +118,215 @@
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ============================================
- * TRANSITION UTILITIES
- * Reusable transition classes using design tokens
- * ============================================ */
+/* ═══════════════════════════════════════
+   LIGHT MODE (Default)
+   ═══════════════════════════════════════ */
 
-/* All-property transitions */
-.transition-fast {
-  transition: all var(--duration-fast) var(--ease-out);
-}
-.transition-normal {
-  transition: all var(--duration-normal) var(--ease-out);
-}
-.transition-slow {
-  transition: all var(--duration-slow) var(--ease-out);
+:root {
+  color-scheme: light;
+
+  /* Main/Primary color - Orange */
+  --main: #f97316;
+  --main-foreground: #000000;
+
+  /* Core colors */
+  --background: #ffffff;
+  --foreground: #000000;
+  --secondary-background: #e8e8e8;
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  /* Border - black for neobrutalism */
+  --border: #000000;
+  --ring: #000000;
+  --input: #e8e8e8;
+
+  /* Card */
+  --card: #ffffff;
+  --card-foreground: #000000;
+
+  /* Popover */
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+
+  /* Primary */
+  --primary: #f97316;
+  --primary-foreground: #000000;
+
+  /* Secondary */
+  --secondary: #e8e8e8;
+  --secondary-foreground: #000000;
+
+  /* Muted */
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+
+  /* Accent */
+  --accent: #ffecd2;
+  --accent-foreground: #000000;
+
+  /* Destructive */
+  --destructive: #ef4444;
+
+  /* Radius */
+  --radius: 5px;
+
+  /* Sidebar */
+  --sidebar: #f5f5f5;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #f97316;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #e8e8e8;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #000000;
+  --sidebar-ring: #f97316;
+
+  /* Chart colors */
+  --chart-1: #f97316;
+  --chart-2: #3b82f6;
+  --chart-3: #22c55e;
+  --chart-4: #a855f7;
+  --chart-5: #f59e0b;
+
+  /* Status colors */
+  --success: #22c55e;
+  --success-foreground: #000000;
+  --warning: #f59e0b;
+  --warning-foreground: #000000;
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+
+  /* Type category colors */
+  --type-numeric: #3b82f6;
+  --type-numeric-bg: rgba(59, 130, 246, 0.1);
+  --type-date: #a855f7;
+  --type-date-bg: rgba(168, 85, 247, 0.1);
+  --type-boolean: #22c55e;
+  --type-boolean-bg: rgba(34, 197, 94, 0.1);
+  --type-text: #6b7280;
+  --type-text-bg: rgba(107, 114, 128, 0.1);
+  --type-unknown: #9ca3af;
+  --type-unknown-bg: rgba(156, 163, 175, 0.1);
+
+  /* Neobrutalism shadows */
+  --shadow: 4px 4px 0px 0px #000000;
+  --shadow-sm: 2px 2px 0px 0px #000000;
+  --shadow-lg: 6px 6px 0px 0px #000000;
 }
 
-/* Color-only transitions (lighter, for backgrounds) */
-.transition-colors-fast {
-  transition:
-    color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out);
+/* ═══════════════════════════════════════
+   DARK MODE
+   ═══════════════════════════════════════ */
+
+.dark {
+  color-scheme: dark;
+
+  /* Main/Primary color */
+  --main: #fb923c;
+  --main-foreground: #000000;
+
+  /* Core colors */
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --secondary-background: #2a2a2a;
+  --overlay: rgba(0, 0, 0, 0.8);
+
+  /* Border - white for visibility */
+  --border: #ffffff;
+  --ring: #ffffff;
+  --input: #2a2a2a;
+
+  /* Card */
+  --card: #262626;
+  --card-foreground: #ffffff;
+
+  /* Popover */
+  --popover: #262626;
+  --popover-foreground: #ffffff;
+
+  /* Primary */
+  --primary: #fb923c;
+  --primary-foreground: #000000;
+
+  /* Secondary */
+  --secondary: #404040;
+  --secondary-foreground: #ffffff;
+
+  /* Muted */
+  --muted: #404040;
+  --muted-foreground: #a3a3a3;
+
+  /* Accent */
+  --accent: #44403c;
+  --accent-foreground: #ffffff;
+
+  /* Destructive */
+  --destructive: #f87171;
+
+  /* Sidebar */
+  --sidebar: #1f1f1f;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #fb923c;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #ffffff;
+  --sidebar-ring: #fb923c;
+
+  /* Status colors */
+  --success: #4ade80;
+  --success-foreground: #000000;
+  --warning: #fbbf24;
+  --warning-foreground: #000000;
+  --info: #60a5fa;
+  --info-foreground: #000000;
+
+  /* Type category colors */
+  --type-numeric: #60a5fa;
+  --type-numeric-bg: rgba(96, 165, 250, 0.15);
+  --type-date: #c084fc;
+  --type-date-bg: rgba(192, 132, 252, 0.15);
+  --type-boolean: #4ade80;
+  --type-boolean-bg: rgba(74, 222, 128, 0.15);
+  --type-text: #9ca3af;
+  --type-text-bg: rgba(156, 163, 175, 0.15);
+  --type-unknown: #6b7280;
+  --type-unknown-bg: rgba(107, 114, 128, 0.15);
+
+  /* Dark mode shadows with white */
+  --shadow: 4px 4px 0px 0px #ffffff;
+  --shadow-sm: 2px 2px 0px 0px #ffffff;
+  --shadow-lg: 6px 6px 0px 0px #ffffff;
 }
+
+/* ═══════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════ */
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
   }
+
   body {
-    @apply bg-background text-foreground font-sans;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
   }
+
   html {
-    @apply font-sans;
-    /* Smooth scrolling for native feel */
+    font-family: var(--font-sans);
     scroll-behavior: smooth;
   }
 
-  /* ============================================
-   * NATIVE APP EXPERIENCE STYLES
-   * Eliminate browser-like behaviors
-   * ============================================ */
-
-  /* Disable text selection on UI elements (native apps don't allow selecting labels) */
+  /* Native app experience - disable text selection on UI */
   body {
     -webkit-user-select: none;
     user-select: none;
     cursor: default;
-    /* Prevent overscroll bounce on macOS */
     overscroll-behavior: none;
   }
 
-  /* Allow text selection only in editable/content areas */
+  /* Allow text selection in editable areas */
   input,
   textarea,
   [contenteditable='true'],
@@ -393,73 +334,45 @@
   code,
   .selectable,
   [data-selectable],
-  /* Monaco editor content */
   .monaco-editor .view-lines,
-  /* Table cell content when editing */
   [data-editing='true'],
-  /* Query results that users might want to copy */
   [data-table-font] td {
     -webkit-user-select: text;
     user-select: text;
     cursor: text;
   }
 
-  /* macOS-style native scrollbars - dark mode (default) */
+  /* Neobrutalism scrollbars */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--secondary-background);
+    border-left: 2px solid var(--border);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.8 0 0 / 20%);
-    border-radius: 4px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
+    background: var(--main);
+    border: 2px solid var(--border);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.8 0 0 / 35%);
-    background-clip: padding-box;
+    background: var(--foreground);
   }
 
-  /* Hide scrollbar until hover (native macOS behavior) */
-  ::-webkit-scrollbar-thumb:not(:hover) {
-    background: oklch(0.8 0 0 / 12%);
-    background-clip: padding-box;
-  }
-
-  /* Light mode scrollbar */
-  .light ::-webkit-scrollbar-thumb {
-    background: oklch(0.5 0 0 / 20%);
-    background-clip: padding-box;
-  }
-
-  .light ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.5 0 0 / 35%);
-    background-clip: padding-box;
-  }
-
-  .light ::-webkit-scrollbar-thumb:not(:hover) {
-    background: oklch(0.5 0 0 / 12%);
-    background-clip: padding-box;
-  }
-
-  /* Remove outline focus ring on click (use :focus-visible for keyboard only) */
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-
-  /* Subtle focus ring for keyboard navigation only */
+  /* Focus ring */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
 
-  /* Disable image/element dragging (native app behavior) */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Disable image dragging */
   img,
   svg,
   [draggable='false'] {
@@ -467,7 +380,7 @@
     user-drag: none;
   }
 
-  /* Disable text cursor on non-editable elements */
+  /* Cursor defaults */
   label,
   span,
   p,
@@ -482,7 +395,7 @@
     cursor: default;
   }
 
-  /* Proper cursor for interactive elements */
+  /* Interactive elements cursor */
   a,
   button,
   [role='button'],
@@ -499,93 +412,81 @@
     cursor: pointer !important;
   }
 
-  /* Ensure children of interactive elements inherit cursor */
-  a *,
-  button *,
-  [role='button'] *,
-  [role='tab'] *,
-  [role='menuitem'] *,
-  [role='option'] *,
-  [role='checkbox'] *,
-  [role='radio'] *,
-  [role='switch'] *,
-  label[for] *,
-  .cursor-pointer * {
-    cursor: inherit !important;
-  }
-
-  /* Disabled state cursor for all interactive elements */
-  a[disabled],
+  /* Disabled state */
   button:disabled,
-  button[disabled],
-  [role='button'][aria-disabled='true'],
-  [role='tab'][aria-disabled='true'],
-  [role='menuitem'][aria-disabled='true'],
-  [role='option'][aria-disabled='true'],
-  [role='checkbox'][aria-disabled='true'],
-  [role='radio'][aria-disabled='true'],
-  [role='switch'][aria-disabled='true'],
-  input:disabled,
-  select:disabled,
-  textarea:disabled,
-  [data-disabled],
-  .disabled {
+  [disabled],
+  [aria-disabled='true'] {
     cursor: not-allowed !important;
-    pointer-events: auto !important; /* Allow cursor to show even when disabled */
+    opacity: 0.5;
   }
 }
 
-/* Font size inheritance - use CSS variables set by useApplyFont */
+/* ═══════════════════════════════════════
+   NEOBRUTALISM UTILITY CLASSES
+   ═══════════════════════════════════════ */
+
+/* Base rounded corners */
+.rounded-base {
+  border-radius: 5px;
+}
+
+/* Shadow utilities */
+.shadow-shadow {
+  box-shadow: var(--shadow);
+}
+
+.shadow-shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Hover translate effect */
+.translate-x-boxShadowX {
+  --tw-translate-x: 4px;
+}
+
+.translate-y-boxShadowY {
+  --tw-translate-y: 4px;
+}
+
+/* Font utilities */
+.font-base {
+  font-weight: 500;
+}
+
+.font-heading {
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════
+   FONT SIZE INHERITANCE
+   ═══════════════════════════════════════ */
+
 :root {
-  /* Default font sizes (will be overridden by useApplyFont) */
   --font-ui-size: 14px;
   --font-table-size: 13px;
   --font-editor-size: 14px;
 }
 
-/* Elements with explicit font-size style should have children inherit it */
-[style*='font-size'] {
-  /* Make sure children inherit font size unless they have their own explicit size */
-  & *:not([style*='font-size']) {
-    font-size: inherit;
-  }
-
-  /* Override Tailwind fixed-size text classes within font-styled containers */
-  & .text-xs,
-  & .text-sm,
-  & .text-base {
-    font-size: inherit;
-  }
-
-  /* Allow smaller relative sizes for specific UI elements */
-  & .text-\[10px\],
-  & .text-\[11px\] {
-    font-size: 0.8em;
-  }
-}
-
-/* Table elements should inherit font size */
-table,
-table * {
-  font-size: inherit;
-}
-
-/* Specific areas that should use the UI font size variable */
 [data-ui-font] {
   font-size: var(--font-ui-size);
 }
 
-/* Table data areas should use table font size variable */
 [data-table-font] {
   font-size: var(--font-table-size);
 }
 
-/* Editor areas should use editor font size variable */
 [data-editor-font] {
   font-size: var(--font-editor-size);
 }
 
-/* macOS window drag region */
+/* ═══════════════════════════════════════
+   TITLEBAR / DRAG REGION
+   ═══════════════════════════════════════ */
+
 .titlebar {
   -webkit-app-region: drag;
 }
@@ -594,13 +495,11 @@ table * {
   -webkit-app-region: no-drag;
 }
 
-/* Tauri drag region - elements with data-tauri-drag-region are draggable */
 [data-tauri-drag-region] {
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Ensure buttons and interactive elements are not draggable */
 button,
 a,
 input,
@@ -610,211 +509,61 @@ textarea,
   -webkit-app-region: no-drag;
 }
 
-/* ============================================
- * DEVELOPER PROFESSIONAL BRANDING
- * Orange accent theme for professional identity
- * ============================================ */
+/* ═══════════════════════════════════════
+   REACT FLOW CUSTOMIZATION
+   ═══════════════════════════════════════ */
 
-:root {
-  /* Branded text gradient - Primary Orange to lighter Orange */
-  --gradient-primary: linear-gradient(
-    135deg,
-    oklch(0.75 0.183 55.934) 0%,
-    oklch(0.837 0.128 66.29) 100%
-  );
-}
-
-.light {
-  --gradient-primary: linear-gradient(
-    135deg,
-    oklch(0.646 0.222 41.116) 0%,
-    oklch(0.705 0.213 47.604) 100%
-  );
-}
-
-/* Primary gradient text utility */
-.text-gradient-primary {
-  background: var(--gradient-primary);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Primary glow effects */
-.glow-primary {
-  box-shadow: 0 0 40px oklch(0.75 0.183 55.934 / 35%);
-}
-
-.light .glow-primary {
-  box-shadow: 0 0 40px oklch(0.646 0.222 41.116 / 30%);
-}
-
-.glow-primary-pulse {
-  animation: pulse-primary 3s ease-in-out infinite;
-}
-
-@keyframes pulse-primary {
-  0%,
-  100% {
-    box-shadow: 0 4px 30px oklch(0.75 0.183 55.934 / 30%);
-  }
-  50% {
-    box-shadow:
-      0 8px 50px oklch(0.75 0.183 55.934 / 40%),
-      0 0 80px oklch(0.75 0.183 55.934 / 20%);
-  }
-}
-
-.light .glow-primary-pulse {
-  animation: pulse-primary-light 3s ease-in-out infinite;
-}
-
-@keyframes pulse-primary-light {
-  0%,
-  100% {
-    box-shadow: 0 4px 30px oklch(0.646 0.222 41.116 / 25%);
-  }
-  50% {
-    box-shadow:
-      0 8px 50px oklch(0.646 0.222 41.116 / 35%),
-      0 0 80px oklch(0.646 0.222 41.116 / 15%);
-  }
-}
-
-/* Grid background patterns */
-.bg-grid-dot {
-  background-image: radial-gradient(
-    circle,
-    var(--grid-color) 1px,
-    transparent 1px
-  );
-  background-size: 24px 24px;
-}
-
-.bg-grid-line {
-  background-image:
-    linear-gradient(var(--grid-color) 1px, transparent 1px),
-    linear-gradient(to right, var(--grid-color) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Subtle grid for content areas */
-.bg-grid-subtle {
-  background-image:
-    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-  background-size: 48px 48px;
-  background-position: -1px -1px;
-}
-
-/* Small grid for data areas */
-.bg-grid-small {
-  background-image:
-    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-  background-size: 16px 16px;
-  background-position: -1px -1px;
-}
-
-/* Grid mask for fade effect */
-.bg-grid-mask {
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 20%,
-    black 80%,
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 20%,
-    black 80%,
-    transparent
-  );
-}
-
-/* React Flow theme customization */
-/* ReactFlow's colorMode prop adds 'light' or 'dark' class to the container.
-   Our design system is dark-first (:root = dark, .light = light override).
-   So we need to explicitly set variables for both modes on the .react-flow element. */
 .react-flow {
-  /* Base variables that work for both modes */
-  --xy-edge-stroke-width-default: 1.5;
-  --xy-handle-background-color-default: var(--primary);
+  --xy-edge-stroke-width-default: 2;
+  --xy-handle-background-color-default: var(--main);
   --xy-handle-border-color-default: var(--border);
 }
 
-/* Dark mode - ReactFlow adds .dark class when colorMode="dark" */
 .react-flow.dark {
-  --xy-background-color-default: var(--slate-900);
-  --xy-background-pattern-color-default: oklch(1 0 0 / 6%);
-  --xy-node-background-color-default: var(--slate-800);
-  --xy-node-border-color-default: oklch(1 0 0 / 8%);
-  --xy-node-color-default: var(--slate-100);
-  --xy-edge-stroke-default: var(--slate-400);
-  --xy-minimap-background-color-default: var(--slate-900);
-  --xy-minimap-mask-background-color-default: var(--slate-700);
-  --xy-controls-button-background-color-default: var(--slate-800);
-  --xy-controls-button-border-color-default: oklch(1 0 0 / 8%);
-  --xy-controls-button-color-default: var(--slate-100);
-  background-color: var(--slate-900) !important;
+  --xy-background-color-default: var(--background);
+  --xy-node-background-color-default: var(--card);
+  --xy-node-border-color-default: var(--border);
+  --xy-node-color-default: var(--foreground);
+  --xy-edge-stroke-default: var(--foreground);
+  background-color: var(--background) !important;
 }
 
-.react-flow.dark .react-flow__background {
-  background-color: var(--slate-900) !important;
-}
-
-/* Light mode - ReactFlow adds .light class when colorMode="light" */
 .react-flow.light {
-  --xy-background-color-default: var(--slate-50);
-  --xy-background-pattern-color-default: oklch(0 0 0 / 4%);
-  --xy-node-background-color-default: white;
-  --xy-node-border-color-default: oklch(0 0 0 / 8%);
-  --xy-node-color-default: var(--slate-900);
-  --xy-edge-stroke-default: var(--slate-500);
-  --xy-minimap-background-color-default: var(--slate-50);
-  --xy-minimap-mask-background-color-default: var(--slate-100);
-  --xy-controls-button-background-color-default: white;
-  --xy-controls-button-border-color-default: oklch(0 0 0 / 8%);
-  --xy-controls-button-color-default: var(--slate-900);
-  background-color: var(--slate-50) !important;
+  --xy-background-color-default: var(--background);
+  --xy-node-background-color-default: var(--card);
+  --xy-node-border-color-default: var(--border);
+  --xy-node-color-default: var(--foreground);
+  --xy-edge-stroke-default: var(--foreground);
+  background-color: var(--background) !important;
 }
 
-.react-flow.light .react-flow__background {
-  background-color: var(--slate-50) !important;
-}
-
-/* Query Builder node styles */
 .react-flow__node {
   overflow: visible !important;
 }
 
-/* Ensure handles are visible outside node boundaries */
 .react-flow__handle {
   z-index: 10;
 }
 
-/* Connection line while dragging */
 .react-flow__connection-path {
-  stroke: var(--primary) !important;
+  stroke: var(--main) !important;
   stroke-width: 2px !important;
 }
 
-/* Edge (connection) line styles */
 .react-flow__edge-path {
   stroke: var(--muted-foreground);
   stroke-width: 2px;
 }
 
-/* Fix Radix ScrollArea horizontal scrolling issue */
-/* Radix adds display:table inline style to inner div which prevents horizontal scroll */
+/* Fix Radix ScrollArea */
 [data-radix-scroll-area-viewport] > div {
   display: block !important;
 }
 
-/* Shimmer animation for loading states */
+/* ═══════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════ */
+
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -824,29 +573,12 @@ textarea,
   }
 }
 
-/* Row highlight animation for locate in table feature */
 @keyframes row-highlight {
   0% {
-    background-color: oklch(0.75 0.183 55.934 / 40%);
+    background-color: rgba(249, 115, 22, 0.4);
   }
   50% {
-    background-color: oklch(0.75 0.183 55.934 / 25%);
-  }
-  100% {
-    background-color: transparent;
-  }
-}
-
-.light .row-highlight-animation {
-  animation: row-highlight-light 2s ease-out forwards;
-}
-
-@keyframes row-highlight-light {
-  0% {
-    background-color: oklch(0.646 0.222 41.116 / 40%);
-  }
-  50% {
-    background-color: oklch(0.646 0.222 41.116 / 25%);
+    background-color: rgba(249, 115, 22, 0.25);
   }
   100% {
     background-color: transparent;
@@ -861,64 +593,6 @@ textarea,
   background-color: inherit !important;
 }
 
-/* GPU compositing for data table scroll to reduce flickering */
-[data-slot='scroll-area-viewport'] {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-/* CSS containment for table performance optimization */
-/* Limits style recalculation and layout scope to improve rendering performance */
-table {
-  table-layout: fixed;
-  contain: layout style;
-}
-
-tbody {
-  contain: layout;
-  /* Hint browser to optimize for scroll/transform changes */
-  will-change: transform;
-}
-
-tr {
-  contain: layout style;
-}
-
-td,
-th {
-  contain: layout style paint;
-}
-
-/* Optimize scroll container for compositing */
-[data-slot='scroll-area-viewport'] table {
-  /* Force GPU layer for smoother scrolling */
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* macOS vibrancy support - areas that should be transparent for blur effect */
-[data-vibrancy] {
-  background-color: transparent !important;
-}
-
-/* Dark mode vibrancy (default) - slightly darker overlay for better contrast */
-:root:not(.light) [data-vibrancy] {
-  background-color: rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Light mode vibrancy - very subtle white overlay */
-.light [data-vibrancy] {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* ============================================
- * LAYOUT ANIMATIONS
- * Staggered reveal, entrance, and micro-interactions
- * ============================================ */
-
-/* Fade in up animation */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -931,11 +605,11 @@ th {
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
+  animation: fade-in-up 0.5s ease-out forwards;
   opacity: 0;
 }
 
-/* Staggered delays for children */
+/* Stagger delays */
 .stagger-1 {
   animation-delay: 0.1s;
 }
@@ -955,11 +629,10 @@ th {
   animation-delay: 0.6s;
 }
 
-/* Scale in animation */
 @keyframes scale-in {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -968,220 +641,116 @@ th {
 }
 
 .animate-scale-in {
-  animation: scale-in 0.5s ease-out forwards;
+  animation: scale-in 0.4s ease-out forwards;
   opacity: 0;
 }
 
-/* Slide in from left */
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* ═══════════════════════════════════════
+   TABLE PERFORMANCE OPTIMIZATION
+   ═══════════════════════════════════════ */
+
+[data-slot='scroll-area-viewport'] {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-.animate-slide-in-left {
-  animation: slide-in-left 0.5s ease-out forwards;
-  opacity: 0;
+table {
+  table-layout: fixed;
+  contain: layout style;
 }
 
-/* Slide in from right */
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+tbody {
+  contain: layout;
+  will-change: transform;
 }
 
-.animate-slide-in-right {
-  animation: slide-in-right 0.5s ease-out forwards;
-  opacity: 0;
+tr {
+  contain: layout style;
 }
 
-/* Floating animation for decorative elements */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+td,
+th {
+  contain: layout style paint;
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
+[data-slot='scroll-area-viewport'] table {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-/* ============================================
- * GLASSMORPHISM EFFECTS
- * Modern glass-like UI elements
- * ============================================ */
+/* ═══════════════════════════════════════
+   NEOBRUTALISM COMPONENT PATTERNS
+   ═══════════════════════════════════════ */
 
-.glass {
-  background: oklch(0.15 0 0 / 70%);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid oklch(1 0 0 / 10%);
+/* Neobrutalism button hover effect */
+.btn-neo {
+  transition: all 0.15s ease;
 }
 
-.light .glass {
-  background: oklch(1 0 0 / 60%);
-  border: 1px solid oklch(1 0 0 / 20%);
+.btn-neo:hover {
+  transform: translate(4px, 4px);
+  box-shadow: none !important;
 }
 
-.glass-primary {
-  background: linear-gradient(
-    135deg,
-    oklch(0.75 0.183 55.934 / 12%) 0%,
-    oklch(0.837 0.128 66.29 / 6%) 100%
-  );
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid oklch(0.75 0.183 55.934 / 20%);
+/* Neobrutalism card hover effect */
+.card-neo {
+  transition: all 0.15s ease;
 }
 
-.light .glass-primary {
-  background: linear-gradient(
-    135deg,
-    oklch(0.646 0.222 41.116 / 8%) 0%,
-    oklch(0.705 0.213 47.604 / 4%) 100%
-  );
-  border: 1px solid oklch(0.646 0.222 41.116 / 25%);
+.card-neo:hover {
+  transform: translate(4px, 4px);
+  box-shadow: none !important;
 }
 
-/* ============================================
- * PRIMARY THEME INTERACTIVE UTILITIES
- * Reusable classes for themed UI elements
- * ============================================ */
-
-/* Primary background opacities - dark mode (default) */
-.bg-primary-5 {
-  background-color: oklch(0.75 0.183 55.934 / 5%);
-}
-.bg-primary-8 {
-  background-color: oklch(0.75 0.183 55.934 / 8%);
-}
-.bg-primary-10 {
-  background-color: oklch(0.75 0.183 55.934 / 10%);
-}
-.bg-primary-15 {
-  background-color: oklch(0.75 0.183 55.934 / 15%);
+/* Primary gradient text (legacy support) */
+.text-gradient-primary {
+  background: linear-gradient(135deg, var(--main) 0%, #fdba74 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.light .bg-primary-5 {
-  background-color: oklch(0.646 0.222 41.116 / 5%);
-}
-.light .bg-primary-8 {
-  background-color: oklch(0.646 0.222 41.116 / 8%);
-}
-.light .bg-primary-10 {
-  background-color: oklch(0.646 0.222 41.116 / 10%);
-}
-.light .bg-primary-15 {
-  background-color: oklch(0.646 0.222 41.116 / 15%);
+/* Glow effects (adapted for neobrutalism) */
+.glow-primary {
+  box-shadow:
+    var(--shadow),
+    0 0 20px rgba(249, 115, 22, 0.3);
 }
 
-/* Interactive primary button - ghost style with primary hover */
-.btn-primary-ghost {
-  color: var(--muted-foreground);
-  background-color: transparent;
-  transition:
-    color 150ms ease,
-    background-color 150ms ease;
-}
-.btn-primary-ghost:hover {
-  color: var(--primary);
-  background-color: oklch(0.75 0.183 55.934 / 10%);
-}
-.light .btn-primary-ghost:hover {
-  background-color: oklch(0.646 0.222 41.116 / 10%);
+/* Grid backgrounds */
+.bg-grid-dot {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-/* Interactive primary button - active/selected state */
-.btn-primary-active {
-  color: var(--primary);
-  background-color: oklch(0.75 0.183 55.934 / 15%);
-}
-.light .btn-primary-active {
-  background-color: oklch(0.646 0.222 41.116 / 15%);
+.bg-grid-line {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-/* Primary tab/pill - for mode switchers and segmented controls */
-.pill-primary {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  border-radius: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all 150ms ease;
-  color: var(--muted-foreground);
-}
-.pill-primary:hover {
-  color: var(--primary);
-}
-.pill-primary.active {
-  color: var(--primary);
-  background-color: oklch(0.75 0.183 55.934 / 15%);
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-}
-.light .pill-primary.active {
-  background-color: oklch(0.646 0.222 41.116 / 15%);
+.dark .bg-grid-line {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
 }
 
-/* Primary segmented control container */
-.segmented-primary {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  border-radius: 0.5rem;
-  background-color: oklch(0.75 0.183 55.934 / 5%);
-  padding: 0.25rem;
-}
-.light .segmented-primary {
-  background-color: oklch(0.646 0.222 41.116 / 5%);
-}
+/* ═══════════════════════════════════════
+   TOOLBAR AND PANEL UTILITIES
+   ═══════════════════════════════════════ */
 
-/* Primary hover effect for list items */
-.hover-primary {
-  transition:
-    color 150ms ease,
-    background-color 150ms ease;
-}
-.hover-primary:hover {
-  color: var(--primary);
-  background-color: oklch(0.75 0.183 55.934 / 8%);
-}
-.light .hover-primary:hover {
-  background-color: oklch(0.646 0.222 41.116 / 5%);
-}
-
-/* ============================================
- * TOOLBAR AND CONTROL BAR UTILITIES
- * Common patterns for header bars and toolbars
- * ============================================ */
-
-/* Toolbar container - horizontal action bar with controls */
 .toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
 }
 
-/* Toolbar section - groups of related controls */
 .toolbar-section {
   display: flex;
   flex-shrink: 0;
@@ -1189,42 +758,16 @@ th {
   gap: 0.5rem;
 }
 
-.toolbar-section-sm {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-/* Control bar - compact horizontal bar for filters/actions */
-.control-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.375rem 0.75rem;
-  background-color: var(--muted);
-  border-radius: var(--radius);
-}
-
-/* Action group - inline button group */
-.action-group {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-/* Panel header - consistent header for side panels */
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
   background-color: var(--card);
 }
 
-/* Panel header title area */
 .panel-header-title {
   display: flex;
   align-items: center;
@@ -1233,7 +776,6 @@ th {
   flex: 1;
 }
 
-/* Panel header actions */
 .panel-header-actions {
   display: flex;
   flex-shrink: 0;
@@ -1241,470 +783,122 @@ th {
   gap: 0.25rem;
 }
 
-/* ============================================
- * CARD AND CONTAINER UTILITIES
- * Common card patterns for settings and content
- * ============================================ */
+/* ═══════════════════════════════════════
+   CARD UTILITIES
+   ═══════════════════════════════════════ */
 
-/* Base card - rounded border with padding */
 .card-base {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--border);
   padding: 1rem;
+  box-shadow: var(--shadow);
 }
 
-.card-base-sm {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 0.75rem;
-}
-
-/* Interactive card - with hover effects */
 .card-interactive {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--border);
   padding: 0.75rem;
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease;
-}
-.card-interactive:hover {
-  border-color: var(--primary);
-  background-color: var(--muted);
+  box-shadow: var(--shadow);
+  transition: all 0.15s ease;
 }
 
-/* Setting item row - common pattern in settings */
+.card-interactive:hover {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
 .setting-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--border);
   padding: 0.75rem;
 }
 
-/* Content section with vertical spacing */
-.content-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.content-section-sm {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* ============================================
- * FLOATING DOCK STYLES
- * Bottom-centered navigation dock
- * ============================================ */
-
-.floating-dock {
-  position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 50;
-  padding: 6px 12px;
-  border-radius: var(--radius-xl); /* 12px - capped */
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.floating-dock-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  transition: all 0.2s ease-out;
-}
-
-.floating-dock-item:hover {
-  transform: translateY(-4px) scale(1.1);
-  background: oklch(0.75 0.183 55.934 / 15%);
-}
-
-.light .floating-dock-item:hover {
-  background: oklch(0.646 0.222 41.116 / 15%);
-}
-
-.floating-dock-item.active {
-  background: linear-gradient(
-    135deg,
-    oklch(0.75 0.183 55.934 / 25%) 0%,
-    oklch(0.837 0.128 66.29 / 15%) 100%
-  );
-  box-shadow: 0 0 20px oklch(0.75 0.183 55.934 / 30%);
-}
-
-.light .floating-dock-item.active {
-  background: linear-gradient(
-    135deg,
-    oklch(0.646 0.222 41.116 / 25%) 0%,
-    oklch(0.705 0.213 47.604 / 15%) 100%
-  );
-  box-shadow: 0 0 20px oklch(0.646 0.222 41.116 / 30%);
-}
-
-.floating-dock-tooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.2s ease-out;
-  white-space: nowrap;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.floating-dock-item:hover .floating-dock-tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* ============================================
- * COMMAND BAR STYLES
- * Floating titlebar with glass effect
- * ============================================ */
-
-.command-bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: 48px;
-  padding: 0 16px;
-  border-bottom: 1px solid oklch(0.75 0.183 55.934 / 10%);
-  background: linear-gradient(
-    to right,
-    oklch(0.75 0.183 55.934 / 5%) 0%,
-    transparent 20%,
-    transparent 80%,
-    oklch(0.75 0.183 55.934 / 5%) 100%
-  );
-}
-
-.light .command-bar {
-  border-bottom: 1px solid oklch(0.646 0.222 41.116 / 10%);
-  background: linear-gradient(
-    to right,
-    oklch(0.646 0.222 41.116 / 3%) 0%,
-    transparent 20%,
-    transparent 80%,
-    oklch(0.646 0.222 41.116 / 3%) 100%
-  );
-}
-
-/* ============================================
- * WELCOME SCREEN SPECIAL EFFECTS
- * Immersive entry experience
- * ============================================ */
-
-/* Radial gradient spotlight effect */
-.spotlight {
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    oklch(0.75 0.183 55.934 / 20%) 0%,
-    oklch(0.75 0.183 55.934 / 8%) 40%,
-    transparent 70%
-  );
-  pointer-events: none;
-  filter: blur(40px);
-}
-
-.light .spotlight {
-  background: radial-gradient(
-    circle,
-    oklch(0.646 0.222 41.116 / 15%) 0%,
-    oklch(0.646 0.222 41.116 / 5%) 40%,
-    transparent 70%
-  );
-}
-
-/* Noise texture overlay for depth */
-.noise-overlay {
-  position: absolute;
-  inset: 0;
-  opacity: 0.05;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
-
-.light .noise-overlay {
-  opacity: 0.03;
-}
-
-/* Modern card frame */
-.card-frame {
-  position: relative;
-}
-
-.card-frame::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  padding: 2px;
-  background: linear-gradient(
-    135deg,
-    oklch(0.75 0.183 55.934 / 50%) 0%,
-    oklch(0.75 0.183 55.934 / 20%) 25%,
-    oklch(0.837 0.128 66.29 / 15%) 50%,
-    oklch(0.75 0.183 55.934 / 20%) 75%,
-    oklch(0.75 0.183 55.934 / 50%) 100%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.light .card-frame::before {
-  background: linear-gradient(
-    135deg,
-    oklch(0.646 0.222 41.116 / 40%) 0%,
-    oklch(0.646 0.222 41.116 / 15%) 25%,
-    oklch(0.705 0.213 47.604 / 10%) 50%,
-    oklch(0.646 0.222 41.116 / 15%) 75%,
-    oklch(0.646 0.222 41.116 / 40%) 100%
-  );
-}
-
-/* ============================================
- * LEGACY GOLD THEME COMPATIBILITY
- * Gold class names now map to primary (orange) colors
- * for backward compatibility during migration
- * ============================================ */
+/* ═══════════════════════════════════════
+   LEGACY GOLD THEME COMPATIBILITY
+   Now maps to primary (orange) colors
+   ═══════════════════════════════════════ */
 
 :root {
-  /* Gold variables now use primary orange colors (dark mode) */
-  --gold: var(--primary);
-  --gold-bright: var(--primary);
-  --gold-dark: var(--primary-dark);
-  --gold-glow: oklch(0.75 0.183 55.934 / 40%);
-  --gold-subtle: oklch(0.75 0.183 55.934 / 10%);
-  --gold-muted: oklch(0.55 0.14 55);
+  --gold: var(--main);
+  --gold-bright: var(--main);
+  --gold-dark: #ea580c;
+  --gold-glow: rgba(249, 115, 22, 0.4);
+  --gold-subtle: rgba(249, 115, 22, 0.1);
 }
 
-.light {
-  --gold: var(--primary);
-  --gold-bright: var(--primary);
-  --gold-dark: var(--primary-dark);
-  --gold-glow: oklch(0.646 0.222 41.116 / 35%);
-  --gold-subtle: oklch(0.646 0.222 41.116 / 8%);
-  --gold-muted: oklch(0.55 0.14 45);
-}
-
-/* Gold gradient text utility (now uses primary orange) */
 .text-gradient-gold {
-  background: linear-gradient(
-    135deg,
-    oklch(0.75 0.183 55.934) 0%,
-    oklch(0.837 0.128 66.29) 50%,
-    oklch(0.75 0.183 55.934) 100%
-  );
-  background-size: 200% auto;
+  background: linear-gradient(135deg, var(--main) 0%, #fdba74 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer-gold 4s ease-in-out infinite;
 }
 
-@keyframes shimmer-gold {
-  0%,
-  100% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 200% center;
-  }
-}
-
-/* Gold glow effects (now uses primary orange) */
 .glow-gold {
-  box-shadow: 0 0 40px var(--gold-glow);
+  box-shadow:
+    var(--shadow),
+    0 0 20px var(--gold-glow);
 }
 
-.glow-gold-pulse {
-  animation: pulse-gold 3s ease-in-out infinite;
-}
-
-@keyframes pulse-gold {
-  0%,
-  100% {
-    box-shadow: 0 4px 30px var(--gold-glow);
-  }
-  50% {
-    box-shadow:
-      0 8px 50px var(--gold-glow),
-      0 0 80px oklch(0.75 0.183 55.934 / 15%);
-  }
-}
-
-/* ============================================
- * LEGACY GOLD UTILITY CLASSES
- * These map to primary colors for compatibility
- * ============================================ */
-
-/* Glass effect with primary tint - dark mode (default) */
-.glass-gold {
-  background: linear-gradient(
-    135deg,
-    oklch(0.75 0.183 55.934 / 12%) 0%,
-    oklch(0.837 0.128 66.29 / 6%) 50%,
-    oklch(0.75 0.183 55.934 / 8%) 100%
-  );
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.75 0.183 55.934 / 30%);
-}
-
-.light .glass-gold {
-  background: linear-gradient(
-    135deg,
-    oklch(0.646 0.222 41.116 / 8%) 0%,
-    oklch(0.705 0.213 47.604 / 4%) 50%,
-    oklch(0.646 0.222 41.116 / 6%) 100%
-  );
-  border: 1px solid oklch(0.646 0.222 41.116 / 25%);
-}
-
-/* Active/selected state - dark mode (default) */
 .btn-gold-active {
-  color: var(--primary);
-  background-color: oklch(0.75 0.183 55.934 / 15%);
-}
-.light .btn-gold-active {
-  background-color: oklch(0.646 0.222 41.116 / 15%);
+  color: var(--main);
+  background-color: var(--gold-subtle);
 }
 
-/* Hover effect for list items - dark mode (default) */
-.hover-gold {
-  transition:
-    color 150ms ease,
-    background-color 150ms ease;
-}
 .hover-gold:hover {
-  color: var(--primary);
-  background-color: oklch(0.75 0.183 55.934 / 8%);
-}
-.light .hover-gold:hover {
-  background-color: oklch(0.646 0.222 41.116 / 8%);
+  color: var(--main);
+  background-color: var(--gold-subtle);
 }
 
-/* Background with 5% primary opacity - dark mode (default) */
-.bg-gold-5 {
-  background-color: oklch(0.75 0.183 55.934 / 5%);
-}
-.light .bg-gold-5 {
-  background-color: oklch(0.646 0.222 41.116 / 5%);
-}
-
-/* Text color with primary */
 .text-gold {
-  color: var(--primary);
+  color: var(--main);
 }
 
-/* Background with primary color */
 .bg-gold {
-  background-color: var(--primary);
-}
-.bg-gold:hover {
-  background-color: var(--primary-dark);
+  background-color: var(--main);
 }
 
-/* Border with primary color */
 .border-gold {
-  border-color: var(--primary);
+  border-color: var(--main);
 }
 
-/* Shadow with primary glow */
-.shadow-gold {
-  box-shadow: 0 4px 20px var(--gold-glow);
-}
+/* ═══════════════════════════════════════
+   TOOLTIP KBD STYLING
+   ═══════════════════════════════════════ */
 
-/* Geometric hexagon background (legacy) - dark mode (default) */
-.bg-hex-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpath d='M30 0L60 15v22L30 52 0 37V15z' fill='none' stroke='%23fb923c18' stroke-width='0.5'/%3E%3C/svg%3E");
-  background-size: 60px 52px;
-}
-
-.light .bg-hex-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpath d='M30 0L60 15v22L30 52 0 37V15z' fill='none' stroke='%23ea580c12' stroke-width='0.5'/%3E%3C/svg%3E");
-}
-
-/* Art Deco decorative border (legacy) */
-.border-deco {
-  position: relative;
-}
-
-.border-deco::before,
-.border-deco::after {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--primary);
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.border-deco::before {
-  top: 0;
-  left: 0;
-  border-right: none;
-  border-bottom: none;
-}
-
-.border-deco::after {
-  bottom: 0;
-  right: 0;
-  border-left: none;
-  border-top: none;
-}
-
-/* ============================================
- * TOOLTIP KBD STYLING
- * Override kbd colors when inside tooltip
- * ============================================ */
 [data-slot='tooltip-content'] [data-slot='kbd'] {
-  background-color: oklch(1 0 1 / 10%);
+  background-color: rgba(0, 0, 0, 0.1);
   color: var(--popover-foreground);
+  border: 1px solid var(--border);
 }
 
-.light [data-slot='tooltip-content'] [data-slot='kbd'] {
-  background-color: oklch(0 0 0 / 10%);
+.dark [data-slot='tooltip-content'] [data-slot='kbd'] {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ============================================
- * TAB BAR PILL STYLES
- * Linear/Raycast style pill tabs
- * ============================================ */
+/* ═══════════════════════════════════════
+   TAB BAR PILL STYLES
+   ═══════════════════════════════════════ */
 
-/* Tab bar pill styles */
 .tab-pill {
-  @apply rounded-md transition-colors;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
 }
+
 .tab-pill-active {
-  @apply bg-accent text-foreground;
+  background: var(--accent);
+  color: var(--foreground);
+  border-color: var(--border);
 }
+
 .tab-pill-inactive {
-  @apply text-muted-foreground hover:bg-muted/50 hover:text-foreground;
+  color: var(--muted-foreground);
+}
+
+.tab-pill-inactive:hover {
+  background: var(--muted);
+  color: var(--foreground);
 }

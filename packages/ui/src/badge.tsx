@@ -6,32 +6,30 @@ import { cva } from 'class-variance-authority';
 import { cn } from './lib/utils';
 
 const badgeVariants = cva(
-  'h-5 gap-1 rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium transition-all has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-colors overflow-hidden group/badge',
+  'h-6 gap-1 rounded-[3px] border-2 border-border px-2 py-0.5 text-xs font-bold transition-all has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 overflow-hidden group/badge',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground [a]:hover:bg-primary/80',
+        default:
+          'bg-main text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]',
         secondary:
-          'bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80',
+          'bg-secondary text-secondary-foreground shadow-[2px_2px_0px_0px_var(--border)]',
         destructive:
-          'bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20',
+          'bg-destructive text-white shadow-[2px_2px_0px_0px_var(--border)]',
         outline:
-          'border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground',
-        ghost:
-          'hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-background text-foreground shadow-[2px_2px_0px_0px_var(--border)]',
+        ghost: 'border-transparent bg-muted text-muted-foreground',
+        link: 'text-main underline-offset-4 hover:underline border-transparent',
         // Semantic status variants
-        success:
-          'bg-success/10 [a]:hover:bg-success/20 focus-visible:ring-success/20 text-success',
-        warning:
-          'bg-warning/10 [a]:hover:bg-warning/20 focus-visible:ring-warning/20 text-warning',
-        info: 'bg-info/10 [a]:hover:bg-info/20 focus-visible:ring-info/20 text-info',
+        success: 'bg-success text-white shadow-[2px_2px_0px_0px_var(--border)]',
+        warning: 'bg-warning text-white shadow-[2px_2px_0px_0px_var(--border)]',
+        info: 'bg-info text-white shadow-[2px_2px_0px_0px_var(--border)]',
         // Type category variants
-        numeric: 'bg-type-numeric-bg text-type-numeric',
-        date: 'bg-type-date-bg text-type-date',
-        boolean: 'bg-type-boolean-bg text-type-boolean',
-        text: 'bg-type-text-bg text-type-text',
-        unknown: 'bg-type-unknown-bg text-type-unknown',
+        numeric: 'bg-type-numeric-bg text-type-numeric border-type-numeric',
+        date: 'bg-type-date-bg text-type-date border-type-date',
+        boolean: 'bg-type-boolean-bg text-type-boolean border-type-boolean',
+        text: 'bg-type-text-bg text-type-text border-type-text',
+        unknown: 'bg-type-unknown-bg text-type-unknown border-type-unknown',
       },
     },
     defaultVariants: {

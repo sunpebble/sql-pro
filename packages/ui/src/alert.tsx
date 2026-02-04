@@ -5,13 +5,17 @@ import * as React from 'react';
 import { cn } from './lib/utils';
 
 const alertVariants = cva(
-  "grid gap-0.5 rounded-lg border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert",
+  "grid gap-0.5 rounded-[5px] border-2 border-border px-4 py-3 text-left text-sm font-medium has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert shadow-[4px_4px_0px_0px_var(--border)]",
   {
     variants: {
       variant: {
         default: 'bg-card text-card-foreground',
         destructive:
-          'text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current',
+          'text-destructive bg-destructive/10 border-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current',
+        success:
+          'text-success bg-success/10 border-success *:data-[slot=alert-description]:text-success/90 *:[svg]:text-current',
+        warning:
+          'text-warning bg-warning/10 border-warning *:data-[slot=alert-description]:text-warning/90 *:[svg]:text-current',
       },
     },
     defaultVariants: {
@@ -40,7 +44,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="alert-title"
       className={cn(
-        '[&_a]:hover:text-foreground font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3',
+        '[&_a]:hover:text-foreground font-bold group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3',
         className
       )}
       {...props}
