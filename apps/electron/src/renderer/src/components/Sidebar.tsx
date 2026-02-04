@@ -74,7 +74,12 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ColoredTagBadge, CreateTagDialog, EditTagDialog, TagColorDot  } from '@/components/tags';
+import {
+  ColoredTagBadge,
+  CreateTagDialog,
+  EditTagDialog,
+  TagColorDot,
+} from '@/components/tags';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
@@ -772,6 +777,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
           <input
             ref={searchInputRef}
             type="text"
+            aria-label={t('schema.search')}
             placeholder={
               appVimMode
                 ? t('schema.searchVim', {
@@ -870,6 +876,11 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 size="sm"
                 className="ml-auto h-7 w-7 shrink-0 p-0"
                 onClick={toggleExpandAll}
+                aria-label={
+                  isAllExpanded
+                    ? t('filter.collapseAll')
+                    : t('filter.expandAll')
+                }
               >
                 {isAllExpanded ? (
                   <ChevronsDownUp className="h-3.5 w-3.5" />
@@ -1169,6 +1180,7 @@ function SchemaSection({
       {showSchemaHeader && (
         <button
           onClick={onToggleSchema}
+          aria-expanded={isSchemaExpanded}
           className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-2 rounded-md px-2 py-1 text-sm font-medium"
         >
           {isSchemaExpanded ? (
@@ -1189,6 +1201,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(tablesKey)}
+                aria-expanded={tablesExpanded}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
               >
                 {tablesExpanded ? (
@@ -1254,6 +1267,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(viewsKey)}
+                aria-expanded={viewsExpanded}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
               >
                 {viewsExpanded ? (
@@ -1320,6 +1334,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(triggersKey)}
+                aria-expanded={triggersExpanded}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
               >
                 {triggersExpanded ? (
