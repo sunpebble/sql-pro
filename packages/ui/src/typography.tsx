@@ -79,7 +79,7 @@ function SectionNumber({ className, children, ...props }: SectionNumberProps) {
       data-slot="section-number"
       className={cn(
         'inline-block px-4 py-2',
-        'font-mono text-xs tracking-[0.4em] uppercase',
+        'font-mono [font-size:calc(var(--font-ui-size,14px)*0.75)] tracking-[0.4em] uppercase',
         'text-primary',
         'border-primary/20 border',
         className
@@ -159,7 +159,7 @@ function MonoText({ className, ...props }: React.ComponentProps<'span'>) {
     <span
       data-slot="mono-text"
       className={cn(
-        'font-mono text-sm tracking-tight',
+        'font-mono [font-size:var(--font-ui-size,14px)] tracking-tight',
         'text-muted-foreground',
         className
       )}

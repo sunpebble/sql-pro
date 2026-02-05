@@ -29,12 +29,12 @@ function NativeSelect({
         className={cn(
           // Base styles
           'border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50',
-          'flex w-full cursor-pointer appearance-none rounded-md border pr-8 text-sm transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-[3px]',
+          'flex w-full cursor-pointer appearance-none rounded-md border pr-8 [font-size:var(--font-ui-size,14px)] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-[3px]',
           // Dark mode
           'dark:bg-input/30 dark:hover:bg-input/50',
           // Size variants
           'data-[size=default]:h-9 data-[size=default]:px-3 data-[size=default]:py-2',
-          'data-[size=sm]:h-8 data-[size=sm]:px-2 data-[size=sm]:py-1.5 data-[size=sm]:text-xs',
+          'data-[size=sm]:h-8 data-[size=sm]:px-2 data-[size=sm]:py-1.5 data-[size=sm]:[font-size:calc(var(--font-ui-size,14px)*0.75)]',
           className
         )}
         {...props}

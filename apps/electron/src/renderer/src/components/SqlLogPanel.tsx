@@ -72,21 +72,29 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             {/* Operation badge */}
-            <Badge variant="outline" className="font-mono text-xs">
+            <Badge
+              variant="outline"
+              className="font-mono"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {entry.operation.toUpperCase()}
             </Badge>
 
             {/* Level badge */}
             <Badge
               variant="secondary"
-              className={cn('text-xs', LOG_LEVEL_COLORS[entry.level])}
+              className={cn(LOG_LEVEL_COLORS[entry.level])}
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
             >
               {entry.level}
             </Badge>
 
             {/* Duration */}
             {entry.durationMs !== undefined && (
-              <span className="text-muted-foreground flex items-center gap-1 text-xs">
+              <span
+                className="text-muted-foreground flex items-center gap-1"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 <Clock className="h-3 w-3" />
                 {entry.durationMs.toFixed(2)}ms
               </span>
@@ -94,7 +102,10 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
 
             {/* Row count */}
             {entry.rowCount !== undefined && (
-              <span className="text-muted-foreground text-xs">
+              <span
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {entry.rowCount === 1
                   ? t('sqlLog.rowCount', { count: entry.rowCount })
                   : t('sqlLog.rowsCount', { count: entry.rowCount })}
@@ -102,7 +113,10 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             )}
 
             {/* Timestamp */}
-            <span className="text-muted-foreground ml-auto text-xs">
+            <span
+              className="text-muted-foreground ml-auto"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {timestamp}
             </span>
           </div>
@@ -111,9 +125,10 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
           {entry.sql && (
             <div
               className={cn(
-                'text-muted-foreground mt-1 truncate font-mono text-xs',
+                'text-muted-foreground mt-1 truncate font-mono',
                 isExpanded && 'break-all whitespace-pre-wrap'
               )}
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
             >
               {isExpanded ? entry.sql : entry.sql.slice(0, 100)}
               {!isExpanded && entry.sql.length > 100 && '...'}
@@ -122,7 +137,10 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
 
           {/* Error message */}
           {entry.error && (
-            <div className="mt-1 text-xs text-red-500">
+            <div
+              className="mt-1 text-red-500"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {isExpanded ? entry.error : entry.error.slice(0, 100)}
               {!isExpanded && entry.error.length > 100 && '...'}
             </div>
@@ -130,7 +148,10 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
 
           {/* Expanded details */}
           {isExpanded && (
-            <div className="text-muted-foreground mt-2 space-y-1 text-xs">
+            <div
+              className="text-muted-foreground mt-2 space-y-1"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               <div className="flex items-center gap-2">
                 <Database className="h-3 w-3" />
                 <span>

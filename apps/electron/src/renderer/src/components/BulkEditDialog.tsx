@@ -115,7 +115,10 @@ export function BulkEditDialog({
           {/* Add field selector */}
           <div className="flex items-end gap-2">
             <div className="flex-1">
-              <Label htmlFor="column-select" className="text-xs">
+              <Label
+                htmlFor="column-select"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('table.bulkEdit.addFieldToEdit')}
               </Label>
               <Select
@@ -133,7 +136,12 @@ export function BulkEditDialog({
                     <SelectItem key={col.name} value={col.name}>
                       <div className="flex items-center gap-2">
                         <span>{col.name}</span>
-                        <span className="text-muted-foreground text-xs">
+                        <span
+                          className="text-muted-foreground"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           ({col.type})
                         </span>
                       </div>
@@ -167,12 +175,24 @@ export function BulkEditDialog({
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{field.column}</span>
                         {colInfo && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge
+                            variant="secondary"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {colInfo.type}
                           </Badge>
                         )}
                         {colInfo?.nullable && (
-                          <Badge variant="outline" className="text-xs">
+                          <Badge
+                            variant="outline"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {t('table.bulkEdit.nullable')}
                           </Badge>
                         )}
@@ -221,14 +241,20 @@ export function BulkEditDialog({
 
           {/* Summary */}
           {editFields.length > 0 && (
-            <div className="bg-primary/5 border-primary/20 rounded-base border p-3 text-sm">
+            <div
+              className="bg-primary/5 border-primary/20 rounded-base border p-3"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               <p>
                 {t('table.bulkEdit.fieldsWillBeUpdated', {
                   count: editFields.length,
                   rows: selectedRowCount,
                 })}
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p
+                className="text-muted-foreground mt-1"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('table.bulkEdit.willCreatePendingUpdates', {
                   count: selectedRowCount,
                 })}

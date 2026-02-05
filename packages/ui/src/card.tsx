@@ -40,7 +40,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-title"
       className={cn(
-        'text-base leading-none font-bold group-data-[size=sm]/card:text-sm',
+        '[font-size:calc(var(--font-ui-size,14px)*1.15)] leading-none font-bold group-data-[size=sm]/card:[font-size:var(--font-ui-size,14px)]',
         className
       )}
       {...props}
@@ -52,7 +52,10 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
-      className={cn('text-foreground/80 text-sm font-medium', className)}
+      className={cn(
+        'text-foreground/80 [font-size:var(--font-ui-size,14px)] font-medium',
+        className
+      )}
       {...props}
     />
   );

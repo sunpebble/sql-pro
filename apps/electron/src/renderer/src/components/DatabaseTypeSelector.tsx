@@ -93,7 +93,12 @@ export function DatabaseTypeSelector({
                   <div className="font-medium">
                     {t(`databaseType.${option.type}.name`)}
                   </div>
-                  <div className="text-muted-foreground text-xs">
+                  <div
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t(`databaseType.${option.type}.description`)}
                   </div>
                 </div>

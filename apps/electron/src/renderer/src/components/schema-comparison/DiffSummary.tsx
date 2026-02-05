@@ -293,7 +293,10 @@ function SummarySection({
                 {addedLabel}
               </span>
             </div>
-            <span className="text-foreground text-lg font-semibold">
+            <span
+              className="text-foreground font-semibold"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
               {counts.added}
             </span>
           </Button>
@@ -316,7 +319,10 @@ function SummarySection({
                 {removedLabel}
               </span>
             </div>
-            <span className="text-foreground text-lg font-semibold">
+            <span
+              className="text-foreground font-semibold"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
               {counts.removed}
             </span>
           </Button>
@@ -339,7 +345,10 @@ function SummarySection({
                 {modifiedLabel}
               </span>
             </div>
-            <span className="text-foreground text-lg font-semibold">
+            <span
+              className="text-foreground font-semibold"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
               {counts.modified}
             </span>
           </Button>

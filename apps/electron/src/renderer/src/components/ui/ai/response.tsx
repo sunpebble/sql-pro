@@ -10,17 +10,29 @@ const markdownComponents: ComponentPropsWithoutRef<
   typeof Markdown
 >['components'] = {
   h1: ({ children, ...props }) => (
-    <h1 className="mb-2 text-lg font-semibold" {...props}>
+    <h1
+      className="mb-2 font-semibold"
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.3)' }}
+      {...props}
+    >
       {children}
     </h1>
   ),
   h2: ({ children, ...props }) => (
-    <h2 className="mb-2 text-base font-semibold" {...props}>
+    <h2
+      className="mb-2 font-semibold"
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+      {...props}
+    >
       {children}
     </h2>
   ),
   h3: ({ children, ...props }) => (
-    <h3 className="mb-1 text-sm font-medium" {...props}>
+    <h3
+      className="mb-1 font-medium"
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      {...props}
+    >
       {children}
     </h3>
   ),
@@ -49,7 +61,8 @@ const markdownComponents: ComponentPropsWithoutRef<
     if (isInline) {
       return (
         <code
-          className="bg-muted rounded-md px-1 py-0.5 font-mono text-xs"
+          className="bg-muted rounded-md px-1 py-0.5 font-mono"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           {...props}
         >
           {children}
@@ -64,7 +77,8 @@ const markdownComponents: ComponentPropsWithoutRef<
   },
   pre: ({ children, ...props }) => (
     <pre
-      className="bg-muted my-2 overflow-x-auto rounded-md p-3 font-mono text-xs"
+      className="bg-muted my-2 overflow-x-auto rounded-md p-3 font-mono"
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
       {...props}
     >
       {children}
@@ -91,7 +105,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   ),
   table: ({ children, ...props }) => (
     <div className="my-2 overflow-x-auto">
-      <table className="min-w-full border-collapse text-sm" {...props}>
+      <table className="min-w-full border-collapse" {...props}>
         {children}
       </table>
     </div>

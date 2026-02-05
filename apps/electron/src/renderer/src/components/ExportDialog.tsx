@@ -280,7 +280,11 @@ export function ExportDialog({
         <div className="space-y-4 py-4">
           {/* Format Selection */}
           <div className="space-y-2">
-            <Label htmlFor="export-format" className="text-sm font-medium">
+            <Label
+              htmlFor="export-format"
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('sharing.exportFormat')}
             </Label>
             <Select
@@ -306,7 +310,13 @@ export function ExportDialog({
                         <Icon className="h-4 w-4" />
                         <div className="flex flex-col">
                           <span>{option.label}</span>
-                          <span className="text-muted-foreground text-xs">
+                          <span
+                            className="text-muted-foreground"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {t(option.descriptionKey)}
                           </span>
                         </div>
@@ -321,7 +331,10 @@ export function ExportDialog({
           {/* Column Selection */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">
+              <Label
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('sharing.columnsSelected', {
                   selected: selectedColumns.size,
                   total: columns.length,
@@ -332,7 +345,8 @@ export function ExportDialog({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-auto px-2 py-1 text-xs"
+                  className="h-auto px-2 py-1"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                   onClick={handleSelectAll}
                   disabled={allSelected}
                 >
@@ -342,7 +356,8 @@ export function ExportDialog({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-auto px-2 py-1 text-xs"
+                  className="h-auto px-2 py-1"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                   onClick={handleDeselectAll}
                   disabled={noneSelected}
                 >
@@ -363,8 +378,15 @@ export function ExportDialog({
                         handleColumnToggle(column.name, checked === true)
                       }
                     />
-                    <span className="text-sm">{column.name}</span>
-                    <span className="text-muted-foreground text-xs">
+                    <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                      {column.name}
+                    </span>
+                    <span
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {column.type}
                     </span>
                   </label>
@@ -376,14 +398,20 @@ export function ExportDialog({
           {/* Format-Specific Options */}
           {selectedFormat === 'csv' && (
             <div className="space-y-3">
-              <Label className="text-sm font-medium">
+              <Label
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('sharing.csvOptions')}
               </Label>
               <div className="rounded-base space-y-3 border-2 p-3">
                 <div className="space-y-2">
                   <Label
                     htmlFor="delimiter"
-                    className="text-muted-foreground text-xs"
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     {t('sharing.delimiter')}
                   </Label>
@@ -410,7 +438,9 @@ export function ExportDialog({
                       setIncludeHeaders(checked === true)
                     }
                   />
-                  <span className="text-sm">{t('sharing.includeHeaders')}</span>
+                  <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                    {t('sharing.includeHeaders')}
+                  </span>
                 </label>
               </div>
             </div>
@@ -418,7 +448,10 @@ export function ExportDialog({
 
           {selectedFormat === 'json' && (
             <div className="space-y-3">
-              <Label className="text-sm font-medium">
+              <Label
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('sharing.jsonOptions')}
               </Label>
               <div className="rounded-base space-y-3 border-2 p-3">
@@ -429,7 +462,9 @@ export function ExportDialog({
                       setPrettyPrint(checked === true)
                     }
                   />
-                  <span className="text-sm">{t('sharing.prettyPrint')}</span>
+                  <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                    {t('sharing.prettyPrint')}
+                  </span>
                 </label>
               </div>
             </div>
@@ -437,14 +472,20 @@ export function ExportDialog({
 
           {selectedFormat === 'xlsx' && (
             <div className="space-y-3">
-              <Label className="text-sm font-medium">
+              <Label
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('sharing.excelOptions')}
               </Label>
               <div className="rounded-base space-y-3 border-2 p-3">
                 <div className="space-y-2">
                   <Label
                     htmlFor="sheet-name"
-                    className="text-muted-foreground text-xs"
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     {t('sharing.sheetName')}
                   </Label>
@@ -455,7 +496,12 @@ export function ExportDialog({
                     placeholder={tableName}
                     maxLength={31}
                   />
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('sharing.maxCharacters')}
                   </p>
                 </div>
@@ -466,7 +512,10 @@ export function ExportDialog({
           {/* Progress indicator for large exports */}
           {isExporting && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
+              <div
+                className="flex items-center justify-between"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   {t('sharing.exportingRows', { count: rows.length })}

@@ -22,7 +22,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 const inputGroupAddonVariants = cva(
-  "text-muted-foreground h-auto gap-2 py-1.5 text-sm font-medium group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4 flex cursor-text items-center justify-center select-none",
+  "text-muted-foreground h-auto gap-2 py-1.5 font-medium group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4 flex cursor-text items-center justify-center select-none [font-size:var(--font-ui-size,14px)]",
   {
     variants: {
       align: {
@@ -65,7 +65,7 @@ function InputGroupAddon({
 }
 
 const inputGroupButtonVariants = cva(
-  'gap-2 text-sm shadow-none flex items-center',
+  'gap-2 shadow-none flex items-center [font-size:var(--font-ui-size,14px)]',
   {
     variants: {
       size: {
@@ -107,7 +107,7 @@ function InputGroupText({ className, ...props }: React.ComponentProps<'span'>) {
   return (
     <span
       className={cn(
-        "text-muted-foreground flex items-center gap-2 text-sm [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        "text-muted-foreground flex items-center gap-2 [font-size:var(--font-ui-size,14px)] [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}

@@ -16,21 +16,42 @@ interface CellValueProps {
 
 const CellValue = memo<CellValueProps>(({ value, type }) => {
   if (value === null) {
-    return <span className="text-muted-foreground text-sm italic">NULL</span>;
+    return (
+      <span
+        className="text-muted-foreground italic"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
+        NULL
+      </span>
+    );
   }
 
   if (typeof value === 'boolean') {
-    return <span className="text-sm">{value ? 'true' : 'false'}</span>;
+    return (
+      <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+        {value ? 'true' : 'false'}
+      </span>
+    );
   }
 
   if (typeof value === 'number') {
-    return <span className="font-mono text-sm tabular-nums">{value}</span>;
+    return (
+      <span
+        className="font-mono tabular-nums"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
+        {value}
+      </span>
+    );
   }
 
   // Blob/binary data
   if (value instanceof Uint8Array || type.toLowerCase().includes('blob')) {
     return (
-      <span className="text-muted-foreground text-sm italic">
+      <span
+        className="text-muted-foreground italic"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
         [BLOB{' '}
         {typeof value === 'object' ? (value as ArrayBuffer).byteLength : '?'}{' '}
         bytes]
@@ -40,7 +61,11 @@ const CellValue = memo<CellValueProps>(({ value, type }) => {
 
   const strValue = String(value);
   return (
-    <span className="text-sm whitespace-nowrap" title={strValue}>
+    <span
+      className="whitespace-nowrap"
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      title={strValue}
+    >
       {strValue}
     </span>
   );
@@ -132,7 +157,8 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
                   if (isResizeLocked()) return;
                   onSort(col.name);
                 }}
-                className="hover:text-foreground flex flex-1 items-center gap-1 text-left text-sm font-medium"
+                className="hover:text-foreground flex flex-1 items-center gap-1 text-left font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 aria-label={t('dataGrid.sortBy', {
                   column: col.name,
                   currentSort:

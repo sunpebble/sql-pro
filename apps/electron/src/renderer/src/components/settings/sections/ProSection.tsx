@@ -57,7 +57,10 @@ export function ProSection() {
                 </span>
                 {isPro && <ProBadge size="sm" />}
               </div>
-              <p className="text-muted-foreground text-xs">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {isPro
                   ? t('pro.featuresUnlocked', {
                       count: features.length,
@@ -82,7 +85,10 @@ export function ProSection() {
       {/* Feature List when Pro is active */}
       {isPro && features.length > 0 && (
         <div className="space-y-2">
-          <p className="text-muted-foreground text-xs font-medium uppercase">
+          <p
+            className="text-muted-foreground font-medium uppercase"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {t('pro.featuresUnlocked', { count: features.length })}
           </p>
           <div className="grid grid-cols-2 gap-2">
@@ -92,7 +98,9 @@ export function ProSection() {
                 className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2"
               >
                 <Crown className="h-3 w-3 text-amber-500" />
-                <span className="text-xs">
+                <span
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t(`pro.features.${feature}`, { defaultValue: feature })}
                 </span>
               </div>

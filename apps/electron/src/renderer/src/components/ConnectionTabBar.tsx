@@ -265,7 +265,7 @@ const ConnectionTab = memo(
                   ref={setNodeRef}
                   aria-selected={isActive}
                   className={cn(
-                    'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-1.5 text-sm transition-all',
+                    'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-1.5 transition-all',
                     isActive
                       ? 'bg-accent text-foreground rounded-md'
                       : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground rounded-md bg-transparent',
@@ -275,6 +275,7 @@ const ConnectionTab = memo(
                   style={{
                     transform: CSS.Transform.toString(transform),
                     transition,
+                    fontSize: 'var(--font-ui-size, 14px)',
                   }}
                   onClick={handleClick}
                   {...attributes}
@@ -297,7 +298,10 @@ const ConnectionTab = memo(
                       </TooltipTrigger>
                       <TooltipContent
                         side="bottom"
-                        className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                        className={cn(TOOLTIP_CONTENT_STYLE)}
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
                       >
                         {t('connection.unsavedChanges')}
                       </TooltipContent>
@@ -314,7 +318,12 @@ const ConnectionTab = memo(
                         const parentDir =
                           parts.length > 1 ? parts[parts.length - 2] : null;
                         return parentDir ? (
-                          <span className="text-muted-foreground text-2xs block truncate leading-tight">
+                          <span
+                            className="text-muted-foreground block truncate leading-tight"
+                            style={{
+                              fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)',
+                            }}
+                          >
                             {parentDir}
                           </span>
                         ) : null;
@@ -334,7 +343,10 @@ const ConnectionTab = memo(
                     </TooltipTrigger>
                     <TooltipContent
                       side="bottom"
-                      className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                      className={cn(TOOLTIP_CONTENT_STYLE)}
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       {t('connection.closeConnection')}
                     </TooltipContent>
@@ -344,11 +356,17 @@ const ConnectionTab = memo(
               {!contextMenuOpen && (
                 <TooltipContent
                   side="bottom"
-                  className={cn('max-w-80 text-xs', TOOLTIP_CONTENT_STYLE)}
+                  className={cn('max-w-80', TOOLTIP_CONTENT_STYLE)}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                 >
                   <div className="flex flex-col gap-1">
                     <div className="font-medium">{connection.filename}</div>
-                    <div className="text-muted-foreground font-mono text-xs break-all">
+                    <div
+                      className="text-muted-foreground font-mono break-all"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {connection.path}
                     </div>
                   </div>

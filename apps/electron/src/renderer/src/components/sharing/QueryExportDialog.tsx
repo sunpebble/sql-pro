@@ -169,11 +169,19 @@ export function QueryExportDialog({
                   <p className="font-medium text-green-900 dark:text-green-100">
                     {t('sharing.exportSuccessful')}
                   </p>
-                  <p className="text-sm text-green-700 dark:text-green-300">
+                  <p
+                    className="text-green-700 dark:text-green-300"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('sharing.queryExportedSuccessfully')}
                   </p>
                   {exportResult.filePath && (
-                    <p className="text-xs break-all text-green-600 dark:text-green-400">
+                    <p
+                      className="break-all text-green-600 dark:text-green-400"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {exportResult.filePath}
                     </p>
                   )}
@@ -183,7 +191,10 @@ export function QueryExportDialog({
                   <p className="text-destructive font-medium">
                     {t('sharing.exportFailed')}
                   </p>
-                  <p className="text-destructive/80 mt-1 text-sm">
+                  <p
+                    className="text-destructive/80 mt-1"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {exportResult.error || t('sharing.unknownError')}
                   </p>
                 </div>
@@ -193,7 +204,11 @@ export function QueryExportDialog({
             <>
               {/* Query Name (Required) */}
               <div className="space-y-2">
-                <Label htmlFor="query-name" className="text-sm font-medium">
+                <Label
+                  htmlFor="query-name"
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('sharing.queryName')}{' '}
                   <span className="text-destructive">*</span>
                 </Label>
@@ -205,7 +220,10 @@ export function QueryExportDialog({
                   maxLength={200}
                   disabled={isExporting}
                 />
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('sharing.queryNameHelp')}
                 </p>
               </div>
@@ -214,7 +232,8 @@ export function QueryExportDialog({
               <div className="space-y-2">
                 <Label
                   htmlFor="query-description"
-                  className="text-sm font-medium"
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 >
                   {t('sharing.description')}
                 </Label>
@@ -227,23 +246,33 @@ export function QueryExportDialog({
                   rows={2}
                   disabled={isExporting}
                 />
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('sharing.descriptionHelp')}
                 </p>
               </div>
 
               {/* SQL Preview (Read-only) */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">
+                <Label
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('sharing.sqlQuery')}
                 </Label>
                 <Textarea
                   value={sql}
                   readOnly
-                  className="bg-muted font-mono text-sm"
+                  className="bg-muted font-mono"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                   rows={4}
                 />
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('sharing.characters', { count: sql.length })}
                 </p>
               </div>
@@ -252,7 +281,8 @@ export function QueryExportDialog({
               <div className="space-y-2">
                 <Label
                   htmlFor="database-context"
-                  className="text-sm font-medium"
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 >
                   {t('sharing.databaseContext')}
                 </Label>
@@ -264,14 +294,21 @@ export function QueryExportDialog({
                   maxLength={200}
                   disabled={isExporting}
                 />
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('sharing.databaseContextHelp')}
                 </p>
               </div>
 
               {/* Tags (Optional) */}
               <div className="space-y-2">
-                <Label htmlFor="query-tags" className="text-sm font-medium">
+                <Label
+                  htmlFor="query-tags"
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('sharing.tags')}
                 </Label>
                 <Input
@@ -281,7 +318,10 @@ export function QueryExportDialog({
                   placeholder={t('sharing.tagsPlaceholder')}
                   disabled={isExporting}
                 />
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('sharing.tagsHelp')}
                   {parsedTags.length > 0 &&
                     ` ${parsedTags.length === 1 ? t('sharing.tagsCount', { count: parsedTags.length }) : t('sharing.tagsCountPlural', { count: parsedTags.length })}`}
@@ -292,7 +332,8 @@ export function QueryExportDialog({
               <div className="space-y-2">
                 <Label
                   htmlFor="query-documentation"
-                  className="text-sm font-medium"
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 >
                   {t('sharing.documentation')}
                 </Label>
@@ -305,7 +346,10 @@ export function QueryExportDialog({
                   rows={4}
                   disabled={isExporting}
                 />
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('sharing.documentationHelp', {
                     count: documentation.length,
                   })}
@@ -314,7 +358,10 @@ export function QueryExportDialog({
 
               {/* Export Options */}
               <div className="space-y-3">
-                <Label className="text-sm font-medium">
+                <Label
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('sharing.exportOptions')}
                 </Label>
                 <div className="space-y-3 rounded-md border p-3">
@@ -327,8 +374,15 @@ export function QueryExportDialog({
                       disabled={isExporting}
                     />
                     <div className="flex-1">
-                      <p className="text-sm">{t('sharing.compressExport')}</p>
-                      <p className="text-muted-foreground text-xs">
+                      <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                        {t('sharing.compressExport')}
+                      </p>
+                      <p
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('sharing.compressHelp')}
                       </p>
                     </div>

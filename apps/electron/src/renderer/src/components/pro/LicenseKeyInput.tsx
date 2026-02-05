@@ -193,7 +193,10 @@ export function LicenseKeyInput({
     <div className={cn('space-y-2', className)}>
       <div className="flex items-center gap-1.5">
         {/* Prefix label */}
-        <div className="bg-muted text-muted-foreground flex h-10 items-center rounded-md border px-3 font-mono text-sm">
+        <div
+          className="bg-muted text-muted-foreground flex h-10 items-center rounded-md border px-3 font-mono"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {LICENSE_PREFIX}
         </div>
 
@@ -222,11 +225,12 @@ export function LicenseKeyInput({
               onBlur={() => setFocusedIndex(null)}
               disabled={disabled}
               className={cn(
-                'h-10 w-16 text-center font-mono text-sm tracking-wider',
+                'h-10 w-16 text-center font-mono tracking-wider',
                 focusedIndex === index && 'ring-gold ring-2',
                 segment.length === SEGMENT_LENGTH &&
                   'border-green-500/50 bg-green-500/5'
               )}
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
               placeholder={t('license.segmentPlaceholder')}
               aria-label={t('license.segmentAriaLabel', { index: index + 1 })}
             />
@@ -256,7 +260,12 @@ export function LicenseKeyInput({
       </div>
 
       {/* Helper text */}
-      <p className="text-muted-foreground text-xs">{t('license.formatHint')}</p>
+      <p
+        className="text-muted-foreground"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
+        {t('license.formatHint')}
+      </p>
     </div>
   );
 }

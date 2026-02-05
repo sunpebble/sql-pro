@@ -69,7 +69,10 @@ export function Titlebar() {
           data-tauri-drag-region
         >
           <Database className="text-primary mr-2 h-4 w-4 shrink-0" />
-          <span className="text-primary text-sm font-medium tracking-wide">
+          <span
+            className="text-primary font-medium tracking-wide"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             SQL Pro
           </span>
         </div>

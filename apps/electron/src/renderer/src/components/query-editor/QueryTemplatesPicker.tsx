@@ -117,7 +117,8 @@ const TemplateCard = memo(
         <SqlHighlight
           code={template.query}
           maxLines={3}
-          className="rounded-base bg-muted/50 p-2.5 text-xs"
+          className="rounded-base bg-muted/50 p-2.5"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
         />
 
         {/* Actions - appear on hover */}

@@ -107,7 +107,7 @@ export const Reasoning = memo(
       >
         <Collapsible
           className={cn(
-            'not-prose my-2 rounded-base border border-[var(--gold-muted,hsl(var(--primary)/0.3))] bg-[var(--gold-subtle,hsl(var(--primary)/0.05))]',
+            'not-prose rounded-base my-2 border border-[var(--gold-muted,hsl(var(--primary)/0.3))] bg-[var(--gold-subtle,hsl(var(--primary)/0.05))]',
             isStreaming && 'border-[var(--gold,hsl(var(--primary)))]/50',
             className
           )}
@@ -140,7 +140,7 @@ export const ReasoningTrigger = memo(
     return (
       <CollapsibleTrigger
         className={cn(
-          'flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-[var(--gold,hsl(var(--primary)))]/5',
+          'flex w-full items-center gap-2 px-3 py-2 transition-colors hover:bg-[var(--gold,hsl(var(--primary)))]/5',
           className
         )}
         {...props}
@@ -182,7 +182,7 @@ export const ReasoningContent = memo(
     return (
       <CollapsibleContent
         className={cn(
-          'border-t border-[var(--gold-muted,hsl(var(--primary)/0.2))] px-3 py-2.5 text-xs',
+          'border-t border-[var(--gold-muted,hsl(var(--primary)/0.2))] px-3 py-2.5',
           'data-[state=closed]:animate-out data-[state=open]:animate-in',
           className
         )}

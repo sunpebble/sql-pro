@@ -485,7 +485,8 @@ export function EditableDataGrid({
                     if (isResizeLocked()) return;
                     onSort(col.name);
                   }}
-                  className="hover:text-foreground flex flex-1 items-center gap-1 text-left text-sm font-medium"
+                  className="hover:text-foreground flex flex-1 items-center gap-1 text-left font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 >
                   {col.isPrimaryKey && (
                     <Key className="h-3 w-3 text-amber-500" />
@@ -577,7 +578,12 @@ export function EditableDataGrid({
                     >
                       {/* NEW badge for first column of new rows */}
                       {isNew && idx === 0 && (
-                        <span className="text-2xs mr-1 rounded bg-green-500 px-1 py-0.5 font-medium text-white">
+                        <span
+                          className="mr-1 rounded bg-green-500 px-1 py-0.5 font-medium text-white"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)',
+                          }}
+                        >
                           {t('dataTable.newBadge')}
                         </span>
                       )}

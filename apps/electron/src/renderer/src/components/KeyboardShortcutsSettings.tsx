@@ -117,16 +117,27 @@ const ShortcutEditor = memo(
       >
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{label}</span>
+            <span
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
+              {label}
+            </span>
             {hasConflicts && !isRecording && (
               <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
             )}
           </div>
-          <p className="text-muted-foreground truncate text-xs">
+          <p
+            className="text-muted-foreground truncate"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {description}
           </p>
           {hasConflicts && !isRecording && (
-            <p className="mt-1 text-xs text-amber-600">
+            <p
+              className="mt-1 text-amber-600"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('shortcuts.conflictsWith')}{' '}
               {conflicts
                 .map(
@@ -157,7 +168,8 @@ const ShortcutEditor = memo(
                     }
                   }, 100);
                 }}
-                className="h-8 w-32 text-center text-xs"
+                className="h-8 w-32 text-center"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                 placeholder={t('shortcuts.pressKeys')}
               />
               <Button
@@ -183,10 +195,11 @@ const ShortcutEditor = memo(
               <button
                 onClick={startRecording}
                 className={cn(
-                  'flex h-8 min-w-24 items-center justify-center rounded border px-3 text-xs transition-colors',
+                  'flex h-8 min-w-24 items-center justify-center rounded border px-3 transition-colors',
                   'hover:border-primary hover:bg-muted',
                   !binding && 'text-muted-foreground italic'
                 )}
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
               >
                 {formatShortcutBinding(binding, t('shortcuts.notSet'))}
               </button>
@@ -326,7 +339,10 @@ export const KeyboardShortcutsSettings = memo(
               {/* Preset Selection */}
               <div className="mb-6 space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium">
+                  <Label
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('shortcuts.preset')}
                   </Label>
                   <div className="flex items-center gap-2">
@@ -334,7 +350,10 @@ export const KeyboardShortcutsSettings = memo(
                       variant="outline"
                       size="sm"
                       onClick={handleImport}
-                      className="h-7 gap-1.5 text-xs"
+                      className="h-7 gap-1.5"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       <Upload className="h-3 w-3" />
                       {t('shortcuts.import')}
@@ -343,7 +362,10 @@ export const KeyboardShortcutsSettings = memo(
                       variant="outline"
                       size="sm"
                       onClick={handleExport}
-                      className="h-7 gap-1.5 text-xs"
+                      className="h-7 gap-1.5"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       <Download className="h-3 w-3" />
                       {t('shortcuts.export')}
@@ -369,7 +391,13 @@ export const KeyboardShortcutsSettings = memo(
                               defaultValue: info.label,
                             })}
                           </span>
-                          <span className="text-muted-foreground text-xs">
+                          <span
+                            className="text-muted-foreground"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {t(`shortcuts.presets.${key}Desc`, {
                               defaultValue: info.description,
                             })}
@@ -381,7 +409,12 @@ export const KeyboardShortcutsSettings = memo(
                 </Select>
 
                 {activePreset === 'custom' && (
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('shortcuts.clickToChange')}
                   </p>
                 )}
@@ -395,7 +428,12 @@ export const KeyboardShortcutsSettings = memo(
 
                   return (
                     <div key={category} className="space-y-3">
-                      <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+                      <h3
+                        className="text-muted-foreground font-semibold tracking-wide uppercase"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {categoryLabels[category]}
                       </h3>
                       <div className="space-y-2">

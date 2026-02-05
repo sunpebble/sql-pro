@@ -106,7 +106,8 @@ export function ERControls({ onResetLayout }: ERControlsProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-14 font-mono text-xs tabular-nums"
+            className="h-8 w-14 font-mono tabular-nums"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
             onClick={handleResetZoom}
           >
             {zoomPercentage}%

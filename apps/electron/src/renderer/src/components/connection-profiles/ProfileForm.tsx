@@ -182,7 +182,11 @@ export function ProfileForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Display Name */}
       <div className="space-y-2">
-        <label htmlFor="displayName" className="text-sm font-medium">
+        <label
+          htmlFor="displayName"
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('profileForm.displayName')}{' '}
           <span className="text-destructive">*</span>
         </label>
@@ -194,18 +198,25 @@ export function ProfileForm({
           placeholder={t('profileForm.enterProfileName')}
           autoFocus
           className={cn(
-            'bg-background w-full rounded-md border px-3 py-2 text-sm',
+            'bg-background w-full rounded-md border px-3 py-2',
             'placeholder:text-muted-foreground',
             'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
             validationErrors.displayName ? 'border-destructive' : 'border-input'
           )}
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
         />
         {validationErrors.displayName && (
-          <p className="text-destructive text-xs">
+          <p
+            className="text-destructive"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {validationErrors.displayName}
           </p>
         )}
-        <p className="text-muted-foreground text-xs">
+        <p
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('profileForm.characterCount', {
             current: displayName.trim().length,
             max: MAX_DISPLAY_NAME_LENGTH,
@@ -215,7 +226,11 @@ export function ProfileForm({
 
       {/* Folder Selection */}
       <div className="space-y-2">
-        <label htmlFor="folder" className="text-sm font-medium">
+        <label
+          htmlFor="folder"
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('profiles.folder')}{' '}
           <span className="text-muted-foreground">
             ({t('common.optional')})
@@ -250,14 +265,21 @@ export function ProfileForm({
               ))}
           </SelectContent>
         </Select>
-        <p className="text-muted-foreground text-xs">
+        <p
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('profiles.folderHint')}
         </p>
       </div>
 
       {/* Tags */}
       <div className="space-y-2">
-        <label htmlFor="tags" className="text-sm font-medium">
+        <label
+          htmlFor="tags"
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('profiles.tags')}{' '}
           <span className="text-muted-foreground">
             ({t('common.optional')})
@@ -270,20 +292,28 @@ export function ProfileForm({
           onChange={(e) => setTags(e.target.value)}
           placeholder={t('profileForm.tagsPlaceholder')}
           className={cn(
-            'bg-background w-full rounded-md border px-3 py-2 text-sm',
+            'bg-background w-full rounded-md border px-3 py-2',
             'placeholder:text-muted-foreground',
             'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
             'border-input'
           )}
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
         />
-        <p className="text-muted-foreground text-xs">
+        <p
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('profiles.tagsHint')}
         </p>
       </div>
 
       {/* Notes */}
       <div className="space-y-2">
-        <label htmlFor="notes" className="text-sm font-medium">
+        <label
+          htmlFor="notes"
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('profiles.notes')}{' '}
           <span className="text-muted-foreground">
             ({t('common.optional')})
@@ -298,9 +328,17 @@ export function ProfileForm({
           rows={3}
         />
         {validationErrors.notes && (
-          <p className="text-destructive text-xs">{validationErrors.notes}</p>
+          <p
+            className="text-destructive"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
+            {validationErrors.notes}
+          </p>
         )}
-        <p className="text-muted-foreground text-xs">
+        <p
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('profiles.notesCounter', {
             current: notes.length,
             max: MAX_NOTES_LENGTH,
@@ -317,10 +355,16 @@ export function ProfileForm({
           className="border-input h-4 w-4 rounded-md"
         />
         <div className="flex-1">
-          <span className="text-sm font-medium">
+          <span
+            className="font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {t('profileForm.readOnlyMode')}
           </span>
-          <p className="text-muted-foreground text-xs">
+          <p
+            className="text-muted-foreground"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {t('profileForm.readOnlyDescription')}
           </p>
         </div>
@@ -345,7 +389,10 @@ export function ProfileForm({
           />
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">
+              <span
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('profileForm.rememberPassword')}
               </span>
               {!isStorageAvailable && (
@@ -354,14 +401,22 @@ export function ProfileForm({
                     <Info className="text-muted-foreground h-4 w-4" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="max-w-xs text-xs">
+                    <p
+                      className="max-w-xs"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('profileForm.passwordStorageUnavailable')}
                     </p>
                   </TooltipContent>
                 </Tooltip>
               )}
             </div>
-            <p className="text-muted-foreground text-xs">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('profileForm.rememberPasswordDescription')}
             </p>
           </div>

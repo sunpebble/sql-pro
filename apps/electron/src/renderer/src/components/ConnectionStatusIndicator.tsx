@@ -102,10 +102,11 @@ export function ConnectionStatusIndicator({
         <TooltipTrigger>
           <div
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium',
+              'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-medium',
               getStatusColor(),
               className
             )}
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           >
             {getStatusIcon()}
             <span className="hidden sm:inline">
@@ -123,7 +124,10 @@ export function ConnectionStatusIndicator({
           <div className="space-y-1">
             <p className="font-medium">{getStatusText()}</p>
             {tunnelStatus.localPort && (
-              <p className="text-muted-foreground text-xs">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('ssh.localPort', 'Local port: {{port}}', {
                   port: tunnelStatus.localPort,
                 })}
@@ -131,7 +135,10 @@ export function ConnectionStatusIndicator({
             )}
             {tunnelStatus.reconnectAttempts !== undefined &&
               tunnelStatus.reconnectAttempts > 0 && (
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('ssh.reconnectAttempts', 'Reconnect attempts: {{count}}', {
                     count: tunnelStatus.reconnectAttempts,
                   })}

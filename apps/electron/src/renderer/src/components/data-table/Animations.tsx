@@ -17,9 +17,28 @@ export function AnimatedLoader({
   size = 'md',
 }: AnimatedLoaderProps) {
   const sizeClasses = {
-    sm: { icon: 'h-6 w-6', text: 'text-xs', container: 'gap-2' },
-    md: { icon: 'h-10 w-10', text: 'text-sm', container: 'gap-3' },
-    lg: { icon: 'h-14 w-14', text: 'text-base', container: 'gap-4' },
+    sm: {
+      icon: 'h-6 w-6',
+      text: '',
+      textStyle: {
+        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+      } as React.CSSProperties,
+      container: 'gap-2',
+    },
+    md: {
+      icon: 'h-10 w-10',
+      text: '',
+      textStyle: {
+        fontSize: 'var(--font-ui-size, 14px)',
+      } as React.CSSProperties,
+      container: 'gap-3',
+    },
+    lg: {
+      icon: 'h-14 w-14',
+      text: 'text-base',
+      textStyle: {} as React.CSSProperties,
+      container: 'gap-4',
+    },
   };
 
   const sizes = sizeClasses[size];
@@ -60,7 +79,10 @@ export function AnimatedLoader({
         {/* Pulsing center icon */}
         <Database className={cn('text-primary animate-pulse', sizes.icon)} />
       </div>
-      <span className={cn('text-muted-foreground animate-pulse', sizes.text)}>
+      <span
+        className={cn('text-muted-foreground animate-pulse', sizes.text)}
+        style={sizes.textStyle}
+      >
         {text}
       </span>
     </div>

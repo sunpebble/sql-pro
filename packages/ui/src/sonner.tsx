@@ -25,19 +25,19 @@ function Toaster({ className, toastOptions, ...props }: ToasterProps) {
             toastOptions?.classNames?.title
           ),
           description: cn(
-            'group-[.toast]:text-muted-foreground group-[.toast]:text-sm',
+            'group-[.toast]:text-muted-foreground group-[.toast]:[font-size:var(--font-ui-size,14px)]',
             toastOptions?.classNames?.description
           ),
           actionButton: cn(
             'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground',
             'group-[.toast]:hover:bg-primary/90',
-            'group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:text-sm group-[.toast]:font-medium',
+            'group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:[font-size:var(--font-ui-size,14px)] group-[.toast]:font-medium',
             toastOptions?.classNames?.actionButton
           ),
           cancelButton: cn(
             'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
             'group-[.toast]:hover:bg-muted/80',
-            'group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:text-sm group-[.toast]:font-medium',
+            'group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:[font-size:var(--font-ui-size,14px)] group-[.toast]:font-medium',
             toastOptions?.classNames?.cancelButton
           ),
           closeButton: cn(

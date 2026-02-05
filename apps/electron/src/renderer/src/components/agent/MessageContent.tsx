@@ -46,17 +46,29 @@ const markdownComponents: ComponentPropsWithoutRef<
   typeof Markdown
 >['components'] = {
   h1: ({ children, ...props }) => (
-    <h1 className="mb-2 text-lg font-semibold" {...props}>
+    <h1
+      className="mb-2 font-semibold"
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+      {...props}
+    >
       {children}
     </h1>
   ),
   h2: ({ children, ...props }) => (
-    <h2 className="mb-2 text-base font-semibold" {...props}>
+    <h2
+      className="mb-2 font-semibold"
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      {...props}
+    >
       {children}
     </h2>
   ),
   h3: ({ children, ...props }) => (
-    <h3 className="mb-1 text-sm font-medium" {...props}>
+    <h3
+      className="mb-1 font-medium"
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      {...props}
+    >
       {children}
     </h3>
   ),
@@ -85,7 +97,8 @@ const markdownComponents: ComponentPropsWithoutRef<
     if (isInline) {
       return (
         <code
-          className="bg-muted rounded-md px-1 py-0.5 font-mono text-xs"
+          className="bg-muted rounded-md px-1 py-0.5 font-mono"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           {...props}
         >
           {children}
@@ -100,7 +113,8 @@ const markdownComponents: ComponentPropsWithoutRef<
   },
   pre: ({ children, ...props }) => (
     <pre
-      className="bg-muted my-2 overflow-x-auto rounded-md p-3 font-mono text-xs"
+      className="bg-muted my-2 overflow-x-auto rounded-md p-3 font-mono"
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
       {...props}
     >
       {children}
@@ -127,7 +141,11 @@ const markdownComponents: ComponentPropsWithoutRef<
   ),
   table: ({ children, ...props }) => (
     <div className="my-2 overflow-x-auto">
-      <table className="min-w-full border-collapse text-sm" {...props}>
+      <table
+        className="min-w-full border-collapse"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        {...props}
+      >
         {children}
       </table>
     </div>
@@ -180,7 +198,10 @@ function Shimmer({ className }: { className?: string }) {
           style={{ animationDelay: '300ms' }}
         />
       </div>
-      <span className="text-muted-foreground text-xs">
+      <span
+        className="text-muted-foreground"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         {t('agent.thinking', 'Thinking...')}
       </span>
     </div>
@@ -218,7 +239,8 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-[var(--gold)]/5"
+        className="flex w-full items-center gap-2 px-3 py-2 transition-colors hover:bg-[var(--gold)]/5"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
       >
         {isExpanded ? (
           <ChevronDown className="h-3.5 w-3.5 text-[var(--gold)]" />
@@ -240,7 +262,10 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
       </button>
       {/* ReasoningContent */}
       {isExpanded && (
-        <div className="text-muted-foreground border-t border-[var(--gold-muted)]/20 px-3 py-2.5 text-xs leading-relaxed whitespace-pre-wrap">
+        <div
+          className="text-muted-foreground border-t border-[var(--gold-muted)]/20 px-3 py-2.5 leading-relaxed whitespace-pre-wrap"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {text}
           {isStreaming && (
             <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-[var(--gold)]" />
@@ -317,14 +342,33 @@ function formatToolOutput(
                   >
                     {col.name}
                   </span>
-                  <span className="bg-background/50 rounded px-1 text-xs">
+                  <span
+                    className="bg-background/50 rounded px-1"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {col.type}
                   </span>
                   {col.isPrimaryKey && (
-                    <span className="text-xs text-yellow-500">PK</span>
+                    <span
+                      className="text-yellow-500"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
+                      PK
+                    </span>
                   )}
                   {col.nullable === false && (
-                    <span className="text-xs text-blue-500">NOT NULL</span>
+                    <span
+                      className="text-blue-500"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
+                      NOT NULL
+                    </span>
                   )}
                 </div>
               ))}
@@ -361,7 +405,10 @@ function formatToolOutput(
         </div>
         {rows && rows.length > 0 && (
           <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse text-xs">
+            <table
+              className="min-w-full border-collapse"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               <thead>
                 <tr>
                   {Object.keys(rows[0] as object).map((key) => (
@@ -410,7 +457,10 @@ function formatToolOutput(
   if (toolName === 'explain_query' && data.success && data.plan) {
     return (
       <div className="mt-1">
-        <pre className="bg-muted max-h-48 overflow-auto rounded p-2 font-mono text-xs whitespace-pre-wrap">
+        <pre
+          className="bg-muted max-h-48 overflow-auto rounded p-2 font-mono whitespace-pre-wrap"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {typeof data.plan === 'string'
             ? data.plan
             : JSON.stringify(data.plan, null, 2)}
@@ -453,10 +503,20 @@ function formatToolOutput(
                   className="bg-muted flex items-center gap-3 rounded p-2"
                 >
                   <span className="font-mono font-medium">{colName}</span>
-                  <span className="bg-background/50 rounded px-1 text-xs">
+                  <span
+                    className="bg-background/50 rounded px-1"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {colStats.type}
                   </span>
-                  <span className="text-muted-foreground text-xs">
+                  <span
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {colStats.distinctValues} distinct,{' '}
                     {colStats.nullPercentage} null
                   </span>
@@ -471,7 +531,10 @@ function formatToolOutput(
 
   // Default: JSON output
   return (
-    <pre className="bg-muted mt-1 max-h-64 overflow-auto rounded p-2 font-mono text-xs whitespace-pre-wrap">
+    <pre
+      className="bg-muted mt-1 max-h-64 overflow-auto rounded p-2 font-mono whitespace-pre-wrap"
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+    >
       {JSON.stringify(output, null, 2)}
     </pre>
   );
@@ -528,7 +591,8 @@ function ToolCall({ part, isStreaming }: ToolCallProps) {
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-2 py-1.5 text-xs transition-colors"
+        className="text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-2 py-1.5 transition-colors"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
       >
         {isExpanded ? (
           <ChevronDown className="h-3 w-3" />
@@ -539,11 +603,16 @@ function ToolCall({ part, isStreaming }: ToolCallProps) {
         <span className="font-medium capitalize">{toolDisplayName}</span>
         <span className={cn('ml-auto flex items-center gap-1', status.color)}>
           {status.icon}
-          <span className="text-xs">{status.text}</span>
+          <span style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}>
+            {status.text}
+          </span>
         </span>
       </button>
       {isExpanded && (
-        <div className="border-t px-3 py-2 text-xs">
+        <div
+          className="border-t px-3 py-2"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {/* Input/Args */}
           {((part.args !== undefined &&
             Object.keys(part.args as object).length > 0) ||
@@ -618,7 +687,10 @@ export function MessageContent({
   isStreaming = false,
 }: MessageContentProps) {
   return (
-    <div className={cn('text-sm', className)}>
+    <div
+      className={cn('', className)}
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+    >
       {parts.length === 0 && isStreaming && <Shimmer />}
       {parts.map((part, index) => {
         const isLastPart = index === parts.length - 1;

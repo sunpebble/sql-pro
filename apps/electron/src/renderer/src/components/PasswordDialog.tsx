@@ -68,10 +68,16 @@ export function PasswordDialog({
             <div className="bg-main rounded-base border-border mb-4 flex h-12 w-12 items-center justify-center border-2">
               <Lock className="text-main-foreground h-6 w-6" />
             </div>
-            <Dialog.Title className="text-lg font-semibold">
+            <Dialog.Title
+              className="font-semibold"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
               {t('passwordDialog.title')}
             </Dialog.Title>
-            <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+            <Dialog.Description
+              className="text-muted-foreground mt-2"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('passwordDialog.description')}{' '}
               <span className="font-medium">{filename}</span>
             </Dialog.Description>
@@ -85,7 +91,7 @@ export function PasswordDialog({
               placeholder={t('passwordDialog.placeholder')}
               autoFocus
               className={cn(
-                'border-border bg-background rounded-base w-full border-2 px-3 py-2 text-sm',
+                'border-border bg-background rounded-base w-full border-2 px-3 py-2',
                 'placeholder:text-muted-foreground',
                 'focus:ring-main focus:ring-2 focus:ring-offset-2 focus:outline-none'
               )}
@@ -95,7 +101,7 @@ export function PasswordDialog({
             <div className="flex items-center justify-between">
               <label
                 className={cn(
-                  'flex cursor-pointer items-center gap-2 text-sm',
+                  'flex cursor-pointer items-center gap-2',
                   !isStorageAvailable && 'cursor-not-allowed opacity-50'
                 )}
               >
@@ -124,7 +130,8 @@ export function PasswordDialog({
                 <button
                   type="button"
                   onClick={handleForgetPassword}
-                  className="text-muted-foreground hover:text-foreground text-xs hover:underline"
+                  className="text-muted-foreground hover:text-foreground hover:underline"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                 >
                   {t('passwordDialog.forgetPassword')}
                 </button>

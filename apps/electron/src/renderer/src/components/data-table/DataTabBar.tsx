@@ -151,11 +151,12 @@ const TabItem = memo(
                   role="tab"
                   aria-selected={isActive}
                   className={cn(
-                    'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-2.5 text-sm transition-colors',
+                    'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-2.5 transition-colors',
                     isActive
                       ? 'bg-accent text-foreground rounded-md'
                       : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground rounded-md bg-transparent'
                   )}
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                   onClick={onSelect}
                 >
                   {isView ? (

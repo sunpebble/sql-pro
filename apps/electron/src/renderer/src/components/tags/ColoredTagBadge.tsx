@@ -23,12 +23,15 @@ export function ColoredTagBadge({
     <Badge
       className={cn(
         'gap-1 border-0 transition-opacity hover:opacity-90',
-        size === 'sm' ? 'text-2xs h-4 px-1.5' : 'h-5 px-2 text-xs',
+        size === 'sm' ? 'text-2xs h-4 px-1.5' : 'h-5 px-2',
         className
       )}
       style={{
         backgroundColor: tag.color,
         color: textColor,
+        ...(size === 'md' && {
+          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+        }),
       }}
     >
       {tag.name}

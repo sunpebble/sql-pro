@@ -323,7 +323,7 @@ export function PluginCard({
         onClick={handleCardClick}
       >
         {/* Plugin Icon */}
-        <div className="bg-muted flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-base">
+        <div className="bg-muted rounded-base flex size-10 shrink-0 items-center justify-center overflow-hidden">
           {pluginIcon ? (
             <img
               src={pluginIcon}
@@ -339,7 +339,10 @@ export function PluginCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate font-medium">{pluginName}</span>
-            <span className="text-muted-foreground text-xs">
+            <span
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               v{pluginVersion}
             </span>
             {variant === 'installed' && pluginState && (
@@ -361,7 +364,10 @@ export function PluginCard({
               </Badge>
             )}
           </div>
-          <p className="text-muted-foreground truncate text-sm">
+          <p
+            className="text-muted-foreground truncate"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {pluginDescription}
           </p>
         </div>
@@ -445,7 +451,7 @@ export function PluginCard({
       <CardHeader className="pb-2">
         <div className="flex items-start gap-3">
           {/* Plugin Icon */}
-          <div className="bg-muted flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-base">
+          <div className="bg-muted rounded-base flex size-12 shrink-0 items-center justify-center overflow-hidden">
             {pluginIcon ? (
               <img
                 src={pluginIcon}
@@ -474,10 +480,16 @@ export function PluginCard({
               )}
             </div>
             <div className="mt-1 flex items-center gap-2">
-              <span className="text-muted-foreground text-xs">
+              <span
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 v{pluginVersion}
               </span>
-              <span className="text-muted-foreground text-xs">
+              <span
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('pluginCard.byAuthor', { author: pluginAuthor })}
               </span>
             </div>
@@ -490,7 +502,10 @@ export function PluginCard({
           {pluginDescription}
         </CardDescription>
         {hasError && errorMessage && (
-          <p className="text-destructive mt-2 line-clamp-2 text-xs">
+          <p
+            className="text-destructive mt-2 line-clamp-2"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {errorMessage}
           </p>
         )}
@@ -499,7 +514,10 @@ export function PluginCard({
       <CardFooter className="justify-between pt-0">
         {/* Marketplace downloads/rating info */}
         {variant === 'marketplace' && !isPluginInfoType && (
-          <div className="text-muted-foreground flex items-center gap-3 text-xs">
+          <div
+            className="text-muted-foreground flex items-center gap-3"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {'downloads' in plugin && plugin.downloads !== undefined && (
               <span>
                 {t('pluginCard.downloads', { count: plugin.downloads })}
@@ -522,7 +540,10 @@ export function PluginCard({
         <div className="flex items-center gap-2">
           {variant === 'installed' && onToggleEnabled && (
             <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-xs">
+              <span
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {isEnabled ? t('pluginCard.enabled') : t('pluginCard.disabled')}
               </span>
               <Switch

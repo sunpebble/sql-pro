@@ -343,7 +343,10 @@ export function ConnectionSelector({
         >
           {/* Open connections */}
           {allConnections.length > 0 && (
-            <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">
+            <DropdownMenuLabel
+              className="text-muted-foreground font-normal"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('connectionSelector.openConnections')}
             </DropdownMenuLabel>
           )}
@@ -412,7 +415,10 @@ export function ConnectionSelector({
           {filteredRecentConnections.length > 0 && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel className="text-muted-foreground flex items-center gap-1.5 text-xs font-normal">
+              <DropdownMenuLabel
+                className="text-muted-foreground flex items-center gap-1.5 font-normal"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 <Clock className="h-3 w-3" />
                 {t('connectionSelector.recent')}
               </DropdownMenuLabel>

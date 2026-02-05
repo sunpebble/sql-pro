@@ -76,9 +76,19 @@ export function QuickQueryInput({
         </Button>
       </div>
 
-      {error && <p className="text-destructive px-1 text-sm">{error}</p>}
+      {error && (
+        <p
+          className="text-destructive px-1"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
+          {error}
+        </p>
+      )}
 
-      <div className="text-muted-foreground flex items-center gap-2 px-1 text-xs">
+      <div
+        className="text-muted-foreground flex items-center gap-2 px-1"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         <span>Examples:</span>
         <button
           type="button"

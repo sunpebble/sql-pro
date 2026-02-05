@@ -28,10 +28,24 @@ function CardinalityMarker({
     cardinality === '1:1';
 
   if (isMany) {
-    return <span className="font-mono text-xs">N</span>;
+    return (
+      <span
+        className="font-mono"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
+        N
+      </span>
+    );
   }
   if (isOne) {
-    return <span className="font-mono text-xs">1</span>;
+    return (
+      <span
+        className="font-mono"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
+        1
+      </span>
+    );
   }
   return null;
 }
@@ -79,7 +93,10 @@ function ERRelationshipEdgeComponent({
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
           }}
         >
-          <div className="bg-background/90 flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs shadow-sm">
+          <div
+            className="bg-background/90 flex items-center gap-1 rounded border px-1.5 py-0.5 shadow-sm"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             <CardinalityMarker cardinality={cardinality} position="source" />
             <span className="text-muted-foreground">:</span>
             <CardinalityMarker cardinality={cardinality} position="target" />

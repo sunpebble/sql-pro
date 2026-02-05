@@ -199,7 +199,8 @@ export function SSHTunnelConfig({
                 value={privateKeyPath}
                 onChange={(e) => onPrivateKeyPathChange(e.target.value)}
                 disabled={disabled}
-                className="flex-1 font-mono text-xs"
+                className="flex-1 font-mono"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
               />
               <Button
                 type="button"
@@ -216,7 +217,10 @@ export function SSHTunnelConfig({
           <div className="space-y-2">
             <Label htmlFor={`${prefix}-passphrase`}>
               {t('connection.ssh.passphrase')}{' '}
-              <span className="text-muted-foreground text-xs">
+              <span
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 ({t('connection.optional')})
               </span>
             </Label>
@@ -337,7 +341,10 @@ export function SSHTunnelConfig({
             {/* Jump Host Configuration */}
             {showJumpHost && (
               <div className="border-primary/10 space-y-4 border-l-2 pt-2 pl-4">
-                <Label className="text-muted-foreground text-sm font-medium">
+                <Label
+                  className="text-muted-foreground font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('connection.ssh.jumpHost.title')}
                 </Label>
 

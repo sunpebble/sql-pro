@@ -230,12 +230,15 @@ export const QuickFilterTags = memo(
                   <button
                     onClick={() => handleToggle(suggestion)}
                     className={cn(
-                      'inline-flex h-6 items-center gap-1 rounded-md border px-2 text-xs font-medium transition-all duration-150',
+                      'inline-flex h-6 items-center gap-1 rounded-md border px-2 font-medium transition-all duration-150',
                       isActive
                         ? 'bg-primary text-background shadow-sm'
                         : 'bg-background hover:bg-muted',
                       suggestion.type === 'null' && !isActive && 'border-dashed'
                     )}
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     {getIcon(suggestion)}
                     <span className="max-w-25 truncate">

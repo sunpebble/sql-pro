@@ -131,7 +131,10 @@ export function DataDiffSummary({
                     {t('diffFilter.added')}
                   </span>
                 </div>
-                <span className="text-foreground text-lg font-semibold">
+                <span
+                  className="text-foreground font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                >
                   {counts.added.toLocaleString()}
                 </span>
               </Button>
@@ -156,7 +159,10 @@ export function DataDiffSummary({
                     {t('diffFilter.removed')}
                   </span>
                 </div>
-                <span className="text-foreground text-lg font-semibold">
+                <span
+                  className="text-foreground font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                >
                   {counts.removed.toLocaleString()}
                 </span>
               </Button>
@@ -181,7 +187,10 @@ export function DataDiffSummary({
                     {t('diffFilter.modified')}
                   </span>
                 </div>
-                <span className="text-foreground text-lg font-semibold">
+                <span
+                  className="text-foreground font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                >
                   {counts.modified.toLocaleString()}
                 </span>
               </Button>
@@ -205,7 +214,10 @@ export function DataDiffSummary({
                     {t('diffFilter.unchanged')}
                   </span>
                 </div>
-                <span className="text-foreground text-lg font-semibold">
+                <span
+                  className="text-foreground font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                >
                   {counts.unchanged.toLocaleString()}
                 </span>
               </Button>

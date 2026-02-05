@@ -137,12 +137,18 @@ export function ChangePasswordDialog({
             <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
               <KeyRound className="text-primary h-6 w-6" />
             </div>
-            <Dialog.Title className="text-lg font-semibold">
+            <Dialog.Title
+              className="font-semibold"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
               {isCurrentlyEncrypted
                 ? t('changePassword.changeTitle')
                 : t('changePassword.encryptTitle')}
             </Dialog.Title>
-            <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+            <Dialog.Description
+              className="text-muted-foreground mt-2"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {isCurrentlyEncrypted
                 ? t('changePassword.changeDesc', { filename })
                 : t('changePassword.encryptDesc', { filename })}
@@ -159,7 +165,11 @@ export function ChangePasswordDialog({
 
             {/* New Password */}
             <div className="space-y-2">
-              <label htmlFor="newPassword" className="text-sm font-medium">
+              <label
+                htmlFor="newPassword"
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('changePassword.newPassword')}
               </label>
               <input
@@ -174,13 +184,16 @@ export function ChangePasswordDialog({
                 }
                 autoFocus
                 className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2 text-sm',
+                  'border-input bg-background w-full rounded-md border px-3 py-2',
                   'placeholder:text-muted-foreground',
                   'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
                 )}
               />
               {isCurrentlyEncrypted && (
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('changePassword.leaveEmptyToRemove')}
                 </p>
               )}
@@ -188,7 +201,11 @@ export function ChangePasswordDialog({
 
             {/* Confirm Password */}
             <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-sm font-medium">
+              <label
+                htmlFor="confirmPassword"
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('changePassword.confirmPassword')}
               </label>
               <input
@@ -198,14 +215,17 @@ export function ChangePasswordDialog({
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder={t('changePassword.confirmPlaceholder')}
                 className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2 text-sm',
+                  'border-input bg-background w-full rounded-md border px-3 py-2',
                   'placeholder:text-muted-foreground',
                   'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
                   confirmPassword && !passwordsMatch && 'border-destructive'
                 )}
               />
               {confirmPassword && !passwordsMatch && (
-                <p className="text-destructive text-xs">
+                <p
+                  className="text-destructive"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('changePassword.passwordsNotMatch')}
                 </p>
               )}
@@ -228,7 +248,10 @@ export function ChangePasswordDialog({
                 />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">
+                    <span
+                      className="font-medium"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t('changePassword.rememberPassword')}
                     </span>
                     {!isStorageAvailable && (
@@ -242,7 +265,12 @@ export function ChangePasswordDialog({
                       </Tooltip>
                     )}
                   </div>
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('changePassword.storeInKeychain')}
                   </p>
                 </div>
@@ -251,7 +279,10 @@ export function ChangePasswordDialog({
 
             {/* Info message when there's already a saved password */}
             {newPassword && hasSavedPassword && (
-              <div className="text-muted-foreground flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
+              <div
+                className="text-muted-foreground flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 <Info className="h-4 w-4 text-blue-500" />
                 <span>{t('changePassword.autoUpdateSavedPassword')}</span>
               </div>

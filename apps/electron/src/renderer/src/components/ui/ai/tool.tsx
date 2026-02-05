@@ -83,7 +83,7 @@ export const ToolHeader = memo(
     return (
       <CollapsibleTrigger
         className={cn(
-          'text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-2 py-1.5 text-xs transition-colors',
+          'text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-2 py-1.5 transition-colors',
           className
         )}
         {...props}
@@ -95,7 +95,7 @@ export const ToolHeader = memo(
           className={cn('ml-auto flex items-center gap-1', config.className)}
         >
           <Icon className="h-3 w-3" />
-          <span className="text-xs">{config.text}</span>
+          <span>{config.text}</span>
         </span>
       </CollapsibleTrigger>
     );
@@ -107,7 +107,7 @@ export type ToolContentProps = ComponentProps<typeof CollapsibleContent>;
 export const ToolContent = memo(
   ({ className, children, ...props }: ToolContentProps) => (
     <CollapsibleContent
-      className={cn('border-t px-3 py-2 text-xs', className)}
+      className={cn('border-t px-3 py-2', className)}
       {...props}
     >
       {children}

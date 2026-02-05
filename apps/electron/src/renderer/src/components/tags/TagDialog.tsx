@@ -92,13 +92,23 @@ function CreateTagForm({
             })}
             autoFocus
           />
-          {error && <p className="text-destructive text-xs">{error}</p>}
+          {error && (
+            <p
+              className="text-destructive"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {error}
+            </p>
+          )}
         </div>
         <div className="space-y-2">
           <Label>{t('tags.color', { defaultValue: 'Color' })}</Label>
           <div className="flex items-center gap-3">
             <ColorPicker color={color} onChange={setColor} />
-            <span className="text-muted-foreground text-sm">
+            <span
+              className="text-muted-foreground"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('tags.colorHint', {
                 defaultValue: 'Choose a color for this tag',
               })}
@@ -232,7 +242,14 @@ function EditTagForm({
             }}
             autoFocus
           />
-          {error && <p className="text-destructive text-xs">{error}</p>}
+          {error && (
+            <p
+              className="text-destructive"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {error}
+            </p>
+          )}
         </div>
         <div className="space-y-2">
           <Label>{t('tags.color', { defaultValue: 'Color' })}</Label>

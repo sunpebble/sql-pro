@@ -183,7 +183,13 @@ const HeaderCell = memo(
                 <span className="text-primary flex shrink-0 items-center gap-0.5">
                   <Layers className="h-3 w-3" />
                   {groupCount !== undefined && (
-                    <span className="text-xs">({groupCount})</span>
+                    <span
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
+                      ({groupCount})
+                    </span>
                   )}
                 </span>
               )}

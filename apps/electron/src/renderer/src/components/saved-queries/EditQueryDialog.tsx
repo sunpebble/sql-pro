@@ -165,7 +165,12 @@ function EditQueryForm({
             autoFocus
           />
           {formState.error && (
-            <p className="text-destructive text-xs">{formState.error}</p>
+            <p
+              className="text-destructive"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {formState.error}
+            </p>
           )}
         </div>
 
@@ -173,7 +178,10 @@ function EditQueryForm({
         <div className="space-y-2">
           <Label htmlFor="edit-query-description">
             {t('savedQueries.description', { defaultValue: 'Description' })}
-            <span className="text-muted-foreground ml-1 text-xs">
+            <span
+              className="text-muted-foreground ml-1"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('common.optional', { defaultValue: '(optional)' })}
             </span>
           </Label>
@@ -231,14 +239,18 @@ function EditQueryForm({
             placeholder={t('savedQueries.sqlQueryPlaceholder', {
               defaultValue: 'SELECT * FROM ...',
             })}
-            className="min-h-32 font-mono text-sm"
+            className="min-h-32 font-mono"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           />
         </div>
 
         {/* Parameters detected */}
         {parameters.length > 0 && (
           <div className="bg-muted/50 rounded-base border-border border-2 p-3">
-            <p className="text-sm font-medium">
+            <p
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('savedQueries.parametersDetected', {
                 defaultValue: 'Parameters detected',
               })}
@@ -248,7 +260,12 @@ function EditQueryForm({
                 <Badge key={p.name} variant="secondary">
                   {`{{${p.name}}}`}
                   {p.type && p.type !== 'string' && (
-                    <span className="text-muted-foreground ml-1 text-xs">
+                    <span
+                      className="text-muted-foreground ml-1"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       :{p.type}
                     </span>
                   )}
@@ -261,7 +278,10 @@ function EditQueryForm({
       <DialogFooter className="flex-col gap-2 sm:flex-row">
         {formState.showDeleteConfirm ? (
           <div className="flex items-center gap-2 sm:mr-auto">
-            <span className="text-destructive text-sm">
+            <span
+              className="text-destructive"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('savedQueries.deleteConfirm', {
                 defaultValue: 'Delete this query?',
               })}

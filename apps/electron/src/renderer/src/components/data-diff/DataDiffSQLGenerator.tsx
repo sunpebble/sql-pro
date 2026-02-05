@@ -238,13 +238,21 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
               >
                 {t('dataDiffSQL.selectedRows', { count: selectedRowKeys.size })}
               </div>
-              <div className="grid grid-cols-3 gap-2 text-xs">
+              <div
+                className="grid grid-cols-3 gap-2"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {counts.inserts > 0 && (
                   <div className="rounded-md bg-green-100 p-2 dark:bg-green-950">
                     <div className="text-green-700 dark:text-green-300">
                       {t('dataDiffSQL.inserts')}
                     </div>
-                    <div className="text-lg font-semibold">
+                    <div
+                      className="font-semibold"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)',
+                      }}
+                    >
                       {counts.inserts}
                     </div>
                   </div>
@@ -254,7 +262,12 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     <div className="text-amber-700 dark:text-amber-300">
                       {t('dataDiffSQL.updates')}
                     </div>
-                    <div className="text-lg font-semibold">
+                    <div
+                      className="font-semibold"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)',
+                      }}
+                    >
                       {counts.updates}
                     </div>
                   </div>
@@ -264,7 +277,12 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     <div className="text-red-700 dark:text-red-300">
                       {t('dataDiffSQL.deletes')}
                     </div>
-                    <div className="text-lg font-semibold">
+                    <div
+                      className="font-semibold"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)',
+                      }}
+                    >
                       {counts.deletes}
                     </div>
                   </div>
@@ -434,7 +452,13 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                       </AlertTitle>
                       {showWarnings && (
                         <AlertDescription className="mt-2">
-                          <ul className="list-inside list-disc space-y-1 text-xs">
+                          <ul
+                            className="list-inside list-disc space-y-1"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {syncSQL.warnings.map((warning) => (
                               <li key={warning}>{warning}</li>
                             ))}
@@ -530,9 +554,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                           <SqlHighlight
                             code={syncSQL.sql}
                             className={cn(
-                              'text-sm',
-                              syncSQL.sql.length > 5000 && 'text-xs'
+                              syncSQL.sql.length > 5000 &&
+                                'text-[calc(var(--font-ui-size,14px)*0.85)]'
                             )}
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                           />
                         </div>
                       </ScrollArea>

@@ -209,13 +209,21 @@ export function ImportExportDialog({
                       <p className="font-medium text-green-900 dark:text-green-100">
                         {t('importExport.exportSuccessful')}
                       </p>
-                      <p className="text-sm text-green-700 dark:text-green-300">
+                      <p
+                        className="text-green-700 dark:text-green-300"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('importExport.exportedCount', {
                           count: exportResult.exportedCount,
                         })}
                       </p>
                       {exportResult.filePath && (
-                        <p className="text-xs break-all text-green-600 dark:text-green-400">
+                        <p
+                          className="break-all text-green-600 dark:text-green-400"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {exportResult.filePath}
                         </p>
                       )}
@@ -225,7 +233,10 @@ export function ImportExportDialog({
                       <p className="text-destructive font-medium">
                         {t('importExport.exportFailed')}
                       </p>
-                      <p className="text-destructive/80 mt-1 text-sm">
+                      <p
+                        className="text-destructive/80 mt-1"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {exportResult.error || t('importExport.unknownError')}
                       </p>
                     </div>
@@ -236,7 +247,10 @@ export function ImportExportDialog({
                   <div className="space-y-3">
                     {/* Selection controls */}
                     <div className="flex items-center justify-between border-b pb-2">
-                      <span className="text-sm font-medium">
+                      <span
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('importExport.selected', {
                           count:
                             selectedProfileIds.size + selectedFolderIds.size,
@@ -267,7 +281,13 @@ export function ImportExportDialog({
                       <div className="space-y-2">
                         {folders.length > 0 && (
                           <div className="space-y-2">
-                            <h4 className="text-muted-foreground text-xs font-semibold uppercase">
+                            <h4
+                              className="text-muted-foreground font-semibold uppercase"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
+                            >
                               {t('importExport.folders')}
                             </h4>
                             {folders.map((folder) => (
@@ -281,7 +301,12 @@ export function ImportExportDialog({
                                     toggleFolder(folder.id)
                                   }
                                 />
-                                <span className="flex-1 text-sm">
+                                <span
+                                  className="flex-1"
+                                  style={{
+                                    fontSize: 'var(--font-ui-size, 14px)',
+                                  }}
+                                >
                                   {folder.name}
                                 </span>
                               </label>
@@ -291,7 +316,13 @@ export function ImportExportDialog({
 
                         {profiles.length > 0 && (
                           <div className="space-y-2">
-                            <h4 className="text-muted-foreground text-xs font-semibold uppercase">
+                            <h4
+                              className="text-muted-foreground font-semibold uppercase"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
+                            >
                               {t('importExport.profiles')}
                             </h4>
                             {profiles.map((profile) => (
@@ -306,10 +337,21 @@ export function ImportExportDialog({
                                   }
                                 />
                                 <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm">
+                                  <p
+                                    className="truncate"
+                                    style={{
+                                      fontSize: 'var(--font-ui-size, 14px)',
+                                    }}
+                                  >
                                     {profile.displayName || profile.filename}
                                   </p>
-                                  <p className="text-muted-foreground truncate text-xs">
+                                  <p
+                                    className="text-muted-foreground truncate"
+                                    style={{
+                                      fontSize:
+                                        'calc(var(--font-ui-size, 14px) * 0.85)',
+                                    }}
+                                  >
                                     {profile.path}
                                   </p>
                                 </div>
@@ -319,7 +361,10 @@ export function ImportExportDialog({
                         )}
 
                         {profiles.length === 0 && folders.length === 0 && (
-                          <p className="text-muted-foreground py-8 text-center text-sm">
+                          <p
+                            className="text-muted-foreground py-8 text-center"
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          >
                             {t('importExport.noProfilesOrFolders')}
                           </p>
                         )}
@@ -342,10 +387,18 @@ export function ImportExportDialog({
                     }
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">
+                    <p
+                      className="font-medium"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t('importExport.mergeWithExisting')}
                     </p>
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('importExport.mergeDescription')}
                     </p>
                   </div>
@@ -359,7 +412,10 @@ export function ImportExportDialog({
                         <p className="font-medium text-green-900 dark:text-green-100">
                           {t('importExport.importSuccessful')}
                         </p>
-                        <div className="space-y-1 text-sm text-green-700 dark:text-green-300">
+                        <div
+                          className="space-y-1 text-green-700 dark:text-green-300"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           <p>
                             {t('importExport.importedCount', {
                               count: importResult.importedCount || 0,
@@ -380,16 +436,31 @@ export function ImportExportDialog({
                         <p className="text-destructive font-medium">
                           {t('importExport.importFailed')}
                         </p>
-                        <p className="text-destructive/80 text-sm">
+                        <p
+                          className="text-destructive/80"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {importResult.error || t('importExport.unknownError')}
                         </p>
                         {importResult.errors &&
                           importResult.errors.length > 0 && (
                             <div className="mt-2 space-y-1">
-                              <p className="text-destructive text-xs font-medium">
+                              <p
+                                className="text-destructive font-medium"
+                                style={{
+                                  fontSize:
+                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                }}
+                              >
                                 {t('importExport.validationErrors')}
                               </p>
-                              <ul className="text-destructive/80 list-inside list-disc space-y-0.5 text-xs">
+                              <ul
+                                className="text-destructive/80 list-inside list-disc space-y-0.5"
+                                style={{
+                                  fontSize:
+                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                }}
+                              >
                                 {importResult.errors.map((error) => (
                                   <li key={error}>{error}</li>
                                 ))}

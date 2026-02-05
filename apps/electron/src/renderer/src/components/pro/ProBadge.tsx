@@ -6,7 +6,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const proBadgeVariants = cva(
-  'inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none transition-[color,box-shadow] overflow-hidden',
+  'inline-flex items-center justify-center rounded-full border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none transition-[color,box-shadow] overflow-hidden',
   {
     variants: {
       variant: {
@@ -21,9 +21,9 @@ const proBadgeVariants = cva(
         glow: 'border-transparent bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-lg shadow-amber-500/30',
       },
       size: {
-        default: 'px-2 py-0.5 text-xs',
-        sm: 'px-1.5 py-0.5 text-2xs',
-        lg: 'px-3 py-1 text-sm',
+        default: 'px-2 py-0.5',
+        sm: 'px-1.5 py-0.5',
+        lg: 'px-3 py-1',
       },
     },
     defaultVariants: {
@@ -47,6 +47,13 @@ export interface ProBadgeProps
   label?: string;
 }
 
+// Font size mapping for each size variant
+const sizeStyles: Record<'default' | 'sm' | 'lg', React.CSSProperties> = {
+  default: { fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' },
+  sm: { fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)' },
+  lg: { fontSize: 'var(--font-ui-size, 14px)' },
+};
+
 /**
  * Badge component to indicate Pro features in the UI.
  * Shows a gold-colored badge with a crown icon.
@@ -57,12 +64,15 @@ function ProBadge({
   size,
   showIcon = true,
   label = 'Pro',
+  style,
   ...props
 }: ProBadgeProps) {
+  const sizeStyle = sizeStyles[size ?? 'default'];
   return (
     <span
       data-slot="pro-badge"
       className={cn(proBadgeVariants({ variant, size }), className)}
+      style={{ ...sizeStyle, ...style }}
       {...props}
     >
       {showIcon && <Crown className="h-3 w-3" aria-hidden="true" />}

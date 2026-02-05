@@ -105,7 +105,10 @@ export function UpdateCheckDialog() {
         </DialogHeader>
 
         {updateInfo && (
-          <div className="bg-muted/50 rounded-base border-border space-y-2 border-2 p-3 text-sm">
+          <div
+            className="bg-muted/50 rounded-base border-border space-y-2 border-2 p-3"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             <div className="flex justify-between">
               <span className="text-muted-foreground">
                 {t('updateCheck.version')}:
@@ -127,7 +130,10 @@ export function UpdateCheckDialog() {
                 <span className="text-muted-foreground">
                   {t('updateCheck.releaseNotes')}:
                 </span>
-                <p className="mt-1 text-xs whitespace-pre-wrap">
+                <p
+                  className="mt-1 whitespace-pre-wrap"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {updateInfo.releaseNotes}
                 </p>
               </div>
@@ -143,7 +149,10 @@ export function UpdateCheckDialog() {
                 style={{ width: `${downloadProgress}%` }}
               />
             </div>
-            <p className="text-muted-foreground text-center text-sm">
+            <p
+              className="text-muted-foreground text-center"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('updateCheck.downloading')} {downloadProgress.toFixed(0)}%
             </p>
           </div>

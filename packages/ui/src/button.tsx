@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from './lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-[5px] text-sm font-medium ring-offset-white transition-all gap-2 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-[5px] font-medium ring-offset-white transition-all gap-2 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
   {
     variants: {
       variant: {
@@ -42,7 +42,7 @@ const buttonVariants = cva(
       },
       size: {
         default: 'h-10 px-4 py-2',
-        xs: 'h-7 px-2 text-xs gap-1',
+        xs: 'h-7 px-2 gap-1',
         sm: 'h-9 px-3 gap-1.5',
         lg: 'h-11 px-8 gap-2',
         icon: 'size-10',
@@ -62,12 +62,24 @@ function Button({
   className,
   variant = 'default',
   size = 'default',
+  style,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+  // Calculate font size based on size variant
+  const getFontSize = () => {
+    switch (size) {
+      case 'xs':
+        return 'calc(var(--font-ui-size, 14px) * 0.85)';
+      default:
+        return 'var(--font-ui-size, 14px)';
+    }
+  };
+
   return (
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      style={{ fontSize: getFontSize(), ...style }}
       {...props}
     />
   );

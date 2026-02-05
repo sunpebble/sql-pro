@@ -180,15 +180,18 @@ export function AppearanceSection() {
       {/* Font Settings Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-medium">{t('fonts.title')}</Label>
+          <Label
+            className="font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
+            {t('fonts.title')}
+          </Label>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setSyncAll(!fonts.syncAll)}
-            className={cn(
-              'h-7 gap-1.5 text-xs',
-              fonts.syncAll && 'text-primary'
-            )}
+            className={cn('h-7 gap-1.5', fonts.syncAll && 'text-primary')}
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           >
             {fonts.syncAll ? (
               <Link className="h-3.5 w-3.5" />
@@ -200,7 +203,10 @@ export function AppearanceSection() {
         </div>
 
         {fonts.syncAll && (
-          <p className="text-muted-foreground -mt-2 text-xs">
+          <p
+            className="text-muted-foreground -mt-2"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {t('fonts.syncDescription')}
           </p>
         )}
@@ -313,8 +319,16 @@ function FontSettingsRow({
     >
       <div className="mb-2 flex items-center justify-between">
         <div>
-          <span className="text-sm font-medium">{label}</span>
-          <span className="text-muted-foreground ml-2 text-xs">
+          <span
+            className="font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
+            {label}
+          </span>
+          <span
+            className="text-muted-foreground ml-2"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {description}
           </span>
         </div>
@@ -328,7 +342,8 @@ function FontSettingsRow({
               variant="outline"
               role="combobox"
               aria-expanded={fontSelectOpen}
-              className="h-8 w-full flex-1 justify-between text-xs font-normal"
+              className="h-8 w-full flex-1 justify-between font-normal"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
               disabled={loading}
             >
               {loading ? (
@@ -363,7 +378,9 @@ function FontSettingsRow({
                       onChange({ family: '' });
                       setFontSelectOpen(false);
                     }}
-                    className="text-xs"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     <Check
                       className={cn(
@@ -388,8 +405,11 @@ function FontSettingsRow({
                           onChange({ family: font.value });
                           setFontSelectOpen(false);
                         }}
-                        className="text-xs"
-                        style={{ fontFamily: font.value }}
+                        className=""
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontFamily: font.value,
+                        }}
                       >
                         <Check
                           className={cn(
@@ -420,7 +440,10 @@ function FontSettingsRow({
           >
             -
           </Button>
-          <span className="text-muted-foreground w-10 text-center text-xs">
+          <span
+            className="text-muted-foreground w-10 text-center"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {config.size}px
           </span>
           <Button

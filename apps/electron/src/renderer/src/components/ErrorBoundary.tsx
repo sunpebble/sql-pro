@@ -124,7 +124,8 @@ function CollapsibleSection({
     <div className="border-border/50 rounded-base overflow-hidden border">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hover:bg-muted/50 flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium transition-colors"
+        className="hover:bg-muted/50 flex w-full items-center gap-2 px-3 py-2 text-left font-medium transition-colors"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
       >
         {isOpen ? (
           <ChevronDown className="h-4 w-4" />
@@ -153,13 +154,17 @@ function StackTraceViewer({ stack }: { stack: string }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-muted-foreground text-xs">
+        <span
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('errorBoundary.stackFrames', { count: frames.length })}
         </span>
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 px-2 text-xs"
+          className="h-7 px-2"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           onClick={handleCopy}
         >
           <Copy className="mr-1 h-3 w-3" />
@@ -172,9 +177,10 @@ function StackTraceViewer({ stack }: { stack: string }) {
             <div
               key={`${frame.raw}`}
               className={cn(
-                'group flex items-start gap-2 px-2 py-1.5 font-mono text-xs',
+                'group flex items-start gap-2 px-2 py-1.5 font-mono',
                 index === 0 && 'bg-destructive/10'
               )}
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
             >
               <span className="text-muted-foreground w-5 shrink-0 text-right">
                 {index}
@@ -222,13 +228,17 @@ function ComponentStackViewer({ componentStack }: { componentStack: string }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-muted-foreground text-xs">
+        <span
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('errorBoundary.componentHierarchy')}
         </span>
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 px-2 text-xs"
+          className="h-7 px-2"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           onClick={handleCopy}
         >
           <Copy className="mr-1 h-3 w-3" />
@@ -243,8 +253,11 @@ function ComponentStackViewer({ componentStack }: { componentStack: string }) {
             return (
               <div
                 key={line}
-                className="flex items-center gap-1 font-mono text-xs"
-                style={{ paddingLeft: `${index * 12}px` }}
+                className="flex items-center gap-1 font-mono"
+                style={{
+                  paddingLeft: `${index * 12}px`,
+                  fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                }}
               >
                 <span className="text-muted-foreground">{'>'}</span>
                 <span
@@ -353,10 +366,16 @@ function ErrorFallback({
           <AlertTriangle className="text-destructive h-8 w-8" />
         </div>
 
-        <h2 className="mb-1 text-xl font-semibold">
+        <h2
+          className="mb-1 font-semibold"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+        >
           {t('errorBoundary.somethingWentWrong')}
         </h2>
-        <p className="text-muted-foreground mb-4 text-sm">
+        <p
+          className="text-muted-foreground mb-4"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('errorBoundary.unexpectedError')}
         </p>
 
@@ -364,11 +383,17 @@ function ErrorFallback({
         {error && (
           <div className="bg-destructive/5 border-destructive/20 rounded-base mb-4 w-full border p-4 text-left">
             <div className="text-destructive flex items-start gap-2">
-              <span className="bg-destructive/20 rounded px-1.5 py-0.5 font-mono text-xs font-medium">
+              <span
+                className="bg-destructive/20 rounded px-1.5 py-0.5 font-mono font-medium"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {error.name || t('errorBoundary.error')}
               </span>
             </div>
-            <p className="text-destructive mt-2 font-mono text-sm">
+            <p
+              className="text-destructive mt-2 font-mono"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {error.message}
             </p>
           </div>

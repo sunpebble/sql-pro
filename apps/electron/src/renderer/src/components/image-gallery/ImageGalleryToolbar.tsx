@@ -100,7 +100,10 @@ export function MediaGalleryToolbar({
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <ImageIcon className="text-muted-foreground h-4 w-4" />
-            <span className="text-sm font-medium">
+            <span
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('mediaGallery.title', 'Media')}
             </span>
           </div>
@@ -124,7 +127,12 @@ export function MediaGalleryToolbar({
                 {mediaColumns.map((col) => (
                   <SelectItem key={col.column} value={col.column}>
                     {col.column}{' '}
-                    <span className="text-muted-foreground ml-1 text-xs">
+                    <span
+                      className="text-muted-foreground ml-1"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       ({col.type})
                     </span>
                   </SelectItem>
@@ -133,7 +141,10 @@ export function MediaGalleryToolbar({
             </Select>
           )}
 
-          <span className="text-muted-foreground text-sm">
+          <span
+            className="text-muted-foreground"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {totalCount} {t('mediaGallery.mediaFound', 'media')}
           </span>
         </div>
@@ -144,7 +155,8 @@ export function MediaGalleryToolbar({
           {hasSelection && onExportSelected && (
             <button
               onClick={onExportSelected}
-              className="hover:bg-muted flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm transition-colors"
+              className="hover:bg-muted flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
             >
               <Download className="h-4 w-4" />
               <span>
@@ -167,7 +179,10 @@ export function MediaGalleryToolbar({
             >
               <Minus className="h-4 w-4" />
             </button>
-            <span className="text-muted-foreground w-12 text-center text-xs">
+            <span
+              className="text-muted-foreground w-12 text-center"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {thumbnailSize}px
             </span>
             <button

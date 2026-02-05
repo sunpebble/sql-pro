@@ -32,7 +32,10 @@ export function ActiveFilters({
 
   return (
     <div className="flex flex-wrap items-center gap-2 border-b px-4 py-2">
-      <span className="text-muted-foreground text-xs font-medium">
+      <span
+        className="text-muted-foreground font-medium"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         {t('filter.title')}
       </span>
       {filters.map((filter) => {
@@ -61,7 +64,8 @@ export function ActiveFilters({
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 px-2 text-xs"
+          className="h-6 px-2"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           onClick={onFiltersClear}
         >
           {t('actions.clear')}

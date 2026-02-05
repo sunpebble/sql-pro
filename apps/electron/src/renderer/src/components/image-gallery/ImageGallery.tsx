@@ -193,7 +193,11 @@ const ImageThumbnail = memo(
         ) : (
           <div className="bg-muted text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-1">
             <ImageOff className="h-6 w-6" />
-            <span className="text-xs">{t('mediaGallery.error')}</span>
+            <span
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {t('mediaGallery.error')}
+            </span>
           </div>
         )}
 
@@ -201,7 +205,10 @@ const ImageThumbnail = memo(
         <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 opacity-0 transition-opacity group-hover:opacity-100">
           <div className="flex items-center gap-1">
             {isVideo && <Film className="h-3 w-3 text-white" />}
-            <p className="truncate text-xs text-white">
+            <p
+              className="truncate text-white"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('mediaGallery.rowLabel', { row: item.rowIndex + 1 })} ·{' '}
               {item.column}
             </p>
@@ -449,18 +456,30 @@ const ImageListItem = memo(
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             {isVideo && <Film className="text-muted-foreground h-4 w-4" />}
-            <span className="text-sm font-medium">
+            <span
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('mediaGallery.rowLabel', { row: item.rowIndex + 1 })}
             </span>
-            <span className="bg-muted rounded px-1.5 py-0.5 text-xs font-medium">
+            <span
+              className="bg-muted rounded px-1.5 py-0.5 font-medium"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {item.column}
             </span>
-            <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs">
+            <span
+              className="bg-muted text-muted-foreground rounded px-1.5 py-0.5"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {sourceInfo.type}
             </span>
           </div>
           {sourceInfo.detail && (
-            <p className="text-muted-foreground mt-1 truncate text-xs">
+            <p
+              className="text-muted-foreground mt-1 truncate"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {sourceInfo.detail}
             </p>
           )}

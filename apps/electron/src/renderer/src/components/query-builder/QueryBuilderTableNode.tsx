@@ -203,7 +203,7 @@ function QueryBuilderTableNodeComponent({
         role="button"
         tabIndex={0}
         className={cn(
-          'group relative flex items-center gap-1.5 overflow-visible py-1 pr-4 pl-5 text-sm',
+          'group relative flex items-center gap-1.5 overflow-visible py-1 pr-4 pl-5',
           'hover:bg-accent/50 cursor-pointer transition-colors',
           isSelected && 'bg-primary/10',
           isPK && 'bg-amber-500/5',
@@ -211,6 +211,7 @@ function QueryBuilderTableNodeComponent({
           isDirectlyHighlighted &&
             'bg-cyan-500/30 ring-2 ring-cyan-500 ring-inset'
         )}
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
         onClick={() => handleToggleColumn(column.name)}
         onKeyDown={(e) =>
           handleKeyDown(e, () => handleToggleColumn(column.name))
@@ -325,7 +326,10 @@ function QueryBuilderTableNodeComponent({
             {table.name}
           </span>
           {alias !== table.name && (
-            <span className="text-muted-foreground truncate text-xs">
+            <span
+              className="text-muted-foreground truncate"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               AS {alias}
             </span>
           )}
@@ -353,8 +357,9 @@ function QueryBuilderTableNodeComponent({
         tabIndex={0}
         className={cn(
           'flex items-center gap-2 border-b py-1 pr-4 pl-5',
-          'hover:bg-accent/50 cursor-pointer text-xs'
+          'hover:bg-accent/50 cursor-pointer'
         )}
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
         onClick={handleToggleAll}
         onKeyDown={(e) => handleKeyDown(e, handleToggleAll)}
       >

@@ -53,7 +53,12 @@ export const GroupRow = memo(({ row, isExpanded }: GroupRowProps) => {
             )}
           </span>
 
-          <span className="text-muted-foreground text-xs">({leafCount})</span>
+          <span
+            className="text-muted-foreground"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
+            ({leafCount})
+          </span>
         </div>
       </td>
     </tr>

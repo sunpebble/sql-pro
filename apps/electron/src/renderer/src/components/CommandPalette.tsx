@@ -222,12 +222,18 @@ function CommandPaletteInner() {
           <div className="border-b p-4">
             <div className="mb-3 flex items-center gap-2">
               <Sparkles className="text-primary h-4 w-4" />
-              <span className="text-sm font-medium">
+              <span
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('commandPalette.aiQueryMode', {
                   defaultValue: 'AI Query Mode',
                 })}
               </span>
-              <span className="text-muted-foreground ml-auto text-xs">
+              <span
+                className="text-muted-foreground ml-auto"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('commandPalette.aiQueryHint', {
                   defaultValue: 'Type naturally to generate SQL',
                 })}
@@ -266,7 +272,12 @@ function CommandPaletteInner() {
                       )}
                       <span className="flex-1">{command.label}</span>
                       {command.shortcut && (
-                        <CommandShortcut className="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">
+                        <CommandShortcut
+                          className="bg-muted rounded px-1.5 py-0.5 font-mono"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {command.shortcut}
                         </CommandShortcut>
                       )}
@@ -278,7 +289,10 @@ function CommandPaletteInner() {
         )}
       </CommandList>
       {/* Footer */}
-      <div className="text-muted-foreground border-border/50 flex items-center justify-between border-t px-4 py-2 text-xs">
+      <div
+        className="text-muted-foreground border-border/50 flex items-center justify-between border-t px-4 py-2"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         <div className="flex items-center gap-4">
           <button
             onClick={() => setMode('command')}
@@ -290,7 +304,10 @@ function CommandPaletteInner() {
             <span>
               {t('commandPalette.commands', { defaultValue: 'Commands' })}
             </span>
-            <kbd className="bg-muted rounded px-1.5 py-0.5 text-[10px]">
+            <kbd
+              className="bg-muted rounded px-1.5 py-0.5"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)' }}
+            >
               &gt;
             </kbd>
           </button>
@@ -305,7 +322,12 @@ function CommandPaletteInner() {
             <span>
               {t('commandPalette.aiQuery', { defaultValue: 'AI Query' })}
             </span>
-            <kbd className="bg-muted rounded px-1.5 py-0.5 text-[10px]">?</kbd>
+            <kbd
+              className="bg-muted rounded px-1.5 py-0.5"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)' }}
+            >
+              ?
+            </kbd>
           </button>
         </div>
         <span>

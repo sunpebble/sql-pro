@@ -35,7 +35,12 @@ function DeveloperPanel({ onOpenChange }: DeveloperPanelProps) {
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <Zap className="h-4 w-4" />
-        <Label className="text-sm font-medium">{t('developer.title')}</Label>
+        <Label
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
+          {t('developer.title')}
+        </Label>
       </div>
 
       <button
@@ -47,10 +52,16 @@ function DeveloperPanel({ onOpenChange }: DeveloperPanelProps) {
             <Zap className="text-muted-foreground h-5 w-5" />
           </div>
           <div className="text-left">
-            <span className="text-sm font-medium">
+            <span
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('developer.memoryMonitor')}
             </span>
-            <p className="text-muted-foreground text-xs">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('developer.memoryMonitorDescription')}
             </p>
           </div>
@@ -58,7 +69,10 @@ function DeveloperPanel({ onOpenChange }: DeveloperPanelProps) {
         <ChevronRight className="text-muted-foreground h-5 w-5" />
       </button>
 
-      <p className="text-muted-foreground text-xs">
+      <p
+        className="text-muted-foreground"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         Access via menu: View → Developer → Memory Monitor (⌘⇧M)
       </p>
     </div>

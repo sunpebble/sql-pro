@@ -292,7 +292,10 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
             {/* Source Selector */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
+                <CardTitle
+                  className="flex items-center gap-2"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Database className="h-4 w-4" />
                   {t('compare.source')}
                 </CardTitle>
@@ -300,7 +303,12 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               <CardContent className="space-y-3">
                 {/* Connection Selector */}
                 <div className="space-y-2">
-                  <label className="text-muted-foreground text-xs font-medium">
+                  <label
+                    className="text-muted-foreground font-medium"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('compare.connection')}
                   </label>
                   <Select
@@ -339,7 +347,12 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
 
                 {/* Table Selector */}
                 <div className="space-y-2">
-                  <label className="text-muted-foreground text-xs font-medium">
+                  <label
+                    className="text-muted-foreground font-medium"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('compare.table')}
                   </label>
                   <Select
@@ -388,7 +401,10 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
             {/* Target Selector */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
+                <CardTitle
+                  className="flex items-center gap-2"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Database className="h-4 w-4" />
                   {t('compare.target')}
                 </CardTitle>
@@ -396,7 +412,12 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
               <CardContent className="space-y-3">
                 {/* Connection Selector */}
                 <div className="space-y-2">
-                  <label className="text-muted-foreground text-xs font-medium">
+                  <label
+                    className="text-muted-foreground font-medium"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('compare.connection')}
                   </label>
                   <Select
@@ -435,7 +456,12 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
 
                 {/* Table Selector */}
                 <div className="space-y-2">
-                  <label className="text-muted-foreground text-xs font-medium">
+                  <label
+                    className="text-muted-foreground font-medium"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('compare.table')}
                   </label>
                   <Select
@@ -520,7 +546,10 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
+                    <div
+                      className="flex items-center justify-between"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       <span className="text-muted-foreground">
                         {t('compare.sourceLabel')}
                       </span>
@@ -528,7 +557,10 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                         {comparisonResult.sourceName}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
+                    <div
+                      className="flex items-center justify-between"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       <span className="text-muted-foreground">
                         {t('compare.targetLabel')}
                       </span>
@@ -537,18 +569,32 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                       </span>
                     </div>
                     <div className="mt-4 border-t pt-2">
-                      <p className="text-muted-foreground text-sm">
+                      <p
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('compare.rowsSummary', {
                           sourceRows: comparisonResult.summary.sourceRows,
                           targetRows: comparisonResult.summary.targetRows,
                         })}
                       </p>
-                      <div className="mt-2 grid grid-cols-4 gap-2 text-xs">
+                      <div
+                        className="mt-2 grid grid-cols-4 gap-2"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         <div className="rounded-md bg-green-100 p-2 dark:bg-green-950">
                           <div className="text-green-700 dark:text-green-300">
                             {t('compare.rowsAdded')}
                           </div>
-                          <div className="text-lg font-semibold">
+                          <div
+                            className="font-semibold"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                            }}
+                          >
                             {comparisonResult.summary.rowsAdded}
                           </div>
                         </div>
@@ -556,7 +602,13 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                           <div className="text-red-700 dark:text-red-300">
                             {t('compare.rowsRemoved')}
                           </div>
-                          <div className="text-lg font-semibold">
+                          <div
+                            className="font-semibold"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                            }}
+                          >
                             {comparisonResult.summary.rowsRemoved}
                           </div>
                         </div>
@@ -564,7 +616,13 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                           <div className="text-amber-700 dark:text-amber-300">
                             {t('compare.rowsModified')}
                           </div>
-                          <div className="text-lg font-semibold">
+                          <div
+                            className="font-semibold"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                            }}
+                          >
                             {comparisonResult.summary.rowsModified}
                           </div>
                         </div>
@@ -572,7 +630,13 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                           <div className="text-blue-700 dark:text-blue-300">
                             {t('compare.rowsUnchanged')}
                           </div>
-                          <div className="text-lg font-semibold">
+                          <div
+                            className="font-semibold"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                            }}
+                          >
                             {comparisonResult.summary.rowsUnchanged}
                           </div>
                         </div>
@@ -588,7 +652,10 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                   <CardTitle>{t('compare.rowDifferences')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground text-sm">
+                  <p
+                    className="text-muted-foreground"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('compare.detailedDiffPlaceholder')}
                   </p>
                 </CardContent>
@@ -601,7 +668,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
             <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-12 text-center">
               <GitCompare className="h-12 w-12 opacity-30" />
               <p className="font-medium">{t('compare.readyToCompare')}</p>
-              <p className="text-sm">
+              <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                 {t('compare.selectSourceAndTargetData')}
               </p>
             </div>

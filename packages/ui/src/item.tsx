@@ -36,7 +36,7 @@ function ItemSeparator({
 }
 
 const itemVariants = cva(
-  '[a]:hover:bg-muted rounded-md border text-sm w-full group/item focus-visible:border-ring focus-visible:ring-ring/50 flex items-center flex-wrap outline-none transition-colors duration-100 focus-visible:ring-[3px] [a]:transition-colors',
+  '[a]:hover:bg-muted rounded-md border w-full group/item focus-visible:border-ring focus-visible:ring-ring/50 flex items-center flex-wrap outline-none transition-colors duration-100 focus-visible:ring-[3px] [a]:transition-colors [font-size:var(--font-ui-size,14px)]',
   {
     variants: {
       variant: {
@@ -131,7 +131,7 @@ function ItemTitle({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="item-title"
       className={cn(
-        'line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4',
+        'line-clamp-1 flex w-fit items-center gap-2 [font-size:var(--font-ui-size,14px)] leading-snug font-medium underline-offset-4',
         className
       )}
       {...props}
@@ -144,7 +144,7 @@ function ItemDescription({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot="item-description"
       className={cn(
-        'text-muted-foreground [&>a:hover]:text-primary line-clamp-2 text-left text-sm leading-normal font-normal group-data-[size=xs]/item:text-xs [&>a]:underline [&>a]:underline-offset-4',
+        'text-muted-foreground [&>a:hover]:text-primary line-clamp-2 text-left [font-size:var(--font-ui-size,14px)] leading-normal font-normal group-data-[size=xs]/item:[font-size:calc(var(--font-ui-size,14px)*0.75)] [&>a]:underline [&>a]:underline-offset-4',
         className
       )}
       {...props}

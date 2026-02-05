@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 import * as monaco from 'monaco-editor';
 import { useEffect, useRef } from 'react';
 
@@ -11,6 +13,8 @@ interface SqlHighlightProps {
   className?: string;
   /** Maximum number of lines to show (uses line-clamp) */
   maxLines?: number;
+  /** Additional inline styles */
+  style?: CSSProperties;
 }
 
 /**
@@ -23,7 +27,12 @@ interface SqlHighlightProps {
  * - Query optimizer previews
  * - AI-generated SQL display
  */
-export function SqlHighlight({ code, className, maxLines }: SqlHighlightProps) {
+export function SqlHighlight({
+  code,
+  className,
+  maxLines,
+  style,
+}: SqlHighlightProps) {
   const { theme } = useThemeStore();
   const containerRef = useRef<HTMLPreElement>(null);
 
@@ -53,7 +62,7 @@ export function SqlHighlight({ code, className, maxLines }: SqlHighlightProps) {
   }, [code, isDark]);
 
   // Generate line-clamp style based on maxLines
-  const lineClampStyle = maxLines
+  const lineClampStyle: CSSProperties | undefined = maxLines
     ? {
         display: '-webkit-box',
         WebkitLineClamp: maxLines,
@@ -62,15 +71,24 @@ export function SqlHighlight({ code, className, maxLines }: SqlHighlightProps) {
       }
     : undefined;
 
+  // Merge lineClampStyle with custom style
+  const mergedStyle: CSSProperties | undefined =
+    lineClampStyle || style
+      ? {
+          ...lineClampStyle,
+          ...style,
+        }
+      : undefined;
+
   return (
     <pre
       ref={containerRef}
       data-lang="sql"
       className={cn(
-        'overflow-hidden font-mono text-xs break-all whitespace-pre-wrap',
+        'overflow-hidden font-mono break-all whitespace-pre-wrap',
         className
       )}
-      style={lineClampStyle}
+      style={mergedStyle}
     >
       {code}
     </pre>

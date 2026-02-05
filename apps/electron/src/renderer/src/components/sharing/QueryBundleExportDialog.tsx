@@ -205,13 +205,21 @@ export function QueryBundleExportDialog({
                   <p className="font-medium text-green-900 dark:text-green-100">
                     {t('queryBundleExport.exportSuccessful')}
                   </p>
-                  <p className="text-sm text-green-700 dark:text-green-300">
+                  <p
+                    className="text-green-700 dark:text-green-300"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('queryBundleExport.exportSuccessDescription', {
                       count: queries.length,
                     })}
                   </p>
                   {exportResult.filePath && (
-                    <p className="text-xs break-all text-green-600 dark:text-green-400">
+                    <p
+                      className="break-all text-green-600 dark:text-green-400"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {exportResult.filePath}
                     </p>
                   )}
@@ -221,7 +229,10 @@ export function QueryBundleExportDialog({
                   <p className="text-destructive font-medium">
                     {t('queryBundleExport.exportFailed')}
                   </p>
-                  <p className="text-destructive/80 mt-1 text-sm">
+                  <p
+                    className="text-destructive/80 mt-1"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {exportResult.error || t('queryBundleExport.unknownError')}
                   </p>
                 </div>
@@ -231,13 +242,20 @@ export function QueryBundleExportDialog({
             <>
               {/* Bundle Metadata */}
               <div className="rounded-base space-y-4 border p-4">
-                <h4 className="text-sm font-semibold">
+                <h4
+                  className="font-semibold"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('queryBundleExport.bundleInformation')}
                 </h4>
 
                 {/* Bundle Name (Required) */}
                 <div className="space-y-2">
-                  <Label htmlFor="bundle-name" className="text-sm font-medium">
+                  <Label
+                    htmlFor="bundle-name"
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('queryBundleExport.bundleName')}{' '}
                     <span className="text-destructive">*</span>
                   </Label>
@@ -249,7 +267,12 @@ export function QueryBundleExportDialog({
                     maxLength={200}
                     disabled={isExporting}
                   />
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('queryBundleExport.bundleNameDescription')}
                   </p>
                 </div>
@@ -258,7 +281,8 @@ export function QueryBundleExportDialog({
                 <div className="space-y-2">
                   <Label
                     htmlFor="bundle-description"
-                    className="text-sm font-medium"
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                   >
                     {t('queryBundleExport.description_label')}
                   </Label>
@@ -271,7 +295,12 @@ export function QueryBundleExportDialog({
                     rows={2}
                     disabled={isExporting}
                   />
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('queryBundleExport.descriptionHint')}
                   </p>
                 </div>
@@ -280,7 +309,8 @@ export function QueryBundleExportDialog({
                 <div className="space-y-2">
                   <Label
                     htmlFor="database-context"
-                    className="text-sm font-medium"
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                   >
                     {t('queryBundleExport.databaseContext')}
                   </Label>
@@ -294,14 +324,23 @@ export function QueryBundleExportDialog({
                     maxLength={200}
                     disabled={isExporting}
                   />
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('queryBundleExport.databaseContextHint')}
                   </p>
                 </div>
 
                 {/* Bundle Tags (Optional) */}
                 <div className="space-y-2">
-                  <Label htmlFor="bundle-tags" className="text-sm font-medium">
+                  <Label
+                    htmlFor="bundle-tags"
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('queryBundleExport.tags')}
                   </Label>
                   <Input
@@ -311,7 +350,12 @@ export function QueryBundleExportDialog({
                     placeholder={t('queryBundleExport.tagsPlaceholder')}
                     disabled={isExporting}
                   />
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('queryBundleExport.tagsHint')}
                     {parseBundleTags.length > 0 &&
                       ` (${parseBundleTags.length} ${t('queryBundleExport.tagsCount', { count: parseBundleTags.length })})`}
@@ -322,7 +366,8 @@ export function QueryBundleExportDialog({
                 <div className="space-y-2">
                   <Label
                     htmlFor="bundle-documentation"
-                    className="text-sm font-medium"
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                   >
                     {t('queryBundleExport.documentation')}
                   </Label>
@@ -337,7 +382,12 @@ export function QueryBundleExportDialog({
                     rows={3}
                     disabled={isExporting}
                   />
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('queryBundleExport.documentationHint', {
                       current: documentation.length,
                       max: 10000,
@@ -348,7 +398,10 @@ export function QueryBundleExportDialog({
 
               {/* Individual Query Metadata */}
               <div className="rounded-base space-y-4 border p-4">
-                <h4 className="text-sm font-semibold">
+                <h4
+                  className="font-semibold"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('queryBundleExport.individualQueries', {
                     count: queries.length,
                   })}
@@ -364,12 +417,23 @@ export function QueryBundleExportDialog({
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div className="flex-1">
-                              <p className="text-sm font-medium">
+                              <p
+                                className="font-medium"
+                                style={{
+                                  fontSize: 'var(--font-ui-size, 14px)',
+                                }}
+                              >
                                 {t('queryBundleExport.queryNumber', {
                                   number: index + 1,
                                 })}
                               </p>
-                              <p className="text-muted-foreground font-mono text-xs">
+                              <p
+                                className="text-muted-foreground font-mono"
+                                style={{
+                                  fontSize:
+                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                }}
+                              >
                                 {(query.queryText ?? '').substring(0, 80)}
                                 {(query.queryText ?? '').length > 80
                                   ? '...'
@@ -382,7 +446,10 @@ export function QueryBundleExportDialog({
                           <div className="space-y-1.5">
                             <Label
                               htmlFor={`query-name-${query.id}`}
-                              className="text-xs"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             >
                               {t('queryBundleExport.queryName')}
                             </Label>
@@ -402,7 +469,11 @@ export function QueryBundleExportDialog({
                               )}
                               maxLength={200}
                               disabled={isExporting}
-                              className="h-8 text-xs"
+                              className="h-8"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             />
                           </div>
 
@@ -410,7 +481,10 @@ export function QueryBundleExportDialog({
                           <div className="space-y-1.5">
                             <Label
                               htmlFor={`query-description-${query.id}`}
-                              className="text-xs"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             >
                               {t('queryBundleExport.queryDescription')}
                             </Label>
@@ -430,7 +504,10 @@ export function QueryBundleExportDialog({
                               maxLength={1000}
                               rows={2}
                               disabled={isExporting}
-                              className="text-xs"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             />
                           </div>
 
@@ -438,7 +515,10 @@ export function QueryBundleExportDialog({
                           <div className="space-y-1.5">
                             <Label
                               htmlFor={`query-notes-${query.id}`}
-                              className="text-xs"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             >
                               {t('queryBundleExport.queryNotes')}
                             </Label>
@@ -458,7 +538,10 @@ export function QueryBundleExportDialog({
                               maxLength={1000}
                               rows={2}
                               disabled={isExporting}
-                              className="text-xs"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             />
                           </div>
 
@@ -466,7 +549,10 @@ export function QueryBundleExportDialog({
                           <div className="space-y-1.5">
                             <Label
                               htmlFor={`query-tags-${query.id}`}
-                              className="text-xs"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             >
                               {t('queryBundleExport.queryTags')}
                             </Label>
@@ -484,7 +570,11 @@ export function QueryBundleExportDialog({
                                 'queryBundleExport.queryTagsPlaceholder'
                               )}
                               disabled={isExporting}
-                              className="h-8 text-xs"
+                              className="h-8"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                             />
                           </div>
                         </div>
@@ -496,7 +586,10 @@ export function QueryBundleExportDialog({
 
               {/* Export Options */}
               <div className="space-y-3">
-                <Label className="text-sm font-medium">
+                <Label
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('queryBundleExport.exportOptions')}
                 </Label>
                 <div className="space-y-3 rounded-md border p-3">
@@ -509,10 +602,15 @@ export function QueryBundleExportDialog({
                       disabled={isExporting}
                     />
                     <div className="flex-1">
-                      <p className="text-sm">
+                      <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                         {t('queryBundleExport.compressExport')}
                       </p>
-                      <p className="text-muted-foreground text-xs">
+                      <p
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('queryBundleExport.compressExportHint')}
                       </p>
                     </div>

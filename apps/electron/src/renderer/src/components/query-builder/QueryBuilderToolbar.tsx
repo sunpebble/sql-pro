@@ -164,7 +164,12 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
                   >
                     <Table className="h-4 w-4" />
                     <span>{table.name}</span>
-                    <span className="text-muted-foreground ml-auto text-xs">
+                    <span
+                      className="text-muted-foreground ml-auto"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {table.columns.length} cols
                     </span>
                   </CommandItem>
@@ -189,7 +194,10 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             <Filter className="h-4 w-4" />
             {t('queryBuilder.filters', 'Filters')}
             {filters.length > 0 && (
-              <span className="bg-primary/15 text-primary rounded-full px-1.5 text-xs">
+              <span
+                className="bg-primary/15 text-primary rounded-full px-1.5"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {filters.length}
               </span>
             )}
@@ -208,7 +216,10 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             </div>
 
             {filters.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('queryBuilder.noFilters', 'No filters added')}
               </p>
             ) : (
@@ -241,7 +252,10 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             <ArrowDownAZ className="h-4 w-4" />
             {t('queryBuilder.sort', 'Sort')}
             {sorts.length > 0 && (
-              <span className="bg-primary/15 text-primary rounded-full px-1.5 text-xs">
+              <span
+                className="bg-primary/15 text-primary rounded-full px-1.5"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {sorts.length}
               </span>
             )}
@@ -260,7 +274,10 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             </div>
 
             {sorts.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('queryBuilder.noSorts', 'No sorting applied')}
               </p>
             ) : (
@@ -294,13 +311,16 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             onCheckedChange={setDistinct}
             disabled={nodes.length === 0}
           />
-          <Label htmlFor="distinct" className="text-sm">
+          <Label
+            htmlFor="distinct"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             DISTINCT
           </Label>
         </div>
 
         <div className="flex items-center gap-2">
-          <Label className="text-sm">LIMIT</Label>
+          <Label style={{ fontSize: 'var(--font-ui-size, 14px)' }}>LIMIT</Label>
           <Input
             type="number"
             min={0}

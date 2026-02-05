@@ -43,8 +43,16 @@ export function PluginsPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-lg font-semibold">{t('plugins.title')}</h1>
-            <p className="text-muted-foreground text-sm">
+            <h1
+              className="font-semibold"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
+              {t('plugins.title')}
+            </h1>
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('plugins.description')}
             </p>
           </div>

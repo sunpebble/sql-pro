@@ -153,16 +153,18 @@ export function EditableCell({
           onBlur={handleSave}
           onKeyDown={handleKeyDown}
           className={cn(
-            'bg-background w-full px-1 py-0.5 text-sm ring-2 outline-none',
+            'bg-background w-full px-1 py-0.5 ring-2 outline-none',
             validationError ? 'ring-destructive' : 'ring-ring'
           )}
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           aria-invalid={!!validationError}
           aria-describedby={validationError ? 'cell-error' : undefined}
         />
         {validationError && (
           <div
             id="cell-error"
-            className="bg-destructive text-destructive-foreground absolute -top-6 left-0 z-50 rounded px-1.5 py-0.5 text-xs whitespace-nowrap shadow-sm"
+            className="bg-destructive text-destructive-foreground absolute -top-6 left-0 z-50 rounded px-1.5 py-0.5 whitespace-nowrap shadow-sm"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           >
             {validationError}
           </div>
@@ -191,24 +193,53 @@ export function EditableCell({
 
 function CellDisplay({ value, type }: { value: unknown; type: string }) {
   if (value === null) {
-    return <span className="text-muted-foreground text-sm italic">NULL</span>;
+    return (
+      <span
+        className="text-muted-foreground italic"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
+        NULL
+      </span>
+    );
   }
 
   if (typeof value === 'boolean') {
-    return <span className="text-sm">{value ? 'true' : 'false'}</span>;
+    return (
+      <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+        {value ? 'true' : 'false'}
+      </span>
+    );
   }
 
   if (typeof value === 'number') {
-    return <span className="font-mono text-sm tabular-nums">{value}</span>;
+    return (
+      <span
+        className="font-mono tabular-nums"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
+        {value}
+      </span>
+    );
   }
 
   if (type.toLowerCase().includes('blob')) {
-    return <span className="text-muted-foreground text-sm italic">[BLOB]</span>;
+    return (
+      <span
+        className="text-muted-foreground italic"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
+        [BLOB]
+      </span>
+    );
   }
 
   const strValue = String(value);
   return (
-    <span className="text-sm whitespace-nowrap" title={strValue}>
+    <span
+      className="whitespace-nowrap"
+      title={strValue}
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+    >
       {strValue}
     </span>
   );

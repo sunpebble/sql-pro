@@ -279,7 +279,10 @@ export const KeyboardShortcutsOverlay = memo(
           <div className="flex items-center justify-between border-b px-3 py-2">
             <div className="flex items-center gap-2">
               <Keyboard className="text-primary h-4 w-4" />
-              <span className="text-sm font-medium">
+              <span
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('keyboardShortcuts.title')}
               </span>
             </div>
@@ -310,7 +313,12 @@ export const KeyboardShortcutsOverlay = memo(
                       key={shortcut.descriptionKey}
                       className="hover:bg-muted/30 flex items-center justify-between px-3 py-1.5 transition-colors"
                     >
-                      <span className="text-muted-foreground text-xs">
+                      <span
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t(shortcut.descriptionKey)}
                       </span>
                       <div className="flex items-center gap-0.5">

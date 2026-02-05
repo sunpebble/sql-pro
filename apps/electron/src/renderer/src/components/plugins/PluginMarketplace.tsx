@@ -405,10 +405,16 @@ export function PluginMarketplace({
                 <div className="flex flex-col items-center justify-center gap-4 py-16">
                   <WifiOff className="text-muted-foreground h-12 w-12" />
                   <div className="text-center">
-                    <p className="text-sm font-medium">
+                    <p
+                      className="font-medium"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t('marketplace.offline')}
                     </p>
-                    <p className="text-muted-foreground mt-1 text-sm">
+                    <p
+                      className="text-muted-foreground mt-1"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t('marketplace.offlineDesc')}
                     </p>
                   </div>
@@ -422,13 +428,21 @@ export function PluginMarketplace({
               {/* Error State */}
               {!state.isLoading && !state.isOffline && state.error && (
                 <div className="flex flex-col items-center justify-center gap-4 py-16">
-                  <div className="bg-destructive/10 border-destructive/50 flex max-w-md items-start gap-3 rounded-base border p-4">
+                  <div className="bg-destructive/10 border-destructive/50 rounded-base flex max-w-md items-start gap-3 border p-4">
                     <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
                     <div>
-                      <p className="text-destructive text-sm font-medium">
+                      <p
+                        className="text-destructive font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('marketplace.failedToLoad')}
                       </p>
-                      <p className="text-destructive/80 mt-1 text-xs">
+                      <p
+                        className="text-destructive/80 mt-1"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {state.error}
                       </p>
                     </div>
@@ -448,10 +462,16 @@ export function PluginMarketplace({
                     <Store className="text-muted-foreground h-12 w-12" />
                     {searchQuery || selectedCategory !== 'all' ? (
                       <>
-                        <p className="text-sm font-medium">
+                        <p
+                          className="font-medium"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t('marketplace.noPluginsFound')}
                         </p>
-                        <p className="text-muted-foreground text-sm">
+                        <p
+                          className="text-muted-foreground"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t('marketplace.adjustFilters')}
                         </p>
                         <Button
@@ -467,10 +487,16 @@ export function PluginMarketplace({
                       </>
                     ) : (
                       <>
-                        <p className="text-sm font-medium">
+                        <p
+                          className="font-medium"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t('marketplace.noPluginsAvailable')}
                         </p>
-                        <p className="text-muted-foreground text-sm">
+                        <p
+                          className="text-muted-foreground"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t('marketplace.checkBackLater')}
                         </p>
                       </>
@@ -510,7 +536,10 @@ export function PluginMarketplace({
 
             {/* Status Bar */}
             {!state.isLoading && !state.error && (
-              <div className="text-muted-foreground flex items-center justify-between border-t pt-3 text-xs">
+              <div
+                className="text-muted-foreground flex items-center justify-between border-t pt-3"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 <span>
                   {t('marketplace.pluginsCount', {
                     filtered: filteredPlugins.length,
@@ -523,7 +552,12 @@ export function PluginMarketplace({
                 </span>
                 <span>
                   {t('marketplace.pressToSearch')}{' '}
-                  <kbd className="bg-muted text-muted-foreground text-2xs rounded px-1.5 py-0.5 font-mono">
+                  <kbd
+                    className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 font-mono"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)',
+                    }}
+                  >
                     Cmd/Ctrl+F
                   </kbd>{' '}
                   {t('marketplace.toSearch')}

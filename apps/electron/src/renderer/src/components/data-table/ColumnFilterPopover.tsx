@@ -202,14 +202,20 @@ export function ColumnFilterPopover({
           onPointerDown={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="text-sm font-medium">
+          <div
+            className="font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {t('filter.title')}{' '}
             <span className="text-muted-foreground">{columnName}</span>
           </div>
 
           {/* Operator selector */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-muted-foreground text-xs">
+            <label
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('filter.operator')}
             </label>
             <Select
@@ -237,7 +243,10 @@ export function ColumnFilterPopover({
           {/* Value input(s) */}
           {showValueInput && (
             <div className="flex flex-col gap-1.5">
-              <label className="text-muted-foreground text-xs">
+              <label
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {showSecondValueInput ? t('filter.from') : t('filter.value')}
               </label>
               <Input
@@ -263,7 +272,10 @@ export function ColumnFilterPopover({
           {/* Second value input for 'between' */}
           {showSecondValueInput && (
             <div className="flex flex-col gap-1.5">
-              <label className="text-muted-foreground text-xs">
+              <label
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('filter.to')}
               </label>
               <Input
@@ -289,7 +301,14 @@ export function ColumnFilterPopover({
           )}
 
           {/* Validation error */}
-          {error && <div className="text-destructive text-xs">{error}</div>}
+          {error && (
+            <div
+              className="text-destructive"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {error}
+            </div>
+          )}
 
           {/* Action buttons */}
           <div className="flex items-center gap-2 pt-1">

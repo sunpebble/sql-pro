@@ -137,10 +137,13 @@ function FolderNode({
           >
             <div
               className={cn(
-                'hover:bg-accent flex items-center gap-1 rounded-sm px-2 py-1.5 text-sm transition-colors',
+                'hover:bg-accent flex items-center gap-1 rounded-sm px-2 py-1.5 transition-colors',
                 isDragOver && 'bg-accent/50 ring-gold ring-1'
               )}
-              style={{ paddingLeft: `${level * 12 + 8}px` }}
+              style={{
+                paddingLeft: `${level * 12 + 8}px`,
+                fontSize: 'var(--font-ui-size, 14px)',
+              }}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -167,7 +170,10 @@ function FolderNode({
                 <Folder className="text-muted-foreground size-4" />
               )}
               <span className="flex-1 truncate">{folder.name}</span>
-              <span className="text-muted-foreground text-xs">
+              <span
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {profiles.length + subfolders.length}
               </span>
             </div>
@@ -287,10 +293,13 @@ function ProfileNode({
           draggable
           onDragStart={handleDragStart}
           className={cn(
-            'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors',
+            'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 transition-colors',
             isSelected && 'bg-accent'
           )}
-          style={{ paddingLeft: `${level * 12 + 8}px` }}
+          style={{
+            paddingLeft: `${level * 12 + 8}px`,
+            fontSize: 'var(--font-ui-size, 14px)',
+          }}
           onClick={() => onSelect(profile.id)}
           onDoubleClick={() => onConnect(profile)}
         >
@@ -298,14 +307,27 @@ function ProfileNode({
             <div className="flex items-center gap-2">
               <span>{profile.displayName || profile.filename}</span>
               {profile.isEncrypted && (
-                <span className="text-muted-foreground text-xs">🔒</span>
+                <span
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
+                  🔒
+                </span>
               )}
               {profile.readOnly && (
-                <span className="text-muted-foreground text-xs">👁</span>
+                <span
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
+                  👁
+                </span>
               )}
             </div>
             {profile.notes && (
-              <div className="text-muted-foreground truncate text-xs">
+              <div
+                className="text-muted-foreground truncate"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {profile.notes}
               </div>
             )}

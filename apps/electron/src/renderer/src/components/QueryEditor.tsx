@@ -185,7 +185,7 @@ function TemplateCard({
       <SqlHighlight
         code={template.query}
         maxLines={2}
-        className="bg-muted/50 rounded-md p-2 text-xs"
+        className="bg-muted/50 rounded-md p-2"
       />
 
       {/* Actions - appear on hover */}
@@ -883,21 +883,30 @@ export function QueryEditor() {
                   <TabsList className="h-8 p-1">
                     <TabsTrigger
                       value="share"
-                      className="h-6 gap-1.5 px-3 text-xs"
+                      className="h-6 gap-1.5 px-3"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       <Share2 className="h-3.5 w-3.5" />
                       {t('queryEditor.share')}
                     </TabsTrigger>
                     <TabsTrigger
                       value="templates"
-                      className="h-6 gap-1.5 px-3 text-xs"
+                      className="h-6 gap-1.5 px-3"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       <Code className="h-3.5 w-3.5" />
                       {t('queryEditor.templates')}
                     </TabsTrigger>
                     <TabsTrigger
                       value="history"
-                      className="h-6 gap-1.5 px-3 text-xs"
+                      className="h-6 gap-1.5 px-3"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       <History className="h-3.5 w-3.5" />
                       {t('queryEditor.history')}
@@ -990,7 +999,8 @@ export function QueryEditor() {
                             onChange={(e) =>
                               setTemplateSearchQuery(e.target.value)
                             }
-                            className="h-8 pl-8 text-sm"
+                            className="h-8 pl-8"
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                           />
                           {templateSearchQuery && (
                             <Button
@@ -1010,7 +1020,13 @@ export function QueryEditor() {
                               setSelectedCategory(v as TemplateCategory | 'all')
                             }
                           >
-                            <SelectTrigger className="h-8 w-28 text-xs">
+                            <SelectTrigger
+                              className="h-8 w-28"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
+                            >
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -1096,7 +1112,11 @@ export function QueryEditor() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-7 text-xs"
+                              className="h-7"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                               onClick={
                                 selectedHistoryIds.size ===
                                 filteredHistory.length
@@ -1113,7 +1133,11 @@ export function QueryEditor() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-7 gap-1 text-xs"
+                              className="h-7 gap-1"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                               onClick={handleExportSelected}
                               disabled={selectedHistoryIds.size === 0}
                             >
@@ -1123,7 +1147,11 @@ export function QueryEditor() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-7 text-xs"
+                              className="h-7"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
                               onClick={handleExitSelectionMode}
                             >
                               {t('actions.cancel')}
@@ -1169,7 +1197,8 @@ export function QueryEditor() {
                               searchText: e.target.value || undefined,
                             })
                           }
-                          className="h-8 pl-8 text-sm"
+                          className="h-8 pl-8"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                         />
                       </div>
                     </div>
@@ -1223,17 +1252,35 @@ export function QueryEditor() {
                                     <div className="min-w-0 flex-1">
                                       <div className="flex items-center gap-2">
                                         {item.success ? (
-                                          <span className="text-xs text-green-600">
+                                          <span
+                                            className="text-green-600"
+                                            style={{
+                                              fontSize:
+                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                            }}
+                                          >
                                             {formatDuration(
                                               item.durationMs ?? 0
                                             )}
                                           </span>
                                         ) : (
-                                          <span className="text-destructive text-xs">
+                                          <span
+                                            className="text-destructive"
+                                            style={{
+                                              fontSize:
+                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                            }}
+                                          >
                                             Failed
                                           </span>
                                         )}
-                                        <span className="text-muted-foreground text-xs">
+                                        <span
+                                          className="text-muted-foreground"
+                                          style={{
+                                            fontSize:
+                                              'calc(var(--font-ui-size, 14px) * 0.85)',
+                                          }}
+                                        >
                                           {new Date(
                                             item.executedAt ?? ''
                                           ).toLocaleTimeString()}
@@ -1258,17 +1305,35 @@ export function QueryEditor() {
                                     >
                                       <div className="flex items-center gap-2 pr-6">
                                         {item.success ? (
-                                          <span className="text-xs text-green-600">
+                                          <span
+                                            className="text-green-600"
+                                            style={{
+                                              fontSize:
+                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                            }}
+                                          >
                                             {formatDuration(
                                               item.durationMs ?? 0
                                             )}
                                           </span>
                                         ) : (
-                                          <span className="text-destructive text-xs">
+                                          <span
+                                            className="text-destructive"
+                                            style={{
+                                              fontSize:
+                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                            }}
+                                          >
                                             Failed
                                           </span>
                                         )}
-                                        <span className="text-muted-foreground text-xs">
+                                        <span
+                                          className="text-muted-foreground"
+                                          style={{
+                                            fontSize:
+                                              'calc(var(--font-ui-size, 14px) * 0.85)',
+                                          }}
+                                        >
                                           {new Date(
                                             item.executedAt ?? ''
                                           ).toLocaleTimeString()}

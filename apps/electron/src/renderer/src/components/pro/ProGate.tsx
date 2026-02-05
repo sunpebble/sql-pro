@@ -141,7 +141,10 @@ export function ProGate({
               <span className="font-medium">{featureName}</span>
               <ProBadge size="sm" />
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {featureDescription}
             </p>
           </div>
@@ -185,16 +188,27 @@ export function ProGate({
       {/* Feature Info */}
       <div className="space-y-2">
         <div className="flex items-center justify-center gap-2">
-          <h3 className="text-xl font-semibold">{featureName}</h3>
+          <h3
+            className="font-semibold"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+          >
+            {featureName}
+          </h3>
           <ProBadge variant="glow" />
         </div>
-        <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
+        <p
+          className="text-muted-foreground max-w-md leading-relaxed"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {config?.previewDescription || featureDescription}
         </p>
       </div>
 
       {/* Pricing hint */}
-      <p className="text-muted-foreground text-xs">
+      <p
+        className="text-muted-foreground"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         Starting at{' '}
         <span className="text-foreground font-semibold">$6.67/month</span> with
         yearly plan

@@ -290,10 +290,16 @@ export function PluginManager({
       <div className="flex flex-col gap-4 border-b p-4">
         <div className="flex items-center justify-between">
           <div>
-            <Label className="text-lg font-semibold">
+            <Label
+              className="font-semibold"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
               {t('plugins.title')}
             </Label>
-            <p className="text-muted-foreground text-sm">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('plugins.description')}
             </p>
           </div>
@@ -372,10 +378,18 @@ export function PluginManager({
         <div className="bg-destructive/10 border-destructive rounded-base mx-4 mt-4 flex items-start gap-3 border-2 p-3">
           <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
           <div className="flex-1">
-            <p className="text-destructive text-sm font-medium">
+            <p
+              className="text-destructive font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('plugins.error')}
             </p>
-            <p className="text-destructive/80 text-xs">{error.message}</p>
+            <p
+              className="text-destructive/80"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {error.message}
+            </p>
           </div>
           <Button
             variant="ghost"
@@ -395,7 +409,10 @@ export function PluginManager({
           {isLoading && (
             <div className="flex flex-col items-center justify-center gap-3 py-16">
               <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
-              <p className="text-muted-foreground text-sm">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('plugins.loading')}
               </p>
             </div>
@@ -406,8 +423,16 @@ export function PluginManager({
             <div className="flex flex-col items-center justify-center gap-4 py-16">
               <Package className="text-muted-foreground h-12 w-12" />
               <div className="text-center">
-                <p className="text-sm font-medium">{t('plugins.noPlugins')}</p>
-                <p className="text-muted-foreground mt-1 text-sm">
+                <p
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
+                  {t('plugins.noPlugins')}
+                </p>
+                <p
+                  className="text-muted-foreground mt-1"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('plugins.noPluginsDesc')}
                 </p>
               </div>
@@ -421,10 +446,16 @@ export function PluginManager({
               <div className="flex flex-col items-center justify-center gap-3 py-16">
                 <Search className="text-muted-foreground h-12 w-12" />
                 <div className="text-center">
-                  <p className="text-sm font-medium">
+                  <p
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('plugins.noResults')}
                   </p>
-                  <p className="text-muted-foreground mt-1 text-sm">
+                  <p
+                    className="text-muted-foreground mt-1"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('plugins.noResultsDesc')}
                   </p>
                 </div>
@@ -469,7 +500,10 @@ export function PluginManager({
 
       {/* Status Bar */}
       {!isLoading && (plugins || []).length > 0 && (
-        <div className="text-muted-foreground flex items-center justify-between border-t px-4 py-2 text-xs">
+        <div
+          className="text-muted-foreground flex items-center justify-between border-t px-4 py-2"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           <span>
             {t('plugins.statusBar.showing', {
               count: filteredPlugins.length,

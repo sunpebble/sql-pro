@@ -419,7 +419,10 @@ export function SchemaComparisonPanel({
 
           {/* Loading State */}
           {isLoadingSnapshots && (
-            <div className="text-muted-foreground flex items-center justify-center gap-2 text-sm">
+            <div
+              className="text-muted-foreground flex items-center justify-center gap-2"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               <Loader2 className="h-4 w-4 animate-spin" />
               {t('compare.loadingSnapshots')}
             </div>
@@ -444,7 +447,10 @@ export function SchemaComparisonPanel({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
+                    <div
+                      className="flex items-center justify-between"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       <span className="text-muted-foreground">
                         {t('compare.sourceLabel')}
                       </span>
@@ -452,7 +458,10 @@ export function SchemaComparisonPanel({
                         {comparisonResult.sourceName}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
+                    <div
+                      className="flex items-center justify-between"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       <span className="text-muted-foreground">
                         {t('compare.targetLabel')}
                       </span>
@@ -461,19 +470,33 @@ export function SchemaComparisonPanel({
                       </span>
                     </div>
                     <div className="mt-4 border-t pt-2">
-                      <p className="text-muted-foreground text-sm">
+                      <p
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('compare.tablesCompared', {
                           count:
                             comparisonResult.summary.sourceTables +
                             comparisonResult.summary.targetTables,
                         })}
                       </p>
-                      <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+                      <div
+                        className="mt-2 grid grid-cols-3 gap-2"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         <div className="rounded-base bg-green-100 p-2 dark:bg-green-950">
                           <div className="text-green-700 dark:text-green-300">
                             {t('compare.added')}
                           </div>
-                          <div className="text-lg font-semibold">
+                          <div
+                            className="font-semibold"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                            }}
+                          >
                             {comparisonResult.summary.tablesAdded}
                           </div>
                         </div>
@@ -481,7 +504,13 @@ export function SchemaComparisonPanel({
                           <div className="text-red-700 dark:text-red-300">
                             {t('compare.removed')}
                           </div>
-                          <div className="text-lg font-semibold">
+                          <div
+                            className="font-semibold"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                            }}
+                          >
                             {comparisonResult.summary.tablesRemoved}
                           </div>
                         </div>
@@ -489,7 +518,13 @@ export function SchemaComparisonPanel({
                           <div className="text-amber-700 dark:text-amber-300">
                             {t('compare.modified')}
                           </div>
-                          <div className="text-lg font-semibold">
+                          <div
+                            className="font-semibold"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                            }}
+                          >
                             {comparisonResult.summary.tablesModified}
                           </div>
                         </div>
@@ -526,7 +561,9 @@ export function SchemaComparisonPanel({
             <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-12 text-center">
               <GitCompare className="h-12 w-12 opacity-30" />
               <p className="font-medium">{t('compare.readyToCompare')}</p>
-              <p className="text-sm">{t('compare.selectSourceAndTarget')}</p>
+              <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                {t('compare.selectSourceAndTarget')}
+              </p>
             </div>
           )}
         </div>

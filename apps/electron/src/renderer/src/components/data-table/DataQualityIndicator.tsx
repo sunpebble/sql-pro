@@ -210,7 +210,9 @@ export const DataQualityIndicator = memo(
                 {quality.grade}
               </Badge>
             </div>
-            <PopoverDescription className="text-xs">
+            <PopoverDescription
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('quality.score', { score: quality.score })} •{' '}
               {t('quality.summary', {
                 rows: quality.totalRows,
@@ -227,7 +229,10 @@ export const DataQualityIndicator = memo(
                 {quality.issues.slice(0, 5).map((issue) => (
                   <div
                     key={`${issue.column}-${issue.type}`}
-                    className="px-3 py-2 text-xs"
+                    className="px-3 py-2"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     <div className="flex items-center gap-1.5">
                       {issue.severity === 'error' && (
@@ -261,7 +266,10 @@ export const DataQualityIndicator = memo(
                 ))}
               </div>
               {quality.issues.length > 5 && (
-                <div className="text-muted-foreground border-t px-3 py-2 text-xs">
+                <div
+                  className="text-muted-foreground border-t px-3 py-2"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('quality.moreIssues', {
                     count: quality.issues.length - 5,
                   })}
@@ -269,7 +277,10 @@ export const DataQualityIndicator = memo(
               )}
             </ScrollArea>
           ) : (
-            <div className="text-muted-foreground flex flex-col items-center gap-1 p-4 text-center text-xs">
+            <div
+              className="text-muted-foreground flex flex-col items-center gap-1 p-4 text-center"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               <CheckCircle className="text-success h-5 w-5" />
               {t('quality.noIssues')}
             </div>

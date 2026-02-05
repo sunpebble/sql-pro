@@ -64,7 +64,10 @@ export function SchemaDetailsPanel({
             <X className="h-4 w-4" />
           </Button>
         </div>
-        <div className="text-muted-foreground flex flex-1 items-center justify-center text-sm">
+        <div
+          className="text-muted-foreground flex flex-1 items-center justify-center"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('schema.selectTable', {
             defaultValue: 'Select a table or view to see details',
           })}
@@ -87,7 +90,10 @@ export function SchemaDetailsPanel({
           )}
           <div>
             <h2 className="font-semibold">{table.name}</h2>
-            <p className="text-muted-foreground text-sm">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {isView
                 ? t('schema.viewIn', {
                     defaultValue: 'View in {{schema}}',
@@ -203,7 +209,8 @@ function Section({
       <button
         type="button"
         onClick={onToggle}
-        className="hover:bg-accent/50 rounded-t-base flex w-full items-center gap-2 px-3 py-2 text-sm font-medium transition-colors"
+        className="hover:bg-accent/50 rounded-t-base flex w-full items-center gap-2 px-3 py-2 font-medium transition-colors"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
       >
         {isExpanded ? (
           <ChevronDown className="h-4 w-4" />
@@ -213,7 +220,10 @@ function Section({
         {icon}
         <span>{title}</span>
         {count !== undefined && (
-          <span className="text-muted-foreground ml-auto text-xs">
+          <span
+            className="text-muted-foreground ml-auto"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             ({count})
           </span>
         )}
@@ -232,7 +242,10 @@ interface ColumnsTableProps {
 function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
   if (columns.length === 0) {
     return (
-      <div className="text-muted-foreground py-2 text-sm">
+      <div
+        className="text-muted-foreground py-2"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
         {t('schema.noColumns', { defaultValue: 'No columns defined' })}
       </div>
     );
@@ -240,7 +253,10 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm" style={{ tableLayout: 'fixed' }}>
+      <table
+        className="w-full"
+        style={{ tableLayout: 'fixed', fontSize: 'var(--font-ui-size, 14px)' }}
+      >
         <colgroup>
           <col style={{ width: '30%' }} />
           <col style={{ width: '35%' }} />
@@ -270,14 +286,18 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
             return (
               <tr key={column.name} className="border-b last:border-0">
                 <td
-                  className="truncate py-1.5 pr-3 font-mono text-xs"
+                  className="truncate py-1.5 pr-3 font-mono"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                   title={column.name}
                 >
                   {column.name}
                 </td>
                 <td className="py-1.5 pr-3">
                   <span
-                    className="bg-muted inline-block max-w-full truncate rounded px-1.5 py-0.5 font-mono text-xs"
+                    className="bg-muted inline-block max-w-full truncate rounded px-1.5 py-0.5 font-mono"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                     title={column.type}
                   >
                     {column.type}
@@ -286,11 +306,13 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
                 <td className="py-1.5 pr-3 whitespace-nowrap">
                   <span
                     className={cn(
-                      'text-xs',
                       column.nullable
                         ? 'text-muted-foreground'
                         : 'text-amber-600'
                     )}
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     {column.nullable
                       ? t('schema.yes', { defaultValue: 'Yes' })
@@ -299,7 +321,12 @@ function ColumnsTable({ columns, primaryKey, t }: ColumnsTableProps) {
                 </td>
                 <td className="py-1.5 whitespace-nowrap">
                   {isPK && (
-                    <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-xs font-medium">
+                    <span
+                      className="bg-primary/10 text-primary rounded px-1.5 py-0.5 font-medium"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       PK
                     </span>
                   )}
@@ -324,14 +351,25 @@ function IndexesList({ indexes, t }: IndexesListProps) {
       {indexes.map((index) => (
         <div key={index.name} className="bg-background rounded border p-2">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-medium">{index.name}</span>
+            <span
+              className="font-mono font-medium"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {index.name}
+            </span>
             {index.isUnique && (
-              <span className="rounded-md bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+              <span
+                className="rounded-md bg-blue-100 px-1.5 py-0.5 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 UNIQUE
               </span>
             )}
           </div>
-          <div className="text-muted-foreground mt-1 text-xs">
+          <div
+            className="text-muted-foreground mt-1"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {t('schema.columnsLabel', { defaultValue: 'Columns:' })}{' '}
             {index.columns.join(', ')}
           </div>
@@ -358,14 +396,28 @@ function ForeignKeysList({ foreignKeys }: ForeignKeysListProps) {
           key={`${fk.column}-${fk.referencedTable}-${fk.referencedColumn}`}
           className="bg-background rounded border p-2"
         >
-          <div className="flex items-center gap-2 text-sm">
-            <span className="font-mono text-xs">{fk.column}</span>
+          <div
+            className="flex items-center gap-2"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
+            <span
+              className="font-mono"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {fk.column}
+            </span>
             <span className="text-muted-foreground">&rarr;</span>
-            <span className="font-mono text-xs">
+            <span
+              className="font-mono"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {fk.referencedTable}.{fk.referencedColumn}
             </span>
           </div>
-          <div className="text-muted-foreground mt-1 flex gap-3 text-xs">
+          <div
+            className="text-muted-foreground mt-1 flex gap-3"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {fk.onDelete && (
               <span>
                 ON DELETE: <span className="font-medium">{fk.onDelete}</span>
@@ -393,13 +445,22 @@ function TriggersList({ triggers }: TriggersListProps) {
       {triggers.map((trigger) => (
         <div key={trigger.name} className="bg-background rounded border p-2">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-medium">
+            <span
+              className="font-mono font-medium"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {trigger.name}
             </span>
-            <span className="rounded-md bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+            <span
+              className="rounded-md bg-purple-100 px-1.5 py-0.5 text-purple-700 dark:bg-purple-950 dark:text-purple-300"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {trigger.timing}
             </span>
-            <span className="rounded-md bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-950 dark:text-green-300">
+            <span
+              className="rounded-md bg-green-100 px-1.5 py-0.5 text-green-700 dark:bg-green-950 dark:text-green-300"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {trigger.event}
             </span>
           </div>

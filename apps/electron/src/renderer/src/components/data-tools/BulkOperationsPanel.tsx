@@ -238,7 +238,13 @@ export const BulkOperationsPanel = memo(
                         >
                           <Icon className="h-8 w-8" />
                           <span className="font-medium">{info.label}</span>
-                          <span className="text-muted-foreground text-xs">
+                          <span
+                            className="text-muted-foreground"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {info.extension}
                           </span>
                         </button>
@@ -310,7 +316,13 @@ export const BulkOperationsPanel = memo(
                   </Label>
                   <div className="bg-muted/50 rounded-base flex flex-wrap gap-1 p-2">
                     {columns.map((col) => (
-                      <Badge key={col} variant="secondary" className="text-xs">
+                      <Badge
+                        key={col}
+                        variant="secondary"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {col}
                       </Badge>
                     ))}
@@ -338,7 +350,10 @@ export const BulkOperationsPanel = memo(
                     </div>
                     <div className="text-center">
                       <p className="font-medium">{importFile.name}</p>
-                      <p className="text-muted-foreground text-sm">
+                      <p
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {(importFile.size / 1024).toFixed(1)} KB
                       </p>
                     </div>
@@ -358,7 +373,10 @@ export const BulkOperationsPanel = memo(
                       <p className="font-medium">
                         {t('bulkOperations.dropFileHere')}
                       </p>
-                      <p className="text-muted-foreground text-sm">
+                      <p
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('bulkOperations.orClickToBrowse')}
                       </p>
                     </div>
@@ -433,7 +451,10 @@ export const BulkOperationsPanel = memo(
               {/* Import Progress */}
               {isImporting && (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
+                  <div
+                    className="flex items-center justify-between"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     <span>{t('bulkOperations.importing')}</span>
                     <span>{importProgress}%</span>
                   </div>
@@ -462,7 +483,10 @@ export const BulkOperationsPanel = memo(
                         ? t('bulkOperations.importComplete')
                         : t('bulkOperations.importFailed')}
                     </p>
-                    <p className="text-muted-foreground text-sm">
+                    <p
+                      className="text-muted-foreground"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t('bulkOperations.rowsImported', {
                         count: importResult.rowsImported,
                       })}
@@ -472,7 +496,10 @@ export const BulkOperationsPanel = memo(
                         })}
                     </p>
                     {importResult.errors.length > 0 && (
-                      <ul className="mt-2 text-sm text-red-600">
+                      <ul
+                        className="mt-2 text-red-600"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {importResult.errors.slice(0, 3).map((err) => (
                           <li key={`error-${err.slice(0, 50)}`}>{err}</li>
                         ))}

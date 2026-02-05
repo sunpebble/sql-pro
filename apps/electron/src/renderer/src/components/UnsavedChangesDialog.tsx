@@ -135,8 +135,16 @@ export function UnsavedChangesDialog({
               key={summary.table}
               className="bg-muted/50 rounded-md px-3 py-2"
             >
-              <div className="text-sm font-medium">{summary.table}</div>
-              <div className="mt-1 flex flex-wrap gap-3 text-xs">
+              <div
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
+                {summary.table}
+              </div>
+              <div
+                className="mt-1 flex flex-wrap gap-3"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {summary.inserts > 0 && (
                   <div className="flex items-center gap-1 text-green-600">
                     <Plus className="h-3 w-3" />
@@ -174,7 +182,10 @@ export function UnsavedChangesDialog({
 
         {/* Error Message */}
         {error && (
-          <div className="bg-destructive/10 text-destructive rounded-md px-3 py-2 text-sm">
+          <div
+            className="bg-destructive/10 text-destructive rounded-md px-3 py-2"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {error}
           </div>
         )}

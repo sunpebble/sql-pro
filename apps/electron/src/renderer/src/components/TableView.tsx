@@ -529,14 +529,18 @@ export function TableView({ tableOverride }: TableViewProps) {
         {selectedRowIds.length > 0 && (
           <div className="border-main/30 bg-main/5 flex items-center justify-between gap-4 border-b-2 px-4 py-2">
             <div className="flex items-center gap-3">
-              <span className="font-heading text-main text-sm">
+              <span
+                className="font-heading text-main"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('table.rowsSelected', { count: selectedRowIds.length })}
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={clearSelection}
-                className="h-7 text-xs"
+                className="h-7"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
               >
                 <X className="mr-1 h-3 w-3" />
                 {t('table.clearSelection')}
@@ -578,7 +582,10 @@ export function TableView({ tableOverride }: TableViewProps) {
         <div className="flex items-center justify-between gap-2 border-b-2 px-4 py-2">
           <div className="flex min-w-0 items-center gap-2 overflow-hidden">
             <h2 className="truncate font-medium">{selectedTable.name}</h2>
-            <span className="text-muted-foreground shrink-0 text-sm">
+            <span
+              className="text-muted-foreground shrink-0"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {searchStats.isSearching ? (
                 <>
                   ({searchStats.matchedRows.toLocaleString()} of{' '}
@@ -593,12 +600,18 @@ export function TableView({ tableOverride }: TableViewProps) {
               )}
             </span>
             {searchStats.isSearching && (
-              <span className="rounded-base bg-main/10 font-base text-main shrink-0 px-1.5 py-0.5 text-xs">
+              <span
+                className="rounded-base bg-main/10 font-base text-main shrink-0 px-1.5 py-0.5"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('table.filtered', { defaultValue: 'Filtered' })}
               </span>
             )}
             {selectedTable.type === 'view' && (
-              <span className="rounded-base bg-secondary text-muted-foreground flex shrink-0 items-center gap-1 px-1.5 py-0.5 text-xs">
+              <span
+                className="rounded-base bg-secondary text-muted-foreground flex shrink-0 items-center gap-1 px-1.5 py-0.5"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 <Eye className="h-3 w-3" />
                 {t('table.view', { defaultValue: 'View' })}
               </span>
@@ -621,7 +634,8 @@ export function TableView({ tableOverride }: TableViewProps) {
                 })}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-8 w-48 pr-8 pl-8 text-sm"
+                className="h-8 w-48 pr-8 pl-8"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
               />
               {searchTerm && (
                 <button
@@ -842,7 +856,10 @@ export function TableView({ tableOverride }: TableViewProps) {
         {/* Pagination - Single Row Layout */}
         <div className="bg-background flex shrink-0 items-center justify-center gap-2 border-t-2 px-2 py-2 sm:gap-3 sm:px-4">
           {/* Page Info - hidden on very small screens */}
-          <div className="text-muted-foreground hidden text-sm whitespace-nowrap sm:block">
+          <div
+            className="text-muted-foreground hidden whitespace-nowrap sm:block"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {t('table.pageInfo', {
               defaultValue: 'Page {{page}} of {{totalPages}}',
               page,
@@ -913,10 +930,14 @@ export function TableView({ tableOverride }: TableViewProps) {
                     }
                   }
                 }}
-                className="h-7 w-12 [appearance:textfield] px-1 text-center text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="h-7 w-12 [appearance:textfield] px-1 text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 disabled={isLoading}
               />
-              <span className="text-muted-foreground text-sm whitespace-nowrap">
+              <span
+                className="text-muted-foreground whitespace-nowrap"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 / {totalPages || 1}
               </span>
             </div>

@@ -54,12 +54,12 @@ function TabsList({
   );
 }
 
-function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
+function TabsTrigger({ className, style, ...props }: TabsPrimitive.Tab.Props) {
   return (
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-[3px] border-2 border-transparent px-3 py-1 text-sm font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
+        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-[3px] border-2 border-transparent px-3 py-1 font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
         'group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start',
         'disabled:pointer-events-none disabled:opacity-50',
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -70,20 +70,26 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
         'group-data-[variant=line]/tabs-list:data-active:border-main group-data-[variant=line]/tabs-list:data-active:bg-transparent',
         className
       )}
+      style={{ fontSize: 'var(--font-ui-size, 14px)', ...style }}
       {...props}
     />
   );
 }
 
-function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
+function TabsContent({
+  className,
+  style,
+  ...props
+}: TabsPrimitive.Panel.Props) {
   return (
     <TabsPrimitive.Panel
       data-slot="tabs-content"
       className={cn(
-        'mt-2 flex-1 text-sm font-medium outline-none',
+        'mt-2 flex-1 font-medium outline-none',
         'data-open:animate-in data-open:fade-in-0 data-open:slide-in-from-bottom-1 duration-150',
         className
       )}
+      style={{ fontSize: 'var(--font-ui-size, 14px)', ...style }}
       {...props}
     />
   );

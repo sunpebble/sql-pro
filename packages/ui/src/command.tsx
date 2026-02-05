@@ -33,7 +33,7 @@ function CommandInput({
         <CommandPrimitive.Input
           data-slot="command-input"
           className={cn(
-            'w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
+            'w-full [font-size:var(--font-ui-size,14px)] outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
             className
           )}
           {...props}
@@ -73,7 +73,10 @@ function CommandEmpty({
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
-      className={cn('py-6 text-center text-sm', className)}
+      className={cn(
+        'py-6 text-center [font-size:var(--font-ui-size,14px)]',
+        className
+      )}
       {...props}
     />
   );
@@ -87,7 +90,7 @@ function CommandGroup({
     <CommandPrimitive.Group
       data-slot="command-group"
       className={cn(
-        'text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium',
+        'text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:[font-size:calc(var(--font-ui-size,14px)*0.75)] [&_[cmdk-group-heading]]:font-medium',
         className
       )}
       {...props}
@@ -118,7 +121,7 @@ function CommandItem({
       data-slot="command-item"
       className={cn(
         // Base styles
-        'group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none',
+        'group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 [font-size:var(--font-ui-size,14px)] outline-hidden select-none',
         // Smooth transition for state changes
         'transition-colors duration-100 ease-out',
         // Hover state (subtle)
@@ -149,7 +152,7 @@ function CommandShortcut({
     <span
       data-slot="command-shortcut"
       className={cn(
-        'text-muted-foreground group-data-selected/command-item:text-foreground ml-auto text-xs tracking-widest',
+        'text-muted-foreground group-data-selected/command-item:text-foreground ml-auto [font-size:calc(var(--font-ui-size,14px)*0.75)] tracking-widest',
         className
       )}
       {...props}

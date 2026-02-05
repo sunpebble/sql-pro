@@ -211,7 +211,10 @@ export const ColumnStats = memo(
         >
           <div className="flex items-center gap-2">
             <BarChart3 className="text-muted-foreground h-3.5 w-3.5" />
-            <span className="text-xs font-medium">
+            <span
+              className="font-medium"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('table.columnStats', { defaultValue: 'Column Statistics' })}
             </span>
             <span className="text-muted-foreground text-2xs">
@@ -291,12 +294,15 @@ export const ColumnStats = memo(
                         setSelectedColumn(isSelected ? null : col.name)
                       }
                       className={cn(
-                        'flex items-center gap-1.5 rounded px-2 py-1 text-xs',
+                        'flex items-center gap-1.5 rounded px-2 py-1',
                         'whitespace-nowrap transition-all duration-150',
                         isSelected
                           ? 'bg-primary text-background shadow-sm'
                           : 'hover:bg-muted bg-background border'
                       )}
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       <span className="max-w-25 truncate font-medium">
                         {col.name}
@@ -343,7 +349,10 @@ export const ColumnStats = memo(
                   )
                 )
               ) : (
-                <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-center text-xs">
+                <div
+                  className="text-muted-foreground flex h-full items-center justify-center p-4 text-center"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('table.selectColumn', {
                     defaultValue:
                       'Select a column above to view detailed statistics',
@@ -431,7 +440,8 @@ function PageStats({ stats, t }: PageStatsProps) {
             {stats.topValues.map((item) => (
               <div
                 key={`${String(item.value)}-${item.count}`}
-                className="flex items-center gap-2 text-xs"
+                className="flex items-center gap-2"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -485,7 +495,10 @@ function FullTableStats({
     return (
       <div className="flex items-center justify-center gap-2 p-8">
         <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
-        <span className="text-muted-foreground text-xs">
+        <span
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('columnStats.loading', {
             defaultValue: 'Loading full table statistics...',
           })}
@@ -548,7 +561,8 @@ function FullTableStats({
               <div
                 // eslint-disable-next-line react/no-array-index-key -- Index needed as value may not be unique
                 key={`${String(item.value)}-${index}`}
-                className="group flex items-center gap-2 text-xs"
+                className="group flex items-center gap-2"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -606,7 +620,12 @@ function StatCard({ icon, label, value, subtitle, warning }: StatCardProps) {
         {icon}
         <span className="text-2xs uppercase">{label}</span>
       </div>
-      <div className="text-sm font-medium">{value}</div>
+      <div
+        className="font-medium"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
+        {value}
+      </div>
       {subtitle && (
         <div className="text-muted-foreground text-2xs">{subtitle}</div>
       )}

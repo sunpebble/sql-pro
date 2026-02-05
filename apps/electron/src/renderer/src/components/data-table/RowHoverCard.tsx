@@ -129,10 +129,16 @@ export const RowHoverCard = memo(
           <div className="border-b px-3 py-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground text-xs">
+                <span
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('dataTable.rowId')}:
                 </span>
-                <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 font-mono text-xs">
+                <span
+                  className="bg-primary/10 text-primary rounded px-1.5 py-0.5 font-mono"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {String(rowId)}
                 </span>
               </div>
@@ -178,14 +184,22 @@ export const RowHoverCard = memo(
                     key={col.name}
                     className="hover:bg-muted/50 flex items-start gap-2 px-3 py-1.5 transition-colors"
                   >
-                    <span className="text-muted-foreground min-w-20 truncate text-xs font-medium">
+                    <span
+                      className="text-muted-foreground min-w-20 truncate font-medium"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {col.name}
                     </span>
                     <span
                       className={cn(
-                        'flex-1 text-xs wrap-break-word',
+                        'flex-1 wrap-break-word',
                         getValueStyle(value, col.type)
                       )}
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       {formattedValue}
                     </span>

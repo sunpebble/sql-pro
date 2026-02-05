@@ -454,7 +454,12 @@ export function ServerConnectionDialog({
                 <div className="space-y-2">
                   <Label htmlFor="connectionString">
                     {t('connection.importFromUrl')}{' '}
-                    <span className="text-muted-foreground text-xs">
+                    <span
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.pasteToAutoFill')}
                     </span>
                   </Label>
@@ -478,7 +483,10 @@ export function ServerConnectionDialog({
                         e.target.value = '';
                       }
                     }}
-                    className="font-mono text-xs"
+                    className="font-mono"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   />
                 </div>
               )}
@@ -509,7 +517,12 @@ export function ServerConnectionDialog({
                       onChange={(e) => setQdrantHost(e.target.value)}
                       required
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.qdrant.hostHint')}
                     </p>
                   </div>
@@ -524,7 +537,12 @@ export function ServerConnectionDialog({
                       value={qdrantPort}
                       onChange={(e) => setQdrantPort(e.target.value)}
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.qdrant.portHint')}
                     </p>
                   </div>
@@ -533,7 +551,12 @@ export function ServerConnectionDialog({
                   <div className="space-y-2">
                     <Label htmlFor="qdrantApiKey">
                       {t('connection.qdrant.apiKey')}{' '}
-                      <span className="text-muted-foreground text-xs">
+                      <span
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         ({t('connection.optional')})
                       </span>
                     </Label>
@@ -544,7 +567,12 @@ export function ServerConnectionDialog({
                       value={qdrantApiKey}
                       onChange={(e) => setQdrantApiKey(e.target.value)}
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.qdrant.apiKeyHint')}
                     </p>
                   </div>
@@ -579,7 +607,12 @@ export function ServerConnectionDialog({
                       onChange={(e) => setTursoAuthToken(e.target.value)}
                       required
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.turso.authTokenHint')}
                     </p>
                   </div>
@@ -599,7 +632,12 @@ export function ServerConnectionDialog({
                       onChange={(e) => setTursoOrganization(e.target.value)}
                       required
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.turso.organizationHint')}
                     </p>
                   </div>
@@ -617,7 +655,12 @@ export function ServerConnectionDialog({
                       onChange={(e) => setTursoDatabase(e.target.value)}
                       required
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.turso.databaseHint')}
                     </p>
                   </div>
@@ -626,7 +669,12 @@ export function ServerConnectionDialog({
                   <div className="space-y-2">
                     <Label htmlFor="tursoBranch">
                       {t('connection.turso.branch')}{' '}
-                      <span className="text-muted-foreground text-xs">
+                      <span
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         ({t('connection.optional')})
                       </span>
                     </Label>
@@ -636,7 +684,12 @@ export function ServerConnectionDialog({
                       value={tursoBranch}
                       onChange={(e) => setTursoBranch(e.target.value)}
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.turso.branchHint')}
                     </p>
                   </div>
@@ -657,7 +710,12 @@ export function ServerConnectionDialog({
                       onChange={(e) => setSupabaseUrl(e.target.value)}
                       required
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.supabase.projectUrlHint')}
                     </p>
                   </div>
@@ -666,7 +724,12 @@ export function ServerConnectionDialog({
                   <div className="space-y-2">
                     <Label htmlFor="supabaseHost">
                       {t('connection.supabase.databaseHost')}{' '}
-                      <span className="text-muted-foreground text-xs">
+                      <span
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         ({t('connection.recommended')})
                       </span>
                     </Label>
@@ -676,7 +739,12 @@ export function ServerConnectionDialog({
                       value={host}
                       onChange={(e) => setHost(e.target.value)}
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.supabase.databaseHostHint')}
                     </p>
                   </div>
@@ -685,7 +753,12 @@ export function ServerConnectionDialog({
                   <div className="space-y-2">
                     <Label htmlFor="supabasePort">
                       {t('connection.port')}{' '}
-                      <span className="text-muted-foreground text-xs">
+                      <span
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         ({t('connection.optional')})
                       </span>
                     </Label>
@@ -702,7 +775,12 @@ export function ServerConnectionDialog({
                   <div className="space-y-2">
                     <Label htmlFor="supabaseUsername">
                       {t('connection.username')}{' '}
-                      <span className="text-muted-foreground text-xs">
+                      <span
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         ({t('connection.optional')})
                       </span>
                     </Label>
@@ -712,7 +790,12 @@ export function ServerConnectionDialog({
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.supabase.usernameHint')}
                     </p>
                   </div>
@@ -731,7 +814,12 @@ export function ServerConnectionDialog({
                       onChange={(e) => setSupabaseKey(e.target.value)}
                       required
                     />
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('connection.supabase.passwordHint')}
                     </p>
                   </div>
@@ -873,7 +961,10 @@ export function ServerConnectionDialog({
               </div>
               {/* Error message */}
               {error && (
-                <div className="border-destructive/50 bg-destructive/10 text-destructive rounded-md border p-3 text-sm">
+                <div
+                  className="border-destructive/50 bg-destructive/10 text-destructive rounded-md border p-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {error}
                 </div>
               )}
@@ -884,7 +975,10 @@ export function ServerConnectionDialog({
             <div className="flex w-full flex-col gap-3">
               {/* Test Result Indicator - shown above buttons when present */}
               {testResult && (
-                <div className="flex items-center gap-1.5 text-xs">
+                <div
+                  className="flex items-center gap-1.5"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {testResult.success ? (
                     <>
                       <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" />

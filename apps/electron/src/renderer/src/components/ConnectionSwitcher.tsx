@@ -247,7 +247,12 @@ export function ConnectionSwitcher({
                     <Database className="text-muted-foreground h-4 w-4 shrink-0" />
                     <div className="flex flex-1 flex-col overflow-hidden">
                       <span className="truncate">{item.label}</span>
-                      <span className="text-muted-foreground truncate text-xs">
+                      <span
+                        className="text-muted-foreground truncate"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {item.path}
                       </span>
                     </div>
@@ -284,7 +289,12 @@ export function ConnectionSwitcher({
                       <Clock className="text-muted-foreground h-4 w-4 shrink-0" />
                       <div className="flex flex-1 flex-col overflow-hidden">
                         <span className="truncate">{item.label}</span>
-                        <span className="text-muted-foreground truncate text-xs">
+                        <span
+                          className="text-muted-foreground truncate"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {item.path}
                         </span>
                       </div>
@@ -293,7 +303,13 @@ export function ConnectionSwitcher({
                           <KeyRound className="h-3 w-3 text-green-500" />
                         )}
                         {item.lastOpened && (
-                          <span className="text-muted-foreground text-xs">
+                          <span
+                            className="text-muted-foreground"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {formatLastOpened(item.lastOpened)}
                           </span>
                         )}
@@ -306,7 +322,10 @@ export function ConnectionSwitcher({
           </CommandList>
 
           {/* Footer */}
-          <div className="text-muted-foreground flex items-center justify-between border-t px-4 py-2 text-xs">
+          <div
+            className="text-muted-foreground flex items-center justify-between border-t px-4 py-2"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <kbd className="bg-muted text-muted-foreground rounded px-1 py-0.5">

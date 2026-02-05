@@ -105,7 +105,7 @@ function BrandCardTitle({ className, ...props }: React.ComponentProps<'h3'>) {
     <h3
       data-slot="brand-card-title"
       className={cn(
-        'font-sans text-xl font-medium',
+        'font-sans [font-size:calc(var(--font-ui-size,14px)*1.4)] font-medium',
         'text-card-foreground tracking-tight',
         className
       )}
@@ -121,7 +121,10 @@ function BrandCardDescription({
   return (
     <p
       data-slot="brand-card-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn(
+        'text-muted-foreground [font-size:var(--font-ui-size,14px)]',
+        className
+      )}
       {...props}
     />
   );

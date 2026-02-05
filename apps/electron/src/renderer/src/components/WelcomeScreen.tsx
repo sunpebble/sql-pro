@@ -967,10 +967,16 @@ export function WelcomeScreen() {
                 <div className="rounded-base border-border bg-main shadow-shadow mx-auto mb-5 flex h-14 w-14 items-center justify-center border-2">
                   <Database className="text-main-foreground h-7 w-7" />
                 </div>
-                <h1 className="text-foreground text-2xl font-bold tracking-tight">
+                <h1
+                  className="text-foreground font-bold tracking-tight"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.7)' }}
+                >
                   {t('app.name')}
                 </h1>
-                <p className="text-muted-foreground mt-1.5 text-sm">
+                <p
+                  className="text-muted-foreground mt-1.5"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('welcome.subtitle', {
                     defaultValue: 'Professional Database Manager',
                   })}
@@ -979,7 +985,10 @@ export function WelcomeScreen() {
 
               {/* Error Message */}
               {error && (
-                <div className="border-border bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border-2 p-3 text-sm">
+                <div
+                  className="border-border bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border-2 p-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{error}</span>
                 </div>
@@ -1015,7 +1024,12 @@ export function WelcomeScreen() {
                     defaultValue: 'Connect to Server',
                   })}
                 </Button>
-                <p className="text-muted-foreground text-center text-xs">
+                <p
+                  className="text-muted-foreground text-center"
+                  style={{
+                    fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                  }}
+                >
                   {t('welcome.supportsDb', {
                     defaultValue:
                       'Supports MySQL, PostgreSQL, Supabase, and Turso',
@@ -1039,7 +1053,12 @@ export function WelcomeScreen() {
                       data-tour-target="recent-connections"
                     >
                       <div className="flex shrink-0 items-center justify-between px-1">
-                        <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        <span
+                          className="text-muted-foreground font-medium tracking-wide uppercase"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {t('welcome.recentConnections', {
                             defaultValue: 'Recent Connections',
                           })}
@@ -1082,7 +1101,12 @@ export function WelcomeScreen() {
                                 })()}
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center gap-2">
-                                    <span className="truncate text-sm font-medium">
+                                    <span
+                                      className="truncate font-medium"
+                                      style={{
+                                        fontSize: 'var(--font-ui-size, 14px)',
+                                      }}
+                                    >
                                       {conn.displayName || conn.filename}
                                     </span>
                                     <div className="flex shrink-0 items-center gap-1">
@@ -1103,7 +1127,13 @@ export function WelcomeScreen() {
                                       />
                                     </div>
                                   </div>
-                                  <div className="text-muted-foreground truncate font-mono text-xs">
+                                  <div
+                                    className="text-muted-foreground truncate font-mono"
+                                    style={{
+                                      fontSize:
+                                        'calc(var(--font-ui-size, 14px) * 0.85)',
+                                    }}
+                                  >
                                     {conn.path}
                                   </div>
                                 </div>

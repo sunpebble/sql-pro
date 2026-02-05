@@ -114,7 +114,7 @@ function Kbd({
         'data-[variant=default]:bg-muted data-[variant=default]:text-muted-foreground',
         'data-[variant=outline]:border-border data-[variant=outline]:text-muted-foreground data-[variant=outline]:border data-[variant=outline]:bg-transparent',
         // Size styles
-        'data-[size=default]:h-5 data-[size=default]:min-w-5 data-[size=default]:rounded data-[size=default]:px-1 data-[size=default]:text-xs',
+        'data-[size=default]:h-5 data-[size=default]:min-w-5 data-[size=default]:rounded data-[size=default]:px-1 data-[size=default]:[font-size:calc(var(--font-ui-size,14px)*0.75)]',
         'data-[size=sm]:h-4 data-[size=sm]:min-w-4 data-[size=sm]:rounded-sm data-[size=sm]:px-0.5 data-[size=sm]:text-[10px]',
         className
       )}

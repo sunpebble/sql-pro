@@ -96,7 +96,10 @@ class DiagramErrorBoundary extends Component<
           <p className="text-destructive mb-2 font-medium">
             {this.props.errorMessage}
           </p>
-          <p className="text-muted-foreground text-center text-sm">
+          <p
+            className="text-muted-foreground text-center"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {this.state.error?.message || this.props.unexpectedErrorMessage}
           </p>
         </div>
@@ -191,9 +194,17 @@ const PlanNode = memo(function PlanNode({
           <Icon className="text-primary h-4 w-4" />
         </div>
         <div className="flex-1">
-          <p className="font-mono text-sm">{node.detail}</p>
+          <p
+            className="font-mono"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
+            {node.detail}
+          </p>
           {(node.estimatedCost || node.estimatedRows) && (
-            <div className="text-muted-foreground flex gap-4 text-xs">
+            <div
+              className="text-muted-foreground flex gap-4"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {node.estimatedCost && (
                 <span>
                   {t('devTools.queryOptimizer.cost', {
@@ -364,7 +375,10 @@ export const QueryOptimizerPanel = memo(
           {/* Query Preview */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground text-sm">
+              <span
+                className="text-muted-foreground"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('devTools.queryOptimizer.query')}
               </span>
               <Button
@@ -384,10 +398,14 @@ export const QueryOptimizerPanel = memo(
               <SqlHighlight
                 code={query}
                 maxLines={3}
-                className="bg-muted rounded-base p-3 text-sm"
+                className="bg-muted rounded-base p-3"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
               />
             ) : (
-              <pre className="bg-muted text-muted-foreground rounded-base p-3 font-mono text-sm">
+              <pre
+                className="bg-muted text-muted-foreground rounded-base p-3 font-mono"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('devTools.queryOptimizer.noQuery')}
               </pre>
             )}
@@ -401,7 +419,12 @@ export const QueryOptimizerPanel = memo(
                 <p className="text-destructive font-medium">
                   {t('devTools.queryOptimizer.analysisError')}
                 </p>
-                <p className="text-destructive/80 text-sm">{error}</p>
+                <p
+                  className="text-destructive/80"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
+                  {error}
+                </p>
               </div>
             </div>
           )}
@@ -412,35 +435,61 @@ export const QueryOptimizerPanel = memo(
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1">
                   <Clock className="h-4 w-4" />
-                  <span className="text-lg font-semibold">
+                  <span
+                    className="font-semibold"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)',
+                    }}
+                  >
                     {(stats.executionTime ?? 0).toFixed(2)}ms
                   </span>
                 </div>
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('devTools.queryOptimizer.executionTime')}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-semibold">
+                <p
+                  className="font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                >
                   {stats.rowsExamined ?? 0}
                 </p>
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('devTools.queryOptimizer.rowsExamined')}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-semibold">
+                <p
+                  className="font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                >
                   {stats.rowsReturned ?? 0}
                 </p>
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('devTools.queryOptimizer.rowsReturned')}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-semibold">
+                <p
+                  className="font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                >
                   {stats.indexesUsed?.length ?? 0}
                 </p>
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('devTools.queryOptimizer.indexesUsed')}
                 </p>
               </div>
@@ -607,14 +656,20 @@ export const QueryOptimizerPanel = memo(
                                   ? 'default'
                                   : 'secondary'
                             }
-                            className="text-xs"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
                           >
                             {t('devTools.queryOptimizer.impact', {
                               impact: suggestion.impact,
                             })}
                           </Badge>
                         </div>
-                        <p className="text-muted-foreground text-sm">
+                        <p
+                          className="text-muted-foreground"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t(suggestion.descriptionKey, suggestion.params)}
                         </p>
                       </div>
@@ -629,10 +684,13 @@ export const QueryOptimizerPanel = memo(
           {!isAnalyzing && plan.length === 0 && !error && (
             <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center py-12">
               <Zap className="mb-4 h-12 w-12 opacity-30" />
-              <p className="text-lg font-medium">
+              <p
+                className="font-medium"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+              >
                 {t('devTools.queryOptimizer.readyToAnalyze')}
               </p>
-              <p className="text-sm">
+              <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                 {t('devTools.queryOptimizer.clickAnalyze')}
               </p>
             </div>
@@ -662,11 +720,17 @@ export const QueryOptimizerPanel = memo(
                 <div className="mt-6 space-y-6">
                   {/* Operation Details */}
                   <div className="space-y-2">
-                    <h3 className="text-sm font-medium">
+                    <h3
+                      className="font-medium"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t('devTools.queryOptimizer.operation')}
                     </h3>
                     <div className="bg-muted rounded-base p-3">
-                      <p className="font-mono text-sm">
+                      <p
+                        className="font-mono"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {selectedNode.data.detail}
                       </p>
                     </div>
@@ -676,17 +740,26 @@ export const QueryOptimizerPanel = memo(
                   {(selectedNode.data.tableName ||
                     selectedNode.data.indexName) && (
                     <div className="space-y-2">
-                      <h3 className="text-sm font-medium">
+                      <h3
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('devTools.queryOptimizer.tableAndIndex')}
                       </h3>
                       <div className="space-y-2">
                         {selectedNode.data.tableName && (
                           <div className="flex items-center gap-2">
                             <Table className="text-muted-foreground h-4 w-4" />
-                            <span className="text-muted-foreground text-sm">
+                            <span
+                              className="text-muted-foreground"
+                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            >
                               {t('devTools.queryOptimizer.table')}
                             </span>
-                            <span className="font-mono text-sm font-medium">
+                            <span
+                              className="font-mono font-medium"
+                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            >
                               {selectedNode.data.tableName}
                             </span>
                           </div>
@@ -694,10 +767,16 @@ export const QueryOptimizerPanel = memo(
                         {selectedNode.data.indexName && (
                           <div className="flex items-center gap-2">
                             <Zap className="text-muted-foreground h-4 w-4" />
-                            <span className="text-muted-foreground text-sm">
+                            <span
+                              className="text-muted-foreground"
+                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            >
                               {t('devTools.queryOptimizer.index')}
                             </span>
-                            <span className="font-mono text-sm font-medium">
+                            <span
+                              className="font-mono font-medium"
+                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            >
                               {selectedNode.data.indexName}
                             </span>
                           </div>
@@ -710,26 +789,53 @@ export const QueryOptimizerPanel = memo(
                   {(selectedNode.data.estimatedCost !== undefined ||
                     selectedNode.data.estimatedRows !== undefined) && (
                     <div className="space-y-2">
-                      <h3 className="text-sm font-medium">
+                      <h3
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('devTools.queryOptimizer.performanceMetrics')}
                       </h3>
                       <div className="bg-muted/50 rounded-base grid grid-cols-2 gap-4 p-4">
                         {selectedNode.data.estimatedCost !== undefined && (
                           <div className="text-center">
-                            <p className="text-2xl font-semibold">
+                            <p
+                              className="font-semibold"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 1.7)',
+                              }}
+                            >
                               {selectedNode.data.estimatedCost}
                             </p>
-                            <p className="text-muted-foreground text-xs">
+                            <p
+                              className="text-muted-foreground"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
+                            >
                               {t('devTools.queryOptimizer.estimatedCost')}
                             </p>
                           </div>
                         )}
                         {selectedNode.data.estimatedRows !== undefined && (
                           <div className="text-center">
-                            <p className="text-2xl font-semibold">
+                            <p
+                              className="font-semibold"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 1.7)',
+                              }}
+                            >
                               ~{selectedNode.data.estimatedRows}
                             </p>
-                            <p className="text-muted-foreground text-xs">
+                            <p
+                              className="text-muted-foreground"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
+                            >
                               {t('devTools.queryOptimizer.estimatedRows')}
                             </p>
                           </div>
@@ -741,7 +847,10 @@ export const QueryOptimizerPanel = memo(
                   {/* Warnings */}
                   {selectedNode.data.hasWarning && (
                     <div className="space-y-2">
-                      <h3 className="text-sm font-medium">
+                      <h3
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('devTools.queryOptimizer.performanceWarning')}
                       </h3>
                       <div
@@ -782,7 +891,10 @@ export const QueryOptimizerPanel = memo(
                               'missing-index' &&
                               t('devTools.queryOptimizer.warning.missingIndex')}
                           </p>
-                          <p className="text-muted-foreground text-sm">
+                          <p
+                            className="text-muted-foreground"
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          >
                             {selectedNode.data.warningType === 'full-scan' &&
                               t('devTools.queryOptimizer.warning.fullScanDesc')}
                             {selectedNode.data.warningType === 'temp-btree' &&

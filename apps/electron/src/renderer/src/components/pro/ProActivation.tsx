@@ -168,7 +168,12 @@ export function ProActivationDialog({
                   <div>
                     <p className="font-medium">{t('pro.proActive')}</p>
                     {formattedActivatedAt && (
-                      <p className="text-muted-foreground text-xs">
+                      <p
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('pro.activatedOn', { date: formattedActivatedAt })}
                       </p>
                     )}
@@ -207,9 +212,19 @@ export function ProActivationDialog({
                   )}
                 </Button>
               </div>
-              {error && <p className="text-destructive text-xs">{error}</p>}
+              {error && (
+                <p
+                  className="text-destructive"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
+                  {error}
+                </p>
+              )}
               {!isPro && (
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('pro.keyStoredSecurely')}
                 </p>
               )}
@@ -249,9 +264,10 @@ export function ProActivationDialog({
                       <div className="min-w-0 flex-1">
                         <p
                           className={cn(
-                            'truncate text-sm font-medium',
+                            'truncate font-medium',
                             !isActive && !isPro && 'text-muted-foreground'
                           )}
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                         >
                           {t(`pro.features.${featureId}.name`)}
                         </p>

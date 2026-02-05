@@ -646,7 +646,10 @@ export function ProfileManager({
       {/* Header */}
       <div className="border-b p-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">
+          <h2
+            className="font-semibold"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          >
             {t('profiles.title', { defaultValue: 'Connection Profiles' })}
           </h2>
           <div className="flex items-center gap-2">
@@ -703,7 +706,12 @@ export function ProfileManager({
               {/* Recent connections */}
               {recentProfiles.length > 0 && (
                 <div>
-                  <h3 className="text-muted-foreground mb-2 text-xs font-semibold uppercase">
+                  <h3
+                    className="text-muted-foreground mb-2 font-semibold uppercase"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('profiles.recentConnections')}
                   </h3>
                   <div className="space-y-1">
@@ -711,9 +719,10 @@ export function ProfileManager({
                       <div
                         key={profile.id}
                         className={cn(
-                          'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors',
+                          'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 transition-colors',
                           selectedProfileId === profile.id && 'bg-accent'
                         )}
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                         onClick={() => selectProfile(profile.id)}
                         onDoubleClick={() => handleConnectProfile(profile)}
                       >
@@ -746,7 +755,12 @@ export function ProfileManager({
               {/* Saved profiles and folders */}
               {(savedProfiles.length > 0 || folders.size > 0) && (
                 <div>
-                  <h3 className="text-muted-foreground mb-2 text-xs font-semibold uppercase">
+                  <h3
+                    className="text-muted-foreground mb-2 font-semibold uppercase"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('profiles.savedProfiles')}
                   </h3>
                   <FolderTree
@@ -774,7 +788,7 @@ export function ProfileManager({
                 folders.size === 0 && (
                   <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2 text-center">
                     <Database className="size-12" />
-                    <p className="text-sm">
+                    <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                       {searchQuery
                         ? t('profiles.noSearchResults', {
                             defaultValue:
@@ -785,7 +799,11 @@ export function ProfileManager({
                           })}
                     </p>
                     {!searchQuery && (
-                      <p className="text-xs">
+                      <p
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('profiles.getStarted', {
                           defaultValue:
                             'Connect to a database and save it as a profile to get started',
@@ -807,7 +825,12 @@ export function ProfileManager({
                   <h3 className="mb-2 font-semibold">
                     {selectedProfile.displayName || selectedProfile.filename}
                   </h3>
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {selectedProfile.path}
                   </p>
                 </div>
@@ -817,7 +840,12 @@ export function ProfileManager({
                   {/* Tags */}
                   {selectedProfile.tags && selectedProfile.tags.length > 0 && (
                     <div>
-                      <div className="text-muted-foreground mb-1 flex items-center gap-1 text-xs font-medium">
+                      <div
+                        className="text-muted-foreground mb-1 flex items-center gap-1 font-medium"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         <Tag className="size-3" />
                         {t('profileManager.tags')}
                       </div>
@@ -825,7 +853,11 @@ export function ProfileManager({
                         {selectedProfile.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="bg-accent rounded-full px-2 py-0.5 text-xs"
+                            className="bg-accent rounded-full px-2 py-0.5"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
                           >
                             {tag}
                           </span>
@@ -837,11 +869,19 @@ export function ProfileManager({
                   {/* Notes */}
                   {selectedProfile.notes && (
                     <div>
-                      <div className="text-muted-foreground mb-1 flex items-center gap-1 text-xs font-medium">
+                      <div
+                        className="text-muted-foreground mb-1 flex items-center gap-1 font-medium"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         <FileText className="size-3" />
                         {t('profileManager.notes')}
                       </div>
-                      <p className="text-muted-foreground text-sm whitespace-pre-wrap">
+                      <p
+                        className="text-muted-foreground whitespace-pre-wrap"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {selectedProfile.notes}
                       </p>
                     </div>
@@ -849,10 +889,20 @@ export function ProfileManager({
 
                   {/* Properties */}
                   <div>
-                    <div className="text-muted-foreground mb-1 text-xs font-medium">
+                    <div
+                      className="text-muted-foreground mb-1 font-medium"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {t('profileManager.properties')}
                     </div>
-                    <div className="space-y-1 text-xs">
+                    <div
+                      className="space-y-1"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {selectedProfile.isEncrypted && (
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">
@@ -904,7 +954,10 @@ export function ProfileManager({
                 </div>
               </div>
             ) : (
-              <div className="text-muted-foreground flex h-full items-center justify-center text-center text-sm">
+              <div
+                className="text-muted-foreground flex h-full items-center justify-center text-center"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 Select a profile to view details
               </div>
             )}
@@ -948,7 +1001,11 @@ export function ProfileManager({
           </DialogHeader>
           <form onSubmit={handleFolderDialogSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="folderName" className="text-sm font-medium">
+              <label
+                htmlFor="folderName"
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('profiles.folderName')}
               </label>
               <Input
@@ -960,7 +1017,10 @@ export function ProfileManager({
                 autoFocus
               />
               {editingFolder && folderDialogMode === 'create' && (
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('profiles.creatingSubfolderIn', {
                     name: editingFolder.name,
                   })}

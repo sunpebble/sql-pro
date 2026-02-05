@@ -149,7 +149,8 @@ const TabItem = memo(
                 </TooltipTrigger>
                 <TooltipContent
                   side="bottom"
-                  className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                  className={TOOLTIP_CONTENT_STYLE}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                 >
                   {t('queryTabs.closeTab')}
                 </TooltipContent>
@@ -266,7 +267,8 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
             </TooltipTrigger>
             <TooltipContent
               side="bottom"
-              className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+              className={TOOLTIP_CONTENT_STYLE}
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
             >
               {t('queryTabs.newQueryTab')}
             </TooltipContent>
@@ -289,7 +291,8 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
               </TooltipTrigger>
               <TooltipContent
                 side="bottom"
-                className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                className={TOOLTIP_CONTENT_STYLE}
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
               >
                 {t('queryTabs.closeSplitView')}
               </TooltipContent>
@@ -312,7 +315,8 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
                 </TooltipTrigger>
                 <TooltipContent
                   side="bottom"
-                  className={cn('text-xs', TOOLTIP_CONTENT_STYLE)}
+                  className={TOOLTIP_CONTENT_STYLE}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
                 >
                   {t('queryTabs.splitEditor')}
                 </TooltipContent>

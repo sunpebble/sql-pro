@@ -52,10 +52,16 @@ export function EditorSection() {
                 <Keyboard className="text-muted-foreground h-5 w-5" />
               </div>
               <div className="text-left">
-                <span className="text-sm font-medium">
+                <span
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {PRESET_INFO[activePreset].label} {t('shortcuts.preset')}
                 </span>
-                <p className="text-muted-foreground text-xs">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('shortcuts.customize')}
                 </p>
               </div>
@@ -91,7 +97,7 @@ function VimModeToggle({
     <button
       onClick={() => onToggle(!enabled)}
       className={cn(
-        'flex flex-col items-start rounded-base border p-3 text-left transition-colors',
+        'rounded-base flex flex-col items-start border p-3 text-left transition-colors',
         enabled
           ? 'border-primary bg-primary/10'
           : 'border-border hover:border-primary/50 hover:bg-muted/50'
@@ -100,15 +106,26 @@ function VimModeToggle({
       <div className="flex items-center gap-2">
         <span
           className={cn(
-            'font-mono text-xs font-bold uppercase',
+            'font-mono font-bold uppercase',
             enabled ? 'text-primary' : 'text-muted-foreground'
           )}
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
         >
           {enabled ? 'VIM' : 'OFF'}
         </span>
-        <span className="text-sm font-medium">{label}</span>
+        <span
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
+          {label}
+        </span>
       </div>
-      <span className="text-muted-foreground mt-1 text-xs">{description}</span>
+      <span
+        className="text-muted-foreground mt-1"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
+        {description}
+      </span>
     </button>
   );
 }

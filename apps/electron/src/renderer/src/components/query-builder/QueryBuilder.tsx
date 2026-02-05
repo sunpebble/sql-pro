@@ -296,7 +296,10 @@ export function QueryBuilder() {
                     <h3 className="mb-2 font-semibold">
                       {t('queryBuilder.getStarted', 'Get Started')}
                     </h3>
-                    <p className="text-muted-foreground mb-4 text-sm">
+                    <p
+                      className="text-muted-foreground mb-4"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t(
                         'queryBuilder.getStartedHint',
                         'Click "Add Table" in the toolbar to add tables to your query. Drag columns between tables to create JOINs.'
@@ -349,9 +352,10 @@ export function QueryBuilder() {
             <div className="flex-1 overflow-auto p-4">
               <pre
                 className={cn(
-                  'bg-muted/30 rounded-base border-2 p-4 font-mono text-sm',
+                  'bg-muted/30 rounded-base border-2 p-4 font-mono',
                   'break-words whitespace-pre-wrap'
                 )}
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
               >
                 {generatedSQL}
               </pre>
@@ -360,7 +364,10 @@ export function QueryBuilder() {
             {/* Column selection summary */}
             {selectedColumns.length > 0 && (
               <div className="border-t px-4 py-3">
-                <h4 className="mb-2 text-sm font-medium">
+                <h4
+                  className="mb-2 font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('queryBuilder.selectedColumns', 'Selected Columns')} (
                   {selectedColumns.length})
                 </h4>
@@ -372,18 +379,26 @@ export function QueryBuilder() {
                       <span
                         key={key}
                         className={cn(
-                          'inline-flex items-center rounded-full px-2 py-0.5 text-xs transition-colors',
+                          'inline-flex items-center rounded-full px-2 py-0.5 transition-colors',
                           isHighlighted
                             ? 'bg-cyan-500 text-white ring-2 ring-cyan-300'
                             : 'bg-primary/10'
                         )}
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
                       >
                         {key}
                       </span>
                     );
                   })}
                   {selectedColumns.length > 10 && (
-                    <span className="text-muted-foreground text-xs">
+                    <span
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       +{selectedColumns.length - 10} more
                     </span>
                   )}

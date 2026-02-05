@@ -106,7 +106,11 @@ export function RowDiffCard({
           >
             {primaryKeyDisplay}
           </CardTitle>
-          <Badge variant="secondary" className={cn('text-xs', style.badge)}>
+          <Badge
+            variant="secondary"
+            className={style.badge}
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {style.label}
           </Badge>
           {changeCount > 0 && (
@@ -168,7 +172,10 @@ export function RowDiffCard({
                     >
                       {column}
                     </div>
-                    <div className="font-mono text-sm text-green-700 dark:text-green-300">
+                    <div
+                      className="font-mono text-green-700 dark:text-green-300"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {formatValue(value)}
                     </div>
                   </div>
@@ -198,7 +205,10 @@ export function RowDiffCard({
                     >
                       {column}
                     </div>
-                    <div className="font-mono text-sm text-red-700 dark:text-red-300">
+                    <div
+                      className="font-mono text-red-700 dark:text-red-300"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {formatValue(value)}
                     </div>
                   </div>
@@ -228,7 +238,10 @@ export function RowDiffCard({
                     >
                       {column}
                     </div>
-                    <div className="text-muted-foreground font-mono text-sm">
+                    <div
+                      className="text-muted-foreground font-mono"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {formatValue(value)}
                     </div>
                   </div>
@@ -267,10 +280,16 @@ function ColumnChangeRow({ columnChange }: { columnChange: ColumnChange }) {
       </div>
       <div className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
-          <div className="text-xs text-red-600 dark:text-red-400">
+          <div
+            className="text-red-600 dark:text-red-400"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             - {formatValue(sourceValue)}
           </div>
-          <div className="text-xs text-green-600 dark:text-green-400">
+          <div
+            className="text-green-600 dark:text-green-400"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             + {formatValue(targetValue)}
           </div>
         </div>

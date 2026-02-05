@@ -446,7 +446,7 @@ export function PluginDetailView({
           {/* Plugin Header */}
           <div className="flex items-start gap-4">
             {/* Plugin Icon */}
-            <div className="bg-muted flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-base">
+            <div className="bg-muted rounded-base flex size-16 shrink-0 items-center justify-center overflow-hidden">
               {pluginIcon ? (
                 <img
                   src={pluginIcon}
@@ -460,7 +460,11 @@ export function PluginDetailView({
 
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <SheetTitle className="text-xl">{pluginName}</SheetTitle>
+                <SheetTitle
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+                >
+                  {pluginName}
+                </SheetTitle>
                 {variant === 'installed' && pluginState && (
                   <Badge variant={getStateBadgeVariant(pluginState)}>
                     {t(getStateLabelKey(pluginState))}
@@ -491,23 +495,39 @@ export function PluginDetailView({
           <div className="space-y-6 py-4">
             {/* Error Message */}
             {hasError && errorMessage && (
-              <div className="bg-destructive/10 border-destructive/50 flex items-start gap-3 rounded-base border p-3">
+              <div className="bg-destructive/10 border-destructive/50 rounded-base flex items-start gap-3 border p-3">
                 <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
                 <div>
-                  <p className="text-destructive text-sm font-medium">
+                  <p
+                    className="text-destructive font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('pluginCard.error')}
                   </p>
-                  <p className="text-destructive/80 text-xs">{errorMessage}</p>
+                  <p
+                    className="text-destructive/80"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    {errorMessage}
+                  </p>
                 </div>
               </div>
             )}
 
             {/* Description */}
             <div>
-              <h4 className="mb-2 text-sm font-medium">
+              <h4
+                className="mb-2 font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('pluginDetail.description')}
               </h4>
-              <p className="text-muted-foreground text-sm">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {pluginDescription}
               </p>
             </div>
@@ -515,10 +535,13 @@ export function PluginDetailView({
             {/* Screenshots */}
             {hasScreenshots && (
               <div>
-                <h4 className="mb-2 text-sm font-medium">
+                <h4
+                  className="mb-2 font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('pluginDetail.screenshots')}
                 </h4>
-                <div className="bg-muted relative overflow-hidden rounded-base">
+                <div className="bg-muted rounded-base relative overflow-hidden">
                   <img
                     src={pluginScreenshots![currentScreenshotIndex]}
                     alt={`${pluginName} screenshot ${currentScreenshotIndex + 1}`}
@@ -577,7 +600,10 @@ export function PluginDetailView({
               <div>
                 <div className="mb-2 flex items-center gap-2">
                   <Shield className="text-muted-foreground h-4 w-4" />
-                  <h4 className="text-sm font-medium">
+                  <h4
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('pluginDetail.permissions')}
                   </h4>
                 </div>
@@ -590,7 +616,12 @@ export function PluginDetailView({
                       <Badge variant="outline" className="shrink-0">
                         {t(getPermissionLabelKey(permission))}
                       </Badge>
-                      <p className="text-muted-foreground text-xs">
+                      <p
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t(getPermissionDescriptionKey(permission))}
                       </p>
                     </div>
@@ -604,7 +635,10 @@ export function PluginDetailView({
             {/* Metadata */}
             <div className="space-y-3">
               {/* Author */}
-              <div className="flex items-center gap-3 text-sm">
+              <div
+                className="flex items-center gap-3"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 <User className="text-muted-foreground h-4 w-4 shrink-0" />
                 <span className="text-muted-foreground">
                   {t('pluginDetail.author')}
@@ -614,7 +648,10 @@ export function PluginDetailView({
 
               {/* License */}
               {pluginLicense && (
-                <div className="flex items-center gap-3 text-sm">
+                <div
+                  className="flex items-center gap-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Shield className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
                     {t('pluginDetail.license')}
@@ -625,7 +662,10 @@ export function PluginDetailView({
 
               {/* Installed Date */}
               {installedAt && (
-                <div className="flex items-center gap-3 text-sm">
+                <div
+                  className="flex items-center gap-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Calendar className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
                     {t('pluginDetail.installed')}
@@ -638,7 +678,10 @@ export function PluginDetailView({
 
               {/* Last Updated */}
               {updatedAt && (
-                <div className="flex items-center gap-3 text-sm">
+                <div
+                  className="flex items-center gap-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Calendar className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
                     {t('pluginDetail.lastUpdated')}
@@ -651,7 +694,10 @@ export function PluginDetailView({
 
               {/* Downloads (marketplace only) */}
               {downloads !== undefined && (
-                <div className="flex items-center gap-3 text-sm">
+                <div
+                  className="flex items-center gap-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Download className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
                     {t('pluginDetail.downloads')}
@@ -664,7 +710,10 @@ export function PluginDetailView({
 
               {/* Rating (marketplace only) */}
               {rating !== undefined && (
-                <div className="flex items-center gap-3 text-sm">
+                <div
+                  className="flex items-center gap-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <span className="text-muted-foreground">
                     {t('pluginDetail.rating')}
                   </span>
@@ -680,7 +729,10 @@ export function PluginDetailView({
               <>
                 <Separator />
                 <div>
-                  <h4 className="mb-2 text-sm font-medium">
+                  <h4
+                    className="mb-2 font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {isPluginInfoType
                       ? t('pluginDetail.keywords')
                       : t('pluginDetail.categories')}
@@ -690,7 +742,9 @@ export function PluginDetailView({
                       <Badge
                         key={keyword}
                         variant="secondary"
-                        className="text-xs"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
                       >
                         {keyword}
                       </Badge>
@@ -752,7 +806,10 @@ export function PluginDetailView({
                         : t('pluginCard.enablePlugin')
                     }
                   />
-                  <span className="text-muted-foreground text-sm">
+                  <span
+                    className="text-muted-foreground"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {isEnabled
                       ? t('pluginCard.enabled')
                       : t('pluginCard.disabled')}
@@ -802,7 +859,11 @@ export function PluginDetailView({
           {variant === 'marketplace' && (
             <div className="flex w-full items-center justify-end gap-3">
               {isInstalled ? (
-                <Badge variant="secondary" className="px-4 py-1.5 text-sm">
+                <Badge
+                  variant="secondary"
+                  className="px-4 py-1.5"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('pluginDetail.alreadyInstalled')}
                 </Badge>
               ) : (

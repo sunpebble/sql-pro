@@ -301,7 +301,10 @@ export function TourTooltip({
     >
       {/* Header with step indicator and close button */}
       <div className="border-border/50 flex items-center justify-between border-b px-4 py-3">
-        <span className="text-muted-foreground text-xs font-medium">
+        <span
+          className="text-muted-foreground font-medium"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('tour.step', { current: stepNumber, total: totalSteps })}
         </span>
         <Button
@@ -325,7 +328,8 @@ export function TourTooltip({
         </h3>
         <p
           id="tour-tooltip-description"
-          className="text-muted-foreground mt-2 text-sm leading-relaxed"
+          className="text-muted-foreground mt-2 leading-relaxed"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
         >
           {t(step.description)}
         </p>

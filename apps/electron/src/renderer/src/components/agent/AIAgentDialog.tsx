@@ -110,7 +110,10 @@ export function AIAgentDialog({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-2xl">
-          <div className="mb-4 text-lg font-medium">
+          <div
+            className="mb-4 font-medium"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          >
             {t('agent.settings', 'Agent Settings')}
           </div>
           <AgentSettingsPanel
@@ -175,7 +178,7 @@ export function AIAgentDialog({
             {messages.length === 0 && (
               <div className="text-muted-foreground flex flex-col items-center justify-center py-12 text-center">
                 <Bot className="mb-4 h-12 w-12 opacity-50" />
-                <p className="text-sm">
+                <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                   {t(
                     'agent.welcome',
                     'Ask me anything about your database. I can execute queries, analyze data, and suggest optimizations.'
@@ -206,7 +209,10 @@ export function AIAgentDialog({
                   )}
                 >
                   {message.role === 'user' ? (
-                    <div className="text-sm whitespace-pre-wrap">
+                    <div
+                      className="whitespace-pre-wrap"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {getMessageText(message)}
                     </div>
                   ) : (
@@ -226,7 +232,7 @@ export function AIAgentDialog({
               getMessageText(messages[messages.length - 1]) === '' && (
                 <div className="text-muted-foreground flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="text-sm">
+                  <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                     {t('agent.thinking', 'Thinking...')}
                   </span>
                 </div>
@@ -237,7 +243,12 @@ export function AIAgentDialog({
         {/* Error */}
         {error && (
           <div className="bg-destructive/10 border-t px-4 py-2">
-            <p className="text-destructive text-sm">{error}</p>
+            <p
+              className="text-destructive"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
+              {error}
+            </p>
           </div>
         )}
 

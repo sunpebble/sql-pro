@@ -22,7 +22,6 @@ import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { sqlPro } from '@/lib/api';
-import { cn } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
@@ -301,7 +300,12 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                 </AlertTitle>
                 {showWarnings && (
                   <AlertDescription className="mt-2">
-                    <ul className="list-inside list-disc space-y-1 text-xs">
+                    <ul
+                      className="list-inside list-disc space-y-1"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {migrationSQL.warnings.map((warning) => (
                         <li key={warning}>{warning}</li>
                       ))}
@@ -394,10 +398,12 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                   <div className="p-4">
                     <SqlHighlight
                       code={migrationSQL.sql}
-                      className={cn(
-                        'text-sm',
-                        migrationSQL.sql.length > 5000 && 'text-xs'
-                      )}
+                      style={{
+                        fontSize:
+                          migrationSQL.sql.length > 5000
+                            ? 'calc(var(--font-ui-size, 14px) * 0.85)'
+                            : 'var(--font-ui-size, 14px)',
+                      }}
                     />
                   </div>
                 </ScrollArea>

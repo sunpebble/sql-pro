@@ -48,7 +48,12 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
             <div className="space-y-2">
               <HexColorPicker color={color} onChange={onChange} />
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground text-xs">Hex:</span>
+                <span
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+                >
+                  Hex:
+                </span>
                 <input
                   type="text"
                   value={color}
@@ -58,7 +63,8 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
                       onChange(val);
                     }
                   }}
-                  className="bg-background h-6 w-20 rounded border px-1.5 font-mono text-xs"
+                  className="bg-background h-6 w-20 rounded border px-1.5 font-mono"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
                 />
               </div>
             </div>
@@ -66,7 +72,8 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="w-full text-xs"
+              className="w-full"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
               onClick={() => setShowCustom(true)}
             >
               Custom color...

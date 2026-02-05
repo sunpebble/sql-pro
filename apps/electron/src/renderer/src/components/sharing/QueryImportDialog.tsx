@@ -109,7 +109,10 @@ export function QueryImportDialog({
           <div className="space-y-4 py-4">
             {!importResult ? (
               <div className="space-y-3">
-                <p className="text-muted-foreground text-sm">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('sharing.selectFilePrompt')}
                 </p>
               </div>
@@ -125,7 +128,10 @@ export function QueryImportDialog({
                         <p className="text-destructive font-medium">
                           {t('sharing.versionIncompatible')}
                         </p>
-                        <p className="text-destructive/80 mt-1 text-sm">
+                        <p
+                          className="text-destructive/80 mt-1"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t('sharing.versionIncompatibleDesc')}
                         </p>
                       </div>
@@ -137,10 +143,18 @@ export function QueryImportDialog({
                     <div className="bg-muted rounded-base flex items-start gap-3 p-3">
                       <CheckCircle2 className="text-muted-foreground h-5 w-5 shrink-0" />
                       <div className="flex-1">
-                        <p className="text-sm font-medium">
+                        <p
+                          className="font-medium"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t('sharing.compressedFileDetected')}
                         </p>
-                        <p className="text-muted-foreground text-xs">
+                        <p
+                          className="text-muted-foreground"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {t('sharing.algorithm')}:{' '}
                           {importResult.validation.compressionInfo.algorithm}{' '}
                           {importResult.validation.compressionInfo
@@ -175,12 +189,18 @@ export function QueryImportDialog({
                           <p className="text-destructive font-medium">
                             {t('sharing.validationErrors')}
                           </p>
-                          <p className="text-destructive/80 mt-1 text-sm">
+                          <p
+                            className="text-destructive/80 mt-1"
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          >
                             {t('sharing.errorsFoundInImport')}
                           </p>
                         </div>
                       </div>
-                      <ul className="text-destructive/80 ml-8 list-inside list-disc space-y-1 text-sm">
+                      <ul
+                        className="text-destructive/80 ml-8 list-inside list-disc space-y-1"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {importResult.validation!.errors!.map((error) => (
                           <li key={error}>{error}</li>
                         ))}
@@ -197,12 +217,18 @@ export function QueryImportDialog({
                           <p className="font-medium text-yellow-900 dark:text-yellow-100">
                             {t('sharing.warnings')}
                           </p>
-                          <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+                          <p
+                            className="mt-1 text-yellow-700 dark:text-yellow-300"
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          >
                             {t('sharing.warningsDesc')}
                           </p>
                         </div>
                       </div>
-                      <ul className="ml-8 list-inside list-disc space-y-1 text-sm text-yellow-700 dark:text-yellow-300">
+                      <ul
+                        className="ml-8 list-inside list-disc space-y-1 text-yellow-700 dark:text-yellow-300"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {importResult.validation!.warnings!.map((warning) => (
                           <li key={warning}>{warning}</li>
                         ))}
@@ -218,7 +244,10 @@ export function QueryImportDialog({
                         <p className="font-medium text-green-900 dark:text-green-100">
                           {t('sharing.validationSuccessful')}
                         </p>
-                        <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+                        <p
+                          className="mt-1 text-green-700 dark:text-green-300"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {t('sharing.queryValidAndReady')}
                         </p>
                       </div>
@@ -231,7 +260,10 @@ export function QueryImportDialog({
                       <p className="text-destructive font-medium">
                         {t('sharing.importFailed')}
                       </p>
-                      <p className="text-destructive/80 mt-1 text-sm">
+                      <p
+                        className="text-destructive/80 mt-1"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {importResult.error || t('sharing.unknownError')}
                       </p>
                     </div>
@@ -242,11 +274,19 @@ export function QueryImportDialog({
                 {importResult.query && (
                   <div className="rounded-base space-y-4 border p-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold">
+                      <h3
+                        className="font-semibold"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('sharing.queryPreview')}
                       </h3>
                       {importResult.query.metadata && (
-                        <span className="text-muted-foreground text-xs">
+                        <span
+                          className="text-muted-foreground"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {t('sharing.version')}:{' '}
                           {importResult.query.metadata.version}
                         </span>
@@ -255,19 +295,37 @@ export function QueryImportDialog({
 
                     {/* Query Name */}
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-medium">
+                      <Label
+                        className="font-medium"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('sharing.name')}
                       </Label>
-                      <p className="text-sm">{importResult.query.name}</p>
+                      <p
+                        className=""
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
+                        {importResult.query.name}
+                      </p>
                     </div>
 
                     {/* Description */}
                     {importResult.query.description && (
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-medium">
+                        <Label
+                          className="font-medium"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {t('sharing.description')}
                         </Label>
-                        <p className="text-muted-foreground text-sm">
+                        <p
+                          className="text-muted-foreground"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {importResult.query.description}
                         </p>
                       </div>
@@ -275,16 +333,29 @@ export function QueryImportDialog({
 
                     {/* SQL Query */}
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-medium">
+                      <Label
+                        className="font-medium"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('sharing.sqlQuery')}
                       </Label>
                       <Textarea
                         value={importResult.query.sql}
                         readOnly
-                        className="bg-muted font-mono text-xs"
+                        className="bg-muted font-mono"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
                         rows={6}
                       />
-                      <p className="text-muted-foreground text-xs">
+                      <p
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('sharing.characters', {
                           count: importResult.query.sql.length,
                         })}
@@ -294,10 +365,18 @@ export function QueryImportDialog({
                     {/* Database Context */}
                     {importResult.query.databaseContext && (
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-medium">
+                        <Label
+                          className="font-medium"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {t('sharing.databaseContext')}
                         </Label>
-                        <p className="text-muted-foreground text-sm">
+                        <p
+                          className="text-muted-foreground"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {importResult.query.databaseContext}
                         </p>
                       </div>
@@ -307,14 +386,24 @@ export function QueryImportDialog({
                     {importResult.query.tags &&
                       importResult.query.tags.length > 0 && (
                         <div className="space-y-1.5">
-                          <Label className="text-xs font-medium">
+                          <Label
+                            className="font-medium"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {t('sharing.tags')}
                           </Label>
                           <div className="flex flex-wrap gap-1.5">
                             {importResult.query.tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="bg-muted text-muted-foreground rounded-md px-2 py-0.5 text-xs"
+                                className="bg-muted text-muted-foreground rounded-md px-2 py-0.5"
+                                style={{
+                                  fontSize:
+                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                }}
                               >
                                 {tag}
                               </span>
@@ -326,13 +415,21 @@ export function QueryImportDialog({
                     {/* Documentation */}
                     {importResult.query.documentation && (
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-medium">
+                        <Label
+                          className="font-medium"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {t('sharing.documentation')}
                         </Label>
                         <Textarea
                           value={importResult.query.documentation}
                           readOnly
-                          className="bg-muted text-xs"
+                          className="bg-muted"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
                           rows={4}
                         />
                       </div>
@@ -340,7 +437,12 @@ export function QueryImportDialog({
 
                     {/* Metadata */}
                     <div className="border-t pt-3">
-                      <div className="text-muted-foreground grid grid-cols-2 gap-2 text-xs">
+                      <div
+                        className="text-muted-foreground grid grid-cols-2 gap-2"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {importResult.query.createdAt && (
                           <div>
                             <span className="font-medium">

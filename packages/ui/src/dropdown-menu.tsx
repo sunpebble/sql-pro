@@ -84,7 +84,7 @@ function DropdownMenuLabel({
         data-slot="dropdown-menu-label"
         data-inset={inset}
         className={cn(
-          'text-muted-foreground px-2 py-1.5 text-xs font-bold data-inset:ps-8',
+          'text-muted-foreground px-2 py-1.5 [font-size:calc(var(--font-ui-size,14px)*0.75)] font-bold data-inset:ps-8',
           className
         )}
         {...props}
@@ -108,7 +108,7 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "focus:bg-main focus:text-main-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive group/dropdown-menu-item relative flex cursor-default items-center gap-2 rounded-[3px] px-2 py-1.5 text-sm font-medium outline-hidden transition-colors duration-100 ease-out select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-inset:ps-8 data-[variant=destructive]:focus:text-white [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "focus:bg-main focus:text-main-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive group/dropdown-menu-item relative flex cursor-default items-center gap-2 rounded-[3px] px-2 py-1.5 [font-size:var(--font-ui-size,14px)] font-medium outline-hidden transition-colors duration-100 ease-out select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-inset:ps-8 data-[variant=destructive]:focus:text-white [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -135,7 +135,7 @@ function DropdownMenuSubTrigger({
       data-inset={inset}
       nativeButton={nativeButton}
       className={cn(
-        "focus:bg-main focus:text-main-foreground data-open:bg-main data-open:text-main-foreground flex cursor-default items-center gap-2 rounded-[3px] px-2 py-1.5 text-sm font-medium outline-hidden transition-colors duration-100 ease-out select-none data-inset:ps-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "focus:bg-main focus:text-main-foreground data-open:bg-main data-open:text-main-foreground flex cursor-default items-center gap-2 rounded-[3px] px-2 py-1.5 [font-size:var(--font-ui-size,14px)] font-medium outline-hidden transition-colors duration-100 ease-out select-none data-inset:ps-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -181,7 +181,7 @@ function DropdownMenuCheckboxItem({
     <MenuPrimitive.CheckboxItem
       data-slot="dropdown-menu-checkbox-item"
       className={cn(
-        "focus:bg-main focus:text-main-foreground relative flex cursor-default items-center gap-2 rounded-[3px] py-1.5 ps-2 pe-8 text-sm font-medium outline-hidden transition-colors duration-100 ease-out select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "focus:bg-main focus:text-main-foreground relative flex cursor-default items-center gap-2 rounded-[3px] py-1.5 ps-2 pe-8 [font-size:var(--font-ui-size,14px)] font-medium outline-hidden transition-colors duration-100 ease-out select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       checked={checked}
@@ -218,7 +218,7 @@ function DropdownMenuRadioItem({
     <MenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
       className={cn(
-        "focus:bg-main focus:text-main-foreground relative flex cursor-default items-center gap-2 rounded-[3px] py-1.5 ps-2 pe-8 text-sm font-medium outline-hidden transition-colors duration-100 ease-out select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "focus:bg-main focus:text-main-foreground relative flex cursor-default items-center gap-2 rounded-[3px] py-1.5 ps-2 pe-8 [font-size:var(--font-ui-size,14px)] font-medium outline-hidden transition-colors duration-100 ease-out select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -257,7 +257,7 @@ function DropdownMenuShortcut({
     <span
       data-slot="dropdown-menu-shortcut"
       className={cn(
-        'text-muted-foreground group-focus/dropdown-menu-item:text-main-foreground ms-auto text-xs font-bold tracking-widest',
+        'text-muted-foreground group-focus/dropdown-menu-item:text-main-foreground ms-auto [font-size:calc(var(--font-ui-size,14px)*0.75)] font-bold tracking-widest',
         className
       )}
       {...props}

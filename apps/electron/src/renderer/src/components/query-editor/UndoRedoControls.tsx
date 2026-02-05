@@ -102,7 +102,14 @@ export const UndoRedoControls = memo(
                       description: undoDescription,
                     })}
                   </span>
-                  <span className="text-muted-foreground text-xs">⌘Z</span>
+                  <span
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    ⌘Z
+                  </span>
                 </div>
               ) : (
                 <span>{t('actions.nothingToUndo')}</span>
@@ -132,7 +139,14 @@ export const UndoRedoControls = memo(
                       description: redoDescription,
                     })}
                   </span>
-                  <span className="text-muted-foreground text-xs">⌘⇧Z</span>
+                  <span
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    ⌘⇧Z
+                  </span>
                 </div>
               ) : (
                 <span>{t('actions.nothingToRedo')}</span>

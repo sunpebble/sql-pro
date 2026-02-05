@@ -114,7 +114,10 @@ export function AgentSettingsPanel({
               }
               placeholder="https://api.openai.com/v1"
             />
-            <p className="text-muted-foreground text-xs">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t(
                 'agent.settings.baseUrlHelp',
                 'Leave empty for default OpenAI API. Supports OpenAI, Anthropic, and compatible providers.'
@@ -165,7 +168,10 @@ export function AgentSettingsPanel({
               }
               placeholder="gpt-4o-mini"
             />
-            <p className="text-muted-foreground text-xs">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t(
                 'agent.settings.modelHelp',
                 'Model identifier (e.g., gpt-4o, claude-sonnet-4-20250514)'
@@ -202,7 +208,10 @@ export function AgentSettingsPanel({
                 <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-muted-foreground text-xs">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t(
                 'agent.settings.apiTypeHelp',
                 'Auto-detect works for most providers. Select manually if needed.'
@@ -287,7 +296,12 @@ export function AgentSettingsPanel({
                   <Label htmlFor="confirmDDL" className="cursor-pointer">
                     {t('agent.settings.confirmDDL', 'Confirm DDL Operations')}
                   </Label>
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t(
                       'agent.settings.confirmDDLHelp',
                       'Always require confirmation for DROP, ALTER, TRUNCATE'

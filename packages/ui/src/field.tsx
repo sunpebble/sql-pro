@@ -31,7 +31,7 @@ function FieldLegend({
       data-slot="field-legend"
       data-variant={variant}
       className={cn(
-        'mb-3 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base',
+        'mb-3 font-medium data-[variant=label]:[font-size:var(--font-ui-size,14px)] data-[variant=legend]:[font-size:calc(var(--font-ui-size,14px)*1.15)]',
         className
       )}
       {...props}
@@ -121,7 +121,7 @@ function FieldTitle({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="field-label"
       className={cn(
-        'flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50',
+        'flex w-fit items-center gap-2 [font-size:var(--font-ui-size,14px)] leading-snug font-medium group-data-[disabled=true]/field:opacity-50',
         className
       )}
       {...props}
@@ -134,7 +134,7 @@ function FieldDescription({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot="field-description"
       className={cn(
-        'text-muted-foreground text-left text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance [[data-variant=legend]+&]:-mt-1.5',
+        'text-muted-foreground text-left [font-size:var(--font-ui-size,14px)] leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance [[data-variant=legend]+&]:-mt-1.5',
         'last:mt-0 nth-last-2:-mt-1',
         '[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4',
         className
@@ -156,7 +156,7 @@ function FieldSeparator({
       data-slot="field-separator"
       data-content={!!children}
       className={cn(
-        'relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2',
+        'relative -my-2 h-5 [font-size:var(--font-ui-size,14px)] group-data-[variant=outline]/field-group:-mb-2',
         className
       )}
       {...props}
@@ -217,7 +217,10 @@ function FieldError({
     <div
       role="alert"
       data-slot="field-error"
-      className={cn('text-destructive text-sm font-normal', className)}
+      className={cn(
+        'text-destructive [font-size:var(--font-ui-size,14px)] font-normal',
+        className
+      )}
       {...props}
     >
       {content}

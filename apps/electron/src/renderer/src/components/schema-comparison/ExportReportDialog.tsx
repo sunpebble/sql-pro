@@ -177,7 +177,11 @@ export function ExportReportDialog({
         <div className="space-y-4 py-4">
           {/* Format Selection */}
           <div className="space-y-2">
-            <Label htmlFor="report-format" className="text-sm font-medium">
+            <Label
+              htmlFor="report-format"
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('exportReport.reportFormat')}
             </Label>
             <Select
@@ -203,7 +207,13 @@ export function ExportReportDialog({
                         <Icon className="h-4 w-4" />
                         <div className="flex flex-col">
                           <span>{option.label}</span>
-                          <span className="text-muted-foreground text-xs">
+                          <span
+                            className="text-muted-foreground"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {t(option.descriptionKey)}
                           </span>
                         </div>
@@ -217,7 +227,10 @@ export function ExportReportDialog({
 
           {/* Include Migration SQL Option */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium">
+            <Label
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('exportReport.options')}
             </Label>
             <div className="rounded-base space-y-3 border-2 p-3">
@@ -229,10 +242,15 @@ export function ExportReportDialog({
                   }
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm">
+                  <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                     {t('exportReport.includeMigrationSQL')}
                   </span>
-                  <span className="text-muted-foreground text-xs">
+                  <span
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('exportReport.includeMigrationSQLDesc')}
                   </span>
                 </div>
@@ -243,10 +261,16 @@ export function ExportReportDialog({
           {/* Report Preview Info */}
           {comparisonResult && (
             <div className="rounded-base space-y-2 border-2 p-3">
-              <Label className="text-sm font-medium">
+              <Label
+                className="font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('exportReport.reportSummary')}
               </Label>
-              <div className="text-muted-foreground space-y-1 text-xs">
+              <div
+                className="text-muted-foreground space-y-1"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 <div className="flex justify-between">
                   <span>{t('exportReport.source')}</span>
                   <span className="font-medium">

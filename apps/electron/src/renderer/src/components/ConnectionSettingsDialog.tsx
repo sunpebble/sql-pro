@@ -218,10 +218,16 @@ function DialogFormContent({
         <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
           <Settings className="text-primary h-6 w-6" />
         </div>
-        <Dialog.Title className="text-lg font-semibold">
+        <Dialog.Title
+          className="font-semibold"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+        >
           {dialogTitle}
         </Dialog.Title>
-        <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+        <Dialog.Description
+          className="text-muted-foreground mt-2"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('connectionSettings.description', { filename })}
         </Dialog.Description>
       </div>
@@ -229,7 +235,11 @@ function DialogFormContent({
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         {/* Display Name */}
         <div className="space-y-2">
-          <label htmlFor="displayName" className="text-sm font-medium">
+          <label
+            htmlFor="displayName"
+            className="font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {t('connectionSettings.displayName')}
           </label>
           <input
@@ -240,16 +250,25 @@ function DialogFormContent({
             placeholder={t('connectionSettings.displayNamePlaceholder')}
             autoFocus
             className={cn(
-              'bg-background w-full rounded-md border px-3 py-2 text-sm',
+              'bg-background w-full rounded-md border px-3 py-2',
               'placeholder:text-muted-foreground',
               'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
               validationError ? 'border-destructive' : 'border-input'
             )}
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           />
           {validationError && (
-            <p className="text-destructive text-xs">{validationError}</p>
+            <p
+              className="text-destructive"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {validationError}
+            </p>
           )}
-          <p className="text-muted-foreground text-xs">
+          <p
+            className="text-muted-foreground"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {t('connectionSettings.charCount', {
               current: displayName.trim().length,
               max: MAX_DISPLAY_NAME_LENGTH,
@@ -266,10 +285,16 @@ function DialogFormContent({
             className="border-input h-4 w-4 rounded-md"
           />
           <div className="flex-1">
-            <span className="text-sm font-medium">
+            <span
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('connectionSettings.readOnly')}
             </span>
-            <p className="text-muted-foreground text-xs">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('connectionSettings.readOnlyDesc')}
             </p>
           </div>
@@ -294,7 +319,10 @@ function DialogFormContent({
             />
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">
+                <span
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('connectionSettings.rememberPassword')}
                 </span>
                 {!isStorageAvailable && (
@@ -308,7 +336,10 @@ function DialogFormContent({
                   </Tooltip>
                 )}
               </div>
-              <p className="text-muted-foreground text-xs">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('connectionSettings.rememberPasswordDesc')}
               </p>
             </div>
@@ -323,12 +354,20 @@ function DialogFormContent({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <KeyRound className="text-muted-foreground h-4 w-4" />
-                  <span className="text-sm font-medium">
+                  <span
+                    className="font-medium"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {t('savedPassword')}
                   </span>
                 </div>
                 {hasSavedPassword && (
-                  <span className="text-xs text-green-600 dark:text-green-400">
+                  <span
+                    className="text-green-600 dark:text-green-400"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('passwordSaved')}
                   </span>
                 )}
@@ -363,7 +402,11 @@ function DialogFormContent({
                   {passwordError && (
                     <Alert variant="destructive" className="py-2">
                       <AlertCircle className="h-4 w-4" />
-                      <AlertDescription className="text-xs">
+                      <AlertDescription
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {passwordError}
                       </AlertDescription>
                     </Alert>
@@ -372,7 +415,10 @@ function DialogFormContent({
                   <div className="space-y-2">
                     <label
                       htmlFor="newPassword"
-                      className="text-xs font-medium"
+                      className="font-medium"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       {hasSavedPassword ? t('newPassword') : t('password')}
                     </label>
@@ -383,17 +429,21 @@ function DialogFormContent({
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder={t('enterPassword')}
                       className={cn(
-                        'border-input bg-background w-full rounded-md border px-3 py-1.5 text-sm',
+                        'border-input bg-background w-full rounded-md border px-3 py-1.5',
                         'placeholder:text-muted-foreground',
                         'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
                       )}
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label
                       htmlFor="confirmPassword"
-                      className="text-xs font-medium"
+                      className="font-medium"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
                     >
                       {t('confirmPassword')}
                     </label>
@@ -404,16 +454,22 @@ function DialogFormContent({
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder={t('confirmPasswordPlaceholder')}
                       className={cn(
-                        'border-input bg-background w-full rounded-md border px-3 py-1.5 text-sm',
+                        'border-input bg-background w-full rounded-md border px-3 py-1.5',
                         'placeholder:text-muted-foreground',
                         'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
                         confirmPassword &&
                           !passwordsMatch &&
                           'border-destructive'
                       )}
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                     />
                     {confirmPassword && !passwordsMatch && (
-                      <p className="text-destructive text-xs">
+                      <p
+                        className="text-destructive"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('connectionSettings.passwordsDoNotMatch')}
                       </p>
                     )}
@@ -454,7 +510,10 @@ function DialogFormContent({
                 </div>
               )}
 
-              <p className="text-muted-foreground text-xs">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('connectionSettings.keychainNote')}
               </p>
             </div>

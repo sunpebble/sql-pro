@@ -199,7 +199,12 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
                 <Badge key={p.name} variant="secondary">
                   {`{{${p.name}}}`}
                   {p.type && p.type !== 'string' && (
-                    <span className="text-muted-foreground ml-1 text-xs">
+                    <span
+                      className="text-muted-foreground ml-1"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       :{p.type}
                     </span>
                   )}

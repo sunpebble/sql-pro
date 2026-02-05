@@ -183,15 +183,26 @@ const StatCard = memo(
             <Icon className={cn('h-4 w-4', color)} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xl leading-none font-semibold tabular-nums">
+            <p
+              className="truncate leading-none font-semibold tabular-nums"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+            >
               {value}
             </p>
             {subValue && (
-              <p className="text-muted-foreground/60 truncate text-xs">
+              <p
+                className="text-muted-foreground/60 truncate"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {subValue}
               </p>
             )}
-            <p className="text-muted-foreground truncate text-xs">{label}</p>
+            <p
+              className="text-muted-foreground truncate"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {label}
+            </p>
           </div>
         </div>
       </div>
@@ -222,7 +233,10 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
       )}
     >
       <div className="bg-muted rounded-base flex h-8 w-8 items-center justify-center transition-transform duration-200">
-        <span className="text-muted-foreground text-sm font-semibold">
+        <span
+          className="text-muted-foreground font-semibold"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {index + 1}
         </span>
       </div>
@@ -231,7 +245,10 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
           <Table2 className="text-muted-foreground group-hover:text-foreground h-4 w-4 shrink-0 transition-colors" />
           <span className="truncate font-medium">{table.name}</span>
         </div>
-        <div className="mt-1.5 flex items-center gap-4 text-xs">
+        <div
+          className="mt-1.5 flex items-center gap-4"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           <span className="text-muted-foreground font-medium">
             {table.rowCount.toLocaleString()} {t('databaseDashboard.rows')}
           </span>
@@ -261,7 +278,8 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
       <div className="flex gap-2">
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary text-xs transition-transform"
+          className="bg-primary/10 text-primary transition-transform"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
         >
           {table.indexCount} idx
         </Badge>
@@ -300,7 +318,10 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
         <div className="bg-muted/50 rounded-full p-3">
           <BarChart3 className="text-muted-foreground/60 h-6 w-6" />
         </div>
-        <p className="text-muted-foreground text-sm font-medium">
+        <p
+          className="text-muted-foreground font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {t('databaseDashboard.noTableData')}
         </p>
       </div>
@@ -334,11 +355,19 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
             return (
               <div className="bg-popover border-border rounded-base shadow-shadow border-2 px-3.5 py-2.5">
                 <p className="font-semibold">{data.fullName}</p>
-                <p className="text-sm font-medium text-blue-500">
+                <p
+                  className="font-medium text-blue-500"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {data.rows?.toLocaleString()} {t('databaseDashboard.rows')}
                 </p>
                 {data.size && data.size > 0 && (
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {formatBytes(data.size)}
                   </p>
                 )}
@@ -395,7 +424,10 @@ const DataTypeChart = memo(
           <div className="bg-muted/50 rounded-full p-3">
             <PieChart className="text-muted-foreground/60 h-6 w-6" />
           </div>
-          <p className="text-muted-foreground text-sm font-medium">
+          <p
+            className="text-muted-foreground font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {t('databaseDashboard.noDataTypeInfo')}
           </p>
         </div>
@@ -434,7 +466,10 @@ const DataTypeChart = memo(
                 return (
                   <div className="bg-popover border-border rounded-base shadow-shadow border-2 px-3.5 py-2.5">
                     <p className="font-semibold">{data.name}</p>
-                    <p className="text-muted-foreground text-sm">
+                    <p
+                      className="text-muted-foreground"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       <span className="text-foreground font-medium">
                         {data.value}
                       </span>{' '}
@@ -463,10 +498,16 @@ const DataTypeChart = memo(
                 className="ring-background h-4 w-4 shrink-0 rounded-full shadow-sm ring-2 transition-all duration-200 group-hover/legend:scale-125 group-hover/legend:shadow-md"
                 style={{ backgroundColor: item.fill }}
               />
-              <span className="group-hover/legend:text-foreground text-sm font-medium transition-colors">
+              <span
+                className="group-hover/legend:text-foreground font-medium transition-colors"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {item.name}
               </span>
-              <span className="text-muted-foreground group-hover/legend:text-primary ml-auto text-sm font-semibold tabular-nums transition-colors">
+              <span
+                className="text-muted-foreground group-hover/legend:text-primary ml-auto font-semibold tabular-nums transition-colors"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {item.value}
               </span>
             </div>
@@ -601,10 +642,16 @@ const InsightsCard = memo(({ stats }: InsightsCardProps) => {
                 />
               </div>
               <div className="min-w-0 flex-1 space-y-0.5">
-                <p className="text-sm leading-tight font-semibold">
+                <p
+                  className="leading-tight font-semibold"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {insight.title}
                 </p>
-                <p className="text-muted-foreground text-xs leading-relaxed">
+                <p
+                  className="text-muted-foreground leading-relaxed"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {insight.description}
                 </p>
               </div>
@@ -749,10 +796,16 @@ export const DashboardView = memo(() => {
             <BarChart3 className="text-primary h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight">
+            <h1
+              className="font-semibold tracking-tight"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            >
               {t('databaseDashboard.title')}
             </h1>
-            <p className="text-muted-foreground text-sm">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {connection?.filename && (
                 <Badge variant="secondary" className="mr-2">
                   {connection.filename}
@@ -919,7 +972,10 @@ export const DashboardView = memo(() => {
 
                 <InsightsCard stats={stats} />
 
-                <div className="flex items-center justify-center gap-2 text-center text-xs">
+                <div
+                  className="flex items-center justify-center gap-2 text-center"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   <div className="bg-border h-px flex-1" />
                   <span className="text-muted-foreground/70 font-medium">
                     {t('databaseDashboard.lastAnalyzed')}:{' '}
@@ -1033,7 +1089,10 @@ export const DashboardView = memo(() => {
                             'transition-all hover:translate-x-0.5 hover:translate-y-0.5'
                           )}
                         >
-                          <span className="font-mono text-sm font-medium">
+                          <span
+                            className="font-mono font-medium"
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          >
                             {item.type}
                           </span>
                           <Badge

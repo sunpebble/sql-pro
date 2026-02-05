@@ -177,7 +177,8 @@ function CollapsibleSection({
     <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        className="flex w-full items-center gap-2 px-3 py-2 text-left font-medium transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
       >
         {isOpen ? (
           <ChevronDown className="h-4 w-4" />
@@ -207,13 +208,17 @@ function StackTraceViewer({ stack }: { stack: string }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-zinc-500">
+        <span
+          className="text-zinc-500"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+        >
           {t('error.stackFrames', { count: frames.length })}
         </span>
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 px-2 text-xs"
+          className="h-7 px-2"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
           onClick={handleCopy}
         >
           <Copy className="mr-1 h-3 w-3" />
@@ -226,9 +231,10 @@ function StackTraceViewer({ stack }: { stack: string }) {
             <div
               key={frame.raw}
               className={cn(
-                'group flex items-start gap-2 px-2 py-1.5 font-mono text-xs',
+                'group flex items-start gap-2 px-2 py-1.5 font-mono',
                 index === 0 && 'bg-red-100 dark:bg-red-900/30'
               )}
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
             >
               <span className="w-5 shrink-0 text-right text-zinc-400">
                 {index}
@@ -281,21 +287,33 @@ export function RouterErrorFallback({ error, reset }: ErrorComponentProps) {
           <AlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
         </div>
 
-        <h2 className="mb-1 text-xl font-semibold">
+        <h2
+          className="mb-1 font-semibold"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.25)' }}
+        >
           {t('error.somethingWentWrong')}
         </h2>
-        <p className="mb-4 text-sm text-zinc-500">
+        <p
+          className="mb-4 text-zinc-500"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('error.unexpectedError')}
         </p>
 
         {/* Error message box */}
         <div className="mb-4 w-full rounded-lg border border-red-200 bg-red-50 p-4 text-left dark:border-red-800 dark:bg-red-900/20">
           <div className="flex items-start gap-2">
-            <span className="rounded bg-red-200 px-1.5 py-0.5 font-mono text-xs font-medium text-red-700 dark:bg-red-800 dark:text-red-300">
+            <span
+              className="rounded bg-red-200 px-1.5 py-0.5 font-mono font-medium text-red-700 dark:bg-red-800 dark:text-red-300"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+            >
               {err.name || t('error.error')}
             </span>
           </div>
-          <p className="mt-2 font-mono text-sm text-red-700 dark:text-red-300">
+          <p
+            className="mt-2 font-mono text-red-700 dark:text-red-300"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {err.message}
           </p>
         </div>

@@ -15,7 +15,7 @@ const brandButtonVariants = cva(
   // Base styles - modern, clean design
   [
     'relative inline-flex items-center justify-center gap-2',
-    'font-semibold text-sm',
+    'font-semibold',
     'rounded-lg border-0 outline-none select-none',
     'transition-all duration-200 ease-out',
     'disabled:pointer-events-none disabled:opacity-50',
@@ -61,7 +61,7 @@ const brandButtonVariants = cva(
 
       size: {
         default: 'h-10 px-6',
-        sm: 'h-8 px-4 text-xs',
+        sm: 'h-8 px-4',
         lg: 'h-12 px-8',
         icon: 'size-10',
         'icon-sm': 'size-8',
@@ -103,12 +103,24 @@ function BrandButton({
   variant,
   size,
   corners,
+  style,
   ...props
 }: BrandButtonProps) {
+  // Calculate font size based on size variant
+  const getFontSize = () => {
+    switch (size) {
+      case 'sm':
+        return 'calc(var(--font-ui-size, 14px) * 0.85)';
+      default:
+        return 'var(--font-ui-size, 14px)';
+    }
+  };
+
   return (
     <ButtonPrimitive
       data-slot="brand-button"
       className={cn(brandButtonVariants({ variant, size, corners, className }))}
+      style={{ fontSize: getFontSize(), ...style }}
       {...props}
     />
   );

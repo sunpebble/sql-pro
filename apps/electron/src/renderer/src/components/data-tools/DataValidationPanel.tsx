@@ -111,7 +111,12 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
         </div>
         <div>
           <p className="font-medium">{constraint.name}</p>
-          <p className="text-muted-foreground text-sm">{constraint.type}</p>
+          <p
+            className="text-muted-foreground"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
+            {constraint.type}
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -129,7 +134,10 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Badge variant="outline" className="text-xs">
+                <Badge
+                  variant="outline"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   NOT NULL
                 </Badge>
               </TooltipTrigger>
@@ -143,7 +151,10 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Badge variant="outline" className="text-xs">
+                <Badge
+                  variant="outline"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   UNIQUE
                 </Badge>
               </TooltipTrigger>
@@ -157,7 +168,10 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Badge variant="secondary" className="text-xs">
+                <Badge
+                  variant="secondary"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   DEFAULT
                 </Badge>
               </TooltipTrigger>
@@ -190,7 +204,10 @@ const ForeignKeyCard = memo(({ fk, onNavigate }: ForeignKeyCardProps) => {
             <p className="font-medium">
               {fk.from} → {fk.table}.{fk.to}
             </p>
-            <div className="text-muted-foreground flex gap-3 text-xs">
+            <div
+              className="text-muted-foreground flex gap-3"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               <span>ON UPDATE: {fk.onUpdate}</span>
               <span>ON DELETE: {fk.onDelete}</span>
             </div>
@@ -237,14 +254,22 @@ const IssueCard = memo(({ issue }: IssueCardProps) => {
       <div className="flex-1">
         <div className="flex items-center gap-2">
           <Badge className={styles.badge}>{issue.column}</Badge>
-          <span className="text-muted-foreground text-xs">
+          <span
+            className="text-muted-foreground"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {issue.affectedRows.toLocaleString()}{' '}
             {t('dataValidation.rowsAffected')}
           </span>
         </div>
-        <p className="mt-1 text-sm">{issue.issue}</p>
+        <p className="mt-1" style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+          {issue.issue}
+        </p>
         {issue.suggestion && (
-          <p className="text-muted-foreground mt-1 text-xs">
+          <p
+            className="text-muted-foreground mt-1"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             💡 {issue.suggestion}
           </p>
         )}
@@ -344,10 +369,16 @@ export const DataValidationPanel = memo(
           {!hasValidated ? (
             <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center py-12">
               <Shield className="mb-4 h-16 w-16 opacity-30" />
-              <h3 className="mb-2 text-lg font-medium">
+              <h3
+                className="mb-2 font-medium"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+              >
                 {t('dataValidation.readyToValidate')}
               </h3>
-              <p className="mb-4 text-center text-sm">
+              <p
+                className="mb-4 text-center"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('dataValidation.readyToValidateDescription')}
               </p>
               <Button onClick={handleValidate} disabled={isValidating}>
@@ -426,7 +457,10 @@ export const DataValidationPanel = memo(
                       <p className="font-medium text-green-600">
                         {t('dataValidation.noIssuesFound')}
                       </p>
-                      <p className="text-muted-foreground text-sm">
+                      <p
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('dataValidation.noIssuesDescription')}
                       </p>
                     </div>

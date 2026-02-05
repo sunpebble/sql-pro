@@ -232,9 +232,12 @@ function QueryBuilderJoinEdgeComponent({
                     key={type}
                     onClick={() => handleJoinTypeChange(type)}
                     className={cn(
-                      'font-mono text-xs',
+                      'font-mono',
                       type === joinType && 'bg-accent'
                     )}
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     <span
                       className={cn(

@@ -119,7 +119,10 @@ function ExecutionPlanNodeComponent({
                 <div className="font-semibold">
                   {t(warningMessage.titleKey)}
                 </div>
-                <div className="text-xs opacity-90">
+                <div
+                  className="opacity-90"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t(warningMessage.descriptionKey)}
                 </div>
               </div>
@@ -132,7 +135,10 @@ function ExecutionPlanNodeComponent({
       <div className="space-y-2 p-3">
         {/* Table/Index name */}
         {(tableName || indexName) && (
-          <div className="flex items-center gap-2 text-sm">
+          <div
+            className="flex items-center gap-2"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {tableName && (
               <div className="flex items-center gap-1">
                 <span className="text-muted-foreground">
@@ -154,15 +160,19 @@ function ExecutionPlanNodeComponent({
 
         {/* Detail text (truncated) */}
         <p
-          className="text-muted-foreground line-clamp-2 font-mono text-xs"
+          className="text-muted-foreground line-clamp-2 font-mono"
           title={detail}
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
         >
           {detail}
         </p>
 
         {/* Metrics */}
         {(estimatedCost !== undefined || estimatedRows !== undefined) && (
-          <div className="flex gap-3 border-t pt-2 text-xs">
+          <div
+            className="flex gap-3 border-t pt-2"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {estimatedCost !== undefined && (
               <div className="flex items-center gap-1">
                 <span className="text-muted-foreground">

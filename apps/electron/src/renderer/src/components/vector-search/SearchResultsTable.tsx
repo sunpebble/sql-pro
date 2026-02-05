@@ -91,21 +91,37 @@ const PayloadCell = memo(
 
     if (!needsTooltip) {
       return (
-        <span className="text-muted-foreground text-xs">{displayValue}</span>
+        <span
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
+          {displayValue}
+        </span>
       );
     }
 
     return (
       <Tooltip>
         <TooltipTrigger>
-          <span className="text-muted-foreground cursor-help text-xs underline decoration-dotted">
+          <span
+            className="text-muted-foreground cursor-help underline decoration-dotted"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {displayValue}
           </span>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-md">
           <div className="space-y-1">
-            <p className="text-xs font-medium">{columnName}</p>
-            <pre className="max-h-48 overflow-auto text-xs whitespace-pre-wrap">
+            <p
+              className="font-medium"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {columnName}
+            </p>
+            <pre
+              className="max-h-48 overflow-auto whitespace-pre-wrap"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {fullValue}
             </pre>
           </div>
@@ -150,7 +166,7 @@ export const SearchResultsTable = memo(
           )}
         >
           <Search className="h-10 w-10 opacity-20" />
-          <p className="text-sm">
+          <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
             {t(
               'vectorSearch.noResults',
               'Enter a query to search for similar vectors'
@@ -166,12 +182,18 @@ export const SearchResultsTable = memo(
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               {/* Rank column */}
-              <TableHead className="text-muted-foreground w-12 text-center text-xs">
+              <TableHead
+                className="text-muted-foreground w-12 text-center"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 #
               </TableHead>
               {/* Score column */}
               <TableHead className="w-24">
-                <span className="text-muted-foreground text-xs font-medium">
+                <span
+                  className="text-muted-foreground font-medium"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('vectorSearch.columns.score', 'Score')}
                 </span>
               </TableHead>
@@ -179,7 +201,12 @@ export const SearchResultsTable = memo(
               <TableHead className="w-40">
                 <div className="flex items-center gap-1.5">
                   <Hash className="text-muted-foreground h-3 w-3" />
-                  <span className="text-muted-foreground text-xs font-medium">
+                  <span
+                    className="text-muted-foreground font-medium"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('vectorSearch.columns.id', 'ID')}
                   </span>
                 </div>
@@ -189,7 +216,12 @@ export const SearchResultsTable = memo(
                 <TableHead key={column}>
                   <div className="flex items-center gap-1.5">
                     <FileJson className="text-muted-foreground h-3 w-3" />
-                    <span className="text-muted-foreground text-xs font-medium">
+                    <span
+                      className="text-muted-foreground font-medium"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       {column}
                     </span>
                   </div>
@@ -197,7 +229,10 @@ export const SearchResultsTable = memo(
               ))}
               {/* Actions column */}
               <TableHead className="w-28">
-                <span className="text-muted-foreground text-xs font-medium">
+                <span
+                  className="text-muted-foreground font-medium"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('vectorSearch.columns.actions', 'Actions')}
                 </span>
               </TableHead>
@@ -207,27 +242,40 @@ export const SearchResultsTable = memo(
             {results.map((result, index) => (
               <TableRow key={String(result.id)}>
                 {/* Rank */}
-                <TableCell className="text-muted-foreground text-center text-xs">
+                <TableCell
+                  className="text-muted-foreground text-center"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {index + 1}
                 </TableCell>
                 {/* Score */}
                 <TableCell>
                   <span
                     className={cn(
-                      'font-mono text-xs font-medium',
+                      'font-mono font-medium',
                       result.score >= 0.9
                         ? 'text-green-600 dark:text-green-400'
                         : result.score >= 0.7
                           ? 'text-yellow-600 dark:text-yellow-400'
                           : 'text-muted-foreground'
                     )}
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     {result.score.toFixed(4)}
                   </span>
                 </TableCell>
                 {/* ID */}
                 <TableCell>
-                  <span className="font-mono text-xs">{String(result.id)}</span>
+                  <span
+                    className="font-mono"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    {String(result.id)}
+                  </span>
                 </TableCell>
                 {/* Payload columns */}
                 {payloadColumns.map((column) => (
@@ -246,7 +294,10 @@ export const SearchResultsTable = memo(
                         variant="ghost"
                         size="sm"
                         onClick={() => handleFindSimilar(result.id)}
-                        className="h-7 gap-1.5 px-2 text-xs"
+                        className="h-7 gap-1.5 px-2"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
                       >
                         <Search className="h-3 w-3" />
                         {t('vectorSearch.findSimilar', 'Similar')}

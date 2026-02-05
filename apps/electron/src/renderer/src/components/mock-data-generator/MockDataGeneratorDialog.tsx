@@ -262,7 +262,12 @@ export function MockDataGeneratorDialog({
                       <span className="flex items-center gap-2">
                         <Database className="h-4 w-4" />
                         {table.name}
-                        <span className="text-muted-foreground text-xs">
+                        <span
+                          className="text-muted-foreground"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           ({table.columns.length}{' '}
                           {t('mockData.columns', 'columns')})
                         </span>
@@ -293,7 +298,10 @@ export function MockDataGeneratorDialog({
                 checked={truncateFirst}
                 onCheckedChange={setTruncateFirst}
               />
-              <Label htmlFor="truncate" className="text-sm">
+              <Label
+                htmlFor="truncate"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('mockData.truncateFirst', 'Clear table first')}
               </Label>
             </div>
@@ -358,7 +366,10 @@ export function MockDataGeneratorDialog({
           {previewData.length > 0 && (
             <div className="rounded-base border-border overflow-hidden border-2">
               <div className="bg-muted/30 flex items-center justify-between border-b px-3 py-2">
-                <span className="text-sm font-medium">
+                <span
+                  className="font-medium"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {showPreview
                     ? t('mockData.preview', 'Preview')
                     : t('mockData.generatedData', 'Generated Data')}{' '}
@@ -379,7 +390,12 @@ export function MockDataGeneratorDialog({
                   <TableHeader className="bg-background sticky top-0">
                     <TableRow>
                       {columnConfigs.map((col) => (
-                        <TableHead key={col.columnName} className="text-xs">
+                        <TableHead
+                          key={col.columnName}
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
+                        >
                           {col.columnName}
                         </TableHead>
                       ))}
@@ -392,7 +408,11 @@ export function MockDataGeneratorDialog({
                         {columnConfigs.map((col) => (
                           <TableCell
                             key={col.columnName}
-                            className="max-w-[200px] truncate font-mono text-xs"
+                            className="max-w-[200px] truncate font-mono"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
                           >
                             {row[col.columnName] === null ? (
                               <span className="text-muted-foreground italic">
@@ -554,7 +574,12 @@ function ColumnConfigRow({
       case 'boolean':
         return (
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-xs">TRUE %:</span>
+            <span
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              TRUE %:
+            </span>
             <Input
               type="number"
               min={0}
@@ -574,14 +599,24 @@ function ColumnConfigRow({
         );
 
       default:
-        return <span className="text-muted-foreground text-xs">-</span>;
+        return (
+          <span
+            className="text-muted-foreground"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
+            -
+          </span>
+        );
     }
   };
 
   return (
     <TableRow>
       <TableCell className="font-medium">{config.columnName}</TableCell>
-      <TableCell className="text-muted-foreground text-xs">
+      <TableCell
+        className="text-muted-foreground"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         {config.columnType}
       </TableCell>
       <TableCell>
@@ -595,7 +630,10 @@ function ColumnConfigRow({
           <SelectContent>
             {Object.entries(groupedMockTypes).map(([category, types]) => (
               <div key={category}>
-                <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
+                <div
+                  className="text-muted-foreground px-2 py-1.5 font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {category}
                 </div>
                 {types.map((type) => (
@@ -623,7 +661,12 @@ function ColumnConfigRow({
               }
               className="h-7 w-14"
             />
-            <span className="text-muted-foreground text-xs">%</span>
+            <span
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              %
+            </span>
           </div>
         )}
       </TableCell>
