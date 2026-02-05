@@ -405,15 +405,17 @@ const DataTypeChart = memo(
     return (
       <div className="flex items-center gap-8">
         <ResponsiveContainer width="50%" height={height}>
-          <RechartsPieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+          <RechartsPieChart
+            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+          >
             <Pie
               data={chartData}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
-              innerRadius={60}
-              outerRadius={110}
+              innerRadius="40%"
+              outerRadius="75%"
               paddingAngle={2}
             >
               {chartData.map((entry) => (
