@@ -231,8 +231,11 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
         {hasSelection && (
           <>
             {/* Selection Summary */}
-            <div className="rounded-lg border p-3">
-              <div className="text-muted-foreground mb-2 text-xs font-medium">
+            <div className="rounded-base border p-3">
+              <div
+                className="text-muted-foreground mb-2 font-medium"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('dataDiffSQL.selectedRows', { count: selectedRowKeys.size })}
               </div>
               <div className="grid grid-cols-3 gap-2 text-xs">
@@ -270,7 +273,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
             </div>
 
             {/* Options */}
-            <div className="flex flex-wrap items-center gap-4 rounded-lg border p-3">
+            <div className="rounded-base flex flex-wrap items-center gap-4 border p-3">
               <div className="flex items-center gap-2">
                 <Switch
                   id="include-inserts"
@@ -280,7 +283,8 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                 />
                 <Label
                   htmlFor="include-inserts"
-                  className="cursor-pointer text-sm"
+                  className="cursor-pointer"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 >
                   <div className="flex items-center gap-1.5">
                     <span className="text-green-600 dark:text-green-400">
@@ -288,7 +292,12 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     </span>
                     {t('dataDiffSQL.includeInserts')}
                   </div>
-                  <p className="text-muted-foreground mt-0.5 text-xs font-normal">
+                  <p
+                    className="text-muted-foreground mt-0.5 font-normal"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('dataDiffSQL.includeInsertsDescription')}
                   </p>
                 </Label>
@@ -305,7 +314,8 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                 />
                 <Label
                   htmlFor="include-updates"
-                  className="cursor-pointer text-sm"
+                  className="cursor-pointer"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 >
                   <div className="flex items-center gap-1.5">
                     <span className="text-amber-600 dark:text-amber-400">
@@ -313,7 +323,12 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                     </span>
                     {t('dataDiffSQL.includeUpdates')}
                   </div>
-                  <p className="text-muted-foreground mt-0.5 text-xs font-normal">
+                  <p
+                    className="text-muted-foreground mt-0.5 font-normal"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('dataDiffSQL.includeUpdatesDescription')}
                   </p>
                 </Label>
@@ -330,13 +345,19 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                 />
                 <Label
                   htmlFor="include-deletes"
-                  className="cursor-pointer text-sm"
+                  className="cursor-pointer"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                 >
                   <div className="flex items-center gap-1.5">
                     <AlertCircle className="text-destructive h-3.5 w-3.5" />
                     {t('dataDiffSQL.includeDeletes')}
                   </div>
-                  <p className="text-muted-foreground mt-0.5 text-xs font-normal">
+                  <p
+                    className="text-muted-foreground mt-0.5 font-normal"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
                     {t('dataDiffSQL.includeDeletesDescription')}
                   </p>
                 </Label>
@@ -345,7 +366,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
 
             {/* Loading State */}
             {isGenerating && (
-              <div className="text-muted-foreground flex items-center justify-center gap-2 py-8 text-sm">
+              <div
+                className="text-muted-foreground flex items-center justify-center gap-2 py-8"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 <Loader2 className="h-4 w-4 animate-spin" />
                 {t('dataDiffSQL.generating')}
               </div>
@@ -371,7 +395,7 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   <p className="font-medium">
                     {t('dataDiffSQL.noOperationsSelected')}
                   </p>
-                  <p className="text-sm">
+                  <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
                     {t('dataDiffSQL.noOperationsSelectedDescription')}
                   </p>
                 </div>
@@ -396,7 +420,10 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                           variant="ghost"
                           size="sm"
                           onClick={() => setShowWarnings(!showWarnings)}
-                          className="h-auto p-0 text-xs"
+                          className="h-auto p-0"
+                          style={{
+                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          }}
                         >
                           {showWarnings ? (
                             <ChevronDown className="h-4 w-4" />
@@ -479,7 +506,9 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   {saveError && (
                     <Alert variant="destructive" className="py-2">
                       <AlertCircle className="h-4 w-4" />
-                      <AlertDescription className="text-sm">
+                      <AlertDescription
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {saveError}
                       </AlertDescription>
                     </Alert>
@@ -488,10 +517,15 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
                   {/* SQL Display */}
                   {syncSQL.sql && (
                     <div className="space-y-2">
-                      <Label className="text-xs font-medium">
+                      <Label
+                        className="font-medium"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('dataDiffSQL.generatedSQL')}
                       </Label>
-                      <ScrollArea className="h-100 rounded-lg border">
+                      <ScrollArea className="rounded-base h-100 border">
                         <div className="p-4">
                           <SqlHighlight
                             code={syncSQL.sql}
@@ -507,7 +541,12 @@ export function DataDiffSQLGenerator({ className }: DataDiffSQLGeneratorProps) {
 
                   {/* Statement Count Info */}
                   {syncSQL.statements && syncSQL.statements.length > 0 && (
-                    <p className="text-muted-foreground text-xs">
+                    <p
+                      className="text-muted-foreground"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      }}
+                    >
                       💡 {t('dataDiffSQL.tip')}
                     </p>
                   )}

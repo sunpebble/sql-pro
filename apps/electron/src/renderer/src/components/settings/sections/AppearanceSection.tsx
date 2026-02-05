@@ -307,7 +307,7 @@ function FontSettingsRow({
   return (
     <div
       className={cn(
-        'rounded-lg border p-3 transition-colors',
+        'rounded-base border p-3 transition-colors',
         synced && 'border-primary/20 bg-primary/5'
       )}
     >

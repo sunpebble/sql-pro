@@ -1,7 +1,6 @@
 import type { SettingsSection } from './settings/SettingsNav';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { GradientText } from '@sqlpro/ui/typography';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -50,17 +49,15 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl"
         decorated
       >
-        <DialogHeader className="border-primary/20 shrink-0 border-b px-6 pt-6 pb-4">
+        <DialogHeader className="border-border shrink-0 border-b px-6 pt-6 pb-4">
           <DialogTitle className="text-lg tracking-wide">
-            <GradientText variant="primary">
-              {t('settings.title', { ns: 'dialog' })}
-            </GradientText>
+            {t('settings.title', { ns: 'dialog' })}
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex min-h-0 flex-1">
           {/* Left Navigation */}
-          <div className="border-primary/10 shrink-0 border-r py-4 pl-4">
+          <div className="border-border shrink-0 border-r py-4 pl-4">
             <SettingsNav
               activeSection={activeSection}
               onSectionChange={setActiveSection}

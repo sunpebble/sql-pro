@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from '../hooks/useInView';
-import './Download.css';
 
 type Platform = 'mac' | 'windows' | 'linux' | 'unknown';
 
@@ -64,21 +63,24 @@ export default function Download() {
 
   return (
     <section
-      className="download"
+      className="bg-main relative overflow-hidden py-24 md:py-32"
       id="download"
       aria-labelledby="download-title"
     >
-      <div className="container">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
         <div
           ref={contentRef}
-          className={['download-content', isInView && 'visible']
-            .filter(Boolean)
-            .join(' ')}
+          className={`flex flex-col items-center text-center transition-all duration-500 ${
+            isInView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          }`}
         >
           {/* Title */}
-          <h2 id="download-title" className="download-title">
+          <h2
+            id="download-title"
+            className="text-main-foreground mb-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl"
+          >
             {t('download.title')}{' '}
-            <span className="download-title-gradient">
+            <span className="text-background">
               {t('download.titleHighlight')}
             </span>
           </h2>
@@ -88,22 +90,29 @@ export default function Download() {
             href="https://github.com/kunish-homelab/sql-pro/releases/latest"
             target="_blank"
             rel="noopener noreferrer"
-            className="download-main"
+            className="bg-background text-foreground border-border rounded-base shadow-shadow-lg hover:translate-x-boxShadowX hover:translate-y-boxShadowY mb-8 inline-flex items-center gap-3 border-2 px-8 py-4 text-lg font-semibold no-underline transition-all duration-150 hover:shadow-none"
             aria-describedby="download-arch"
           >
-            {platformIcons[platform]}
-            <span className="download-main-text">
-              {t('download.downloadFor', { platform: platformName })}
-              <small id="download-arch">{platformArch}</small>
+            <span className="h-6 w-6">{platformIcons[platform]}</span>
+            <span className="flex flex-col items-start">
+              <span>
+                {t('download.downloadFor', { platform: platformName })}
+              </span>
+              <small
+                id="download-arch"
+                className="text-muted-foreground text-sm"
+              >
+                {platformArch}
+              </small>
             </span>
           </a>
 
           {/* Other Platforms */}
           <nav
-            className="download-other"
+            className="flex flex-wrap items-center justify-center gap-4"
             aria-label={t('download.otherPlatforms')}
           >
-            <span className="download-other-label">
+            <span className="text-main-foreground/80 text-sm font-medium">
               {t('download.otherPlatforms')}
             </span>
             {otherPlatforms.map((p) => (
@@ -112,10 +121,10 @@ export default function Download() {
                 href="https://github.com/kunish-homelab/sql-pro/releases/latest"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="download-link"
+                className="bg-background/10 text-main-foreground border-main-foreground/20 rounded-base hover:bg-background hover:text-foreground hover:border-border inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-medium no-underline transition-all duration-150"
                 title={t(`download.arch.${p}`)}
               >
-                {platformIcons[p]}
+                <span className="h-4 w-4">{platformIcons[p]}</span>
                 {t(`download.platforms.${p}`)}
               </a>
             ))}

@@ -161,7 +161,7 @@ export function BulkEditDialog({
                 return (
                   <div
                     key={field.column}
-                    className="bg-muted/30 flex items-start gap-3 rounded-lg border p-3"
+                    className="bg-muted/30 rounded-base flex items-start gap-3 border p-3"
                   >
                     <div className="min-w-0 flex-1 space-y-2">
                       <div className="flex items-center gap-2">
@@ -221,7 +221,7 @@ export function BulkEditDialog({
 
           {/* Summary */}
           {editFields.length > 0 && (
-            <div className="bg-primary/5 border-primary/20 rounded-lg border p-3 text-sm">
+            <div className="bg-primary/5 border-primary/20 rounded-base border p-3 text-sm">
               <p>
                 {t('table.bulkEdit.fieldsWillBeUpdated', {
                   count: editFields.length,

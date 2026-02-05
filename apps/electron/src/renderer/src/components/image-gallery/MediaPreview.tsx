@@ -855,10 +855,8 @@ export function MediaPreview({
             disabled={!hasPrev}
             tabIndex={-1}
             className={cn(
-              'bg-background/90 absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all focus:outline-none',
-              hasPrev
-                ? 'hover:bg-background hover:scale-110'
-                : 'cursor-not-allowed opacity-30'
+              'bg-background/90 border-border absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full border-2 p-2 transition-all focus:outline-none',
+              hasPrev ? 'hover:bg-background' : 'cursor-not-allowed opacity-30'
             )}
           >
             <ChevronLeft className="h-6 w-6" />
@@ -869,10 +867,8 @@ export function MediaPreview({
             disabled={!hasNext}
             tabIndex={-1}
             className={cn(
-              'bg-background/90 absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full border p-2 shadow-md transition-all focus:outline-none',
-              hasNext
-                ? 'hover:bg-background hover:scale-110'
-                : 'cursor-not-allowed opacity-30'
+              'bg-background/90 border-border absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full border-2 p-2 transition-all focus:outline-none',
+              hasNext ? 'hover:bg-background' : 'cursor-not-allowed opacity-30'
             )}
           >
             <ChevronRight className="h-6 w-6" />
@@ -1066,7 +1062,7 @@ export function MediaPreview({
                   {/* Video loading skeleton */}
                   {!isMediaLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Skeleton className="h-64 w-96 rounded-lg" />
+                      <Skeleton className="rounded-base h-64 w-96" />
                     </div>
                   )}
                   <video
@@ -1100,7 +1096,7 @@ export function MediaPreview({
                 >
                   {/* Image loading skeleton */}
                   {!isMediaLoaded && (
-                    <Skeleton className="absolute h-64 w-96 rounded-lg" />
+                    <Skeleton className="rounded-base absolute h-64 w-96" />
                   )}
                   <img
                     ref={imageRef}

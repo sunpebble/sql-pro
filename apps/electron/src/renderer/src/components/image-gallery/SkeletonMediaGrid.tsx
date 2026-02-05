@@ -41,7 +41,7 @@ export function SkeletonMediaGrid({
       {items.map((i) => (
         <Skeleton
           key={`skeleton-media-${i}`}
-          className="aspect-square rounded-lg"
+          className="rounded-base aspect-square"
           style={{ animationDelay: `${i * 30}ms` }}
         />
       ))}

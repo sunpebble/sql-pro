@@ -20,14 +20,14 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
   return (
     <div
       className={cn(
-        'bg-card text-card-foreground relative min-w-50 rounded-lg border shadow-sm',
-        selected && 'ring-primary ring-2'
+        'rounded-base bg-card text-card-foreground shadow-shadow-sm relative min-w-50 border-2',
+        selected && 'ring-main ring-2'
       )}
     >
       {/* Header */}
       <div
         className={cn(
-          'flex items-center gap-2 rounded-t-lg border-b px-3 py-2',
+          'flex items-center gap-2 rounded-t-[3px] border-b-2 px-3 py-2',
           'bg-muted/50',
           isView ? 'text-blue-600 dark:text-blue-400' : 'text-foreground'
         )}
@@ -37,7 +37,7 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
         ) : (
           <Table className="h-4 w-4 shrink-0" />
         )}
-        <span className="truncate font-medium">{tableName}</span>
+        <span className="font-heading truncate">{tableName}</span>
       </div>
 
       {/* Columns */}

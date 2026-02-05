@@ -165,7 +165,7 @@ export function QueryExportDialog({
           {exportResult ? (
             <div className="space-y-3">
               {exportResult.success ? (
-                <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
+                <div className="rounded-base space-y-2 bg-green-50 p-4 dark:bg-green-950">
                   <p className="font-medium text-green-900 dark:text-green-100">
                     {t('sharing.exportSuccessful')}
                   </p>
@@ -179,7 +179,7 @@ export function QueryExportDialog({
                   )}
                 </div>
               ) : (
-                <div className="bg-destructive/10 rounded-lg p-4">
+                <div className="bg-destructive/10 rounded-base p-4">
                   <p className="text-destructive font-medium">
                     {t('sharing.exportFailed')}
                   </p>

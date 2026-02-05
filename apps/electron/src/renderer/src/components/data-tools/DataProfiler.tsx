@@ -98,7 +98,7 @@ const StatCard = memo(
     color = 'text-primary',
   }: StatCardProps) => {
     return (
-      <div className="bg-muted/50 rounded-lg p-4">
+      <div className="bg-muted/50 rounded-base p-4">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-muted-foreground text-sm">{label}</p>
@@ -109,7 +109,7 @@ const StatCard = memo(
           </div>
           <div
             className={cn(
-              'rounded-lg p-2',
+              'rounded-base p-2',
               `${color.replace('text-', 'bg-')}/10`
             )}
           >
@@ -137,7 +137,7 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
     <button
       onClick={onClick}
       className={cn(
-        'hover:border-primary/50 w-full rounded-lg border p-3 text-left transition-colors',
+        'hover:border-primary/50 rounded-base w-full border p-3 text-left transition-colors',
         isSelected && 'border-primary bg-primary/5'
       )}
     >
@@ -189,7 +189,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="bg-primary/10 rounded-lg p-2">
+        <div className="bg-primary/10 rounded-base p-2">
           {(() => {
             const Icon = getTypeIcon(column.type);
             return <Icon className="text-primary h-6 w-6" />;
@@ -203,7 +203,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
 
       {/* Statistics */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-muted/50 rounded-lg p-3 text-center">
+        <div className="bg-muted/50 rounded-base p-3 text-center">
           <p className="text-lg font-semibold">
             {column.distinctCount.toLocaleString()}
           </p>
@@ -211,13 +211,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
             {t('dataProfiler.distinctValues')}
           </p>
         </div>
-        <div className="bg-muted/50 rounded-lg p-3 text-center">
+        <div className="bg-muted/50 rounded-base p-3 text-center">
           <p className="text-lg font-semibold">{nullPercentage.toFixed(1)}%</p>
           <p className="text-muted-foreground text-xs">
             {t('dataProfiler.nullValues')}
           </p>
         </div>
-        <div className="bg-muted/50 rounded-lg p-3 text-center">
+        <div className="bg-muted/50 rounded-base p-3 text-center">
           <p className="text-lg font-semibold">{emptyPercentage.toFixed(1)}%</p>
           <p className="text-muted-foreground text-xs">
             {t('dataProfiler.emptyValues')}
@@ -267,7 +267,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
           <h4 className="text-sm font-medium">
             {t('dataProfiler.valueRange')}
           </h4>
-          <div className="bg-muted/50 grid grid-cols-3 gap-3 rounded-lg p-3">
+          <div className="bg-muted/50 rounded-base grid grid-cols-3 gap-3 p-3">
             {column.minValue !== undefined && (
               <div>
                 <p className="text-muted-foreground text-xs">
@@ -490,7 +490,7 @@ export const DataProfiler = memo(
                           key={col.name}
                           onClick={() => setSelectedColumn(col.name)}
                           className={cn(
-                            'hover:bg-muted flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors',
+                            'hover:bg-muted rounded-base flex w-full items-center gap-2 p-2 text-left transition-colors',
                             selectedColumn === col.name && 'bg-muted'
                           )}
                         >
@@ -506,7 +506,7 @@ export const DataProfiler = memo(
                 </ScrollArea>
 
                 {/* Column Detail */}
-                <div className="flex-1 rounded-lg border p-4">
+                <div className="rounded-base flex-1 border p-4">
                   {selectedColumnData ? (
                     <ColumnDetail column={selectedColumnData} />
                   ) : (

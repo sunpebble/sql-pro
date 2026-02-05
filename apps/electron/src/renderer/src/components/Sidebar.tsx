@@ -74,7 +74,12 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ColoredTagBadge, CreateTagDialog, EditTagDialog, TagColorDot  } from '@/components/tags';
+import {
+  ColoredTagBadge,
+  CreateTagDialog,
+  EditTagDialog,
+  TagColorDot,
+} from '@/components/tags';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
@@ -760,13 +765,13 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   return (
     <div
       ref={containerRef}
-      className="glass-gold bg-grid-dot flex h-full w-full flex-col overflow-hidden outline-none"
+      className="bg-background flex h-full w-full flex-col overflow-hidden outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       data-tour-target="sidebar"
     >
       {/* Search - matches DataTabBar height */}
-      <div className="border-border/20 mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
+      <div className="border-border mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
         <div className="relative flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
           <input
@@ -783,13 +788,13 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
-            className="placeholder:text-muted-foreground focus:ring-gold/50 h-6 w-full rounded-sm bg-transparent pr-2 pl-6 text-sm focus:ring-1 focus:outline-none"
+            className="placeholder:text-muted-foreground focus:ring-main rounded-base h-6 w-full bg-transparent pr-2 pl-6 text-sm focus:ring-2 focus:outline-none"
           />
         </div>
       </div>
 
       {/* Sort and Filter Controls */}
-      <ScrollArea className="border-border/20 h-8 w-full shrink-0 border-b">
+      <ScrollArea className="border-border h-8 w-full shrink-0 border-b">
         <div className="flex h-full min-w-0 items-center gap-1 px-1.5">
           {/* Sort Dropdown */}
           <DropdownMenu>
@@ -891,8 +896,8 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
         <div
           className="min-w-0 overflow-hidden p-1.5"
           style={{
-            fontFamily: tableFont.family || undefined,
-            fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
+            fontFamily: tableFont.family || 'inherit',
+            fontSize: `${tableFont.size || 13}px`,
           }}
         >
           {isLoadingSchema ? (
@@ -1169,7 +1174,7 @@ function SchemaSection({
       {showSchemaHeader && (
         <button
           onClick={onToggleSchema}
-          className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-2 rounded-md px-2 py-1 text-sm font-medium"
+          className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-2 px-2 py-1 text-sm font-medium"
         >
           {isSchemaExpanded ? (
             <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1189,7 +1194,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(tablesKey)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 text-xs font-medium"
               >
                 {tablesExpanded ? (
                   <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1254,7 +1259,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(viewsKey)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 text-xs font-medium"
               >
                 {viewsExpanded ? (
                   <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1320,7 +1325,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(triggersKey)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 text-xs font-medium"
               >
                 {triggersExpanded ? (
                   <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1409,26 +1414,26 @@ function TableItem({
         <button
           onClick={onClick}
           className={cn(
-            'flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded-md px-2 py-0.5 transition-colors',
+            'rounded-base flex w-full cursor-pointer items-center gap-1.5 overflow-hidden px-2 py-0.5 transition-colors',
             isSelected
-              ? 'bg-primary/15 text-primary font-medium'
-              : 'hover:bg-muted/50 text-foreground',
-            isFocused && !isSelected && 'ring-primary/50 ring-1 ring-inset'
+              ? 'bg-main/15 text-main font-medium'
+              : 'hover:bg-muted text-foreground',
+            isFocused && !isSelected && 'ring-main ring-2 ring-inset'
           )}
         >
-          {isPinned && <Pin className="text-primary h-3 w-3 shrink-0" />}
+          {isPinned && <Pin className="text-main h-3 w-3 shrink-0" />}
           {isView ? (
             <Eye
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
+                isSelected ? 'text-main' : 'text-muted-foreground'
               )}
             />
           ) : (
             <Table
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-primary/70' : 'text-muted-foreground/70'
+                isSelected ? 'text-main' : 'text-muted-foreground'
               )}
             />
           )}
@@ -1451,7 +1456,7 @@ function TableItem({
             <span
               className={cn(
                 'shrink-0 text-xs tabular-nums',
-                isSelected ? 'text-primary/60' : 'text-muted-foreground/60'
+                isSelected ? 'text-main' : 'text-muted-foreground'
               )}
             >
               {table.rowCount.toLocaleString()}

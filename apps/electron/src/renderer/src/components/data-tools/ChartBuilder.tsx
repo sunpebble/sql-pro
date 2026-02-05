@@ -303,7 +303,7 @@ export const ChartBuilder = memo(
                         key={type}
                         onClick={() => setConfig({ ...config, type })}
                         className={cn(
-                          'flex flex-col items-center gap-1 rounded-lg border p-3 transition-colors',
+                          'rounded-base flex flex-col items-center gap-1 border p-3 transition-colors',
                           config.type === type
                             ? 'border-primary bg-primary/5'
                             : 'hover:border-primary/50'
@@ -417,7 +417,7 @@ export const ChartBuilder = memo(
                           setConfig({ ...config, colorScheme: scheme.value })
                         }
                         className={cn(
-                          'flex flex-col items-center gap-1 rounded-lg border p-2 transition-colors',
+                          'rounded-base flex flex-col items-center gap-1 border p-2 transition-colors',
                           config.colorScheme === scheme.value
                             ? 'border-primary bg-primary/5'
                             : 'hover:border-primary/50'
@@ -442,7 +442,7 @@ export const ChartBuilder = memo(
               {/* Preview */}
               <div className="space-y-2">
                 <Label>{t('chartBuilder.preview')}</Label>
-                <div className="bg-muted/30 flex min-h-[300px] flex-col rounded-lg border">
+                <div className="bg-muted/30 rounded-base flex min-h-[300px] flex-col border">
                   {previewData.length > 0 ? (
                     <>
                       <div className="border-b px-4 py-2 text-center font-medium">

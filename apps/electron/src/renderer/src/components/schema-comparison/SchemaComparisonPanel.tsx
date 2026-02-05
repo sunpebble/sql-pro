@@ -261,10 +261,16 @@ export function SchemaComparisonPanel({
             <div className="flex items-center gap-3">
               <GitCompare className="text-primary h-6 w-6" />
               <div>
-                <h1 className="text-2xl font-semibold">
+                <h1
+                  className="font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.5)' }}
+                >
                   {t('compare.schemaComparison')}
                 </h1>
-                <p className="text-muted-foreground text-sm">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('compare.schemaDescription')}
                 </p>
               </div>
@@ -290,13 +296,19 @@ export function SchemaComparisonPanel({
           {showKeyboardShortcuts && (
             <Card className="bg-muted/50">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base">
+                <CardTitle
+                  className="flex items-center gap-2"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Keyboard className="h-4 w-4" />
                   {t('compare.keyboardShortcuts')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-2 text-sm sm:grid-cols-2">
+                <div
+                  className="grid gap-2 sm:grid-cols-2"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground">
                       {t('compare.runComparison')}
@@ -457,7 +469,7 @@ export function SchemaComparisonPanel({
                         })}
                       </p>
                       <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
-                        <div className="rounded-md bg-green-100 p-2 dark:bg-green-950">
+                        <div className="rounded-base bg-green-100 p-2 dark:bg-green-950">
                           <div className="text-green-700 dark:text-green-300">
                             {t('compare.added')}
                           </div>
@@ -465,7 +477,7 @@ export function SchemaComparisonPanel({
                             {comparisonResult.summary.tablesAdded}
                           </div>
                         </div>
-                        <div className="rounded-md bg-red-100 p-2 dark:bg-red-950">
+                        <div className="rounded-base bg-red-100 p-2 dark:bg-red-950">
                           <div className="text-red-700 dark:text-red-300">
                             {t('compare.removed')}
                           </div>
@@ -473,7 +485,7 @@ export function SchemaComparisonPanel({
                             {comparisonResult.summary.tablesRemoved}
                           </div>
                         </div>
-                        <div className="rounded-md bg-amber-100 p-2 dark:bg-amber-950">
+                        <div className="rounded-base bg-amber-100 p-2 dark:bg-amber-950">
                           <div className="text-amber-700 dark:text-amber-300">
                             {t('compare.modified')}
                           </div>

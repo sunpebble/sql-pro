@@ -100,14 +100,20 @@ export function RowDiffCard({
             <ChevronRight className="h-4 w-4 shrink-0" />
           )}
           {style.icon}
-          <CardTitle className="flex-1 text-base font-semibold">
+          <CardTitle
+            className="flex-1 font-semibold"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          >
             {primaryKeyDisplay}
           </CardTitle>
           <Badge variant="secondary" className={cn('text-xs', style.badge)}>
             {style.label}
           </Badge>
           {changeCount > 0 && (
-            <span className="text-muted-foreground text-xs">
+            <span
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('rowDiff.changeCount', { count: changeCount })}
             </span>
           )}
@@ -144,7 +150,10 @@ export function RowDiffCard({
           {/* Added rows show all target values */}
           {diffType === 'added' && rowDiff.targetRow && (
             <div className="space-y-2">
-              <div className="text-muted-foreground mb-2 text-sm font-medium">
+              <div
+                className="text-muted-foreground mb-2 font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('rowDiff.newValues')}
               </div>
               {Object.entries(rowDiff.targetRow).map(([column, value]) => (
@@ -153,7 +162,12 @@ export function RowDiffCard({
                   className="flex items-start gap-2 rounded-md bg-green-50 p-2 dark:bg-green-950/50"
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium">{column}</div>
+                    <div
+                      className="font-medium"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
+                      {column}
+                    </div>
                     <div className="font-mono text-sm text-green-700 dark:text-green-300">
                       {formatValue(value)}
                     </div>
@@ -166,7 +180,10 @@ export function RowDiffCard({
           {/* Removed rows show all source values */}
           {diffType === 'removed' && rowDiff.sourceRow && (
             <div className="space-y-2">
-              <div className="text-muted-foreground mb-2 text-sm font-medium">
+              <div
+                className="text-muted-foreground mb-2 font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('rowDiff.deletedValues')}
               </div>
               {Object.entries(rowDiff.sourceRow).map(([column, value]) => (
@@ -175,7 +192,12 @@ export function RowDiffCard({
                   className="flex items-start gap-2 rounded-md bg-red-50 p-2 dark:bg-red-950/50"
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium">{column}</div>
+                    <div
+                      className="font-medium"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
+                      {column}
+                    </div>
                     <div className="font-mono text-sm text-red-700 dark:text-red-300">
                       {formatValue(value)}
                     </div>
@@ -188,7 +210,10 @@ export function RowDiffCard({
           {/* Unchanged rows show current values */}
           {diffType === 'unchanged' && rowDiff.sourceRow && (
             <div className="space-y-2">
-              <div className="text-muted-foreground mb-2 text-sm font-medium">
+              <div
+                className="text-muted-foreground mb-2 font-medium"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('rowDiff.currentValues')}
               </div>
               {Object.entries(rowDiff.sourceRow).map(([column, value]) => (
@@ -197,7 +222,12 @@ export function RowDiffCard({
                   className="flex items-start gap-2 rounded-md bg-gray-50 p-2 dark:bg-gray-950/50"
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium">{column}</div>
+                    <div
+                      className="font-medium"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
+                      {column}
+                    </div>
                     <div className="text-muted-foreground font-mono text-sm">
                       {formatValue(value)}
                     </div>
@@ -229,7 +259,12 @@ function ColumnChangeRow({ columnChange }: { columnChange: ColumnChange }) {
           : 'bg-gray-50 dark:bg-gray-950/50'
       )}
     >
-      <div className="mb-1 text-sm font-medium">{columnName}</div>
+      <div
+        className="font-medium"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
+        {columnName}
+      </div>
       <div className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
           <div className="text-xs text-red-600 dark:text-red-400">

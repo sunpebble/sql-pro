@@ -249,7 +249,7 @@ export function ERDiagram() {
           nodeStrokeWidth={3}
           zoomable
           pannable
-          className="!bg-background !border-border"
+          className="!bg-background !border-2"
         />
         <ERControls onResetLayout={handleResetLayout} />
       </ReactFlow>

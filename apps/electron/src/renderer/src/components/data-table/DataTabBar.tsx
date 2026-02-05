@@ -286,12 +286,12 @@ export const DataTabBar = memo(
                       schemaDetailsOpen
                         ? [
                             'text-primary',
-                            'from-primary/15 to-primary/8 bg-gradient-to-br',
+                            'bg-primary/15',
                             'ring-primary/25 ring-1',
                           ]
                         : [
                             'text-muted-foreground hover:text-foreground',
-                            'hover:from-muted/80 hover:to-muted/50 hover:bg-gradient-to-br',
+                            'hover:bg-muted/50',
                           ]
                     )}
                     onClick={onToggleSchemaDetails}

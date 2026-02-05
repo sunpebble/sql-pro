@@ -323,7 +323,7 @@ export function PluginCard({
         onClick={handleCardClick}
       >
         {/* Plugin Icon */}
-        <div className="bg-muted flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg">
+        <div className="bg-muted flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-base">
           {pluginIcon ? (
             <img
               src={pluginIcon}
@@ -445,7 +445,7 @@ export function PluginCard({
       <CardHeader className="pb-2">
         <div className="flex items-start gap-3">
           {/* Plugin Icon */}
-          <div className="bg-muted flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg">
+          <div className="bg-muted flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-base">
             {pluginIcon ? (
               <img
                 src={pluginIcon}

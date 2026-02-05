@@ -201,7 +201,7 @@ export function QueryBundleExportDialog({
           {exportResult ? (
             <div className="space-y-3">
               {exportResult.success ? (
-                <div className="space-y-2 rounded-lg bg-green-50 p-4 dark:bg-green-950">
+                <div className="rounded-base space-y-2 bg-green-50 p-4 dark:bg-green-950">
                   <p className="font-medium text-green-900 dark:text-green-100">
                     {t('queryBundleExport.exportSuccessful')}
                   </p>
@@ -217,7 +217,7 @@ export function QueryBundleExportDialog({
                   )}
                 </div>
               ) : (
-                <div className="bg-destructive/10 rounded-lg p-4">
+                <div className="bg-destructive/10 rounded-base p-4">
                   <p className="text-destructive font-medium">
                     {t('queryBundleExport.exportFailed')}
                   </p>
@@ -230,7 +230,7 @@ export function QueryBundleExportDialog({
           ) : (
             <>
               {/* Bundle Metadata */}
-              <div className="space-y-4 rounded-lg border p-4">
+              <div className="rounded-base space-y-4 border p-4">
                 <h4 className="text-sm font-semibold">
                   {t('queryBundleExport.bundleInformation')}
                 </h4>
@@ -347,7 +347,7 @@ export function QueryBundleExportDialog({
               </div>
 
               {/* Individual Query Metadata */}
-              <div className="space-y-4 rounded-lg border p-4">
+              <div className="rounded-base space-y-4 border p-4">
                 <h4 className="text-sm font-semibold">
                   {t('queryBundleExport.individualQueries', {
                     count: queries.length,

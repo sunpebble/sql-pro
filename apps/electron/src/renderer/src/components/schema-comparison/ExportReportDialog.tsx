@@ -220,7 +220,7 @@ export function ExportReportDialog({
             <Label className="text-sm font-medium">
               {t('exportReport.options')}
             </Label>
-            <div className="space-y-3 rounded-md border p-3">
+            <div className="rounded-base space-y-3 border-2 p-3">
               <label className="flex cursor-pointer items-center gap-2">
                 <Checkbox
                   checked={includeMigrationSQL}
@@ -242,7 +242,7 @@ export function ExportReportDialog({
 
           {/* Report Preview Info */}
           {comparisonResult && (
-            <div className="space-y-2 rounded-md border p-3">
+            <div className="rounded-base space-y-2 border-2 p-3">
               <Label className="text-sm font-medium">
                 {t('exportReport.reportSummary')}
               </Label>

@@ -60,7 +60,7 @@ const ResultCard = memo(
     const { t } = useTranslation('common');
 
     return (
-      <div className="hover:bg-muted/50 rounded-lg border p-3 transition-colors">
+      <div className="hover:bg-muted/50 rounded-base border-border border-2 p-3 transition-colors">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
             <div className="bg-muted flex h-6 w-6 items-center justify-center rounded text-xs font-medium">

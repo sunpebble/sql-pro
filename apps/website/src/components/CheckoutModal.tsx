@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import './CheckoutModal.css';
 
 type Plan = 'monthly' | 'yearly' | 'lifetime';
 
@@ -56,7 +55,7 @@ export default function CheckoutModal({
   }, [isOpen, onClose]);
 
   const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
+    (e: React.MouseEvent | React.KeyboardEvent) => {
       if (e.target === dialogRef.current) {
         onClose();
       }
@@ -106,14 +105,17 @@ export default function CheckoutModal({
   return (
     <dialog
       ref={dialogRef}
-      className="checkout-modal"
+      className="rounded-base border-border bg-background shadow-shadow-lg fixed inset-0 m-auto w-[calc(100%-32px)] max-w-md overflow-hidden border-2 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm"
       onClick={handleBackdropClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') onClose();
+      }}
       aria-labelledby="checkout-title"
     >
-      <div className="checkout-content">
+      <div className="relative p-6 md:p-8">
         <button
           type="button"
-          className="checkout-close"
+          className="rounded-base text-muted-foreground hover:border-border hover:bg-secondary-background hover:text-foreground absolute top-4 right-4 flex h-9 w-9 items-center justify-center border-2 border-transparent transition-all"
           onClick={onClose}
           aria-label={t('checkout.close')}
         >
@@ -131,31 +133,39 @@ export default function CheckoutModal({
           </svg>
         </button>
 
-        <h2 id="checkout-title" className="checkout-title">
+        <h2
+          id="checkout-title"
+          className="mb-6 pr-10 text-xl font-bold md:text-2xl"
+        >
           {t('checkout.title')}
         </h2>
 
         {/* Order Summary */}
-        <div className="checkout-summary">
-          <div className="checkout-plan">
-            <div className="checkout-plan-info">
-              <span className="checkout-plan-name">
+        <div className="rounded-base border-border mb-6 overflow-hidden border-2">
+          <div className="bg-secondary-background flex items-start justify-between gap-4 p-4">
+            <div className="flex flex-col gap-1">
+              <span className="font-semibold">
                 {t(`pricing.plans.${plan}.title`)} Plan
               </span>
-              <span className="checkout-plan-description">
+              <span className="text-muted-foreground max-w-48 text-xs">
                 {t(`pricing.plans.${plan}.description`)}
               </span>
             </div>
-            <span className="checkout-plan-price">
+            <span className="text-main flex flex-col items-end gap-0.5 text-lg font-bold md:text-xl">
               {t(`pricing.plans.${plan}.price`)}
-              <small>{t(`pricing.plans.${plan}.period`)}</small>
+              <small className="text-muted-foreground text-xs font-normal">
+                {t(`pricing.plans.${plan}.period`)}
+              </small>
             </span>
           </div>
 
           {/* Feature list */}
-          <ul className="checkout-features">
+          <ul className="border-border grid grid-cols-2 gap-2 border-t-2 p-3">
             {features.map((feature) => (
-              <li key={feature}>
+              <li
+                key={feature}
+                className="text-muted-foreground flex items-center gap-1.5 text-xs"
+              >
                 <svg
                   width="16"
                   height="16"
@@ -164,6 +174,7 @@ export default function CheckoutModal({
                   stroke="currentColor"
                   strokeWidth="2.5"
                   aria-hidden="true"
+                  className="text-main shrink-0"
                 >
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
@@ -173,8 +184,11 @@ export default function CheckoutModal({
           </ul>
         </div>
 
-        <form onSubmit={handleSubmit} className="checkout-form">
-          <label htmlFor="checkout-email" className="checkout-label">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label
+            htmlFor="checkout-email"
+            className="text-muted-foreground -mb-2 text-sm font-medium"
+          >
             {t('checkout.emailLabel')}
           </label>
           <input
@@ -185,25 +199,33 @@ export default function CheckoutModal({
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t('checkout.emailPlaceholder')}
             required
-            className="checkout-input"
+            className="rounded-base border-border bg-background placeholder:text-muted-foreground focus:border-main focus:ring-main/20 w-full border-2 px-4 py-3 text-base transition-all focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
             disabled={isLoading}
           />
-          <p className="checkout-email-hint">{t('checkout.emailHint')}</p>
+          <p className="text-muted-foreground -mt-2 text-xs">
+            {t('checkout.emailHint')}
+          </p>
 
           {error && (
-            <p className="checkout-error" role="alert">
+            <p
+              className="rounded-base bg-destructive/10 text-destructive p-3 text-sm"
+              role="alert"
+            >
               {error}
             </p>
           )}
 
           <button
             type="submit"
-            className="btn btn-primary checkout-submit"
+            className="rounded-base border-border bg-main text-main-foreground shadow-shadow disabled:hover:shadow-shadow mt-2 flex w-full items-center justify-center gap-2 border-2 px-4 py-4 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
             disabled={isLoading || !email}
           >
             {isLoading ? (
               <>
-                <span className="checkout-spinner" aria-hidden="true" />
+                <span
+                  className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-transparent border-t-current"
+                  aria-hidden="true"
+                />
                 {t('checkout.processing')}
               </>
             ) : (
@@ -212,8 +234,8 @@ export default function CheckoutModal({
           </button>
 
           {/* Trust indicators */}
-          <div className="checkout-trust">
-            <div className="checkout-secure">
+          <div className="border-border mt-4 flex flex-col items-center justify-center gap-3 border-t-2 pt-4 sm:flex-row sm:gap-6">
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
               <svg
                 width="16"
                 height="16"
@@ -222,13 +244,14 @@ export default function CheckoutModal({
                 stroke="currentColor"
                 strokeWidth="2"
                 aria-hidden="true"
+                className="text-main"
               >
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
               {t('checkout.secure')}
             </div>
-            <div className="checkout-guarantee">
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
               <svg
                 width="16"
                 height="16"
@@ -237,6 +260,7 @@ export default function CheckoutModal({
                 stroke="currentColor"
                 strokeWidth="2"
                 aria-hidden="true"
+                className="text-[#22c55e]"
               >
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>

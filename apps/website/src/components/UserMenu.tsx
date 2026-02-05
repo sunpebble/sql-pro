@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import './UserMenu.css';
 
 // API base URL - use relative path in production, localhost for dev
 const API_URL = import.meta.env.DEV ? 'http://localhost:8787' : '';
@@ -186,26 +185,36 @@ export default function UserMenu() {
       if (activeLicense.plan === 'lifetime') {
         return {
           label: t('auth.lifetimePro', 'Lifetime Pro'),
-          className: 'status-lifetime',
+          className: 'bg-main/20 text-main',
         };
       }
       if (activeLicense.status === 'trialing') {
-        return { label: t('auth.trial', 'Trial'), className: 'status-trial' };
+        return {
+          label: t('auth.trial', 'Trial'),
+          className: 'bg-blue-500/20 text-blue-600 dark:text-blue-400',
+        };
       }
-      return { label: t('auth.pro', 'Pro'), className: 'status-active' };
+      return {
+        label: t('auth.pro', 'Pro'),
+        className: 'bg-green-500/20 text-green-600 dark:text-green-400',
+      };
     }
 
-    return { label: t('auth.free', 'Free'), className: 'status-free' };
+    return {
+      label: t('auth.free', 'Free'),
+      className: 'bg-muted text-muted-foreground',
+    };
   }
 
   if (isLoading) {
     return (
-      <div className="user-menu">
-        <div
-          className="user-menu-loading"
-          aria-label={t('auth.loading', 'Loading...')}
-        >
-          <div className="user-menu-spinner" />
+      <div className="relative">
+        <div className="flex h-10 w-10 items-center justify-center">
+          <div
+            className="border-border border-t-main h-5 w-5 animate-spin rounded-full border-2"
+            role="status"
+            aria-label={t('auth.loading', 'Loading...')}
+          />
         </div>
       </div>
     );
@@ -213,15 +222,15 @@ export default function UserMenu() {
 
   if (!authState.authenticated) {
     return (
-      <div className="user-menu">
+      <div className="relative">
         <button
           type="button"
-          className="login-btn"
+          className="bg-background border-border rounded-base text-foreground shadow-shadow-sm hover:translate-x-boxShadowX hover:translate-y-boxShadowY focus-visible:ring-ring flex cursor-pointer items-center gap-2 border-2 px-4 py-2 font-sans text-sm font-medium transition-all duration-150 hover:shadow-none focus-visible:ring-2 focus-visible:outline-none"
           onClick={handleLogin}
           aria-label={t('auth.loginWithGithub', 'Sign in with GitHub')}
         >
           <GitHubIcon />
-          <span className="login-btn-text">{t('auth.login', 'Sign in')}</span>
+          <span className="hidden sm:inline">{t('auth.login', 'Sign in')}</span>
         </button>
       </div>
     );
@@ -231,40 +240,55 @@ export default function UserMenu() {
   const subscriptionStatus = getSubscriptionStatus();
 
   return (
-    <div className="user-menu" ref={menuRef}>
+    <div className="relative" ref={menuRef}>
       <button
         type="button"
-        className="user-menu-trigger"
+        className="bg-background border-border shadow-shadow-sm hover:translate-x-boxShadowX hover:translate-y-boxShadowY focus-visible:ring-ring flex cursor-pointer items-center gap-1 rounded-full border-2 p-0.5 transition-all duration-150 hover:shadow-none focus-visible:ring-2 focus-visible:outline-none"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label={t('auth.accountMenu', 'Account menu')}
       >
         {user?.avatarUrl ? (
-          <img src={user.avatarUrl} alt="" className="user-avatar" />
+          <img
+            src={user.avatarUrl}
+            alt=""
+            className="h-8 w-8 rounded-full object-cover"
+          />
         ) : (
-          <div className="user-avatar-placeholder">
+          <div className="bg-secondary-background text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full">
             <UserIcon />
           </div>
         )}
       </button>
 
       {isOpen && (
-        <div className="user-menu-dropdown" role="menu">
-          <div className="user-menu-header">
+        <div
+          className="bg-background border-border rounded-base shadow-shadow-lg animate-fade-up absolute top-[calc(100%+8px)] right-0 z-50 min-w-[280px] overflow-hidden border-2"
+          role="menu"
+        >
+          <div className="flex items-center gap-3 p-4">
             {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt="" className="user-avatar-lg" />
+              <img
+                src={user.avatarUrl}
+                alt=""
+                className="rounded-base h-10 w-10 object-cover"
+              />
             ) : (
-              <div className="user-avatar-placeholder-lg">
+              <div className="bg-secondary-background rounded-base text-muted-foreground flex h-10 w-10 items-center justify-center">
                 <UserIcon />
               </div>
             )}
-            <div className="user-info">
-              <span className="user-name">{user?.name}</span>
-              <span className="user-email">{user?.email}</span>
+            <div className="flex min-w-0 flex-col gap-0.5">
+              <span className="text-foreground truncate text-sm font-semibold">
+                {user?.name}
+              </span>
+              <span className="text-muted-foreground truncate text-xs">
+                {user?.email}
+              </span>
               {subscriptionStatus && (
                 <span
-                  className={`user-subscription-badge ${subscriptionStatus.className}`}
+                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${subscriptionStatus.className}`}
                 >
                   {subscriptionStatus.label}
                 </span>
@@ -272,11 +296,11 @@ export default function UserMenu() {
             </div>
           </div>
 
-          <div className="user-menu-divider" />
+          <div className="bg-border h-[2px]" />
 
           <button
             type="button"
-            className="user-menu-item"
+            className="text-foreground hover:bg-secondary-background flex w-full cursor-pointer items-center gap-2.5 border-none bg-transparent px-4 py-3 text-left font-sans text-sm font-medium transition-all duration-150"
             onClick={handleOpenAccount}
             role="menuitem"
           >
@@ -284,11 +308,11 @@ export default function UserMenu() {
             <span>{t('auth.accountSettings', 'Account & Subscriptions')}</span>
           </button>
 
-          <div className="user-menu-divider" />
+          <div className="bg-border h-[2px]" />
 
           <button
             type="button"
-            className="user-menu-item user-menu-item-danger"
+            className="text-foreground flex w-full cursor-pointer items-center gap-2.5 border-none bg-transparent px-4 py-3 text-left font-sans text-sm font-medium transition-all duration-150 hover:bg-red-500/10 hover:text-red-500"
             onClick={handleLogout}
             role="menuitem"
           >

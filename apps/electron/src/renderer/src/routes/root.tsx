@@ -8,7 +8,11 @@ import { getFontFamilyCSS, useApplyFont } from '@/hooks/useApplyFont';
 import { useCommands } from '@/hooks/useCommands';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import { useMenuActions } from '@/hooks/useMenuActions';
-import { useUIFont } from '@/stores/settings-store';
+import {
+  useEditorFont,
+  useTableFont,
+  useUIFont,
+} from '@/stores/settings-store';
 
 /**
  * Root layout component that wraps all routes.
@@ -17,6 +21,8 @@ import { useUIFont } from '@/stores/settings-store';
 export function RootLayout() {
   const { t } = useTranslation('common');
   const uiFont = useUIFont();
+  const tableFont = useTableFont();
+  const editorFont = useEditorFont();
 
   // Register commands and global keyboard shortcuts
   useCommands();
@@ -24,8 +30,11 @@ export function RootLayout() {
   // Listen for menu actions from main process
   useMenuActions();
 
-  // Apply UI font to document root
+  // Apply font settings to document root as CSS variables
+  // This enables Portal components (popover, dropdown, etc.) to inherit font settings
   useApplyFont(uiFont, 'ui');
+  useApplyFont(tableFont, 'table');
+  useApplyFont(editorFont, 'editor');
 
   // Global drag-and-drop for database files
   const {

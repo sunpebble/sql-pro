@@ -136,7 +136,8 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn('text-lg font-bold', className)}
+      className={cn('font-bold', className)}
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
       {...props}
     />
   );
@@ -149,7 +150,8 @@ function DialogDescription({
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn('text-muted-foreground', className)}
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
       {...props}
     />
   );

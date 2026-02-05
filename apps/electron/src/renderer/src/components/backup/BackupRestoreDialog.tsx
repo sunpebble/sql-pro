@@ -388,7 +388,7 @@ export function BackupRestoreDialog({
               </div>
 
               {selectedBackup && (
-                <div className="bg-muted/30 space-y-2 rounded-lg border p-4">
+                <div className="bg-muted/30 rounded-base space-y-2 border-2 p-4">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground text-sm">
                       {t('backup.database', 'Database')}:
@@ -462,7 +462,7 @@ export function BackupRestoreDialog({
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </div>
-            <ScrollArea className="flex-1 rounded-lg border">
+            <ScrollArea className="rounded-base flex-1 border-2">
               {backups.length === 0 ? (
                 <div className="text-muted-foreground flex h-32 items-center justify-center">
                   {t('backup.noBackups', 'No backups yet')}
@@ -475,7 +475,7 @@ export function BackupRestoreDialog({
                       className="hover:bg-muted/50 flex items-center justify-between p-3"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="bg-primary/10 rounded-lg p-2">
+                        <div className="bg-primary/10 rounded-base p-2">
                           {backup.format === 'sql' ? (
                             <FileCode className="text-primary h-4 w-4" />
                           ) : (

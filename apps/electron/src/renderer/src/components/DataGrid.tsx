@@ -106,7 +106,7 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
       <div style={{ minWidth: totalWidth }}>
         {/* Header */}
         <div
-          className="bg-muted/50 sticky top-0 z-10 flex border-b backdrop-blur-sm"
+          className="bg-muted sticky top-0 z-10 flex border-b"
           role="row"
           aria-rowindex={1}
         >

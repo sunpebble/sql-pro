@@ -104,18 +104,19 @@ export function QueryResults({ results }: QueryResultsProps) {
     <div className="flex h-full flex-col">
       {/* Result Set Tabs */}
       <div
-        className="bg-muted/30 flex items-center gap-1 overflow-x-auto border-b px-2 py-1"
+        className="bg-muted flex items-center gap-1 overflow-x-auto border-b-2 px-2 py-1"
         role="tablist"
         aria-label={t('queryResults.resultSets')}
       >
         {resultSets.map((resultSet, index) => (
           <button
+            type="button"
             key={`result-${resultSet.columns.join(',')}-${resultSet.rows.length}`}
             onClick={() => setActiveResultIndex(index)}
             className={cn(
-              'flex items-center gap-1.5 rounded px-3 py-1 text-xs font-medium transition-colors',
+              'rounded-base font-base flex items-center gap-1.5 px-3 py-1 text-xs transition-colors',
               activeResultIndex === index
-                ? 'bg-background text-foreground shadow-sm'
+                ? 'bg-background text-foreground shadow-shadow-sm border-2'
                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
             )}
             role="tab"

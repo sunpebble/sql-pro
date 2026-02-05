@@ -1,7 +1,6 @@
-import type { Theme} from '../hooks/useTheme';
+import type { Theme } from '../hooks/useTheme';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
-import './ThemeSwitcher.css';
 
 const SunIcon = () => (
   <svg
@@ -70,7 +69,7 @@ export default function ThemeSwitcher() {
 
   return (
     <div
-      className="theme-switcher"
+      className="bg-background border-border rounded-base shadow-shadow-sm flex items-center gap-0.5 border-2 p-1"
       role="radiogroup"
       aria-label={t('a11y.themeSelector', 'Theme')}
     >
@@ -81,7 +80,11 @@ export default function ThemeSwitcher() {
           role="radio"
           aria-checked={theme === option.value}
           aria-label={t(option.labelKey, option.value)}
-          className={`theme-btn ${theme === option.value ? 'active' : ''}`}
+          className={`rounded-base flex h-8 w-8 cursor-pointer items-center justify-center border-none p-0 transition-all duration-150 ${
+            theme === option.value
+              ? 'bg-main text-main-foreground'
+              : 'text-muted-foreground hover:bg-secondary-background hover:text-foreground bg-transparent'
+          } focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none`}
           onClick={() => setTheme(option.value)}
         >
           {option.icon}

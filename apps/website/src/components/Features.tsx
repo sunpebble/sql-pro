@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from '../hooks/useInView';
-import './Features.css';
 
 type FeatureSize = 'featured' | 'wide' | 'default';
 
@@ -105,6 +104,12 @@ const icons: Record<string, ReactNode> = {
   ),
 };
 
+const sizeClasses: Record<FeatureSize, string> = {
+  featured: 'min-h-[200px] p-8',
+  wide: 'col-span-1 md:col-span-2 lg:col-span-3 flex-row items-center p-8 md:px-10',
+  default: '',
+};
+
 export default function Features() {
   const { t } = useTranslation();
   const { ref: headerRef, isInView: headerVisible } = useInView<HTMLElement>();
@@ -135,19 +140,22 @@ export default function Features() {
 
   return (
     <section
-      className="features"
+      className="relative overflow-hidden py-24 md:py-32"
       id="features"
       aria-labelledby="features-title"
     >
-      <div className="container">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
         <header
           ref={headerRef}
-          className={['features-header', headerVisible && 'visible']
-            .filter(Boolean)
-            .join(' ')}
+          className={`mb-16 text-center transition-all duration-500 ${
+            headerVisible
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-8 opacity-0'
+          }`}
         >
-          <span className="features-label">
+          <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
             <svg
+              className="h-4 w-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -158,15 +166,23 @@ export default function Features() {
             </svg>
             Features
           </span>
-          <h2 id="features-title" className="features-title">
+          <h2
+            id="features-title"
+            className="text-foreground m-0 mb-4 text-3xl leading-tight font-bold tracking-tight md:text-4xl lg:text-5xl"
+          >
             Everything you need for
             <br />
-            <span className="features-title-gradient">database management</span>
+            <span className="text-main">database management</span>
           </h2>
-          <p className="features-subtitle">{t('features.subtitle')}</p>
+          <p className="text-muted-foreground mx-auto max-w-[600px] text-lg leading-relaxed">
+            {t('features.subtitle')}
+          </p>
         </header>
 
-        <div className="bento-grid" role="list">
+        <div
+          className="mx-auto grid max-w-[1100px] grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3"
+          role="list"
+        >
           {features.map((feature, index) => (
             <div
               key={feature.key}
@@ -174,16 +190,40 @@ export default function Features() {
                 cardsRef.current[index] = el;
               }}
               data-index={index}
-              className={`bento-item bento-${feature.size} ${visibleCards.has(index) ? 'visible' : ''}`}
+              className={`bg-card border-border rounded-base flex min-h-[180px] flex-col gap-5 border-2 p-7 transition-all duration-300 ${sizeClasses[feature.size]} ${
+                visibleCards.has(index)
+                  ? 'shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY translate-y-0 opacity-100 hover:shadow-none'
+                  : 'translate-y-8 opacity-0'
+              }`}
               style={{ transitionDelay: `${index * 100}ms` }}
               role="listitem"
             >
-              <div className="bento-item-icon">{icons[feature.icon]}</div>
-              <div className="bento-item-content">
-                <h3 className="bento-item-title">
+              <div
+                className={`bg-main text-main-foreground border-border rounded-base flex h-13 w-13 flex-shrink-0 items-center justify-center border-2 ${
+                  feature.size === 'featured' ? 'h-14 w-14' : ''
+                }`}
+              >
+                <div
+                  className={`h-6 w-6 ${feature.size === 'featured' ? 'h-7 w-7' : ''}`}
+                >
+                  {icons[feature.icon]}
+                </div>
+              </div>
+              <div
+                className={`flex flex-1 flex-col gap-2 ${feature.size === 'wide' ? 'flex-1' : ''}`}
+              >
+                <h3
+                  className={`text-foreground m-0 text-lg font-semibold ${
+                    feature.size === 'featured' ? 'text-xl' : ''
+                  }`}
+                >
                   {t(`features.${feature.key}.title`)}
                 </h3>
-                <p className="bento-item-description">
+                <p
+                  className={`text-muted-foreground m-0 text-sm leading-relaxed ${
+                    feature.size === 'featured' ? 'text-base' : ''
+                  }`}
+                >
                   {t(`features.${feature.key}.description`)}
                 </p>
               </div>

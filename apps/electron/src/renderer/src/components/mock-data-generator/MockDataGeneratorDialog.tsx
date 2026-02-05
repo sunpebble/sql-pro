@@ -317,7 +317,7 @@ export function MockDataGeneratorDialog({
 
           {/* Column Configuration */}
           {selectedTable && (
-            <div className="flex-1 overflow-hidden rounded-lg border">
+            <div className="rounded-base border-border flex-1 overflow-hidden border-2">
               <ScrollArea className="h-[300px]">
                 <Table>
                   <TableHeader className="bg-background sticky top-0 z-10">
@@ -356,7 +356,7 @@ export function MockDataGeneratorDialog({
 
           {/* Preview Section */}
           {previewData.length > 0 && (
-            <div className="overflow-hidden rounded-lg border">
+            <div className="rounded-base border-border overflow-hidden border-2">
               <div className="bg-muted/30 flex items-center justify-between border-b px-3 py-2">
                 <span className="text-sm font-medium">
                   {showPreview

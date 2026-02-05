@@ -9,7 +9,6 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts"
     },
-    "./sanctum.css": "./src/sanctum.css",
     "./theme": {
       "types": "./src/theme/index.ts",
       "import": "./src/theme/index.ts"

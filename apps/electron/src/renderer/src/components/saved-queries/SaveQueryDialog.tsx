@@ -175,7 +175,7 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
 
         {/* Parameters detected */}
         {parameters.length > 0 && (
-          <div className="bg-muted/50 rounded-lg p-3">
+          <div className="bg-muted/50 rounded-base border-border border-2 p-3">
             <p className="text-sm font-medium">
               {t('savedQueries.parametersDetected', {
                 defaultValue: 'Parameters detected',

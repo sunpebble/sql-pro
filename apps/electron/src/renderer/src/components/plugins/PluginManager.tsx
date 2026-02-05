@@ -369,7 +369,7 @@ export function PluginManager({
 
       {/* Error Banner */}
       {error && (
-        <div className="bg-destructive/10 border-destructive/50 mx-4 mt-4 flex items-start gap-3 rounded-lg border p-3">
+        <div className="bg-destructive/10 border-destructive rounded-base mx-4 mt-4 flex items-start gap-3 border-2 p-3">
           <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
           <div className="flex-1">
             <p className="text-destructive text-sm font-medium">

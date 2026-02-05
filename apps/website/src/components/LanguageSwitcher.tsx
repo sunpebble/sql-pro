@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { languages } from '../i18n';
-import './LanguageSwitcher.css';
 
 export default function LanguageSwitcher() {
   const { i18n, t } = useTranslation();
@@ -11,7 +10,7 @@ export default function LanguageSwitcher() {
 
   return (
     <div
-      className="language-switcher"
+      className="relative flex items-center gap-2"
       role="navigation"
       aria-label={t('a11y.languageSelector')}
     >
@@ -22,7 +21,7 @@ export default function LanguageSwitcher() {
         id="language-select"
         value={i18n.language.split('-')[0]}
         onChange={handleChange}
-        className="language-select"
+        className="bg-background border-border rounded-base text-foreground shadow-shadow-sm hover:translate-x-boxShadowX hover:translate-y-boxShadowY focus:ring-ring cursor-pointer appearance-none border-2 py-2.5 pr-10 pl-3.5 font-sans text-sm font-medium transition-all duration-150 hover:shadow-none focus:ring-2 focus:outline-none"
         aria-label={t('a11y.languageSelector')}
       >
         {languages.map((lang) => (
@@ -32,7 +31,7 @@ export default function LanguageSwitcher() {
         ))}
       </select>
       <svg
-        className="language-icon"
+        className="text-muted-foreground pointer-events-none absolute right-3"
         width="16"
         height="16"
         viewBox="0 0 24 24"

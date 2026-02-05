@@ -7,123 +7,119 @@ SQL Pro is a professional, cross-platform database management application built 
 - **Desktop App**: Electron + React + TypeScript + Tailwind CSS + shadcn/ui
 - **Website**: React + TypeScript + Vite
 
-## Design System: Warm Modern
+## Design System: Neobrutalism
 
-The visual identity follows a **"Warm Modern"** design philosophy - a friendly, approachable, and inviting aesthetic inspired by Linear and Raycast. The design communicates creativity, warmth, and trustworthiness.
+The visual identity follows a **"Neobrutalism"** design philosophy - a bold, playful, and distinctive aesthetic characterized by thick borders, offset shadows, and vibrant colors. The design communicates confidence, creativity, and modern craftsmanship.
 
 ### Core Aesthetic Principles
 
-1. **Warm & Inviting**: Soft backgrounds, warm orange accents, welcoming atmosphere
-2. **Soft Modern**: Large rounded corners (16-24px), gentle shadows, smooth transitions
-3. **User-Focused**: High readability, intuitive interactions, accessible design
+1. **Bold & Distinctive**: Thick black borders (2px), offset shadows, high contrast
+2. **Playful Modern**: Large interactive elements, satisfying hover effects (translate + shadow removal)
+3. **Clear Hierarchy**: Simple color palette, strong visual structure, readable typography
 
 ### Color Palette
 
 #### Light Mode
 
-| Token              | Value                  | Usage                                 |
-| ------------------ | ---------------------- | ------------------------------------- |
-| `--primary`        | `#F97316` (Orange 500) | Primary brand color, CTAs, highlights |
-| `--primary-dark`   | `#EA580C` (Orange 600) | Hover states, emphasis                |
-| `--primary-light`  | `#FB923C` (Orange 400) | Lighter accents                       |
-| `--primary-50`     | `#FFF7ED`              | Subtle backgrounds, badges            |
-| `--primary-100`    | `#FFEDD5`              | Light backgrounds                     |
-| `--accent`         | `#FDBA74` (Orange 300) | Secondary accent, gradients           |
-| `--bg-white`       | `#FFFBF7`              | Primary background (warm white)       |
-| `--bg-subtle`      | `#FEF3E7`              | Secondary background                  |
-| `--text-primary`   | `#1C1917` (Stone 900)  | Primary text                          |
-| `--text-secondary` | `#57534E` (Stone 600)  | Secondary text                        |
-| `--text-muted`     | `#A8A29E` (Stone 400)  | Muted text, placeholders              |
-| `--border-light`   | `#F5F0EB`              | Light borders (warm)                  |
-| `--border-medium`  | `#E7E0D9`              | Medium borders                        |
-| `--success`        | `#22C55E` (Green 500)  | Success states                        |
-| `--warning`        | `#F59E0B` (Amber 500)  | Warning states                        |
-| `--error`          | `#EF4444` (Red 500)    | Error states                          |
+| Token                    | Value     | Usage                            |
+| ------------------------ | --------- | -------------------------------- |
+| `--main`                 | `#f97316` | Primary brand color (Orange)     |
+| `--main-foreground`      | `#000000` | Text on primary color            |
+| `--background`           | `#ffffff` | Primary background               |
+| `--foreground`           | `#000000` | Primary text                     |
+| `--secondary-background` | `#e0e0e0` | Secondary/muted backgrounds      |
+| `--border`               | `#000000` | All borders (neobrutalism style) |
+| `--card`                 | `#ffffff` | Card backgrounds                 |
+| `--muted`                | `#f5f5f5` | Muted backgrounds                |
+| `--muted-foreground`     | `#737373` | Muted text                       |
+| `--destructive`          | `#ef4444` | Error/destructive actions        |
+| `--success`              | `#22c55e` | Success states                   |
+| `--warning`              | `#f59e0b` | Warning states                   |
 
 #### Dark Mode
 
-| Token              | Value                  | Usage                          |
-| ------------------ | ---------------------- | ------------------------------ |
-| `--primary`        | `#FB923C` (Orange 400) | Primary brand color (brighter) |
-| `--primary-dark`   | `#F97316` (Orange 500) | Hover states                   |
-| `--bg-dark`        | `#1C1917` (Stone 900)  | Primary background             |
-| `--bg-card`        | `#292524` (Stone 800)  | Card backgrounds               |
-| `--text-primary`   | `#FAFAF9` (Stone 50)   | Primary text                   |
-| `--text-secondary` | `#D6D3D1` (Stone 300)  | Secondary text                 |
-| `--border-dark`    | `#44403C` (Stone 700)  | Borders                        |
+| Token                    | Value     | Usage                           |
+| ------------------------ | --------- | ------------------------------- |
+| `--main`                 | `#fb923c` | Primary brand color (brighter)  |
+| `--main-foreground`      | `#000000` | Text on primary color           |
+| `--background`           | `#1a1a1a` | Primary background              |
+| `--foreground`           | `#ffffff` | Primary text                    |
+| `--secondary-background` | `#262626` | Secondary backgrounds           |
+| `--border`               | `#ffffff` | All borders (inverted for dark) |
+| `--card`                 | `#262626` | Card backgrounds                |
+| `--muted`                | `#404040` | Muted backgrounds               |
+| `--muted-foreground`     | `#a3a3a3` | Muted text                      |
 
 ### Typography
 
-| Font                  | Usage                                         |
-| --------------------- | --------------------------------------------- |
-| **Plus Jakarta Sans** | Display headings, brand name (modern display) |
-| **Inter**             | Body text, UI elements (clean sans-serif)     |
-| **JetBrains Mono**    | Code, technical labels, monospace content     |
+| Font               | Usage                                     |
+| ------------------ | ----------------------------------------- |
+| **Inter**          | All text - headings, body, UI elements    |
+| **JetBrains Mono** | Code, technical labels, monospace content |
 
 ### Signature Design Elements
 
-1. **Gradient Text** (`.text-gradient-primary`)
-   - Primary orange gradient for emphasis
-   - Use on key headlines and CTAs
+1. **Offset Shadows**
+   - Standard: `4px 4px 0px 0px var(--border)`
+   - Small: `2px 2px 0px 0px var(--border)`
+   - Large: `8px 8px 0px 0px var(--border)`
 
-2. **Pill Badges** (`.badge-primary`)
-   - Rounded full badges with primary-50 background
-   - Icon + text combination
+2. **Border Style**
+   - All interactive elements use `2px solid var(--border)`
+   - Consistent border-radius: `5px` (rounded-base)
 
-3. **Card Design**
-   - Large rounded corners (20px-28px border-radius)
-   - Warm, soft shadows with orange tint
-   - Hover lift effect with enhanced glow
+3. **Hover Effect**
+   - Elements translate by shadow offset amount
+   - Shadow disappears on hover
+   - Creates a "press" effect
 
-4. **Soft Shadows**
-   - Use warm-tinted shadows (orange/amber undertones)
-   - Larger blur radius for softer appearance
+4. **Button Patterns**
 
-5. **Stats Display**
-   - Large numbers with gradient text
-   - Supporting labels below
+   ```jsx
+   <button className="rounded-base border-border bg-main text-main-foreground shadow-shadow border-2 px-6 py-3 font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
+     Click Me
+   </button>
+   ```
 
-### CSS Variables (Website)
+5. **Card Patterns**
+   ```jsx
+   <div className="rounded-base border-border bg-card shadow-shadow border-2 p-6 transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
+     Card content
+   </div>
+   ```
+
+### CSS Variables (Website & Electron)
 
 ```css
 :root {
-  /* Primary Colors - Orange Palette */
-  --primary: #f97316;
-  --primary-dark: #ea580c;
-  --primary-light: #fb923c;
-  --primary-50: #fff7ed;
-  --primary-100: #ffedd5;
-  --accent: #fdba74;
+  /* Main/Primary - Orange */
+  --main: #f97316;
+  --main-foreground: #000000;
 
-  /* Backgrounds - Warm Whites */
-  --bg-white: #fffbf7;
-  --bg-subtle: #fef3e7;
+  /* Core Colors */
+  --background: #ffffff;
+  --foreground: #000000;
+  --secondary-background: #e0e0e0;
 
-  /* Text - Stone Palette */
-  --text-primary: #1c1917;
-  --text-secondary: #57534e;
-  --text-muted: #a8a29e;
-  --text-inverse: #ffffff;
+  /* Border - Always solid for neobrutalism */
+  --border: #000000;
+  --ring: #000000;
 
-  /* Borders - Warm */
-  --border-light: #f5f0eb;
-  --border-medium: #e7e0d9;
+  /* Shadows - Offset style */
+  --shadow: 4px 4px 0px 0px #000000;
+  --shadow-sm: 2px 2px 0px 0px #000000;
+  --shadow-lg: 8px 8px 0px 0px #000000;
 
-  /* Shadows - Warm Tinted */
-  --shadow-card: 0 4px 20px -4px rgba(249, 115, 22, 0.1);
-  --shadow-card-hover: 0 20px 40px -8px rgba(249, 115, 22, 0.15);
+  /* Border Radius - Small, consistent */
+  --radius-base: 5px;
+}
 
-  /* Border Radius - Larger for Soft Modern */
-  --border-radius-md: 12px;
-  --border-radius-lg: 16px;
-  --border-radius-xl: 20px;
-  --border-radius-2xl: 28px;
-  --border-radius-full: 9999px;
-
-  /* Typography */
-  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+.dark {
+  --main: #fb923c;
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --border: #ffffff;
+  --shadow: 4px 4px 0px 0px #ffffff;
 }
 ```
 
@@ -132,75 +128,98 @@ The visual identity follows a **"Warm Modern"** design philosophy - a friendly, 
 | File                                                | Purpose                                     |
 | --------------------------------------------------- | ------------------------------------------- |
 | `apps/website/src/index.css`                        | Website global design system, CSS variables |
-| `apps/website/src/components/*.css`                 | Component-specific styles                   |
 | `apps/electron/src/renderer/src/styles/globals.css` | Electron app theme variables (light/dark)   |
+| `packages/ui/src/components/*.tsx`                  | Shared shadcn/ui components (neobrutalism)  |
 
 ### Design Guidelines
 
 **DO:**
 
-- Use the orange primary color for CTAs and interactive elements
-- Maintain generous whitespace and warm, inviting layouts
-- Use large rounded corners consistently (16px-28px)
-- Apply warm-tinted shadows for depth and softness
-- Use gradient text sparingly for emphasis
+- Use thick black borders (2px) on all interactive elements
+- Apply offset shadows (`shadow-shadow`) for depth
+- Use the hover translate effect for buttons and cards
+- Keep border-radius small and consistent (5px)
 - Support both light and dark modes
-- Use Stone color palette for neutrals (warmer than Slate)
+- Use high contrast color combinations
 
 **DON'T:**
 
-- Use cold colors (blue, cyan) as primary accents
-- Use sharp corners - prefer large rounded edges
-- Use harsh black shadows - prefer warm-tinted shadows
-- Neglect dark mode support
-- Overuse gradients - keep them for key elements
+- Use soft/blurred shadows - use solid offset shadows only
+- Use large border-radius - keep it at 5px (rounded-base)
+- Use gradients extensively - prefer solid colors
+- Forget the hover translate + shadow-none effect
+- Mix different border widths - stick to 2px
 
 ### Component Patterns
 
-#### Section Header
+#### Primary Button (Neobrutalism)
 
 ```jsx
-<header className="section-header">
-  <div className="section-label">
-    <Icon /> Label
-  </div>
-  <h2 className="section-title">
-    Title <span className="title-gradient">Highlight</span>
-  </h2>
-  <p className="section-subtitle">Description text</p>
-</header>
+<button className="btn-neo-primary rounded-base border-border bg-main text-main-foreground shadow-shadow inline-flex items-center gap-2 border-2 px-6 py-3 font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
+  Get Started
+  <ArrowIcon />
+</button>
+```
+
+#### Secondary Button
+
+```jsx
+<button className="rounded-base border-border bg-background shadow-shadow border-2 px-6 py-3 font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
+  Learn More
+</button>
 ```
 
 #### Card with Hover
 
 ```jsx
-<div className="card">
-  <div className="card-icon">{icon}</div>
-  <h3 className="card-title">{title}</h3>
-  <p className="card-description">{description}</p>
+<div className="rounded-base border-border bg-card shadow-shadow border-2 p-6 transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
+  <h3 className="font-bold">{title}</h3>
+  <p className="text-muted-foreground">{description}</p>
 </div>
 ```
 
-#### CTA Button
+#### Input Field
 
 ```jsx
-<a href="#" className="btn-primary">
-  Get Started
-  <ArrowIcon />
-</a>
+<input
+  className="rounded-base border-border bg-background placeholder:text-muted-foreground focus:border-main focus:ring-main/20 w-full border-2 px-4 py-3 transition-all focus:ring-2 focus:outline-none"
+  placeholder="Enter text..."
+/>
+```
+
+#### Badge
+
+```jsx
+<span className="rounded-base border-border bg-main text-main-foreground inline-flex items-center gap-1.5 border-2 px-3 py-1 text-sm font-semibold">
+  <Icon /> Label
+</span>
 ```
 
 ### Responsive Behavior
 
-- Desktop: Full experience with all decorative elements
-- Tablet: Simplified grid layouts, maintained spacing
-- Mobile: Single column layouts, reduced padding, touch-friendly targets
+- Desktop: Full shadows (4px offset), generous padding
+- Tablet: Standard layouts, maintained spacing
+- Mobile: Smaller shadows (2px offset), reduced padding, touch-friendly targets
 
 ### Animations
 
-- `fade-up`: Entry animation for sections (translateY + opacity)
-- `scale-in`: Card hover effects
-- Hover transitions: 200-300ms with ease-out timing
+- **Hover transitions**: 150ms with ease timing
+- **fade-up**: Entry animation for sections (translateY + opacity)
+- **bounce-in**: Modal/dialog entry animation (scale + opacity)
+- **Reduced motion**: Respect `prefers-reduced-motion` preference
+
+### Tailwind Utility Classes
+
+| Class                     | Effect                       |
+| ------------------------- | ---------------------------- |
+| `rounded-base`            | Border radius 5px            |
+| `shadow-shadow`           | Standard offset shadow (4px) |
+| `shadow-shadow-sm`        | Small offset shadow (2px)    |
+| `shadow-shadow-lg`        | Large offset shadow (8px)    |
+| `bg-main`                 | Primary brand background     |
+| `text-main`               | Primary brand text color     |
+| `border-border`           | Standard border color        |
+| `bg-secondary-background` | Secondary background         |
 
 ---
 
@@ -234,6 +253,6 @@ sql-pro/
 │   │       └── renderer/  # React frontend
 │   └── website/           # Marketing website
 ├── packages/
-│   └── ui/                # Shared UI components (shadcn/ui)
+│   └── ui/                # Shared UI components (shadcn/ui + neobrutalism)
 └── shared/                # Shared types and utilities
 ```

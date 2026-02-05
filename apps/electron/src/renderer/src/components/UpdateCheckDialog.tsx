@@ -105,7 +105,7 @@ export function UpdateCheckDialog() {
         </DialogHeader>
 
         {updateInfo && (
-          <div className="bg-muted/50 space-y-2 rounded-lg p-3 text-sm">
+          <div className="bg-muted/50 rounded-base border-border space-y-2 border-2 p-3 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">
                 {t('updateCheck.version')}:

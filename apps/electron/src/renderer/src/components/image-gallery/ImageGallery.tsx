@@ -102,12 +102,12 @@ const ImageThumbnail = memo(
     return (
       <div
         className={cn(
-          'group hover:border-primary relative cursor-pointer overflow-hidden rounded-lg border transition-all',
+          'group hover:border-primary rounded-base relative cursor-pointer overflow-hidden border-2 transition-all',
           isSelected
             ? 'border-primary ring-primary/50 ring-2'
             : isFocused
               ? 'border-primary ring-primary/30 ring-2'
-              : 'border-border hover:shadow-md'
+              : 'border-border'
         )}
         style={{ width: size, height: size }}
         onClick={onClick}
@@ -198,7 +198,7 @@ const ImageThumbnail = memo(
         )}
 
         {/* Row info overlay */}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 opacity-0 transition-opacity group-hover:opacity-100">
           <div className="flex items-center gap-1">
             {isVideo && <Film className="h-3 w-3 text-white" />}
             <p className="truncate text-xs text-white">

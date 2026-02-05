@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import './LicenseModal.css';
 
 interface LicenseModalProps {
   isOpen: boolean;
@@ -63,7 +62,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
   }, [isOpen, handleClose]);
 
   const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
+    (e: React.MouseEvent | React.KeyboardEvent) => {
       if (e.target === dialogRef.current) {
         handleClose();
       }
@@ -120,19 +119,31 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
     }
   };
 
+  const getStatusClasses = (status: string): string => {
+    const statusMap: Record<string, string> = {
+      active: 'text-[#22c55e]',
+      canceled: 'text-destructive',
+      expired: 'text-[#f59e0b]',
+    };
+    return statusMap[status] || '';
+  };
+
   if (!isOpen) return null;
 
   return (
     <dialog
       ref={dialogRef}
-      className="license-modal"
+      className="fixed inset-0 m-0 flex h-full max-h-full w-full max-w-full items-center justify-center border-none bg-black/60 p-4 backdrop-blur-sm"
       onClick={handleBackdropClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') handleClose();
+      }}
       aria-labelledby="license-title"
     >
-      <div className="license-content">
+      <div className="animate-bounce-in rounded-base border-border bg-background shadow-shadow-lg relative max-h-[90vh] w-full max-w-md overflow-y-auto border-2 p-6 md:p-8">
         <button
           type="button"
-          className="license-close"
+          className="bg-secondary-background text-muted-foreground hover:border-border hover:text-foreground absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full border-2 border-transparent transition-all"
           onClick={handleClose}
           aria-label={t('license.close')}
         >
@@ -152,8 +163,8 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
 
         {license ? (
           // Show license info
-          <div className="license-result">
-            <div className="license-success-icon">
+          <div className="text-center">
+            <div className="from-main to-main/80 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br text-white">
               <svg
                 width="48"
                 height="48"
@@ -161,26 +172,34 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                aria-hidden="true"
               >
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
             </div>
 
-            <h2 id="license-title" className="license-title">
+            <h2
+              id="license-title"
+              className="mb-2 text-center text-xl font-bold md:text-2xl"
+            >
               {t('license.successTitle')}
             </h2>
 
-            <p className="license-email">{license.email}</p>
+            <p className="text-muted-foreground mb-6">{license.email}</p>
 
             {/* License Key Box */}
-            <div className="license-key-box">
-              <p className="license-key-label">{t('license.keyLabel')}</p>
-              <div className="license-key-wrapper">
-                <code className="license-key">{license.licenseKey}</code>
+            <div className="rounded-base border-main bg-secondary-background mb-6 border-2 border-dashed p-4">
+              <p className="text-muted-foreground mb-2 text-xs tracking-widest uppercase">
+                {t('license.keyLabel')}
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 font-mono text-base font-bold break-all">
+                  {license.licenseKey}
+                </code>
                 <button
                   type="button"
-                  className="license-copy-btn"
+                  className="rounded-base border-border bg-main hover:bg-main/90 flex h-10 w-10 shrink-0 items-center justify-center border-2 text-white transition-all"
                   onClick={handleCopy}
                   aria-label={t('license.copy')}
                 >
@@ -192,6 +211,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
+                      aria-hidden="true"
                     >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
@@ -203,6 +223,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
+                      aria-hidden="true"
                     >
                       <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -213,37 +234,41 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
             </div>
 
             {/* License Details */}
-            <div className="license-details">
-              <div className="license-detail">
-                <span className="license-detail-label">
+            <div className="mb-6 grid grid-cols-3 gap-4 text-left">
+              <div className="rounded-base bg-secondary-background p-3">
+                <span className="text-muted-foreground mb-1 block text-xs">
                   {t('license.plan')}
                 </span>
-                <span className="license-detail-value">{license.plan}</span>
+                <span className="block font-semibold capitalize">
+                  {license.plan}
+                </span>
               </div>
-              <div className="license-detail">
-                <span className="license-detail-label">
+              <div className="rounded-base bg-secondary-background p-3">
+                <span className="text-muted-foreground mb-1 block text-xs">
                   {t('license.status')}
                 </span>
                 <span
-                  className={`license-detail-value license-status-${license.status}`}
+                  className={`block font-semibold capitalize ${getStatusClasses(license.status)}`}
                 >
                   {license.status}
                 </span>
               </div>
-              <div className="license-detail">
-                <span className="license-detail-label">
+              <div className="rounded-base bg-secondary-background p-3">
+                <span className="text-muted-foreground mb-1 block text-xs">
                   {t('license.devices')}
                 </span>
-                <span className="license-detail-value">
+                <span className="block font-semibold">
                   {license.maxMachines}
                 </span>
               </div>
             </div>
 
             {/* Instructions */}
-            <div className="license-instructions">
-              <h3>{t('license.howToActivate')}</h3>
-              <ol>
+            <div className="rounded-base bg-secondary-background mb-6 p-4 text-left">
+              <h3 className="mb-3 text-sm font-semibold">
+                {t('license.howToActivate')}
+              </h3>
+              <ol className="text-muted-foreground list-decimal space-y-1 pl-5 text-sm leading-relaxed">
                 <li>{t('license.step1')}</li>
                 <li>{t('license.step2')}</li>
                 <li>{t('license.step3')}</li>
@@ -252,7 +277,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
 
             <button
               type="button"
-              className="btn btn-primary license-done-btn"
+              className="rounded-base border-border bg-main text-main-foreground shadow-shadow w-full border-2 px-4 py-3.5 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
               onClick={handleClose}
             >
               {t('license.done')}
@@ -261,13 +286,21 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
         ) : (
           // Show lookup form
           <>
-            <h2 id="license-title" className="license-title">
+            <h2
+              id="license-title"
+              className="mb-2 text-center text-xl font-bold md:text-2xl"
+            >
               {t('license.lookupTitle')}
             </h2>
-            <p className="license-subtitle">{t('license.lookupSubtitle')}</p>
+            <p className="text-muted-foreground mb-6 text-center">
+              {t('license.lookupSubtitle')}
+            </p>
 
-            <form onSubmit={handleLookup} className="license-form">
-              <label htmlFor="license-email" className="license-label">
+            <form onSubmit={handleLookup} className="flex flex-col gap-4">
+              <label
+                htmlFor="license-email"
+                className="text-foreground font-medium"
+              >
                 {t('license.emailLabel')}
               </label>
               <input
@@ -278,24 +311,30 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t('license.emailPlaceholder')}
                 required
-                className="license-input"
+                className="rounded-base border-border bg-background placeholder:text-muted-foreground focus:border-main w-full border-2 px-4 py-3.5 text-base transition-colors focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isLoading}
               />
 
               {error && (
-                <p className="license-error" role="alert">
+                <p
+                  className="rounded-base bg-destructive/10 text-destructive p-2 text-sm"
+                  role="alert"
+                >
                   {error}
                 </p>
               )}
 
               <button
                 type="submit"
-                className="btn btn-primary license-submit"
+                className="rounded-base border-border bg-main text-main-foreground shadow-shadow disabled:hover:shadow-shadow flex w-full items-center justify-center gap-2 border-2 px-4 py-3.5 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
                 disabled={isLoading || !email}
               >
                 {isLoading ? (
                   <>
-                    <span className="license-spinner" aria-hidden="true" />
+                    <span
+                      className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
+                      aria-hidden="true"
+                    />
                     {t('license.searching')}
                   </>
                 ) : (

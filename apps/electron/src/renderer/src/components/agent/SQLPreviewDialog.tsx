@@ -16,10 +16,16 @@ import {
 } from '@/components/ui/dialog';
 import { useAIQueryStore } from '@/stores/ai-query-store';
 import { useQueryStore } from '@/stores/query-store';
+import { useEditorFont } from '@/stores/settings-store';
 import { useThemeStore } from '@/stores/theme-store';
+
+// Default monospace font stack for Monaco editor
+const DEFAULT_FONT_FAMILY =
+  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
 
 export function SQLPreviewDialog() {
   const { theme } = useThemeStore();
+  const editorFont = useEditorFont();
   const { isPreviewOpen, generatedSQL, closePreview } = useAIQueryStore();
   const { setCurrentQuery } = useQueryStore();
   const [isEditing, setIsEditing] = useState(false);
@@ -85,7 +91,7 @@ export function SQLPreviewDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="min-h-[200px] flex-1 overflow-hidden rounded-lg border">
+        <div className="rounded-base border-border min-h-[200px] flex-1 overflow-hidden border-2">
           <Editor
             height="100%"
             language="sql"
@@ -97,8 +103,8 @@ export function SQLPreviewDialog() {
               minimap: { enabled: false },
               lineNumbers: 'on',
               scrollBeyondLastLine: false,
-              fontSize: 13,
-              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: editorFont.size,
+              fontFamily: editorFont.family || DEFAULT_FONT_FAMILY,
               padding: { top: 12, bottom: 12 },
               wordWrap: 'on',
               automaticLayout: true,

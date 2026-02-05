@@ -145,6 +145,26 @@ export function MonacoSqlEditor({
     }
   }, [editorTheme]);
 
+  // Sync editor font settings when they change
+  // Monaco's options prop only applies on initial mount, so we need to use updateOptions()
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.updateOptions({
+        fontSize: editorFont.size,
+        fontFamily: editorFont.family || DEFAULT_FONT_FAMILY,
+      });
+    }
+  }, [editorFont.size, editorFont.family]);
+
+  // Sync tabSize when it changes
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.updateOptions({
+        tabSize,
+      });
+    }
+  }, [tabSize]);
+
   // Keep callback refs up to date
   useEffect(() => {
     onExecuteRef.current = onExecute;

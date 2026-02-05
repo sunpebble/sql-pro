@@ -2896,14 +2896,75 @@ function addSnippetSuggestions(
 }
 
 /**
- * Defines custom themes for Monaco Editor that match the application's light/dark theme.
+ * Gets a CSS variable value from the document root.
+ * Returns the value or a fallback if not found.
+ */
+function getCSSVar(name: string, fallback: string): string {
+  if (typeof document === 'undefined') return fallback;
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+  return value || fallback;
+}
+
+/**
+ * Converts a CSS variable value to a hex color for Monaco.
+ * Handles rgb(), hsl(), and hex formats.
+ */
+function toHex(value: string): string {
+  // Already hex
+  if (value.startsWith('#')) return value;
+
+  // Handle rgb/rgba
+  const rgbMatch = value.match(
+    /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/
+  );
+  if (rgbMatch) {
+    const r = Number.parseInt(rgbMatch[1], 10).toString(16).padStart(2, '0');
+    const g = Number.parseInt(rgbMatch[2], 10).toString(16).padStart(2, '0');
+    const b = Number.parseInt(rgbMatch[3], 10).toString(16).padStart(2, '0');
+    return `#${r}${g}${b}`;
+  }
+
+  return value;
+}
+
+/**
+ * Adds alpha to a hex color.
+ */
+function withAlpha(hex: string, alpha: number): string {
+  const alphaHex = Math.round(alpha * 255)
+    .toString(16)
+    .padStart(2, '0');
+  return `${hex}${alphaHex}`;
+}
+
+/**
+ * Defines custom themes for Monaco Editor that match the application's Neobrutalism design.
+ * This function reads CSS variables from the document to stay in sync with the app theme.
  * (US2: Theme-Aware Editor, US3: SQL Syntax Highlighting)
+ *
+ * Neobrutalism style:
+ * - Bold borders (2px)
+ * - High contrast colors
+ * - Orange accent color (--main)
+ * - Black/white borders (--border)
  */
 export function defineCustomThemes(monaco: typeof Monaco): void {
-  // Light theme - warm white background with orange accents
+  // Read CSS variables for light theme
+  const lightMain = toHex(getCSSVar('--main', '#f97316'));
+  const lightMainFg = toHex(getCSSVar('--main-foreground', '#000000'));
+  const lightBg = toHex(getCSSVar('--background', '#ffffff'));
+  const lightFg = toHex(getCSSVar('--foreground', '#000000'));
+  const lightBorder = toHex(getCSSVar('--border', '#000000'));
+  const lightCard = toHex(getCSSVar('--card', '#ffffff'));
+  const lightMuted = toHex(getCSSVar('--muted', '#f5f5f5'));
+  const lightMutedFg = toHex(getCSSVar('--muted-foreground', '#737373'));
+
+  // Light theme - Neobrutalism with dynamic colors
   monaco.editor.defineTheme('sql-pro-light', {
     base: 'vs',
-    inherit: true,
+    inherit: false, // Don't inherit - full control
     rules: [
       // Keywords - blue-700, bold for structure
       { token: 'keyword', foreground: '1D4ED8', fontStyle: 'bold' },
@@ -2919,78 +2980,153 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
       { token: 'number', foreground: 'B45309' },
       { token: 'number.sql', foreground: 'B45309' },
 
-      // Comments - slate-500, italic
+      // Comments - muted, italic
       { token: 'comment', foreground: '64748B', fontStyle: 'italic' },
       { token: 'comment.sql', foreground: '64748B', fontStyle: 'italic' },
       { token: 'comment.quote', foreground: '64748B', fontStyle: 'italic' },
 
-      // Operators - slate-900
-      { token: 'operator', foreground: '0F172A' },
-      { token: 'operator.sql', foreground: '0F172A' },
+      // Operators - foreground color
+      { token: 'operator', foreground: lightFg.replace('#', '') },
+      { token: 'operator.sql', foreground: lightFg.replace('#', '') },
 
-      // Identifiers - slate-800
-      { token: 'identifier', foreground: '1E293B' },
-      { token: 'identifier.quote', foreground: '1E293B' },
+      // Identifiers - foreground color
+      { token: 'identifier', foreground: lightFg.replace('#', '') },
+      { token: 'identifier.quote', foreground: lightFg.replace('#', '') },
 
-      // Built-in functions - orange-600
-      { token: 'predefined', foreground: 'EA580C' },
+      // Built-in functions - main color
+      { token: 'predefined', foreground: lightMain.replace('#', '') },
 
-      // Delimiters - slate-500
-      { token: 'delimiter', foreground: '64748B' },
+      // Delimiters - muted foreground
+      { token: 'delimiter', foreground: lightMutedFg.replace('#', '') },
+
+      // Default text
+      { token: '', foreground: lightFg.replace('#', '') },
     ],
     colors: {
-      // Editor background/foreground (warm white)
-      'editor.background': '#FFFBF7',
-      'editor.foreground': '#1C1917',
+      // Editor background/foreground
+      'editor.background': lightBg,
+      'editor.foreground': lightFg,
 
-      // Cursor - orange accent
-      'editorCursor.foreground': '#EA580C',
+      // Cursor - main accent
+      'editorCursor.foreground': lightMain,
 
-      // Selection - orange with opacity
-      'editor.selectionBackground': '#FB923C40',
-      'editor.inactiveSelectionBackground': '#FB923C25',
-      'editor.selectionHighlightBackground': '#FB923C20',
+      // Selection - main with opacity
+      'editor.selectionBackground': withAlpha(lightMain, 0.25),
+      'editor.inactiveSelectionBackground': withAlpha(lightMain, 0.15),
+      'editor.selectionHighlightBackground': withAlpha(lightMain, 0.12),
 
       // Line highlight
-      'editor.lineHighlightBackground': '#FEF3E7',
+      'editor.lineHighlightBackground': lightMuted,
+      'editor.lineHighlightBorder': withAlpha(lightBorder, 0.1),
 
       // Line numbers
-      'editorLineNumber.foreground': '#A8A29E',
-      'editorLineNumber.activeForeground': '#57534E',
+      'editorLineNumber.foreground': lightMutedFg,
+      'editorLineNumber.activeForeground': lightFg,
 
-      // Suggest widget
-      'editorSuggestWidget.background': '#FFFBF7',
-      'editorSuggestWidget.border': '#E7E0D9',
-      'editorSuggestWidget.foreground': '#1C1917',
-      'editorSuggestWidget.selectedBackground': '#FFEDD5',
-      'editorSuggestWidget.highlightForeground': '#EA580C',
-      'editorSuggestWidget.focusHighlightForeground': '#EA580C',
+      // Gutter
+      'editorGutter.background': lightBg,
+
+      // Suggest widget - Neobrutalism
+      'editorSuggestWidget.background': lightCard,
+      'editorSuggestWidget.border': lightBorder,
+      'editorSuggestWidget.foreground': lightFg,
+      'editorSuggestWidget.selectedForeground': lightMainFg,
+      'editorSuggestWidget.selectedBackground': lightMain,
+      'editorSuggestWidget.highlightForeground': lightMain,
+      'editorSuggestWidget.focusHighlightForeground': lightMainFg,
+      'editorSuggestWidget.selectedIconForeground': lightMainFg,
 
       // Bracket matching
-      'editorBracketMatch.background': '#FB923C30',
-      'editorBracketMatch.border': '#EA580C',
+      'editorBracketMatch.background': withAlpha(lightMain, 0.2),
+      'editorBracketMatch.border': lightMain,
 
       // Find matches
-      'editor.findMatchBackground': '#FB923C50',
-      'editor.findMatchHighlightBackground': '#FB923C25',
+      'editor.findMatchBackground': withAlpha(lightMain, 0.3),
+      'editor.findMatchHighlightBackground': withAlpha(lightMain, 0.2),
+      'editor.findMatchBorder': lightBorder,
+      'editor.findMatchHighlightBorder': withAlpha(lightBorder, 0.3),
 
       // Hover widget
-      'editorHoverWidget.background': '#FFFBF7',
-      'editorHoverWidget.border': '#E7E0D9',
+      'editorHoverWidget.background': lightCard,
+      'editorHoverWidget.border': lightBorder,
+      'editorHoverWidget.foreground': lightFg,
 
       // Scrollbar
-      'scrollbarSlider.background': '#A8A29E40',
-      'scrollbarSlider.hoverBackground': '#A8A29E60',
-      'scrollbarSlider.activeBackground': '#EA580C60',
+      'scrollbar.shadow': '#00000000',
+      'scrollbarSlider.background': withAlpha(lightBorder, 0.4),
+      'scrollbarSlider.hoverBackground': lightMain,
+      'scrollbarSlider.activeBackground': lightMain,
+
+      // Minimap
+      'minimap.background': lightBg,
+      'minimapSlider.background': withAlpha(lightMain, 0.2),
+      'minimapSlider.hoverBackground': withAlpha(lightMain, 0.3),
+      'minimapSlider.activeBackground': withAlpha(lightMain, 0.4),
+
+      // Find/Editor widgets
+      'editorWidget.background': lightCard,
+      'editorWidget.border': lightBorder,
+      'editorWidget.foreground': lightFg,
+
+      // Input in widgets
+      'input.background': lightBg,
+      'input.border': lightBorder,
+      'input.foreground': lightFg,
+      'inputOption.activeBackground': lightMain,
+      'inputOption.activeForeground': lightMainFg,
+      'inputOption.activeBorder': lightBorder,
+
+      // Context menu
+      'menu.background': lightCard,
+      'menu.foreground': lightFg,
+      'menu.border': lightBorder,
+      'menu.selectionBackground': lightMain,
+      'menu.selectionForeground': lightMainFg,
+      'menu.separatorBackground': lightBorder,
+
+      // List (for suggest widget list items)
+      'list.hoverBackground': lightMuted,
+      'list.focusBackground': lightMain,
+      'list.focusForeground': lightMainFg,
+      'list.activeSelectionBackground': lightMain,
+      'list.activeSelectionForeground': lightMainFg,
+      'list.inactiveSelectionBackground': withAlpha(lightMain, 0.3),
+      'list.highlightForeground': lightMain,
+
+      // Focus border
+      focusBorder: lightMain,
+
+      // Word highlight
+      'editor.wordHighlightBackground': withAlpha(lightMain, 0.12),
+      'editor.wordHighlightBorder': lightMain,
+      'editor.wordHighlightStrongBackground': withAlpha(lightMain, 0.2),
+      'editor.wordHighlightStrongBorder': lightMain,
+
+      // Parameter hints
+      'editorParameterHint.background': lightCard,
+      'editorParameterHint.border': lightBorder,
+      'editorParameterHint.foreground': lightFg,
+      'editorParameterHint.highlightForeground': lightMain,
     },
   });
 
-  // Dark theme - Slate-900 background with orange accents
+  // Read CSS variables for dark theme (need to temporarily add .dark class to read)
+  // For simplicity, use hardcoded dark values that match globals.css
+  const darkMain = '#fb923c';
+  const darkMainFg = '#000000';
+  const darkBg = '#1a1a1a';
+  const darkFg = '#ffffff';
+  const darkBorder = '#ffffff';
+  const darkCard = '#262626';
+  const darkMuted = '#404040';
+  const darkMutedFg = '#a3a3a3';
+
+  // Dark theme - Neobrutalism with dynamic colors
   monaco.editor.defineTheme('sql-pro-dark', {
     base: 'vs-dark',
-    inherit: true,
+    inherit: false, // Don't inherit - full control
     rules: [
-      // Keywords - warm blue, bold for structure
+      // Keywords - warm blue, bold
       { token: 'keyword', foreground: '93C5FD', fontStyle: 'bold' },
       { token: 'keyword.sql', foreground: '93C5FD', fontStyle: 'bold' },
       { token: 'keyword.block', foreground: '93C5FD', fontStyle: 'bold' },
@@ -3004,69 +3140,133 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
       { token: 'number', foreground: 'FCD34D' },
       { token: 'number.sql', foreground: 'FCD34D' },
 
-      // Comments - muted slate, italic
+      // Comments - muted, italic
       { token: 'comment', foreground: '64748B', fontStyle: 'italic' },
       { token: 'comment.sql', foreground: '64748B', fontStyle: 'italic' },
       { token: 'comment.quote', foreground: '64748B', fontStyle: 'italic' },
 
-      // Operators - neutral slate
-      { token: 'operator', foreground: 'CBD5E1' },
-      { token: 'operator.sql', foreground: 'CBD5E1' },
+      // Operators - white
+      { token: 'operator', foreground: 'FFFFFF' },
+      { token: 'operator.sql', foreground: 'FFFFFF' },
 
-      // Identifiers - primary text
-      { token: 'identifier', foreground: 'F1F5F9' },
-      { token: 'identifier.quote', foreground: 'F1F5F9' },
+      // Identifiers - white
+      { token: 'identifier', foreground: 'FFFFFF' },
+      { token: 'identifier.quote', foreground: 'FFFFFF' },
 
-      // Built-in functions - orange accent
-      { token: 'predefined', foreground: 'FDBA74' },
+      // Built-in functions - orange
+      { token: 'predefined', foreground: 'FB923C' },
 
-      // Delimiters - subtle
+      // Delimiters - slate-400
       { token: 'delimiter', foreground: '94A3B8' },
+
+      // Default text
+      { token: '', foreground: 'FFFFFF' },
     ],
     colors: {
-      // Editor background/foreground (Slate-900/Slate-100)
-      'editor.background': '#0F172A',
-      'editor.foreground': '#F1F5F9',
+      // Editor background/foreground
+      'editor.background': darkBg,
+      'editor.foreground': darkFg,
 
-      // Cursor - orange accent
-      'editorCursor.foreground': '#FB923C',
+      // Cursor - main accent
+      'editorCursor.foreground': darkMain,
 
-      // Selection - orange with opacity
-      'editor.selectionBackground': '#FB923C40',
-      'editor.inactiveSelectionBackground': '#FB923C25',
-      'editor.selectionHighlightBackground': '#FB923C20',
+      // Selection - main with opacity
+      'editor.selectionBackground': withAlpha(darkMain, 0.25),
+      'editor.inactiveSelectionBackground': withAlpha(darkMain, 0.15),
+      'editor.selectionHighlightBackground': withAlpha(darkMain, 0.12),
 
-      // Line highlight (Slate-800)
-      'editor.lineHighlightBackground': '#1E293B',
+      // Line highlight
+      'editor.lineHighlightBackground': darkMuted,
+      'editor.lineHighlightBorder': withAlpha(darkBorder, 0.1),
 
-      // Line numbers (Slate-400/Slate-300)
-      'editorLineNumber.foreground': '#94A3B8',
-      'editorLineNumber.activeForeground': '#CBD5E1',
+      // Line numbers
+      'editorLineNumber.foreground': darkMutedFg,
+      'editorLineNumber.activeForeground': darkFg,
 
-      // Suggest widget (Slate-800/Slate-700)
-      'editorSuggestWidget.background': '#1E293B',
-      'editorSuggestWidget.border': '#334155',
-      'editorSuggestWidget.foreground': '#F1F5F9',
-      'editorSuggestWidget.selectedBackground': '#334155',
-      'editorSuggestWidget.highlightForeground': '#FB923C',
-      'editorSuggestWidget.focusHighlightForeground': '#FB923C',
+      // Gutter
+      'editorGutter.background': darkBg,
 
-      // Bracket matching - orange tint
-      'editorBracketMatch.background': '#FB923C30',
-      'editorBracketMatch.border': '#FB923C',
+      // Suggest widget - Neobrutalism (white border in dark mode)
+      'editorSuggestWidget.background': darkCard,
+      'editorSuggestWidget.border': darkBorder,
+      'editorSuggestWidget.foreground': darkFg,
+      'editorSuggestWidget.selectedForeground': darkMainFg,
+      'editorSuggestWidget.selectedBackground': darkMain,
+      'editorSuggestWidget.highlightForeground': darkMain,
+      'editorSuggestWidget.focusHighlightForeground': darkMainFg,
+      'editorSuggestWidget.selectedIconForeground': darkMainFg,
+
+      // Bracket matching
+      'editorBracketMatch.background': withAlpha(darkMain, 0.2),
+      'editorBracketMatch.border': darkMain,
 
       // Find matches
-      'editor.findMatchBackground': '#FB923C50',
-      'editor.findMatchHighlightBackground': '#FB923C25',
+      'editor.findMatchBackground': withAlpha(darkMain, 0.3),
+      'editor.findMatchHighlightBackground': withAlpha(darkMain, 0.2),
+      'editor.findMatchBorder': darkBorder,
+      'editor.findMatchHighlightBorder': withAlpha(darkBorder, 0.3),
 
       // Hover widget
-      'editorHoverWidget.background': '#1E293B',
-      'editorHoverWidget.border': '#334155',
+      'editorHoverWidget.background': darkCard,
+      'editorHoverWidget.border': darkBorder,
+      'editorHoverWidget.foreground': darkFg,
 
       // Scrollbar
-      'scrollbarSlider.background': '#94A3B840',
-      'scrollbarSlider.hoverBackground': '#94A3B860',
-      'scrollbarSlider.activeBackground': '#FB923C60',
+      'scrollbar.shadow': '#00000000',
+      'scrollbarSlider.background': withAlpha(darkBorder, 0.4),
+      'scrollbarSlider.hoverBackground': darkMain,
+      'scrollbarSlider.activeBackground': darkMain,
+
+      // Minimap
+      'minimap.background': darkBg,
+      'minimapSlider.background': withAlpha(darkMain, 0.2),
+      'minimapSlider.hoverBackground': withAlpha(darkMain, 0.3),
+      'minimapSlider.activeBackground': withAlpha(darkMain, 0.4),
+
+      // Find/Editor widgets
+      'editorWidget.background': darkCard,
+      'editorWidget.border': darkBorder,
+      'editorWidget.foreground': darkFg,
+
+      // Input in widgets
+      'input.background': darkBg,
+      'input.border': darkBorder,
+      'input.foreground': darkFg,
+      'inputOption.activeBackground': darkMain,
+      'inputOption.activeForeground': darkMainFg,
+      'inputOption.activeBorder': darkBorder,
+
+      // Context menu
+      'menu.background': darkCard,
+      'menu.foreground': darkFg,
+      'menu.border': darkBorder,
+      'menu.selectionBackground': darkMain,
+      'menu.selectionForeground': darkMainFg,
+      'menu.separatorBackground': darkBorder,
+
+      // List (for suggest widget list items)
+      'list.hoverBackground': darkMuted,
+      'list.focusBackground': darkMain,
+      'list.focusForeground': darkMainFg,
+      'list.activeSelectionBackground': darkMain,
+      'list.activeSelectionForeground': darkMainFg,
+      'list.inactiveSelectionBackground': withAlpha(darkMain, 0.3),
+      'list.highlightForeground': darkMain,
+
+      // Focus border
+      focusBorder: darkMain,
+
+      // Word highlight
+      'editor.wordHighlightBackground': withAlpha(darkMain, 0.12),
+      'editor.wordHighlightBorder': darkMain,
+      'editor.wordHighlightStrongBackground': withAlpha(darkMain, 0.2),
+      'editor.wordHighlightStrongBorder': darkMain,
+
+      // Parameter hints
+      'editorParameterHint.background': darkCard,
+      'editorParameterHint.border': darkBorder,
+      'editorParameterHint.foreground': darkFg,
+      'editorParameterHint.highlightForeground': darkMain,
     },
   });
 }

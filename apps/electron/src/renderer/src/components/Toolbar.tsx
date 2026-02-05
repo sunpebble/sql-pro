@@ -42,19 +42,14 @@ export function Toolbar() {
           type="button"
           onClick={openChangesPanel}
           className={cn(
-            'flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5',
+            'rounded-base flex shrink-0 items-center gap-2 px-3 py-1.5',
             'text-sm font-medium',
-            'bg-gradient-to-br from-amber-500/18 via-amber-500/12 to-amber-500/8',
-            'text-amber-600 dark:text-amber-400',
-            'border border-amber-500/25',
-            'shadow-[0_1px_3px_rgba(245,158,11,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]',
-            'dark:shadow-[0_1px_4px_rgba(245,158,11,0.2),inset_0_1px_0_rgba(255,255,255,0.05)]',
-            'transition-all duration-200',
-            'hover:from-amber-500/22 hover:to-amber-500/12',
-            'hover:shadow-[0_2px_8px_rgba(245,158,11,0.25)]',
-            'dark:hover:shadow-[0_2px_10px_rgba(245,158,11,0.3)]',
-            'active:scale-[0.98]',
-            TOOLBAR_BUTTON_INTERACTIVE
+            'bg-warning/20 text-warning-foreground',
+            'border-border border-2',
+            'shadow-shadow-sm',
+            'transition-all duration-150',
+            'hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none',
+            'active:translate-x-1 active:translate-y-1'
           )}
         >
           <FileText className="h-4 w-4" />
@@ -68,7 +63,7 @@ export function Toolbar() {
         </button>
       )}
 
-      <div className="from-primary/20 via-border/50 mx-1 h-5 w-px bg-gradient-to-b to-transparent" />
+      <div className="bg-border mx-1 h-5 w-px" />
 
       <Tooltip>
         <TooltipTrigger>
@@ -77,24 +72,21 @@ export function Toolbar() {
             size="icon"
             onClick={() => toggleAgentSidebar(connection.id)}
             className={cn(
-              'h-8 w-8',
-              'transition-all duration-200',
+              'rounded-base h-8 w-8',
+              'transition-all duration-150',
               agentSidebarOpen
                 ? [
-                    'text-primary',
-                    'from-primary/18 to-primary/10 bg-gradient-to-br',
-                    'ring-primary/30 ring-1',
-                    'shadow-[0_1px_6px_rgba(16,185,129,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]',
-                    'dark:shadow-[0_1px_8px_rgba(52,211,153,0.25),inset_0_1px_0_rgba(255,255,255,0.05)]',
+                    'text-main bg-main/10',
+                    'border-main border-2',
+                    'shadow-shadow-sm',
                   ]
                 : [
                     'text-muted-foreground',
+                    'border-2 border-transparent',
                     'hover:text-foreground',
-                    'hover:from-muted/80 hover:to-muted/50 hover:bg-gradient-to-br',
-                    'hover:shadow-[0_1px_3px_rgba(0,0,0,0.08)]',
-                    'dark:hover:shadow-[0_1px_4px_rgba(0,0,0,0.25)]',
+                    'hover:border-border',
+                    'hover:bg-muted',
                   ],
-              'active:scale-[0.96]',
               TOOLBAR_BUTTON_INTERACTIVE
             )}
           >
@@ -106,7 +98,7 @@ export function Toolbar() {
         </TooltipContent>
       </Tooltip>
 
-      <div className="from-primary/20 via-border/50 mx-1 h-5 w-px bg-gradient-to-b to-transparent" />
+      <div className="bg-border mx-1 h-5 w-px" />
 
       <Tooltip>
         <TooltipTrigger>
@@ -123,15 +115,12 @@ export function Toolbar() {
               );
             }}
             className={cn(
-              'h-8 gap-2 px-3',
+              'rounded-base h-8 gap-2 px-3',
               'text-xs font-medium',
               'text-muted-foreground hover:text-foreground',
-              'hover:from-muted/80 hover:to-muted/50 hover:bg-gradient-to-br',
-              'hover:shadow-[0_1px_3px_rgba(0,0,0,0.08)]',
-              'dark:hover:shadow-[0_1px_4px_rgba(0,0,0,0.25)]',
-              'hover:border-border/40 border border-transparent',
-              'transition-all duration-200',
-              'active:scale-[0.98]',
+              'hover:border-border border-2 border-transparent',
+              'hover:bg-muted',
+              'transition-all duration-150',
               TOOLBAR_BUTTON_INTERACTIVE
             )}
           >
@@ -154,13 +143,11 @@ export function Toolbar() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-8 w-8',
+                  'rounded-base h-8 w-8',
                   'text-muted-foreground hover:text-foreground',
-                  'hover:from-muted/80 hover:to-muted/50 hover:bg-gradient-to-br',
-                  'hover:shadow-[0_1px_3px_rgba(0,0,0,0.08)]',
-                  'dark:hover:shadow-[0_1px_4px_rgba(0,0,0,0.25)]',
-                  'transition-all duration-200',
-                  'active:scale-[0.96]',
+                  'hover:border-border border-2 border-transparent',
+                  'hover:bg-muted',
+                  'transition-all duration-150',
                   TOOLBAR_BUTTON_INTERACTIVE
                 )}
               >

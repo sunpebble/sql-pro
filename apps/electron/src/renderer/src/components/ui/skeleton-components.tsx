@@ -18,13 +18,13 @@ export function SkeletonCard({
 }) {
   return (
     <div
-      className={cn('rounded-xl border p-4', className)}
+      className={cn('rounded-base border p-4', className)}
       data-slot="skeleton-card"
       style={style}
     >
       {/* Header with icon and title */}
       <div className="flex items-start gap-3 pb-2">
-        <Skeleton className="size-10 shrink-0 rounded-lg" />
+        <Skeleton className="size-10 shrink-0 rounded-base" />
         <div className="min-w-0 flex-1 space-y-1.5">
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-1/3" />
@@ -60,14 +60,14 @@ export function SkeletonCardList({
   return (
     <div
       className={cn(
-        'flex flex-row items-center gap-4 rounded-xl border px-4 py-3',
+        'flex flex-row items-center gap-4 rounded-base border px-4 py-3',
         className
       )}
       data-slot="skeleton-card-list"
       style={style}
     >
       {/* Icon */}
-      <Skeleton className="size-10 shrink-0 rounded-lg" />
+      <Skeleton className="size-10 shrink-0 rounded-base" />
 
       {/* Info */}
       <div className="min-w-0 flex-1 space-y-1.5">
@@ -134,7 +134,7 @@ export function SkeletonText({
 export function SkeletonLicenseInfo({ className }: { className?: string }) {
   return (
     <div
-      className={cn('space-y-4 rounded-lg border p-4', className)}
+      className={cn('space-y-4 rounded-base border p-4', className)}
       data-slot="skeleton-license-info"
     >
       {/* Header with icon */}
@@ -150,7 +150,7 @@ export function SkeletonLicenseInfo({ className }: { className?: string }) {
       <Skeleton className="h-9 w-full rounded-md" />
 
       {/* Feature list */}
-      <div className="space-y-2 rounded-lg border p-3">
+      <div className="space-y-2 rounded-base border p-3">
         {SKELETON_INDICES_5.map((i) => (
           <div
             key={i}

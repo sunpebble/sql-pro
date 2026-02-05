@@ -18,7 +18,7 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
     <Popover>
       <PopoverTrigger
         className={cn(
-          'border-border/50 focus:ring-primary/50 h-6 w-6 rounded-md border transition-all hover:scale-105 focus:ring-2 focus:outline-none',
+          'border-border focus:ring-primary/50 rounded-base h-6 w-6 border-2 transition-all focus:ring-2 focus:outline-none',
           className
         )}
         style={{ backgroundColor: color }}
@@ -32,7 +32,7 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
               <button
                 key={preset}
                 className={cn(
-                  'h-6 w-6 rounded-md transition-all hover:scale-110',
+                  'rounded-base h-6 w-6 transition-all',
                   color === preset &&
                     'ring-primary ring-offset-background ring-2 ring-offset-2'
                 )}

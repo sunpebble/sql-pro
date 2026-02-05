@@ -422,7 +422,7 @@ export function PluginMarketplace({
               {/* Error State */}
               {!state.isLoading && !state.isOffline && state.error && (
                 <div className="flex flex-col items-center justify-center gap-4 py-16">
-                  <div className="bg-destructive/10 border-destructive/50 flex max-w-md items-start gap-3 rounded-lg border p-4">
+                  <div className="bg-destructive/10 border-destructive/50 flex max-w-md items-start gap-3 rounded-base border p-4">
                     <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
                     <div>
                       <p className="text-destructive text-sm font-medium">

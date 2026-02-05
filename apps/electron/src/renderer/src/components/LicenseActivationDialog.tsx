@@ -180,7 +180,7 @@ export function LicenseActivationDialog({
     <div className="space-y-6">
       {/* Hero section */}
       <div className="text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-yellow-500">
+        <div className="rounded-base border-border bg-main shadow-shadow mx-auto mb-4 flex h-16 w-16 items-center justify-center border-2">
           <Crown className="h-8 w-8 text-white" />
         </div>
         <h3 className="text-lg font-semibold">{t('pro.unlock')}</h3>
@@ -188,7 +188,7 @@ export function LicenseActivationDialog({
       </div>
 
       {/* Feature list */}
-      <div className="rounded-lg border p-4">
+      <div className="rounded-base border-border border-2 p-4">
         <ul className="space-y-2">
           {PRO_FEATURES.map((feature) => (
             <li
@@ -220,7 +220,7 @@ export function LicenseActivationDialog({
         </Button>
         <Button
           size="lg"
-          className="h-auto flex-col gap-1 bg-gradient-to-r from-amber-500 to-yellow-500 py-4 text-white hover:from-amber-600 hover:to-yellow-600"
+          className="bg-main text-main-foreground h-auto flex-col gap-1 py-4 hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
           onClick={() => setView('purchase')}
         >
           <CreditCard className="h-5 w-5" />
@@ -302,7 +302,7 @@ export function LicenseActivationDialog({
 
       {/* Purchase button */}
       <Button
-        className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600"
+        className="bg-main text-main-foreground w-full hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
         size="lg"
         onClick={handlePurchase}
         disabled={isLoading || !email}

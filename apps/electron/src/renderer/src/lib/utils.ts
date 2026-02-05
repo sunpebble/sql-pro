@@ -8,28 +8,27 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Shared Tailwind class string for toolbar button micro-interactions.
- * Provides subtle hover scale-up and active press-down animations.
- * - duration-150: Quick 150ms animation
- * - ease-in-out: Natural acceleration/deceleration curve
- * - hover:scale-[1.02]: 2% scale up on hover (subtle professional feel)
- * - active:scale-[0.98]: 2% scale down on press (tactile feedback)
+ * Neobrutalism style: translate effect instead of scale.
+ * - transition-all duration-150: Quick 150ms animation
+ * - hover:translate-x-0.5 hover:translate-y-0.5: Offset on hover
+ * - active:translate-x-1 active:translate-y-1: Press effect
  */
 export const TOOLBAR_BUTTON_INTERACTIVE =
-  'duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98]';
+  'transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1';
 
 /**
  * Shared Tailwind class string for tooltip content styling.
- * Enhances default tooltip with frosted glass effect.
+ * Neobrutalism style: solid background with border.
  * - tooltip-kbd: Marker class for kbd styling inside tooltip
- * - bg-popover/95: Semi-transparent for backdrop blur
- * - backdrop-blur-sm: Frosted glass blur effect
+ * - bg-popover: Solid background (no transparency)
+ * - border-2 border-border: Thick border
  */
 export const TOOLTIP_CONTENT_STYLE =
-  'tooltip-kbd bg-popover/95 backdrop-blur-sm';
+  'tooltip-kbd bg-popover border-2 border-border shadow-shadow';
 
 /**
  * Shared Tailwind class string for tooltip content with flex layout.
  * Extends TOOLTIP_CONTENT_STYLE with flex layout for items with shortcuts.
  */
 export const TOOLTIP_CONTENT_FLEX =
-  'tooltip-kbd flex items-center gap-2.5 bg-popover/95 backdrop-blur-sm';
+  'tooltip-kbd flex items-center gap-2.5 bg-popover border-2 border-border shadow-shadow';

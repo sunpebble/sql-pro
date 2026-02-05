@@ -60,7 +60,7 @@ export function SQLExplanationPopover({
 
   return (
     <div style={style} className={cn('z-50', className)}>
-      <div className="bg-popover text-popover-foreground w-[400px] rounded-lg border p-4 shadow-lg">
+      <div className="bg-popover text-popover-foreground rounded-base border-border shadow-shadow w-[400px] border-2 p-4">
         <div className="mb-3 flex items-center justify-between">
           <h4 className="flex items-center gap-2 text-sm font-semibold">
             <Zap className="text-primary h-4 w-4" />

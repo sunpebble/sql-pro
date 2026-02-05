@@ -467,20 +467,37 @@
 
 :root {
   --font-ui-size: 14px;
+  --font-ui-family: inherit;
   --font-table-size: 13px;
+  --font-table-family: inherit;
   --font-editor-size: 14px;
+  --font-editor-family: inherit;
+}
+
+/* Portal components (popover, dropdown, context-menu, sheet, tooltip) */
+/* These are rendered outside the React tree, so they need explicit font inheritance */
+[data-slot='popover-content'],
+[data-slot='dropdown-menu-content'],
+[data-slot='context-menu-content'],
+[data-slot='sheet-content'],
+[data-slot='tooltip-content'] {
+  font-size: var(--font-ui-size);
+  font-family: var(--font-ui-family, var(--font-sans));
 }
 
 [data-ui-font] {
   font-size: var(--font-ui-size);
+  font-family: var(--font-ui-family, var(--font-sans));
 }
 
 [data-table-font] {
   font-size: var(--font-table-size);
+  font-family: var(--font-table-family, var(--font-sans));
 }
 
 [data-editor-font] {
   font-size: var(--font-editor-size);
+  font-family: var(--font-editor-family, var(--font-sans));
 }
 
 /* ═══════════════════════════════════════
@@ -704,38 +721,35 @@ th {
   box-shadow: none !important;
 }
 
-/* Primary gradient text (legacy support) */
+/* Primary text highlight (neobrutalism - solid color, no gradients) */
 .text-gradient-primary {
-  background: linear-gradient(135deg, var(--main) 0%, #fdba74 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--main);
 }
 
-/* Glow effects (adapted for neobrutalism) */
+/* Emphasis shadow (neobrutalism - offset shadow only, no glow) */
 .glow-primary {
-  box-shadow:
-    var(--shadow),
-    0 0 20px rgba(249, 115, 22, 0.3);
+  box-shadow: var(--shadow);
 }
 
-/* Grid backgrounds */
+/* Grid backgrounds (neobrutalism - solid pattern backgrounds) */
 .bg-grid-dot {
-  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-color: var(--secondary-background);
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='%23000'/%3E%3C/svg%3E");
   background-size: 24px 24px;
 }
 
+.dark .bg-grid-dot {
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='%23fff'/%3E%3C/svg%3E");
+}
+
 .bg-grid-line {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-color: var(--secondary-background);
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 0H0v24' fill='none' stroke='rgba(0,0,0,0.1)' stroke-width='1'/%3E%3C/svg%3E");
   background-size: 24px 24px;
 }
 
 .dark .bg-grid-line {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 0H0v24' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1'/%3E%3C/svg%3E");
 }
 
 /* ═══════════════════════════════════════
@@ -830,16 +844,11 @@ th {
 }
 
 .text-gradient-gold {
-  background: linear-gradient(135deg, var(--main) 0%, #fdba74 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--main);
 }
 
 .glow-gold {
-  box-shadow:
-    var(--shadow),
-    0 0 20px var(--gold-glow);
+  box-shadow: var(--shadow);
 }
 
 .btn-gold-active {
@@ -871,7 +880,7 @@ th {
 [data-slot='tooltip-content'] [data-slot='kbd'] {
   background-color: rgba(0, 0, 0, 0.1);
   color: var(--popover-foreground);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
 }
 
 .dark [data-slot='tooltip-content'] [data-slot='kbd'] {
@@ -901,4 +910,57 @@ th {
 .tab-pill-inactive:hover {
   background: var(--muted);
   color: var(--foreground);
+}
+
+/* ═══════════════════════════════════════
+   MONACO EDITOR NEOBRUTALISM ENHANCEMENTS
+   Note: Most styles are defined in monaco-sql-config.ts via defineTheme API.
+   These CSS rules add Neobrutalism-specific styling (borders, shadows, rounded corners)
+   that the Monaco theme API doesn't support.
+   ═══════════════════════════════════════ */
+
+/* --- Suggest Widget (Neobrutalism border + shadow) --- */
+.monaco-editor .suggest-widget {
+  border-width: 2px !important;
+  border-radius: 5px !important;
+  box-shadow: 4px 4px 0px 0px var(--border) !important;
+}
+
+.monaco-editor .suggest-details {
+  border-width: 2px !important;
+  border-radius: 5px !important;
+  box-shadow: 4px 4px 0px 0px var(--border) !important;
+}
+
+/* --- Hover Widget (Neobrutalism border + shadow) --- */
+.monaco-editor .monaco-hover {
+  border-width: 2px !important;
+  border-radius: 5px !important;
+  box-shadow: 4px 4px 0px 0px var(--border) !important;
+}
+
+/* --- Find Widget (Neobrutalism border + shadow) --- */
+.monaco-editor .find-widget {
+  border-width: 2px !important;
+  border-radius: 5px !important;
+  box-shadow: 4px 4px 0px 0px var(--border) !important;
+}
+
+.monaco-editor .find-widget .monaco-inputbox {
+  border-width: 2px !important;
+  border-radius: 5px !important;
+}
+
+/* --- Parameter Hints (Neobrutalism border + shadow) --- */
+.monaco-editor .parameter-hints-widget {
+  border-width: 2px !important;
+  border-radius: 5px !important;
+  box-shadow: 4px 4px 0px 0px var(--border) !important;
+}
+
+/* --- Context Menu (Neobrutalism border + shadow) --- */
+.monaco-editor .monaco-menu .monaco-action-bar.vertical {
+  border: 2px solid var(--border) !important;
+  border-radius: 5px !important;
+  box-shadow: 4px 4px 0px 0px var(--border) !important;
 }

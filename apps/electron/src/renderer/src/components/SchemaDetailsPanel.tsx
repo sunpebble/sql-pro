@@ -199,10 +199,11 @@ function Section({
   children,
 }: SectionProps) {
   return (
-    <div className="bg-muted/30 rounded-lg border">
+    <div className="bg-muted/30 rounded-base border-border border-2">
       <button
+        type="button"
         onClick={onToggle}
-        className="hover:bg-accent/50 flex w-full items-center gap-2 rounded-t-lg px-3 py-2 text-sm font-medium transition-colors"
+        className="hover:bg-accent/50 rounded-t-base flex w-full items-center gap-2 px-3 py-2 text-sm font-medium transition-colors"
       >
         {isExpanded ? (
           <ChevronDown className="h-4 w-4" />

@@ -187,7 +187,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Options */}
-        <div className="flex flex-wrap items-center gap-4 rounded-lg border p-3">
+        <div className="rounded-base flex flex-wrap items-center gap-4 border-2 p-3">
           <div className="flex items-center gap-2">
             <Switch
               id="reverse-migration"
@@ -197,13 +197,17 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             />
             <Label
               htmlFor="reverse-migration"
-              className="cursor-pointer text-sm"
+              className="cursor-pointer"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
             >
               <div className="flex items-center gap-1.5">
                 <RotateCcw className="h-3.5 w-3.5" />
                 {t('migration.reverseMigration')}
               </div>
-              <p className="text-muted-foreground mt-0.5 text-xs font-normal">
+              <p
+                className="text-muted-foreground mt-0.5 font-normal"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('migration.reverseDescription')}
               </p>
             </Label>
@@ -218,12 +222,19 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
               onCheckedChange={setIncludeDropStatements}
               disabled={isGenerating}
             />
-            <Label htmlFor="include-drops" className="cursor-pointer text-sm">
+            <Label
+              htmlFor="include-drops"
+              className="cursor-pointer"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               <div className="flex items-center gap-1.5">
                 <AlertCircle className="text-destructive h-3.5 w-3.5" />
                 {t('migration.includeDropStatements')}
               </div>
-              <p className="text-muted-foreground mt-0.5 text-xs font-normal">
+              <p
+                className="text-muted-foreground mt-0.5 font-normal"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('migration.includeDropDescription')}
               </p>
             </Label>
@@ -232,7 +243,10 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
 
         {/* Loading State */}
         {isGenerating && (
-          <div className="text-muted-foreground flex items-center justify-center gap-2 py-8 text-sm">
+          <div
+            className="text-muted-foreground flex items-center justify-center gap-2 py-8"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             <Loader2 className="h-4 w-4 animate-spin" />
             {t('migration.generating')}
           </div>
@@ -252,7 +266,9 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
           <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-8 text-center">
             <Check className="h-12 w-12 opacity-30" />
             <p className="font-medium">{t('migration.noChanges')}</p>
-            <p className="text-sm">{t('migration.noChangesDescription')}</p>
+            <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+              {t('migration.noChangesDescription')}
+            </p>
           </div>
         )}
 
@@ -271,7 +287,10 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowWarnings(!showWarnings)}
-                    className="h-auto p-0 text-xs"
+                    className="h-auto p-0"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
                   >
                     {showWarnings ? (
                       <ChevronDown className="h-4 w-4" />
@@ -354,7 +373,9 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             {saveError && (
               <Alert variant="destructive" className="py-2">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-sm">
+                <AlertDescription
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {saveError}
                 </AlertDescription>
               </Alert>
@@ -363,10 +384,13 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             {/* SQL Display */}
             {migrationSQL.sql && (
               <div className="space-y-2">
-                <Label className="text-xs font-medium">
+                <Label
+                  className="font-medium"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                >
                   {t('migration.generatedSql')}
                 </Label>
-                <ScrollArea className="h-100 rounded-lg border">
+                <ScrollArea className="rounded-base h-100 border-2">
                   <div className="p-4">
                     <SqlHighlight
                       code={migrationSQL.sql}
@@ -382,7 +406,10 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
 
             {/* Statement Count Info */}
             {migrationSQL.statements && migrationSQL.statements.length > 0 && (
-              <p className="text-muted-foreground text-xs">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('migration.tip')}
               </p>
             )}

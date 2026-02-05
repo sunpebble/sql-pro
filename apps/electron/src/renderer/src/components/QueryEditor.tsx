@@ -140,8 +140,10 @@ function TemplateCard({
   return (
     <div
       className={cn(
-        'group hover:border-primary/50 hover:bg-accent/30 relative flex cursor-pointer flex-col gap-2 rounded-lg border p-3 transition-all duration-200',
-        template.isBuiltIn && 'border-dashed'
+        'group rounded-base relative flex cursor-pointer flex-col gap-2 border-2 p-3 transition-all duration-150',
+        'hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none',
+        'shadow-shadow-sm',
+        template.isBuiltIn ? 'border-border border-dashed' : 'border-border'
       )}
       onClick={() => onSelect(template.query)}
     >
@@ -179,7 +181,7 @@ function TemplateCard({
       />
 
       {/* Actions - appear on hover */}
-      <div className="bg-background/80 absolute top-2 right-2 flex items-center gap-0.5 rounded-md opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+      <div className="bg-background rounded-base absolute top-2 right-2 flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
         <TooltipProvider delay={200}>
           <Tooltip>
             <TooltipTrigger>
@@ -761,7 +763,7 @@ export function QueryEditor() {
                   <SkeletonQueryResults columns={5} rows={10} />
                 ) : tabError ? (
                   <div className="flex h-full items-center justify-center p-4">
-                    <div className="border-destructive/50 bg-destructive/10 flex max-w-md items-start gap-3 rounded-lg border p-4">
+                    <div className="rounded-base border-destructive bg-destructive/10 flex max-w-md items-start gap-3 border-2 p-4">
                       <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                       <div>
                         <p className="text-destructive font-medium">

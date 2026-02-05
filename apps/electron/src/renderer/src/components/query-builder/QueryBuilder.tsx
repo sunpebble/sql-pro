@@ -292,7 +292,7 @@ export function QueryBuilder() {
               {/* Help panel */}
               {storeNodes.length === 0 && (
                 <Panel position="top-center" className="mt-20">
-                  <div className="bg-card max-w-md rounded-lg border p-6 text-center shadow-lg">
+                  <div className="bg-card rounded-base shadow-shadow-lg max-w-md border-2 p-6 text-center">
                     <h3 className="mb-2 font-semibold">
                       {t('queryBuilder.getStarted', 'Get Started')}
                     </h3>
@@ -349,7 +349,7 @@ export function QueryBuilder() {
             <div className="flex-1 overflow-auto p-4">
               <pre
                 className={cn(
-                  'bg-muted/30 rounded-md border p-4 font-mono text-sm',
+                  'bg-muted/30 rounded-base border-2 p-4 font-mono text-sm',
                   'break-words whitespace-pre-wrap'
                 )}
               >

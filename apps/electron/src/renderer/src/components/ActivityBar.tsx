@@ -116,12 +116,11 @@ export const ActivityBar = memo(
         className={cn(
           'relative flex h-full w-12 shrink-0 flex-col py-3',
           'bg-background',
-          'border-border/30 border-r',
-          'animate-slide-in-left opacity-0'
+          'border-border border-r-2'
         )}
       >
         <div className="flex flex-1 flex-col items-center gap-1">
-          {visibleItems.map((item, index) => {
+          {visibleItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
             const badgeCount = badges?.[item.id];
@@ -136,28 +135,21 @@ export const ActivityBar = memo(
                     data-tour-target={item.tourTarget}
                     onClick={() => onViewChange(item.id)}
                     className={cn(
-                      'group relative flex h-9 w-9 items-center justify-center rounded-lg',
-                      'transition-all duration-200 ease-out',
-                      'animate-fade-in-up opacity-0',
-                      index === 0 && 'stagger-1',
-                      index === 1 && 'stagger-2',
-                      index === 2 && 'stagger-3',
-                      index === 3 && 'stagger-4',
-                      index === 4 && 'stagger-5',
+                      'group rounded-base relative flex h-9 w-9 items-center justify-center',
+                      'transition-all duration-150',
                       isActive
-                        ? 'text-primary bg-accent'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                        ? 'text-main-foreground bg-main'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                     )}
                   >
                     <Icon
                       className={cn(
-                        'h-[18px] w-[18px] transition-all duration-200',
-                        'group-hover:scale-105 group-active:scale-95'
+                        'h-[18px] w-[18px] transition-all duration-200'
                       )}
                     />
 
                     {isActive && (
-                      <span className="bg-primary animate-scale-in absolute top-1/2 -left-px h-5 w-0.5 -translate-y-1/2 rounded-full" />
+                      <span className="bg-main absolute top-1/2 -left-px h-5 w-1 -translate-y-1/2" />
                     )}
 
                     {badgeCount !== undefined && badgeCount > 0 && (
@@ -165,12 +157,10 @@ export const ActivityBar = memo(
                         className={cn(
                           'absolute -top-1 -right-1',
                           'flex h-4 min-w-4 items-center justify-center',
-                          'rounded-full px-1',
+                          'rounded-base px-1',
                           'text-[10px] font-semibold',
-                          'bg-primary text-primary-foreground',
-                          'shadow-[0_0_6px_rgba(16,185,129,0.4)]',
-                          'border-background/50 border',
-                          'animate-scale-in'
+                          'bg-main text-main-foreground',
+                          'border-border border-2'
                         )}
                       >
                         {badgeCount > 99 ? '99+' : badgeCount}
@@ -196,7 +186,7 @@ export const ActivityBar = memo(
         </div>
 
         <div className="flex flex-col items-center gap-1 pb-1">
-          <div className="bg-border/30 h-6 w-px" />
+          <div className="bg-border h-6 w-px" />
 
           {/* SQL Log Toggle */}
           <Tooltip>
@@ -205,14 +195,14 @@ export const ActivityBar = memo(
                 type="button"
                 onClick={toggleSqlLog}
                 className={cn(
-                  'group flex h-9 w-9 items-center justify-center rounded-lg',
-                  'transition-all duration-200 ease-out',
+                  'group rounded-base flex h-9 w-9 items-center justify-center',
+                  'transition-all duration-150',
                   sqlLogVisible
-                    ? 'text-primary bg-accent'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                    ? 'text-main-foreground bg-main'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 )}
               >
-                <ScrollText className="h-[18px] w-[18px] transition-transform duration-200 group-hover:scale-105" />
+                <ScrollText className="h-[18px] w-[18px] transition-transform duration-200" />
               </button>
             </TooltipTrigger>
             <TooltipContent
@@ -236,12 +226,12 @@ export const ActivityBar = memo(
                 <button
                   type="button"
                   onClick={onToggleSidebar}
-                  className="group text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200 ease-out"
+                  className="group text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex h-9 w-9 items-center justify-center transition-all duration-150"
                 >
                   {sidebarCollapsed ? (
-                    <PanelLeft className="h-[18px] w-[18px] transition-transform duration-200 group-hover:scale-105" />
+                    <PanelLeft className="h-[18px] w-[18px] transition-transform duration-200" />
                   ) : (
-                    <PanelLeftClose className="h-[18px] w-[18px] transition-transform duration-200 group-hover:scale-105" />
+                    <PanelLeftClose className="h-[18px] w-[18px] transition-transform duration-200" />
                   )}
                 </button>
               </TooltipTrigger>

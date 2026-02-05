@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import './Footer.css';
 
 const essentialLinks = [
   {
@@ -25,29 +24,40 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="footer" role="contentinfo">
-      <div className="container">
-        <div className="footer-content">
+    <footer
+      className="bg-background border-border border-t-2 py-8"
+      role="contentinfo"
+    >
+      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
+        <div className="mb-6 flex flex-col items-center justify-between gap-6 md:flex-row">
           {/* Brand */}
-          <a href="#" className="footer-logo">
+          <a
+            href="#"
+            className="text-foreground flex items-center gap-2 text-lg font-bold no-underline"
+          >
             <img
               src="/icon.svg"
               alt=""
               width="32"
               height="32"
               aria-hidden="true"
+              className="border-border rounded-base border-2"
             />
             SQL Pro
           </a>
 
           {/* Essential links - inline */}
-          <nav className="footer-links" aria-label="Footer navigation">
+          <nav
+            className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
+            aria-label="Footer navigation"
+          >
             {essentialLinks.map((link) => (
               <a
                 key={link.key}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-main text-sm font-medium no-underline transition-colors duration-150"
               >
                 {t(`footer.${link.key}`)}
               </a>
@@ -56,7 +66,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <p className="footer-copyright">
+        <p className="text-muted-foreground m-0 text-center text-sm">
           {t('footer.copyright', { year: currentYear })}
         </p>
       </div>

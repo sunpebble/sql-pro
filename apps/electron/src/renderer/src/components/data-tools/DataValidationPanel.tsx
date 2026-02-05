@@ -98,9 +98,9 @@ interface ConstraintCardProps {
 const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
   const { t } = useTranslation('common');
   return (
-    <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg border p-3 transition-colors">
+    <div className="hover:bg-muted/50 rounded-base border-border flex items-center justify-between border-2 p-3 transition-colors">
       <div className="flex items-center gap-3">
-        <div className="bg-muted rounded-lg p-2">
+        <div className="bg-muted rounded-base p-2">
           {constraint.isPrimaryKey ? (
             <Key className="h-4 w-4 text-amber-500" />
           ) : constraint.isForeignKey ? (
@@ -180,10 +180,10 @@ interface ForeignKeyCardProps {
 const ForeignKeyCard = memo(({ fk, onNavigate }: ForeignKeyCardProps) => {
   const { t } = useTranslation('common');
   return (
-    <div className="hover:bg-muted/50 rounded-lg border p-3 transition-colors">
+    <div className="hover:bg-muted/50 rounded-base border-border border-2 p-3 transition-colors">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-blue-100 p-2 dark:bg-blue-900">
+          <div className="rounded-base bg-blue-100 p-2 dark:bg-blue-900">
             <Link2 className="h-4 w-4 text-blue-600" />
           </div>
           <div>
@@ -222,7 +222,7 @@ const IssueCard = memo(({ issue }: IssueCardProps) => {
   return (
     <div
       className={cn(
-        'flex items-start gap-3 rounded-lg border p-3',
+        'rounded-base flex items-start gap-3 border-2 p-3',
         styles.bg,
         styles.border
       )}

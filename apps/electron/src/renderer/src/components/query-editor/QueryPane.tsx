@@ -171,17 +171,17 @@ export const QueryPane = memo(
       <div
         className={cn(
           'flex h-full min-w-0 flex-col',
-          isActive && 'ring-gold/50 ring-2 ring-inset'
+          isActive && 'ring-main ring-2 ring-inset'
         )}
         onClick={onActivate}
       >
         {/* Pane Header with Tab Selector */}
-        <div className="bg-muted/30 flex items-center justify-between border-b px-2 py-1">
+        <div className="bg-muted flex items-center justify-between border-b-2 px-2 py-1">
           <div className="flex items-center gap-2">
             <select
               value={tab.id}
               onChange={(e) => handleTabSelect(e.target.value)}
-              className="bg-background h-7 rounded border px-2 text-sm"
+              className="bg-background rounded-base h-7 border-2 px-2 text-sm"
             >
               {tabs.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -232,7 +232,7 @@ export const QueryPane = memo(
         </div>
 
         {/* Editor */}
-        <div className="shrink-0 border-b">
+        <div className="shrink-0 border-b-2">
           <MonacoSqlEditor
             value={tab.query}
             onChange={handleQueryChange}
@@ -253,10 +253,10 @@ export const QueryPane = memo(
             </div>
           ) : tab.error ? (
             <div className="flex h-full items-center justify-center p-4">
-              <div className="border-destructive/50 bg-destructive/10 flex max-w-md items-start gap-3 rounded-lg border p-4">
+              <div className="rounded-base border-destructive bg-destructive/10 shadow-shadow-sm flex max-w-md items-start gap-3 border-2 p-4">
                 <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                 <div>
-                  <p className="text-destructive font-medium">
+                  <p className="font-heading text-destructive">
                     {t('queryEditor.queryError')}
                   </p>
                   <p className="text-destructive/80 mt-1 text-sm">
@@ -268,7 +268,7 @@ export const QueryPane = memo(
           ) : tab.results ? (
             <div className="flex h-full flex-col">
               {/* Results Header */}
-              <div className="text-muted-foreground flex items-center gap-4 border-b px-4 py-2 text-sm">
+              <div className="text-muted-foreground flex items-center gap-4 border-b-2 px-4 py-2 text-sm">
                 <span>{tab.results.rowsAffected} rows</span>
                 {tab.executionTime !== null && (
                   <span className="flex items-center gap-1">

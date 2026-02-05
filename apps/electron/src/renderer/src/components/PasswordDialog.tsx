@@ -63,10 +63,10 @@ export function PasswordDialog({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
-        <Dialog.Content className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border p-6 shadow-lg">
+        <Dialog.Content className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-base border-border shadow-shadow fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 border-2 p-6">
           <div className="flex flex-col items-center text-center">
-            <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-              <Lock className="text-primary h-6 w-6" />
+            <div className="bg-main rounded-base border-border mb-4 flex h-12 w-12 items-center justify-center border-2">
+              <Lock className="text-main-foreground h-6 w-6" />
             </div>
             <Dialog.Title className="text-lg font-semibold">
               {t('passwordDialog.title')}
@@ -85,9 +85,9 @@ export function PasswordDialog({
               placeholder={t('passwordDialog.placeholder')}
               autoFocus
               className={cn(
-                'border-input bg-background w-full rounded-md border px-3 py-2 text-sm',
+                'border-border bg-background rounded-base w-full border-2 px-3 py-2 text-sm',
                 'placeholder:text-muted-foreground',
-                'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
+                'focus:ring-main focus:ring-2 focus:ring-offset-2 focus:outline-none'
               )}
             />
 
@@ -104,7 +104,7 @@ export function PasswordDialog({
                   checked={rememberPassword}
                   onChange={(e) => setRememberPassword(e.target.checked)}
                   disabled={!isStorageAvailable}
-                  className="border-input h-4 w-4 rounded-md"
+                  className="border-border rounded-base h-4 w-4 border-2"
                 />
                 <span>{t('passwordDialog.rememberPassword')}</span>
                 {!isStorageAvailable && (

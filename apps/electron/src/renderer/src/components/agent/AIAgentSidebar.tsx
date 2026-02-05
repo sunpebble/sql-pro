@@ -206,7 +206,7 @@ export function AIAgentSidebar({
       <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
         <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">
-            <div className="from-primary/20 via-primary/10 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br to-transparent">
+            <div className="bg-primary/15 rounded-base flex h-7 w-7 items-center justify-center">
               <Settings className="text-primary h-4 w-4" />
             </div>
             <span className="text-sm font-semibold tracking-tight">
@@ -216,7 +216,7 @@ export function AIAgentSidebar({
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+            className="hover:bg-primary/10 hover:text-primary rounded-base h-7 w-7"
             onClick={onClose}
           >
             <X className="h-4 w-4" />
@@ -242,7 +242,7 @@ export function AIAgentSidebar({
       <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
         <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">
-            <div className="from-primary/20 via-primary/10 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br to-transparent">
+            <div className="bg-primary/15 rounded-base flex h-7 w-7 items-center justify-center">
               <History className="text-primary h-4 w-4" />
             </div>
             <span className="text-sm font-semibold tracking-tight">
@@ -252,7 +252,7 @@ export function AIAgentSidebar({
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+            className="hover:bg-primary/10 hover:text-primary rounded-base h-7 w-7"
             onClick={() => setShowHistory(false)}
           >
             <X className="h-4 w-4" />
@@ -263,7 +263,7 @@ export function AIAgentSidebar({
           <div className="space-y-1 p-2">
             {sessions.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="from-primary/15 via-primary/8 mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br to-transparent">
+                <div className="bg-primary/15 rounded-base mb-3 flex h-12 w-12 items-center justify-center">
                   <MessageSquare className="text-primary/50 h-6 w-6" />
                 </div>
                 <p className="text-muted-foreground text-sm">
@@ -282,7 +282,7 @@ export function AIAgentSidebar({
                   <button
                     type="button"
                     key={session.id}
-                    className="group hover:bg-primary/10 flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors"
+                    className="group hover:bg-primary/10 rounded-base flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left transition-colors"
                     onClick={() => {
                       loadSession(session.id);
                       setShowHistory(false);
@@ -342,9 +342,9 @@ export function AIAgentSidebar({
       {/* Header */}
       <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
         <div className="flex items-center gap-2">
-          <div className="from-primary/20 via-primary/10 relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br to-transparent">
+          <div className="bg-primary/15 rounded-base relative flex h-8 w-8 items-center justify-center">
             <Sparkles className="text-primary h-4 w-4" />
-            <div className="bg-primary/10 absolute inset-0 rounded-xl blur-sm" />
+            <div className="bg-primary/10 rounded-base absolute inset-0 blur-sm" />
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-semibold tracking-tight">
@@ -374,7 +374,7 @@ export function AIAgentSidebar({
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                className="hover:bg-primary/10 hover:text-primary rounded-base h-7 w-7"
                 onClick={() => setShowHistory(true)}
               >
                 <History className="h-3.5 w-3.5" />
@@ -389,7 +389,7 @@ export function AIAgentSidebar({
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                className="hover:bg-primary/10 hover:text-primary rounded-base h-7 w-7"
                 onClick={createNewSession}
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -404,7 +404,7 @@ export function AIAgentSidebar({
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                className="hover:bg-primary/10 hover:text-primary rounded-base h-7 w-7"
                 onClick={() => setMessages([])}
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -419,7 +419,7 @@ export function AIAgentSidebar({
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                className="hover:bg-primary/10 hover:text-primary rounded-base h-7 w-7"
                 onClick={() => setShowSettings(true)}
               >
                 <Settings className="h-3.5 w-3.5" />
@@ -435,7 +435,7 @@ export function AIAgentSidebar({
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-primary/10 hover:text-primary h-7 w-7 rounded-lg"
+                className="hover:bg-primary/10 hover:text-primary rounded-base h-7 w-7"
                 onClick={onClose}
               >
                 <ChevronRight className="h-4 w-4" />
@@ -453,7 +453,7 @@ export function AIAgentSidebar({
         <div className="space-y-3 p-3">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="from-primary/15 via-primary/8 mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br to-transparent">
+              <div className="bg-primary/15 rounded-base mb-4 flex h-14 w-14 items-center justify-center">
                 <Bot className="text-primary/70 h-7 w-7" />
               </div>
               <p className="text-muted-foreground mb-1 text-sm font-medium">
@@ -471,7 +471,7 @@ export function AIAgentSidebar({
                     key={action.label}
                     type="button"
                     onClick={() => handleQuickAction(action.query)}
-                    className="bg-background/60 text-muted-foreground hover:bg-primary/10 hover:text-primary border-primary/10 rounded-lg border px-2.5 py-2 text-left text-[11px] font-medium transition-colors"
+                    className="bg-background/60 text-muted-foreground hover:bg-primary/10 hover:text-primary border-primary/10 rounded-base border px-2.5 py-2 text-left text-[11px] font-medium transition-colors"
                   >
                     {action.label}
                   </button>
@@ -521,7 +521,7 @@ export function AIAgentSidebar({
 
       {/* Input Area */}
       <form onSubmit={handleSubmit} className="border-primary/10 border-t p-3">
-        <div className="bg-background/80 ring-primary/20 focus-within:ring-primary/40 flex items-end gap-2 rounded-xl px-3 py-2 ring-1 transition-all focus-within:ring-2">
+        <div className="bg-background/80 ring-primary/20 focus-within:ring-primary/40 rounded-base flex items-end gap-2 px-3 py-2 ring-1 transition-all focus-within:ring-2">
           <textarea
             ref={textareaRef}
             value={input}
@@ -539,7 +539,7 @@ export function AIAgentSidebar({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="text-primary hover:bg-primary/10 hover:text-primary h-8 w-8 shrink-0 rounded-lg"
+                  className="text-primary hover:bg-primary/10 hover:text-primary rounded-base h-8 w-8 shrink-0"
                   onClick={stop}
                 >
                   <Square className="h-3.5 w-3.5" />
@@ -555,7 +555,7 @@ export function AIAgentSidebar({
                 <button
                   type="submit"
                   disabled={!input.trim() || !isConfigured}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all disabled:cursor-not-allowed disabled:opacity-40"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-base flex h-8 w-8 shrink-0 items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Send className="h-3.5 w-3.5" />
                 </button>

@@ -123,7 +123,7 @@ const TabItem = memo(
                 onChange={(e) => setEditValue(e.target.value)}
                 onBlur={handleFinishEdit}
                 onKeyDown={handleKeyDown}
-                className="bg-background h-5 flex-1 rounded border px-1 text-xs outline-none"
+                className="rounded-base bg-background h-5 flex-1 border-2 px-1 text-xs outline-none"
                 autoFocus
               />
             ) : (
@@ -230,7 +230,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
 
   return (
     <div
-      className={cn('bg-muted/30 flex h-8 items-center border-b', className)}
+      className={cn('bg-muted flex h-8 items-center border-b-2', className)}
       role="tablist"
     >
       <div className="flex flex-1 items-center overflow-x-auto">
@@ -249,7 +249,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
           />
         ))}
       </div>
-      <div className="flex items-center border-l">
+      <div className="flex items-center border-l-2">
         <TooltipProvider delay={300}>
           <Tooltip>
             <TooltipTrigger>

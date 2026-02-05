@@ -94,7 +94,7 @@ export function MediaGalleryToolbar({
   };
 
   return (
-    <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur">
+    <div className="bg-background border-b">
       <div className="flex items-center justify-between gap-4 px-4 py-2">
         {/* Left side: Column selector and info */}
         <div className="flex items-center gap-3">

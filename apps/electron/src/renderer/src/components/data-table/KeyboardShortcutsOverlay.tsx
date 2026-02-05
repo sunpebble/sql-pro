@@ -258,9 +258,9 @@ export const KeyboardShortcutsOverlay = memo(
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger
           className={cn(
-            'fixed right-4 bottom-4 z-50 rounded-full shadow-lg',
-            'bg-background/80 border backdrop-blur-sm',
-            'hover:bg-muted transition-all duration-200 hover:scale-105',
+            'fixed right-4 bottom-4 z-50 rounded-full',
+            'bg-background border-border border-2',
+            'hover:bg-muted transition-all duration-200',
             'opacity-50 hover:opacity-100',
             'flex h-8 w-8 items-center justify-center',
             className

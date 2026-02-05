@@ -119,7 +119,7 @@ export function QueryImportDialog({
                 <div className="space-y-3">
                   {/* Version Compatibility */}
                   {!versionCompatible && (
-                    <div className="bg-destructive/10 flex items-start gap-3 rounded-lg p-4">
+                    <div className="bg-destructive/10 rounded-base flex items-start gap-3 p-4">
                       <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-destructive font-medium">
@@ -134,7 +134,7 @@ export function QueryImportDialog({
 
                   {/* Compression Info */}
                   {importResult.validation?.compressionInfo?.compressed && (
-                    <div className="bg-muted flex items-start gap-3 rounded-lg p-3">
+                    <div className="bg-muted rounded-base flex items-start gap-3 p-3">
                       <CheckCircle2 className="text-muted-foreground h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm font-medium">
@@ -168,7 +168,7 @@ export function QueryImportDialog({
 
                   {/* Validation Errors */}
                   {hasErrors && (
-                    <div className="bg-destructive/10 space-y-2 rounded-lg p-4">
+                    <div className="bg-destructive/10 rounded-base space-y-2 p-4">
                       <div className="flex items-start gap-3">
                         <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                         <div className="flex-1">
@@ -190,7 +190,7 @@ export function QueryImportDialog({
 
                   {/* Validation Warnings */}
                   {hasWarnings && (
-                    <div className="space-y-2 rounded-lg border border-yellow-500/30 bg-yellow-50 p-4 dark:bg-yellow-950/30">
+                    <div className="rounded-base space-y-2 border border-yellow-500/30 bg-yellow-50 p-4 dark:bg-yellow-950/30">
                       <div className="flex items-start gap-3">
                         <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-400" />
                         <div className="flex-1">
@@ -212,7 +212,7 @@ export function QueryImportDialog({
 
                   {/* Success Status */}
                   {isValid && !hasErrors && !hasWarnings && (
-                    <div className="flex items-start gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-950">
+                    <div className="rounded-base flex items-start gap-3 bg-green-50 p-4 dark:bg-green-950">
                       <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
                       <div className="flex-1">
                         <p className="font-medium text-green-900 dark:text-green-100">
@@ -227,7 +227,7 @@ export function QueryImportDialog({
 
                   {/* Import Error */}
                   {!importResult.success && (
-                    <div className="bg-destructive/10 rounded-lg p-4">
+                    <div className="bg-destructive/10 rounded-base p-4">
                       <p className="text-destructive font-medium">
                         {t('sharing.importFailed')}
                       </p>
@@ -240,7 +240,7 @@ export function QueryImportDialog({
 
                 {/* Query Preview */}
                 {importResult.query && (
-                  <div className="space-y-4 rounded-lg border p-4">
+                  <div className="rounded-base space-y-4 border p-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-semibold">
                         {t('sharing.queryPreview')}

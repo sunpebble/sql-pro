@@ -409,7 +409,7 @@ const ConnectionTab = memo(
                     key={color.value}
                     onClick={() => handleColorSelect(color.value)}
                     className={cn(
-                      'group relative flex h-10 w-16 items-center justify-center rounded border-2 transition-all hover:scale-105',
+                      'group rounded-base relative flex h-10 w-16 items-center justify-center border-2 transition-all hover:translate-x-0.5 hover:translate-y-0.5',
                       connectionColor === color.value
                         ? 'border-foreground ring-foreground/20 ring-2'
                         : 'border-border hover:border-foreground/50'

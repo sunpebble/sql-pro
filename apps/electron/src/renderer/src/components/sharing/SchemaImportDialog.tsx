@@ -166,7 +166,7 @@ export function SchemaImportDialog({
                   {t('sharing.selectSchemaFilePrompt')}
                 </p>
                 {connectionId && (
-                  <div className="bg-muted rounded-lg p-3">
+                  <div className="bg-muted rounded-base p-3">
                     <p className="text-sm">
                       <span className="font-medium">{t('sharing.note')}:</span>{' '}
                       {t('sharing.schemaImportNote')}
@@ -180,7 +180,7 @@ export function SchemaImportDialog({
                 <div className="space-y-3">
                   {/* Version Compatibility */}
                   {!versionCompatible && (
-                    <div className="bg-destructive/10 flex items-start gap-3 rounded-lg p-4">
+                    <div className="bg-destructive/10 rounded-base flex items-start gap-3 p-4">
                       <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-destructive font-medium">
@@ -195,7 +195,7 @@ export function SchemaImportDialog({
 
                   {/* Compression Info */}
                   {importResult.validation?.compressionInfo?.compressed && (
-                    <div className="bg-muted flex items-start gap-3 rounded-lg p-3">
+                    <div className="bg-muted rounded-base flex items-start gap-3 p-3">
                       <CheckCircle2 className="text-muted-foreground h-5 w-5 shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm font-medium">
@@ -229,7 +229,7 @@ export function SchemaImportDialog({
 
                   {/* Validation Errors */}
                   {hasErrors && (
-                    <div className="bg-destructive/10 space-y-2 rounded-lg p-4">
+                    <div className="bg-destructive/10 rounded-base space-y-2 p-4">
                       <div className="flex items-start gap-3">
                         <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                         <div className="flex-1">
@@ -251,7 +251,7 @@ export function SchemaImportDialog({
 
                   {/* Validation Warnings */}
                   {hasWarnings && (
-                    <div className="space-y-2 rounded-lg border border-yellow-500/30 bg-yellow-50 p-4 dark:bg-yellow-950/30">
+                    <div className="rounded-base space-y-2 border border-yellow-500/30 bg-yellow-50 p-4 dark:bg-yellow-950/30">
                       <div className="flex items-start gap-3">
                         <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-400" />
                         <div className="flex-1">
@@ -273,7 +273,7 @@ export function SchemaImportDialog({
 
                   {/* Success Status */}
                   {isValid && !hasErrors && !hasWarnings && (
-                    <div className="flex items-start gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-950">
+                    <div className="rounded-base flex items-start gap-3 bg-green-50 p-4 dark:bg-green-950">
                       <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
                       <div className="flex-1">
                         <p className="font-medium text-green-900 dark:text-green-100">
@@ -288,7 +288,7 @@ export function SchemaImportDialog({
 
                   {/* Import Error */}
                   {!importResult.success && (
-                    <div className="bg-destructive/10 rounded-lg p-4">
+                    <div className="bg-destructive/10 rounded-base p-4">
                       <p className="text-destructive font-medium">
                         {t('sharing.importFailed')}
                       </p>
@@ -301,7 +301,7 @@ export function SchemaImportDialog({
 
                 {/* Schema Preview */}
                 {importResult.schema && (
-                  <div className="space-y-4 rounded-lg border p-4">
+                  <div className="rounded-base space-y-4 border p-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-semibold">
                         {t('sharing.schemaPreview')}
@@ -359,7 +359,7 @@ export function SchemaImportDialog({
                     </div>
 
                     {/* Format and Statistics */}
-                    <div className="bg-muted space-y-2 rounded-lg p-3">
+                    <div className="bg-muted rounded-base space-y-2 p-3">
                       <div className="flex items-center gap-2">
                         <Database className="text-muted-foreground h-4 w-4" />
                         <Label className="text-xs font-medium">
@@ -445,7 +445,7 @@ export function SchemaImportDialog({
                       <Label className="text-xs font-medium">
                         {t('sharing.exportOptionsLabel')}
                       </Label>
-                      <div className="space-y-1.5 rounded-lg border p-3">
+                      <div className="rounded-base space-y-1.5 border p-3">
                         <div className="flex items-center gap-2">
                           <Checkbox
                             checked={
@@ -497,7 +497,7 @@ export function SchemaImportDialog({
                             {t('sharing.tablesIncluded')}
                           </Label>
                           <ScrollArea className="h-48">
-                            <div className="space-y-2 rounded-lg border p-3">
+                            <div className="rounded-base space-y-2 border p-3">
                               {importResult.schema.schemas.map((schema) => (
                                 <div key={schema.name} className="space-y-1">
                                   <p className="text-sm font-medium">
@@ -610,7 +610,7 @@ export function SchemaImportDialog({
 
                     {/* Conflict Warning */}
                     {isValid && stats && stats.tables > 0 && (
-                      <div className="space-y-2 rounded-lg border border-yellow-500/30 bg-yellow-50 p-3 dark:bg-yellow-950/30">
+                      <div className="rounded-base space-y-2 border border-yellow-500/30 bg-yellow-50 p-3 dark:bg-yellow-950/30">
                         <div className="flex items-start gap-2">
                           <AlertTriangle className="h-4 w-4 shrink-0 text-yellow-600 dark:text-yellow-400" />
                           <div className="flex-1">

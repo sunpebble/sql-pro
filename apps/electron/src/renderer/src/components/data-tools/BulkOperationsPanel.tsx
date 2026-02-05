@@ -230,7 +230,7 @@ export const BulkOperationsPanel = memo(
                           key={format}
                           onClick={() => setExportFormat(format)}
                           className={cn(
-                            'flex flex-col items-center gap-2 rounded-lg border p-4 transition-colors',
+                            'rounded-base border-border flex flex-col items-center gap-2 border-2 p-4 transition-colors',
                             exportFormat === format
                               ? 'border-primary bg-primary/5'
                               : 'hover:border-primary/50'
@@ -308,7 +308,7 @@ export const BulkOperationsPanel = memo(
                       count: columns.length,
                     })}
                   </Label>
-                  <div className="bg-muted/50 flex flex-wrap gap-1 rounded-lg p-2">
+                  <div className="bg-muted/50 rounded-base flex flex-wrap gap-1 p-2">
                     {columns.map((col) => (
                       <Badge key={col} variant="secondary" className="text-xs">
                         {col}
@@ -325,7 +325,7 @@ export const BulkOperationsPanel = memo(
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleDrop}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 transition-colors',
+                  'rounded-base flex flex-col items-center justify-center gap-3 border-2 border-dashed p-8 transition-colors',
                   importFile
                     ? 'border-primary bg-primary/5'
                     : 'hover:border-primary/50'
@@ -445,7 +445,7 @@ export const BulkOperationsPanel = memo(
               {importResult && (
                 <div
                   className={cn(
-                    'flex items-start gap-3 rounded-lg border p-4',
+                    'rounded-base border-border flex items-start gap-3 border-2 p-4',
                     importResult.success
                       ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950'
                       : 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950'

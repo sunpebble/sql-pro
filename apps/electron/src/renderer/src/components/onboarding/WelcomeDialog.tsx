@@ -56,7 +56,7 @@ export function WelcomeDialog({
             size="default"
             variant="gold"
             animated
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
+            className="rounded-base mx-auto mb-4 flex h-16 w-16 items-center justify-center"
           >
             <Database className="text-primary h-8 w-8" />
           </DecoFrame>

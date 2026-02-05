@@ -122,9 +122,10 @@ function AlertDialogTitle({
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
       className={cn(
-        'text-lg font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2',
+        'font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2',
         className
       )}
+      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
       {...props}
     />
   );
@@ -138,9 +139,10 @@ function AlertDialogDescription({
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
       className={cn(
-        'text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3',
+        'text-muted-foreground *:[a]:hover:text-foreground text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3',
         className
       )}
+      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
       {...props}
     />
   );

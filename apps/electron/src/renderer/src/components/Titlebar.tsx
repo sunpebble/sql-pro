@@ -76,19 +76,23 @@ export function Titlebar() {
       )}
 
       {/* Right side controls - non-draggable */}
-      <div className="titlebar-no-drag toolbar-section-sm px-3">
+      <div className="titlebar-no-drag flex shrink-0 items-center gap-1.5 px-3">
         {/* Toolbar controls (changes indicator, layout, commands, help) */}
         {connection && <Toolbar />}
 
         {/* Separator */}
-        <div className="bg-primary/20 mx-1 h-4 w-px" />
+        <div className="bg-border mx-1 h-5 w-px" />
 
         {/* Theme Switcher */}
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger>
               <DropdownMenuTrigger>
-                <Button variant="ghost-primary" size="icon" className="h-8 w-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
+                >
                   {getThemeIcon()}
                 </Button>
               </DropdownMenuTrigger>
@@ -139,9 +143,9 @@ export function Titlebar() {
         <Tooltip>
           <TooltipTrigger>
             <Button
-              variant="ghost-primary"
+              variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
               onClick={openSettings}
               data-action="open-settings"
             >

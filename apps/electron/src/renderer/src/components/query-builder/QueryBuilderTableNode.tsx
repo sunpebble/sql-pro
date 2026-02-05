@@ -308,14 +308,14 @@ function QueryBuilderTableNodeComponent({
   return (
     <div
       className={cn(
-        'bg-card text-card-foreground relative min-w-[200px] overflow-visible rounded-lg border shadow-md',
+        'bg-card text-card-foreground rounded-base shadow-shadow relative min-w-[200px] overflow-visible border-2',
         'dark:border-zinc-700 dark:bg-zinc-900',
         selected && 'ring-primary ring-2'
       )}
     >
       <div
         className={cn(
-          'drag-handle flex cursor-grab items-center gap-2 rounded-t-lg border-b px-3 py-2',
+          'drag-handle flex cursor-grab items-center gap-2 rounded-t-[3px] border-b-2 px-3 py-2',
           'bg-primary/10 dark:bg-primary/5'
         )}
       >

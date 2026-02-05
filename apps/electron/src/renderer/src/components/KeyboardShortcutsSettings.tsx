@@ -110,9 +110,9 @@ const ShortcutEditor = memo(
     return (
       <div
         className={cn(
-          'flex items-center justify-between gap-4 rounded-lg border p-3 transition-colors',
+          'rounded-base border-border flex items-center justify-between gap-4 border-2 p-3 transition-colors',
           isRecording && 'border-primary bg-primary/5',
-          hasConflicts && !isRecording && 'border-amber-500/50 bg-amber-500/5'
+          hasConflicts && !isRecording && 'border-amber-500 bg-amber-500/5'
         )}
       >
         <div className="min-w-0 flex-1">

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from '../hooks/useInView';
-import './FAQ.css';
 
 const faqKeys = [
   'free',
@@ -17,14 +16,23 @@ export default function FAQ() {
   const { ref: headerRef, isInView: headerVisible } = useInView<HTMLElement>();
 
   return (
-    <section className="faq" id="faq" aria-labelledby="faq-title">
-      <div className="container">
+    <section
+      className="relative overflow-hidden py-24 md:py-32"
+      id="faq"
+      aria-labelledby="faq-title"
+    >
+      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
         <header
           ref={headerRef}
-          className={`faq-header ${headerVisible ? 'visible' : ''}`}
+          className={`mb-16 text-center transition-all duration-500 ${
+            headerVisible
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-8 opacity-0'
+          }`}
         >
-          <span className="faq-label">
+          <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
             <svg
+              className="h-4 w-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -37,16 +45,19 @@ export default function FAQ() {
             </svg>
             {t('faq.label')}
           </span>
-          <h2 id="faq-title" className="faq-title">
+          <h2
+            id="faq-title"
+            className="text-foreground mb-4 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl"
+          >
             {t('faq.title')}{' '}
-            <span className="faq-title-gradient">
-              {t('faq.titleHighlight')}
-            </span>
+            <span className="text-main">{t('faq.titleHighlight')}</span>
           </h2>
-          <p className="faq-subtitle">{t('faq.subtitle')}</p>
+          <p className="text-muted-foreground mx-auto max-w-[600px] text-lg leading-relaxed">
+            {t('faq.subtitle')}
+          </p>
         </header>
 
-        <div className="faq-list">
+        <div className="mx-auto flex max-w-[800px] flex-col gap-4">
           {faqKeys.map((key, index) => (
             <FAQItem key={key} faqKey={key} index={index} />
           ))}
@@ -64,35 +75,46 @@ function FAQItem({ faqKey, index }: { faqKey: string; index: number }) {
   return (
     <div
       ref={ref}
-      className={`faq-item ${isOpen ? 'open' : ''} ${isInView ? 'visible' : ''}`}
+      className={`bg-card border-border rounded-base border-2 transition-all duration-300 ${
+        isInView
+          ? 'shadow-shadow translate-y-0 opacity-100'
+          : 'translate-y-8 opacity-0'
+      } ${isOpen ? 'border-main' : ''}`}
       style={{ transitionDelay: `${index * 50}ms` }}
     >
       <button
-        className="faq-question"
+        type="button"
+        className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4 border-none bg-transparent p-5 text-left text-base font-semibold"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls={`faq-answer-${faqKey}`}
       >
         <span>{t(`faq.items.${faqKey}.question`)}</span>
         <svg
-          className="faq-icon"
+          className={`text-main h-5 w-5 flex-shrink-0 transition-transform duration-200 ${
+            isOpen ? 'rotate-45' : ''
+          }`}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
           aria-hidden="true"
         >
-          <path d="M12 5v14" className="faq-icon-vertical" />
+          <path d="M12 5v14" />
           <path d="M5 12h14" />
         </svg>
       </button>
       <div
         id={`faq-answer-${faqKey}`}
-        className="faq-answer"
+        className={`overflow-hidden transition-all duration-200 ${
+          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
         role="region"
         aria-hidden={!isOpen}
       >
-        <p>{t(`faq.items.${faqKey}.answer`)}</p>
+        <p className="text-muted-foreground border-border m-0 border-t-2 px-5 pt-4 pb-5 leading-relaxed">
+          {t(`faq.items.${faqKey}.answer`)}
+        </p>
       </div>
     </div>
   );

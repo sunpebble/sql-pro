@@ -104,7 +104,7 @@ export const SavedQueriesBrowser = memo(
                 <div className="flex-1 space-y-1 p-3">
                   <button
                     className={cn(
-                      'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors',
+                      'rounded-base flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors',
                       activeFolderId === null
                         ? 'bg-accent text-accent-foreground'
                         : 'hover:bg-accent/50'
@@ -121,7 +121,7 @@ export const SavedQueriesBrowser = memo(
                     <button
                       key={folder.id}
                       className={cn(
-                        'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors',
+                        'rounded-base flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors',
                         activeFolderId === folder.id
                           ? 'bg-accent text-accent-foreground'
                           : 'hover:bg-accent/50'

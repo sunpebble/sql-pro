@@ -210,10 +210,16 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
             <div className="flex items-center gap-3">
               <GitCompare className="text-primary h-6 w-6" />
               <div>
-                <h1 className="text-2xl font-semibold">
+                <h1
+                  className="font-semibold"
+                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.5)' }}
+                >
                   {t('compare.dataComparison')}
                 </h1>
-                <p className="text-muted-foreground text-sm">
+                <p
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   {t('compare.dataDescription')}
                 </p>
               </div>
@@ -239,13 +245,19 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
           {showKeyboardShortcuts && (
             <Card className="bg-muted/50">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base">
+                <CardTitle
+                  className="flex items-center gap-2"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <Keyboard className="h-4 w-4" />
                   {t('compare.keyboardShortcuts')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                <div
+                  className="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3"
+                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                >
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground whitespace-nowrap">
                       {t('compare.runComparison')}

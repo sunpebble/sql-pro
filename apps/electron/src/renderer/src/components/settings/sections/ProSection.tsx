@@ -27,7 +27,7 @@ export function ProSection() {
     <div className="space-y-6">
       <div
         className={cn(
-          'rounded-lg border p-4 transition-colors',
+          'rounded-base border p-4 transition-colors',
           isPro
             ? 'border-primary/30 bg-gradient-to-r from-[rgba(212,175,55,0.08)] to-[rgba(201,169,98,0.08)]'
             : 'border-border'

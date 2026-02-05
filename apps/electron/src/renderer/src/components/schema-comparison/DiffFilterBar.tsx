@@ -68,7 +68,7 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
   return (
     <div
       className={cn(
-        'border-border bg-muted/30 flex flex-wrap items-center gap-3 rounded-md border p-3',
+        'border-border bg-muted/30 rounded-base flex flex-wrap items-center gap-3 border-2 p-3',
         className
       )}
     >
@@ -91,7 +91,10 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
 
       {/* Change Type Filters */}
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xs font-medium">
+        <span
+          className="text-muted-foreground font-medium"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('diffFilter.changeType')}
         </span>
         <div className="flex gap-1">
@@ -139,7 +142,10 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
 
       {/* Object Type Filters */}
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xs font-medium">
+        <span
+          className="text-muted-foreground font-medium"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('diffFilter.show')}
         </span>
         <div className="flex gap-1">
@@ -222,7 +228,8 @@ export function DiffFilterBar({ className }: DiffFilterBarProps) {
           placeholder={t('diffFilter.searchPlaceholder')}
           value={filters.searchText}
           onChange={handleSearchChange}
-          className="h-8 w-full pr-8 pl-8 text-sm"
+          className="h-8 w-full pr-8 pl-8"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           title={t('diffFilter.searchShortcut')}
         />
         {filters.searchText && (

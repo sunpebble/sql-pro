@@ -300,8 +300,8 @@ export function ConnectionSelector({
               className
             )}
             style={{
-              fontFamily: tableFont.family || undefined,
-              fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
+              fontFamily: tableFont.family || 'inherit',
+              fontSize: `${tableFont.size || 13}px`,
             }}
           >
             <div className="flex min-w-0 items-center gap-2">
@@ -337,8 +337,8 @@ export function ConnectionSelector({
           align="start"
           className="min-w-(--radix-dropdown-menu-trigger-width)"
           style={{
-            fontFamily: tableFont.family || undefined,
-            fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
+            fontFamily: tableFont.family || 'inherit',
+            fontSize: `${tableFont.size || 13}px`,
           }}
         >
           {/* Open connections */}

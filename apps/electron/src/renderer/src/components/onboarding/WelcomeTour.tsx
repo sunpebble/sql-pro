@@ -224,7 +224,7 @@ export function WelcomeTour({
       <div
         ref={tooltipRef}
         className={cn(
-          'bg-card fixed z-[10000] w-[320px] rounded-lg border p-4 shadow-xl',
+          'bg-card rounded-base border-border shadow-shadow fixed z-[10000] w-[320px] border-2 p-4',
           'transition-all duration-300',
           isPositioned ? 'opacity-100' : 'opacity-0'
         )}

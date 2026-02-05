@@ -32,7 +32,7 @@ export const QueryCard = memo(
     return (
       <div
         className={cn(
-          'group hover:border-primary/50 hover:bg-accent/30 relative flex cursor-pointer flex-col gap-2.5 rounded-xl border p-4 transition-all duration-200'
+          'group hover:border-primary/50 hover:bg-accent/30 rounded-base border-border relative flex cursor-pointer flex-col gap-2.5 border-2 p-4 transition-all duration-200'
         )}
         onClick={onSelect}
       >
@@ -73,11 +73,11 @@ export const QueryCard = memo(
         <SqlHighlight
           code={query.query}
           maxLines={3}
-          className="bg-muted/50 rounded-lg p-2.5 text-xs"
+          className="bg-muted/50 rounded-base p-2.5 text-xs"
         />
 
         {/* Actions - appear on hover */}
-        <div className="bg-background/80 absolute top-2 right-2 flex items-center gap-0.5 rounded-md opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+        <div className="bg-background rounded-base absolute top-2 right-2 flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
           <TooltipProvider delay={200}>
             <Tooltip>
               <TooltipTrigger>

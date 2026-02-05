@@ -28,11 +28,21 @@ export function SettingItem({
         )}
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{label}</span>
+            <span
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size)' }}
+            >
+              {label}
+            </span>
             {badge}
           </div>
           {description && (
-            <p className="text-muted-foreground text-xs">{description}</p>
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'calc(var(--font-ui-size) * 0.85)' }}
+            >
+              {description}
+            </p>
           )}
         </div>
       </div>

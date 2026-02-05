@@ -72,7 +72,10 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
 
       {/* Diff Type Filters */}
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xs font-medium">
+        <span
+          className="text-muted-foreground font-medium"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {t('diffFilter.rowType')}
         </span>
         <div className="flex gap-1">

@@ -13,7 +13,7 @@ function Kbd({ className, ...props }: React.ComponentProps<'kbd'>) {
     <kbd
       data-slot="kbd"
       className={cn(
-        "bg-muted pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium text-inherit select-none [&_svg:not([class*='size-'])]:size-3",
+        "rounded-base border-border bg-muted text-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 border-2 px-1.5 font-mono text-xs font-medium select-none [&_svg:not([class*='size-'])]:size-3",
         className
       )}
       {...props}
@@ -87,12 +87,12 @@ function ShortcutKbd({
     <kbd
       data-slot="kbd"
       className={cn(
-        // Base styles
-        'pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none',
-        // Default colors (outside tooltip)
-        'bg-muted text-muted-foreground',
-        // Tooltip-specific colors using CSS variables
-        '[.tooltip-kbd]:bg-current/15 [.tooltip-kbd]:text-inherit',
+        // Base styles - Neobrutalism
+        'rounded-base border-border bg-muted pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 border-2 px-1.5 font-mono text-xs font-medium select-none',
+        // Default text color
+        'text-foreground',
+        // Tooltip-specific colors
+        '[.tooltip-kbd]:border-current/30 [.tooltip-kbd]:bg-current/15 [.tooltip-kbd]:text-inherit',
         "[&_svg:not([class*='size-'])]:size-3",
         className
       )}

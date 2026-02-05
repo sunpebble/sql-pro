@@ -90,7 +90,7 @@ export function FeatureShowcase({
         {/* Header - minimal and clean */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="from-gold/60 h-px w-8 bg-gradient-to-r to-transparent" />
+            <div className="bg-main h-px w-8" />
             <h2 className="text-foreground/80 text-xs font-medium tracking-widest uppercase">
               {t('features.title', { defaultValue: 'Features' })}
             </h2>
@@ -106,17 +106,17 @@ export function FeatureShowcase({
           </Button>
         </div>
 
-        {/* Feature Grid - refined cards with subtle interactions */}
+        {/* Feature Grid - neobrutalism cards */}
         <div className="grid grid-cols-3 gap-3">
           {featureKeys.map((feature) => (
             <div
               key={feature.key}
-              className="group border-border/40 bg-card/30 hover:border-primary/30 hover:bg-primary/5 flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-all duration-200 hover:shadow-sm"
+              className="group rounded-base border-border bg-card shadow-shadow-sm flex flex-col items-center gap-2 border-2 p-4 text-center transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
             >
-              <div className="text-muted-foreground group-hover:text-primary transition-colors">
+              <div className="text-muted-foreground group-hover:text-main transition-colors">
                 {feature.icon}
               </div>
-              <span className="text-foreground/90 text-xs leading-tight font-medium">
+              <span className="text-foreground text-xs leading-tight font-medium">
                 {t(`features.${feature.key}.title`)}
               </span>
               <span className="text-muted-foreground text-2xs line-clamp-2 leading-tight">
@@ -126,12 +126,12 @@ export function FeatureShowcase({
           ))}
         </div>
 
-        {/* Tour CTA - subtle, non-intrusive */}
+        {/* Tour CTA - neobrutalism style */}
         {!hasCompletedTour && (
           <Button
             variant="outline"
             onClick={onStartTour}
-            className="border-border/60 text-muted-foreground hover:border-primary/40 hover:text-foreground hover:bg-primary/5 mt-6 w-full border-dashed transition-colors"
+            className="mt-6 w-full"
           >
             <PlayCircle className="mr-2 h-4 w-4" />
             {t('features.takeTour', { defaultValue: 'Take the quick tour' })}

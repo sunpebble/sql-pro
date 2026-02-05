@@ -147,12 +147,12 @@ export function DatabaseView() {
         <div
           className={cn(
             'relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden',
-            'from-background via-background to-muted/30 bg-gradient-to-br'
+            'bg-background'
           )}
         >
           <div className="bg-grid-subtle pointer-events-none absolute inset-0 opacity-20 dark:opacity-15" />
           <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.012] dark:opacity-[0.02]" />
-          <div className="from-primary/5 pointer-events-none absolute inset-0 bg-gradient-to-br via-transparent to-transparent" />
+          <div className="bg-primary/5 pointer-events-none absolute inset-0" />
 
           {activeView === 'data' && (
             <div className="flex h-full min-h-0 flex-1 flex-col">

@@ -82,7 +82,7 @@ export const ErrorDisplay = memo(
       >
         <div
           className={cn(
-            'border-destructive/50 bg-destructive/10 flex w-full max-w-lg flex-col gap-3 rounded-lg border p-4',
+            'rounded-base border-destructive bg-destructive/10 shadow-shadow-sm flex w-full max-w-lg flex-col gap-3 border-2 p-4',
             hasEnhancedInfo && 'max-w-xl'
           )}
         >
@@ -90,7 +90,7 @@ export const ErrorDisplay = memo(
           <div className="flex items-start gap-3">
             <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
             <div className="min-w-0 flex-1">
-              <p className="text-destructive font-medium">{title}</p>
+              <p className="font-heading text-destructive">{title}</p>
               <p className="text-destructive/80 mt-1 text-sm wrap-break-word">
                 {error}
               </p>
@@ -112,8 +112,8 @@ export const ErrorDisplay = memo(
 
           {/* Suggestions */}
           {hasSuggestions && (
-            <div className="border-destructive/20 ml-8 border-t pt-3">
-              <div className="text-foreground/80 mb-2 flex items-center gap-2 text-sm font-medium">
+            <div className="border-destructive/20 ml-8 border-t-2 pt-3">
+              <div className="font-heading text-foreground/80 mb-2 flex items-center gap-2 text-sm">
                 <Lightbulb className="h-4 w-4 text-amber-500" />
                 <span>{t('errorDisplay.suggestions')}</span>
               </div>
@@ -133,8 +133,8 @@ export const ErrorDisplay = memo(
 
           {/* Troubleshooting Steps */}
           {hasTroubleshootingSteps && (
-            <div className="border-destructive/20 ml-8 border-t pt-3">
-              <div className="text-foreground/80 mb-2 flex items-center gap-2 text-sm font-medium">
+            <div className="border-destructive/20 ml-8 border-t-2 pt-3">
+              <div className="font-heading text-foreground/80 mb-2 flex items-center gap-2 text-sm">
                 <Lightbulb className="h-4 w-4 text-amber-500" />
                 <span>{t('errorDisplay.troubleshootingSteps')}</span>
               </div>
@@ -150,7 +150,7 @@ export const ErrorDisplay = memo(
 
           {/* Documentation Link */}
           {documentationUrl && (
-            <div className="border-destructive/20 ml-8 border-t pt-3">
+            <div className="border-destructive/20 ml-8 border-t-2 pt-3">
               <a
                 href={documentationUrl}
                 target="_blank"

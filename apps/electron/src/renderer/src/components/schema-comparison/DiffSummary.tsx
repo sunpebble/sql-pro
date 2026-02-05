@@ -140,7 +140,11 @@ export function DiffSummary({ comparisonResult, className }: DiffSummaryProps) {
         onClick={toggleSummaryExpanded}
       >
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">{t('compare.summary')}</CardTitle>
+          <CardTitle
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          >
+            {t('compare.summary')}
+          </CardTitle>
           {isExpanded ? (
             <ChevronUp className="text-muted-foreground h-4 w-4" />
           ) : (
@@ -258,8 +262,16 @@ function SummarySection({
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <Icon className="text-muted-foreground h-4 w-4" />
-        <span className="text-sm font-medium">{title}</span>
-        <span className="text-muted-foreground text-xs">
+        <span
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
+          {title}
+        </span>
+        <span
+          className="text-muted-foreground"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           ({total} {changesLabel})
         </span>
       </div>
@@ -275,7 +287,11 @@ function SummarySection({
           >
             <div className="flex items-center gap-1.5 text-green-700 dark:text-green-300">
               <Plus className="h-3.5 w-3.5" />
-              <span className="text-xs">{addedLabel}</span>
+              <span
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
+                {addedLabel}
+              </span>
             </div>
             <span className="text-foreground text-lg font-semibold">
               {counts.added}
@@ -294,7 +310,11 @@ function SummarySection({
           >
             <div className="flex items-center gap-1.5 text-red-700 dark:text-red-300">
               <Minus className="h-3.5 w-3.5" />
-              <span className="text-xs">{removedLabel}</span>
+              <span
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
+                {removedLabel}
+              </span>
             </div>
             <span className="text-foreground text-lg font-semibold">
               {counts.removed}
@@ -313,7 +333,11 @@ function SummarySection({
           >
             <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-300">
               <Edit className="h-3.5 w-3.5" />
-              <span className="text-xs">{modifiedLabel}</span>
+              <span
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
+                {modifiedLabel}
+              </span>
             </div>
             <span className="text-foreground text-lg font-semibold">
               {counts.modified}

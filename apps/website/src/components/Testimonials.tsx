@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useInView } from '../hooks/useInView';
-import './Testimonials.css';
 
 interface Testimonial {
   key: string;
@@ -40,17 +39,22 @@ export default function Testimonials() {
 
   return (
     <section
-      className="testimonials"
+      className="bg-secondary-background relative overflow-hidden py-24 md:py-32"
       id="testimonials"
       aria-labelledby="testimonials-title"
     >
-      <div className="container">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
         <header
           ref={headerRef}
-          className={`testimonials-header ${headerVisible ? 'visible' : ''}`}
+          className={`mb-16 text-center transition-all duration-500 ${
+            headerVisible
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-8 opacity-0'
+          }`}
         >
-          <span className="testimonials-label">
+          <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
             <svg
+              className="h-4 w-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -61,16 +65,21 @@ export default function Testimonials() {
             </svg>
             {t('testimonials.label')}
           </span>
-          <h2 id="testimonials-title" className="testimonials-title">
+          <h2
+            id="testimonials-title"
+            className="text-foreground mb-4 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl"
+          >
             {t('testimonials.title')}{' '}
-            <span className="testimonials-title-gradient">
+            <span className="text-main">
               {t('testimonials.titleHighlight')}
             </span>
           </h2>
-          <p className="testimonials-subtitle">{t('testimonials.subtitle')}</p>
+          <p className="text-muted-foreground mx-auto max-w-[600px] text-lg leading-relaxed">
+            {t('testimonials.subtitle')}
+          </p>
         </header>
 
-        <div className="testimonials-grid">
+        <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial, index) => (
             <TestimonialCard
               key={testimonial.key}
@@ -97,30 +106,36 @@ function TestimonialCard({
   return (
     <div
       ref={ref}
-      className={`testimonial-card ${isInView ? 'visible' : ''}`}
+      className={`bg-card border-border rounded-base border-2 p-6 transition-all duration-300 ${
+        isInView
+          ? 'shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY translate-y-0 opacity-100 hover:shadow-none'
+          : 'translate-y-8 opacity-0'
+      }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <svg
-        className="testimonial-quote-icon"
+        className="text-main mb-4 h-8 w-8"
         viewBox="0 0 24 24"
         fill="currentColor"
         aria-hidden="true"
       >
         <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
       </svg>
-      <p className="testimonial-quote">
+      <p className="text-foreground mb-6 text-base leading-relaxed">
         {t(`testimonials.quotes.${testimonial.key}`)}
       </p>
-      <div className="testimonial-author">
+      <div className="border-border flex items-center gap-3 border-t-2 pt-4">
         <img
           src={testimonial.avatar}
           alt=""
-          className="testimonial-avatar"
+          className="rounded-base border-border h-12 w-12 border-2"
           loading="lazy"
         />
-        <div className="testimonial-author-info">
-          <span className="testimonial-author-name">{testimonial.name}</span>
-          <span className="testimonial-author-role">
+        <div className="flex flex-col">
+          <span className="text-foreground text-sm font-semibold">
+            {testimonial.name}
+          </span>
+          <span className="text-muted-foreground text-xs">
             {testimonial.role}, {testimonial.company}
           </span>
         </div>

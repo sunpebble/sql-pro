@@ -446,7 +446,7 @@ export function PluginDetailView({
           {/* Plugin Header */}
           <div className="flex items-start gap-4">
             {/* Plugin Icon */}
-            <div className="bg-muted flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl">
+            <div className="bg-muted flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-base">
               {pluginIcon ? (
                 <img
                   src={pluginIcon}
@@ -491,7 +491,7 @@ export function PluginDetailView({
           <div className="space-y-6 py-4">
             {/* Error Message */}
             {hasError && errorMessage && (
-              <div className="bg-destructive/10 border-destructive/50 flex items-start gap-3 rounded-lg border p-3">
+              <div className="bg-destructive/10 border-destructive/50 flex items-start gap-3 rounded-base border p-3">
                 <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
                 <div>
                   <p className="text-destructive text-sm font-medium">
@@ -518,7 +518,7 @@ export function PluginDetailView({
                 <h4 className="mb-2 text-sm font-medium">
                   {t('pluginDetail.screenshots')}
                 </h4>
-                <div className="bg-muted relative overflow-hidden rounded-lg">
+                <div className="bg-muted relative overflow-hidden rounded-base">
                   <img
                     src={pluginScreenshots![currentScreenshotIndex]}
                     alt={`${pluginName} screenshot ${currentScreenshotIndex + 1}`}

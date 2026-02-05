@@ -213,7 +213,7 @@ function MemoryGraph({
   }, [history, maxHeap]);
 
   return (
-    <div className="bg-muted/30 rounded-lg border p-2">
+    <div className="bg-muted/30 rounded-base border-border border-2 p-2">
       <canvas
         ref={canvasRef}
         width={280}
@@ -281,8 +281,9 @@ function CacheStatsSection({
   if (!stats) return null;
 
   return (
-    <div className="bg-muted/30 rounded-lg border">
+    <div className="bg-muted/30 rounded-base border-border border-2">
       <button
+        type="button"
         onClick={onToggle}
         className="hover:bg-accent/50 flex w-full items-center justify-between p-2 text-sm font-medium transition-colors"
       >
@@ -359,8 +360,9 @@ function RendererMetricsSection({
   const { t } = useTranslation('common');
 
   return (
-    <div className="bg-muted/30 rounded-lg border">
+    <div className="bg-muted/30 rounded-base border-border border-2">
       <button
+        type="button"
         onClick={onToggle}
         className="hover:bg-accent/50 flex w-full items-center justify-between p-2 text-sm font-medium transition-colors"
       >
@@ -574,7 +576,7 @@ export function MemoryMonitorPanel({
         <CardContent className="space-y-4 p-4">
           {/* Error State */}
           {error && (
-            <div className="bg-destructive/10 text-destructive flex items-center gap-2 rounded-lg p-2 text-xs">
+            <div className="bg-destructive/10 text-destructive rounded-base flex items-center gap-2 p-2 text-xs">
               <AlertTriangle className="h-4 w-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -583,7 +585,7 @@ export function MemoryMonitorPanel({
           {/* Pressure Level Indicator */}
           <div
             className={cn(
-              'flex items-center justify-between rounded-lg p-3',
+              'rounded-base flex items-center justify-between p-3',
               getPressureBgColor(pressureLevel)
             )}
           >
@@ -624,7 +626,7 @@ export function MemoryMonitorPanel({
               <h3 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                 {t('devTools.memoryMonitor.mainProcessMemory')}
               </h3>
-              <div className="bg-muted/30 grid grid-cols-2 gap-3 rounded-lg border p-3">
+              <div className="bg-muted/30 rounded-base border-border grid grid-cols-2 gap-3 border-2 p-3">
                 <StatItem
                   label={t('devTools.memoryMonitor.heapUsed')}
                   value={`${mainProcessStats.metrics.usedHeapMB.toFixed(1)} MB`}
@@ -681,8 +683,9 @@ export function MemoryMonitorPanel({
             />
 
             {/* Schema cache has different stats format */}
-            <div className="bg-muted/30 rounded-lg border">
+            <div className="bg-muted/30 rounded-base border-border border-2">
               <button
+                type="button"
                 onClick={() => toggleSection('schema')}
                 className="hover:bg-accent/50 flex w-full items-center justify-between p-2 text-sm font-medium transition-colors"
               >

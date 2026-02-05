@@ -465,7 +465,7 @@ export function EditableDataGrid({
       <GhostResizeLine ref={ghostLineRef} />
       <div style={{ minWidth: totalWidth }}>
         {/* Header */}
-        <div className="bg-muted/50 sticky top-0 z-10 flex border-b backdrop-blur-sm">
+        <div className="bg-muted sticky top-0 z-10 flex border-b">
           {columns.map((col, idx) => {
             const typeCategory = getColumnTypeCategory(col);
 

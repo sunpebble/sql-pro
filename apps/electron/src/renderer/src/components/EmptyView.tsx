@@ -54,16 +54,24 @@ export const EmptyView = memo(
             size="default"
             variant="gold"
             animated
-            className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
+            className="rounded-base mb-6 flex h-20 w-20 items-center justify-center"
           >
             <Icon className="text-primary h-10 w-10" />
           </DecoFrame>
 
           {/* Title */}
-          <h3 className="text-primary mb-2 text-lg font-semibold">{title}</h3>
+          <h3
+            className="text-primary mb-2 font-semibold"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          >
+            {title}
+          </h3>
 
           {/* Description */}
-          <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+          <p
+            className="text-muted-foreground mb-6 leading-relaxed"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
             {description}
           </p>
 

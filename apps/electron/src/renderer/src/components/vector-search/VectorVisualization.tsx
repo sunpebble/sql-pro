@@ -769,7 +769,7 @@ export const VectorVisualization = memo(
 
           {/* Legend */}
           {!showLoading && hasMinimumData && !umapError && (
-            <div className="bg-background/90 absolute bottom-3 left-3 flex flex-col gap-1.5 rounded-md border px-3 py-2 text-xs backdrop-blur-sm">
+            <div className="bg-background rounded-base border-border absolute bottom-3 left-3 flex flex-col gap-1.5 border-2 px-3 py-2 text-xs">
               <div className="flex items-center gap-2">
                 <span
                   className="h-2.5 w-2.5 rounded-full"
@@ -804,7 +804,7 @@ export const VectorVisualization = memo(
             !showLoading &&
             hasMinimumData &&
             !umapError && (
-              <div className="bg-background/90 absolute right-3 bottom-3 rounded-md border px-3 py-2 text-xs backdrop-blur-sm">
+              <div className="bg-background rounded-base border-border absolute right-3 bottom-3 border-2 px-3 py-2 text-xs">
                 <span className="text-muted-foreground">
                   {t(
                     'vectorSearch.3dControls',

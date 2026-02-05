@@ -12,7 +12,7 @@ export const PromptInput = memo(
   ({ className, onSubmit, children, ...props }: PromptInputProps) => (
     <form
       className={cn(
-        'bg-background/80 ring-border/50 focus-within:ring-primary/40 flex items-end gap-2 rounded-xl px-3 py-2 ring-1 transition-all focus-within:ring-2',
+        'bg-background/80 ring-border/50 focus-within:ring-primary/40 flex items-end gap-2 rounded-base px-3 py-2 ring-1 transition-all focus-within:ring-2',
         className
       )}
       onSubmit={onSubmit}
@@ -111,7 +111,7 @@ export const PromptInputSubmit = memo(
         type="submit"
         disabled={disabled || isLoading}
         className={cn(
-          'bg-primary text-primary-foreground hover:bg-primary/90 flex h-8 w-8 items-center justify-center rounded-lg transition-all disabled:cursor-not-allowed disabled:opacity-40',
+          'bg-primary text-primary-foreground hover:bg-primary/90 flex h-8 w-8 items-center justify-center rounded-base transition-all disabled:cursor-not-allowed disabled:opacity-40',
           className
         )}
         {...props}

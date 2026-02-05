@@ -209,7 +209,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
   return (
     <div
       className={cn(
-        'my-2 rounded-lg border border-[var(--gold-muted)]/30 bg-[var(--gold-subtle)]',
+        'rounded-base my-2 border border-[var(--gold-muted)]/30 bg-[var(--gold-subtle)]',
         isStreaming && 'border-[var(--gold)]/50',
         className
       )}

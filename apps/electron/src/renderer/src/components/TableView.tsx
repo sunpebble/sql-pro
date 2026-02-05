@@ -527,9 +527,9 @@ export function TableView({ tableOverride }: TableViewProps) {
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         {/* Selection Toolbar */}
         {selectedRowIds.length > 0 && (
-          <div className="bg-primary/5 border-primary/20 flex items-center justify-between gap-4 border-b px-4 py-2">
+          <div className="border-main/30 bg-main/5 flex items-center justify-between gap-4 border-b-2 px-4 py-2">
             <div className="flex items-center gap-3">
-              <span className="text-primary text-sm font-medium">
+              <span className="font-heading text-main text-sm">
                 {t('table.rowsSelected', { count: selectedRowIds.length })}
               </span>
               <Button
@@ -575,7 +575,7 @@ export function TableView({ tableOverride }: TableViewProps) {
         )}
 
         {/* Table Header */}
-        <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
+        <div className="flex items-center justify-between gap-2 border-b-2 px-4 py-2">
           <div className="flex min-w-0 items-center gap-2 overflow-hidden">
             <h2 className="truncate font-medium">{selectedTable.name}</h2>
             <span className="text-muted-foreground shrink-0 text-sm">
@@ -593,12 +593,12 @@ export function TableView({ tableOverride }: TableViewProps) {
               )}
             </span>
             {searchStats.isSearching && (
-              <span className="bg-primary/10 text-primary shrink-0 rounded px-1.5 py-0.5 text-xs font-medium">
+              <span className="rounded-base bg-main/10 font-base text-main shrink-0 px-1.5 py-0.5 text-xs">
                 {t('table.filtered', { defaultValue: 'Filtered' })}
               </span>
             )}
             {selectedTable.type === 'view' && (
-              <span className="bg-secondary text-muted-foreground flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-xs">
+              <span className="rounded-base bg-secondary text-muted-foreground flex shrink-0 items-center gap-1 px-1.5 py-0.5 text-xs">
                 <Eye className="h-3 w-3" />
                 {t('table.view', { defaultValue: 'View' })}
               </span>
@@ -714,7 +714,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             )}
 
             {/* View Mode Toggle - Data/Images */}
-            <div className="border-border flex rounded-md border">
+            <div className="rounded-base flex border-2">
               <Tooltip>
                 <TooltipTrigger>
                   <Button
@@ -840,7 +840,7 @@ export function TableView({ tableOverride }: TableViewProps) {
         <SelectionStats selectedRows={selectedRowsData} columns={columns} />
 
         {/* Pagination - Single Row Layout */}
-        <div className="bg-background flex shrink-0 items-center justify-center gap-2 border-t px-2 py-2 sm:gap-3 sm:px-4">
+        <div className="bg-background flex shrink-0 items-center justify-center gap-2 border-t-2 px-2 py-2 sm:gap-3 sm:px-4">
           {/* Page Info - hidden on very small screens */}
           <div className="text-muted-foreground hidden text-sm whitespace-nowrap sm:block">
             {t('table.pageInfo', {

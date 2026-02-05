@@ -25,9 +25,14 @@ export function useApplyFont(
     const sizeVarName = `--font-${category}-size`;
 
     if (config.family) {
-      target.style.setProperty(varName, config.family);
+      // Set font family with proper fallback chain
+      target.style.setProperty(
+        varName,
+        `"${config.family}", system-ui, sans-serif`
+      );
     } else {
-      target.style.removeProperty(varName);
+      // Use inherit to fall back to --font-sans
+      target.style.setProperty(varName, 'inherit');
     }
     target.style.setProperty(sizeVarName, `${config.size}px`);
 

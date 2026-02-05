@@ -91,7 +91,7 @@ function VimModeToggle({
     <button
       onClick={() => onToggle(!enabled)}
       className={cn(
-        'flex flex-col items-start rounded-lg border p-3 text-left transition-colors',
+        'flex flex-col items-start rounded-base border p-3 text-left transition-colors',
         enabled
           ? 'border-primary bg-primary/10'
           : 'border-border hover:border-primary/50 hover:bg-muted/50'

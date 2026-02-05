@@ -160,7 +160,7 @@ const StatCard = memo(
       <div
         style={{ animationDelay: `${index * 50}ms` }}
         className={cn(
-          'group relative overflow-hidden rounded-lg p-3',
+          'group rounded-base relative overflow-hidden p-3',
           'bg-muted/30',
           'border-border/40 border',
           'transition-all duration-200 ease-out',
@@ -171,15 +171,13 @@ const StatCard = memo(
         <div className="relative flex items-center gap-3">
           <div
             className={cn(
-              'rounded-md p-2',
-              'bg-gradient-to-br',
-              color === 'text-blue-500' && 'from-blue-500/15 to-blue-600/10',
-              color === 'text-green-500' && 'from-green-500/15 to-green-600/10',
-              color === 'text-purple-500' &&
-                'from-purple-500/15 to-purple-600/10',
-              color === 'text-amber-500' && 'from-amber-500/15 to-amber-600/10',
-              color === 'text-rose-500' && 'from-rose-500/15 to-rose-600/10',
-              color === 'text-primary' && 'from-primary/15 to-primary/10'
+              'rounded-base p-2',
+              color === 'text-blue-500' && 'bg-blue-500/15',
+              color === 'text-green-500' && 'bg-green-500/15',
+              color === 'text-purple-500' && 'bg-purple-500/15',
+              color === 'text-amber-500' && 'bg-amber-500/15',
+              color === 'text-rose-500' && 'bg-rose-500/15',
+              color === 'text-primary' && 'bg-primary/15'
             )}
           >
             <Icon className={cn('h-4 w-4', color)} />
@@ -218,12 +216,12 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
   return (
     <div
       className={cn(
-        'group flex items-center gap-4 rounded-xl border border-transparent p-3',
+        'group rounded-base border-border flex items-center gap-4 border-2 p-3',
         'transition-all duration-200',
-        'hover:border-border/50 hover:bg-muted/50 hover:scale-[1.01] hover:shadow-sm'
+        'hover:bg-muted/50 hover:translate-x-0.5 hover:translate-y-0.5'
       )}
     >
-      <div className="from-muted to-muted/50 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br shadow-sm transition-transform duration-200 group-hover:scale-105">
+      <div className="bg-muted rounded-base flex h-8 w-8 items-center justify-center transition-transform duration-200">
         <span className="text-muted-foreground text-sm font-semibold">
           {index + 1}
         </span>
@@ -263,7 +261,7 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
       <div className="flex gap-2">
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary text-xs shadow-sm transition-transform group-hover:scale-105"
+          className="bg-primary/10 text-primary text-xs transition-transform"
         >
           {table.indexCount} idx
         </Badge>
@@ -296,7 +294,7 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
   if (chartData.length === 0) {
     return (
       <div
-        className="border-border/50 bg-muted/20 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed"
+        className="border-border bg-muted/20 rounded-base flex flex-col items-center justify-center gap-3 border-2 border-dashed"
         style={{ height }}
       >
         <div className="bg-muted/50 rounded-full p-3">
@@ -334,7 +332,7 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
               size?: number;
             };
             return (
-              <div className="bg-popover border-border/50 rounded-xl border px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+              <div className="bg-popover border-border rounded-base shadow-shadow border-2 px-3.5 py-2.5">
                 <p className="font-semibold">{data.fullName}</p>
                 <p className="text-sm font-medium text-blue-500">
                   {data.rows?.toLocaleString()} {t('databaseDashboard.rows')}
@@ -391,7 +389,7 @@ const DataTypeChart = memo(
     if (chartData.length === 0) {
       return (
         <div
-          className="border-border/50 bg-muted/20 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed"
+          className="border-border bg-muted/20 rounded-base flex flex-col items-center justify-center gap-3 border-2 border-dashed"
           style={{ height }}
         >
           <div className="bg-muted/50 rounded-full p-3">
@@ -432,7 +430,7 @@ const DataTypeChart = memo(
                 const data = payload[0].payload;
                 const percentage = ((data.value / total) * 100).toFixed(1);
                 return (
-                  <div className="bg-popover border-border/50 rounded-xl border px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+                  <div className="bg-popover border-border rounded-base shadow-shadow border-2 px-3.5 py-2.5">
                     <p className="font-semibold">{data.name}</p>
                     <p className="text-muted-foreground text-sm">
                       <span className="text-foreground font-medium">
@@ -453,8 +451,8 @@ const DataTypeChart = memo(
               key={item.name}
               style={{ animationDelay: `${index * 40}ms` }}
               className={cn(
-                'group/legend flex items-center gap-3 rounded-lg p-2.5 transition-all duration-200',
-                'hover:bg-muted/60 hover:shadow-sm',
+                'group/legend rounded-base flex items-center gap-3 p-2.5 transition-all duration-200',
+                'hover:bg-muted/60',
                 'animate-in fade-in-0 slide-in-from-right-2 fill-mode-both',
                 'cursor-default'
               )}
@@ -561,7 +559,7 @@ const InsightsCard = memo(({ stats }: InsightsCardProps) => {
     <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
-          <div className="rounded-lg bg-gradient-to-br from-emerald-500/15 to-emerald-600/10 p-1.5 shadow-sm">
+          <div className="rounded-base bg-emerald-500/15 p-1.5">
             <TrendingUp className="h-4 w-4 text-emerald-500" />
           </div>
           {t('databaseDashboard.insights.title')}
@@ -574,27 +572,21 @@ const InsightsCard = memo(({ stats }: InsightsCardProps) => {
               key={insight.title}
               style={{ animationDelay: `${index * 75}ms` }}
               className={cn(
-                'group/insight flex items-start gap-3 rounded-xl border p-3.5',
+                'group/insight rounded-base border-border flex items-start gap-3 border-2 p-3.5',
                 'animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-300',
-                'transition-all hover:scale-[1.01]',
-                insight.type === 'warning' &&
-                  'border-amber-500/20 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent hover:border-amber-500/30',
-                insight.type === 'info' &&
-                  'border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent hover:border-blue-500/30',
-                insight.type === 'success' &&
-                  'border-green-500/20 bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent hover:border-green-500/30'
+                'transition-all hover:translate-x-0.5 hover:translate-y-0.5',
+                insight.type === 'warning' && 'bg-amber-500/10',
+                insight.type === 'info' && 'bg-blue-500/10',
+                insight.type === 'success' && 'bg-green-500/10'
               )}
             >
               <div
                 className={cn(
-                  'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
+                  'rounded-base mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center',
                   'transition-transform duration-200 group-hover/insight:scale-110',
-                  insight.type === 'warning' &&
-                    'bg-amber-500/15 shadow-sm shadow-amber-500/10',
-                  insight.type === 'info' &&
-                    'bg-blue-500/15 shadow-sm shadow-blue-500/10',
-                  insight.type === 'success' &&
-                    'bg-green-500/15 shadow-sm shadow-green-500/10'
+                  insight.type === 'warning' && 'bg-amber-500/15',
+                  insight.type === 'info' && 'bg-blue-500/15',
+                  insight.type === 'success' && 'bg-green-500/15'
                 )}
               >
                 <insight.icon
@@ -751,7 +743,7 @@ export const DashboardView = memo(() => {
       {/* Header */}
       <div className="border-border/50 flex shrink-0 items-center justify-between border-b px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="from-primary/15 to-primary/10 shadow-primary/10 rounded-lg bg-gradient-to-br p-2 shadow-sm">
+          <div className="bg-primary/15 rounded-base p-2">
             <BarChart3 className="text-primary h-5 w-5" />
           </div>
           <div>
@@ -785,7 +777,7 @@ export const DashboardView = memo(() => {
         {/* Loading State */}
         {isLoading && !stats && (
           <div className="flex h-full flex-col items-center justify-center py-16">
-            <div className="from-primary/10 to-primary/5 shadow-primary/5 rounded-full bg-gradient-to-br p-5 shadow-lg">
+            <div className="bg-primary/10 rounded-full p-5">
               <Loader2 className="text-primary h-10 w-10 animate-spin" />
             </div>
             <p className="text-muted-foreground mt-4 font-medium">
@@ -797,8 +789,8 @@ export const DashboardView = memo(() => {
         {/* Error State */}
         {error && (
           <div className="p-6">
-            <div className="border-destructive/30 from-destructive/10 via-destructive/5 flex items-center gap-3 rounded-xl border bg-gradient-to-r to-transparent p-4">
-              <div className="bg-destructive/15 rounded-lg p-2">
+            <div className="border-destructive bg-destructive/10 rounded-base flex items-center gap-3 border-2 p-4">
+              <div className="bg-destructive/15 rounded-base p-2">
                 <X className="text-destructive h-5 w-5" />
               </div>
               <span className="text-destructive flex-1 font-medium">
@@ -894,7 +886,7 @@ export const DashboardView = memo(() => {
                   <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-base">
-                        <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
+                        <div className="rounded-base bg-blue-500/15 p-1.5">
                           <Database className="h-4 w-4 text-blue-500" />
                         </div>
                         {t('databaseDashboard.topTablesByRowCount')}
@@ -908,7 +900,7 @@ export const DashboardView = memo(() => {
                   <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-base">
-                        <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
+                        <div className="rounded-base bg-purple-500/15 p-1.5">
                           <PieChart className="h-4 w-4 text-purple-500" />
                         </div>
                         {t('databaseDashboard.dataTypeDistribution')}
@@ -926,14 +918,14 @@ export const DashboardView = memo(() => {
                 <InsightsCard stats={stats} />
 
                 <div className="flex items-center justify-center gap-2 text-center text-xs">
-                  <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
+                  <div className="bg-border h-px flex-1" />
                   <span className="text-muted-foreground/70 font-medium">
                     {t('databaseDashboard.lastAnalyzed')}:{' '}
                     <span className="text-muted-foreground">
                       {stats.analyzedAt.toLocaleString()}
                     </span>
                   </span>
-                  <div className="via-border h-px flex-1 bg-gradient-to-r from-transparent to-transparent" />
+                  <div className="bg-border h-px flex-1" />
                 </div>
               </div>
             </TabsContent>
@@ -946,7 +938,7 @@ export const DashboardView = memo(() => {
               <Card className="border-border/50 overflow-visible shadow-sm">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <div className="rounded-lg bg-gradient-to-br from-indigo-500/15 to-indigo-600/10 p-1.5 shadow-sm">
+                    <div className="rounded-base bg-indigo-500/15 p-1.5">
                       <Table2 className="h-4 w-4 text-indigo-500" />
                     </div>
                     {t('databaseDashboard.allTables')}
@@ -980,7 +972,7 @@ export const DashboardView = memo(() => {
                 <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-base">
-                      <div className="rounded-lg bg-gradient-to-br from-blue-500/15 to-blue-600/10 p-1.5 shadow-sm">
+                      <div className="rounded-base bg-blue-500/15 p-1.5">
                         <BarChart3 className="h-4 w-4 text-blue-500" />
                       </div>
                       {t('databaseDashboard.tableSizeComparison')}
@@ -997,7 +989,7 @@ export const DashboardView = memo(() => {
                 <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-base">
-                      <div className="rounded-lg bg-gradient-to-br from-purple-500/15 to-purple-600/10 p-1.5 shadow-sm">
+                      <div className="rounded-base bg-purple-500/15 p-1.5">
                         <PieChart className="h-4 w-4 text-purple-500" />
                       </div>
                       {t('databaseDashboard.columnTypeAnalysis')}
@@ -1017,7 +1009,7 @@ export const DashboardView = memo(() => {
                 <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-base">
-                      <div className="rounded-lg bg-gradient-to-br from-cyan-500/15 to-cyan-600/10 p-1.5 shadow-sm">
+                      <div className="rounded-base bg-cyan-500/15 p-1.5">
                         <Layers className="h-4 w-4 text-cyan-500" />
                       </div>
                       {t('databaseDashboard.dataTypeDetails')}
@@ -1033,10 +1025,10 @@ export const DashboardView = memo(() => {
                           key={item.type}
                           style={{ animationDelay: `${index * 30}ms` }}
                           className={cn(
-                            'group/type border-border/50 flex items-center gap-2 rounded-xl border px-3 py-2',
-                            'from-muted/50 via-muted/30 bg-gradient-to-br to-transparent',
+                            'group/type border-border rounded-base flex items-center gap-2 border-2 px-3 py-2',
+                            'bg-muted/30',
                             'animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-both duration-200',
-                            'hover:border-border transition-all hover:scale-[1.02] hover:shadow-sm'
+                            'transition-all hover:translate-x-0.5 hover:translate-y-0.5'
                           )}
                         >
                           <span className="font-mono text-sm font-medium">

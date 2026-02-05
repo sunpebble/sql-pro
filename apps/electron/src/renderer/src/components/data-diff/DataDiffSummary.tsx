@@ -72,7 +72,9 @@ export function DataDiffSummary({
         onClick={toggleSummaryExpanded}
       >
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">
+          <CardTitle
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          >
             {t('diffFilter.rowComparisonSummary')}
           </CardTitle>
           {expandedRows.summary ? (
@@ -88,11 +90,19 @@ export function DataDiffSummary({
           {/* Total Rows Info */}
           <div className="bg-muted/50 flex items-center gap-2 rounded-md p-3">
             <TableIcon className="text-muted-foreground h-4 w-4" />
-            <span className="text-sm font-medium">
+            <span
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('diffFilter.totalRows')}
             </span>
-            <span className="text-sm">{totalRows.toLocaleString()}</span>
-            <span className="text-muted-foreground ml-auto text-xs">
+            <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+              {totalRows.toLocaleString()}
+            </span>
+            <span
+              className="text-muted-foreground ml-auto"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('diffFilter.sourceToTarget', {
                 source: comparisonResult.summary.sourceRows.toLocaleString(),
                 target: comparisonResult.summary.targetRows.toLocaleString(),
@@ -113,7 +123,13 @@ export function DataDiffSummary({
               >
                 <div className="flex items-center gap-1.5 text-green-700 dark:text-green-300">
                   <Plus className="h-3.5 w-3.5" />
-                  <span className="text-xs">{t('diffFilter.added')}</span>
+                  <span
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    {t('diffFilter.added')}
+                  </span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.added.toLocaleString()}
@@ -132,7 +148,13 @@ export function DataDiffSummary({
               >
                 <div className="flex items-center gap-1.5 text-red-700 dark:text-red-300">
                   <Minus className="h-3.5 w-3.5" />
-                  <span className="text-xs">{t('diffFilter.removed')}</span>
+                  <span
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    {t('diffFilter.removed')}
+                  </span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.removed.toLocaleString()}
@@ -151,7 +173,13 @@ export function DataDiffSummary({
               >
                 <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-300">
                   <Edit className="h-3.5 w-3.5" />
-                  <span className="text-xs">{t('diffFilter.modified')}</span>
+                  <span
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    {t('diffFilter.modified')}
+                  </span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.modified.toLocaleString()}
@@ -169,7 +197,13 @@ export function DataDiffSummary({
                 title={t('diffFilter.filterUnchanged')}
               >
                 <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-300">
-                  <span className="text-xs">{t('diffFilter.unchanged')}</span>
+                  <span
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    }}
+                  >
+                    {t('diffFilter.unchanged')}
+                  </span>
                 </div>
                 <span className="text-foreground text-lg font-semibold">
                   {counts.unchanged.toLocaleString()}
@@ -179,7 +213,10 @@ export function DataDiffSummary({
           </div>
 
           {/* Change Summary Text */}
-          <div className="text-muted-foreground text-xs">
+          <div
+            className="text-muted-foreground"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {counts.added + counts.removed + counts.modified === 0 ? (
               <p>{t('diffFilter.noDifferencesFound')}</p>
             ) : (

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckoutModal from './CheckoutModal';
 import FeatureComparisonTable from './FeatureComparisonTable';
-import './Pricing.css';
 
 const plans = ['monthly', 'yearly', 'lifetime'] as const;
 type Plan = (typeof plans)[number];
@@ -77,12 +76,17 @@ export default function Pricing() {
   };
 
   return (
-    <section className="pricing" id="pricing" aria-labelledby="pricing-title">
-      <div className="container">
+    <section
+      className="relative overflow-hidden py-24 md:py-32"
+      id="pricing"
+      aria-labelledby="pricing-title"
+    >
+      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
         {/* Header */}
-        <header className="pricing-header">
-          <div className="pricing-label">
+        <header className="mb-16 text-center">
+          <div className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
             <svg
+              className="h-4 w-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -93,54 +97,73 @@ export default function Pricing() {
             </svg>
             Pricing
           </div>
-          <h2 id="pricing-title" className="pricing-title">
+          <h2
+            id="pricing-title"
+            className="text-foreground mb-4 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl"
+          >
             {t('pricing.title')}{' '}
-            <span className="pricing-title-gradient">
-              {t('pricing.titleHighlight')}
-            </span>
+            <span className="text-main">{t('pricing.titleHighlight')}</span>
           </h2>
-          <p className="pricing-subtitle">{t('pricing.subtitle')}</p>
+          <p className="text-muted-foreground mx-auto max-w-[600px] text-lg leading-relaxed">
+            {t('pricing.subtitle')}
+          </p>
         </header>
 
         {/* Pricing Cards */}
-        <div className="pricing-grid" role="list">
-          {plans.map((plan) => (
+        <div
+          className="mx-auto grid max-w-[1100px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+          role="list"
+        >
+          {plans.map((plan, index) => (
             <div
               key={plan}
-              className={`pricing-card ${plan === 'yearly' ? 'featured' : ''}`}
+              className={`bg-card rounded-base animate-fade-up relative flex flex-col border-2 p-9 transition-all duration-300 ${
+                plan === 'yearly'
+                  ? 'border-main shadow-shadow-lg'
+                  : 'border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none'
+              }`}
+              style={{ animationDelay: `${index * 100}ms` }}
               role="listitem"
             >
               {plan === 'yearly' && (
-                <div className="pricing-badge">{t('pricing.popular')}</div>
+                <div className="bg-main text-main-foreground border-border rounded-base absolute -top-3 left-1/2 -translate-x-1/2 border-2 px-4 py-1.5 text-xs font-semibold whitespace-nowrap">
+                  {t('pricing.popular')}
+                </div>
               )}
 
-              <div className="pricing-icon">{planIcons[plan].icon}</div>
+              <div className="bg-main text-main-foreground border-border rounded-base mb-6 flex h-14 w-14 items-center justify-center border-2">
+                <div className="h-7 w-7">{planIcons[plan].icon}</div>
+              </div>
 
-              <h3 className="pricing-plan-title">
+              <h3 className="text-foreground mb-2 text-xl font-semibold">
                 {t(`pricing.plans.${plan}.title`)}
               </h3>
 
-              <div className="pricing-price">
-                <span className="pricing-amount">
+              <div className="mb-3 flex items-baseline gap-1">
+                <span className="text-foreground text-4xl font-bold tracking-tight">
                   {t(`pricing.plans.${plan}.price`)}
                 </span>
-                <span className="pricing-period">
+                <span className="text-muted-foreground text-sm">
                   {t(`pricing.plans.${plan}.period`)}
                 </span>
               </div>
 
-              <p className="pricing-description">
+              <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
                 {t(`pricing.plans.${plan}.description`)}
               </p>
 
-              <ul className="pricing-features">
+              <ul className="m-0 mb-8 flex-1 list-none p-0">
                 {(
                   t(`pricing.plans.${plan}.features`, {
                     returnObjects: true,
                   }) as string[]
                 ).map((feature) => (
-                  <li key={feature}>
+                  <li
+                    key={feature}
+                    className="text-muted-foreground border-border flex items-start gap-3 border-b-2 py-2.5 text-sm last:border-b-0"
+                  >
                     <svg
+                      className="text-main mt-0.5 h-4.5 w-4.5 flex-shrink-0"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -155,7 +178,12 @@ export default function Pricing() {
               </ul>
 
               <button
-                className={`pricing-cta ${plan === 'yearly' ? 'pricing-cta-primary' : 'pricing-cta-outline'}`}
+                type="button"
+                className={`rounded-base border-border w-full cursor-pointer border-2 px-6 py-3.5 text-center text-base font-semibold transition-all duration-150 ${
+                  plan === 'yearly'
+                    ? 'bg-main text-main-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none'
+                    : 'bg-background text-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none'
+                }`}
                 onClick={() => handleSelectPlan(plan)}
               >
                 {t('pricing.cta')}
@@ -164,15 +192,18 @@ export default function Pricing() {
           ))}
         </div>
 
-        <p className="pricing-note">{t('pricing.note')}</p>
+        <p className="text-muted-foreground mt-12 text-center text-sm">
+          {t('pricing.note')}
+        </p>
 
         {/* Feature Comparison Table */}
         <FeatureComparisonTable />
 
         {/* Trust badges */}
-        <div className="pricing-trust">
-          <div className="trust-badge">
+        <div className="border-border mt-12 flex flex-col justify-center gap-8 border-t-2 pt-8 md:flex-row">
+          <div className="text-muted-foreground flex items-center gap-2.5 text-sm font-medium">
             <svg
+              className="text-main h-5 w-5"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -183,8 +214,9 @@ export default function Pricing() {
             </svg>
             <span>{t('pricing.trust.secure')}</span>
           </div>
-          <div className="trust-badge">
+          <div className="text-muted-foreground flex items-center gap-2.5 text-sm font-medium">
             <svg
+              className="text-main h-5 w-5"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -196,8 +228,9 @@ export default function Pricing() {
             </svg>
             <span>{t('pricing.trust.guarantee')}</span>
           </div>
-          <div className="trust-badge">
+          <div className="text-muted-foreground flex items-center gap-2.5 text-sm font-medium">
             <svg
+              className="text-main h-5 w-5"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

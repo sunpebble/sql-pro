@@ -199,7 +199,10 @@ export function SourceSelector({
   return (
     <>
       <div className="space-y-3">
-        <Label className="text-sm font-medium">
+        <Label
+          className="font-medium"
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        >
           {label ||
             (type === 'source' ? t('compare.source') : t('compare.target'))}
         </Label>
@@ -268,7 +271,10 @@ export function SourceSelector({
                 </SelectContent>
               </Select>
             ) : (
-              <div className="text-muted-foreground rounded-md border border-dashed p-4 text-center text-sm">
+              <div
+                className="text-muted-foreground rounded-base border-2 border-dashed p-4 text-center"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('compare.noConnections')}
               </div>
             )}
@@ -299,7 +305,13 @@ export function SourceSelector({
                         <FileText className="text-muted-foreground h-3.5 w-3.5" />
                         <div className="flex flex-col">
                           <span className="truncate">{snapshot.name}</span>
-                          <span className="text-muted-foreground text-xs">
+                          <span
+                            className="text-muted-foreground"
+                            style={{
+                              fontSize:
+                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                            }}
+                          >
                             {t('compare.tableCount', {
                               count: snapshot.tableCount,
                             })}{' '}
@@ -313,7 +325,10 @@ export function SourceSelector({
                 </SelectContent>
               </Select>
             ) : (
-              <div className="text-muted-foreground rounded-md border border-dashed p-4 text-center text-sm">
+              <div
+                className="text-muted-foreground rounded-base border-2 border-dashed p-4 text-center"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {t('compare.noSnapshots')}
               </div>
             )}
@@ -330,7 +345,10 @@ export function SourceSelector({
               {t('compare.createSnapshot')}
             </Button>
             {availableConnections.length === 0 && (
-              <p className="text-muted-foreground text-xs">
+              <p
+                className="text-muted-foreground"
+                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              >
                 {t('compare.openDbFirst')}
               </p>
             )}
@@ -412,7 +430,10 @@ export function SourceSelector({
 
             {/* Error Message */}
             {createSnapshotError && (
-              <div className="text-destructive text-sm">
+              <div
+                className="text-destructive"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {createSnapshotError}
               </div>
             )}

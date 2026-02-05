@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import './Account.css';
 
 // API base URL - use relative path in production, localhost for dev
 const API_URL = import.meta.env.DEV ? 'http://localhost:8787' : '';
@@ -41,6 +40,7 @@ const BackIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <path d="M19 12H5M12 19l-7-7 7-7" />
   </svg>
@@ -56,6 +56,7 @@ const CopyIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -72,6 +73,7 @@ const CheckIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <polyline points="20 6 9 17 4 12" />
   </svg>
@@ -87,6 +89,7 @@ const CreditCardIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
     <line x1="1" y1="10" x2="23" y2="10" />
@@ -103,6 +106,7 @@ const KeyIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
   </svg>
@@ -118,6 +122,7 @@ const DeviceIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
     <line x1="8" y1="21" x2="16" y2="21" />
@@ -135,6 +140,7 @@ const CalendarIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
     <line x1="16" y1="2" x2="16" y2="6" />
@@ -153,6 +159,7 @@ const ExternalLinkIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
     <polyline points="15 3 21 3 21 9" />
@@ -237,30 +244,26 @@ export default function Account({ onClose }: AccountProps) {
     return planNames[plan] || plan.charAt(0).toUpperCase() + plan.slice(1);
   }
 
-  function getStatusInfo(status: string): { label: string; className: string } {
-    const statusMap: Record<string, { label: string; className: string }> = {
-      active: {
-        label: t('account.statusActive', 'Active'),
-        className: 'status-active',
-      },
-      trialing: {
-        label: t('account.statusTrial', 'Trial'),
-        className: 'status-trial',
-      },
-      expired: {
-        label: t('account.statusExpired', 'Expired'),
-        className: 'status-expired',
-      },
-      cancelled: {
-        label: t('account.statusCancelled', 'Cancelled'),
-        className: 'status-cancelled',
-      },
-      past_due: {
-        label: t('account.statusPastDue', 'Past Due'),
-        className: 'status-past-due',
-      },
+  function getStatusClasses(status: string): string {
+    const statusMap: Record<string, string> = {
+      active: 'bg-[#22c55e]/20 text-[#22c55e]',
+      trialing: 'bg-[#3b82f6]/20 text-[#3b82f6]',
+      expired: 'bg-destructive/20 text-destructive',
+      cancelled: 'bg-destructive/20 text-destructive',
+      past_due: 'bg-[#f59e0b]/20 text-[#f59e0b]',
     };
-    return statusMap[status] || { label: status, className: 'status-default' };
+    return statusMap[status] || 'bg-secondary-background text-muted-foreground';
+  }
+
+  function getStatusLabel(status: string): string {
+    const labelMap: Record<string, string> = {
+      active: t('account.statusActive', 'Active'),
+      trialing: t('account.statusTrial', 'Trial'),
+      expired: t('account.statusExpired', 'Expired'),
+      cancelled: t('account.statusCancelled', 'Cancelled'),
+      past_due: t('account.statusPastDue', 'Past Due'),
+    };
+    return labelMap[status] || status;
   }
 
   function formatDate(dateString: string | null): string {
@@ -284,9 +287,9 @@ export default function Account({ onClose }: AccountProps) {
 
   if (isLoading) {
     return (
-      <div className="account-page">
-        <div className="account-loading">
-          <div className="account-spinner" />
+      <div className="bg-secondary-background min-h-screen px-5 py-10">
+        <div className="flex min-h-96 items-center justify-center">
+          <div className="border-border border-t-main h-10 w-10 animate-spin rounded-full border-[3px]" />
         </div>
       </div>
     );
@@ -301,35 +304,47 @@ export default function Account({ onClose }: AccountProps) {
   );
 
   return (
-    <div className="account-page">
-      <div className="account-container">
+    <div className="bg-secondary-background min-h-screen px-5 py-10">
+      <div className="mx-auto max-w-3xl">
         {/* Header */}
-        <header className="account-header">
-          <button type="button" className="account-back-btn" onClick={onClose}>
+        <header className="mb-8">
+          <button
+            type="button"
+            className="rounded-base text-muted-foreground hover:bg-background hover:text-foreground mb-4 flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors"
+            onClick={onClose}
+          >
             <BackIcon />
             <span>{t('account.backToHome', 'Back to Home')}</span>
           </button>
-          <h1 className="account-title">{t('account.title', 'Account')}</h1>
+          <h1 className="text-2xl font-bold md:text-3xl">
+            {t('account.title', 'Account')}
+          </h1>
         </header>
 
         {/* Profile Section */}
-        <section className="account-section">
-          <h2 className="account-section-title">
+        <section className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold">
             {t('account.profile', 'Profile')}
           </h2>
-          <div className="account-card profile-card">
-            <div className="profile-info">
+          <div className="rounded-base border-border bg-background flex flex-col items-start gap-4 border-2 p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
               {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt="" className="profile-avatar" />
+                <img
+                  src={user.avatarUrl}
+                  alt=""
+                  className="h-16 w-16 rounded-full object-cover"
+                />
               ) : (
-                <div className="profile-avatar-placeholder">
+                <div className="bg-main/10 text-main flex h-16 w-16 items-center justify-center rounded-full text-2xl font-semibold">
                   {user?.name?.charAt(0) || '?'}
                 </div>
               )}
-              <div className="profile-details">
-                <span className="profile-name">{user?.name}</span>
-                <span className="profile-email">{user?.email}</span>
-                <span className="profile-provider">
+              <div className="flex flex-col gap-1 text-center sm:text-left">
+                <span className="text-lg font-semibold">{user?.name}</span>
+                <span className="text-muted-foreground text-sm">
+                  {user?.email}
+                </span>
+                <span className="text-muted-foreground text-xs">
                   {t('account.connectedVia', 'Connected via')}{' '}
                   {user?.provider === 'github' ? 'GitHub' : user?.provider}
                 </span>
@@ -339,16 +354,18 @@ export default function Account({ onClose }: AccountProps) {
         </section>
 
         {/* Subscription Section */}
-        <section className="account-section">
-          <div className="account-section-header">
-            <h2 className="account-section-title">
-              <KeyIcon />
+        <section className="mb-8">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+            <h2 className="flex items-center gap-2.5 text-lg font-semibold">
+              <span className="text-main">
+                <KeyIcon />
+              </span>
               {t('account.subscriptions', 'Subscriptions')}
             </h2>
             {hasSubscription && (
               <button
                 type="button"
-                className="billing-portal-btn"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:text-main flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-60"
                 onClick={openBillingPortal}
                 disabled={billingLoading}
               >
@@ -364,9 +381,8 @@ export default function Account({ onClose }: AccountProps) {
           </div>
 
           {licenses && licenses.length > 0 ? (
-            <div className="licenses-list">
+            <div className="flex flex-col gap-4">
               {licenses.map((license) => {
-                const statusInfo = getStatusInfo(license.status);
                 const daysRemaining = getDaysRemaining(license.expiresAt);
                 const isExpiringSoon =
                   daysRemaining !== null &&
@@ -374,29 +390,32 @@ export default function Account({ onClose }: AccountProps) {
                   daysRemaining <= 7;
 
                 return (
-                  <div key={license.id} className="license-card-full">
-                    <div className="license-card-header">
-                      <div className="license-plan-badge">
+                  <div
+                    key={license.id}
+                    className="rounded-base border-border bg-background border-2 p-5 md:p-6"
+                  >
+                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                      <span className="bg-main text-main-foreground rounded-full px-3.5 py-1.5 text-sm font-semibold">
                         {formatPlan(license.plan)}
-                      </div>
+                      </span>
                       <span
-                        className={`license-status-badge ${statusInfo.className}`}
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusClasses(license.status)}`}
                       >
-                        {statusInfo.label}
+                        {getStatusLabel(license.status)}
                       </span>
                     </div>
 
-                    <div className="license-key-section">
-                      <label className="license-key-label">
+                    <div className="border-border mb-5 border-b-2 pb-5">
+                      <span className="text-muted-foreground mb-2 block text-xs font-medium tracking-wide uppercase">
                         {t('account.licenseKey', 'License Key')}
-                      </label>
-                      <div className="license-key-row">
-                        <code className="license-key-code">
+                      </span>
+                      <div className="flex flex-col items-stretch gap-3 sm:flex-row">
+                        <code className="rounded-base border-border bg-secondary-background flex-1 truncate border-2 px-4 py-3 text-center font-mono text-sm sm:text-left">
                           {license.licenseKey}
                         </code>
                         <button
                           type="button"
-                          className="copy-key-btn"
+                          className="rounded-base border-border bg-main text-main-foreground hover:bg-main/90 flex items-center justify-center gap-1.5 border-2 px-3.5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors"
                           onClick={() => copyLicenseKey(license.licenseKey)}
                         >
                           {copiedKey === license.licenseKey ? (
@@ -413,31 +432,39 @@ export default function Account({ onClose }: AccountProps) {
                       </div>
                     </div>
 
-                    <div className="license-details-grid">
-                      <div className="license-detail">
-                        <DeviceIcon />
-                        <span className="license-detail-label">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      <div className="rounded-base bg-secondary-background flex items-center gap-2.5 px-4 py-3">
+                        <span className="text-muted-foreground shrink-0">
+                          <DeviceIcon />
+                        </span>
+                        <span className="text-muted-foreground text-xs">
                           {t('account.devices', 'Devices')}
                         </span>
-                        <span className="license-detail-value">
+                        <span className="ml-auto text-sm font-semibold">
                           {license.activeMachines || 0} / {license.maxMachines}
                         </span>
                       </div>
 
                       {license.expiresAt && (
                         <div
-                          className={`license-detail ${isExpiringSoon ? 'expiring-soon' : ''}`}
+                          className={`rounded-base flex items-center gap-2.5 px-4 py-3 ${isExpiringSoon ? 'bg-[#f59e0b]/20' : 'bg-secondary-background'}`}
                         >
-                          <CalendarIcon />
-                          <span className="license-detail-label">
+                          <span
+                            className={`shrink-0 ${isExpiringSoon ? 'text-[#f59e0b]' : 'text-muted-foreground'}`}
+                          >
+                            <CalendarIcon />
+                          </span>
+                          <span
+                            className={`text-xs ${isExpiringSoon ? 'text-[#f59e0b]' : 'text-muted-foreground'}`}
+                          >
                             {license.status === 'active'
                               ? t('account.renewsOn', 'Renews on')
                               : t('account.expiresOn', 'Expires on')}
                           </span>
-                          <span className="license-detail-value">
+                          <span className="ml-auto flex flex-col items-end text-sm font-semibold">
                             {formatDate(license.expiresAt)}
                             {isExpiringSoon && (
-                              <span className="expiry-warning">
+                              <span className="text-[11px] font-medium text-[#f59e0b]">
                                 ({daysRemaining}{' '}
                                 {t('account.daysLeft', 'days left')})
                               </span>
@@ -447,12 +474,14 @@ export default function Account({ onClose }: AccountProps) {
                       )}
 
                       {license.plan === 'lifetime' && (
-                        <div className="license-detail">
-                          <CalendarIcon />
-                          <span className="license-detail-label">
+                        <div className="rounded-base bg-secondary-background flex items-center gap-2.5 px-4 py-3">
+                          <span className="text-muted-foreground shrink-0">
+                            <CalendarIcon />
+                          </span>
+                          <span className="text-muted-foreground text-xs">
                             {t('account.validity', 'Validity')}
                           </span>
-                          <span className="license-detail-value license-lifetime">
+                          <span className="text-main ml-auto text-sm font-semibold">
                             {t('account.lifetimeAccess', 'Lifetime Access')}
                           </span>
                         </div>
@@ -463,12 +492,14 @@ export default function Account({ onClose }: AccountProps) {
               })}
             </div>
           ) : (
-            <div className="no-licenses">
-              <div className="no-licenses-icon">
+            <div className="rounded-base border-border bg-background border-2 border-dashed px-6 py-12 text-center">
+              <div className="bg-secondary-background text-muted-foreground mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <KeyIcon />
               </div>
-              <h3>{t('account.noLicenses', 'No Active Licenses')}</h3>
-              <p>
+              <h3 className="mb-2 text-lg font-semibold">
+                {t('account.noLicenses', 'No Active Licenses')}
+              </h3>
+              <p className="text-muted-foreground mb-5 text-sm">
                 {t(
                   'account.noLicensesDesc',
                   'Purchase a license to unlock all Pro features.'
@@ -476,7 +507,7 @@ export default function Account({ onClose }: AccountProps) {
               </p>
               <button
                 type="button"
-                className="get-license-btn"
+                className="rounded-base border-border bg-main text-main-foreground shadow-shadow inline-flex items-center gap-2 border-2 px-6 py-3 text-sm font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
                 onClick={() => {
                   onClose();
                   // Scroll to pricing section
@@ -495,16 +526,15 @@ export default function Account({ onClose }: AccountProps) {
 
         {/* Quick Actions */}
         {hasActiveLicense && (
-          <section className="account-section">
-            <h2 className="account-section-title">
+          <section className="mb-8">
+            <h2 className="mb-4 text-lg font-semibold">
               {t('account.quickActions', 'Quick Actions')}
             </h2>
-            <div className="quick-actions-grid">
-              <a
-                href="#download"
-                className="quick-action-card"
-                onClick={(e) => {
-                  e.preventDefault();
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <button
+                type="button"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:shadow-shadow flex items-center gap-3 border-2 px-5 py-4 text-sm font-medium transition-all hover:-translate-y-0.5"
+                onClick={() => {
                   onClose();
                   setTimeout(() => {
                     document
@@ -513,7 +543,7 @@ export default function Account({ onClose }: AccountProps) {
                   }, 100);
                 }}
               >
-                <div className="quick-action-icon">
+                <div className="rounded-base bg-main/10 text-main flex h-10 w-10 items-center justify-center">
                   <svg
                     width="24"
                     height="24"
@@ -521,6 +551,7 @@ export default function Account({ onClose }: AccountProps) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
+                    aria-hidden="true"
                   >
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                     <polyline points="7 10 12 15 17 10" />
@@ -528,15 +559,15 @@ export default function Account({ onClose }: AccountProps) {
                   </svg>
                 </div>
                 <span>{t('account.downloadApp', 'Download App')}</span>
-              </a>
+              </button>
 
               <a
                 href="https://docs.sqlpro.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="quick-action-card"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:shadow-shadow flex items-center gap-3 border-2 px-5 py-4 text-sm font-medium no-underline transition-all hover:-translate-y-0.5"
               >
-                <div className="quick-action-icon">
+                <div className="rounded-base bg-main/10 text-main flex h-10 w-10 items-center justify-center">
                   <svg
                     width="24"
                     height="24"
@@ -544,17 +575,23 @@ export default function Account({ onClose }: AccountProps) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
+                    aria-hidden="true"
                   >
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                   </svg>
                 </div>
                 <span>{t('account.documentation', 'Documentation')}</span>
-                <ExternalLinkIcon />
+                <span className="text-muted-foreground ml-auto">
+                  <ExternalLinkIcon />
+                </span>
               </a>
 
-              <a href="mailto:support@sqlpro.app" className="quick-action-card">
-                <div className="quick-action-icon">
+              <a
+                href="mailto:support@sqlpro.app"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:shadow-shadow flex items-center gap-3 border-2 px-5 py-4 text-sm font-medium no-underline transition-all hover:-translate-y-0.5"
+              >
+                <div className="rounded-base bg-main/10 text-main flex h-10 w-10 items-center justify-center">
                   <svg
                     width="24"
                     height="24"
@@ -562,6 +599,7 @@ export default function Account({ onClose }: AccountProps) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
+                    aria-hidden="true"
                   >
                     <circle cx="12" cy="12" r="10" />
                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />

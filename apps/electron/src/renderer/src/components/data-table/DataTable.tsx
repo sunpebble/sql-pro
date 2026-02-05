@@ -656,8 +656,8 @@ export const DataTable = function DataTable({
       viewportRef={containerRef}
       data-component="data-table"
       className={cn(
-        'bg-background rounded-md outline-none',
-        'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2',
+        'bg-background rounded-base border-border border-2 outline-none',
+        'focus-visible:ring-main focus-visible:ring-2 focus-visible:ring-offset-2',
         className
       )}
       tabIndex={0}
@@ -672,8 +672,8 @@ export const DataTable = function DataTable({
         style={{
           tableLayout: 'fixed',
           minWidth: table.getTotalSize(),
-          fontFamily: tableFont.family || undefined,
-          fontSize: tableFont.size ? `${tableFont.size}px` : undefined,
+          fontFamily: tableFont.family || 'inherit',
+          fontSize: `${tableFont.size || 13}px`,
         }}
       >
         {/* Column group for width control - uses CSS variables for instant updates */}

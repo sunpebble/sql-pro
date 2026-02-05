@@ -107,7 +107,7 @@ export const Reasoning = memo(
       >
         <Collapsible
           className={cn(
-            'not-prose my-2 rounded-lg border border-[var(--gold-muted,hsl(var(--primary)/0.3))] bg-[var(--gold-subtle,hsl(var(--primary)/0.05))]',
+            'not-prose my-2 rounded-base border border-[var(--gold-muted,hsl(var(--primary)/0.3))] bg-[var(--gold-subtle,hsl(var(--primary)/0.05))]',
             isStreaming && 'border-[var(--gold,hsl(var(--primary)))]/50',
             className
           )}

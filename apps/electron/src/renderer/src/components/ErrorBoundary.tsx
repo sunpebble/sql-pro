@@ -121,7 +121,7 @@ function CollapsibleSection({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-border/50 overflow-hidden rounded-lg border">
+    <div className="border-border/50 rounded-base overflow-hidden border">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="hover:bg-muted/50 flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium transition-colors"
@@ -362,7 +362,7 @@ function ErrorFallback({
 
         {/* Error message box */}
         {error && (
-          <div className="bg-destructive/5 border-destructive/20 mb-4 w-full rounded-lg border p-4 text-left">
+          <div className="bg-destructive/5 border-destructive/20 rounded-base mb-4 w-full border p-4 text-left">
             <div className="text-destructive flex items-start gap-2">
               <span className="bg-destructive/20 rounded px-1.5 py-0.5 font-mono text-xs font-medium">
                 {error.name || t('errorBoundary.error')}

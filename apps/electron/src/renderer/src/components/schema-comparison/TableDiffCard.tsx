@@ -130,9 +130,15 @@ export function TableDiffCard({
             <ChevronRight className="h-4 w-4 shrink-0" />
           )}
           {style.icon}
-          <CardTitle className="flex-1 text-base font-semibold">
+          <CardTitle
+            className="flex-1 font-semibold"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          >
             {name}
-            <span className="text-muted-foreground ml-2 text-sm font-normal">
+            <span
+              className="text-muted-foreground ml-2 font-normal"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {schema}
             </span>
           </CardTitle>
@@ -240,14 +246,17 @@ export function TableDiffCard({
 
           {/* For added tables, show the full structure */}
           {diffType === 'added' && tableDiff.target && (
-            <div className="space-y-2 text-sm">
+            <div
+              className="space-y-2"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               <p className="text-muted-foreground">
                 {t('schema.tableAddedInTarget', {
                   count: tableDiff.target.columns.length,
                 })}
               </p>
               {tableDiff.target.columns.length > 0 && (
-                <div className="bg-background/50 rounded border p-2">
+                <div className="bg-background/50 rounded-base border-2 p-2">
                   <div className="space-y-1">
                     {tableDiff.target.columns.map((col) => (
                       <div
@@ -279,14 +288,17 @@ export function TableDiffCard({
 
           {/* For removed tables, show the full structure */}
           {diffType === 'removed' && tableDiff.source && (
-            <div className="space-y-2 text-sm">
+            <div
+              className="space-y-2"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               <p className="text-muted-foreground">
                 {t('schema.tableRemovedFromSource', {
                   count: tableDiff.source.columns.length,
                 })}
               </p>
               {tableDiff.source.columns.length > 0 && (
-                <div className="bg-background/50 rounded border p-2">
+                <div className="bg-background/50 rounded-base border-2 p-2">
                   <div className="space-y-1">
                     {tableDiff.source.columns.map((col) => (
                       <div
@@ -318,7 +330,10 @@ export function TableDiffCard({
 
           {/* Unchanged tables */}
           {diffType === 'unchanged' && (
-            <p className="text-muted-foreground text-sm">
+            <p
+              className="text-muted-foreground"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('diffFilter.noDifferences')}
             </p>
           )}
@@ -338,7 +353,10 @@ interface DiffSectionProps {
 function DiffSection({ title, icon, count, children }: DiffSectionProps) {
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 text-sm font-medium">
+      <div
+        className="flex items-center gap-2 font-medium"
+        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      >
         {icon}
         <span>
           {title} <span className="text-muted-foreground">({count})</span>
@@ -372,7 +390,7 @@ function ColumnDiffList({
   }
 
   return (
-    <div className="bg-background/50 space-y-1 rounded border p-2">
+    <div className="bg-background/50 rounded-base space-y-1 border-2 p-2">
       {filteredDiffs.map((diff) => (
         <ColumnDiffRow key={diff.name} diff={diff} />
       ))}
@@ -500,7 +518,7 @@ function IndexDiffList({
   }
 
   return (
-    <div className="bg-background/50 space-y-1 rounded border p-2">
+    <div className="bg-background/50 rounded-base space-y-1 border-2 p-2">
       {filteredDiffs.map((diff) => (
         <IndexDiffRow key={diff.name} diff={diff} />
       ))}
@@ -604,7 +622,7 @@ function ForeignKeyDiffList({
   }
 
   return (
-    <div className="bg-background/50 space-y-1 rounded border p-2">
+    <div className="bg-background/50 rounded-base space-y-1 border-2 p-2">
       {filteredDiffs.map((diff) => (
         <ForeignKeyDiffRow
           key={`${diff.column}-${diff.diffType}-${diff.target?.referencedTable ?? diff.source?.referencedTable ?? 'none'}`}
@@ -720,7 +738,7 @@ function TriggerDiffList({
   }
 
   return (
-    <div className="bg-background/50 space-y-1 rounded border p-2">
+    <div className="bg-background/50 rounded-base space-y-1 border-2 p-2">
       {filteredDiffs.map((diff) => (
         <TriggerDiffRow key={diff.name} diff={diff} />
       ))}

@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useInView } from '../hooks/useInView';
-import './Stats.css';
 
 interface Stat {
   key: string;
@@ -22,27 +21,35 @@ export default function Stats() {
   return (
     <section
       ref={ref}
-      className={`stats ${isInView ? 'visible' : ''}`}
+      className={`bg-secondary-background py-16 transition-all duration-500 md:py-20 ${
+        isInView ? 'opacity-100' : 'opacity-0'
+      }`}
       aria-labelledby="stats-title"
     >
-      <div className="container">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
         <h2 id="stats-title" className="sr-only">
           {t('stats.title')}
         </h2>
-        <div className="stats-grid">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
           {stats.map((stat, index) => (
             <div
               key={stat.key}
-              className="stat-item"
+              className={`bg-card border-border rounded-base shadow-shadow flex flex-col items-center border-2 p-6 text-center transition-all duration-300 ${
+                isInView
+                  ? 'translate-y-0 opacity-100'
+                  : 'translate-y-4 opacity-0'
+              }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="stat-value">
+              <div className="text-main mb-2 text-4xl font-bold md:text-5xl">
                 {stat.value}
                 {stat.suffix && (
-                  <span className="stat-suffix">{stat.suffix}</span>
+                  <span className="text-3xl md:text-4xl">{stat.suffix}</span>
                 )}
               </div>
-              <div className="stat-label">{t(`stats.${stat.key}`)}</div>
+              <div className="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+                {t(`stats.${stat.key}`)}
+              </div>
             </div>
           ))}
         </div>

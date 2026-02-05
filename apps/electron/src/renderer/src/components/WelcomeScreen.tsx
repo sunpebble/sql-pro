@@ -921,47 +921,7 @@ export function WelcomeScreen() {
   );
 
   return (
-    <div className="from-background via-background to-muted/20 relative flex h-full flex-col overflow-hidden bg-gradient-to-br">
-      {/* Subtle ambient glow - refined single effect */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 80% 50% at 70% 20%, var(--primary-subtle), transparent 60%)
-          `,
-        }}
-      />
-
-      {/* Minimal geometric accent */}
-      <div className="pointer-events-none absolute top-0 right-0 h-1/2 w-1/3 opacity-[0.03]">
-        <svg viewBox="0 0 200 200" className="h-full w-full">
-          <defs>
-            <linearGradient
-              id="primary-stroke"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="var(--primary)" />
-              <stop offset="100%" stopColor="var(--primary-dark)" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M100 10 L190 55 L190 145 L100 190 L10 145 L10 55 Z"
-            fill="none"
-            stroke="url(#primary-stroke)"
-            strokeWidth="0.5"
-          />
-          <path
-            d="M100 30 L170 65 L170 135 L100 170 L30 135 L30 65 Z"
-            fill="none"
-            stroke="url(#primary-stroke)"
-            strokeWidth="0.3"
-          />
-        </svg>
-      </div>
-
+    <div className="bg-background relative flex h-full flex-col overflow-hidden">
       {/* Top Right Controls */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
         <Tooltip>
@@ -988,7 +948,7 @@ export function WelcomeScreen() {
       <div className="flex flex-1 items-center justify-center overflow-hidden">
         <div className="flex h-full max-h-[700px] w-full items-center">
           {/* Left Column - Feature Showcase (wider) */}
-          <div className="border-border/50 flex w-[55%] justify-center border-r p-10">
+          <div className="border-border flex w-[55%] justify-center border-r-2 p-10">
             <div className="w-full max-w-lg">
               <FeatureShowcase
                 onStartTour={handleStartWelcomeTour}
@@ -1002,12 +962,12 @@ export function WelcomeScreen() {
           {/* Right Column - Connection Area (focused) */}
           <div className="relative flex w-[45%] justify-center p-10">
             <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
-              {/* Logo & Title - refined, minimal */}
+              {/* Logo & Title - neobrutalism style */}
               <div className="shrink-0 text-center">
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-[var(--primary)]/20 bg-[var(--primary)]/5 shadow-sm transition-all duration-300 hover:border-[var(--primary)]/40 hover:shadow-[0_4px_20px_var(--primary-subtle)]">
-                  <Database className="h-7 w-7 text-[var(--primary)]" />
+                <div className="rounded-base border-border bg-main shadow-shadow mx-auto mb-5 flex h-14 w-14 items-center justify-center border-2">
+                  <Database className="text-main-foreground h-7 w-7" />
                 </div>
-                <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+                <h1 className="text-foreground text-2xl font-bold tracking-tight">
                   {t('app.name')}
                 </h1>
                 <p className="text-muted-foreground mt-1.5 text-sm">
@@ -1019,18 +979,18 @@ export function WelcomeScreen() {
 
               {/* Error Message */}
               {error && (
-                <div className="border-destructive/30 bg-destructive/5 text-destructive flex items-center gap-2.5 rounded-lg border p-3 text-sm">
+                <div className="border-border bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border-2 p-3 text-sm">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
-              {/* Connection Buttons - clean, professional */}
+              {/* Connection Buttons - neobrutalism style */}
               <div className="shrink-0 space-y-3">
                 <Button
                   variant={isConnecting ? 'outline' : 'default'}
                   size="lg"
-                  className="text-background w-full bg-[var(--primary)] font-medium shadow-sm transition-all hover:bg-[var(--primary-dark)] hover:shadow-md"
+                  className="w-full font-medium"
                   onClick={handleOpenDatabase}
                   disabled={isConnecting}
                   data-action="open-database"
@@ -1045,7 +1005,7 @@ export function WelcomeScreen() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-border/80 w-full transition-colors hover:border-[var(--primary)]/50 hover:bg-[var(--primary)]/5"
+                  className="w-full"
                   onClick={() => setDbTypeSelectorOpen(true)}
                   disabled={isConnecting}
                   data-action="connect-server"
@@ -1066,7 +1026,7 @@ export function WelcomeScreen() {
               {/* Recent Connections / Profile Manager */}
               <div>
                 {showProfiles ? (
-                  <div className="border-border/50 bg-card/50 max-h-64 overflow-hidden rounded-lg border backdrop-blur-sm">
+                  <div className="border-border bg-secondary-background rounded-base max-h-64 overflow-hidden border-2">
                     <ProfileManager
                       onConnect={handleConnectFromProfile}
                       compact={true}

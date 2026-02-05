@@ -84,7 +84,7 @@ function ExecutionPlanNodeComponent({
   return (
     <div
       className={cn(
-        'bg-card text-card-foreground min-w-[280px] rounded-lg border shadow-sm',
+        'bg-card text-card-foreground rounded-base border-border min-w-[280px] border-2',
         'dark:border-zinc-700 dark:bg-zinc-900',
         selected && 'ring-gold ring-2',
         hasWarning && [warningStyle.border, warningStyle.bg]
