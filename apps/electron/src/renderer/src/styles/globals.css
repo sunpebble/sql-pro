@@ -734,12 +734,12 @@ th {
 /* Grid backgrounds (neobrutalism - solid pattern backgrounds) */
 .bg-grid-dot {
   background-color: var(--secondary-background);
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='%23000'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='rgba(0,0,0,0.08)'/%3E%3C/svg%3E");
   background-size: 24px 24px;
 }
 
 .dark .bg-grid-dot {
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='%23fff'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
 }
 
 .bg-grid-line {
@@ -750,6 +750,12 @@ th {
 
 .dark .bg-grid-line {
   background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 0H0v24' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* Glass effect with gold accent */
+.glass-gold {
+  background-color: var(--card);
+  border-left: 3px solid var(--primary);
 }
 
 /* ═══════════════════════════════════════
