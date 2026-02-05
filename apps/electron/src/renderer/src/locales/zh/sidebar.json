@@ -117,7 +117,17 @@
     "noFolders": "暂无文件夹"
   },
   "tags": {
-    "createTag": "创建标签"
+    "createTag": "创建标签",
+    "editTag": "编辑标签",
+    "name": "名称",
+    "namePlaceholder": "输入标签名称...",
+    "color": "颜色",
+    "colorHint": "点击选择颜色",
+    "create": "创建",
+    "save": "保存",
+    "delete": "删除",
+    "errorNameRequired": "标签名称不能为空",
+    "errorDuplicate": "标签名称已存在"
   },
   "newQuery": "新建查询"
 }

@@ -117,7 +117,17 @@
     "noFolders": "No folders"
   },
   "tags": {
-    "createTag": "Create Tag"
+    "createTag": "Create Tag",
+    "editTag": "Edit Tag",
+    "name": "Name",
+    "namePlaceholder": "Enter tag name...",
+    "color": "Color",
+    "colorHint": "Click to select color",
+    "create": "Create",
+    "save": "Save",
+    "delete": "Delete",
+    "errorNameRequired": "Tag name is required",
+    "errorDuplicate": "Tag name already exists"
   },
   "newQuery": "New Query"
 }
