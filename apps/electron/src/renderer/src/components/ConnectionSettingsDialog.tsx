@@ -358,7 +358,7 @@ function DialogFormContent({
                     className="font-medium"
                     style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                   >
-                    {t('savedPassword')}
+                    {t('connectionSettings.savedPassword')}
                   </span>
                 </div>
                 {hasSavedPassword && (
@@ -368,7 +368,7 @@ function DialogFormContent({
                       fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
                     }}
                   >
-                    {t('passwordSaved')}
+                    {t('connectionSettings.passwordSaved')}
                   </span>
                 )}
               </div>
@@ -383,8 +383,8 @@ function DialogFormContent({
                     onClick={() => setShowPasswordEdit(true)}
                   >
                     {hasSavedPassword
-                      ? t('changePasswordBtn')
-                      : t('savePassword')}
+                      ? t('connectionSettings.changePassword')
+                      : t('connectionSettings.savePassword')}
                   </Button>
                   {hasSavedPassword && (
                     <Button
