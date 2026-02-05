@@ -2555,5 +2555,9 @@
   },
   "pagination": {
     "all": "全部"
-  }
+  },
+  "savedPassword": "已保存的密码",
+  "passwordSaved": "密码已保存",
+  "savePassword": "保存密码",
+  "changePasswordBtn": "修改密码"
 }

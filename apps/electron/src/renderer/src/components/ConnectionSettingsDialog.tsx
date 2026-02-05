@@ -382,7 +382,9 @@ function DialogFormContent({
                     className="flex-1"
                     onClick={() => setShowPasswordEdit(true)}
                   >
-                    {hasSavedPassword ? t('changePassword') : t('savePassword')}
+                    {hasSavedPassword
+                      ? t('changePasswordBtn')
+                      : t('savePassword')}
                   </Button>
                   {hasSavedPassword && (
                     <Button

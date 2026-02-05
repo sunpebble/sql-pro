@@ -2555,5 +2555,9 @@
   },
   "pagination": {
     "all": "All"
-  }
+  },
+  "savedPassword": "Saved Password",
+  "passwordSaved": "Password saved",
+  "savePassword": "Save Password",
+  "changePasswordBtn": "Change Password"
 }
