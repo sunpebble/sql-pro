@@ -172,6 +172,7 @@
     "free": "Free Plan",
     "featuresUnlocked": "{{count}} features unlocked",
     "activated": "Activated {{date}}",
+    "expiresOn": "Expires {{date}}",
     "unlockFeatures": "Unlock AI features and advanced tools",
     "upgrade": "Upgrade",
     "manage": "Manage",
@@ -180,7 +181,10 @@
       "advanced_analytics": "Advanced Analytics",
       "export_formats": "Export Formats",
       "batch_operations": "Batch Operations",
-      "performance_monitoring": "Performance Monitoring"
+      "performance_monitoring": "Performance Monitoring",
+      "advanced-export": "Advanced Export",
+      "plugin-system": "Plugin System",
+      "query-optimizer": "Query Optimizer"
     }
   },
   "ai": {

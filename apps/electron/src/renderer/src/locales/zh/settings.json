@@ -172,6 +172,7 @@
     "free": "免费版",
     "featuresUnlocked": "已解锁 {{count}} 项功能",
     "activated": "激活于 {{date}}",
+    "expiresOn": "有效期至 {{date}}",
     "unlockFeatures": "解锁 AI 功能和高级工具",
     "upgrade": "升级",
     "manage": "管理",
@@ -180,7 +181,10 @@
       "advanced_analytics": "高级分析",
       "export_formats": "导出格式",
       "batch_operations": "批量操作",
-      "performance_monitoring": "性能监控"
+      "performance_monitoring": "性能监控",
+      "advanced-export": "高级导出",
+      "plugin-system": "插件系统",
+      "query-optimizer": "查询优化器"
     }
   },
   "ai": {

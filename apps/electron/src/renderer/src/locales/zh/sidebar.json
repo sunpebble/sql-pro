@@ -116,5 +116,8 @@
     "delete": "删除文件夹",
     "noFolders": "暂无文件夹"
   },
+  "tags": {
+    "createTag": "创建标签"
+  },
   "newQuery": "新建查询"
 }

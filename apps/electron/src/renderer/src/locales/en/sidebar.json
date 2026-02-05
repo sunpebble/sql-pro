@@ -116,5 +116,8 @@
     "delete": "Delete Folder",
     "noFolders": "No folders"
   },
+  "tags": {
+    "createTag": "Create Tag"
+  },
   "newQuery": "New Query"
 }

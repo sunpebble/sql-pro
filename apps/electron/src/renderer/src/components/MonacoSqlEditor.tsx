@@ -87,9 +87,9 @@ export function MonacoSqlEditor({
   onChange,
   onExecute,
   schema,
-  height = '150px',
-  minHeight = 100,
-  maxHeight = 500,
+  height = '250px',
+  minHeight = 150,
+  maxHeight = 600,
   executionError,
   initialCursorPosition,
   initialScrollPosition,
@@ -611,8 +611,11 @@ export function MonacoSqlEditor({
 
   return (
     <div ref={containerRef} className="relative flex flex-col">
-      {/* Editor container */}
-      <div style={{ height: editorHeight }}>
+      {/* Editor container with Neobrutalism border */}
+      <div
+        className="rounded-base border-border overflow-hidden border-2"
+        style={{ height: editorHeight }}
+      >
         <Editor
           height="100%"
           defaultLanguage="sql"
@@ -658,6 +661,9 @@ export function MonacoSqlEditor({
               horizontalScrollbarSize: 10,
             },
 
+            // Fix suggest widget being clipped by overflow:hidden container
+            fixedOverflowWidgets: true,
+
             // Find/Replace (Cmd/Ctrl+F to find, Cmd/Ctrl+H to replace)
             find: {
               addExtraSpaceOnTop: true,
@@ -675,7 +681,7 @@ export function MonacoSqlEditor({
       {editorVimMode && (
         <div
           ref={vimStatusRef}
-          className="bg-muted/50 text-muted-foreground border-t px-2 py-1 font-mono text-xs"
+          className="bg-muted/50 text-muted-foreground border-t-2 px-2 py-1 font-mono text-xs"
         />
       )}
 
@@ -685,8 +691,8 @@ export function MonacoSqlEditor({
         onDoubleClick={handleDoubleClick}
         className={cn(
           'h-1.5 cursor-ns-resize transition-colors',
-          'hover:bg-primary/20 bg-transparent',
-          isResizing && 'bg-primary/30'
+          'hover:bg-main/20 bg-transparent',
+          isResizing && 'bg-main/30'
         )}
         title={t('queryEditor.resizeHandle')}
       >
