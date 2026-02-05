@@ -43,7 +43,7 @@ export function Toolbar() {
           onClick={openChangesPanel}
           className={cn(
             'rounded-base flex shrink-0 items-center gap-2 px-3 py-1.5',
-            'text-sm font-medium',
+            'font-medium',
             'bg-warning/20 text-warning-foreground',
             'border-border border-2',
             'shadow-shadow-sm',
@@ -51,6 +51,7 @@ export function Toolbar() {
             'hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none',
             'active:translate-x-1 active:translate-y-1'
           )}
+          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
         >
           <FileText className="h-4 w-4" />
           <span>
@@ -116,13 +117,14 @@ export function Toolbar() {
             }}
             className={cn(
               'rounded-base h-8 gap-2 px-3',
-              'text-xs font-medium',
+              'font-medium',
               'text-muted-foreground hover:text-foreground',
               'hover:border-border border-2 border-transparent',
               'hover:bg-muted',
               'transition-all duration-150',
               TOOLBAR_BUTTON_INTERACTIVE
             )}
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           >
             <span>{t('toolbar.commands', { defaultValue: 'Commands' })}</span>
             <ShortcutKbd action="action.command-palette" />
@@ -162,7 +164,8 @@ export function Toolbar() {
         <DropdownMenuContent align="end" className="min-w-[160px]">
           <DropdownMenuItem
             onClick={startTour}
-            className="gap-2 text-sm font-medium"
+            className="gap-2 font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           >
             <Compass className="h-4 w-4" />
             {t('toolbar.takeATour', { defaultValue: 'Take a Tour' })}

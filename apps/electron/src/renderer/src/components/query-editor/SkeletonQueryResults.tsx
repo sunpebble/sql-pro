@@ -26,7 +26,10 @@ export function SkeletonQueryResults({
       data-slot="skeleton-query-results"
     >
       {/* Results Header */}
-      <div className="text-muted-foreground flex items-center gap-4 border-b-2 px-4 py-2 text-sm">
+      <div
+        className="text-muted-foreground flex items-center gap-4 border-b-2 px-4 py-2"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         <Skeleton className="h-4 w-20" />
         <Skeleton className="h-4 w-16" />
       </div>

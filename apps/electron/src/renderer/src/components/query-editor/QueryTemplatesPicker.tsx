@@ -106,7 +106,10 @@ const TemplateCard = memo(
         </div>
 
         {/* Description */}
-        <p className="text-muted-foreground line-clamp-2 text-xs leading-relaxed">
+        <p
+          className="text-muted-foreground line-clamp-2 leading-relaxed"
+          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        >
           {template.description}
         </p>
 
@@ -390,7 +393,10 @@ export const QueryTemplatesPicker = memo(
                     <p className="font-medium">
                       {t('queryTemplates.noTemplatesFound')}
                     </p>
-                    <p className="text-sm opacity-70">
+                    <p
+                      className="opacity-70"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {t('queryTemplates.tryAdjustingSearch')}
                     </p>
                   </div>

@@ -91,7 +91,10 @@ export const ErrorDisplay = memo(
             <AlertCircle className="text-destructive mt-0.5 h-5 w-5 shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="font-heading text-destructive">{title}</p>
-              <p className="text-destructive/80 mt-1 text-sm wrap-break-word">
+              <p
+                className="text-destructive/80 mt-1 wrap-break-word"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 {error}
               </p>
             </div>
@@ -99,7 +102,10 @@ export const ErrorDisplay = memo(
 
           {/* Error Position */}
           {errorPosition && (
-            <div className="text-muted-foreground ml-8 flex items-center gap-2 text-xs">
+            <div
+              className="text-muted-foreground ml-8 flex items-center gap-2"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               <MapPin className="h-3.5 w-3.5" />
               <span>
                 {t('errorDisplay.lineColumn', {
@@ -113,7 +119,10 @@ export const ErrorDisplay = memo(
           {/* Suggestions */}
           {hasSuggestions && (
             <div className="border-destructive/20 ml-8 border-t-2 pt-3">
-              <div className="font-heading text-foreground/80 mb-2 flex items-center gap-2 text-sm">
+              <div
+                className="font-heading text-foreground/80 mb-2 flex items-center gap-2"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 <Lightbulb className="h-4 w-4 text-amber-500" />
                 <span>{t('errorDisplay.suggestions')}</span>
               </div>
@@ -121,7 +130,8 @@ export const ErrorDisplay = memo(
                 {suggestions.map((suggestion) => (
                   <li
                     key={suggestion}
-                    className="text-muted-foreground flex items-start gap-2 text-sm"
+                    className="text-muted-foreground flex items-start gap-2"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                   >
                     <ChevronRight className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>{suggestion}</span>
@@ -134,13 +144,20 @@ export const ErrorDisplay = memo(
           {/* Troubleshooting Steps */}
           {hasTroubleshootingSteps && (
             <div className="border-destructive/20 ml-8 border-t-2 pt-3">
-              <div className="font-heading text-foreground/80 mb-2 flex items-center gap-2 text-sm">
+              <div
+                className="font-heading text-foreground/80 mb-2 flex items-center gap-2"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              >
                 <Lightbulb className="h-4 w-4 text-amber-500" />
                 <span>{t('errorDisplay.troubleshootingSteps')}</span>
               </div>
               <ol className="list-inside list-decimal space-y-1.5">
                 {troubleshootingSteps.map((step) => (
-                  <li key={step} className="text-muted-foreground text-sm">
+                  <li
+                    key={step}
+                    className="text-muted-foreground"
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  >
                     {step}
                   </li>
                 ))}
@@ -155,7 +172,8 @@ export const ErrorDisplay = memo(
                 href={documentationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary inline-flex items-center gap-2 text-sm hover:underline"
+                className="text-primary inline-flex items-center gap-2 hover:underline"
+                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span>{t('errorDisplay.viewDocumentation')}</span>

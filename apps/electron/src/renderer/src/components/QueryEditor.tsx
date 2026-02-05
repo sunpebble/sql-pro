@@ -155,7 +155,12 @@ function TemplateCard({
           ) : (
             <FileText className="text-muted-foreground h-3.5 w-3.5 shrink-0" />
           )}
-          <span className="truncate text-sm font-medium">{template.name}</span>
+          <span
+            className="truncate font-medium"
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          >
+            {template.name}
+          </span>
         </div>
         <Badge
           variant="secondary"
@@ -169,7 +174,10 @@ function TemplateCard({
       </div>
 
       {/* Description */}
-      <p className="text-muted-foreground line-clamp-2 text-xs leading-relaxed">
+      <p
+        className="text-muted-foreground line-clamp-2 leading-relaxed"
+        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      >
         {template.description}
       </p>
 
@@ -620,7 +628,10 @@ export function QueryEditor() {
       <div className="flex min-w-0 items-center justify-between gap-4 border-b px-4 py-2">
         <div className="toolbar-section">
           <h2 className="font-medium">{t('queryEditor.title')}</h2>
-          <span className="text-muted-foreground hidden text-xs sm:inline">
+          <span
+            className="text-muted-foreground hidden sm:inline"
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          >
             {t('queryEditor.executeHint')}
           </span>
         </div>
@@ -769,7 +780,10 @@ export function QueryEditor() {
                         <p className="text-destructive font-medium">
                           {t('queryEditor.queryError')}
                         </p>
-                        <p className="text-destructive/80 mt-1 text-sm">
+                        <p
+                          className="text-destructive/80 mt-1"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {tabError}
                         </p>
                       </div>
@@ -778,7 +792,10 @@ export function QueryEditor() {
                 ) : tabResults ? (
                   <div className="flex h-full flex-col">
                     {/* Results Header */}
-                    <div className="text-muted-foreground flex items-center gap-4 border-b px-4 py-2 text-sm">
+                    <div
+                      className="text-muted-foreground flex items-center gap-4 border-b px-4 py-2"
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    >
                       {tabResults.resultSets &&
                       tabResults.resultSets.length > 1 ? (
                         <span>
@@ -903,10 +920,18 @@ export function QueryEditor() {
                 >
                   <div className="flex flex-col gap-4 p-4">
                     <div className="flex flex-col gap-2">
-                      <h4 className="text-sm font-medium">
+                      <h4
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('queryEditor.exportQuery')}
                       </h4>
-                      <p className="text-muted-foreground text-xs">
+                      <p
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('queryEditor.exportQueryDesc', {
                           defaultValue:
                             'Export current query as JSON or SQL file',
@@ -923,10 +948,18 @@ export function QueryEditor() {
                       </Button>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h4 className="text-sm font-medium">
+                      <h4
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      >
                         {t('queryEditor.importQuery')}
                       </h4>
-                      <p className="text-muted-foreground text-xs">
+                      <p
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {t('queryEditor.importQueryDesc', {
                           defaultValue: 'Import query from JSON or SQL file',
                         })}
@@ -1006,10 +1039,19 @@ export function QueryEditor() {
                         {getFilteredTemplates().length === 0 ? (
                           <div className="text-muted-foreground flex flex-col items-center justify-center py-12">
                             <FileText className="mb-3 h-10 w-10 opacity-40" />
-                            <p className="text-sm font-medium">
+                            <p
+                              className="font-medium"
+                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            >
                               {t('queryTemplates.noTemplatesFound')}
                             </p>
-                            <p className="text-xs opacity-70">
+                            <p
+                              className="opacity-70"
+                              style={{
+                                fontSize:
+                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                              }}
+                            >
                               {t('queryTemplates.tryAdjustingSearch')}
                             </p>
                           </div>
@@ -1036,7 +1078,12 @@ export function QueryEditor() {
                   <div className="flex h-full flex-col">
                     {/* History Header Actions */}
                     <div className="flex shrink-0 items-center justify-between border-b px-3 py-2">
-                      <span className="text-muted-foreground text-xs">
+                      <span
+                        className="text-muted-foreground"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        }}
+                      >
                         {historySelectionMode
                           ? t('queryEditor.selected', {
                               count: selectedHistoryIds.size,
@@ -1134,7 +1181,10 @@ export function QueryEditor() {
                     <ScrollArea className="min-h-0 flex-1">
                       <div className="space-y-1 p-2">
                         {filteredHistory.length === 0 ? (
-                          <p className="text-muted-foreground py-8 text-center text-sm">
+                          <p
+                            className="text-muted-foreground py-8 text-center"
+                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          >
                             {getActiveFilterCount() > 0
                               ? t('queryEditor.noMatchingQueries')
                               : t('queryEditor.noQueriesYet')}
@@ -1146,12 +1196,15 @@ export function QueryEditor() {
                               <div
                                 key={item.id}
                                 className={cn(
-                                  'hover:bg-accent group relative w-full rounded-md text-left text-sm transition-colors',
+                                  'hover:bg-accent group relative w-full rounded-md text-left transition-colors',
                                   !item.success &&
                                     'border-destructive border-l-2',
                                   historySelectionMode && 'px-2 py-2',
                                   !historySelectionMode && 'px-3 py-2'
                                 )}
+                                style={{
+                                  fontSize: 'var(--font-ui-size, 14px)',
+                                }}
                               >
                                 {historySelectionMode ? (
                                   <div

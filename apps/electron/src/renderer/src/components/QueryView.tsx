@@ -30,7 +30,7 @@ export function QueryView() {
             onClick={() => setMode('editor')}
             className={cn(
               'rounded-base flex items-center gap-1.5 px-3 py-1.5',
-              'text-xs font-medium',
+              'font-medium',
               'transition-all duration-150',
               mode === 'editor'
                 ? [
@@ -41,6 +41,7 @@ export function QueryView() {
                   ]
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
             )}
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           >
             <Code className="h-3.5 w-3.5" />
             {t('queryView.sqlEditor', { defaultValue: 'SQL Editor' })}
@@ -50,7 +51,7 @@ export function QueryView() {
             onClick={() => setMode('builder')}
             className={cn(
               'rounded-base flex items-center gap-1.5 px-3 py-1.5',
-              'text-xs font-medium',
+              'font-medium',
               'transition-all duration-150',
               mode === 'builder'
                 ? [
@@ -61,6 +62,7 @@ export function QueryView() {
                   ]
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
             )}
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
           >
             <Blocks className="h-3.5 w-3.5" />
             {t('queryView.queryBuilder', { defaultValue: 'Query Builder' })}

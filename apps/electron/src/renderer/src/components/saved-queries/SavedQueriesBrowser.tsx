@@ -104,11 +104,12 @@ export const SavedQueriesBrowser = memo(
                 <div className="flex-1 space-y-1 p-3">
                   <button
                     className={cn(
-                      'rounded-base flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors',
+                      'rounded-base flex w-full items-center gap-2 px-3 py-2 text-left transition-colors',
                       activeFolderId === null
                         ? 'bg-accent text-accent-foreground'
                         : 'hover:bg-accent/50'
                     )}
+                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                     onClick={() => setActiveFolderId(null)}
                   >
                     <FileText className="h-4 w-4" />
@@ -121,11 +122,12 @@ export const SavedQueriesBrowser = memo(
                     <button
                       key={folder.id}
                       className={cn(
-                        'rounded-base flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors',
+                        'rounded-base flex w-full items-center gap-2 px-3 py-2 text-left transition-colors',
                         activeFolderId === folder.id
                           ? 'bg-accent text-accent-foreground'
                           : 'hover:bg-accent/50'
                       )}
+                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
                       onClick={() => setActiveFolderId(folder.id)}
                     >
                       <FolderOpen
@@ -181,7 +183,10 @@ export const SavedQueriesBrowser = memo(
                             defaultValue: 'No queries found',
                           })}
                         </p>
-                        <p className="text-sm opacity-70">
+                        <p
+                          className="opacity-70"
+                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        >
                           {searchQuery
                             ? t('savedQueries.tryAdjustingSearch', {
                                 defaultValue:

@@ -129,14 +129,24 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
             })}
             autoFocus
           />
-          {error && <p className="text-destructive text-xs">{error}</p>}
+          {error && (
+            <p
+              className="text-destructive"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
+              {error}
+            </p>
+          )}
         </div>
 
         {/* Description field */}
         <div className="space-y-2">
           <Label htmlFor="query-description">
             {t('savedQueries.description', { defaultValue: 'Description' })}
-            <span className="text-muted-foreground ml-1 text-xs">
+            <span
+              className="text-muted-foreground ml-1"
+              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            >
               {t('common.optional', { defaultValue: '(optional)' })}
             </span>
           </Label>
@@ -176,7 +186,10 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
         {/* Parameters detected */}
         {parameters.length > 0 && (
           <div className="bg-muted/50 rounded-base border-border border-2 p-3">
-            <p className="text-sm font-medium">
+            <p
+              className="font-medium"
+              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            >
               {t('savedQueries.parametersDetected', {
                 defaultValue: 'Parameters detected',
               })}

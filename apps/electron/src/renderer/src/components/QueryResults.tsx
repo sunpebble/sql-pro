@@ -114,11 +114,12 @@ export function QueryResults({ results }: QueryResultsProps) {
             key={`result-${resultSet.columns.join(',')}-${resultSet.rows.length}`}
             onClick={() => setActiveResultIndex(index)}
             className={cn(
-              'rounded-base font-base flex items-center gap-1.5 px-3 py-1 text-xs transition-colors',
+              'rounded-base font-base flex items-center gap-1.5 px-3 py-1 transition-colors',
               activeResultIndex === index
                 ? 'bg-background text-foreground shadow-shadow-sm border-2'
                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
             )}
+            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
             role="tab"
             aria-selected={activeResultIndex === index}
             aria-controls={`result-panel-${index}`}
