@@ -118,7 +118,7 @@ function CreateTagForm({
       </div>
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t('dialog.cancel')}
         </Button>
         <Button onClick={handleCreate} disabled={!name.trim()}>
           {t('tags.create', { defaultValue: 'Create' })}
@@ -265,7 +265,7 @@ function EditTagForm({
           {t('tags.delete', { defaultValue: 'Delete' })}
         </Button>
         <Button variant="outline" onClick={() => onOpenChange(false)}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t('dialog.cancel')}
         </Button>
         <Button onClick={handleUpdate}>
           {t('tags.save', { defaultValue: 'Save' })}

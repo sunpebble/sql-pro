@@ -114,7 +114,7 @@ export function AIAgentDialog({
             className="mb-4 font-medium"
             style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
           >
-            {t('agent.settings', 'Agent Settings')}
+            {t('agent.settings.title', 'Agent Settings')}
           </div>
           <AgentSettingsPanel
             settings={settings}
@@ -165,7 +165,7 @@ export function AIAgentDialog({
               variant="ghost"
               size="icon"
               onClick={() => setShowSettings(true)}
-              title={t('agent.settings', 'Settings')}
+              title={t('agent.settings.title', 'Settings')}
             >
               <Settings className="h-4 w-4" />
             </Button>

@@ -422,14 +422,16 @@ function DialogFormContent({
                         fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
                       }}
                     >
-                      {hasSavedPassword ? t('newPassword') : t('password')}
+                      {hasSavedPassword
+                        ? t('connectionSettings.newPassword')
+                        : t('connectionSettings.password')}
                     </label>
                     <input
                       id="newPassword"
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder={t('enterPassword')}
+                      placeholder={t('connectionSettings.enterPassword')}
                       className={cn(
                         'border-input bg-background w-full rounded-md border px-3 py-1.5',
                         'placeholder:text-muted-foreground',
@@ -447,14 +449,16 @@ function DialogFormContent({
                         fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
                       }}
                     >
-                      {t('confirmPassword')}
+                      {t('connectionSettings.confirmPassword')}
                     </label>
                     <input
                       id="confirmPassword"
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder={t('confirmPasswordPlaceholder')}
+                      placeholder={t(
+                        'connectionSettings.confirmPasswordPlaceholder'
+                      )}
                       className={cn(
                         'border-input bg-background w-full rounded-md border px-3 py-1.5',
                         'placeholder:text-muted-foreground',

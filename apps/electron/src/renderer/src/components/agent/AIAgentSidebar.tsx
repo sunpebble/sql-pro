@@ -213,7 +213,7 @@ export function AIAgentSidebar({
               className="font-semibold tracking-tight"
               style={{ fontSize: 'var(--font-ui-size, 14px)' }}
             >
-              {t('agent.settings', 'Agent Settings')}
+              {t('agent.settings.title', 'Agent Settings')}
             </span>
           </div>
           <Button
@@ -448,7 +448,7 @@ export function AIAgentSidebar({
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
-              {t('agent.settings', 'Settings')}
+              {t('agent.settings.title', 'Settings')}
             </TooltipContent>
           </Tooltip>
           <div className="bg-primary/20 mx-1 h-4 w-px" />
