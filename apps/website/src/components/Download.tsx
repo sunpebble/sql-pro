@@ -82,13 +82,13 @@ export default function Download() {
           </h2>
 
           {/* Main Download Button */}
-          <span className="relative inline-flex">
+          <span className="relative mb-8 inline-flex">
             <span className="animate-pulse-ring bg-main/20 border-border rounded-base absolute inset-0 border-2" />
             <a
               href="https://github.com/kunish-homelab/sql-pro/releases/latest"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-background text-foreground border-border rounded-base shadow-shadow-lg hover:translate-x-boxShadowX hover:translate-y-boxShadowY group relative mb-8 inline-flex items-center gap-3 border-2 px-8 py-4 text-lg font-semibold no-underline transition-all duration-150 hover:shadow-none"
+              className="bg-background text-foreground border-border rounded-base shadow-shadow-lg hover:translate-x-boxShadowX hover:translate-y-boxShadowY group relative inline-flex items-center gap-3 border-2 px-8 py-4 text-lg font-semibold no-underline transition-all duration-150 hover:shadow-none"
               aria-describedby="download-arch"
             >
               <span className="group-hover:animate-wiggle h-6 w-6 transition-transform duration-300">
