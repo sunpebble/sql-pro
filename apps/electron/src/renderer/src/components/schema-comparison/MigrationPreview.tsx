@@ -197,7 +197,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             <Label
               htmlFor="reverse-migration"
               className="cursor-pointer"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <div className="flex items-center gap-1.5">
                 <RotateCcw className="h-3.5 w-3.5" />
@@ -205,7 +205,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
               </div>
               <p
                 className="text-muted-foreground mt-0.5 font-normal"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('migration.reverseDescription')}
               </p>
@@ -224,7 +224,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             <Label
               htmlFor="include-drops"
               className="cursor-pointer"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <div className="flex items-center gap-1.5">
                 <AlertCircle className="text-destructive h-3.5 w-3.5" />
@@ -232,7 +232,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
               </div>
               <p
                 className="text-muted-foreground mt-0.5 font-normal"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('migration.includeDropDescription')}
               </p>
@@ -244,7 +244,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
         {isGenerating && (
           <div
             className="text-muted-foreground flex items-center justify-center gap-2 py-8"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             <Loader2 className="h-4 w-4 animate-spin" />
             {t('migration.generating')}
@@ -265,7 +265,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
           <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-8 text-center">
             <Check className="h-12 w-12 opacity-30" />
             <p className="font-medium">{t('migration.noChanges')}</p>
-            <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+            <p style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
               {t('migration.noChangesDescription')}
             </p>
           </div>
@@ -288,7 +288,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                     onClick={() => setShowWarnings(!showWarnings)}
                     className="h-auto p-0"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {showWarnings ? (
@@ -303,7 +303,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                     <ul
                       className="list-inside list-disc space-y-1"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {migrationSQL.warnings.map((warning) => (
@@ -378,7 +378,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
               <Alert variant="destructive" className="py-2">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {saveError}
                 </AlertDescription>
@@ -390,7 +390,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
               <div className="space-y-2">
                 <Label
                   className="font-medium"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('migration.generatedSql')}
                 </Label>
@@ -401,8 +401,8 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                       style={{
                         fontSize:
                           migrationSQL.sql.length > 5000
-                            ? 'calc(var(--font-ui-size, 14px) * 0.85)'
-                            : 'var(--font-ui-size, 14px)',
+                            ? 'calc(var(--font-ui-size, 13px) * 0.85)'
+                            : 'var(--font-ui-size, 13px)',
                       }}
                     />
                   </div>
@@ -414,7 +414,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
             {migrationSQL.statements && migrationSQL.statements.length > 0 && (
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('migration.tip')}
               </p>

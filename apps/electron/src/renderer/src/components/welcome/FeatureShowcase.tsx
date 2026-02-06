@@ -93,7 +93,7 @@ export function FeatureShowcase({
             <div className="bg-main h-px w-8" />
             <h2
               className="text-foreground/80 font-medium tracking-widest uppercase"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('features.title', { defaultValue: 'Features' })}
             </h2>
@@ -102,7 +102,7 @@ export function FeatureShowcase({
             variant="ghost"
             size="sm"
             className="text-muted-foreground hover:text-foreground h-auto px-2 py-1"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             onClick={handleOpenDocs}
           >
             <BookOpen className="mr-1 h-3 w-3" />
@@ -122,13 +122,13 @@ export function FeatureShowcase({
               </div>
               <span
                 className="text-foreground leading-tight font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t(`features.${feature.key}.title`)}
               </span>
               <span
                 className="text-muted-foreground line-clamp-2 leading-tight"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
               >
                 {t(`features.${feature.key}.desc`)}
               </span>

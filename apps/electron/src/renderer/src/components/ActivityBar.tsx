@@ -158,7 +158,7 @@ export const ActivityBar = memo(
                           'absolute -top-1 -right-1',
                           'flex h-4 min-w-4 items-center justify-center',
                           'rounded-base px-1',
-                          'text-[10px] font-semibold',
+                          'text-2xs font-semibold',
                           'bg-main text-main-foreground',
                           'border-border border-2'
                         )}

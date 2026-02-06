@@ -606,7 +606,7 @@ export const VectorVisualization = memo(
         <div className="bg-muted/30 flex shrink-0 items-center justify-between border-b px-4 py-2">
           <span
             className="text-muted-foreground"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('vectorSearch.visualization', 'Visualization')}
           </span>
@@ -616,7 +616,7 @@ export const VectorVisualization = memo(
                 type="button"
                 onClick={reset3DView}
                 className="text-muted-foreground hover:text-foreground flex items-center gap-1 rounded px-2 py-1 transition-colors"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 title={t('vectorSearch.reset3D', 'Reset view')}
               >
                 <RotateCcw className="h-3 w-3" />
@@ -662,7 +662,7 @@ export const VectorVisualization = memo(
               <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
               <span
                 className="text-muted-foreground"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {isComputing
                   ? t('vectorSearch.computing', 'Computing projection...')
@@ -685,7 +685,7 @@ export const VectorVisualization = memo(
               <Square className="h-10 w-10 opacity-20" />
               <p
                 className="text-center"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t(
                   'vectorSearch.noVectorsToVisualize',
@@ -701,7 +701,7 @@ export const VectorVisualization = memo(
               <Square className="h-10 w-10 opacity-20" />
               <p
                 className="text-center"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t(
                   'vectorSearch.notEnoughVectors',
@@ -717,7 +717,7 @@ export const VectorVisualization = memo(
               <Square className="h-10 w-10 opacity-20" />
               <p
                 className="text-center text-red-500"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {umapError}
               </p>
@@ -754,7 +754,7 @@ export const VectorVisualization = memo(
               style={{
                 left: Math.min(tooltipPosition.x + 12, canvasSize.width - 200),
                 top: Math.min(tooltipPosition.y + 12, canvasSize.height - 100),
-                fontSize: 'var(--font-ui-size, 14px)',
+                fontSize: 'var(--font-ui-size, 13px)',
               }}
             >
               <div className="space-y-1">
@@ -762,7 +762,7 @@ export const VectorVisualization = memo(
                   <span
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     ID:
@@ -770,7 +770,7 @@ export const VectorVisualization = memo(
                   <span
                     className="font-mono font-medium"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {String(hoveredPoint.id)}
@@ -781,7 +781,7 @@ export const VectorVisualization = memo(
                     <span
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       Score:
@@ -789,7 +789,7 @@ export const VectorVisualization = memo(
                     <span
                       className="font-mono font-medium text-blue-500"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {hoveredPoint.score.toFixed(4)}
@@ -801,14 +801,14 @@ export const VectorVisualization = memo(
                     <span
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {key}:
                     </span>
                     <span
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {value}
@@ -823,7 +823,7 @@ export const VectorVisualization = memo(
           {!showLoading && hasMinimumData && !umapError && (
             <div
               className="bg-background rounded-base border-border absolute bottom-3 left-3 flex flex-col gap-1.5 border-2 px-3 py-2"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <div className="flex items-center gap-2">
                 <span
@@ -861,7 +861,7 @@ export const VectorVisualization = memo(
             !umapError && (
               <div
                 className="bg-background rounded-base border-border absolute right-3 bottom-3 border-2 px-3 py-2"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <span className="text-muted-foreground">
                   {t(

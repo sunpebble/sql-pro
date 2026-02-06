@@ -52,7 +52,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <DialogHeader className="border-border shrink-0 border-b px-6 pt-6 pb-4">
           <DialogTitle
             className="tracking-wide"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {t('settings.title', { ns: 'dialog' })}
           </DialogTitle>

@@ -49,7 +49,7 @@ export function SettingsNav({
               'flex items-center gap-2 rounded-md px-3 py-2 text-left transition-colors',
               isActive ? 'btn-gold-active font-medium' : 'hover-gold'
             )}
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             <Icon
               className={cn('h-4 w-4 shrink-0', isActive && 'text-primary')}

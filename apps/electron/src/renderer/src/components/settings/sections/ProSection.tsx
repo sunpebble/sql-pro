@@ -59,7 +59,7 @@ export function ProSection() {
               </div>
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {isPro
                   ? t('pro.featuresUnlocked', {
@@ -87,7 +87,7 @@ export function ProSection() {
         <div className="space-y-2">
           <p
             className="text-muted-foreground font-medium uppercase"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('pro.featuresUnlocked', { count: features.length })}
           </p>
@@ -99,7 +99,7 @@ export function ProSection() {
               >
                 <Crown className="h-3 w-3 text-amber-500" />
                 <span
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t(`pro.features.${feature}`, { defaultValue: feature })}
                 </span>

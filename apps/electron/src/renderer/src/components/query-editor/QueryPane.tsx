@@ -182,7 +182,7 @@ export const QueryPane = memo(
               value={tab.id}
               onChange={(e) => handleTabSelect(e.target.value)}
               className="bg-background rounded-base h-7 border-2 px-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {tabs.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -263,7 +263,7 @@ export const QueryPane = memo(
                   <p
                     className="text-destructive/80 mt-1"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {tab.error}
@@ -276,7 +276,7 @@ export const QueryPane = memo(
               {/* Results Header */}
               <div
                 className="text-muted-foreground flex items-center gap-4 border-b-2 px-4 py-2"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <span>{tab.results.rowsAffected} rows</span>
                 {tab.executionTime !== null && (

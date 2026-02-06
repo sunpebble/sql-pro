@@ -165,7 +165,7 @@ function QueryBuilderJoinEdgeComponent({
         >
           <span
             className={cn(
-              'bg-background/90 rounded px-1 py-0.5 font-mono text-[10px] font-semibold',
+              'bg-background/90 text-2xs rounded px-1 py-0.5 font-mono font-semibold',
               isHighlighted ? 'bg-cyan-500 text-white' : textColor
             )}
           >
@@ -183,7 +183,7 @@ function QueryBuilderJoinEdgeComponent({
         >
           <span
             className={cn(
-              'bg-background/90 rounded px-1 py-0.5 font-mono text-[10px] font-semibold',
+              'bg-background/90 text-2xs rounded px-1 py-0.5 font-mono font-semibold',
               isHighlighted ? 'bg-cyan-500 text-white' : textColor
             )}
           >
@@ -215,7 +215,7 @@ function QueryBuilderJoinEdgeComponent({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-auto gap-1.5 px-1 py-0.5 font-mono text-[10px]"
+                  className="text-2xs h-auto gap-1.5 px-1 py-0.5 font-mono"
                 >
                   <span
                     className={cn(
@@ -236,7 +236,7 @@ function QueryBuilderJoinEdgeComponent({
                       type === joinType && 'bg-accent'
                     )}
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     <span

@@ -250,7 +250,7 @@ export function ConnectionSwitcher({
                       <span
                         className="text-muted-foreground truncate"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {item.path}
@@ -292,7 +292,7 @@ export function ConnectionSwitcher({
                         <span
                           className="text-muted-foreground truncate"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {item.path}
@@ -307,7 +307,7 @@ export function ConnectionSwitcher({
                             className="text-muted-foreground"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {formatLastOpened(item.lastOpened)}
@@ -324,7 +324,7 @@ export function ConnectionSwitcher({
           {/* Footer */}
           <div
             className="text-muted-foreground flex items-center justify-between border-t px-4 py-2"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">

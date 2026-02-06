@@ -66,7 +66,7 @@ export function SQLExplanationPopover({
         <div className="mb-3 flex items-center justify-between">
           <h4
             className="flex items-center gap-2 font-semibold"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             <Zap className="text-primary h-4 w-4" />
             SQL Explanation
@@ -86,7 +86,7 @@ export function SQLExplanationPopover({
             <Loader2 className="text-primary h-6 w-6 animate-spin" />
             <span
               className="text-muted-foreground ml-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               Analyzing SQL...
             </span>
@@ -94,7 +94,7 @@ export function SQLExplanationPopover({
         ) : explanation ? (
           <div className="space-y-4">
             {/* Summary */}
-            <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+            <p style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
               {explanation.summary}
             </p>
 
@@ -103,7 +103,7 @@ export function SQLExplanationPopover({
               <div className="space-y-2">
                 <h5
                   className="text-muted-foreground font-medium uppercase"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   Query Components
                 </h5>
@@ -119,12 +119,12 @@ export function SQLExplanationPopover({
                           componentTypeColors[component.type]
                         )}
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {component.type}
                       </Badge>
-                      <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                      <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                         {component.description}
                       </span>
                     </div>
@@ -138,7 +138,7 @@ export function SQLExplanationPopover({
               <div className="space-y-2">
                 <h5
                   className="text-muted-foreground flex items-center gap-1 font-medium uppercase"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   <Table2 className="h-3 w-3" />
                   Tables Used
@@ -149,7 +149,7 @@ export function SQLExplanationPopover({
                       key={`${table.name}-${table.role}`}
                       variant="secondary"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       <span className="font-mono">{table.name}</span>
@@ -167,13 +167,13 @@ export function SQLExplanationPopover({
               <div className="space-y-1 border-t pt-2">
                 <h5
                   className="text-muted-foreground font-medium uppercase"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   Performance Notes
                 </h5>
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {explanation.performanceNotes}
                 </p>
@@ -183,7 +183,7 @@ export function SQLExplanationPopover({
         ) : (
           <p
             className="text-muted-foreground py-4 text-center"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             Select SQL to see explanation
           </p>

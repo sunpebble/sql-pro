@@ -224,7 +224,7 @@ function CommandPaletteInner() {
               <Sparkles className="text-primary h-4 w-4" />
               <span
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('commandPalette.aiQueryMode', {
                   defaultValue: 'AI Query Mode',
@@ -232,7 +232,7 @@ function CommandPaletteInner() {
               </span>
               <span
                 className="text-muted-foreground ml-auto"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('commandPalette.aiQueryHint', {
                   defaultValue: 'Type naturally to generate SQL',
@@ -275,7 +275,7 @@ function CommandPaletteInner() {
                         <CommandShortcut
                           className="bg-muted rounded px-1.5 py-0.5 font-mono"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {command.shortcut}
@@ -291,7 +291,7 @@ function CommandPaletteInner() {
       {/* Footer */}
       <div
         className="text-muted-foreground border-border/50 flex items-center justify-between border-t px-4 py-2"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         <div className="flex items-center gap-4">
           <button
@@ -306,7 +306,7 @@ function CommandPaletteInner() {
             </span>
             <kbd
               className="bg-muted rounded px-1.5 py-0.5"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)' }}
             >
               &gt;
             </kbd>
@@ -324,7 +324,7 @@ function CommandPaletteInner() {
             </span>
             <kbd
               className="bg-muted rounded px-1.5 py-0.5"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)' }}
             >
               ?
             </kbd>

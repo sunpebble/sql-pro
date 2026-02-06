@@ -204,7 +204,7 @@ export function ColumnFilterPopover({
           {/* Header */}
           <div
             className="font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('filter.title')}{' '}
             <span className="text-muted-foreground">{columnName}</span>
@@ -214,7 +214,7 @@ export function ColumnFilterPopover({
           <div className="flex flex-col gap-1.5">
             <label
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('filter.operator')}
             </label>
@@ -245,7 +245,7 @@ export function ColumnFilterPopover({
             <div className="flex flex-col gap-1.5">
               <label
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {showSecondValueInput ? t('filter.from') : t('filter.value')}
               </label>
@@ -274,7 +274,7 @@ export function ColumnFilterPopover({
             <div className="flex flex-col gap-1.5">
               <label
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('filter.to')}
               </label>
@@ -304,7 +304,7 @@ export function ColumnFilterPopover({
           {error && (
             <div
               className="text-destructive"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {error}
             </div>

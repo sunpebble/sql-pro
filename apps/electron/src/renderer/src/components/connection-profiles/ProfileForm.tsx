@@ -185,7 +185,7 @@ export function ProfileForm({
         <label
           htmlFor="displayName"
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('profileForm.displayName')}{' '}
           <span className="text-destructive">*</span>
@@ -203,19 +203,19 @@ export function ProfileForm({
             'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
             validationErrors.displayName ? 'border-destructive' : 'border-input'
           )}
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         />
         {validationErrors.displayName && (
           <p
             className="text-destructive"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {validationErrors.displayName}
           </p>
         )}
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('profileForm.characterCount', {
             current: displayName.trim().length,
@@ -229,7 +229,7 @@ export function ProfileForm({
         <label
           htmlFor="folder"
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('profiles.folder')}{' '}
           <span className="text-muted-foreground">
@@ -267,7 +267,7 @@ export function ProfileForm({
         </Select>
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('profiles.folderHint')}
         </p>
@@ -278,7 +278,7 @@ export function ProfileForm({
         <label
           htmlFor="tags"
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('profiles.tags')}{' '}
           <span className="text-muted-foreground">
@@ -297,11 +297,11 @@ export function ProfileForm({
             'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
             'border-input'
           )}
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         />
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('profiles.tagsHint')}
         </p>
@@ -312,7 +312,7 @@ export function ProfileForm({
         <label
           htmlFor="notes"
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('profiles.notes')}{' '}
           <span className="text-muted-foreground">
@@ -330,14 +330,14 @@ export function ProfileForm({
         {validationErrors.notes && (
           <p
             className="text-destructive"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {validationErrors.notes}
           </p>
         )}
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('profiles.notesCounter', {
             current: notes.length,
@@ -357,13 +357,13 @@ export function ProfileForm({
         <div className="flex-1">
           <span
             className="font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('profileForm.readOnlyMode')}
           </span>
           <p
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('profileForm.readOnlyDescription')}
           </p>
@@ -391,7 +391,7 @@ export function ProfileForm({
             <div className="flex items-center gap-2">
               <span
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('profileForm.rememberPassword')}
               </span>
@@ -404,7 +404,7 @@ export function ProfileForm({
                     <p
                       className="max-w-xs"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('profileForm.passwordStorageUnavailable')}
@@ -415,7 +415,7 @@ export function ProfileForm({
             </div>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('profileForm.rememberPasswordDescription')}
             </p>

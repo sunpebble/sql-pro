@@ -242,7 +242,7 @@ export const BulkOperationsPanel = memo(
                             className="text-muted-foreground"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {info.extension}
@@ -320,7 +320,7 @@ export const BulkOperationsPanel = memo(
                         key={col}
                         variant="secondary"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {col}
@@ -352,7 +352,7 @@ export const BulkOperationsPanel = memo(
                       <p className="font-medium">{importFile.name}</p>
                       <p
                         className="text-muted-foreground"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {(importFile.size / 1024).toFixed(1)} KB
                       </p>
@@ -375,7 +375,7 @@ export const BulkOperationsPanel = memo(
                       </p>
                       <p
                         className="text-muted-foreground"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('bulkOperations.orClickToBrowse')}
                       </p>
@@ -453,7 +453,7 @@ export const BulkOperationsPanel = memo(
                 <div className="space-y-2">
                   <div
                     className="flex items-center justify-between"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     <span>{t('bulkOperations.importing')}</span>
                     <span>{importProgress}%</span>
@@ -485,7 +485,7 @@ export const BulkOperationsPanel = memo(
                     </p>
                     <p
                       className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('bulkOperations.rowsImported', {
                         count: importResult.rowsImported,
@@ -498,7 +498,7 @@ export const BulkOperationsPanel = memo(
                     {importResult.errors.length > 0 && (
                       <ul
                         className="mt-2 text-red-600"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.errors.slice(0, 3).map((err) => (
                           <li key={`error-${err.slice(0, 50)}`}>{err}</li>

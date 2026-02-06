@@ -62,7 +62,7 @@ export const EmptyView = memo(
           {/* Title */}
           <h3
             className="text-primary mb-2 font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {title}
           </h3>
@@ -70,7 +70,7 @@ export const EmptyView = memo(
           {/* Description */}
           <p
             className="text-muted-foreground mb-6 leading-relaxed"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {description}
           </p>

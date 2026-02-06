@@ -75,7 +75,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             <Badge
               variant="outline"
               className="font-mono"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {entry.operation.toUpperCase()}
             </Badge>
@@ -84,7 +84,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             <Badge
               variant="secondary"
               className={cn(LOG_LEVEL_COLORS[entry.level])}
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {entry.level}
             </Badge>
@@ -93,7 +93,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             {entry.durationMs !== undefined && (
               <span
                 className="text-muted-foreground flex items-center gap-1"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <Clock className="h-3 w-3" />
                 {entry.durationMs.toFixed(2)}ms
@@ -104,7 +104,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             {entry.rowCount !== undefined && (
               <span
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {entry.rowCount === 1
                   ? t('sqlLog.rowCount', { count: entry.rowCount })
@@ -115,7 +115,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
             {/* Timestamp */}
             <span
               className="text-muted-foreground ml-auto"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {timestamp}
             </span>
@@ -128,7 +128,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
                 'text-muted-foreground mt-1 truncate font-mono',
                 isExpanded && 'break-all whitespace-pre-wrap'
               )}
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {isExpanded ? entry.sql : entry.sql.slice(0, 100)}
               {!isExpanded && entry.sql.length > 100 && '...'}
@@ -139,7 +139,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
           {entry.error && (
             <div
               className="mt-1 text-red-500"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {isExpanded ? entry.error : entry.error.slice(0, 100)}
               {!isExpanded && entry.error.length > 100 && '...'}
@@ -150,7 +150,7 @@ function SqlLogItem({ entry }: SqlLogItemProps) {
           {isExpanded && (
             <div
               className="text-muted-foreground mt-2 space-y-1"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <div className="flex items-center gap-2">
                 <Database className="h-3 w-3" />

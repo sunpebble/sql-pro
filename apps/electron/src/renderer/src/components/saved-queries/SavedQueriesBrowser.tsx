@@ -109,7 +109,7 @@ export const SavedQueriesBrowser = memo(
                         ? 'bg-accent text-accent-foreground'
                         : 'hover:bg-accent/50'
                     )}
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     onClick={() => setActiveFolderId(null)}
                   >
                     <FileText className="h-4 w-4" />
@@ -127,7 +127,7 @@ export const SavedQueriesBrowser = memo(
                           ? 'bg-accent text-accent-foreground'
                           : 'hover:bg-accent/50'
                       )}
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       onClick={() => setActiveFolderId(folder.id)}
                     >
                       <FolderOpen
@@ -185,7 +185,7 @@ export const SavedQueriesBrowser = memo(
                         </p>
                         <p
                           className="opacity-70"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {searchQuery
                             ? t('savedQueries.tryAdjustingSearch', {

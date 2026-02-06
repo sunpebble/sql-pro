@@ -37,7 +37,7 @@ function DeveloperPanel({ onOpenChange }: DeveloperPanelProps) {
         <Zap className="h-4 w-4" />
         <Label
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('developer.title')}
         </Label>
@@ -54,13 +54,13 @@ function DeveloperPanel({ onOpenChange }: DeveloperPanelProps) {
           <div className="text-left">
             <span
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('developer.memoryMonitor')}
             </span>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('developer.memoryMonitorDescription')}
             </p>
@@ -71,7 +71,7 @@ function DeveloperPanel({ onOpenChange }: DeveloperPanelProps) {
 
       <p
         className="text-muted-foreground"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         Access via menu: View → Developer → Memory Monitor (⌘⇧M)
       </p>

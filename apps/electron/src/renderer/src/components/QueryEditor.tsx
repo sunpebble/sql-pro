@@ -157,7 +157,7 @@ function TemplateCard({
           )}
           <span
             className="truncate font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {template.name}
           </span>
@@ -176,7 +176,7 @@ function TemplateCard({
       {/* Description */}
       <p
         className="text-muted-foreground line-clamp-2 leading-relaxed"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {template.description}
       </p>
@@ -630,7 +630,7 @@ export function QueryEditor() {
           <h2 className="font-medium">{t('queryEditor.title')}</h2>
           <span
             className="text-muted-foreground hidden sm:inline"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('queryEditor.executeHint')}
           </span>
@@ -782,7 +782,7 @@ export function QueryEditor() {
                         </p>
                         <p
                           className="text-destructive/80 mt-1"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {tabError}
                         </p>
@@ -794,7 +794,7 @@ export function QueryEditor() {
                     {/* Results Header */}
                     <div
                       className="text-muted-foreground flex items-center gap-4 border-b px-4 py-2"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {tabResults.resultSets &&
                       tabResults.resultSets.length > 1 ? (
@@ -885,7 +885,7 @@ export function QueryEditor() {
                       value="share"
                       className="h-6 gap-1.5 px-3"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       <Share2 className="h-3.5 w-3.5" />
@@ -895,7 +895,7 @@ export function QueryEditor() {
                       value="templates"
                       className="h-6 gap-1.5 px-3"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       <Code className="h-3.5 w-3.5" />
@@ -905,7 +905,7 @@ export function QueryEditor() {
                       value="history"
                       className="h-6 gap-1.5 px-3"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       <History className="h-3.5 w-3.5" />
@@ -931,14 +931,14 @@ export function QueryEditor() {
                     <div className="flex flex-col gap-2">
                       <h4
                         className="font-medium"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('queryEditor.exportQuery')}
                       </h4>
                       <p
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('queryEditor.exportQueryDesc', {
@@ -959,14 +959,14 @@ export function QueryEditor() {
                     <div className="flex flex-col gap-2">
                       <h4
                         className="font-medium"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('queryEditor.importQuery')}
                       </h4>
                       <p
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('queryEditor.importQueryDesc', {
@@ -1000,7 +1000,7 @@ export function QueryEditor() {
                               setTemplateSearchQuery(e.target.value)
                             }
                             className="h-8 pl-8"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           />
                           {templateSearchQuery && (
                             <Button
@@ -1024,7 +1024,7 @@ export function QueryEditor() {
                               className="h-8 w-28"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
                               <SelectValue />
@@ -1057,7 +1057,7 @@ export function QueryEditor() {
                             <FileText className="mb-3 h-10 w-10 opacity-40" />
                             <p
                               className="font-medium"
-                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                             >
                               {t('queryTemplates.noTemplatesFound')}
                             </p>
@@ -1065,7 +1065,7 @@ export function QueryEditor() {
                               className="opacity-70"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
                               {t('queryTemplates.tryAdjustingSearch')}
@@ -1097,7 +1097,7 @@ export function QueryEditor() {
                       <span
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {historySelectionMode
@@ -1115,7 +1115,7 @@ export function QueryEditor() {
                               className="h-7"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                               onClick={
                                 selectedHistoryIds.size ===
@@ -1136,7 +1136,7 @@ export function QueryEditor() {
                               className="h-7 gap-1"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                               onClick={handleExportSelected}
                               disabled={selectedHistoryIds.size === 0}
@@ -1150,7 +1150,7 @@ export function QueryEditor() {
                               className="h-7"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                               onClick={handleExitSelectionMode}
                             >
@@ -1198,7 +1198,7 @@ export function QueryEditor() {
                             })
                           }
                           className="h-8 pl-8"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         />
                       </div>
                     </div>
@@ -1212,7 +1212,7 @@ export function QueryEditor() {
                         {filteredHistory.length === 0 ? (
                           <p
                             className="text-muted-foreground py-8 text-center"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {getActiveFilterCount() > 0
                               ? t('queryEditor.noMatchingQueries')
@@ -1232,7 +1232,7 @@ export function QueryEditor() {
                                   !historySelectionMode && 'px-3 py-2'
                                 )}
                                 style={{
-                                  fontSize: 'var(--font-ui-size, 14px)',
+                                  fontSize: 'var(--font-ui-size, 13px)',
                                 }}
                               >
                                 {historySelectionMode ? (
@@ -1256,7 +1256,7 @@ export function QueryEditor() {
                                             className="text-green-600"
                                             style={{
                                               fontSize:
-                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                                'calc(var(--font-ui-size, 13px) * 0.85)',
                                             }}
                                           >
                                             {formatDuration(
@@ -1268,7 +1268,7 @@ export function QueryEditor() {
                                             className="text-destructive"
                                             style={{
                                               fontSize:
-                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                                'calc(var(--font-ui-size, 13px) * 0.85)',
                                             }}
                                           >
                                             Failed
@@ -1278,7 +1278,7 @@ export function QueryEditor() {
                                           className="text-muted-foreground"
                                           style={{
                                             fontSize:
-                                              'calc(var(--font-ui-size, 14px) * 0.85)',
+                                              'calc(var(--font-ui-size, 13px) * 0.85)',
                                           }}
                                         >
                                           {new Date(
@@ -1309,7 +1309,7 @@ export function QueryEditor() {
                                             className="text-green-600"
                                             style={{
                                               fontSize:
-                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                                'calc(var(--font-ui-size, 13px) * 0.85)',
                                             }}
                                           >
                                             {formatDuration(
@@ -1321,7 +1321,7 @@ export function QueryEditor() {
                                             className="text-destructive"
                                             style={{
                                               fontSize:
-                                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                                'calc(var(--font-ui-size, 13px) * 0.85)',
                                             }}
                                           >
                                             Failed
@@ -1331,7 +1331,7 @@ export function QueryEditor() {
                                           className="text-muted-foreground"
                                           style={{
                                             fontSize:
-                                              'calc(var(--font-ui-size, 14px) * 0.85)',
+                                              'calc(var(--font-ui-size, 13px) * 0.85)',
                                           }}
                                         >
                                           {new Date(

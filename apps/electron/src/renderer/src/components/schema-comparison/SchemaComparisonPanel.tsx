@@ -263,13 +263,13 @@ export function SchemaComparisonPanel({
               <div>
                 <h1
                   className="font-semibold"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.5)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.5)' }}
                 >
                   {t('compare.schemaComparison')}
                 </h1>
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('compare.schemaDescription')}
                 </p>
@@ -298,7 +298,7 @@ export function SchemaComparisonPanel({
               <CardHeader className="pb-3">
                 <CardTitle
                   className="flex items-center gap-2"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <Keyboard className="h-4 w-4" />
                   {t('compare.keyboardShortcuts')}
@@ -307,7 +307,7 @@ export function SchemaComparisonPanel({
               <CardContent>
                 <div
                   className="grid gap-2 sm:grid-cols-2"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-muted-foreground">
@@ -421,7 +421,7 @@ export function SchemaComparisonPanel({
           {isLoadingSnapshots && (
             <div
               className="text-muted-foreground flex items-center justify-center gap-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <Loader2 className="h-4 w-4 animate-spin" />
               {t('compare.loadingSnapshots')}
@@ -449,7 +449,7 @@ export function SchemaComparisonPanel({
                   <div className="space-y-2">
                     <div
                       className="flex items-center justify-between"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       <span className="text-muted-foreground">
                         {t('compare.sourceLabel')}
@@ -460,7 +460,7 @@ export function SchemaComparisonPanel({
                     </div>
                     <div
                       className="flex items-center justify-between"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       <span className="text-muted-foreground">
                         {t('compare.targetLabel')}
@@ -472,7 +472,7 @@ export function SchemaComparisonPanel({
                     <div className="mt-4 border-t pt-2">
                       <p
                         className="text-muted-foreground"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('compare.tablesCompared', {
                           count:
@@ -483,7 +483,7 @@ export function SchemaComparisonPanel({
                       <div
                         className="mt-2 grid grid-cols-3 gap-2"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         <div className="rounded-base bg-green-100 p-2 dark:bg-green-950">
@@ -494,7 +494,7 @@ export function SchemaComparisonPanel({
                             className="font-semibold"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                                'calc(var(--font-ui-size, 13px) * 1.15)',
                             }}
                           >
                             {comparisonResult.summary.tablesAdded}
@@ -508,7 +508,7 @@ export function SchemaComparisonPanel({
                             className="font-semibold"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                                'calc(var(--font-ui-size, 13px) * 1.15)',
                             }}
                           >
                             {comparisonResult.summary.tablesRemoved}
@@ -522,7 +522,7 @@ export function SchemaComparisonPanel({
                             className="font-semibold"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 1.15)',
+                                'calc(var(--font-ui-size, 13px) * 1.15)',
                             }}
                           >
                             {comparisonResult.summary.tablesModified}
@@ -561,7 +561,7 @@ export function SchemaComparisonPanel({
             <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-12 text-center">
               <GitCompare className="h-12 w-12 opacity-30" />
               <p className="font-medium">{t('compare.readyToCompare')}</p>
-              <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+              <p style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                 {t('compare.selectSourceAndTarget')}
               </p>
             </div>

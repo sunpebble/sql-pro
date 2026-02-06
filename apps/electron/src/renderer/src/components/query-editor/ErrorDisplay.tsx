@@ -93,7 +93,7 @@ export const ErrorDisplay = memo(
               <p className="font-heading text-destructive">{title}</p>
               <p
                 className="text-destructive/80 mt-1 wrap-break-word"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {error}
               </p>
@@ -104,7 +104,7 @@ export const ErrorDisplay = memo(
           {errorPosition && (
             <div
               className="text-muted-foreground ml-8 flex items-center gap-2"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <MapPin className="h-3.5 w-3.5" />
               <span>
@@ -121,7 +121,7 @@ export const ErrorDisplay = memo(
             <div className="border-destructive/20 ml-8 border-t-2 pt-3">
               <div
                 className="font-heading text-foreground/80 mb-2 flex items-center gap-2"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 <Lightbulb className="h-4 w-4 text-amber-500" />
                 <span>{t('errorDisplay.suggestions')}</span>
@@ -131,7 +131,7 @@ export const ErrorDisplay = memo(
                   <li
                     key={suggestion}
                     className="text-muted-foreground flex items-start gap-2"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     <ChevronRight className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>{suggestion}</span>
@@ -146,7 +146,7 @@ export const ErrorDisplay = memo(
             <div className="border-destructive/20 ml-8 border-t-2 pt-3">
               <div
                 className="font-heading text-foreground/80 mb-2 flex items-center gap-2"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 <Lightbulb className="h-4 w-4 text-amber-500" />
                 <span>{t('errorDisplay.troubleshootingSteps')}</span>
@@ -156,7 +156,7 @@ export const ErrorDisplay = memo(
                   <li
                     key={step}
                     className="text-muted-foreground"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {step}
                   </li>
@@ -173,7 +173,7 @@ export const ErrorDisplay = memo(
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary inline-flex items-center gap-2 hover:underline"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span>{t('errorDisplay.viewDocumentation')}</span>

@@ -275,7 +275,7 @@ const ConnectionTab = memo(
                   style={{
                     transform: CSS.Transform.toString(transform),
                     transition,
-                    fontSize: 'var(--font-ui-size, 14px)',
+                    fontSize: 'var(--font-ui-size, 13px)',
                   }}
                   onClick={handleClick}
                   {...attributes}
@@ -300,7 +300,7 @@ const ConnectionTab = memo(
                         side="bottom"
                         className={cn(TOOLTIP_CONTENT_STYLE)}
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('connection.unsavedChanges')}
@@ -321,7 +321,7 @@ const ConnectionTab = memo(
                           <span
                             className="text-muted-foreground block truncate leading-tight"
                             style={{
-                              fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)',
+                              fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)',
                             }}
                           >
                             {parentDir}
@@ -345,7 +345,7 @@ const ConnectionTab = memo(
                       side="bottom"
                       className={cn(TOOLTIP_CONTENT_STYLE)}
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.closeConnection')}
@@ -357,14 +357,14 @@ const ConnectionTab = memo(
                 <TooltipContent
                   side="bottom"
                   className={cn('max-w-80', TOOLTIP_CONTENT_STYLE)}
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   <div className="flex flex-col gap-1">
                     <div className="font-medium">{connection.filename}</div>
                     <div
                       className="text-muted-foreground font-mono break-all"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {connection.path}

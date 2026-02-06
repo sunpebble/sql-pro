@@ -223,7 +223,7 @@ function MemoryGraph({
       />
       <div
         className="text-muted-foreground mt-1 flex justify-between"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-full bg-blue-500" />
@@ -256,20 +256,20 @@ function StatItem({
     <div className={cn('flex flex-col', className)}>
       <span
         className="text-muted-foreground"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {label}
       </span>
       <span
         className="font-mono font-medium"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         {value}
       </span>
       {subValue && (
         <span
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {subValue}
         </span>
@@ -304,7 +304,7 @@ function CacheStatsSection({
         type="button"
         onClick={onToggle}
         className="hover:bg-accent/50 flex w-full items-center justify-between p-2 font-medium transition-colors"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         <span className="flex items-center gap-2">
           {isExpanded ? (
@@ -317,7 +317,7 @@ function CacheStatsSection({
         </span>
         <span
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('devTools.memoryMonitor.items', { count: stats.itemCount })}
         </span>
@@ -347,7 +347,7 @@ function CacheStatsSection({
           <div className="flex items-center justify-between pt-1">
             <span
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('devTools.memoryMonitor.hitsAndMisses', {
                 hits: stats.hits,
@@ -359,7 +359,7 @@ function CacheStatsSection({
               size="sm"
               onClick={onClear}
               className="h-6"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <Trash2 className="mr-1 h-3 w-3" />
               {t('devTools.memoryMonitor.clear')}
@@ -391,7 +391,7 @@ function RendererMetricsSection({
         type="button"
         onClick={onToggle}
         className="hover:bg-accent/50 flex w-full items-center justify-between p-2 font-medium transition-colors"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         <span className="flex items-center gap-2">
           {isExpanded ? (
@@ -579,7 +579,7 @@ export function MemoryMonitorPanel({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Zap className="text-muted-foreground h-4 w-4" />
-            <CardTitle style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+            <CardTitle style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
               {t('devTools.memoryMonitor.title')}
             </CardTitle>
           </div>
@@ -595,7 +595,7 @@ export function MemoryMonitorPanel({
           )}
         </div>
         <CardDescription
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('devTools.memoryMonitor.description')}
         </CardDescription>
@@ -607,7 +607,7 @@ export function MemoryMonitorPanel({
           {error && (
             <div
               className="bg-destructive/10 text-destructive rounded-base flex items-center gap-2 p-2"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <AlertTriangle className="h-4 w-4 flex-shrink-0" />
               <span>{error}</span>
@@ -657,7 +657,7 @@ export function MemoryMonitorPanel({
             <div className="space-y-2">
               <h3
                 className="text-muted-foreground font-medium tracking-wide uppercase"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('devTools.memoryMonitor.mainProcessMemory')}
               </h3>
@@ -699,7 +699,7 @@ export function MemoryMonitorPanel({
           <div className="space-y-2">
             <h3
               className="text-muted-foreground font-medium tracking-wide uppercase"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('devTools.memoryMonitor.cacheStatistics')}
             </h3>
@@ -726,7 +726,7 @@ export function MemoryMonitorPanel({
                 type="button"
                 onClick={() => toggleSection('schema')}
                 className="hover:bg-accent/50 flex w-full items-center justify-between p-2 font-medium transition-colors"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 <span className="flex items-center gap-2">
                   {expandedSections.schema ? (
@@ -739,7 +739,7 @@ export function MemoryMonitorPanel({
                 </span>
                 <span
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('devTools.memoryMonitor.connections', {
                     count: schemaCacheStats.connectionCount,
@@ -777,7 +777,7 @@ export function MemoryMonitorPanel({
                       onClick={handleClearSchemaCache}
                       className="h-6"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       <Trash2 className="mr-1 h-3 w-3" />
@@ -795,7 +795,7 @@ export function MemoryMonitorPanel({
           <div className="space-y-2">
             <h3
               className="text-muted-foreground font-medium tracking-wide uppercase"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('devTools.memoryMonitor.rendererMetrics')}
             </h3>
@@ -813,7 +813,7 @@ export function MemoryMonitorPanel({
           <div className="space-y-2">
             <h3
               className="text-muted-foreground font-medium tracking-wide uppercase"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('devTools.memoryMonitor.actions')}
             </h3>

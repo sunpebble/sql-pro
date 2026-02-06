@@ -178,7 +178,7 @@ function CollapsibleSection({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center gap-2 px-3 py-2 text-left font-medium transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {isOpen ? (
           <ChevronDown className="h-4 w-4" />
@@ -210,7 +210,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
       <div className="flex items-center justify-between">
         <span
           className="text-zinc-500"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
         >
           {t('error.stackFrames', { count: frames.length })}
         </span>
@@ -218,7 +218,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
           variant="ghost"
           size="sm"
           className="h-7 px-2"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
           onClick={handleCopy}
         >
           <Copy className="mr-1 h-3 w-3" />
@@ -234,7 +234,7 @@ function StackTraceViewer({ stack }: { stack: string }) {
                 'group flex items-start gap-2 px-2 py-1.5 font-mono',
                 index === 0 && 'bg-red-100 dark:bg-red-900/30'
               )}
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
             >
               <span className="w-5 shrink-0 text-right text-zinc-400">
                 {index}
@@ -289,13 +289,13 @@ export function RouterErrorFallback({ error, reset }: ErrorComponentProps) {
 
         <h2
           className="mb-1 font-semibold"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.25)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.25)' }}
         >
           {t('error.somethingWentWrong')}
         </h2>
         <p
           className="mb-4 text-zinc-500"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('error.unexpectedError')}
         </p>
@@ -305,14 +305,14 @@ export function RouterErrorFallback({ error, reset }: ErrorComponentProps) {
           <div className="flex items-start gap-2">
             <span
               className="rounded bg-red-200 px-1.5 py-0.5 font-mono font-medium text-red-700 dark:bg-red-800 dark:text-red-300"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
             >
               {err.name || t('error.error')}
             </span>
           </div>
           <p
             className="mt-2 font-mono text-red-700 dark:text-red-300"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {err.message}
           </p>

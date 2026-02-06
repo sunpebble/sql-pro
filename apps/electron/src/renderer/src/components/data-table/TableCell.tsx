@@ -322,7 +322,7 @@ export const TableCell = memo(
             <div
               id="cell-error"
               className="bg-destructive text-destructive-foreground absolute -top-6 left-0 z-50 rounded px-1.5 py-0.5 whitespace-nowrap shadow-sm"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {validationError}
             </div>

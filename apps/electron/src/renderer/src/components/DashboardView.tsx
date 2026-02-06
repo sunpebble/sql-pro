@@ -185,21 +185,21 @@ const StatCard = memo(
           <div className="min-w-0 flex-1">
             <p
               className="truncate leading-none font-semibold tabular-nums"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.4)' }}
             >
               {value}
             </p>
             {subValue && (
               <p
                 className="text-muted-foreground/60 truncate"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {subValue}
               </p>
             )}
             <p
               className="text-muted-foreground truncate"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {label}
             </p>
@@ -235,7 +235,7 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
       <div className="bg-muted rounded-base flex h-8 w-8 items-center justify-center transition-transform duration-200">
         <span
           className="text-muted-foreground font-semibold"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {index + 1}
         </span>
@@ -247,7 +247,7 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
         </div>
         <div
           className="mt-1.5 flex items-center gap-4"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           <span className="text-muted-foreground font-medium">
             {table.rowCount.toLocaleString()} {t('databaseDashboard.rows')}
@@ -279,7 +279,7 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
         <Badge
           variant="secondary"
           className="bg-primary/10 text-primary transition-transform"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {table.indexCount} idx
         </Badge>
@@ -320,7 +320,7 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
         </div>
         <p
           className="text-muted-foreground font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('databaseDashboard.noTableData')}
         </p>
@@ -357,7 +357,7 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
                 <p className="font-semibold">{data.fullName}</p>
                 <p
                   className="font-medium text-blue-500"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {data.rows?.toLocaleString()} {t('databaseDashboard.rows')}
                 </p>
@@ -365,7 +365,7 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {formatBytes(data.size)}
@@ -426,7 +426,7 @@ const DataTypeChart = memo(
           </div>
           <p
             className="text-muted-foreground font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('databaseDashboard.noDataTypeInfo')}
           </p>
@@ -468,7 +468,7 @@ const DataTypeChart = memo(
                     <p className="font-semibold">{data.name}</p>
                     <p
                       className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       <span className="text-foreground font-medium">
                         {data.value}
@@ -500,13 +500,13 @@ const DataTypeChart = memo(
               />
               <span
                 className="group-hover/legend:text-foreground font-medium transition-colors"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {item.name}
               </span>
               <span
                 className="text-muted-foreground group-hover/legend:text-primary ml-auto font-semibold tabular-nums transition-colors"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {item.value}
               </span>
@@ -601,7 +601,10 @@ const InsightsCard = memo(({ stats }: InsightsCardProps) => {
   return (
     <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base">
+        <CardTitle
+          className="flex items-center gap-2"
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
+        >
           <div className="rounded-base bg-emerald-500/15 p-1.5">
             <TrendingUp className="h-4 w-4 text-emerald-500" />
           </div>
@@ -644,13 +647,13 @@ const InsightsCard = memo(({ stats }: InsightsCardProps) => {
               <div className="min-w-0 flex-1 space-y-0.5">
                 <p
                   className="leading-tight font-semibold"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {insight.title}
                 </p>
                 <p
                   className="text-muted-foreground leading-relaxed"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {insight.description}
                 </p>
@@ -798,13 +801,13 @@ export const DashboardView = memo(() => {
           <div>
             <h1
               className="font-semibold tracking-tight"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
             >
               {t('databaseDashboard.title')}
             </h1>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {connection?.filename && (
                 <Badge variant="secondary" className="mr-2">
@@ -940,7 +943,12 @@ export const DashboardView = memo(() => {
                 <div className="grid gap-6 lg:grid-cols-2">
                   <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                     <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
+                      <CardTitle
+                        className="flex items-center gap-2"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)',
+                        }}
+                      >
                         <div className="rounded-base bg-blue-500/15 p-1.5">
                           <Database className="h-4 w-4 text-blue-500" />
                         </div>
@@ -954,7 +962,12 @@ export const DashboardView = memo(() => {
 
                   <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                     <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
+                      <CardTitle
+                        className="flex items-center gap-2"
+                        style={{
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)',
+                        }}
+                      >
                         <div className="rounded-base bg-purple-500/15 p-1.5">
                           <PieChart className="h-4 w-4 text-purple-500" />
                         </div>
@@ -974,7 +987,7 @@ export const DashboardView = memo(() => {
 
                 <div
                   className="flex items-center justify-center gap-2 text-center"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   <div className="bg-border h-px flex-1" />
                   <span className="text-muted-foreground/70 font-medium">
@@ -995,7 +1008,12 @@ export const DashboardView = memo(() => {
             >
               <Card className="border-border/50 overflow-visible shadow-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2 text-base">
+                  <CardTitle
+                    className="flex items-center gap-2"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)',
+                    }}
+                  >
                     <div className="rounded-base bg-indigo-500/15 p-1.5">
                       <Table2 className="h-4 w-4 text-indigo-500" />
                     </div>
@@ -1029,7 +1047,12 @@ export const DashboardView = memo(() => {
               <div className="space-y-6">
                 <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
+                    <CardTitle
+                      className="flex items-center gap-2"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)',
+                      }}
+                    >
                       <div className="rounded-base bg-blue-500/15 p-1.5">
                         <BarChart3 className="h-4 w-4 text-blue-500" />
                       </div>
@@ -1046,7 +1069,12 @@ export const DashboardView = memo(() => {
 
                 <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
+                    <CardTitle
+                      className="flex items-center gap-2"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)',
+                      }}
+                    >
                       <div className="rounded-base bg-purple-500/15 p-1.5">
                         <PieChart className="h-4 w-4 text-purple-500" />
                       </div>
@@ -1066,7 +1094,12 @@ export const DashboardView = memo(() => {
 
                 <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
+                    <CardTitle
+                      className="flex items-center gap-2"
+                      style={{
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)',
+                      }}
+                    >
                       <div className="rounded-base bg-cyan-500/15 p-1.5">
                         <Layers className="h-4 w-4 text-cyan-500" />
                       </div>
@@ -1091,7 +1124,7 @@ export const DashboardView = memo(() => {
                         >
                           <span
                             className="font-mono font-medium"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {item.type}
                           </span>

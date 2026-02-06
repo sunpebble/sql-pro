@@ -65,13 +65,13 @@ export function RootLayout() {
             <Upload className="text-primary mb-4 h-12 w-12" />
             <p
               className="text-primary font-medium"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
             >
               {t('dragDrop.dropDatabaseFile')}
             </p>
             <p
               className="text-muted-foreground mt-1"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {DB_EXTENSIONS.join(', ')}
             </p>

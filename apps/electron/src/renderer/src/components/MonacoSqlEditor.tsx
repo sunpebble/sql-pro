@@ -702,7 +702,7 @@ export function MonacoSqlEditor({
         <div
           ref={vimStatusRef}
           className="bg-muted/50 text-muted-foreground border-t-2 px-2 py-1 font-mono"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         />
       )}
 

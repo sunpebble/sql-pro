@@ -121,7 +121,7 @@ function ExecutionPlanNodeComponent({
                 </div>
                 <div
                   className="opacity-90"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t(warningMessage.descriptionKey)}
                 </div>
@@ -137,7 +137,7 @@ function ExecutionPlanNodeComponent({
         {(tableName || indexName) && (
           <div
             className="flex items-center gap-2"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {tableName && (
               <div className="flex items-center gap-1">
@@ -162,7 +162,7 @@ function ExecutionPlanNodeComponent({
         <p
           className="text-muted-foreground line-clamp-2 font-mono"
           title={detail}
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {detail}
         </p>
@@ -171,7 +171,7 @@ function ExecutionPlanNodeComponent({
         {(estimatedCost !== undefined || estimatedRows !== undefined) && (
           <div
             className="flex gap-3 border-t pt-2"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {estimatedCost !== undefined && (
               <div className="flex items-center gap-1">

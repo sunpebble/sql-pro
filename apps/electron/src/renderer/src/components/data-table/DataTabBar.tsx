@@ -156,7 +156,7 @@ const TabItem = memo(
                       ? 'bg-accent text-foreground rounded-md'
                       : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground rounded-md bg-transparent'
                   )}
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   onClick={onSelect}
                 >
                   {isView ? (

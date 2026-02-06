@@ -466,9 +466,9 @@
    ═══════════════════════════════════════ */
 
 :root {
-  --font-ui-size: 14px;
+  --font-ui-size: 13px;
   --font-ui-family: inherit;
-  --font-table-size: 13px;
+  --font-table-size: 14px;
   --font-table-family: inherit;
   --font-editor-size: 14px;
   --font-editor-family: inherit;

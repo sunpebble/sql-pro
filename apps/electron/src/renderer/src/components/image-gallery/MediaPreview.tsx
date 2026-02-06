@@ -909,7 +909,7 @@ export function MediaPreview({
                     <span
                       className="text-muted-foreground min-w-[4rem] text-center"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {Math.round(scale * 100)}%
@@ -1088,7 +1088,7 @@ export function MediaPreview({
                   <div
                     className="pointer-events-none absolute right-6 bottom-16 flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-white opacity-50"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {isPlaying ? (
@@ -1150,13 +1150,13 @@ export function MediaPreview({
               <div className="border-b pb-2">
                 <div
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('mediaGallery.fileName', 'File Name')}
                 </div>
                 <div
                   className="font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {displayMetadata.fileName}
                 </div>
@@ -1166,13 +1166,13 @@ export function MediaPreview({
             {/* Main info grid */}
             <div
               className="grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {/* Document Type / Format */}
               <div>
                 <div
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('mediaGallery.documentType', 'Document Type')}
                 </div>
@@ -1191,7 +1191,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('mediaGallery.fileSize', 'File Size')}
@@ -1206,7 +1206,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {displayMetadata.isVideo
@@ -1226,7 +1226,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('mediaGallery.imageDPI', 'Image DPI')}
@@ -1247,7 +1247,7 @@ export function MediaPreview({
                     <div
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('mediaGallery.colorModel', 'Color Model')}
@@ -1265,7 +1265,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('mediaGallery.depth', 'Depth')}
@@ -1281,7 +1281,7 @@ export function MediaPreview({
                     <div
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('mediaGallery.colorProfile', 'Color Profile')}
@@ -1299,7 +1299,7 @@ export function MediaPreview({
                     <div
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('mediaGallery.progressive', 'Progressive')}
@@ -1319,7 +1319,7 @@ export function MediaPreview({
                     <div
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t(
@@ -1340,7 +1340,7 @@ export function MediaPreview({
                     <div
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('mediaGallery.frames', 'Frames')}
@@ -1357,7 +1357,7 @@ export function MediaPreview({
                     <div
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('mediaGallery.duration', 'Duration')}
@@ -1374,7 +1374,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('mediaGallery.codec', 'Codec')}
@@ -1389,7 +1389,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('mediaGallery.bitrate', 'Bitrate')}
@@ -1406,7 +1406,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('mediaGallery.fps', 'FPS')}
@@ -1423,7 +1423,7 @@ export function MediaPreview({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('mediaGallery.creationDate', 'Creation Date')}
@@ -1441,7 +1441,7 @@ export function MediaPreview({
                     <div
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('mediaGallery.modificationDate', 'Modification Date')}
@@ -1457,7 +1457,7 @@ export function MediaPreview({
             {isLoadingMetadata && (
               <div
                 className="text-muted-foreground flex items-center gap-1"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <Loader2 className="h-3 w-3 animate-spin" />
                 {t('mediaGallery.loadingMetadata', 'Loading metadata...')}
@@ -1470,7 +1470,7 @@ export function MediaPreview({
                 <button
                   onClick={handleOpenUrl}
                   className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono break-all transition-colors"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   title={t('mediaGallery.openUrl', 'Open URL')}
                 >
                   {item.source.url}
@@ -1478,7 +1478,7 @@ export function MediaPreview({
                 <button
                   onClick={handleOpenUrl}
                   className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 font-medium transition-colors"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   title={t('mediaGallery.openUrl', 'Open URL')}
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -1486,7 +1486,7 @@ export function MediaPreview({
                 <button
                   onClick={handleCopyUrl}
                   className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 font-medium transition-colors"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   title={t('mediaGallery.copyUrl', 'Copy URL')}
                 >
                   <Copy className="h-3.5 w-3.5" />
@@ -1500,7 +1500,7 @@ export function MediaPreview({
                 <button
                   onClick={handleShowInFolder}
                   className="bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground flex-1 cursor-pointer rounded-md px-2 py-1.5 text-left font-mono break-all transition-colors"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   title={t('mediaGallery.showInFolder', 'Show in folder')}
                 >
                   {item.source.path}
@@ -1508,7 +1508,7 @@ export function MediaPreview({
                 <button
                   onClick={handleShowInFolder}
                   className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 font-medium transition-colors"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   title={t('mediaGallery.showInFolder', 'Show in folder')}
                 >
                   <FolderOpen className="h-3.5 w-3.5" />
@@ -1516,7 +1516,7 @@ export function MediaPreview({
                 <button
                   onClick={handleCopyFilePath}
                   className="bg-muted hover:bg-muted/80 shrink-0 rounded-md px-2 py-1.5 font-medium transition-colors"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   title={t('mediaGallery.copyPath', 'Copy path')}
                 >
                   <Copy className="h-3.5 w-3.5" />

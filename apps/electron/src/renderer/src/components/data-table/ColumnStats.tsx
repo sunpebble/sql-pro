@@ -213,7 +213,7 @@ export const ColumnStats = memo(
             <BarChart3 className="text-muted-foreground h-3.5 w-3.5" />
             <span
               className="font-medium"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('table.columnStats', { defaultValue: 'Column Statistics' })}
             </span>
@@ -301,7 +301,7 @@ export const ColumnStats = memo(
                           : 'hover:bg-muted bg-background border'
                       )}
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       <span className="max-w-25 truncate font-medium">
@@ -310,7 +310,7 @@ export const ColumnStats = memo(
                       {nullPercentage > 0 && (
                         <span
                           className={cn(
-                            'rounded-md px-1 text-[9px]',
+                            'text-2xs rounded-md px-1',
                             isSelected
                               ? 'bg-background/20'
                               : nullPercentage > 50
@@ -351,7 +351,7 @@ export const ColumnStats = memo(
               ) : (
                 <div
                   className="text-muted-foreground flex h-full items-center justify-center p-4 text-center"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('table.selectColumn', {
                     defaultValue:
@@ -441,7 +441,7 @@ function PageStats({ stats, t }: PageStatsProps) {
               <div
                 key={`${String(item.value)}-${item.count}`}
                 className="flex items-center gap-2"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -497,7 +497,7 @@ function FullTableStats({
         <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
         <span
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('columnStats.loading', {
             defaultValue: 'Loading full table statistics...',
@@ -562,7 +562,7 @@ function FullTableStats({
                 // eslint-disable-next-line react/no-array-index-key -- Index needed as value may not be unique
                 key={`${String(item.value)}-${index}`}
                 className="group flex items-center gap-2"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -622,7 +622,7 @@ function StatCard({ icon, label, value, subtitle, warning }: StatCardProps) {
       </div>
       <div
         className="font-medium"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         {value}
       </div>

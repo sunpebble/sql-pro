@@ -30,7 +30,7 @@ export function ColoredTagBadge({
         backgroundColor: tag.color,
         color: textColor,
         ...(size === 'md' && {
-          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
         }),
       }}
     >

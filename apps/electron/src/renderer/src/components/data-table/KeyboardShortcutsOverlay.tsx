@@ -281,7 +281,7 @@ export const KeyboardShortcutsOverlay = memo(
               <Keyboard className="text-primary h-4 w-4" />
               <span
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('keyboardShortcuts.title')}
               </span>
@@ -316,7 +316,7 @@ export const KeyboardShortcutsOverlay = memo(
                       <span
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t(shortcut.descriptionKey)}
@@ -375,7 +375,7 @@ export const InlineShortcutHint = memo(
           <kbd
             key={key}
             className={cn(
-              'rounded-md px-1 py-0.5 font-mono text-[9px]',
+              'text-2xs rounded-md px-1 py-0.5 font-mono',
               'bg-muted/50 text-muted-foreground',
               'min-w-3.5 text-center'
             )}

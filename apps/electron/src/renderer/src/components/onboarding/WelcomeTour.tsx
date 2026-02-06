@@ -260,7 +260,7 @@ export function WelcomeTour({
         <p
           id="welcome-tour-description"
           className="text-muted-foreground mb-4"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {stepDescription}
         </p>
@@ -282,7 +282,7 @@ export function WelcomeTour({
         <div className="flex items-center justify-between">
           <span
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {currentStep + 1} / {WELCOME_TOUR_TOTAL_STEPS}
           </span>

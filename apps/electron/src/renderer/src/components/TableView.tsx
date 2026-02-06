@@ -531,7 +531,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             <div className="flex items-center gap-3">
               <span
                 className="font-heading text-main"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('table.rowsSelected', { count: selectedRowIds.length })}
               </span>
@@ -540,7 +540,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 size="sm"
                 onClick={clearSelection}
                 className="h-7"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <X className="mr-1 h-3 w-3" />
                 {t('table.clearSelection')}
@@ -584,7 +584,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             <h2 className="truncate font-medium">{selectedTable.name}</h2>
             <span
               className="text-muted-foreground shrink-0"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {searchStats.isSearching ? (
                 <>
@@ -602,7 +602,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             {searchStats.isSearching && (
               <span
                 className="rounded-base bg-main/10 font-base text-main shrink-0 px-1.5 py-0.5"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('table.filtered', { defaultValue: 'Filtered' })}
               </span>
@@ -610,7 +610,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             {selectedTable.type === 'view' && (
               <span
                 className="rounded-base bg-secondary text-muted-foreground flex shrink-0 items-center gap-1 px-1.5 py-0.5"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <Eye className="h-3 w-3" />
                 {t('table.view', { defaultValue: 'View' })}
@@ -635,7 +635,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="h-8 w-48 pr-8 pl-8"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               />
               {searchTerm && (
                 <button
@@ -858,7 +858,7 @@ export function TableView({ tableOverride }: TableViewProps) {
           {/* Page Info - hidden on very small screens */}
           <div
             className="text-muted-foreground hidden whitespace-nowrap sm:block"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('table.pageInfo', {
               defaultValue: 'Page {{page}} of {{totalPages}}',
@@ -931,12 +931,12 @@ export function TableView({ tableOverride }: TableViewProps) {
                   }
                 }}
                 className="h-7 w-12 [appearance:textfield] px-1 text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 disabled={isLoading}
               />
               <span
                 className="text-muted-foreground whitespace-nowrap"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 / {totalPages || 1}
               </span>

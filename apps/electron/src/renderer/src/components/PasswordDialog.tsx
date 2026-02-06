@@ -70,13 +70,13 @@ export function PasswordDialog({
             </div>
             <Dialog.Title
               className="font-semibold"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
             >
               {t('passwordDialog.title')}
             </Dialog.Title>
             <Dialog.Description
               className="text-muted-foreground mt-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('passwordDialog.description')}{' '}
               <span className="font-medium">{filename}</span>
@@ -131,7 +131,7 @@ export function PasswordDialog({
                   type="button"
                   onClick={handleForgetPassword}
                   className="text-muted-foreground hover:text-foreground hover:underline"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('passwordDialog.forgetPassword')}
                 </button>

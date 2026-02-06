@@ -292,7 +292,7 @@ export function SchemaExportDialog({
                     </p>
                     <p
                       className="text-green-700 dark:text-green-300"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('sharing.schemaExportedSuccessfully')}
                     </p>
@@ -300,7 +300,7 @@ export function SchemaExportDialog({
                       <p
                         className="break-all text-green-600 dark:text-green-400"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {exportResult.filePath}
@@ -314,7 +314,7 @@ export function SchemaExportDialog({
                     </p>
                     <p
                       className="text-destructive/80 mt-1"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {exportResult.error || t('sharing.unknownError')}
                     </p>
@@ -328,7 +328,7 @@ export function SchemaExportDialog({
                   <Label
                     htmlFor="schema-name"
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('sharing.schemaName')}{' '}
                     <span className="text-destructive">*</span>
@@ -344,7 +344,7 @@ export function SchemaExportDialog({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('sharing.schemaNameHelp')}
@@ -356,7 +356,7 @@ export function SchemaExportDialog({
                   <Label
                     htmlFor="schema-description"
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('sharing.description')}
                   </Label>
@@ -372,7 +372,7 @@ export function SchemaExportDialog({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('sharing.descriptionHelp')}
@@ -384,7 +384,7 @@ export function SchemaExportDialog({
                   <Label
                     htmlFor="format"
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('sharing.exportFormat')}{' '}
                     <span className="text-destructive">*</span>
@@ -413,7 +413,7 @@ export function SchemaExportDialog({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {format === 'json'
@@ -426,7 +426,7 @@ export function SchemaExportDialog({
                 <div className="space-y-2">
                   <Label
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('sharing.tablesToExport')}{' '}
                     <span className="text-destructive">*</span>
@@ -437,7 +437,7 @@ export function SchemaExportDialog({
                         <Loader2 className="h-4 w-4 animate-spin" />
                         <span
                           className=""
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.loadingSchema')}
                         </span>
@@ -446,7 +446,7 @@ export function SchemaExportDialog({
                   ) : schemas.length === 0 ? (
                     <div
                       className="text-muted-foreground rounded-md border p-4 text-center"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('sharing.noTablesFound')}
                     </div>
@@ -471,7 +471,7 @@ export function SchemaExportDialog({
                               <span
                                 className="font-medium"
                                 style={{
-                                  fontSize: 'var(--font-ui-size, 14px)',
+                                  fontSize: 'var(--font-ui-size, 13px)',
                                 }}
                               >
                                 {schema.name}
@@ -480,7 +480,7 @@ export function SchemaExportDialog({
                                 className="text-muted-foreground"
                                 style={{
                                   fontSize:
-                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                    'calc(var(--font-ui-size, 13px) * 0.85)',
                                 }}
                               >
                                 {schema.tables.length === 1
@@ -511,7 +511,7 @@ export function SchemaExportDialog({
                                     <span
                                       className=""
                                       style={{
-                                        fontSize: 'var(--font-ui-size, 14px)',
+                                        fontSize: 'var(--font-ui-size, 13px)',
                                       }}
                                     >
                                       {table.name}
@@ -520,7 +520,7 @@ export function SchemaExportDialog({
                                       className="text-muted-foreground"
                                       style={{
                                         fontSize:
-                                          'calc(var(--font-ui-size, 14px) * 0.85)',
+                                          'calc(var(--font-ui-size, 13px) * 0.85)',
                                       }}
                                     >
                                       {table.columns.length === 1
@@ -543,7 +543,7 @@ export function SchemaExportDialog({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {totalTables === 1
@@ -562,7 +562,7 @@ export function SchemaExportDialog({
                 <div className="space-y-3">
                   <Label
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('sharing.includeInExport')}
                   </Label>
@@ -578,14 +578,14 @@ export function SchemaExportDialog({
                       <div className="flex-1">
                         <p
                           className=""
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.indexes')}
                         </p>
                         <p
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.indexesHelp')}
@@ -604,14 +604,14 @@ export function SchemaExportDialog({
                       <div className="flex-1">
                         <p
                           className=""
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.triggers')}
                         </p>
                         <p
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.triggersHelp')}
@@ -630,14 +630,14 @@ export function SchemaExportDialog({
                       <div className="flex-1">
                         <p
                           className=""
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.foreignKeys')}
                         </p>
                         <p
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.foreignKeysHelp')}
@@ -656,14 +656,14 @@ export function SchemaExportDialog({
                       <div className="flex-1">
                         <p
                           className=""
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.compressExport')}
                         </p>
                         <p
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.compressHelp')}
@@ -678,7 +678,7 @@ export function SchemaExportDialog({
                   <Label
                     htmlFor="schema-documentation"
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('sharing.documentation')}
                   </Label>
@@ -694,7 +694,7 @@ export function SchemaExportDialog({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('sharing.documentationHelp', {

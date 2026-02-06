@@ -72,7 +72,7 @@ export const VectorSearchHistory = memo(
           className={cn('text-muted-foreground py-8 text-center', className)}
         >
           <Clock className="mx-auto mb-2 h-8 w-8 opacity-30" />
-          <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+          <p style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
             {t('vectorSearch.history.empty', 'No search history yet')}
           </p>
         </div>
@@ -84,13 +84,13 @@ export const VectorSearchHistory = memo(
         <div className="flex items-center justify-between border-b px-3 py-2">
           <div
             className="text-muted-foreground flex items-center gap-2"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             <Clock className="h-4 w-4" />
             <span>{t('vectorSearch.history.title', 'Recent Searches')}</span>
             <span
               className="bg-muted rounded px-1.5 py-0.5"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {entries.length}
             </span>
@@ -135,14 +135,14 @@ export const VectorSearchHistory = memo(
                 <div className="min-w-0 flex-1">
                   <p
                     className="truncate font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {entry.query}
                   </p>
                   <div
                     className="text-muted-foreground mt-0.5 flex items-center gap-2"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     <span className="flex items-center gap-1">

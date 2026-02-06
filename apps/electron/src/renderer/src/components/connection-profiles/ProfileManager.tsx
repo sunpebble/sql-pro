@@ -648,7 +648,7 @@ export function ProfileManager({
         <div className="mb-3 flex items-center justify-between">
           <h2
             className="font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {t('profiles.title', { defaultValue: 'Connection Profiles' })}
           </h2>
@@ -709,7 +709,7 @@ export function ProfileManager({
                   <h3
                     className="text-muted-foreground mb-2 font-semibold uppercase"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('profiles.recentConnections')}
@@ -722,7 +722,7 @@ export function ProfileManager({
                           'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 transition-colors',
                           selectedProfileId === profile.id && 'bg-accent'
                         )}
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         onClick={() => selectProfile(profile.id)}
                         onDoubleClick={() => handleConnectProfile(profile)}
                       >
@@ -758,7 +758,7 @@ export function ProfileManager({
                   <h3
                     className="text-muted-foreground mb-2 font-semibold uppercase"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('profiles.savedProfiles')}
@@ -788,7 +788,7 @@ export function ProfileManager({
                 folders.size === 0 && (
                   <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2 text-center">
                     <Database className="size-12" />
-                    <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                    <p style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                       {searchQuery
                         ? t('profiles.noSearchResults', {
                             defaultValue:
@@ -801,7 +801,7 @@ export function ProfileManager({
                     {!searchQuery && (
                       <p
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('profiles.getStarted', {
@@ -828,7 +828,7 @@ export function ProfileManager({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {selectedProfile.path}
@@ -843,7 +843,7 @@ export function ProfileManager({
                       <div
                         className="text-muted-foreground mb-1 flex items-center gap-1 font-medium"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         <Tag className="size-3" />
@@ -856,7 +856,7 @@ export function ProfileManager({
                             className="bg-accent rounded-full px-2 py-0.5"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {tag}
@@ -872,7 +872,7 @@ export function ProfileManager({
                       <div
                         className="text-muted-foreground mb-1 flex items-center gap-1 font-medium"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         <FileText className="size-3" />
@@ -880,7 +880,7 @@ export function ProfileManager({
                       </div>
                       <p
                         className="text-muted-foreground whitespace-pre-wrap"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {selectedProfile.notes}
                       </p>
@@ -892,7 +892,7 @@ export function ProfileManager({
                     <div
                       className="text-muted-foreground mb-1 font-medium"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('profileManager.properties')}
@@ -900,7 +900,7 @@ export function ProfileManager({
                     <div
                       className="space-y-1"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {selectedProfile.isEncrypted && (
@@ -956,7 +956,7 @@ export function ProfileManager({
             ) : (
               <div
                 className="text-muted-foreground flex h-full items-center justify-center text-center"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 Select a profile to view details
               </div>
@@ -1004,7 +1004,7 @@ export function ProfileManager({
               <label
                 htmlFor="folderName"
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('profiles.folderName')}
               </label>
@@ -1019,7 +1019,7 @@ export function ProfileManager({
               {editingFolder && folderDialogMode === 'create' && (
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('profiles.creatingSubfolderIn', {
                     name: editingFolder.name,

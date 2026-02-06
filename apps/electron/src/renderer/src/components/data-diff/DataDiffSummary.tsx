@@ -73,7 +73,7 @@ export function DataDiffSummary({
       >
         <div className="flex items-center justify-between">
           <CardTitle
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {t('diffFilter.rowComparisonSummary')}
           </CardTitle>
@@ -92,16 +92,16 @@ export function DataDiffSummary({
             <TableIcon className="text-muted-foreground h-4 w-4" />
             <span
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('diffFilter.totalRows')}
             </span>
-            <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+            <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
               {totalRows.toLocaleString()}
             </span>
             <span
               className="text-muted-foreground ml-auto"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('diffFilter.sourceToTarget', {
                 source: comparisonResult.summary.sourceRows.toLocaleString(),
@@ -125,7 +125,7 @@ export function DataDiffSummary({
                   <Plus className="h-3.5 w-3.5" />
                   <span
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('diffFilter.added')}
@@ -133,7 +133,7 @@ export function DataDiffSummary({
                 </div>
                 <span
                   className="text-foreground font-semibold"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
                 >
                   {counts.added.toLocaleString()}
                 </span>
@@ -153,7 +153,7 @@ export function DataDiffSummary({
                   <Minus className="h-3.5 w-3.5" />
                   <span
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('diffFilter.removed')}
@@ -161,7 +161,7 @@ export function DataDiffSummary({
                 </div>
                 <span
                   className="text-foreground font-semibold"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
                 >
                   {counts.removed.toLocaleString()}
                 </span>
@@ -181,7 +181,7 @@ export function DataDiffSummary({
                   <Edit className="h-3.5 w-3.5" />
                   <span
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('diffFilter.modified')}
@@ -189,7 +189,7 @@ export function DataDiffSummary({
                 </div>
                 <span
                   className="text-foreground font-semibold"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
                 >
                   {counts.modified.toLocaleString()}
                 </span>
@@ -208,7 +208,7 @@ export function DataDiffSummary({
                 <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-300">
                   <span
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('diffFilter.unchanged')}
@@ -216,7 +216,7 @@ export function DataDiffSummary({
                 </div>
                 <span
                   className="text-foreground font-semibold"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
                 >
                   {counts.unchanged.toLocaleString()}
                 </span>
@@ -227,7 +227,7 @@ export function DataDiffSummary({
           {/* Change Summary Text */}
           <div
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {counts.added + counts.removed + counts.modified === 0 ? (
               <p>{t('diffFilter.noDifferencesFound')}</p>

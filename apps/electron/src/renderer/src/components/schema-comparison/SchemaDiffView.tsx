@@ -72,7 +72,7 @@ export function SchemaDiffView({
         </p>
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {filters.showOnlyDifferences || filters.searchText
             ? t('schemaDiff.tryAdjustingFilters')

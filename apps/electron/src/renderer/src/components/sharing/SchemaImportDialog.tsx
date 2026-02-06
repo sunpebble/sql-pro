@@ -164,7 +164,7 @@ export function SchemaImportDialog({
               <div className="space-y-3">
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('sharing.selectSchemaFilePrompt')}
                 </p>
@@ -172,7 +172,7 @@ export function SchemaImportDialog({
                   <div className="bg-muted rounded-base p-3">
                     <p
                       className=""
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       <span className="font-medium">{t('sharing.note')}:</span>{' '}
                       {t('sharing.schemaImportNote')}
@@ -194,7 +194,7 @@ export function SchemaImportDialog({
                         </p>
                         <p
                           className="text-destructive/80 mt-1"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.schemaVersionIncompatibleDesc')}
                         </p>
@@ -209,14 +209,14 @@ export function SchemaImportDialog({
                       <div className="flex-1">
                         <p
                           className="font-medium"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.compressedFileDetected')}
                         </p>
                         <p
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.algorithm')}:{' '}
@@ -255,7 +255,7 @@ export function SchemaImportDialog({
                           </p>
                           <p
                             className="text-destructive/80 mt-1"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('sharing.errorsFoundInSchemaImport')}
                           </p>
@@ -263,7 +263,7 @@ export function SchemaImportDialog({
                       </div>
                       <ul
                         className="text-destructive/80 ml-8 list-inside list-disc space-y-1"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.validation!.errors!.map((error) => (
                           <li key={error}>{error}</li>
@@ -283,7 +283,7 @@ export function SchemaImportDialog({
                           </p>
                           <p
                             className="mt-1 text-yellow-700 dark:text-yellow-300"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('sharing.schemaWarningsDesc')}
                           </p>
@@ -291,7 +291,7 @@ export function SchemaImportDialog({
                       </div>
                       <ul
                         className="ml-8 list-inside list-disc space-y-1 text-yellow-700 dark:text-yellow-300"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.validation!.warnings!.map((warning) => (
                           <li key={warning}>{warning}</li>
@@ -310,7 +310,7 @@ export function SchemaImportDialog({
                         </p>
                         <p
                           className="mt-1 text-green-700 dark:text-green-300"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.schemaValidAndReady')}
                         </p>
@@ -326,7 +326,7 @@ export function SchemaImportDialog({
                       </p>
                       <p
                         className="text-destructive/80 mt-1"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.error || t('sharing.unknownError')}
                       </p>
@@ -340,7 +340,7 @@ export function SchemaImportDialog({
                     <div className="flex items-center justify-between">
                       <h3
                         className="font-semibold"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('sharing.schemaPreview')}
                       </h3>
@@ -348,7 +348,7 @@ export function SchemaImportDialog({
                         <span
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.version')}:{' '}
@@ -362,14 +362,14 @@ export function SchemaImportDialog({
                       <Label
                         className="font-medium"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('sharing.schemaName')}
                       </Label>
                       <p
                         className=""
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.schema.name}
                       </p>
@@ -381,14 +381,14 @@ export function SchemaImportDialog({
                         <Label
                           className="font-medium"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.description')}
                         </Label>
                         <p
                           className="text-muted-foreground"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {importResult.schema.description}
                         </p>
@@ -403,14 +403,14 @@ export function SchemaImportDialog({
                             className="font-medium"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t('sharing.databaseName')}
                           </Label>
                           <p
                             className="text-muted-foreground"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {importResult.schema.databaseName}
                           </p>
@@ -422,14 +422,14 @@ export function SchemaImportDialog({
                             className="font-medium"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t('sharing.databaseType')}
                           </Label>
                           <p
                             className="text-muted-foreground capitalize"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {importResult.schema.databaseType}
                           </p>
@@ -444,7 +444,7 @@ export function SchemaImportDialog({
                         <Label
                           className="font-medium"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.exportFormat')}
@@ -452,7 +452,7 @@ export function SchemaImportDialog({
                       </div>
                       <p
                         className=""
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.schema.format === 'json'
                           ? t('sharing.jsonFormat')
@@ -462,7 +462,7 @@ export function SchemaImportDialog({
                         <div
                           className="text-muted-foreground grid grid-cols-2 gap-2 pt-2"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {importResult.schema.format === 'json' ? (
@@ -537,7 +537,7 @@ export function SchemaImportDialog({
                       <Label
                         className="font-medium"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('sharing.exportOptionsLabel')}
@@ -554,7 +554,7 @@ export function SchemaImportDialog({
                           />
                           <span
                             className=""
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('sharing.includeIndexes')}
                           </span>
@@ -570,7 +570,7 @@ export function SchemaImportDialog({
                           />
                           <span
                             className=""
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('sharing.includeTriggers')}
                           </span>
@@ -586,7 +586,7 @@ export function SchemaImportDialog({
                           />
                           <span
                             className=""
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('sharing.includeForeignKeys')}
                           </span>
@@ -603,7 +603,7 @@ export function SchemaImportDialog({
                             className="font-medium"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t('sharing.tablesIncluded')}
@@ -615,7 +615,7 @@ export function SchemaImportDialog({
                                   <p
                                     className="font-medium"
                                     style={{
-                                      fontSize: 'var(--font-ui-size, 14px)',
+                                      fontSize: 'var(--font-ui-size, 13px)',
                                     }}
                                   >
                                     {schema.name}
@@ -627,7 +627,7 @@ export function SchemaImportDialog({
                                         className="text-muted-foreground"
                                         style={{
                                           fontSize:
-                                            'calc(var(--font-ui-size, 14px) * 0.85)',
+                                            'calc(var(--font-ui-size, 13px) * 0.85)',
                                         }}
                                       >
                                         • {table.name} ({table.columns.length}{' '}
@@ -654,7 +654,7 @@ export function SchemaImportDialog({
                             className="font-medium"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t('sharing.sqlStatementsPreview')}
@@ -667,7 +667,7 @@ export function SchemaImportDialog({
                             className="bg-muted font-mono"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                             rows={10}
                           />
@@ -676,7 +676,7 @@ export function SchemaImportDialog({
                               className="text-muted-foreground"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
                               {t('sharing.showingFirstStatements', {
@@ -694,7 +694,7 @@ export function SchemaImportDialog({
                         <Label
                           className="font-medium"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.documentation')}
@@ -704,7 +704,7 @@ export function SchemaImportDialog({
                           readOnly
                           className="bg-muted"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                           rows={4}
                         />
@@ -716,7 +716,7 @@ export function SchemaImportDialog({
                       <div
                         className="text-muted-foreground grid grid-cols-2 gap-2"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {importResult.schema.createdAt && (
@@ -766,7 +766,7 @@ export function SchemaImportDialog({
                           <div className="flex-1">
                             <p
                               className="font-medium text-yellow-900 dark:text-yellow-100"
-                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                             >
                               {t('sharing.schemaConflictWarning')}
                             </p>
@@ -774,7 +774,7 @@ export function SchemaImportDialog({
                               className="mt-1 text-yellow-700 dark:text-yellow-300"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
                               {t('sharing.schemaConflictDesc', {

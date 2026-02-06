@@ -102,7 +102,7 @@ function ParameterInputForm({
               {param.type && param.type !== 'string' && (
                 <span
                   className="text-muted-foreground ml-1"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   ({param.type})
                 </span>

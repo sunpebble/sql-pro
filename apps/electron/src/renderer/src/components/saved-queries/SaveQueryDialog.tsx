@@ -132,7 +132,7 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
           {error && (
             <p
               className="text-destructive"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {error}
             </p>
@@ -145,7 +145,7 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
             {t('savedQueries.description', { defaultValue: 'Description' })}
             <span
               className="text-muted-foreground ml-1"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('common.optional', { defaultValue: '(optional)' })}
             </span>
@@ -188,7 +188,7 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
           <div className="bg-muted/50 rounded-base border-border border-2 p-3">
             <p
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('savedQueries.parametersDetected', {
                 defaultValue: 'Parameters detected',
@@ -202,7 +202,7 @@ function SaveQueryForm({ initialQuery, onOpenChange }: SaveQueryFormProps) {
                     <span
                       className="text-muted-foreground ml-1"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       :{p.type}

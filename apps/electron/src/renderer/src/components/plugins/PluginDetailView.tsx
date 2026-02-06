@@ -461,7 +461,7 @@ export function PluginDetailView({
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <SheetTitle
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.4)' }}
                 >
                   {pluginName}
                 </SheetTitle>
@@ -500,14 +500,14 @@ export function PluginDetailView({
                 <div>
                   <p
                     className="text-destructive font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('pluginCard.error')}
                   </p>
                   <p
                     className="text-destructive/80"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {errorMessage}
@@ -520,13 +520,13 @@ export function PluginDetailView({
             <div>
               <h4
                 className="mb-2 font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('pluginDetail.description')}
               </h4>
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {pluginDescription}
               </p>
@@ -537,7 +537,7 @@ export function PluginDetailView({
               <div>
                 <h4
                   className="mb-2 font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('pluginDetail.screenshots')}
                 </h4>
@@ -602,7 +602,7 @@ export function PluginDetailView({
                   <Shield className="text-muted-foreground h-4 w-4" />
                   <h4
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('pluginDetail.permissions')}
                   </h4>
@@ -619,7 +619,7 @@ export function PluginDetailView({
                       <p
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t(getPermissionDescriptionKey(permission))}
@@ -637,7 +637,7 @@ export function PluginDetailView({
               {/* Author */}
               <div
                 className="flex items-center gap-3"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 <User className="text-muted-foreground h-4 w-4 shrink-0" />
                 <span className="text-muted-foreground">
@@ -650,7 +650,7 @@ export function PluginDetailView({
               {pluginLicense && (
                 <div
                   className="flex items-center gap-3"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <Shield className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
@@ -664,7 +664,7 @@ export function PluginDetailView({
               {installedAt && (
                 <div
                   className="flex items-center gap-3"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <Calendar className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
@@ -680,7 +680,7 @@ export function PluginDetailView({
               {updatedAt && (
                 <div
                   className="flex items-center gap-3"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <Calendar className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
@@ -696,7 +696,7 @@ export function PluginDetailView({
               {downloads !== undefined && (
                 <div
                   className="flex items-center gap-3"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <Download className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="text-muted-foreground">
@@ -712,7 +712,7 @@ export function PluginDetailView({
               {rating !== undefined && (
                 <div
                   className="flex items-center gap-3"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <span className="text-muted-foreground">
                     {t('pluginDetail.rating')}
@@ -731,7 +731,7 @@ export function PluginDetailView({
                 <div>
                   <h4
                     className="mb-2 font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {isPluginInfoType
                       ? t('pluginDetail.keywords')
@@ -743,7 +743,7 @@ export function PluginDetailView({
                         key={keyword}
                         variant="secondary"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {keyword}
@@ -808,7 +808,7 @@ export function PluginDetailView({
                   />
                   <span
                     className="text-muted-foreground"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {isEnabled
                       ? t('pluginCard.enabled')
@@ -862,7 +862,7 @@ export function PluginDetailView({
                 <Badge
                   variant="secondary"
                   className="px-4 py-1.5"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('pluginDetail.alreadyInstalled')}
                 </Badge>

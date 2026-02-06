@@ -129,7 +129,7 @@ export function SelectionStats({
         'bg-muted/50 flex items-center gap-4 border-t px-4 py-1.5',
         className
       )}
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {/* Count - always show */}
       <div className="flex items-center gap-1.5">

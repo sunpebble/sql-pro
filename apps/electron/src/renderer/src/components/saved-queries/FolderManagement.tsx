@@ -34,7 +34,7 @@ export function FolderManagement({ onCreateFolder }: FolderManagementProps) {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         onClick={() => setIsExpanded(true)}
       >
         <Plus className="mr-1 h-3 w-3" />
@@ -62,7 +62,7 @@ export function FolderManagement({ onCreateFolder }: FolderManagementProps) {
           defaultValue: 'Folder name',
         })}
         className="h-8"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         autoFocus
       />
       <div className="flex items-center justify-between gap-2">
@@ -70,7 +70,7 @@ export function FolderManagement({ onCreateFolder }: FolderManagementProps) {
           <ColorPicker color={color} onChange={setColor} className="h-5 w-5" />
           <span
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('savedQueries.color', { defaultValue: 'Color' })}
           </span>
@@ -80,7 +80,7 @@ export function FolderManagement({ onCreateFolder }: FolderManagementProps) {
             variant="ghost"
             size="sm"
             className="h-6 px-2"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             onClick={() => {
               setIsExpanded(false);
               setName('');
@@ -91,7 +91,7 @@ export function FolderManagement({ onCreateFolder }: FolderManagementProps) {
           <Button
             size="sm"
             className="h-6 px-2"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             onClick={handleCreate}
             disabled={!name.trim()}
           >

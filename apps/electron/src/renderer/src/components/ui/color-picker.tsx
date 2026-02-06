@@ -50,7 +50,7 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
               <div className="flex items-center gap-2">
                 <span
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
                 >
                   Hex:
                 </span>
@@ -64,7 +64,7 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
                     }
                   }}
                   className="bg-background h-6 w-20 rounded border px-1.5 font-mono"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
                 />
               </div>
             </div>
@@ -73,7 +73,7 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
               variant="ghost"
               size="sm"
               className="w-full"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
               onClick={() => setShowCustom(true)}
             >
               Custom color...

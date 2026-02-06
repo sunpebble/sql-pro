@@ -61,7 +61,7 @@ export function WelcomeDialog({
             <Database className="text-primary h-8 w-8" />
           </DecoFrame>
           <DialogTitle
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.4)' }}
           >
             <GradientText variant="primary">
               {t('welcomeDialog.title')}

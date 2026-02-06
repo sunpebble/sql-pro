@@ -345,7 +345,7 @@ export function ConnectionSelector({
           {allConnections.length > 0 && (
             <DropdownMenuLabel
               className="text-muted-foreground font-normal"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('connectionSelector.openConnections')}
             </DropdownMenuLabel>
@@ -417,7 +417,7 @@ export function ConnectionSelector({
               <DropdownMenuSeparator />
               <DropdownMenuLabel
                 className="text-muted-foreground flex items-center gap-1.5 font-normal"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <Clock className="h-3 w-3" />
                 {t('connectionSelector.recent')}

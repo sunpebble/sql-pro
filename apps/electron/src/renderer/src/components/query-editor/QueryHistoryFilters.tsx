@@ -85,7 +85,7 @@ export const QueryHistoryFilters = memo(
           <Label
             htmlFor="status-filter"
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('queryEditor.historyFilters.status')}
           </Label>
@@ -121,7 +121,7 @@ export const QueryHistoryFilters = memo(
             <Label
               htmlFor="start-date-filter"
               className="text-muted-foreground flex items-center gap-1"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <Calendar className="h-3 w-3" />
               {t('queryEditor.historyFilters.from')}
@@ -132,7 +132,7 @@ export const QueryHistoryFilters = memo(
               value={filter.dateRange?.start || ''}
               onChange={handleStartDateChange}
               className="h-8 w-[130px]"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               aria-label={t('queryEditor.historyFilters.from')}
             />
           </div>
@@ -140,7 +140,7 @@ export const QueryHistoryFilters = memo(
             <Label
               htmlFor="end-date-filter"
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('queryEditor.historyFilters.to')}
             </Label>
@@ -150,7 +150,7 @@ export const QueryHistoryFilters = memo(
               value={filter.dateRange?.end || ''}
               onChange={handleEndDateChange}
               className="h-8 w-[130px]"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               aria-label={t('queryEditor.historyFilters.to')}
             />
           </div>
@@ -163,7 +163,7 @@ export const QueryHistoryFilters = memo(
             size="sm"
             onClick={handleClearFilters}
             className="h-8 gap-1"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             aria-label={t('queryEditor.historyFilters.clearCount', {
               count: activeFilterCount,
             })}

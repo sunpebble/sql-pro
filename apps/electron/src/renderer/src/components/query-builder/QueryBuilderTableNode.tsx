@@ -211,7 +211,7 @@ function QueryBuilderTableNodeComponent({
           isDirectlyHighlighted &&
             'bg-cyan-500/30 ring-2 ring-cyan-500 ring-inset'
         )}
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         onClick={() => handleToggleColumn(column.name)}
         onKeyDown={(e) =>
           handleKeyDown(e, () => handleToggleColumn(column.name))
@@ -283,7 +283,7 @@ function QueryBuilderTableNodeComponent({
           {column.name}
         </span>
 
-        <span className="text-muted-foreground shrink-0 font-mono text-[10px] uppercase">
+        <span className="text-muted-foreground text-2xs shrink-0 font-mono uppercase">
           {column.type.length > 12
             ? `${column.type.slice(0, 10)}…`
             : column.type}
@@ -328,7 +328,7 @@ function QueryBuilderTableNodeComponent({
           {alias !== table.name && (
             <span
               className="text-muted-foreground truncate"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               AS {alias}
             </span>
@@ -359,7 +359,7 @@ function QueryBuilderTableNodeComponent({
           'flex items-center gap-2 border-b py-1 pr-4 pl-5',
           'hover:bg-accent/50 cursor-pointer'
         )}
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         onClick={handleToggleAll}
         onKeyDown={(e) => handleKeyDown(e, handleToggleAll)}
       >
@@ -396,7 +396,7 @@ function QueryBuilderTableNodeComponent({
       )}
 
       {table.rowCount !== undefined && (
-        <div className="text-muted-foreground border-t px-3 py-1 text-[10px] tabular-nums">
+        <div className="text-muted-foreground text-2xs border-t px-3 py-1 tabular-nums">
           {table.rowCount.toLocaleString()} {t('queryBuilder.rows')}
         </div>
       )}

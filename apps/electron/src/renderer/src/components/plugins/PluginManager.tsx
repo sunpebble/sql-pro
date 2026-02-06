@@ -292,13 +292,13 @@ export function PluginManager({
           <div>
             <Label
               className="font-semibold"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
             >
               {t('plugins.title')}
             </Label>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('plugins.description')}
             </p>
@@ -380,13 +380,13 @@ export function PluginManager({
           <div className="flex-1">
             <p
               className="text-destructive font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('plugins.error')}
             </p>
             <p
               className="text-destructive/80"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {error.message}
             </p>
@@ -411,7 +411,7 @@ export function PluginManager({
               <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('plugins.loading')}
               </p>
@@ -425,13 +425,13 @@ export function PluginManager({
               <div className="text-center">
                 <p
                   className="font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('plugins.noPlugins')}
                 </p>
                 <p
                   className="text-muted-foreground mt-1"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('plugins.noPluginsDesc')}
                 </p>
@@ -448,13 +448,13 @@ export function PluginManager({
                 <div className="text-center">
                   <p
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('plugins.noResults')}
                   </p>
                   <p
                     className="text-muted-foreground mt-1"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('plugins.noResultsDesc')}
                   </p>
@@ -502,7 +502,7 @@ export function PluginManager({
       {!isLoading && (plugins || []).length > 0 && (
         <div
           className="text-muted-foreground flex items-center justify-between border-t px-4 py-2"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           <span>
             {t('plugins.statusBar.showing', {

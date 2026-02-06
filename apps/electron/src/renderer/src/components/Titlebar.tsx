@@ -71,7 +71,7 @@ export function Titlebar() {
           <Database className="text-primary mr-2 h-4 w-4 shrink-0" />
           <span
             className="text-primary font-medium tracking-wide"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             SQL Pro
           </span>

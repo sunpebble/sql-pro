@@ -457,7 +457,7 @@ export function ServerConnectionDialog({
                     <span
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.pasteToAutoFill')}
@@ -485,7 +485,7 @@ export function ServerConnectionDialog({
                     }}
                     className="font-mono"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   />
                 </div>
@@ -520,7 +520,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.qdrant.hostHint')}
@@ -540,7 +540,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.qdrant.portHint')}
@@ -554,7 +554,7 @@ export function ServerConnectionDialog({
                       <span
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         ({t('connection.optional')})
@@ -570,7 +570,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.qdrant.apiKeyHint')}
@@ -610,7 +610,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.turso.authTokenHint')}
@@ -635,7 +635,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.turso.organizationHint')}
@@ -658,7 +658,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.turso.databaseHint')}
@@ -672,7 +672,7 @@ export function ServerConnectionDialog({
                       <span
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         ({t('connection.optional')})
@@ -687,7 +687,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.turso.branchHint')}
@@ -713,7 +713,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.supabase.projectUrlHint')}
@@ -727,7 +727,7 @@ export function ServerConnectionDialog({
                       <span
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         ({t('connection.recommended')})
@@ -742,7 +742,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.supabase.databaseHostHint')}
@@ -756,7 +756,7 @@ export function ServerConnectionDialog({
                       <span
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         ({t('connection.optional')})
@@ -778,7 +778,7 @@ export function ServerConnectionDialog({
                       <span
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         ({t('connection.optional')})
@@ -793,7 +793,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.supabase.usernameHint')}
@@ -817,7 +817,7 @@ export function ServerConnectionDialog({
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connection.supabase.passwordHint')}
@@ -963,7 +963,7 @@ export function ServerConnectionDialog({
               {error && (
                 <div
                   className="border-destructive/50 bg-destructive/10 text-destructive rounded-md border p-3"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {error}
                 </div>
@@ -977,7 +977,7 @@ export function ServerConnectionDialog({
               {testResult && (
                 <div
                   className="flex items-center gap-1.5"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {testResult.success ? (
                     <>

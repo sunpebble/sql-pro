@@ -185,7 +185,7 @@ const HeaderCell = memo(
                   {groupCount !== undefined && (
                     <span
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       ({groupCount})

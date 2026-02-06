@@ -65,7 +65,7 @@ const ResultCard = memo(
           <div className="flex items-center gap-2">
             <div
               className="bg-muted flex h-6 w-6 items-center justify-center rounded font-medium"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {index + 1}
             </div>
@@ -74,7 +74,7 @@ const ResultCard = memo(
                 <Hash className="text-muted-foreground h-3 w-3" />
                 <span
                   className="font-mono"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {String(result.id)}
                 </span>
@@ -83,7 +83,7 @@ const ResultCard = memo(
           </div>
           <div
             className="text-muted-foreground flex items-center gap-1"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             <span>{t('vectorSearch.score', 'Score')}:</span>
             <span className="text-foreground font-mono font-medium">
@@ -97,7 +97,7 @@ const ResultCard = memo(
           <div className="bg-muted/50 mt-2 rounded p-2">
             <pre
               className="text-muted-foreground overflow-x-auto"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {JSON.stringify(result.payload, null, 2)}
             </pre>
@@ -324,13 +324,13 @@ export const VectorSearchPanel = memo(
             <Waypoints className="text-muted-foreground h-4 w-4" />
             <span
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('vectorSearch.title', 'Vector Search')}
             </span>
             <span
               className="bg-muted text-muted-foreground rounded px-2 py-0.5"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {collection}
             </span>
@@ -346,7 +346,7 @@ export const VectorSearchPanel = memo(
             {collectionHistory.length > 0 && (
               <span
                 className="bg-muted text-muted-foreground ml-1 rounded-full px-1.5 py-0.5"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {collectionHistory.length}
               </span>
@@ -436,13 +436,13 @@ export const VectorSearchPanel = memo(
                           'min-h-20 resize-none font-mono',
                           vectorError && 'border-destructive'
                         )}
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       />
                       {vectorError && (
                         <p
                           className="text-destructive"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {vectorError}
@@ -477,7 +477,7 @@ export const VectorSearchPanel = memo(
                           htmlFor="top-k"
                           className="text-muted-foreground whitespace-nowrap"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('vectorSearch.topK', 'Top K')}
@@ -501,7 +501,7 @@ export const VectorSearchPanel = memo(
                           htmlFor="score-threshold"
                           className="text-muted-foreground whitespace-nowrap"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('vectorSearch.scoreThreshold', 'Min Score')}
@@ -551,7 +551,7 @@ export const VectorSearchPanel = memo(
                   <div className="bg-muted/30 flex shrink-0 items-center justify-between px-4 py-2">
                     <span
                       className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('vectorSearch.results', 'Results')}
                       {results.length > 0 && (
@@ -565,7 +565,7 @@ export const VectorSearchPanel = memo(
                     {searchError && (
                       <div
                         className="flex items-center gap-2 border-b border-red-200 bg-red-50 p-3 text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         <AlertCircle className="h-4 w-4 shrink-0" />
                         <span>{searchError}</span>
@@ -574,7 +574,7 @@ export const VectorSearchPanel = memo(
                     {results.length === 0 && !searchError ? (
                       <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2 p-8">
                         <Search className="h-10 w-10 opacity-20" />
-                        <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                        <p style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                           {t(
                             'vectorSearch.noResults',
                             'Enter a query to search for similar vectors'

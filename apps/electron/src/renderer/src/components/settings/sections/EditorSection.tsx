@@ -54,13 +54,13 @@ export function EditorSection() {
               <div className="text-left">
                 <span
                   className="font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {PRESET_INFO[activePreset].label} {t('shortcuts.preset')}
                 </span>
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('shortcuts.customize')}
                 </p>
@@ -109,20 +109,20 @@ function VimModeToggle({
             'font-mono font-bold uppercase',
             enabled ? 'text-primary' : 'text-muted-foreground'
           )}
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {enabled ? 'VIM' : 'OFF'}
         </span>
         <span
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {label}
         </span>
       </div>
       <span
         className="text-muted-foreground mt-1"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {description}
       </span>

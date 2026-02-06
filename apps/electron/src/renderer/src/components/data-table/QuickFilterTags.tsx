@@ -237,7 +237,7 @@ export const QuickFilterTags = memo(
                       suggestion.type === 'null' && !isActive && 'border-dashed'
                     )}
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {getIcon(suggestion)}

@@ -185,13 +185,13 @@ export function LicenseActivationDialog({
         </div>
         <h3
           className="font-semibold"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
         >
           {t('pro.unlock')}
         </h3>
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('pro.getAccess')}
         </p>
@@ -204,7 +204,7 @@ export function LicenseActivationDialog({
             <li
               key={feature.nameKey}
               className="flex items-center gap-3"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/10">
                 <feature.icon className="h-3.5 w-3.5 text-amber-600" />
@@ -227,7 +227,7 @@ export function LicenseActivationDialog({
           <span className="font-medium">{t('pro.iHaveLicense')}</span>
           <span
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('pro.activateExisting')}
           </span>
@@ -241,7 +241,7 @@ export function LicenseActivationDialog({
           <span className="font-medium">{t('pro.purchase')}</span>
           <span
             className="opacity-80"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('pro.startingAt')}
           </span>
@@ -271,7 +271,7 @@ export function LicenseActivationDialog({
         />
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('pro.licenseEmailHint')}
         </p>
@@ -293,26 +293,26 @@ export function LicenseActivationDialog({
             {plan.popular && (
               <Badge
                 className="absolute -top-2 left-1/2 -translate-x-1/2"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <Star className="mr-0.5 h-2.5 w-2.5" />
                 {t('pro.best')}
               </Badge>
             )}
             <CardHeader className="p-3 pb-1">
-              <CardTitle style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+              <CardTitle style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                 {t(plan.nameKey)}
               </CardTitle>
               <CardDescription className="space-y-0.5">
                 <span
                   className="text-foreground font-semibold"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
                 >
                   {plan.price}
                 </span>
                 <span
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {' '}
                   {t(plan.periodKey)}
@@ -324,14 +324,14 @@ export function LicenseActivationDialog({
                 <Badge
                   variant="secondary"
                   className="mb-1"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('pro.save', { percent: plan.savings })}
                 </Badge>
               )}
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('pro.devices', { count: plan.devices })}
               </p>
@@ -358,7 +358,7 @@ export function LicenseActivationDialog({
       {/* Trust badges */}
       <div
         className="text-muted-foreground flex items-center justify-center gap-4"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         <span className="flex items-center gap-1">
           <Check className="h-3 w-3" />
@@ -387,7 +387,7 @@ export function LicenseActivationDialog({
         <h3 className="font-semibold">{t('pro.activateTitle')}</h3>
         <p
           className="text-muted-foreground"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('pro.activateDescription')}
         </p>
@@ -436,7 +436,7 @@ export function LicenseActivationDialog({
       {/* Help text */}
       <p
         className="text-muted-foreground text-center"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {t('pro.cantFindKey')}{' '}
         <a
@@ -490,7 +490,7 @@ export function LicenseActivationDialog({
         {error && (
           <div
             className="bg-destructive/10 text-destructive rounded-md p-3"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {error}
             <Button

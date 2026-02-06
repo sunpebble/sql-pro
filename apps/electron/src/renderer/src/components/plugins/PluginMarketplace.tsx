@@ -407,13 +407,13 @@ export function PluginMarketplace({
                   <div className="text-center">
                     <p
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('marketplace.offline')}
                     </p>
                     <p
                       className="text-muted-foreground mt-1"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('marketplace.offlineDesc')}
                     </p>
@@ -433,14 +433,14 @@ export function PluginMarketplace({
                     <div>
                       <p
                         className="text-destructive font-medium"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('marketplace.failedToLoad')}
                       </p>
                       <p
                         className="text-destructive/80 mt-1"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {state.error}
@@ -464,13 +464,13 @@ export function PluginMarketplace({
                       <>
                         <p
                           className="font-medium"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('marketplace.noPluginsFound')}
                         </p>
                         <p
                           className="text-muted-foreground"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('marketplace.adjustFilters')}
                         </p>
@@ -489,13 +489,13 @@ export function PluginMarketplace({
                       <>
                         <p
                           className="font-medium"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('marketplace.noPluginsAvailable')}
                         </p>
                         <p
                           className="text-muted-foreground"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('marketplace.checkBackLater')}
                         </p>
@@ -538,7 +538,7 @@ export function PluginMarketplace({
             {!state.isLoading && !state.error && (
               <div
                 className="text-muted-foreground flex items-center justify-between border-t pt-3"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <span>
                   {t('marketplace.pluginsCount', {
@@ -555,7 +555,7 @@ export function PluginMarketplace({
                   <kbd
                     className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 font-mono"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)',
                     }}
                   >
                     Cmd/Ctrl+F

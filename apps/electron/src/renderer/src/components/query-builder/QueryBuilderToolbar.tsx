@@ -167,7 +167,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
                     <span
                       className="text-muted-foreground ml-auto"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {table.columns.length} cols
@@ -196,7 +196,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             {filters.length > 0 && (
               <span
                 className="bg-primary/15 text-primary rounded-full px-1.5"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {filters.length}
               </span>
@@ -218,7 +218,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             {filters.length === 0 ? (
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('queryBuilder.noFilters', 'No filters added')}
               </p>
@@ -254,7 +254,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             {sorts.length > 0 && (
               <span
                 className="bg-primary/15 text-primary rounded-full px-1.5"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {sorts.length}
               </span>
@@ -276,7 +276,7 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
             {sorts.length === 0 ? (
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('queryBuilder.noSorts', 'No sorting applied')}
               </p>
@@ -313,14 +313,14 @@ export function QueryBuilderToolbar({ onRunQuery }: QueryBuilderToolbarProps) {
           />
           <Label
             htmlFor="distinct"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             DISTINCT
           </Label>
         </div>
 
         <div className="flex items-center gap-2">
-          <Label style={{ fontSize: 'var(--font-ui-size, 14px)' }}>LIMIT</Label>
+          <Label style={{ fontSize: 'var(--font-ui-size, 13px)' }}>LIMIT</Label>
           <Input
             type="number"
             min={0}

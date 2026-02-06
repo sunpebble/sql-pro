@@ -298,7 +298,7 @@ export function QueryBuilder() {
                     </h3>
                     <p
                       className="text-muted-foreground mb-4"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t(
                         'queryBuilder.getStartedHint',
@@ -355,7 +355,7 @@ export function QueryBuilder() {
                   'bg-muted/30 rounded-base border-2 p-4 font-mono',
                   'break-words whitespace-pre-wrap'
                 )}
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {generatedSQL}
               </pre>
@@ -366,7 +366,7 @@ export function QueryBuilder() {
               <div className="border-t px-4 py-3">
                 <h4
                   className="mb-2 font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('queryBuilder.selectedColumns', 'Selected Columns')} (
                   {selectedColumns.length})
@@ -385,7 +385,7 @@ export function QueryBuilder() {
                             : 'bg-primary/10'
                         )}
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {key}
@@ -396,7 +396,7 @@ export function QueryBuilder() {
                     <span
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       +{selectedColumns.length - 10} more

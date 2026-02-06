@@ -103,20 +103,20 @@ const StatCard = memo(
           <div>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {label}
             </p>
             <p
               className="font-semibold"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.7)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.7)' }}
             >
               {value}
             </p>
             {subValue && (
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {subValue}
               </p>
@@ -165,7 +165,7 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
             <p className="font-medium">{column.name}</p>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {column.type}
             </p>
@@ -173,7 +173,7 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
         </div>
         <Badge
           variant="secondary"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {column.distinctCount.toLocaleString()} {t('dataProfiler.unique')}
         </Badge>
@@ -181,7 +181,7 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
       <div className="mt-3 space-y-2">
         <div
           className="flex items-center justify-between"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           <span className="text-muted-foreground">
             {t('dataProfiler.nullPercentage')}
@@ -191,7 +191,7 @@ const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
         <Progress value={nullPercentage} className="h-1" />
         <div
           className="flex items-center justify-between"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           <span className="text-muted-foreground">
             {t('dataProfiler.uniquePercentage')}
@@ -227,13 +227,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         <div>
           <h3
             className="font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {column.name}
           </h3>
           <p
             className="text-muted-foreground"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {column.type}
           </p>
@@ -245,13 +245,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         <div className="bg-muted/50 rounded-base p-3 text-center">
           <p
             className="font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {column.distinctCount.toLocaleString()}
           </p>
           <p
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('dataProfiler.distinctValues')}
           </p>
@@ -259,13 +259,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         <div className="bg-muted/50 rounded-base p-3 text-center">
           <p
             className="font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {nullPercentage.toFixed(1)}%
           </p>
           <p
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('dataProfiler.nullValues')}
           </p>
@@ -273,13 +273,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         <div className="bg-muted/50 rounded-base p-3 text-center">
           <p
             className="font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {emptyPercentage.toFixed(1)}%
           </p>
           <p
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('dataProfiler.emptyValues')}
           </p>
@@ -290,7 +290,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
       <div className="space-y-2">
         <h4
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('dataProfiler.dataQuality')}
         </h4>
@@ -307,7 +307,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         </div>
         <div
           className="flex justify-between"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           <div className="flex items-center gap-1">
             <div className="h-2 w-2 rounded-full bg-green-500" />
@@ -335,7 +335,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         <div className="space-y-2">
           <h4
             className="font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('dataProfiler.valueRange')}
           </h4>
@@ -344,13 +344,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
               <div>
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('dataProfiler.min')}
                 </p>
                 <p
                   className="truncate font-mono"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {String(column.minValue)}
                 </p>
@@ -360,13 +360,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
               <div>
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('dataProfiler.average')}
                 </p>
                 <p
                   className="font-mono"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {column.avgValue.toFixed(2)}
                 </p>
@@ -376,13 +376,13 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
               <div>
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('dataProfiler.max')}
                 </p>
                 <p
                   className="truncate font-mono"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {String(column.maxValue)}
                 </p>
@@ -397,7 +397,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
         <div className="space-y-2">
           <h4
             className="font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('dataProfiler.topValues')}
           </h4>
@@ -411,14 +411,14 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
                   <div className="flex items-center justify-between">
                     <span
                       className="truncate font-mono"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {item.value || t('dataProfiler.emptyValue')}
                     </span>
                     <span
                       className="text-muted-foreground shrink-0"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {item.count.toLocaleString()} (
@@ -485,13 +485,13 @@ export const DataProfiler = memo(
               <PieChart className="text-muted-foreground mb-4 h-16 w-16 opacity-30" />
               <h3
                 className="mb-2 font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
               >
                 {t('dataProfiler.readyToProfile')}
               </h3>
               <p
                 className="text-muted-foreground mb-4"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('dataProfiler.analyzeDescription')}
               </p>
@@ -606,7 +606,7 @@ export const DataProfiler = memo(
                           <Icon className="h-4 w-4" />
                           <span
                             className="flex-1 truncate"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {col.name}
                           </span>

@@ -180,7 +180,7 @@ export function ExportReportDialog({
             <Label
               htmlFor="report-format"
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('exportReport.reportFormat')}
             </Label>
@@ -211,7 +211,7 @@ export function ExportReportDialog({
                             className="text-muted-foreground"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t(option.descriptionKey)}
@@ -229,7 +229,7 @@ export function ExportReportDialog({
           <div className="space-y-3">
             <Label
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('exportReport.options')}
             </Label>
@@ -242,13 +242,13 @@ export function ExportReportDialog({
                   }
                 />
                 <div className="flex flex-col">
-                  <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                  <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                     {t('exportReport.includeMigrationSQL')}
                   </span>
                   <span
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('exportReport.includeMigrationSQLDesc')}
@@ -263,13 +263,13 @@ export function ExportReportDialog({
             <div className="rounded-base space-y-2 border-2 p-3">
               <Label
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('exportReport.reportSummary')}
               </Label>
               <div
                 className="text-muted-foreground space-y-1"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <div className="flex justify-between">
                   <span>{t('exportReport.source')}</span>

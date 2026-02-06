@@ -392,13 +392,13 @@ export function BackupRestoreDialog({
                   <div className="flex justify-between">
                     <span
                       className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('backup.database', 'Database')}:
                     </span>
                     <span
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {selectedBackup.databaseName}
                     </span>
@@ -406,13 +406,13 @@ export function BackupRestoreDialog({
                   <div className="flex justify-between">
                     <span
                       className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('backup.tables', 'Tables')}:
                     </span>
                     <span
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {selectedBackup.tableCount}
                     </span>
@@ -420,13 +420,13 @@ export function BackupRestoreDialog({
                   <div className="flex justify-between">
                     <span
                       className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('backup.rows', 'Rows')}:
                     </span>
                     <span
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {selectedBackup.totalRows.toLocaleString()}
                     </span>
@@ -434,13 +434,13 @@ export function BackupRestoreDialog({
                   <div className="flex justify-between">
                     <span
                       className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('backup.size', 'Size')}:
                     </span>
                     <span
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {formatBytes(selectedBackup.fileSize)}
                     </span>
@@ -449,7 +449,7 @@ export function BackupRestoreDialog({
                     <div className="border-t pt-2">
                       <span
                         className="text-muted-foreground"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {selectedBackup.description}
                       </span>
@@ -482,7 +482,7 @@ export function BackupRestoreDialog({
             <div className="flex items-center justify-between py-2">
               <span
                 className="text-muted-foreground"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('backup.backupCount', '{{count}} backups', {
                   count: backups.length,
@@ -518,7 +518,7 @@ export function BackupRestoreDialog({
                             className="text-muted-foreground"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {formatDate(backup.createdAt)} •{' '}
@@ -530,7 +530,7 @@ export function BackupRestoreDialog({
                               className="text-muted-foreground mt-1"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
                               {backup.description}

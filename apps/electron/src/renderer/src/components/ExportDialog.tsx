@@ -283,7 +283,7 @@ export function ExportDialog({
             <Label
               htmlFor="export-format"
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('sharing.exportFormat')}
             </Label>
@@ -314,7 +314,7 @@ export function ExportDialog({
                             className="text-muted-foreground"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t(option.descriptionKey)}
@@ -333,7 +333,7 @@ export function ExportDialog({
             <div className="flex items-center justify-between">
               <Label
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('sharing.columnsSelected', {
                   selected: selectedColumns.size,
@@ -346,7 +346,7 @@ export function ExportDialog({
                   variant="ghost"
                   size="sm"
                   className="h-auto px-2 py-1"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   onClick={handleSelectAll}
                   disabled={allSelected}
                 >
@@ -357,7 +357,7 @@ export function ExportDialog({
                   variant="ghost"
                   size="sm"
                   className="h-auto px-2 py-1"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   onClick={handleDeselectAll}
                   disabled={noneSelected}
                 >
@@ -378,13 +378,13 @@ export function ExportDialog({
                         handleColumnToggle(column.name, checked === true)
                       }
                     />
-                    <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                    <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                       {column.name}
                     </span>
                     <span
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {column.type}
@@ -400,7 +400,7 @@ export function ExportDialog({
             <div className="space-y-3">
               <Label
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('sharing.csvOptions')}
               </Label>
@@ -410,7 +410,7 @@ export function ExportDialog({
                     htmlFor="delimiter"
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('sharing.delimiter')}
@@ -438,7 +438,7 @@ export function ExportDialog({
                       setIncludeHeaders(checked === true)
                     }
                   />
-                  <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                  <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                     {t('sharing.includeHeaders')}
                   </span>
                 </label>
@@ -450,7 +450,7 @@ export function ExportDialog({
             <div className="space-y-3">
               <Label
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('sharing.jsonOptions')}
               </Label>
@@ -462,7 +462,7 @@ export function ExportDialog({
                       setPrettyPrint(checked === true)
                     }
                   />
-                  <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+                  <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                     {t('sharing.prettyPrint')}
                   </span>
                 </label>
@@ -474,7 +474,7 @@ export function ExportDialog({
             <div className="space-y-3">
               <Label
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('sharing.excelOptions')}
               </Label>
@@ -484,7 +484,7 @@ export function ExportDialog({
                     htmlFor="sheet-name"
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('sharing.sheetName')}
@@ -499,7 +499,7 @@ export function ExportDialog({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('sharing.maxCharacters')}
@@ -514,7 +514,7 @@ export function ExportDialog({
             <div className="space-y-2">
               <div
                 className="flex items-center justify-between"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />

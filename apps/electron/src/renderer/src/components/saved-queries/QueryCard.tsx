@@ -66,7 +66,7 @@ export const QueryCard = memo(
         {query.description && (
           <p
             className="text-muted-foreground line-clamp-2 leading-relaxed"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {query.description}
           </p>
@@ -77,7 +77,7 @@ export const QueryCard = memo(
           code={query.query}
           maxLines={3}
           className="bg-muted/50 rounded-base p-2.5"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         />
 
         {/* Actions - appear on hover */}

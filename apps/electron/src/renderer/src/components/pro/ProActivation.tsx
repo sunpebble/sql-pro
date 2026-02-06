@@ -171,7 +171,7 @@ export function ProActivationDialog({
                       <p
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('pro.activatedOn', { date: formattedActivatedAt })}
@@ -215,7 +215,7 @@ export function ProActivationDialog({
               {error && (
                 <p
                   className="text-destructive"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {error}
                 </p>
@@ -223,7 +223,7 @@ export function ProActivationDialog({
               {!isPro && (
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('pro.keyStoredSecurely')}
                 </p>
@@ -267,7 +267,7 @@ export function ProActivationDialog({
                             'truncate font-medium',
                             !isActive && !isPro && 'text-muted-foreground'
                           )}
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t(`pro.features.${featureId}.name`)}
                         </p>

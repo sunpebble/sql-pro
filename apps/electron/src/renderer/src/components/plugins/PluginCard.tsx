@@ -341,7 +341,7 @@ export function PluginCard({
             <span className="truncate font-medium">{pluginName}</span>
             <span
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               v{pluginVersion}
             </span>
@@ -366,7 +366,7 @@ export function PluginCard({
           </div>
           <p
             className="text-muted-foreground truncate"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {pluginDescription}
           </p>
@@ -466,7 +466,12 @@ export function PluginCard({
           {/* Title and Status */}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <CardTitle className="truncate text-base">{pluginName}</CardTitle>
+              <CardTitle
+                className="truncate"
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
+              >
+                {pluginName}
+              </CardTitle>
               {variant === 'installed' && pluginState && (
                 <Badge variant={getStateBadgeVariant(pluginState)}>
                   {t(getStateLabelKey(pluginState))}
@@ -482,13 +487,13 @@ export function PluginCard({
             <div className="mt-1 flex items-center gap-2">
               <span
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 v{pluginVersion}
               </span>
               <span
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('pluginCard.byAuthor', { author: pluginAuthor })}
               </span>
@@ -504,7 +509,7 @@ export function PluginCard({
         {hasError && errorMessage && (
           <p
             className="text-destructive mt-2 line-clamp-2"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {errorMessage}
           </p>
@@ -516,7 +521,7 @@ export function PluginCard({
         {variant === 'marketplace' && !isPluginInfoType && (
           <div
             className="text-muted-foreground flex items-center gap-3"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {'downloads' in plugin && plugin.downloads !== undefined && (
               <span>
@@ -542,7 +547,7 @@ export function PluginCard({
             <div className="flex items-center gap-2">
               <span
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {isEnabled ? t('pluginCard.enabled') : t('pluginCard.disabled')}
               </span>

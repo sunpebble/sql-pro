@@ -12,7 +12,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   h1: ({ children, ...props }) => (
     <h1
       className="mb-2 font-semibold"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.3)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.3)' }}
       {...props}
     >
       {children}
@@ -21,7 +21,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   h2: ({ children, ...props }) => (
     <h2
       className="mb-2 font-semibold"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
       {...props}
     >
       {children}
@@ -30,7 +30,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   h3: ({ children, ...props }) => (
     <h3
       className="mb-1 font-medium"
-      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       {...props}
     >
       {children}
@@ -62,7 +62,7 @@ const markdownComponents: ComponentPropsWithoutRef<
       return (
         <code
           className="bg-muted rounded-md px-1 py-0.5 font-mono"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           {...props}
         >
           {children}
@@ -78,7 +78,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   pre: ({ children, ...props }) => (
     <pre
       className="bg-muted my-2 overflow-x-auto rounded-md p-3 font-mono"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       {...props}
     >
       {children}

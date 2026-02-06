@@ -220,13 +220,13 @@ function DialogFormContent({
         </div>
         <Dialog.Title
           className="font-semibold"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
         >
           {dialogTitle}
         </Dialog.Title>
         <Dialog.Description
           className="text-muted-foreground mt-2"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t('connectionSettings.description', { filename })}
         </Dialog.Description>
@@ -238,7 +238,7 @@ function DialogFormContent({
           <label
             htmlFor="displayName"
             className="font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('connectionSettings.displayName')}
           </label>
@@ -255,19 +255,19 @@ function DialogFormContent({
               'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
               validationError ? 'border-destructive' : 'border-input'
             )}
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           />
           {validationError && (
             <p
               className="text-destructive"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {validationError}
             </p>
           )}
           <p
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('connectionSettings.charCount', {
               current: displayName.trim().length,
@@ -287,13 +287,13 @@ function DialogFormContent({
           <div className="flex-1">
             <span
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('connectionSettings.readOnly')}
             </span>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('connectionSettings.readOnlyDesc')}
             </p>
@@ -321,7 +321,7 @@ function DialogFormContent({
               <div className="flex items-center gap-2">
                 <span
                   className="font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('connectionSettings.rememberPassword')}
                 </span>
@@ -338,7 +338,7 @@ function DialogFormContent({
               </div>
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('connectionSettings.rememberPasswordDesc')}
               </p>
@@ -356,7 +356,7 @@ function DialogFormContent({
                   <KeyRound className="text-muted-foreground h-4 w-4" />
                   <span
                     className="font-medium"
-                    style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   >
                     {t('connectionSettings.savedPassword')}
                   </span>
@@ -365,7 +365,7 @@ function DialogFormContent({
                   <span
                     className="text-green-600 dark:text-green-400"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('connectionSettings.passwordSaved')}
@@ -406,7 +406,7 @@ function DialogFormContent({
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {passwordError}
@@ -419,7 +419,7 @@ function DialogFormContent({
                       htmlFor="newPassword"
                       className="font-medium"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {hasSavedPassword
@@ -437,7 +437,7 @@ function DialogFormContent({
                         'placeholder:text-muted-foreground',
                         'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
                       )}
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     />
                   </div>
 
@@ -446,7 +446,7 @@ function DialogFormContent({
                       htmlFor="confirmPassword"
                       className="font-medium"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('connectionSettings.confirmPassword')}
@@ -467,13 +467,13 @@ function DialogFormContent({
                           !passwordsMatch &&
                           'border-destructive'
                       )}
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     />
                     {confirmPassword && !passwordsMatch && (
                       <p
                         className="text-destructive"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('connectionSettings.passwordsDoNotMatch')}
@@ -518,7 +518,7 @@ function DialogFormContent({
 
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('connectionSettings.keychainNote')}
               </p>

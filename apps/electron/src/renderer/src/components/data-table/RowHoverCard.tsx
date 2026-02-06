@@ -131,13 +131,13 @@ export const RowHoverCard = memo(
               <div className="flex items-center gap-2">
                 <span
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('dataTable.rowId')}:
                 </span>
                 <span
                   className="bg-primary/10 text-primary rounded px-1.5 py-0.5 font-mono"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {String(rowId)}
                 </span>
@@ -187,7 +187,7 @@ export const RowHoverCard = memo(
                     <span
                       className="text-muted-foreground min-w-20 truncate font-medium"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {col.name}
@@ -198,7 +198,7 @@ export const RowHoverCard = memo(
                         getValueStyle(value, col.type)
                       )}
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {formattedValue}

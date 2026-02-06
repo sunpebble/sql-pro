@@ -969,13 +969,13 @@ export function WelcomeScreen() {
                 </div>
                 <h1
                   className="text-foreground font-bold tracking-tight"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.7)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.7)' }}
                 >
                   {t('app.name')}
                 </h1>
                 <p
                   className="text-muted-foreground mt-1.5"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('welcome.subtitle', {
                     defaultValue: 'Professional Database Manager',
@@ -987,7 +987,7 @@ export function WelcomeScreen() {
               {error && (
                 <div
                   className="border-border bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border-2 p-3"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{error}</span>
@@ -1027,7 +1027,7 @@ export function WelcomeScreen() {
                 <p
                   className="text-muted-foreground text-center"
                   style={{
-                    fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                    fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                   }}
                 >
                   {t('welcome.supportsDb', {
@@ -1056,7 +1056,7 @@ export function WelcomeScreen() {
                         <span
                           className="text-muted-foreground font-medium tracking-wide uppercase"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('welcome.recentConnections', {
@@ -1104,7 +1104,7 @@ export function WelcomeScreen() {
                                     <span
                                       className="truncate font-medium"
                                       style={{
-                                        fontSize: 'var(--font-ui-size, 14px)',
+                                        fontSize: 'var(--font-ui-size, 13px)',
                                       }}
                                     >
                                       {conn.displayName || conn.filename}
@@ -1131,7 +1131,7 @@ export function WelcomeScreen() {
                                     className="text-muted-foreground truncate font-mono"
                                     style={{
                                       fontSize:
-                                        'calc(var(--font-ui-size, 14px) * 0.85)',
+                                        'calc(var(--font-ui-size, 13px) * 0.85)',
                                     }}
                                   >
                                     {conn.path}

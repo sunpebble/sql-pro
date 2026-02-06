@@ -117,7 +117,7 @@ export function BulkEditDialog({
             <div className="flex-1">
               <Label
                 htmlFor="column-select"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('table.bulkEdit.addFieldToEdit')}
               </Label>
@@ -139,7 +139,7 @@ export function BulkEditDialog({
                         <span
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           ({col.type})
@@ -179,7 +179,7 @@ export function BulkEditDialog({
                             variant="secondary"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {colInfo.type}
@@ -190,7 +190,7 @@ export function BulkEditDialog({
                             variant="outline"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t('table.bulkEdit.nullable')}
@@ -229,7 +229,9 @@ export function BulkEditDialog({
                 <EmptyMedia variant="icon">
                   <MousePointerClick />
                 </EmptyMedia>
-                <EmptyTitle className="text-base">
+                <EmptyTitle
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
+                >
                   {t('table.bulkEdit.noFieldsAdded')}
                 </EmptyTitle>
                 <EmptyDescription>
@@ -243,7 +245,7 @@ export function BulkEditDialog({
           {editFields.length > 0 && (
             <div
               className="bg-primary/5 border-primary/20 rounded-base border p-3"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <p>
                 {t('table.bulkEdit.fieldsWillBeUpdated', {
@@ -253,7 +255,7 @@ export function BulkEditDialog({
               </p>
               <p
                 className="text-muted-foreground mt-1"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('table.bulkEdit.willCreatePendingUpdates', {
                   count: selectedRowCount,

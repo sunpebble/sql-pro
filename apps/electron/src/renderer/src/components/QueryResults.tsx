@@ -119,7 +119,7 @@ export function QueryResults({ results }: QueryResultsProps) {
                 ? 'bg-background text-foreground shadow-shadow-sm border-2'
                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
             )}
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             role="tab"
             aria-selected={activeResultIndex === index}
             aria-controls={`result-panel-${index}`}

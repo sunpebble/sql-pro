@@ -49,9 +49,9 @@ export interface ProBadgeProps
 
 // Font size mapping for each size variant
 const sizeStyles: Record<'default' | 'sm' | 'lg', React.CSSProperties> = {
-  default: { fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' },
-  sm: { fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)' },
-  lg: { fontSize: 'var(--font-ui-size, 14px)' },
+  default: { fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' },
+  sm: { fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)' },
+  lg: { fontSize: 'var(--font-ui-size, 13px)' },
 };
 
 /**

@@ -113,7 +113,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
           <p className="font-medium">{constraint.name}</p>
           <p
             className="text-muted-foreground"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {constraint.type}
           </p>
@@ -136,7 +136,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
               <TooltipTrigger>
                 <Badge
                   variant="outline"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   NOT NULL
                 </Badge>
@@ -153,7 +153,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
               <TooltipTrigger>
                 <Badge
                   variant="outline"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   UNIQUE
                 </Badge>
@@ -170,7 +170,7 @@ const ConstraintCard = memo(({ constraint }: ConstraintCardProps) => {
               <TooltipTrigger>
                 <Badge
                   variant="secondary"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   DEFAULT
                 </Badge>
@@ -206,7 +206,7 @@ const ForeignKeyCard = memo(({ fk, onNavigate }: ForeignKeyCardProps) => {
             </p>
             <div
               className="text-muted-foreground flex gap-3"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <span>ON UPDATE: {fk.onUpdate}</span>
               <span>ON DELETE: {fk.onDelete}</span>
@@ -256,19 +256,19 @@ const IssueCard = memo(({ issue }: IssueCardProps) => {
           <Badge className={styles.badge}>{issue.column}</Badge>
           <span
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {issue.affectedRows.toLocaleString()}{' '}
             {t('dataValidation.rowsAffected')}
           </span>
         </div>
-        <p className="mt-1" style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+        <p className="mt-1" style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
           {issue.issue}
         </p>
         {issue.suggestion && (
           <p
             className="text-muted-foreground mt-1"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             💡 {issue.suggestion}
           </p>
@@ -371,13 +371,13 @@ export const DataValidationPanel = memo(
               <Shield className="mb-4 h-16 w-16 opacity-30" />
               <h3
                 className="mb-2 font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
               >
                 {t('dataValidation.readyToValidate')}
               </h3>
               <p
                 className="mb-4 text-center"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('dataValidation.readyToValidateDescription')}
               </p>
@@ -459,7 +459,7 @@ export const DataValidationPanel = memo(
                       </p>
                       <p
                         className="text-muted-foreground"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('dataValidation.noIssuesDescription')}
                       </p>

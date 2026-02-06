@@ -21,7 +21,7 @@ export function AnimatedLoader({
       icon: 'h-6 w-6',
       text: '',
       textStyle: {
-        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
       } as React.CSSProperties,
       container: 'gap-2',
     },
@@ -29,14 +29,16 @@ export function AnimatedLoader({
       icon: 'h-10 w-10',
       text: '',
       textStyle: {
-        fontSize: 'var(--font-ui-size, 14px)',
+        fontSize: 'var(--font-ui-size, 13px)',
       } as React.CSSProperties,
       container: 'gap-3',
     },
     lg: {
       icon: 'h-14 w-14',
-      text: 'text-base',
-      textStyle: {} as React.CSSProperties,
+      text: '',
+      textStyle: {
+        fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)',
+      } as React.CSSProperties,
       container: 'gap-4',
     },
   };

@@ -95,7 +95,7 @@ function CreateTagForm({
           {error && (
             <p
               className="text-destructive"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {error}
             </p>
@@ -107,7 +107,7 @@ function CreateTagForm({
             <ColorPicker color={color} onChange={setColor} />
             <span
               className="text-muted-foreground"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('tags.colorHint', {
                 defaultValue: 'Choose a color for this tag',
@@ -245,7 +245,7 @@ function EditTagForm({
           {error && (
             <p
               className="text-destructive"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {error}
             </p>

@@ -194,7 +194,7 @@ const ImageThumbnail = memo(
           <div className="bg-muted text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-1">
             <ImageOff className="h-6 w-6" />
             <span
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('mediaGallery.error')}
             </span>
@@ -207,7 +207,7 @@ const ImageThumbnail = memo(
             {isVideo && <Film className="h-3 w-3 text-white" />}
             <p
               className="truncate text-white"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('mediaGallery.rowLabel', { row: item.rowIndex + 1 })} ·{' '}
               {item.column}
@@ -458,19 +458,19 @@ const ImageListItem = memo(
             {isVideo && <Film className="text-muted-foreground h-4 w-4" />}
             <span
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('mediaGallery.rowLabel', { row: item.rowIndex + 1 })}
             </span>
             <span
               className="bg-muted rounded px-1.5 py-0.5 font-medium"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {item.column}
             </span>
             <span
               className="bg-muted text-muted-foreground rounded px-1.5 py-0.5"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {sourceInfo.type}
             </span>
@@ -478,7 +478,7 @@ const ImageListItem = memo(
           {sourceInfo.detail && (
             <p
               className="text-muted-foreground mt-1 truncate"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {sourceInfo.detail}
             </p>

@@ -206,12 +206,16 @@ export const DataQualityIndicator = memo(
           <PopoverHeader className="p-3">
             <div className="flex items-center justify-between">
               <PopoverTitle>{t('quality.title')}</PopoverTitle>
-              <Badge variant={badgeVariant} className="text-base font-bold">
+              <Badge
+                variant={badgeVariant}
+                className="font-bold"
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
+              >
                 {quality.grade}
               </Badge>
             </div>
             <PopoverDescription
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('quality.score', { score: quality.score })} •{' '}
               {t('quality.summary', {
@@ -231,7 +235,7 @@ export const DataQualityIndicator = memo(
                     key={`${issue.column}-${issue.type}`}
                     className="px-3 py-2"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     <div className="flex items-center gap-1.5">
@@ -268,7 +272,7 @@ export const DataQualityIndicator = memo(
               {quality.issues.length > 5 && (
                 <div
                   className="text-muted-foreground border-t px-3 py-2"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('quality.moreIssues', {
                     count: quality.issues.length - 5,
@@ -279,7 +283,7 @@ export const DataQualityIndicator = memo(
           ) : (
             <div
               className="text-muted-foreground flex flex-col items-center gap-1 p-4 text-center"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <CheckCircle className="text-success h-5 w-5" />
               {t('quality.noIssues')}

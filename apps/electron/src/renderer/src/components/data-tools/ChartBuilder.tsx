@@ -137,7 +137,7 @@ const ChartPreview = memo(({ config, data }: ChartPreviewProps) => {
             <div
               key={`legend-${d.label}`}
               className="flex items-center gap-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <div
                 className="h-3 w-3 rounded-md"
@@ -288,11 +288,11 @@ export const ChartBuilder = memo(
               <BarChart3 className="mb-4 h-12 w-12 opacity-30" />
               <p
                 className="font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
               >
                 {t('chartBuilder.noDataAvailable')}
               </p>
-              <p style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+              <p style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
                 {t('chartBuilder.executeQueryFirst')}
               </p>
             </div>
@@ -318,7 +318,7 @@ export const ChartBuilder = memo(
                         <Icon className="h-5 w-5" />
                         <span
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t(labelKey)}
@@ -446,7 +446,7 @@ export const ChartBuilder = memo(
                         </div>
                         <span
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t(scheme.labelKey)}
@@ -472,7 +472,7 @@ export const ChartBuilder = memo(
                       <div
                         className="text-muted-foreground border-t px-4 py-2 text-center"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('chartBuilder.showingDataPoints', {

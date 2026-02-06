@@ -111,7 +111,7 @@ const TabItem = memo(
                 ? 'bg-accent text-foreground rounded-md'
                 : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground rounded-md bg-transparent'
             )}
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             onClick={onSelect}
             onDoubleClick={handleDoubleClick}
           >
@@ -125,7 +125,7 @@ const TabItem = memo(
                 onBlur={handleFinishEdit}
                 onKeyDown={handleKeyDown}
                 className="rounded-base bg-background h-5 flex-1 border-2 px-1 outline-none"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 autoFocus
               />
             ) : (
@@ -150,7 +150,7 @@ const TabItem = memo(
                 <TooltipContent
                   side="bottom"
                   className={TOOLTIP_CONTENT_STYLE}
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('queryTabs.closeTab')}
                 </TooltipContent>
@@ -268,7 +268,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
             <TooltipContent
               side="bottom"
               className={TOOLTIP_CONTENT_STYLE}
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('queryTabs.newQueryTab')}
             </TooltipContent>
@@ -292,7 +292,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
               <TooltipContent
                 side="bottom"
                 className={TOOLTIP_CONTENT_STYLE}
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('queryTabs.closeSplitView')}
               </TooltipContent>
@@ -316,7 +316,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
                 <TooltipContent
                   side="bottom"
                   className={TOOLTIP_CONTENT_STYLE}
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('queryTabs.splitEditor')}
                 </TooltipContent>

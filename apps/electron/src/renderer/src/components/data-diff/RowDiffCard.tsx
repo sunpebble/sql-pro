@@ -102,21 +102,21 @@ export function RowDiffCard({
           {style.icon}
           <CardTitle
             className="flex-1 font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {primaryKeyDisplay}
           </CardTitle>
           <Badge
             variant="secondary"
             className={style.badge}
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {style.label}
           </Badge>
           {changeCount > 0 && (
             <span
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('rowDiff.changeCount', { count: changeCount })}
             </span>
@@ -156,7 +156,7 @@ export function RowDiffCard({
             <div className="space-y-2">
               <div
                 className="text-muted-foreground mb-2 font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('rowDiff.newValues')}
               </div>
@@ -168,13 +168,13 @@ export function RowDiffCard({
                   <div className="min-w-0 flex-1">
                     <div
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {column}
                     </div>
                     <div
                       className="font-mono text-green-700 dark:text-green-300"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {formatValue(value)}
                     </div>
@@ -189,7 +189,7 @@ export function RowDiffCard({
             <div className="space-y-2">
               <div
                 className="text-muted-foreground mb-2 font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('rowDiff.deletedValues')}
               </div>
@@ -201,13 +201,13 @@ export function RowDiffCard({
                   <div className="min-w-0 flex-1">
                     <div
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {column}
                     </div>
                     <div
                       className="font-mono text-red-700 dark:text-red-300"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {formatValue(value)}
                     </div>
@@ -222,7 +222,7 @@ export function RowDiffCard({
             <div className="space-y-2">
               <div
                 className="text-muted-foreground mb-2 font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('rowDiff.currentValues')}
               </div>
@@ -234,13 +234,13 @@ export function RowDiffCard({
                   <div className="min-w-0 flex-1">
                     <div
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {column}
                     </div>
                     <div
                       className="text-muted-foreground font-mono"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {formatValue(value)}
                     </div>
@@ -274,7 +274,7 @@ function ColumnChangeRow({ columnChange }: { columnChange: ColumnChange }) {
     >
       <div
         className="font-medium"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         {columnName}
       </div>
@@ -282,13 +282,13 @@ function ColumnChangeRow({ columnChange }: { columnChange: ColumnChange }) {
         <div className="min-w-0 flex-1">
           <div
             className="text-red-600 dark:text-red-400"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             - {formatValue(sourceValue)}
           </div>
           <div
             className="text-green-600 dark:text-green-400"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             + {formatValue(targetValue)}
           </div>

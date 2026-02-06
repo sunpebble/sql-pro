@@ -51,7 +51,7 @@ export function Toolbar() {
             'hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none',
             'active:translate-x-1 active:translate-y-1'
           )}
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           <FileText className="h-4 w-4" />
           <span>
@@ -124,7 +124,7 @@ export function Toolbar() {
               'transition-all duration-150',
               TOOLBAR_BUTTON_INTERACTIVE
             )}
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             <span>{t('toolbar.commands', { defaultValue: 'Commands' })}</span>
             <ShortcutKbd action="action.command-palette" />
@@ -165,7 +165,7 @@ export function Toolbar() {
           <DropdownMenuItem
             onClick={startTour}
             className="gap-2 font-medium"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             <Compass className="h-4 w-4" />
             {t('toolbar.takeATour', { defaultValue: 'Take a Tour' })}

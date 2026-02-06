@@ -101,7 +101,7 @@ export function ProStatusCard({
                   isActive &&
                     'bg-green-500/10 text-green-600 hover:bg-green-500/20 dark:text-green-400'
                 )}
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t(`pro.status.${license.status}`, {
                   defaultValue: license.status,
@@ -110,13 +110,13 @@ export function ProStatusCard({
             </div>
             <p
               className="text-muted-foreground flex items-center gap-1.5"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {license.email}
               {(isCached || isOffline) && (
                 <span
                   className="text-muted-foreground/60 inline-flex items-center gap-0.5"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {isOffline ? (
                     <CloudOff className="h-3 w-3" />
@@ -135,7 +135,7 @@ export function ProStatusCard({
         <div className="rounded-lg border bg-gradient-to-br from-amber-50/50 to-transparent p-3 dark:from-amber-950/20">
           <p
             className="text-muted-foreground mb-0.5 font-medium tracking-wide uppercase"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('pro.currentPlan')}
           </p>
@@ -148,7 +148,7 @@ export function ProStatusCard({
         <div className="rounded-lg border bg-gradient-to-br from-gray-50/50 to-transparent p-3 dark:from-gray-900/50">
           <p
             className="text-muted-foreground mb-0.5 font-medium tracking-wide uppercase"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {isLifetime
               ? t('pro.validity', { defaultValue: 'Validity' })
@@ -183,7 +183,7 @@ export function ProStatusCard({
           <Calendar className="h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-400" />
           <p
             className="text-amber-700 dark:text-amber-300"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {t('pro.renewsInDays', {
               days: daysUntilExpiry,
@@ -198,7 +198,7 @@ export function ProStatusCard({
       <div className="rounded-lg border p-3">
         <p
           className="text-muted-foreground mb-2 font-medium tracking-wide uppercase"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('pro.activeFeatures', { defaultValue: 'Active Features' })}
         </p>
@@ -207,7 +207,7 @@ export function ProStatusCard({
             <div
               key={feature.key}
               className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-1 font-medium text-green-700 dark:text-green-400"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <feature.icon className="h-3 w-3" />
               {t(`pro.featureShort.${feature.key}`, {
@@ -226,7 +226,7 @@ export function ProStatusCard({
       {/* Device Info */}
       <div
         className="text-muted-foreground flex items-center gap-1.5"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         <Laptop className="h-3.5 w-3.5" />
         <span>
@@ -258,7 +258,7 @@ export function ProStatusCard({
             variant="ghost"
             size="sm"
             className="text-muted-foreground hover:text-destructive"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             onClick={onDeactivate}
           >
             {t('pro.deactivateDevice', {

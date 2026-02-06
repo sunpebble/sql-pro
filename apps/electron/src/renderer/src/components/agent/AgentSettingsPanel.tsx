@@ -116,7 +116,7 @@ export function AgentSettingsPanel({
             />
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t(
                 'agent.settings.baseUrlHelp',
@@ -170,7 +170,7 @@ export function AgentSettingsPanel({
             />
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t(
                 'agent.settings.modelHelp',
@@ -210,7 +210,7 @@ export function AgentSettingsPanel({
             </Select>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t(
                 'agent.settings.apiTypeHelp',
@@ -299,7 +299,7 @@ export function AgentSettingsPanel({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t(

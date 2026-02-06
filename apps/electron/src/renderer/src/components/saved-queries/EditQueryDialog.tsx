@@ -167,7 +167,7 @@ function EditQueryForm({
           {formState.error && (
             <p
               className="text-destructive"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {formState.error}
             </p>
@@ -180,7 +180,7 @@ function EditQueryForm({
             {t('savedQueries.description', { defaultValue: 'Description' })}
             <span
               className="text-muted-foreground ml-1"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('common.optional', { defaultValue: '(optional)' })}
             </span>
@@ -240,7 +240,7 @@ function EditQueryForm({
               defaultValue: 'SELECT * FROM ...',
             })}
             className="min-h-32 font-mono"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           />
         </div>
 
@@ -249,7 +249,7 @@ function EditQueryForm({
           <div className="bg-muted/50 rounded-base border-border border-2 p-3">
             <p
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('savedQueries.parametersDetected', {
                 defaultValue: 'Parameters detected',
@@ -263,7 +263,7 @@ function EditQueryForm({
                     <span
                       className="text-muted-foreground ml-1"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       :{p.type}
@@ -280,7 +280,7 @@ function EditQueryForm({
           <div className="flex items-center gap-2 sm:mr-auto">
             <span
               className="text-destructive"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('savedQueries.deleteConfirm', {
                 defaultValue: 'Delete this query?',

@@ -205,7 +205,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
             <h2 className="font-semibold">{t('pendingChanges.title')}</h2>
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('pendingChanges.tables', { count: tableGroups.length })} •{' '}
               {t('pendingChanges.changes', { count: changes.length })}
@@ -258,7 +258,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
             >
               <Code className="h-3.5 w-3.5" />
               <span
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('diffPreview.sql')}
               </span>
@@ -278,7 +278,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
           <div className="flex items-center justify-between border-b px-4 py-2">
             <span
               className="text-muted-foreground font-medium"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('pendingChanges.sqlPreview')}
             </span>
@@ -293,7 +293,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
                   <Copy className="h-3.5 w-3.5" />
                   <span
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {copied
@@ -312,7 +312,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
               <SqlHighlight
                 code={sqlScript}
                 className=""
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               />
             </div>
           </ScrollArea>
@@ -356,7 +356,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
                             className="flex h-5 w-5 items-center justify-center rounded bg-green-500/20 text-green-600"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             +{group.insertCount}
@@ -367,7 +367,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
                             className="flex h-5 w-5 items-center justify-center rounded bg-amber-500/20 text-amber-600"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             ~{group.updateCount}
@@ -378,7 +378,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
                             className="flex h-5 w-5 items-center justify-center rounded bg-red-500/20 text-red-600"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             -{group.deleteCount}
@@ -438,7 +438,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
       {invalidCount > 0 && (
         <div
           className="bg-destructive/10 text-destructive flex items-center gap-2 border-t px-4 py-2"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>
@@ -558,7 +558,7 @@ function ChangeItem({
 
         <span
           className={cn('flex items-center gap-1 font-medium', config.color)}
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {config.icon}
           {config.label}
@@ -566,7 +566,7 @@ function ChangeItem({
 
         <span
           className="text-muted-foreground font-mono"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           #{formatRowId(change.rowId)}
         </span>
@@ -607,7 +607,7 @@ function ChangeItem({
           {(validationError || change.validationError) && (
             <div
               className="bg-destructive/10 text-destructive mb-2 rounded px-2 py-1.5"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {validationError || change.validationError}
             </div>
@@ -818,7 +818,7 @@ function DiffTable({ change }: { change: PendingChange }) {
     return (
       <p
         className="text-muted-foreground italic"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         No changes detected
       </p>
@@ -831,7 +831,7 @@ function DiffTable({ change }: { change: PendingChange }) {
   return (
     <div
       className="overflow-hidden rounded border"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       <table className="w-full">
         <thead>
@@ -889,14 +889,14 @@ function DiffTable({ change }: { change: PendingChange }) {
                             validationError && 'border-destructive'
                           )}
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         />
                         {validationError && (
                           <span
                             className="text-destructive"
                             style={{
-                              fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)',
+                              fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)',
                             }}
                           >
                             {validationError}
@@ -906,7 +906,7 @@ function DiffTable({ change }: { change: PendingChange }) {
                           <span
                             className="text-muted-foreground/60"
                             style={{
-                              fontSize: 'calc(var(--font-ui-size, 14px) * 0.7)',
+                              fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)',
                             }}
                           >
                             {columnSchema.type}

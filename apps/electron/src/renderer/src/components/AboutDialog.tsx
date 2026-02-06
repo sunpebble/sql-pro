@@ -31,13 +31,13 @@ export function AboutDialog() {
 
           <DialogTitle
             className="font-bold tracking-wide"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.4)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.4)' }}
           >
             SQL Pro
           </DialogTitle>
           <DialogDescription
             className="text-muted-foreground font-medium tracking-wider uppercase"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {t('about.subtitle')}
           </DialogDescription>
@@ -50,13 +50,13 @@ export function AboutDialog() {
             <div className="rounded-base border-border bg-secondary-background space-y-1 border-2 p-3">
               <p
                 className="text-muted-foreground tracking-wider uppercase"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('about.version')}
               </p>
               <p
                 className="text-main font-mono font-bold"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 1.9.0
               </p>
@@ -64,13 +64,13 @@ export function AboutDialog() {
             <div className="rounded-base border-border bg-secondary-background space-y-1 border-2 p-3">
               <p
                 className="text-muted-foreground tracking-wider uppercase"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('about.platform')}
               </p>
               <p
                 className="font-mono font-bold"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 Electron
               </p>
@@ -80,13 +80,13 @@ export function AboutDialog() {
           <div className="rounded-base border-border bg-secondary-background space-y-1 border-2 p-3">
             <p
               className="text-muted-foreground tracking-wider uppercase"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('about.builtWith')}
             </p>
             <p
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               Electron · React · TypeScript · libSQL
             </p>
@@ -97,13 +97,13 @@ export function AboutDialog() {
           <div className="space-y-2">
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('about.copyright')}
             </p>
             <p
               className="text-main font-bold tracking-widest uppercase"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {t('about.tagline')}
             </p>

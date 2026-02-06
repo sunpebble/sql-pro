@@ -142,7 +142,7 @@ function FolderNode({
               )}
               style={{
                 paddingLeft: `${level * 12 + 8}px`,
-                fontSize: 'var(--font-ui-size, 14px)',
+                fontSize: 'var(--font-ui-size, 13px)',
               }}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -172,7 +172,7 @@ function FolderNode({
               <span className="flex-1 truncate">{folder.name}</span>
               <span
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {profiles.length + subfolders.length}
               </span>
@@ -298,7 +298,7 @@ function ProfileNode({
           )}
           style={{
             paddingLeft: `${level * 12 + 8}px`,
-            fontSize: 'var(--font-ui-size, 14px)',
+            fontSize: 'var(--font-ui-size, 13px)',
           }}
           onClick={() => onSelect(profile.id)}
           onDoubleClick={() => onConnect(profile)}
@@ -309,7 +309,7 @@ function ProfileNode({
               {profile.isEncrypted && (
                 <span
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   🔒
                 </span>
@@ -317,7 +317,7 @@ function ProfileNode({
               {profile.readOnly && (
                 <span
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   👁
                 </span>
@@ -326,7 +326,7 @@ function ProfileNode({
             {profile.notes && (
               <div
                 className="text-muted-foreground truncate"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {profile.notes}
               </div>

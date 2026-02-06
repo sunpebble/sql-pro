@@ -156,7 +156,7 @@ export function EditableCell({
             'bg-background w-full px-1 py-0.5 ring-2 outline-none',
             validationError ? 'ring-destructive' : 'ring-ring'
           )}
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           aria-invalid={!!validationError}
           aria-describedby={validationError ? 'cell-error' : undefined}
         />
@@ -164,7 +164,7 @@ export function EditableCell({
           <div
             id="cell-error"
             className="bg-destructive text-destructive-foreground absolute -top-6 left-0 z-50 rounded px-1.5 py-0.5 whitespace-nowrap shadow-sm"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {validationError}
           </div>
@@ -196,7 +196,7 @@ function CellDisplay({ value, type }: { value: unknown; type: string }) {
     return (
       <span
         className="text-muted-foreground italic"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         NULL
       </span>
@@ -205,7 +205,7 @@ function CellDisplay({ value, type }: { value: unknown; type: string }) {
 
   if (typeof value === 'boolean') {
     return (
-      <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+      <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
         {value ? 'true' : 'false'}
       </span>
     );
@@ -215,7 +215,7 @@ function CellDisplay({ value, type }: { value: unknown; type: string }) {
     return (
       <span
         className="font-mono tabular-nums"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         {value}
       </span>
@@ -226,7 +226,7 @@ function CellDisplay({ value, type }: { value: unknown; type: string }) {
     return (
       <span
         className="text-muted-foreground italic"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         [BLOB]
       </span>
@@ -238,7 +238,7 @@ function CellDisplay({ value, type }: { value: unknown; type: string }) {
     <span
       className="whitespace-nowrap"
       title={strValue}
-      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
     >
       {strValue}
     </span>

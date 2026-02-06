@@ -53,7 +53,7 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
                 'flex items-center gap-2 px-3 py-1',
                 'hover:bg-accent/50'
               )}
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {/* PK/FK indicators */}
               <div className="flex w-8 shrink-0 items-center gap-0.5">
@@ -84,7 +84,7 @@ function ERTableNodeComponent({ data, selected }: ERTableNodeProps) {
               {/* Column type */}
               <span
                 className="text-muted-foreground shrink-0 font-mono"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {column.type}
               </span>

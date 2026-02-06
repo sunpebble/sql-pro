@@ -265,7 +265,7 @@ export function MockDataGeneratorDialog({
                         <span
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           ({table.columns.length}{' '}
@@ -300,7 +300,7 @@ export function MockDataGeneratorDialog({
               />
               <Label
                 htmlFor="truncate"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('mockData.truncateFirst', 'Clear table first')}
               </Label>
@@ -368,7 +368,7 @@ export function MockDataGeneratorDialog({
               <div className="bg-muted/30 flex items-center justify-between border-b px-3 py-2">
                 <span
                   className="font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {showPreview
                     ? t('mockData.preview', 'Preview')
@@ -393,7 +393,7 @@ export function MockDataGeneratorDialog({
                         <TableHead
                           key={col.columnName}
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {col.columnName}
@@ -411,7 +411,7 @@ export function MockDataGeneratorDialog({
                             className="max-w-[200px] truncate font-mono"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {row[col.columnName] === null ? (
@@ -576,7 +576,7 @@ function ColumnConfigRow({
           <div className="flex items-center gap-2">
             <span
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               TRUE %:
             </span>
@@ -602,7 +602,7 @@ function ColumnConfigRow({
         return (
           <span
             className="text-muted-foreground"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             -
           </span>
@@ -615,7 +615,7 @@ function ColumnConfigRow({
       <TableCell className="font-medium">{config.columnName}</TableCell>
       <TableCell
         className="text-muted-foreground"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {config.columnType}
       </TableCell>
@@ -632,7 +632,7 @@ function ColumnConfigRow({
               <div key={category}>
                 <div
                   className="text-muted-foreground px-2 py-1.5 font-semibold"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {category}
                 </div>
@@ -663,7 +663,7 @@ function ColumnConfigRow({
             />
             <span
               className="text-muted-foreground"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               %
             </span>

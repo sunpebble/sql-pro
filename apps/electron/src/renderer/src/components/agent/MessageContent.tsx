@@ -48,7 +48,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   h1: ({ children, ...props }) => (
     <h1
       className="mb-2 font-semibold"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
       {...props}
     >
       {children}
@@ -57,7 +57,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   h2: ({ children, ...props }) => (
     <h2
       className="mb-2 font-semibold"
-      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       {...props}
     >
       {children}
@@ -66,7 +66,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   h3: ({ children, ...props }) => (
     <h3
       className="mb-1 font-medium"
-      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       {...props}
     >
       {children}
@@ -98,7 +98,7 @@ const markdownComponents: ComponentPropsWithoutRef<
       return (
         <code
           className="bg-muted rounded-md px-1 py-0.5 font-mono"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           {...props}
         >
           {children}
@@ -114,7 +114,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   pre: ({ children, ...props }) => (
     <pre
       className="bg-muted my-2 overflow-x-auto rounded-md p-3 font-mono"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       {...props}
     >
       {children}
@@ -143,7 +143,7 @@ const markdownComponents: ComponentPropsWithoutRef<
     <div className="my-2 overflow-x-auto">
       <table
         className="min-w-full border-collapse"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         {...props}
       >
         {children}
@@ -200,7 +200,7 @@ function Shimmer({ className }: { className?: string }) {
       </div>
       <span
         className="text-muted-foreground"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {t('agent.thinking', 'Thinking...')}
       </span>
@@ -240,7 +240,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex w-full items-center gap-2 px-3 py-2 transition-colors hover:bg-[var(--gold)]/5"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {isExpanded ? (
           <ChevronDown className="h-3.5 w-3.5 text-[var(--gold)]" />
@@ -255,7 +255,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
           <Loader2 className="ml-1 h-3 w-3 animate-spin text-[var(--gold)]" />
         )}
         {!isExpanded && !isStreaming && (
-          <span className="text-muted-foreground ml-auto text-[10px]">
+          <span className="text-muted-foreground text-2xs ml-auto">
             {t('agent.reasoningLines', '{{count}} lines', { count: lineCount })}
           </span>
         )}
@@ -264,7 +264,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
       {isExpanded && (
         <div
           className="text-muted-foreground border-t border-[var(--gold-muted)]/20 px-3 py-2.5 leading-relaxed whitespace-pre-wrap"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {text}
           {isStreaming && (
@@ -345,7 +345,7 @@ function formatToolOutput(
                   <span
                     className="bg-background/50 rounded px-1"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {col.type}
@@ -354,7 +354,7 @@ function formatToolOutput(
                     <span
                       className="text-yellow-500"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       PK
@@ -364,7 +364,7 @@ function formatToolOutput(
                     <span
                       className="text-blue-500"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       NOT NULL
@@ -407,7 +407,7 @@ function formatToolOutput(
           <div className="overflow-x-auto">
             <table
               className="min-w-full border-collapse"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <thead>
                 <tr>
@@ -459,7 +459,7 @@ function formatToolOutput(
       <div className="mt-1">
         <pre
           className="bg-muted max-h-48 overflow-auto rounded p-2 font-mono whitespace-pre-wrap"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {typeof data.plan === 'string'
             ? data.plan
@@ -506,7 +506,7 @@ function formatToolOutput(
                   <span
                     className="bg-background/50 rounded px-1"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {colStats.type}
@@ -514,7 +514,7 @@ function formatToolOutput(
                   <span
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {colStats.distinctValues} distinct,{' '}
@@ -533,7 +533,7 @@ function formatToolOutput(
   return (
     <pre
       className="bg-muted mt-1 max-h-64 overflow-auto rounded p-2 font-mono whitespace-pre-wrap"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {JSON.stringify(output, null, 2)}
     </pre>
@@ -592,7 +592,7 @@ function ToolCall({ part, isStreaming }: ToolCallProps) {
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
         className="text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-2 py-1.5 transition-colors"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {isExpanded ? (
           <ChevronDown className="h-3 w-3" />
@@ -603,7 +603,7 @@ function ToolCall({ part, isStreaming }: ToolCallProps) {
         <span className="font-medium capitalize">{toolDisplayName}</span>
         <span className={cn('ml-auto flex items-center gap-1', status.color)}>
           {status.icon}
-          <span style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}>
+          <span style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}>
             {status.text}
           </span>
         </span>
@@ -611,7 +611,7 @@ function ToolCall({ part, isStreaming }: ToolCallProps) {
       {isExpanded && (
         <div
           className="border-t px-3 py-2"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {/* Input/Args */}
           {((part.args !== undefined &&
@@ -689,7 +689,7 @@ export function MessageContent({
   return (
     <div
       className={cn('', className)}
-      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
     >
       {parts.length === 0 && isStreaming && <Shimmer />}
       {parts.map((part, index) => {

@@ -139,7 +139,7 @@ export function ChangePasswordDialog({
             </div>
             <Dialog.Title
               className="font-semibold"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
             >
               {isCurrentlyEncrypted
                 ? t('changePassword.changeTitle')
@@ -147,7 +147,7 @@ export function ChangePasswordDialog({
             </Dialog.Title>
             <Dialog.Description
               className="text-muted-foreground mt-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {isCurrentlyEncrypted
                 ? t('changePassword.changeDesc', { filename })
@@ -168,7 +168,7 @@ export function ChangePasswordDialog({
               <label
                 htmlFor="newPassword"
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('changePassword.newPassword')}
               </label>
@@ -192,7 +192,7 @@ export function ChangePasswordDialog({
               {isCurrentlyEncrypted && (
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('changePassword.leaveEmptyToRemove')}
                 </p>
@@ -204,7 +204,7 @@ export function ChangePasswordDialog({
               <label
                 htmlFor="confirmPassword"
                 className="font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('changePassword.confirmPassword')}
               </label>
@@ -224,7 +224,7 @@ export function ChangePasswordDialog({
               {confirmPassword && !passwordsMatch && (
                 <p
                   className="text-destructive"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('changePassword.passwordsNotMatch')}
                 </p>
@@ -250,7 +250,7 @@ export function ChangePasswordDialog({
                   <div className="flex items-center gap-2">
                     <span
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('changePassword.rememberPassword')}
                     </span>
@@ -268,7 +268,7 @@ export function ChangePasswordDialog({
                   <p
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('changePassword.storeInKeychain')}
@@ -281,7 +281,7 @@ export function ChangePasswordDialog({
             {newPassword && hasSavedPassword && (
               <div
                 className="text-muted-foreground flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 <Info className="h-4 w-4 text-blue-500" />
                 <span>{t('changePassword.autoUpdateSavedPassword')}</span>

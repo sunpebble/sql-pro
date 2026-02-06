@@ -144,7 +144,7 @@ export const VectorSearchFilter = memo(
               {conditions.length > 0 && (
                 <span
                   className="bg-primary text-primary-foreground ml-1 rounded-full px-1.5 py-0.5"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {conditions.length}
                 </span>
@@ -156,7 +156,7 @@ export const VectorSearchFilter = memo(
               <div className="flex items-center justify-between">
                 <span
                   className="font-medium"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('vectorSearch.filter.title', 'Filters')}
                 </span>
@@ -167,7 +167,7 @@ export const VectorSearchFilter = memo(
                     onClick={clearFilter}
                     className="text-muted-foreground hover:text-destructive h-7 px-2"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('vectorSearch.filter.clearAll', 'Clear all')}
@@ -178,7 +178,7 @@ export const VectorSearchFilter = memo(
               {conditions.length === 0 ? (
                 <p
                   className="text-muted-foreground py-4 text-center"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t(
                     'vectorSearch.filter.noConditions',

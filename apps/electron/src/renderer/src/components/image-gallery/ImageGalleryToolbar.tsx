@@ -102,7 +102,7 @@ export function MediaGalleryToolbar({
             <ImageIcon className="text-muted-foreground h-4 w-4" />
             <span
               className="font-medium"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('mediaGallery.title', 'Media')}
             </span>
@@ -130,7 +130,7 @@ export function MediaGalleryToolbar({
                     <span
                       className="text-muted-foreground ml-1"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       ({col.type})
@@ -143,7 +143,7 @@ export function MediaGalleryToolbar({
 
           <span
             className="text-muted-foreground"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             {totalCount} {t('mediaGallery.mediaFound', 'media')}
           </span>
@@ -156,7 +156,7 @@ export function MediaGalleryToolbar({
             <button
               onClick={onExportSelected}
               className="hover:bg-muted flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <Download className="h-4 w-4" />
               <span>
@@ -181,7 +181,7 @@ export function MediaGalleryToolbar({
             </button>
             <span
               className="text-muted-foreground w-12 text-center"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {thumbnailSize}px
             </span>

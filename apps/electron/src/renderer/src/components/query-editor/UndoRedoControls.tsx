@@ -105,7 +105,7 @@ export const UndoRedoControls = memo(
                   <span
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     ⌘Z
@@ -142,7 +142,7 @@ export const UndoRedoControls = memo(
                   <span
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     ⌘⇧Z

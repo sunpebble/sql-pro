@@ -19,7 +19,7 @@ const CellValue = memo<CellValueProps>(({ value, type }) => {
     return (
       <span
         className="text-muted-foreground italic"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         NULL
       </span>
@@ -28,7 +28,7 @@ const CellValue = memo<CellValueProps>(({ value, type }) => {
 
   if (typeof value === 'boolean') {
     return (
-      <span style={{ fontSize: 'var(--font-ui-size, 14px)' }}>
+      <span style={{ fontSize: 'var(--font-ui-size, 13px)' }}>
         {value ? 'true' : 'false'}
       </span>
     );
@@ -38,7 +38,7 @@ const CellValue = memo<CellValueProps>(({ value, type }) => {
     return (
       <span
         className="font-mono tabular-nums"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         {value}
       </span>
@@ -50,7 +50,7 @@ const CellValue = memo<CellValueProps>(({ value, type }) => {
     return (
       <span
         className="text-muted-foreground italic"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         [BLOB{' '}
         {typeof value === 'object' ? (value as ArrayBuffer).byteLength : '?'}{' '}
@@ -63,7 +63,7 @@ const CellValue = memo<CellValueProps>(({ value, type }) => {
   return (
     <span
       className="whitespace-nowrap"
-      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       title={strValue}
     >
       {strValue}
@@ -158,7 +158,7 @@ export function DataGrid({ columns, rows, sort, onSort }: DataGridProps) {
                   onSort(col.name);
                 }}
                 className="hover:text-foreground flex flex-1 items-center gap-1 text-left font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 aria-label={t('dataGrid.sortBy', {
                   column: col.name,
                   currentSort:

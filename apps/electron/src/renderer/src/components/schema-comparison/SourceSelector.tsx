@@ -201,7 +201,7 @@ export function SourceSelector({
       <div className="space-y-3">
         <Label
           className="font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {label ||
             (type === 'source' ? t('compare.source') : t('compare.target'))}
@@ -273,7 +273,7 @@ export function SourceSelector({
             ) : (
               <div
                 className="text-muted-foreground rounded-base border-2 border-dashed p-4 text-center"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('compare.noConnections')}
               </div>
@@ -309,7 +309,7 @@ export function SourceSelector({
                             className="text-muted-foreground"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t('compare.tableCount', {
@@ -327,7 +327,7 @@ export function SourceSelector({
             ) : (
               <div
                 className="text-muted-foreground rounded-base border-2 border-dashed p-4 text-center"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('compare.noSnapshots')}
               </div>
@@ -347,7 +347,7 @@ export function SourceSelector({
             {availableConnections.length === 0 && (
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('compare.openDbFirst')}
               </p>
@@ -432,7 +432,7 @@ export function SourceSelector({
             {createSnapshotError && (
               <div
                 className="text-destructive"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {createSnapshotError}
               </div>

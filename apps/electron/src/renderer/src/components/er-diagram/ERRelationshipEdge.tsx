@@ -31,7 +31,7 @@ function CardinalityMarker({
     return (
       <span
         className="font-mono"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         N
       </span>
@@ -41,7 +41,7 @@ function CardinalityMarker({
     return (
       <span
         className="font-mono"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         1
       </span>
@@ -95,7 +95,7 @@ function ERRelationshipEdgeComponent({
         >
           <div
             className="bg-background/90 flex items-center gap-1 rounded border px-1.5 py-0.5 shadow-sm"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             <CardinalityMarker cardinality={cardinality} position="source" />
             <span className="text-muted-foreground">:</span>

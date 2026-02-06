@@ -111,7 +111,7 @@ export function QueryImportDialog({
               <div className="space-y-3">
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('sharing.selectFilePrompt')}
                 </p>
@@ -130,7 +130,7 @@ export function QueryImportDialog({
                         </p>
                         <p
                           className="text-destructive/80 mt-1"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.versionIncompatibleDesc')}
                         </p>
@@ -145,14 +145,14 @@ export function QueryImportDialog({
                       <div className="flex-1">
                         <p
                           className="font-medium"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.compressedFileDetected')}
                         </p>
                         <p
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.algorithm')}:{' '}
@@ -191,7 +191,7 @@ export function QueryImportDialog({
                           </p>
                           <p
                             className="text-destructive/80 mt-1"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('sharing.errorsFoundInImport')}
                           </p>
@@ -199,7 +199,7 @@ export function QueryImportDialog({
                       </div>
                       <ul
                         className="text-destructive/80 ml-8 list-inside list-disc space-y-1"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.validation!.errors!.map((error) => (
                           <li key={error}>{error}</li>
@@ -219,7 +219,7 @@ export function QueryImportDialog({
                           </p>
                           <p
                             className="mt-1 text-yellow-700 dark:text-yellow-300"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('sharing.warningsDesc')}
                           </p>
@@ -227,7 +227,7 @@ export function QueryImportDialog({
                       </div>
                       <ul
                         className="ml-8 list-inside list-disc space-y-1 text-yellow-700 dark:text-yellow-300"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.validation!.warnings!.map((warning) => (
                           <li key={warning}>{warning}</li>
@@ -246,7 +246,7 @@ export function QueryImportDialog({
                         </p>
                         <p
                           className="mt-1 text-green-700 dark:text-green-300"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {t('sharing.queryValidAndReady')}
                         </p>
@@ -262,7 +262,7 @@ export function QueryImportDialog({
                       </p>
                       <p
                         className="text-destructive/80 mt-1"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.error || t('sharing.unknownError')}
                       </p>
@@ -276,7 +276,7 @@ export function QueryImportDialog({
                     <div className="flex items-center justify-between">
                       <h3
                         className="font-semibold"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('sharing.queryPreview')}
                       </h3>
@@ -284,7 +284,7 @@ export function QueryImportDialog({
                         <span
                           className="text-muted-foreground"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.version')}:{' '}
@@ -298,14 +298,14 @@ export function QueryImportDialog({
                       <Label
                         className="font-medium"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('sharing.name')}
                       </Label>
                       <p
                         className=""
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {importResult.query.name}
                       </p>
@@ -317,14 +317,14 @@ export function QueryImportDialog({
                         <Label
                           className="font-medium"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.description')}
                         </Label>
                         <p
                           className="text-muted-foreground"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {importResult.query.description}
                         </p>
@@ -336,7 +336,7 @@ export function QueryImportDialog({
                       <Label
                         className="font-medium"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('sharing.sqlQuery')}
@@ -346,14 +346,14 @@ export function QueryImportDialog({
                         readOnly
                         className="bg-muted font-mono"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                         rows={6}
                       />
                       <p
                         className="text-muted-foreground"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {t('sharing.characters', {
@@ -368,14 +368,14 @@ export function QueryImportDialog({
                         <Label
                           className="font-medium"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.databaseContext')}
                         </Label>
                         <p
                           className="text-muted-foreground"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {importResult.query.databaseContext}
                         </p>
@@ -390,7 +390,7 @@ export function QueryImportDialog({
                             className="font-medium"
                             style={{
                               fontSize:
-                                'calc(var(--font-ui-size, 14px) * 0.85)',
+                                'calc(var(--font-ui-size, 13px) * 0.85)',
                             }}
                           >
                             {t('sharing.tags')}
@@ -402,7 +402,7 @@ export function QueryImportDialog({
                                 className="bg-muted text-muted-foreground rounded-md px-2 py-0.5"
                                 style={{
                                   fontSize:
-                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                    'calc(var(--font-ui-size, 13px) * 0.85)',
                                 }}
                               >
                                 {tag}
@@ -418,7 +418,7 @@ export function QueryImportDialog({
                         <Label
                           className="font-medium"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {t('sharing.documentation')}
@@ -428,7 +428,7 @@ export function QueryImportDialog({
                           readOnly
                           className="bg-muted"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                           rows={4}
                         />
@@ -440,7 +440,7 @@ export function QueryImportDialog({
                       <div
                         className="text-muted-foreground grid grid-cols-2 gap-2"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         {importResult.query.createdAt && (

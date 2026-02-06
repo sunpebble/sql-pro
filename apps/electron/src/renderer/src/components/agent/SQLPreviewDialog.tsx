@@ -114,7 +114,7 @@ export function SQLPreviewDialog() {
 
         <div
           className="text-muted-foreground flex items-center gap-2"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           <span>Tables:</span>
           {generatedSQL.referencedTables.map((table) => (
@@ -122,7 +122,7 @@ export function SQLPreviewDialog() {
               key={table}
               variant="secondary"
               className="font-mono"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {table}
             </Badge>

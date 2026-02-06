@@ -211,7 +211,7 @@ export function ImportExportDialog({
                       </p>
                       <p
                         className="text-green-700 dark:text-green-300"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('importExport.exportedCount', {
                           count: exportResult.exportedCount,
@@ -221,7 +221,7 @@ export function ImportExportDialog({
                         <p
                           className="break-all text-green-600 dark:text-green-400"
                           style={{
-                            fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                            fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                           }}
                         >
                           {exportResult.filePath}
@@ -235,7 +235,7 @@ export function ImportExportDialog({
                       </p>
                       <p
                         className="text-destructive/80 mt-1"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {exportResult.error || t('importExport.unknownError')}
                       </p>
@@ -249,7 +249,7 @@ export function ImportExportDialog({
                     <div className="flex items-center justify-between border-b pb-2">
                       <span
                         className="font-medium"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {t('importExport.selected', {
                           count:
@@ -285,7 +285,7 @@ export function ImportExportDialog({
                               className="text-muted-foreground font-semibold uppercase"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
                               {t('importExport.folders')}
@@ -304,7 +304,7 @@ export function ImportExportDialog({
                                 <span
                                   className="flex-1"
                                   style={{
-                                    fontSize: 'var(--font-ui-size, 14px)',
+                                    fontSize: 'var(--font-ui-size, 13px)',
                                   }}
                                 >
                                   {folder.name}
@@ -320,7 +320,7 @@ export function ImportExportDialog({
                               className="text-muted-foreground font-semibold uppercase"
                               style={{
                                 fontSize:
-                                  'calc(var(--font-ui-size, 14px) * 0.85)',
+                                  'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
                               {t('importExport.profiles')}
@@ -340,7 +340,7 @@ export function ImportExportDialog({
                                   <p
                                     className="truncate"
                                     style={{
-                                      fontSize: 'var(--font-ui-size, 14px)',
+                                      fontSize: 'var(--font-ui-size, 13px)',
                                     }}
                                   >
                                     {profile.displayName || profile.filename}
@@ -349,7 +349,7 @@ export function ImportExportDialog({
                                     className="text-muted-foreground truncate"
                                     style={{
                                       fontSize:
-                                        'calc(var(--font-ui-size, 14px) * 0.85)',
+                                        'calc(var(--font-ui-size, 13px) * 0.85)',
                                     }}
                                   >
                                     {profile.path}
@@ -363,7 +363,7 @@ export function ImportExportDialog({
                         {profiles.length === 0 && folders.length === 0 && (
                           <p
                             className="text-muted-foreground py-8 text-center"
-                            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                           >
                             {t('importExport.noProfilesOrFolders')}
                           </p>
@@ -389,14 +389,14 @@ export function ImportExportDialog({
                   <div className="flex-1">
                     <p
                       className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                     >
                       {t('importExport.mergeWithExisting')}
                     </p>
                     <p
                       className="text-muted-foreground"
                       style={{
-                        fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                        fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
                     >
                       {t('importExport.mergeDescription')}
@@ -414,7 +414,7 @@ export function ImportExportDialog({
                         </p>
                         <div
                           className="space-y-1 text-green-700 dark:text-green-300"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           <p>
                             {t('importExport.importedCount', {
@@ -438,7 +438,7 @@ export function ImportExportDialog({
                         </p>
                         <p
                           className="text-destructive/80"
-                          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                         >
                           {importResult.error || t('importExport.unknownError')}
                         </p>
@@ -449,7 +449,7 @@ export function ImportExportDialog({
                                 className="text-destructive font-medium"
                                 style={{
                                   fontSize:
-                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                    'calc(var(--font-ui-size, 13px) * 0.85)',
                                 }}
                               >
                                 {t('importExport.validationErrors')}
@@ -458,7 +458,7 @@ export function ImportExportDialog({
                                 className="text-destructive/80 list-inside list-disc space-y-0.5"
                                 style={{
                                   fontSize:
-                                    'calc(var(--font-ui-size, 14px) * 0.85)',
+                                    'calc(var(--font-ui-size, 13px) * 0.85)',
                                 }}
                               >
                                 {importResult.errors.map((error) => (

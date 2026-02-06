@@ -303,7 +303,7 @@ export function TourTooltip({
       <div className="border-border/50 flex items-center justify-between border-b px-4 py-3">
         <span
           className="text-muted-foreground font-medium"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {t('tour.step', { current: stepNumber, total: totalSteps })}
         </span>
@@ -329,7 +329,7 @@ export function TourTooltip({
         <p
           id="tour-tooltip-description"
           className="text-muted-foreground mt-2 leading-relaxed"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {t(step.description)}
         </p>

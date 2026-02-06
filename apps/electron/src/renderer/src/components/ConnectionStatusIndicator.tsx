@@ -106,7 +106,7 @@ export function ConnectionStatusIndicator({
               getStatusColor(),
               className
             )}
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {getStatusIcon()}
             <span className="hidden sm:inline">
@@ -126,7 +126,7 @@ export function ConnectionStatusIndicator({
             {tunnelStatus.localPort && (
               <p
                 className="text-muted-foreground"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('ssh.localPort', 'Local port: {{port}}', {
                   port: tunnelStatus.localPort,
@@ -137,7 +137,7 @@ export function ConnectionStatusIndicator({
               tunnelStatus.reconnectAttempts > 0 && (
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('ssh.reconnectAttempts', 'Reconnect attempts: {{count}}', {
                     count: tunnelStatus.reconnectAttempts,

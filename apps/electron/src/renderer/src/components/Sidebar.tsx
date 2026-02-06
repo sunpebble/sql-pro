@@ -789,7 +789,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
             className="placeholder:text-muted-foreground focus:ring-main rounded-base h-6 w-full bg-transparent pr-2 pl-6 focus:ring-2 focus:outline-none"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           />
         </div>
       </div>
@@ -807,7 +807,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
               >
                 <SortAsc className="h-3.5 w-3.5 shrink-0" />
                 <span
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {sortOption === 'name-asc' && t('sort.aToZ')}
                   {sortOption === 'name-desc' && t('sort.zToA')}
@@ -1178,7 +1178,7 @@ function SchemaSection({
         <button
           onClick={onToggleSchema}
           className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-2 px-2 py-1 font-medium"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {isSchemaExpanded ? (
             <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1199,7 +1199,7 @@ function SchemaSection({
               <button
                 onClick={() => onToggleSection(tablesKey)}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {tablesExpanded ? (
                   <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1265,7 +1265,7 @@ function SchemaSection({
               <button
                 onClick={() => onToggleSection(viewsKey)}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {viewsExpanded ? (
                   <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1332,7 +1332,7 @@ function SchemaSection({
               <button
                 onClick={() => onToggleSection(triggersKey)}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {triggersExpanded ? (
                   <ChevronDown className="h-2.5 w-2.5 transition-transform" />
@@ -1465,7 +1465,7 @@ function TableItem({
                 'shrink-0 tabular-nums',
                 isSelected ? 'text-main' : 'text-muted-foreground'
               )}
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {table.rowCount.toLocaleString()}
             </span>
@@ -1503,7 +1503,7 @@ function TableItem({
               <>
                 <div
                   className="text-muted-foreground px-2 py-1 font-medium"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('contextMenu.currentTags', {
                     defaultValue: 'Current Tags',
@@ -1528,7 +1528,7 @@ function TableItem({
               <>
                 <div
                   className="text-muted-foreground px-2 py-1 font-medium"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('contextMenu.addTag', { defaultValue: 'Add Tag' })}
                 </div>
@@ -1563,7 +1563,7 @@ function TableItem({
                     }
                   }}
                   className="h-7"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 />
                 <Button
                   size="sm"
@@ -1626,12 +1626,15 @@ interface TriggerItemProps {
 
 function TriggerItem({ trigger }: TriggerItemProps) {
   return (
-    <div className="text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-0.5 text-[13px] transition-colors">
+    <div
+      className="text-foreground hover:bg-muted/50 flex w-full items-center gap-1.5 rounded-md px-2 py-0.5 transition-colors"
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.95)' }}
+    >
       <Zap className="text-muted-foreground/70 h-3.5 w-3.5 shrink-0" />
       <span className="truncate">{trigger.name}</span>
       <span
         className="text-muted-foreground/60 ml-auto"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {trigger.timing} {trigger.event}
       </span>
@@ -1696,7 +1699,7 @@ function FilterTagsPopover({
                 <Badge
                   variant="secondary"
                   className="h-5 max-w-15 gap-1 truncate px-1"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   <TagColorDot
                     color={activeTag.color}
@@ -1706,7 +1709,7 @@ function FilterTagsPopover({
                 </Badge>
               ) : (
                 <span
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 >
                   {t('filter.filter')}
                 </span>
@@ -1729,7 +1732,7 @@ function FilterTagsPopover({
                   ? 'bg-accent text-foreground'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               )}
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               onClick={() => setActiveTab('filter')}
             >
               {t('filter.filter')}
@@ -1741,7 +1744,7 @@ function FilterTagsPopover({
                   ? 'bg-accent text-foreground'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               )}
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               onClick={() => setActiveTab('manage')}
             >
               {t('filter.manageTags')}
@@ -1756,7 +1759,7 @@ function FilterTagsPopover({
                   <div
                     className="text-muted-foreground py-2 text-center"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('filter.noTags')}
@@ -1771,7 +1774,7 @@ function FilterTagsPopover({
                         size="sm"
                         className="h-7 w-full justify-start gap-2 px-2"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                         onClick={() => onSetActiveTagFilter(null)}
                       >
@@ -1788,7 +1791,7 @@ function FilterTagsPopover({
                         size="sm"
                         className="h-7 w-full justify-start gap-2 px-2"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                         onClick={() =>
                           onSetActiveTagFilter(
@@ -1813,7 +1816,7 @@ function FilterTagsPopover({
                   variant="outline"
                   size="sm"
                   className="h-7 w-full justify-start gap-2"
-                  style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                  style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                   onClick={() => setShowCreateDialog(true)}
                 >
                   <Plus className="h-3 w-3" />
@@ -1832,7 +1835,7 @@ function FilterTagsPopover({
                           <div className="flex items-center gap-2">
                             <TagColorDot color={tag.color} />
                             <span
-                              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                             >
                               {tag.name}
                             </span>
@@ -1853,7 +1856,7 @@ function FilterTagsPopover({
                   <div
                     className="text-muted-foreground"
                     style={{
-                      fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                     }}
                   >
                     {t('filter.noTagsYet')}

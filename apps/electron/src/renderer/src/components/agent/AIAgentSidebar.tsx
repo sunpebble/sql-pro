@@ -211,7 +211,7 @@ export function AIAgentSidebar({
             </div>
             <span
               className="font-semibold tracking-tight"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('agent.settings.title', 'Agent Settings')}
             </span>
@@ -250,7 +250,7 @@ export function AIAgentSidebar({
             </div>
             <span
               className="font-semibold tracking-tight"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('agent.history', 'Chat History')}
             </span>
@@ -274,7 +274,7 @@ export function AIAgentSidebar({
                 </div>
                 <p
                   className="text-muted-foreground"
-                  style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   {t('agent.noHistory', 'No chat history yet')}
                 </p>
@@ -301,14 +301,14 @@ export function AIAgentSidebar({
                     <div className="min-w-0 flex-1">
                       <p
                         className="truncate"
-                        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
                         {sessionTitle}
                       </p>
                       <div
                         className="text-muted-foreground flex items-center gap-2"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         <Clock className="h-3 w-3" />
@@ -368,12 +368,12 @@ export function AIAgentSidebar({
           <div className="flex flex-col">
             <span
               className="font-semibold tracking-tight"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('agent.title', 'SQL Pro Agent')}
             </span>
             {(databaseName || tableName) && (
-              <span className="text-muted-foreground flex items-center gap-1 text-[10px]">
+              <span className="text-muted-foreground text-2xs flex items-center gap-1">
                 {databaseName && <span>{databaseName}</span>}
                 {tableName && (
                   <>
@@ -384,7 +384,7 @@ export function AIAgentSidebar({
               </span>
             )}
             {!databaseName && !tableName && (
-              <span className="text-muted-foreground text-[10px]">
+              <span className="text-muted-foreground text-2xs">
                 {t('agent.subtitle', 'AI-powered database assistant')}
               </span>
             )}
@@ -480,13 +480,13 @@ export function AIAgentSidebar({
               </div>
               <p
                 className="text-muted-foreground mb-1 font-medium"
-                style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('agent.welcomeTitle', 'How can I help?')}
               </p>
               <p
                 className="text-muted-foreground/70 mb-4 max-w-[220px] leading-relaxed"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t(
                   'agent.welcomeDescription',
@@ -499,7 +499,10 @@ export function AIAgentSidebar({
                     key={action.label}
                     type="button"
                     onClick={() => handleQuickAction(action.query)}
-                    className="bg-background/60 text-muted-foreground hover:bg-primary/10 hover:text-primary border-primary/10 rounded-base border px-2.5 py-2 text-left text-[11px] font-medium transition-colors"
+                    className="bg-background/60 text-muted-foreground hover:bg-primary/10 hover:text-primary border-primary/10 rounded-base border px-2.5 py-2 text-left font-medium transition-colors"
+                    style={{
+                      fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
+                    }}
                   >
                     {action.label}
                   </button>
@@ -527,13 +530,13 @@ export function AIAgentSidebar({
             <div className="min-w-0 flex-1">
               <p
                 className="text-destructive font-medium"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {t('agent.errorTitle', 'Something went wrong')}
               </p>
               <p
                 className="text-destructive/80 mt-0.5"
-                style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+                style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {error.message}
               </p>
@@ -565,7 +568,7 @@ export function AIAgentSidebar({
             disabled={isLoading || !isConfigured}
             rows={1}
             className="placeholder:text-muted-foreground max-h-[120px] min-h-[32px] flex-1 resize-none bg-transparent outline-none disabled:cursor-not-allowed disabled:opacity-50"
-            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+            style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           />
           {isLoading ? (
             <Tooltip>
@@ -601,7 +604,7 @@ export function AIAgentSidebar({
             </Tooltip>
           )}
         </div>
-        <div className="text-muted-foreground/60 mt-1.5 flex items-center justify-between text-[10px]">
+        <div className="text-muted-foreground/60 text-2xs mt-1.5 flex items-center justify-between">
           <span>
             {t(
               'agent.disclaimer',
@@ -609,7 +612,7 @@ export function AIAgentSidebar({
             )}
           </span>
           <div className="flex items-center gap-2">
-            <kbd className="bg-primary/10 text-primary/80 rounded px-1 py-0.5 font-mono text-[9px]">
+            <kbd className="bg-primary/10 text-primary/80 text-2xs rounded px-1 py-0.5 font-mono">
               ⌘↵
             </kbd>
             <span>{t('agent.toSend', 'to send')}</span>

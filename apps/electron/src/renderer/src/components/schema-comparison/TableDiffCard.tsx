@@ -132,12 +132,12 @@ export function TableDiffCard({
           {style.icon}
           <CardTitle
             className="flex-1 font-semibold"
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 1.15)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
           >
             {name}
             <span
               className="text-muted-foreground ml-2 font-normal"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {schema}
             </span>
@@ -145,14 +145,14 @@ export function TableDiffCard({
           <Badge
             variant="secondary"
             className={style.badge}
-            style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
             {style.label}
           </Badge>
           {changeCounts && (
             <div
               className="flex items-center gap-2"
-              style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+              style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               {changeCounts.columns > 0 && (
                 <span className="text-muted-foreground">
@@ -255,7 +255,7 @@ export function TableDiffCard({
           {diffType === 'added' && tableDiff.target && (
             <div
               className="space-y-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <p className="text-muted-foreground">
                 {t('schema.tableAddedInTarget', {
@@ -270,7 +270,7 @@ export function TableDiffCard({
                         key={col.name}
                         className="flex items-center gap-2"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         <Columns3 className="text-muted-foreground h-3 w-3" />
@@ -300,7 +300,7 @@ export function TableDiffCard({
           {diffType === 'removed' && tableDiff.source && (
             <div
               className="space-y-2"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               <p className="text-muted-foreground">
                 {t('schema.tableRemovedFromSource', {
@@ -315,7 +315,7 @@ export function TableDiffCard({
                         key={col.name}
                         className="flex items-center gap-2 line-through opacity-60"
                         style={{
-                          fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)',
+                          fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                         }}
                       >
                         <Columns3 className="text-muted-foreground h-3 w-3" />
@@ -345,7 +345,7 @@ export function TableDiffCard({
           {diffType === 'unchanged' && (
             <p
               className="text-muted-foreground"
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {t('diffFilter.noDifferences')}
             </p>
@@ -368,7 +368,7 @@ function DiffSection({ title, icon, count, children }: DiffSectionProps) {
     <div className="space-y-2">
       <div
         className="flex items-center gap-2 font-medium"
-        style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
         {icon}
         <span>
@@ -398,7 +398,7 @@ function ColumnDiffList({
     return (
       <p
         className="text-muted-foreground italic"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {t('schema.noDifferences')}
       </p>
@@ -408,7 +408,7 @@ function ColumnDiffList({
   return (
     <div
       className="bg-background/50 rounded-base space-y-1 border-2 p-2"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (
         <ColumnDiffRow key={diff.name} diff={diff} />
@@ -472,7 +472,7 @@ function ColumnDiffRow({ diff }: { diff: ColumnDiff }) {
       {diff.diffType === 'modified' && diff.changes && (
         <div
           className="text-muted-foreground ml-5 space-y-0.5"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
         >
           {diff.changes.type && (
             <div>
@@ -535,7 +535,7 @@ function IndexDiffList({
     return (
       <p
         className="text-muted-foreground italic"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {t('schema.noDifferences')}
       </p>
@@ -545,7 +545,7 @@ function IndexDiffList({
   return (
     <div
       className="bg-background/50 rounded-base space-y-1 border-2 p-2"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (
         <IndexDiffRow key={diff.name} diff={diff} />
@@ -604,7 +604,7 @@ function IndexDiffRow({ diff }: { diff: IndexDiff }) {
       {diff.diffType === 'modified' && diff.changes && (
         <div
           className="text-muted-foreground ml-5 space-y-0.5"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
         >
           {diff.changes.columns && (
             <div>
@@ -648,7 +648,7 @@ function ForeignKeyDiffList({
     return (
       <p
         className="text-muted-foreground italic"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {t('schema.noDifferences')}
       </p>
@@ -658,7 +658,7 @@ function ForeignKeyDiffList({
   return (
     <div
       className="bg-background/50 rounded-base space-y-1 border-2 p-2"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (
         <ForeignKeyDiffRow
@@ -715,7 +715,7 @@ function ForeignKeyDiffRow({ diff }: { diff: ForeignKeyDiff }) {
       {diff.diffType === 'modified' && diff.changes && (
         <div
           className="text-muted-foreground ml-5 space-y-0.5"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
         >
           {diff.changes.referencedTable && (
             <div>
@@ -773,7 +773,7 @@ function TriggerDiffList({
     return (
       <p
         className="text-muted-foreground italic"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {t('schema.noDifferences')}
       </p>
@@ -783,7 +783,7 @@ function TriggerDiffList({
   return (
     <div
       className="bg-background/50 rounded-base space-y-1 border-2 p-2"
-      style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+      style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (
         <TriggerDiffRow key={diff.name} diff={diff} />
@@ -837,7 +837,7 @@ function TriggerDiffRow({ diff }: { diff: TriggerDiff }) {
       {diff.diffType === 'modified' && diff.changes && (
         <div
           className="text-muted-foreground ml-5 space-y-0.5"
-          style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.75)' }}
+          style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.75)' }}
         >
           {diff.changes.timing && (
             <div>

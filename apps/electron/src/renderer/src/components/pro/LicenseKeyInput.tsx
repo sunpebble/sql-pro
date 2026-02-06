@@ -195,7 +195,7 @@ export function LicenseKeyInput({
         {/* Prefix label */}
         <div
           className="bg-muted text-muted-foreground flex h-10 items-center rounded-md border px-3 font-mono"
-          style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {LICENSE_PREFIX}
         </div>
@@ -230,7 +230,7 @@ export function LicenseKeyInput({
                 segment.length === SEGMENT_LENGTH &&
                   'border-green-500/50 bg-green-500/5'
               )}
-              style={{ fontSize: 'var(--font-ui-size, 14px)' }}
+              style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               placeholder={t('license.segmentPlaceholder')}
               aria-label={t('license.segmentAriaLabel', { index: index + 1 })}
             />
@@ -262,7 +262,7 @@ export function LicenseKeyInput({
       {/* Helper text */}
       <p
         className="text-muted-foreground"
-        style={{ fontSize: 'calc(var(--font-ui-size, 14px) * 0.85)' }}
+        style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {t('license.formatHint')}
       </p>
