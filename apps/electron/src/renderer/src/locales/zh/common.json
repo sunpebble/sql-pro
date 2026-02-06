@@ -965,7 +965,8 @@
     "exportError": "导出图片失败",
     "failedToGetCanvasContext": "无法获取画布上下文",
     "failedToConvertToPng": "无法转换为 PNG",
-    "failedToLoadImageForConversion": "无法加载图片进行转换"
+    "failedToLoadImageForConversion": "无法加载图片进行转换",
+    "filePathExportNotSupported": "暂不支持文件路径导出"
   },
   "row": {
     "copyRowAsSQL": "复制行为 SQL INSERT",
@@ -1761,7 +1762,14 @@
     "sqlCopied": "SQL 已复制到剪贴板",
     "noConnection": "无数据库连接",
     "generatedQuery": "生成的查询",
-    "openedInEditor": "已在查询编辑器中打开"
+    "openedInEditor": "已在查询编辑器中打开",
+    "emptyQueryHint": "添加表以构建查询"
+  },
+  "sqlGenerator": {
+    "insertNoValues": "INSERT：未提供新值",
+    "updateNoValues": "UPDATE：未提供新值",
+    "noPendingChanges": "无待处理的更改",
+    "pendingChangesSqlPreview": "待处理更改 SQL 预览"
   },
   "mockData": {
     "title": "模拟数据生成器",
@@ -2407,7 +2415,8 @@
   },
   "diagram": {
     "noSchema": "未加载结构",
-    "noTables": "此数据库没有可在图表中显示的表"
+    "noTables": "此数据库没有可在图表中显示的表",
+    "connectToViewDiagram": "连接数据库以查看实体关系图"
   },
   "quit": {
     "cancel": "取消"
@@ -2493,7 +2502,9 @@
     "toolCompleted": "已完成",
     "toolError": "错误",
     "toolInput": "输入",
-    "toolOutput": "输出"
+    "toolOutput": "输出",
+    "exampleQueryUsers": "显示本周创建的所有用户",
+    "exampleQueryOrders": "按状态统计订单数量"
   },
   "savedQueries": {
     "title": "已保存的查询",

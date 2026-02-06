@@ -271,7 +271,7 @@ export function TableImageGallery({
             // File path - would need backend to read
             toast.warning(
               t(
-                'mediaGallery.fileExportNotSupported',
+                'mediaGallery.filePathExportNotSupported',
                 'File path export not yet supported'
               )
             );

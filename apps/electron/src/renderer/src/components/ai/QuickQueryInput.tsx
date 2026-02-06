@@ -6,6 +6,7 @@ import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import { Loader2, Send, Sparkles } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuickQuery } from '@/hooks/useQuickQuery';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,7 @@ export function QuickQueryInput({
   placeholder = 'Describe what you want to query...',
   autoFocus = true,
 }: QuickQueryInputProps) {
+  const { t } = useTranslation('common');
   const [input, setInput] = useState('');
   const { isGenerating, error, generateSQL } = useQuickQuery();
 
@@ -93,17 +95,17 @@ export function QuickQueryInput({
         <button
           type="button"
           className="hover:text-foreground transition-colors"
-          onClick={() => setInput('Show all users created this week')}
+          onClick={() => setInput(t('agent.exampleQueryUsers'))}
         >
-          "Show all users created this week"
+          "{t('agent.exampleQueryUsers')}"
         </button>
         <span>·</span>
         <button
           type="button"
           className="hover:text-foreground transition-colors"
-          onClick={() => setInput('Count orders by status')}
+          onClick={() => setInput(t('agent.exampleQueryOrders'))}
         >
-          "Count orders by status"
+          "{t('agent.exampleQueryOrders')}"
         </button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import type { PendingChange } from './collections';
+import i18n from '@/lib/i18n';
 
 /**
  * Escape a SQL identifier (table name, column name) with double quotes.
@@ -68,7 +69,7 @@ function inferPrimaryKeyColumn(change: PendingChange): string | null {
  */
 function generateInsertSQL(change: PendingChange): string {
   if (!change.newValues) {
-    return '-- INSERT: No new values provided';
+    return `-- ${  i18n.t('sqlGenerator.insertNoValues')}`;
   }
 
   const schema = change.schema || 'main';
@@ -92,7 +93,7 @@ function generateInsertSQL(change: PendingChange): string {
  */
 function generateUpdateSQL(change: PendingChange): string {
   if (!change.newValues) {
-    return '-- UPDATE: No new values provided';
+    return `-- ${  i18n.t('sqlGenerator.updateNoValues')}`;
   }
 
   const pkColumn = inferPrimaryKeyColumn(change);
@@ -188,7 +189,7 @@ export function generateSQLForChanges(changes: PendingChange[]): string[] {
  */
 export function generateSQLScript(changes: PendingChange[]): string {
   if (changes.length === 0) {
-    return '-- No pending changes';
+    return `-- ${  i18n.t('sqlGenerator.noPendingChanges')}`;
   }
 
   // Group changes by table
@@ -202,7 +203,7 @@ export function generateSQLScript(changes: PendingChange[]): string {
   }
 
   const lines: string[] = [
-    '-- Pending Changes SQL Preview',
+    `-- ${  i18n.t('sqlGenerator.pendingChangesSqlPreview')}`,
     `-- Generated at: ${new Date().toISOString()}`,
     `-- Total changes: ${changes.length}`,
     '',

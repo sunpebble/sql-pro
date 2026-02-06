@@ -5,6 +5,7 @@ import type {
   SelectedColumn,
   SortConfig,
 } from '@/types/query-builder';
+import i18n from '@/lib/i18n';
 
 interface GenerateSQLOptions {
   nodes: QueryBuilderNode[];
@@ -35,7 +36,7 @@ export function generateSQL(options: GenerateSQLOptions): string {
   } = options;
 
   if (nodes.length === 0) {
-    return '-- Add tables to build your query';
+    return `-- ${  i18n.t('queryBuilder.emptyQueryHint')}`;
   }
 
   // Build SELECT clause

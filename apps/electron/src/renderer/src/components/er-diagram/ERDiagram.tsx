@@ -203,7 +203,7 @@ export function ERDiagram() {
       <EmptyView
         icon={Database}
         title={t('diagram.noSchema', { defaultValue: 'No Schema Loaded' })}
-        description={t('diagram.noSchemaDescription', {
+        description={t('diagram.connectToViewDiagram', {
           defaultValue:
             'Connect to a database to view its entity relationship diagram',
         })}

@@ -1118,7 +1118,8 @@
     "exportError": "Failed to export images",
     "failedToGetCanvasContext": "Failed to get canvas context",
     "failedToConvertToPng": "Failed to convert to PNG",
-    "failedToLoadImageForConversion": "Failed to load image for conversion"
+    "failedToLoadImageForConversion": "Failed to load image for conversion",
+    "filePathExportNotSupported": "File path export not yet supported"
   },
   "row": {
     "copyRowAsSQL": "Copy Row as SQL INSERT",
@@ -1761,7 +1762,14 @@
     "sqlCopied": "SQL copied to clipboard",
     "noConnection": "No database connection",
     "generatedQuery": "Generated Query",
-    "openedInEditor": "Opened in query editor"
+    "openedInEditor": "Opened in query editor",
+    "emptyQueryHint": "Add tables to build your query"
+  },
+  "sqlGenerator": {
+    "insertNoValues": "INSERT: No new values provided",
+    "updateNoValues": "UPDATE: No new values provided",
+    "noPendingChanges": "No pending changes",
+    "pendingChangesSqlPreview": "Pending Changes SQL Preview"
   },
   "mockData": {
     "title": "Mock Data Generator",
@@ -2407,7 +2415,8 @@
   },
   "diagram": {
     "noSchema": "No Schema Loaded",
-    "noTables": "This database has no tables to display in the diagram"
+    "noTables": "This database has no tables to display in the diagram",
+    "connectToViewDiagram": "Connect to a database to view its entity relationship diagram"
   },
   "quit": {
     "cancel": "Cancel"
@@ -2493,7 +2502,9 @@
     "toolCompleted": "Completed",
     "toolError": "Error",
     "toolInput": "Input",
-    "toolOutput": "Output"
+    "toolOutput": "Output",
+    "exampleQueryUsers": "Show all users created this week",
+    "exampleQueryOrders": "Count orders by status"
   },
   "savedQueries": {
     "title": "Saved Queries",
