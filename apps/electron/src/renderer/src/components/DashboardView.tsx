@@ -872,23 +872,14 @@ export const DashboardView = memo(() => {
             defaultValue="overview"
             className="flex h-full min-h-0 flex-col px-6 pt-4"
           >
-            <TabsList className="bg-muted/50 border-border/30 mb-4 w-fit shrink-0 border p-1 shadow-sm">
-              <TabsTrigger
-                value="overview"
-                className="data-[state=active]:bg-background data-[state=active]:border-border/50 transition-all duration-200 data-[state=active]:shadow-sm"
-              >
+            <TabsList className="mb-4 w-fit shrink-0">
+              <TabsTrigger value="overview">
                 {t('databaseDashboard.overview')}
               </TabsTrigger>
-              <TabsTrigger
-                value="tables"
-                className="data-[state=active]:bg-background data-[state=active]:border-border/50 transition-all duration-200 data-[state=active]:shadow-sm"
-              >
+              <TabsTrigger value="tables">
                 {t('databaseDashboard.tables')}
               </TabsTrigger>
-              <TabsTrigger
-                value="charts"
-                className="data-[state=active]:bg-background data-[state=active]:border-border/50 transition-all duration-200 data-[state=active]:shadow-sm"
-              >
+              <TabsTrigger value="charts">
                 {t('databaseDashboard.charts')}
               </TabsTrigger>
             </TabsList>

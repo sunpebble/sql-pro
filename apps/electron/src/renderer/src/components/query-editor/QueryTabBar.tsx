@@ -108,8 +108,8 @@ const TabItem = memo(
             className={cn(
               'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1 px-2 transition-colors',
               isActive
-                ? 'bg-accent text-foreground rounded-md'
-                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground rounded-md bg-transparent'
+                ? 'bg-background text-foreground border-border rounded-[5px] border-2 shadow-[2px_2px_0px_0px_var(--border)]'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-[5px] border-2 border-transparent bg-transparent'
             )}
             style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             onClick={onSelect}
@@ -141,7 +141,7 @@ const TabItem = memo(
                     onClick={handleCloseClick}
                     className={cn(
                       'hover:bg-accent shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100',
-                      isActive && 'opacity-60'
+                      isActive && 'opacity-70'
                     )}
                   >
                     <X className="h-3 w-3" />

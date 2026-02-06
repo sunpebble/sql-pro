@@ -116,8 +116,8 @@ export function QueryResults({ results }: QueryResultsProps) {
             className={cn(
               'rounded-base font-base flex items-center gap-1.5 px-3 py-1 transition-colors',
               activeResultIndex === index
-                ? 'bg-background text-foreground shadow-shadow-sm border-2'
-                : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
+                ? 'bg-background text-foreground shadow-shadow-sm rounded-[5px] border-2'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground border-2 border-transparent'
             )}
             style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             role="tab"

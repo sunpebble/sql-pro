@@ -267,8 +267,8 @@ const ConnectionTab = memo(
                   className={cn(
                     'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-1.5 transition-all',
                     isActive
-                      ? 'bg-accent text-foreground rounded-md'
-                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground rounded-md bg-transparent',
+                      ? 'bg-background text-foreground border-border rounded-[5px] border-2 shadow-[2px_2px_0px_0px_var(--border)]'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-[5px] border-2 border-transparent bg-transparent',
                     isDragging &&
                       'ring-primary/50 z-50 scale-105 cursor-grabbing opacity-90 shadow-lg ring-2'
                   )}
@@ -335,7 +335,7 @@ const ConnectionTab = memo(
                         onClick={handleCloseClick}
                         className={cn(
                           'hover:bg-accent shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100',
-                          isActive && 'opacity-60'
+                          isActive && 'opacity-70'
                         )}
                       >
                         <X className="h-3 w-3" />
@@ -636,7 +636,7 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
         onDragCancel={handleDragCancel}
       >
         <div
-          className={cn('bg-muted/30 flex h-full items-center', className)}
+          className={cn('bg-muted flex h-full items-center', className)}
           role="tablist"
         >
           <SortableContext
