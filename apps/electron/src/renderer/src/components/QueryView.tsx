@@ -33,7 +33,7 @@ export function QueryView() {
               'font-bold',
               'transition-all duration-150',
               mode === 'editor'
-                ? 'bg-background text-foreground border-border border-2 shadow-[2px_2px_0px_0px_var(--border)]'
+                ? 'bg-background text-foreground border-border border-2'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
             )}
             style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
@@ -49,7 +49,7 @@ export function QueryView() {
               'font-bold',
               'transition-all duration-150',
               mode === 'builder'
-                ? 'bg-background text-foreground border-border border-2 shadow-[2px_2px_0px_0px_var(--border)]'
+                ? 'bg-background text-foreground border-border border-2'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
             )}
             style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}

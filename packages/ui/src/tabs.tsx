@@ -64,7 +64,7 @@ function TabsTrigger({ className, style, ...props }: TabsPrimitive.Tab.Props) {
         'disabled:pointer-events-none disabled:opacity-50',
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         // Default variant active state
-        'group-data-[variant=default]/tabs-list:data-active:bg-background group-data-[variant=default]/tabs-list:data-active:border-border data-active:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-[2px_2px_0px_0px_var(--border)]',
+        'group-data-[variant=default]/tabs-list:data-active:bg-background group-data-[variant=default]/tabs-list:data-active:border-border data-active:text-foreground',
         // Line variant
         'group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:border-b-2 group-data-[variant=line]/tabs-list:border-transparent',
         'group-data-[variant=line]/tabs-list:data-active:border-main group-data-[variant=line]/tabs-list:data-active:bg-transparent',
