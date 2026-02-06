@@ -36,7 +36,7 @@ export function QueryView() {
                 ? 'bg-background text-foreground border-border border-2'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
             )}
-            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           >
             <Code className="h-3.5 w-3.5" />
             {t('queryView.sqlEditor', { defaultValue: 'SQL Editor' })}
@@ -52,7 +52,7 @@ export function QueryView() {
                 ? 'bg-background text-foreground border-border border-2'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
             )}
-            style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
+            style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           >
             <Blocks className="h-3.5 w-3.5" />
             {t('queryView.queryBuilder', { defaultValue: 'Query Builder' })}
