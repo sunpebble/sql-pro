@@ -313,15 +313,21 @@ async function openQueryEditor(page: Page): Promise<boolean> {
 
     if (queryViewOpened) {
       console.log('Switched to query view');
-      await page.waitForTimeout(1500);
     } else {
       // Fallback: try keyboard shortcut
       console.log('Trying keyboard shortcut for query view...');
       await page.keyboard.press('Meta+2');
-      await page.waitForTimeout(1000);
     }
 
-    let monaco = await page.$('.monaco-editor');
+    // Wait for Monaco editor to mount (lazy-loaded, can take a few seconds)
+    let monaco: Awaited<ReturnType<typeof page.$>> = null;
+    try {
+      monaco = await page.waitForSelector('.monaco-editor', { timeout: 10000 });
+      console.log('Monaco editor mounted');
+      await page.waitForTimeout(500);
+    } catch {
+      console.log('Monaco editor did not appear within timeout');
+    }
     if (!monaco) {
       // Try clicking "New Query" button or similar
       const newQueryClicked = await page.evaluate(() => {
@@ -356,10 +362,18 @@ async function openQueryEditor(page: Page): Promise<boolean> {
 
       if (newQueryClicked) {
         console.log('Clicked new query button');
-        await page.waitForTimeout(1000);
+        try {
+          monaco = await page.waitForSelector('.monaco-editor', {
+            timeout: 10000,
+          });
+          console.log('Monaco editor mounted after new query');
+          await page.waitForTimeout(500);
+        } catch {
+          console.log('Monaco editor still not found after new query');
+        }
+      } else {
+        monaco = await page.$('.monaco-editor');
       }
-
-      monaco = await page.$('.monaco-editor');
     }
 
     if (monaco) {

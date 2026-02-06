@@ -2912,8 +2912,14 @@ function getCSSVar(name: string, fallback: string): string {
  * Handles rgb(), hsl(), and hex formats.
  */
 function toHex(value: string): string {
-  // Already hex
-  if (value.startsWith('#')) return value;
+  // Already hex — expand 3-digit shorthand (#fff → #ffffff) for Monaco compatibility
+  if (value.startsWith('#')) {
+    const hex = value.slice(1);
+    if (hex.length === 3) {
+      return `#${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+    }
+    return value;
+  }
 
   // Handle rgb/rgba
   const rgbMatch = value.match(
