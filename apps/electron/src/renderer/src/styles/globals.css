@@ -970,3 +970,177 @@ th {
   border-radius: 5px !important;
   box-shadow: 4px 4px 0px 0px var(--border) !important;
 }
+
+/* ═══════════════════════════════════════
+   BUTTON ACTIVE/PRESSED STATES
+   ═══════════════════════════════════════ */
+
+/* Neobrutalism pressed feedback — quick scale-down on click */
+.btn-neo:active {
+  transform: translate(4px, 4px) scale(0.97) !important;
+  box-shadow: none !important;
+  transition-duration: 50ms;
+}
+
+/* Generic active state for all interactive elements with shadow */
+[class*='shadow-shadow']:active:not(:disabled):not([data-no-active]) {
+  transition-duration: 50ms;
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR & NAVIGATION TRANSITIONS
+   ═══════════════════════════════════════ */
+
+/* Smooth sidebar item selection */
+[data-slot='sidebar-menu-button'] {
+  transition: all 0.15s ease;
+}
+
+[data-slot='sidebar-menu-button']:hover {
+  transform: translateX(2px);
+}
+
+[data-slot='sidebar-menu-button'][data-active='true'] {
+  border-left: 3px solid var(--main);
+}
+
+/* ═══════════════════════════════════════
+   TAB & PANEL TRANSITIONS
+   ═══════════════════════════════════════ */
+
+/* Smooth tab content transitions */
+.tab-content-enter {
+  animation: tab-fade-in 0.15s ease-out;
+}
+
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Panel resize smooth transition */
+[data-panel-group] [data-panel] {
+  transition: flex-basis 0.1s ease;
+}
+
+/* ═══════════════════════════════════════
+   SCROLLBAR ENHANCEMENTS
+   ═══════════════════════════════════════ */
+
+::-webkit-scrollbar-thumb {
+  transition: background 0.15s ease;
+}
+
+/* Thin scrollbar variant for compact areas */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  border-width: 1px;
+}
+
+/* ═══════════════════════════════════════
+   DATA TABLE MICRO-INTERACTIONS
+   ═══════════════════════════════════════ */
+
+/* Row hover with left accent */
+[data-table-font] tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--main);
+}
+
+/* Smooth cell editing transition */
+[data-editing='true'] {
+  box-shadow: inset 0 0 0 2px var(--main);
+  transition: box-shadow 0.15s ease;
+}
+
+/* New row insertion animation */
+@keyframes row-insert {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+    transform-origin: top;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+.row-insert-animation {
+  animation: row-insert 0.2s ease-out;
+}
+
+/* ═══════════════════════════════════════
+   DIALOG & MODAL POLISH
+   ═══════════════════════════════════════ */
+
+/* Enhanced dialog backdrop */
+[data-slot='dialog-overlay'] {
+  backdrop-filter: blur(2px);
+  transition: opacity 0.2s ease;
+}
+
+/* Dialog content entrance */
+[data-slot='dialog-content'] {
+  animation: dialog-enter 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dialog-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════
+   TOAST & NOTIFICATION ANIMATIONS
+   ═══════════════════════════════════════ */
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20%) scale(0.95);
+  }
+}
+
+/* ═══════════════════════════════════════
+   SELECTION & HIGHLIGHT POLISH
+   ═══════════════════════════════════════ */
+
+::selection {
+  background: var(--main);
+  color: var(--main-foreground);
+}
+
+/* Smooth focus ring transition */
+*:focus-visible {
+  transition: outline-offset 0.1s ease;
+}

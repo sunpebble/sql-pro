@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from '../hooks/useInView';
 
@@ -47,12 +47,8 @@ const platformIcons: Record<Platform, ReactNode> = {
 
 export default function Download() {
   const { t } = useTranslation();
-  const [platform, setPlatform] = useState<Platform>('unknown');
+  const [platform] = useState<Platform>(() => detectPlatform());
   const { ref: contentRef, isInView } = useInView<HTMLDivElement>();
-
-  useEffect(() => {
-    setPlatform(detectPlatform());
-  }, []);
 
   const platformName = t(`download.platforms.${platform}`);
   const platformArch = t(`download.arch.${platform}`);
@@ -86,26 +82,31 @@ export default function Download() {
           </h2>
 
           {/* Main Download Button */}
-          <a
-            href="https://github.com/kunish-homelab/sql-pro/releases/latest"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-background text-foreground border-border rounded-base shadow-shadow-lg hover:translate-x-boxShadowX hover:translate-y-boxShadowY mb-8 inline-flex items-center gap-3 border-2 px-8 py-4 text-lg font-semibold no-underline transition-all duration-150 hover:shadow-none"
-            aria-describedby="download-arch"
-          >
-            <span className="h-6 w-6">{platformIcons[platform]}</span>
-            <span className="flex flex-col items-start">
-              <span>
-                {t('download.downloadFor', { platform: platformName })}
+          <span className="relative inline-flex">
+            <span className="animate-pulse-ring bg-main/20 border-border rounded-base absolute inset-0 border-2" />
+            <a
+              href="https://github.com/kunish-homelab/sql-pro/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-background text-foreground border-border rounded-base shadow-shadow-lg hover:translate-x-boxShadowX hover:translate-y-boxShadowY group relative mb-8 inline-flex items-center gap-3 border-2 px-8 py-4 text-lg font-semibold no-underline transition-all duration-150 hover:shadow-none"
+              aria-describedby="download-arch"
+            >
+              <span className="group-hover:animate-wiggle h-6 w-6 transition-transform duration-300">
+                {platformIcons[platform]}
               </span>
-              <small
-                id="download-arch"
-                className="text-muted-foreground text-sm"
-              >
-                {platformArch}
-              </small>
-            </span>
-          </a>
+              <span className="flex flex-col items-start">
+                <span>
+                  {t('download.downloadFor', { platform: platformName })}
+                </span>
+                <small
+                  id="download-arch"
+                  className="text-muted-foreground text-sm"
+                >
+                  {platformArch}
+                </small>
+              </span>
+            </a>
+          </span>
 
           {/* Other Platforms */}
           <nav
@@ -121,10 +122,12 @@ export default function Download() {
                 href="https://github.com/kunish-homelab/sql-pro/releases/latest"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-background/10 text-main-foreground border-main-foreground/20 rounded-base hover:bg-background hover:text-foreground hover:border-border inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-medium no-underline transition-all duration-150"
+                className="bg-background/10 text-main-foreground border-main-foreground/20 rounded-base hover:bg-background hover:text-foreground hover:border-border group inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-medium no-underline transition-all duration-150"
                 title={t(`download.arch.${p}`)}
               >
-                <span className="h-4 w-4">{platformIcons[p]}</span>
+                <span className="h-4 w-4 transition-transform duration-200 group-hover:scale-110">
+                  {platformIcons[p]}
+                </span>
                 {t(`download.platforms.${p}`)}
               </a>
             ))}

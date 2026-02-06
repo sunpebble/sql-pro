@@ -91,7 +91,7 @@ function FAQItem({ faqKey, index }: { faqKey: string; index: number }) {
       >
         <span>{t(`faq.items.${faqKey}.question`)}</span>
         <svg
-          className={`text-main h-5 w-5 flex-shrink-0 transition-transform duration-200 ${
+          className={`text-main h-5 w-5 flex-shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
             isOpen ? 'rotate-45' : ''
           }`}
           viewBox="0 0 24 24"
@@ -106,15 +106,16 @@ function FAQItem({ faqKey, index }: { faqKey: string; index: number }) {
       </button>
       <div
         id={`faq-answer-${faqKey}`}
-        className={`overflow-hidden transition-all duration-200 ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className="accordion-content"
+        data-open={isOpen}
         role="region"
         aria-hidden={!isOpen}
       >
-        <p className="text-muted-foreground border-border m-0 border-t-2 px-5 pt-4 pb-5 leading-relaxed">
-          {t(`faq.items.${faqKey}.answer`)}
-        </p>
+        <div>
+          <p className="text-muted-foreground border-border m-0 border-t-2 px-5 pt-4 pb-5 leading-relaxed">
+            {t(`faq.items.${faqKey}.answer`)}
+          </p>
+        </div>
       </div>
     </div>
   );

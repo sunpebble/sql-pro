@@ -57,7 +57,8 @@ export default function OpenSource() {
                   stroke="currentColor"
                   strokeWidth="2"
                   aria-hidden="true"
-                  className="text-main h-4 w-4"
+                  className={`text-main h-4 w-4 ${isInView ? 'animate-icon-bounce' : ''}`}
+                  style={isInView ? { animationDelay: '0ms' } : undefined}
                 >
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
@@ -70,7 +71,8 @@ export default function OpenSource() {
                   stroke="currentColor"
                   strokeWidth="2"
                   aria-hidden="true"
-                  className="text-main h-4 w-4"
+                  className={`text-main h-4 w-4 ${isInView ? 'animate-icon-bounce' : ''}`}
+                  style={isInView ? { animationDelay: '100ms' } : undefined}
                 >
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
@@ -86,7 +88,8 @@ export default function OpenSource() {
                   stroke="currentColor"
                   strokeWidth="2"
                   aria-hidden="true"
-                  className="text-main h-4 w-4"
+                  className={`text-main h-4 w-4 ${isInView ? 'animate-icon-bounce' : ''}`}
+                  style={isInView ? { animationDelay: '200ms' } : undefined}
                 >
                   <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
                 </svg>
@@ -135,7 +138,7 @@ export default function OpenSource() {
 
           {/* Visual - Terminal */}
           <div className="flex justify-center">
-            <div className="rounded-base border-border bg-card shadow-shadow-lg w-full max-w-lg overflow-hidden border-2 transition-all hover:-translate-y-1">
+            <div className="rounded-base border-border bg-card shadow-shadow-lg hover:shadow-shadow-lg w-full max-w-lg overflow-hidden border-2 transition-all duration-300 hover:-translate-y-1.5">
               {/* Terminal Header */}
               <div className="border-border bg-secondary-background flex items-center gap-2 border-b-2 px-4 py-3">
                 <div className="flex gap-2">
@@ -169,7 +172,7 @@ export default function OpenSource() {
                   <span className="text-main">$</span>
                   <span>pnpm dev:electron</span>
                 </div>
-                <div className="font-semibold text-[#22c55e]">
+                <div className="terminal-cursor font-semibold text-[#22c55e]">
                   SQL Pro is ready!
                 </div>
               </div>

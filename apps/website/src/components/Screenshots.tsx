@@ -32,6 +32,11 @@ export default function Screenshots() {
     goTo((current - 1 + screenshots.length) % screenshots.length);
   const goNext = () => goTo((current + 1) % screenshots.length);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') goPrev();
+    if (e.key === 'ArrowRight') goNext();
+  };
+
   return (
     <section
       className="bg-secondary-background relative overflow-hidden py-24 md:py-32"
@@ -59,9 +64,11 @@ export default function Screenshots() {
           role="region"
           aria-roledescription="carousel"
           aria-label={t('screenshots.title')}
+          onKeyDown={handleKeyDown}
+          tabIndex={0}
         >
           <button
-            className="bg-background border-border rounded-base text-muted-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:bg-main hover:text-main-foreground absolute left-0 z-20 flex hidden h-12 w-12 cursor-pointer items-center justify-center border-2 transition-all duration-150 hover:shadow-none md:flex"
+            className="bg-background border-border rounded-base text-muted-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:bg-main hover:text-main-foreground absolute left-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border-2 transition-all duration-150 hover:shadow-none md:flex"
             onClick={goPrev}
             aria-label={t('screenshots.prev')}
             type="button"
@@ -130,7 +137,7 @@ export default function Screenshots() {
           </div>
 
           <button
-            className="bg-background border-border rounded-base text-muted-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:bg-main hover:text-main-foreground absolute right-0 z-20 flex hidden h-12 w-12 cursor-pointer items-center justify-center border-2 transition-all duration-150 hover:shadow-none md:flex"
+            className="bg-background border-border rounded-base text-muted-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:bg-main hover:text-main-foreground absolute right-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border-2 transition-all duration-150 hover:shadow-none md:flex"
             onClick={goNext}
             aria-label={t('screenshots.next')}
             type="button"
@@ -147,6 +154,17 @@ export default function Screenshots() {
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </button>
+        </div>
+
+        {/* Autoplay progress bar */}
+        <div className="mx-auto mt-6 max-w-[200px]">
+          <div className="carousel-progress">
+            <div
+              key={current}
+              className="carousel-progress-bar"
+              data-paused={!isAutoPlaying}
+            />
+          </div>
         </div>
 
         <div

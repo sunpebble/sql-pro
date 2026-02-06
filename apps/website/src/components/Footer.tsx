@@ -33,7 +33,7 @@ export default function Footer() {
           {/* Brand */}
           <a
             href="#"
-            className="text-foreground flex items-center gap-2 text-lg font-bold no-underline"
+            className="text-foreground flex items-center gap-2 text-lg font-bold no-underline transition-transform duration-200 hover:scale-105"
           >
             <img
               src="/icon.svg"
@@ -57,7 +57,7 @@ export default function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-main text-sm font-medium no-underline transition-colors duration-150"
+                className="text-muted-foreground hover:text-main link-underline text-sm font-medium no-underline transition-colors duration-150"
               >
                 {t(`footer.${link.key}`)}
               </a>

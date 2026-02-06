@@ -106,15 +106,18 @@ function TestimonialCard({
   return (
     <div
       ref={ref}
-      className={`bg-card border-border rounded-base border-2 p-6 transition-all duration-300 ${
+      className={`group bg-card border-border rounded-base border-2 p-6 transition-all duration-300 ${
         isInView
-          ? 'shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY translate-y-0 opacity-100 hover:shadow-none'
+          ? 'shadow-shadow card-neo-lift translate-y-0 opacity-100'
           : 'translate-y-8 opacity-0'
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <svg
-        className="text-main mb-4 h-8 w-8"
+        className={`text-main mb-4 h-8 w-8 ${isInView ? 'animate-scale-bounce' : 'opacity-0'}`}
+        style={
+          isInView ? { animationDelay: `${index * 100 + 200}ms` } : undefined
+        }
         viewBox="0 0 24 24"
         fill="currentColor"
         aria-hidden="true"
@@ -128,7 +131,7 @@ function TestimonialCard({
         <img
           src={testimonial.avatar}
           alt=""
-          className="rounded-base border-border h-12 w-12 border-2"
+          className="rounded-base border-border group-hover:ring-main h-12 w-12 border-2 transition-all duration-300 group-hover:ring-2 group-hover:ring-offset-2"
           loading="lazy"
         />
         <div className="flex flex-col">

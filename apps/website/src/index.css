@@ -584,4 +584,325 @@ pre {
   .card-neo:hover {
     transform: translate(2px, 2px);
   }
+
+  /* Reduced animation intensity on mobile */
+  .animate-float {
+    animation-duration: 2s;
+  }
+
+  .card-neo-lift:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+}
+
+/* ═══════════════════════════════════════
+   BUTTON ACTIVE/PRESSED STATES
+   ═══════════════════════════════════════ */
+
+/* Active/pressed feedback for neobrutalism buttons */
+.btn-neo-primary:active,
+.btn-neo-secondary:active,
+.btn-neo-outline:active {
+  transform: translate(4px, 4px) scale(0.97);
+  box-shadow: none;
+  transition: all 0.1s ease;
+}
+
+/* ═══════════════════════════════════════
+   NEW KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════ */
+
+/* Gentle floating motion - ideal for hero elements */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Shimmer effect moving left to right */
+@keyframes shimmer-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* Expanding ring that fades out - for button clicks */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Slide up with fade in */
+@keyframes slide-up-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide down with fade in */
+@keyframes slide-down-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale bounce - smooth entrance */
+@keyframes scale-bounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Blinking cursor for terminal */
+@keyframes typing-cursor {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Progress bar animation - for carousel */
+@keyframes progress-bar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Subtle icon bounce */
+@keyframes icon-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Underline slide for links */
+@keyframes underline-slide {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Small rotation wiggle */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+/* ═══════════════════════════════════════
+   UTILITY CLASSES FOR NEW ANIMATIONS
+   ═══════════════════════════════════════ */
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer-slide 2s infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1s ease-out;
+}
+
+.animate-slide-up-fade {
+  animation: slide-up-fade 0.5s ease forwards;
+  opacity: 0;
+}
+
+.animate-slide-down-fade {
+  animation: slide-down-fade 0.4s ease forwards;
+  opacity: 0;
+}
+
+.animate-scale-bounce {
+  animation: scale-bounce 0.5s ease forwards;
+  opacity: 0;
+}
+
+.animate-icon-bounce {
+  animation: icon-bounce 0.4s ease;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease;
+}
+
+/* ═══════════════════════════════════════
+   INTERACTIVE HOVER ENHANCEMENTS
+   ═══════════════════════════════════════ */
+
+/* Subtle lift effect for cards with spring easing */
+.card-neo-lift {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card-neo-lift:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-neo-lift:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Link with sliding underline effect */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--main);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* ═══════════════════════════════════════
+   FOCUS & INPUT ENHANCEMENTS
+   ═══════════════════════════════════════ */
+
+/* Enhanced focus state with orange glow */
+.input-neo:focus-within {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(249, 115, 22, 0.3),
+    0 0 0 1px var(--main);
+  border-color: var(--main);
+}
+
+/* ═══════════════════════════════════════
+   SMOOTH ACCORDION (FOR FAQ)
+   ═══════════════════════════════════════ */
+
+/* CSS grid trick for smooth height animation */
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+  overflow: hidden;
+}
+
+.accordion-content[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+.accordion-content > div {
+  min-height: 0;
+}
+
+/* ═══════════════════════════════════════
+   CAROUSEL PROGRESS BAR
+   ═══════════════════════════════════════ */
+
+.carousel-progress {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: var(--secondary-background);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.carousel-progress-bar {
+  height: 100%;
+  background: var(--main);
+  animation: progress-bar 4s linear;
+  transform-origin: left;
+}
+
+.carousel-progress-bar[data-paused='true'] {
+  animation-play-state: paused;
+}
+
+/* ═══════════════════════════════════════
+   TERMINAL CURSOR
+   ═══════════════════════════════════════ */
+
+.terminal-cursor::after {
+  content: '▋';
+  color: var(--main);
+  animation: typing-cursor 1s step-end infinite;
+  margin-left: 2px;
+}
+
+/* ═══════════════════════════════════════
+   EXTENDED STAGGER DELAYS
+   ═══════════════════════════════════════ */
+
+.delay-600 {
+  animation-delay: 0.6s;
+}
+
+.delay-700 {
+  animation-delay: 0.7s;
+}
+
+.delay-800 {
+  animation-delay: 0.8s;
 }

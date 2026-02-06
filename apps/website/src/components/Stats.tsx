@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useCountUp } from '../hooks/useCountUp';
 import { useInView } from '../hooks/useInView';
 
 interface Stat {
@@ -13,6 +14,32 @@ const stats: Stat[] = [
   { key: 'queries', value: '∞' },
   { key: 'license', value: 'MIT' },
 ];
+
+function StatValue({
+  value,
+  suffix,
+  animate,
+}: {
+  value: string;
+  suffix?: string;
+  animate: boolean;
+}) {
+  const numericValue = Number(value);
+  const isNumeric =
+    !Number.isNaN(numericValue) && Number.isFinite(numericValue);
+  const count = useCountUp({
+    end: numericValue,
+    enabled: animate && isNumeric,
+    duration: 1200,
+  });
+
+  return (
+    <div className="text-main mb-2 text-4xl font-bold md:text-5xl">
+      {isNumeric ? count : value}
+      {suffix && <span className="text-3xl md:text-4xl">{suffix}</span>}
+    </div>
+  );
+}
 
 export default function Stats() {
   const { t } = useTranslation();
@@ -41,12 +68,11 @@ export default function Stats() {
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="text-main mb-2 text-4xl font-bold md:text-5xl">
-                {stat.value}
-                {stat.suffix && (
-                  <span className="text-3xl md:text-4xl">{stat.suffix}</span>
-                )}
-              </div>
+              <StatValue
+                value={stat.value}
+                suffix={stat.suffix}
+                animate={isInView}
+              />
               <div className="text-muted-foreground text-sm font-medium tracking-wide uppercase">
                 {t(`stats.${stat.key}`)}
               </div>

@@ -10,9 +10,10 @@ export default function Hero() {
     >
       <div className="mx-auto flex max-w-[1280px] flex-col items-center px-5 text-center md:px-12">
         {/* Header Section */}
-        <div className="animate-fade-up mb-12 flex max-w-[800px] flex-col items-center gap-6">
-          <div className="flex items-center gap-3">
-            <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm inline-flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-semibold tracking-wide uppercase">
+        <div className="animate-fade-up mb-12 flex max-w-[860px] flex-col items-center gap-6">
+          {/* Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <span className="animate-float bg-main text-main-foreground border-border rounded-base shadow-shadow-sm inline-flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-semibold tracking-wide uppercase">
               <svg
                 className="h-4 w-4"
                 viewBox="0 0 24 24"
@@ -26,10 +27,14 @@ export default function Hero() {
               Open Source
             </span>
             <span className="text-muted-foreground bg-secondary-background border-border rounded-base border-2 px-3 py-1.5 font-mono text-xs">
+              MIT License
+            </span>
+            <span className="text-muted-foreground bg-secondary-background border-border rounded-base border-2 px-3 py-1.5 font-mono text-xs">
               v1.0.0
             </span>
           </div>
 
+          {/* Main Heading - keyword-rich for SEO */}
           <h1
             id="hero-title"
             className="text-foreground m-0 text-4xl leading-tight font-extrabold tracking-tight md:text-5xl lg:text-6xl"
@@ -37,9 +42,29 @@ export default function Hero() {
             {t('hero.title')}
           </h1>
 
-          <p className="text-muted-foreground max-w-[600px] text-lg leading-relaxed md:text-xl">
+          {/* Description */}
+          <p className="text-muted-foreground max-w-[680px] text-lg leading-relaxed md:text-xl">
             {t('hero.description')}
           </p>
+
+          {/* Key highlights as inline tags */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {[
+              'SQLite & SQLCipher',
+              'Monaco Editor',
+              'Visual Diff',
+              'ER Diagrams',
+              'AI-Powered',
+            ].map((tag, index) => (
+              <span
+                key={tag}
+                className="animate-slide-up-fade text-foreground bg-secondary-background border-border rounded-base border px-3 py-1 text-xs font-medium"
+                style={{ animationDelay: `${0.4 + index * 0.08}s` }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Actions */}
@@ -48,24 +73,27 @@ export default function Hero() {
           role="group"
           aria-label={t('a11y.mainNavigation')}
         >
-          <a
-            href="#download"
-            className="bg-main text-main-foreground border-border rounded-base shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY inline-flex items-center gap-2.5 border-2 px-8 py-4 text-base font-semibold no-underline transition-all duration-150 hover:shadow-none"
-          >
-            <svg
-              className="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
+          <span className="relative">
+            <span className="animate-pulse-ring bg-main/30 rounded-base absolute inset-0" />
+            <a
+              href="#download"
+              className="bg-main text-main-foreground border-border rounded-base shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY relative inline-flex items-center gap-2.5 border-2 px-8 py-4 text-base font-semibold no-underline transition-all duration-150 hover:shadow-none"
             >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            {t('hero.download')}
-          </a>
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              {t('hero.download')}
+            </a>
+          </span>
           <a
             href="https://github.com/anthropics/sql-pro"
             target="_blank"
@@ -86,7 +114,7 @@ export default function Hero() {
         </div>
 
         {/* Product Video */}
-        <div className="animate-fade-up relative mx-auto w-full max-w-[1000px] delay-200">
+        <div className="animate-fade-up relative mx-auto w-full max-w-[1000px] transition-transform delay-200 duration-300 hover:scale-[1.01]">
           <video
             src="/promo.mp4"
             autoPlay
@@ -94,12 +122,12 @@ export default function Hero() {
             loop
             playsInline
             className="border-border rounded-base shadow-shadow-lg h-auto w-full border-2"
-            aria-label="SQL Pro product demonstration video showing query editor, data editing, and multi-database support"
+            aria-label="SQL Pro product demonstration video showing Monaco SQL editor, inline data editing, ER diagrams, and multi-database management"
           >
             {/* Fallback for browsers that don't support video */}
             <img
               src="/screenshots/query-dark.png"
-              alt="SQL Pro query editor interface showing SQL syntax highlighting and database sidebar"
+              alt="SQL Pro — open-source SQLite database manager with Monaco SQL editor, autocomplete, and database sidebar navigation"
             />
           </video>
         </div>

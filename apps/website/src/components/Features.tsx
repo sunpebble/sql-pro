@@ -164,17 +164,17 @@ export default function Features() {
             >
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
-            Features
+            {t('features.title')} {t('features.titleHighlight')}
           </span>
           <h2
             id="features-title"
             className="text-foreground m-0 mb-4 text-3xl leading-tight font-bold tracking-tight md:text-4xl lg:text-5xl"
           >
-            Everything you need for
+            {t('features.sectionTitle')}
             <br />
-            <span className="text-main">database management</span>
+            <span className="text-main">{t('features.sectionHighlight')}</span>
           </h2>
-          <p className="text-muted-foreground mx-auto max-w-[600px] text-lg leading-relaxed">
+          <p className="text-muted-foreground mx-auto max-w-[640px] text-lg leading-relaxed">
             {t('features.subtitle')}
           </p>
         </header>
@@ -192,7 +192,7 @@ export default function Features() {
               data-index={index}
               className={`bg-card border-border rounded-base flex min-h-[180px] flex-col gap-5 border-2 p-7 transition-all duration-300 ${sizeClasses[feature.size]} ${
                 visibleCards.has(index)
-                  ? 'shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY translate-y-0 opacity-100 hover:shadow-none'
+                  ? 'shadow-shadow card-neo-lift translate-y-0 opacity-100'
                   : 'translate-y-8 opacity-0'
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
@@ -201,7 +201,12 @@ export default function Features() {
               <div
                 className={`bg-main text-main-foreground border-border rounded-base flex h-13 w-13 flex-shrink-0 items-center justify-center border-2 ${
                   feature.size === 'featured' ? 'h-14 w-14' : ''
-                }`}
+                } ${visibleCards.has(index) ? 'animate-icon-bounce' : ''}`}
+                style={
+                  visibleCards.has(index)
+                    ? { animationDelay: `${index * 100}ms` }
+                    : undefined
+                }
               >
                 <div
                   className={`h-6 w-6 ${feature.size === 'featured' ? 'h-7 w-7' : ''}`}
