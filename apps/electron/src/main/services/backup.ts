@@ -366,6 +366,7 @@ export async function restoreBackup(
             if (statement && !statement.startsWith('--')) {
               processStatement(statement);
             }
+            index = buffer.indexOf(';');
           }
         }
 

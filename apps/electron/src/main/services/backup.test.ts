@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as fs from 'node:fs';
 import { Readable } from 'node:stream';
+
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { restoreBackup } from './backup';
 import { databaseService } from './database';
 
@@ -74,7 +75,10 @@ describe('restoreBackup', () => {
     vi.mocked(fs.readFileSync).mockReturnValue(sqlContent);
 
     // Mock for stream read (future implementation)
-    vi.mocked(fs.createReadStream).mockImplementation(((path: any, options: any) => {
+    vi.mocked(fs.createReadStream).mockImplementation(((
+      _path: any,
+      _options: any
+    ) => {
       const s = new Readable();
       s.push(sqlContent);
       s.push(null);
@@ -91,26 +95,35 @@ describe('restoreBackup', () => {
       expect(result.tablesRestored).toBe(1); // CREATE TABLE
       // Known bug: naive split treats statements following comments (without semicolon in between) as part of the comment block if the whole block starts with --
       // So the second INSERT is skipped.
-      expect(result.rowsRestored).toBe(1);   // INSERT
+      expect(result.rowsRestored).toBe(1); // INSERT
     }
 
     // Verify executions
     // BEGIN/COMMIT should be skipped
     // Comments should be skipped
 
-    expect(databaseService.execute).toHaveBeenCalledWith(mockConnectionId, expect.stringContaining('CREATE TABLE'));
-    expect(databaseService.execute).toHaveBeenCalledWith(mockConnectionId, expect.stringContaining('INSERT INTO users VALUES (1)'));
+    expect(databaseService.execute).toHaveBeenCalledWith(
+      mockConnectionId,
+      expect.stringContaining('CREATE TABLE')
+    );
+    expect(databaseService.execute).toHaveBeenCalledWith(
+      mockConnectionId,
+      expect.stringContaining('INSERT INTO users VALUES (1)')
+    );
   });
 
   it('should handle dropExisting option', async () => {
     const sqlContent = `DROP TABLE users; CREATE TABLE users (id INTEGER);`;
     vi.mocked(fs.readFileSync).mockReturnValue(sqlContent);
-    vi.mocked(fs.createReadStream).mockImplementation(((path: any, options: any) => {
-        const s = new Readable();
-        s.push(sqlContent);
-        s.push(null);
-        return s;
-      }) as any);
+    vi.mocked(fs.createReadStream).mockImplementation(((
+      _path: any,
+      _options: any
+    ) => {
+      const s = new Readable();
+      s.push(sqlContent);
+      s.push(null);
+      return s;
+    }) as any);
 
     // dropExisting: false (default) -> DROP should be skipped
     await restoreBackup({
@@ -120,20 +133,30 @@ describe('restoreBackup', () => {
     });
 
     expect(databaseService.execute).toHaveBeenCalledTimes(1);
-    expect(databaseService.execute).toHaveBeenCalledWith(mockConnectionId, expect.stringContaining('CREATE TABLE'));
+    expect(databaseService.execute).toHaveBeenCalledWith(
+      mockConnectionId,
+      expect.stringContaining('CREATE TABLE')
+    );
 
     vi.clearAllMocks();
     // Re-setup basic mocks cleared by clearAllMocks
     vi.mocked(fs.existsSync).mockReturnValue(true);
-    vi.mocked(databaseService.getConnection).mockReturnValue({ id: mockConnectionId } as any);
-    vi.mocked(databaseService.execute).mockReturnValue({ success: true } as any);
+    vi.mocked(databaseService.getConnection).mockReturnValue({
+      id: mockConnectionId,
+    } as any);
+    vi.mocked(databaseService.execute).mockReturnValue({
+      success: true,
+    } as any);
     vi.mocked(fs.readFileSync).mockReturnValue(sqlContent);
-    vi.mocked(fs.createReadStream).mockImplementation(((path: any, options: any) => {
-        const s = new Readable();
-        s.push(sqlContent);
-        s.push(null);
-        return s;
-      }) as any);
+    vi.mocked(fs.createReadStream).mockImplementation(((
+      _path: any,
+      _options: any
+    ) => {
+      const s = new Readable();
+      s.push(sqlContent);
+      s.push(null);
+      return s;
+    }) as any);
 
     // dropExisting: true -> DROP should be executed
     await restoreBackup({
@@ -143,6 +166,9 @@ describe('restoreBackup', () => {
     });
 
     expect(databaseService.execute).toHaveBeenCalledTimes(2);
-    expect(databaseService.execute).toHaveBeenCalledWith(mockConnectionId, expect.stringContaining('DROP TABLE'));
+    expect(databaseService.execute).toHaveBeenCalledWith(
+      mockConnectionId,
+      expect.stringContaining('DROP TABLE')
+    );
   });
 });
