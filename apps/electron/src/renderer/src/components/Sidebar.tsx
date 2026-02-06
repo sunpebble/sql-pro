@@ -771,7 +771,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       data-tour-target="sidebar"
     >
       {/* Search - matches DataTabBar height */}
-      <div className="border-border mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
+      <div className="border-border mt-1 flex h-8 shrink-0 items-center border-b-2 px-1.5">
         <div className="relative flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
           <input
@@ -795,7 +795,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       </div>
 
       {/* Sort and Filter Controls */}
-      <ScrollArea className="border-border h-8 w-full shrink-0 border-b">
+      <ScrollArea className="border-border h-8 w-full shrink-0 border-b-2">
         <div className="flex h-full min-w-0 items-center gap-1 px-1.5">
           {/* Sort Dropdown */}
           <DropdownMenu>

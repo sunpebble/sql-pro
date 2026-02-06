@@ -599,7 +599,7 @@ const InsightsCard = memo(({ stats }: InsightsCardProps) => {
   }, [stats, t]);
 
   return (
-    <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+    <Card className="overflow-hidden transition-all duration-200">
       <CardHeader className="pb-3">
         <CardTitle
           className="flex items-center gap-2"
@@ -793,7 +793,7 @@ export const DashboardView = memo(() => {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* Header */}
-      <div className="border-border/50 flex shrink-0 items-center justify-between border-b px-6 py-4">
+      <div className="border-border flex shrink-0 items-center justify-between border-b-2 px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="bg-primary/15 rounded-base p-2">
             <BarChart3 className="text-primary h-5 w-5" />
@@ -932,7 +932,7 @@ export const DashboardView = memo(() => {
 
                 {/* Quick Charts - side by side */}
                 <div className="grid gap-6 lg:grid-cols-2">
-                  <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                  <Card className="group overflow-hidden transition-all duration-200">
                     <CardHeader className="pb-2">
                       <CardTitle
                         className="flex items-center gap-2"
@@ -951,7 +951,7 @@ export const DashboardView = memo(() => {
                     </CardContent>
                   </Card>
 
-                  <Card className="group border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                  <Card className="group overflow-hidden transition-all duration-200">
                     <CardHeader className="pb-2">
                       <CardTitle
                         className="flex items-center gap-2"
@@ -997,7 +997,7 @@ export const DashboardView = memo(() => {
               value="tables"
               className="mt-0 min-h-0 flex-1 overflow-auto pb-6"
             >
-              <Card className="border-border/50 overflow-visible shadow-sm">
+              <Card className="overflow-visible">
                 <CardHeader className="pb-2">
                   <CardTitle
                     className="flex items-center gap-2"
@@ -1036,7 +1036,7 @@ export const DashboardView = memo(() => {
               className="mt-0 min-h-0 flex-1 overflow-auto pb-6"
             >
               <div className="space-y-6">
-                <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                <Card className="overflow-hidden transition-all duration-200">
                   <CardHeader>
                     <CardTitle
                       className="flex items-center gap-2"
@@ -1058,7 +1058,7 @@ export const DashboardView = memo(() => {
                   </CardContent>
                 </Card>
 
-                <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                <Card className="overflow-hidden transition-all duration-200">
                   <CardHeader>
                     <CardTitle
                       className="flex items-center gap-2"
@@ -1083,7 +1083,7 @@ export const DashboardView = memo(() => {
                   </CardContent>
                 </Card>
 
-                <Card className="border-border/50 hover:border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+                <Card className="overflow-hidden transition-all duration-200">
                   <CardHeader>
                     <CardTitle
                       className="flex items-center gap-2"
