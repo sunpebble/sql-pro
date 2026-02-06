@@ -15,31 +15,26 @@ export function QueryView() {
         className={cn(
           'flex h-9 shrink-0 items-center justify-between gap-3 px-3',
           'border-border border-b-2',
-          'bg-muted/30'
+          'bg-muted'
         )}
       >
         <div
           className={cn(
-            'rounded-base flex items-center gap-0.5 p-0.5',
+            'flex items-center gap-0.5 rounded-[5px] p-0.5',
             'border-border border-2',
-            'bg-muted/50'
+            'bg-muted'
           )}
         >
           <button
             type="button"
             onClick={() => setMode('editor')}
             className={cn(
-              'rounded-base flex items-center gap-1.5 px-3 py-1.5',
-              'font-medium',
+              'flex items-center gap-1.5 rounded-[5px] px-3 py-1.5',
+              'font-bold',
               'transition-all duration-150',
               mode === 'editor'
-                ? [
-                    'bg-background',
-                    'text-foreground',
-                    'shadow-shadow-sm',
-                    'border-border border-2',
-                  ]
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+                ? 'bg-background text-foreground border-border border-2 shadow-[2px_2px_0px_0px_var(--border)]'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
             )}
             style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
@@ -50,17 +45,12 @@ export function QueryView() {
             type="button"
             onClick={() => setMode('builder')}
             className={cn(
-              'rounded-base flex items-center gap-1.5 px-3 py-1.5',
-              'font-medium',
+              'flex items-center gap-1.5 rounded-[5px] px-3 py-1.5',
+              'font-bold',
               'transition-all duration-150',
               mode === 'builder'
-                ? [
-                    'bg-background',
-                    'text-foreground',
-                    'shadow-shadow-sm',
-                    'border-border border-2',
-                  ]
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+                ? 'bg-background text-foreground border-border border-2 shadow-[2px_2px_0px_0px_var(--border)]'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
             )}
             style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
           >
