@@ -1,56 +1,58 @@
 {
   "meta": {
-    "title": "SQL Pro - Professional SQLite Database Manager",
-    "description": "A modern, cross-platform SQLite database manager with encrypted database support, visual diff preview, and powerful query tools."
+    "title": "SQL Pro — Open-Source SQLite Database Manager",
+    "description": "Free, open-source SQLite database manager with SQLCipher encryption, visual diff preview, Monaco SQL editor, and AI-powered query tools. For macOS, Windows, and Linux."
   },
   "hero": {
-    "title": "SQL Pro",
+    "title": "The Modern, Open-Source SQLite Database Manager",
     "subtitle": "Professional SQLite Database Manager",
-    "description": "The database manager developers love.",
-    "download": "Download Now",
-    "github": "GitHub",
+    "description": "Query, edit, and visualize your SQLite databases with a powerful Monaco editor, SQLCipher encryption, visual diff preview, and AI-powered tools — all in a free, cross-platform desktop app.",
+    "download": "Download Free",
+    "github": "View on GitHub",
     "scrollHint": "Scroll down"
   },
   "features": {
     "title": "Powerful Features,",
     "titleHighlight": "Professional Experience",
-    "subtitle": "Everything you need for database management",
+    "sectionTitle": "Everything you need for",
+    "sectionHighlight": "SQLite database management",
+    "subtitle": "From quick queries to complex schema analysis — a complete toolkit designed for developers who work with SQLite every day.",
     "database": {
       "title": "Multi-Database Support",
-      "description": "SQLite, SQLCipher encryption, multi-connection tabs"
+      "description": "Open multiple SQLite and SQLCipher databases simultaneously with tabbed connections. Manage all your databases from a single, unified interface."
     },
     "query": {
-      "title": "Smart Query Editor",
-      "description": "Monaco editor, autocomplete, Vim mode, history"
+      "title": "Monaco SQL Editor",
+      "description": "Write SQL with full IntelliSense autocomplete, syntax highlighting, Vim mode, and query history. The same editor that powers VS Code."
     },
     "data": {
       "title": "Visual Data Editing",
-      "description": "Inline editing, diff preview, bulk operations"
+      "description": "Edit data inline with spreadsheet-like controls, preview every change with a visual diff before committing, and run bulk operations with confidence."
     },
     "compare": {
       "title": "Schema & Data Compare",
       "description": "Compare schemas and data between connections"
     },
     "visualization": {
-      "title": "Schema Visualization",
-      "description": "ER diagrams, structure browser, relationships"
+      "title": "ER Diagram & Schema Visualization",
+      "description": "Explore your database structure with interactive ER diagrams, browse tables, views, indexes, and trace foreign key relationships at a glance."
     },
     "security": {
-      "title": "Encrypted Databases",
-      "description": "SQLCipher support, secure keychain storage"
+      "title": "SQLCipher Encryption",
+      "description": "Open and manage encrypted SQLite databases with full SQLCipher support. Encryption keys are stored securely in your system's native keychain."
     },
     "crossPlatform": {
-      "title": "Cross-Platform",
-      "description": "macOS, Windows, Linux native apps"
+      "title": "macOS, Windows & Linux",
+      "description": "One app, three platforms. Native Electron builds for macOS (Universal), Windows (x64), and Linux (AppImage & deb)."
     }
   },
   "screenshots": {
-    "title": "Interface Preview",
-    "subtitle": "Modern design, professional experience",
-    "welcome": "Elegant welcome interface",
-    "database": "Powerful database browser",
-    "table": "High-performance data table",
-    "query": "Monaco SQL editor",
+    "title": "See It in Action",
+    "subtitle": "A modern interface designed for speed and clarity",
+    "welcome": "Clean welcome screen with quick-start connections",
+    "database": "Database browser with table and view navigation",
+    "table": "High-performance data grid with inline editing",
+    "query": "Monaco SQL editor with autocomplete and results",
     "prev": "Previous",
     "next": "Next",
     "goTo": "Go to slide {{number}}"
@@ -67,7 +69,7 @@
       "unknown": "Download"
     },
     "arch": {
-      "mac": "Universal (M1/M2/M3/M4 + Intel)",
+      "mac": "Universal (Apple Silicon + Intel)",
       "windows": "x64",
       "linux": "x64 (AppImage / deb)",
       "unknown": "All platforms"
@@ -83,7 +85,7 @@
   "pricing": {
     "title": "Simple,",
     "titleHighlight": "Transparent Pricing",
-    "subtitle": "Choose the plan that works best for you. All plans include full access to all features.",
+    "subtitle": "Start free with the open-source edition. Upgrade to Pro for encryption, AI tools, and priority support.",
     "popular": "Most Popular",
     "cta": "Get Started",
     "note": "All plans include free updates. Cancel subscription anytime.",
@@ -110,7 +112,7 @@
         "title": "Monthly",
         "price": "$9",
         "period": "/month",
-        "description": "Perfect for trying out SQL Pro with full access to all features.",
+        "description": "Full access to all Pro features. Perfect for getting started.",
         "features": [
           "All Pro features",
           "SQLCipher encryption support",
@@ -123,7 +125,7 @@
         "title": "Yearly",
         "price": "$69",
         "period": "/year",
-        "description": "Best value for power users. Save over 35% compared to monthly.",
+        "description": "Best value — save over 35% compared to monthly billing.",
         "features": [
           "All Pro features",
           "SQLCipher encryption support",
@@ -136,7 +138,7 @@
         "title": "Lifetime",
         "price": "$199",
         "period": "one-time",
-        "description": "Pay once, use forever. Includes all future updates.",
+        "description": "Pay once, use forever. Every future update included.",
         "features": [
           "All Pro features forever",
           "SQLCipher encryption support",
@@ -205,7 +207,7 @@
     "expires": "Expires"
   },
   "stats": {
-    "title": "SQL Pro by the Numbers",
+    "title": "SQL Pro at a Glance",
     "databases": "Database Types",
     "platforms": "Platforms",
     "queries": "Queries",
@@ -215,18 +217,18 @@
     "label": "Testimonials",
     "title": "Loved by",
     "titleHighlight": "Developers",
-    "subtitle": "See what developers around the world are saying about SQL Pro.",
+    "subtitle": "Hear from developers who use SQL Pro to manage their SQLite databases every day.",
     "quotes": {
-      "developer": "SQL Pro has completely transformed how I work with SQLite databases. The Monaco editor with autocomplete is a game changer.",
-      "datascientist": "Finally, a database tool that just works. The visual diff preview saves me hours every week when reviewing data changes.",
-      "indie": "As a solo developer, I need tools that are fast and reliable. SQL Pro is exactly that - simple, powerful, and beautiful."
+      "developer": "SQL Pro completely changed how I work with SQLite. The Monaco editor with IntelliSense is a game changer — it feels like writing code in VS Code.",
+      "datascientist": "The visual diff preview alone is worth it. I can review data changes before committing, which saves me hours every week and prevents mistakes.",
+      "indie": "As an indie developer, I need tools that are fast, reliable, and don't get in the way. SQL Pro nails all three — and it's open source."
     }
   },
   "opensource": {
     "label": "Open Source",
     "title": "Built in the Open,",
-    "titleHighlight": "by Developers",
-    "description": "SQL Pro is fully open source under the MIT license. Inspect the code, contribute features, or fork it for your own needs.",
+    "titleHighlight": "for Developers",
+    "description": "SQL Pro is fully open source under the MIT license. Audit the code, contribute features, report issues, or fork it for your own needs. No vendor lock-in, ever.",
     "features": {
       "secure": "Secure & Auditable",
       "community": "Community Driven",
@@ -243,27 +245,27 @@
     "items": {
       "free": {
         "question": "Is SQL Pro free to use?",
-        "answer": "Yes! SQL Pro is open source and free to use under the MIT license. You can download and use it for personal and commercial projects at no cost."
+        "answer": "Yes! The core edition of SQL Pro is open source and free under the MIT license. You can download and use it for personal and commercial projects at no cost. Pro features like SQLCipher encryption and AI tools are available through a paid subscription."
       },
       "platforms": {
-        "question": "Which platforms are supported?",
-        "answer": "SQL Pro runs natively on macOS (Intel and Apple Silicon), Windows (x64), and Linux (x64). We provide Universal binaries for Mac and AppImage/deb packages for Linux."
+        "question": "Which platforms does SQL Pro support?",
+        "answer": "SQL Pro runs natively on macOS (Universal binary for Intel and Apple Silicon), Windows (x64), and Linux (x64 via AppImage and deb packages). All platforms receive the same features and updates."
       },
       "sqlite": {
         "question": "What SQLite features are supported?",
-        "answer": "SQL Pro supports all standard SQLite features including views, triggers, indexes, foreign keys, virtual tables, and full-text search. We also support WAL mode and concurrent connections."
+        "answer": "SQL Pro supports all standard SQLite features including views, triggers, indexes, foreign keys, virtual tables, and full-text search (FTS5). It also supports WAL mode and concurrent connections for high-performance workflows."
       },
       "encryption": {
-        "question": "How does database encryption work?",
-        "answer": "SQL Pro supports SQLCipher encrypted databases. Your encryption keys are stored securely in your system's keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service)."
+        "question": "How does SQLCipher encryption work?",
+        "answer": "SQL Pro integrates SQLCipher to open and manage encrypted SQLite databases. Your encryption keys are stored securely in your system's native keychain — macOS Keychain, Windows Credential Manager, or Linux Secret Service — so they never touch disk in plain text."
       },
       "updates": {
         "question": "How do I get updates?",
-        "answer": "SQL Pro includes automatic update checks. When a new version is available, you'll be notified and can update with a single click. You can also download updates manually from GitHub Releases."
+        "answer": "SQL Pro checks for updates automatically. When a new version is available, you'll be notified and can update with one click. You can also download releases manually from GitHub."
       },
       "support": {
         "question": "Where can I get help?",
-        "answer": "You can get help through our GitHub Discussions for community support, GitHub Issues for bug reports, or our documentation for guides and tutorials."
+        "answer": "Community support is available through GitHub Discussions. For bug reports, use GitHub Issues. Pro subscribers also receive priority email support and faster response times."
       }
     }
   }

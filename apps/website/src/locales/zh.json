@@ -1,56 +1,58 @@
 {
   "meta": {
-    "title": "SQL Pro - 专业的 SQLite 数据库管理工具",
-    "description": "现代化、跨平台的 SQLite 数据库管理工具，支持加密数据库、可视化差异预览和强大的查询功能。"
+    "title": "SQL Pro — 开源 SQLite 数据库管理工具",
+    "description": "免费开源的 SQLite 数据库管理工具，支持 SQLCipher 加密、可视化差异预览、Monaco SQL 编辑器和 AI 查询工具。适用于 macOS、Windows 和 Linux。"
   },
   "hero": {
-    "title": "SQL Pro",
+    "title": "现代化、开源的 SQLite 数据库管理工具",
     "subtitle": "专业的 SQLite 数据库管理工具",
-    "description": "开发者喜爱的数据库管理工具。",
-    "download": "立即下载",
-    "github": "GitHub",
+    "description": "通过强大的 Monaco 编辑器查询、编辑和可视化 SQLite 数据库，支持 SQLCipher 加密、差异预览和 AI 工具——完全免费的跨平台桌面应用。",
+    "download": "免费下载",
+    "github": "GitHub 查看",
     "scrollHint": "向下滚动"
   },
   "features": {
     "title": "强大功能，",
     "titleHighlight": "专业体验",
-    "subtitle": "数据库管理所需的一切",
+    "sectionTitle": "SQLite 数据库管理",
+    "sectionHighlight": "一站式解决方案",
+    "subtitle": "从快速查询到复杂的结构分析——为每天使用 SQLite 的开发者打造的完整工具链。",
     "database": {
       "title": "多数据库支持",
-      "description": "SQLite、SQLCipher 加密、多连接标签页"
+      "description": "同时打开多个 SQLite 和 SQLCipher 数据库，支持标签页多连接管理。在统一界面中管理所有数据库。"
     },
     "query": {
-      "title": "智能查询编辑器",
-      "description": "Monaco 编辑器、自动补全、Vim 模式、历史记录"
+      "title": "Monaco SQL 编辑器",
+      "description": "使用完整的智能补全、语法高亮、Vim 模式和查询历史编写 SQL。与 VS Code 同款编辑器内核。"
     },
     "data": {
       "title": "可视化数据编辑",
-      "description": "行内编辑、差异预览、批量操作"
+      "description": "像电子表格一样直接编辑数据，提交前预览每一处变更的差异，放心执行批量操作。"
     },
     "compare": {
       "title": "结构与数据对比",
       "description": "对比连接间的结构和数据"
     },
     "visualization": {
-      "title": "结构可视化",
-      "description": "ER 图、结构浏览器、关系展示"
+      "title": "ER 图与结构可视化",
+      "description": "通过交互式 ER 图探索数据库结构，浏览表、视图、索引，一目了然地追踪外键关系。"
     },
     "security": {
-      "title": "加密数据库",
-      "description": "SQLCipher 支持、系统密钥链存储"
+      "title": "SQLCipher 加密",
+      "description": "完整支持打开和管理 SQLCipher 加密数据库。加密密钥安全存储在系统原生密钥链中。"
     },
     "crossPlatform": {
-      "title": "跨平台",
-      "description": "macOS、Windows、Linux 原生应用"
+      "title": "macOS、Windows 和 Linux",
+      "description": "一个应用，三大平台。提供 macOS（Universal）、Windows（x64）和 Linux（AppImage / deb）原生构建。"
     }
   },
   "screenshots": {
-    "title": "界面预览",
-    "subtitle": "现代化设计，专业体验",
-    "welcome": "简洁优雅的欢迎界面",
-    "database": "强大的数据库浏览器",
-    "table": "高性能数据表格",
-    "query": "Monaco SQL 编辑器",
+    "title": "界面一览",
+    "subtitle": "为速度和清晰度设计的现代界面",
+    "welcome": "简洁的欢迎界面，支持快速连接",
+    "database": "数据库浏览器，支持表和视图导航",
+    "table": "高性能数据表格，支持行内编辑",
+    "query": "Monaco SQL 编辑器，支持自动补全",
     "prev": "上一张",
     "next": "下一张",
     "goTo": "跳转到第 {{number}} 张"
@@ -67,7 +69,7 @@
       "unknown": "下载"
     },
     "arch": {
-      "mac": "Universal (M1/M2/M3/M4 + Intel)",
+      "mac": "Universal (Apple Silicon + Intel)",
       "windows": "x64",
       "linux": "x64 (AppImage / deb)",
       "unknown": "所有平台"
@@ -83,7 +85,7 @@
   "pricing": {
     "title": "简单，",
     "titleHighlight": "透明定价",
-    "subtitle": "选择最适合您的方案。所有方案都包含全部功能。",
+    "subtitle": "开源版完全免费。升级 Pro 版可解锁加密支持、AI 工具和优先技术支持。",
     "popular": "最受欢迎",
     "cta": "立即开始",
     "note": "所有方案包含免费更新。订阅可随时取消。",
@@ -110,7 +112,7 @@
         "title": "月付",
         "price": "$9",
         "period": "/月",
-        "description": "完美试用 SQL Pro 的所有专业功能。",
+        "description": "全部 Pro 功能完整体验，适合快速上手。",
         "features": [
           "所有专业功能",
           "SQLCipher 加密支持",
@@ -123,7 +125,7 @@
         "title": "年付",
         "price": "$69",
         "period": "/年",
-        "description": "资深用户最佳选择。比月付节省超过 35%。",
+        "description": "最佳性价比——比月付节省超过 35%。",
         "features": [
           "所有专业功能",
           "SQLCipher 加密支持",
@@ -136,7 +138,7 @@
         "title": "终身",
         "price": "$199",
         "period": "一次性付款",
-        "description": "一次付款，永久使用。包含所有未来更新。",
+        "description": "一次付款，永久使用，包含所有未来更新。",
         "features": [
           "永久享有所有专业功能",
           "SQLCipher 加密支持",
@@ -205,7 +207,7 @@
     "expires": "到期时间"
   },
   "stats": {
-    "title": "SQL Pro 数据统计",
+    "title": "SQL Pro 一览",
     "databases": "数据库类型",
     "platforms": "支持平台",
     "queries": "查询次数",
@@ -215,18 +217,18 @@
     "label": "用户评价",
     "title": "深受",
     "titleHighlight": "开发者喜爱",
-    "subtitle": "看看全球开发者对 SQL Pro 的评价。",
+    "subtitle": "听听每天使用 SQL Pro 管理 SQLite 数据库的开发者怎么说。",
     "quotes": {
-      "developer": "SQL Pro 彻底改变了我使用 SQLite 数据库的方式。带有自动补全的 Monaco 编辑器是真正的效率利器。",
-      "datascientist": "终于有一个真正好用的数据库工具了。可视化差异预览每周都能为我节省数小时的时间。",
-      "indie": "作为独立开发者，我需要快速可靠的工具。SQL Pro 正是如此——简洁、强大、精美。"
+      "developer": "SQL Pro 彻底改变了我使用 SQLite 的方式。Monaco 编辑器的智能补全堪称神器——感觉就像在 VS Code 里写代码一样流畅。",
+      "datascientist": "光是可视化差异预览就已经值回票价。提交前就能审查数据变更，每周帮我节省数小时，还能避免失误。",
+      "indie": "作为独立开发者，我需要快速、可靠、不碍事的工具。SQL Pro 三者兼得——而且还是开源的。"
     }
   },
   "opensource": {
     "label": "开源项目",
     "title": "公开构建，",
-    "titleHighlight": "由开发者驱动",
-    "description": "SQL Pro 基于 MIT 协议完全开源。您可以审查代码、贡献功能，或将其 fork 用于自己的需求。",
+    "titleHighlight": "为开发者而生",
+    "description": "SQL Pro 基于 MIT 协议完全开源。审计代码、贡献功能、报告问题，或 fork 到自己的项目。永远没有供应商锁定。",
     "features": {
       "secure": "安全可审计",
       "community": "社区驱动",
@@ -243,27 +245,27 @@
     "items": {
       "free": {
         "question": "SQL Pro 可以免费使用吗？",
-        "answer": "是的！SQL Pro 基于 MIT 协议开源且免费使用。您可以免费下载并用于个人和商业项目。"
+        "answer": "可以！SQL Pro 核心版基于 MIT 协议开源且免费，可用于个人和商业项目。SQLCipher 加密和 AI 等高级功能通过 Pro 订阅提供。"
       },
       "platforms": {
         "question": "支持哪些平台？",
-        "answer": "SQL Pro 原生运行于 macOS（Intel 和 Apple Silicon）、Windows（x64）和 Linux（x64）。我们为 Mac 提供 Universal 二进制包，为 Linux 提供 AppImage/deb 安装包。"
+        "answer": "SQL Pro 原生运行于 macOS（Universal，同时支持 Intel 和 Apple Silicon）、Windows（x64）和 Linux（x64，提供 AppImage 和 deb 安装包）。所有平台功能和更新同步。"
       },
       "sqlite": {
         "question": "支持哪些 SQLite 功能？",
-        "answer": "SQL Pro 支持所有标准 SQLite 功能，包括视图、触发器、索引、外键、虚拟表和全文搜索。我们还支持 WAL 模式和并发连接。"
+        "answer": "SQL Pro 支持所有标准 SQLite 功能，包括视图、触发器、索引、外键、虚拟表和全文搜索（FTS5）。同时支持 WAL 模式和并发连接，满足高性能工作流需求。"
       },
       "encryption": {
-        "question": "数据库加密如何工作？",
-        "answer": "SQL Pro 支持 SQLCipher 加密数据库。您的加密密钥安全地存储在系统密钥链中（macOS 钥匙串、Windows 凭据管理器或 Linux Secret Service）。"
+        "question": "SQLCipher 加密如何工作？",
+        "answer": "SQL Pro 集成 SQLCipher 来打开和管理加密的 SQLite 数据库。加密密钥安全存储在系统原生密钥链中——macOS 钥匙串、Windows 凭据管理器或 Linux Secret Service——绝不会以明文形式写入磁盘。"
       },
       "updates": {
         "question": "如何获取更新？",
-        "answer": "SQL Pro 内置自动更新检查。当有新版本可用时，您会收到通知并可以一键更新。您也可以从 GitHub Releases 手动下载更新。"
+        "answer": "SQL Pro 会自动检查更新。当有新版本时，您会收到通知并可一键更新。也可以从 GitHub 手动下载发布版本。"
       },
       "support": {
         "question": "在哪里可以获得帮助？",
-        "answer": "您可以通过 GitHub Discussions 获得社区支持，通过 GitHub Issues 报告 bug，或查阅我们的文档获取指南和教程。"
+        "answer": "社区支持通过 GitHub Discussions 提供。Bug 报告请使用 GitHub Issues。Pro 订阅用户还可享受优先邮件支持和更快的响应速度。"
       }
     }
   }

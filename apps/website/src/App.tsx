@@ -24,9 +24,22 @@ function Loading() {
 }
 
 export default function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [showLicenseModal, setShowLicenseModal] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
+
+  // Sync document title and meta description with current language
+  useEffect(() => {
+    document.title = t('meta.title');
+
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', t('meta.description'));
+    }
+
+    // Update html lang attribute
+    document.documentElement.lang = i18n.language === 'zh' ? 'zh-CN' : 'en';
+  }, [t, i18n.language]);
 
   // Check for checkout success and account page in URL params
   useEffect(() => {
