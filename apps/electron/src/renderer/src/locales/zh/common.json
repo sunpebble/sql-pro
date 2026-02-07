@@ -24,6 +24,7 @@
     "currentlySorted": ", 当前{{direction}}",
     "licenseKeySegment": "许可证密钥段 {{index}}",
     "add": "添加",
+    "moreOptions": "更多选项",
     "yes": "是",
     "no": "否"
   },

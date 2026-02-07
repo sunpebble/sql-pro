@@ -932,6 +932,11 @@ export function WelcomeScreen() {
               className="h-8 w-8"
               onClick={() => setShowProfiles(!showProfiles)}
               data-tour-target="profiles-button"
+              aria-label={
+                showProfiles
+                  ? t('welcome.hideProfiles')
+                  : t('welcome.showProfiles')
+              }
             >
               <Database className="h-4 w-4" />
             </Button>
@@ -1143,7 +1148,8 @@ export function WelcomeScreen() {
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100"
+                                    className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                    aria-label={t('common.moreOptions')}
                                   >
                                     <MoreVertical className="h-4 w-4" />
                                   </Button>
