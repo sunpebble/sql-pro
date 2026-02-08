@@ -784,6 +784,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                   })
                 : t('schema.search')
             }
+            aria-label={t('schema.search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
@@ -878,6 +879,9 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 size="sm"
                 className="ml-auto h-7 w-7 shrink-0 p-0"
                 onClick={toggleExpandAll}
+                aria-label={
+                  isAllExpanded ? t('filter.collapseAll') : t('filter.expandAll')
+                }
               >
                 {isAllExpanded ? (
                   <ChevronsDownUp className="h-3.5 w-3.5" />
@@ -1177,6 +1181,7 @@ function SchemaSection({
       {showSchemaHeader && (
         <button
           onClick={onToggleSchema}
+          aria-expanded={isSchemaExpanded}
           className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-2 px-2 py-1 font-medium"
           style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
@@ -1198,6 +1203,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(tablesKey)}
+                aria-expanded={tablesExpanded}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
@@ -1264,6 +1270,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(viewsKey)}
+                aria-expanded={viewsExpanded}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
@@ -1331,6 +1338,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(triggersKey)}
+                aria-expanded={triggersExpanded}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
