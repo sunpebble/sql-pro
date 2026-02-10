@@ -1,7 +1,9 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from '@sqlpro/ui/button';
+import { Input } from '@sqlpro/ui/input';
+import { Label } from '@sqlpro/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Info, Lock } from 'lucide-react';
+import { Eye, EyeOff, Info, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
@@ -24,6 +26,7 @@ export function PasswordDialog({
 }: PasswordDialogProps) {
   const { t } = useTranslation('common');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberPassword, setRememberPassword] = useState(false);
   const [isStorageAvailable, setIsStorageAvailable] = useState(false);
   const [hasSavedPassword, setHasSavedPassword] = useState(false);
@@ -84,18 +87,40 @@ export function PasswordDialog({
           </div>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('passwordDialog.placeholder')}
-              autoFocus
-              className={cn(
-                'border-border bg-background rounded-base w-full border-2 px-3 py-2',
-                'placeholder:text-muted-foreground',
-                'focus:ring-main focus:ring-2 focus:ring-offset-2 focus:outline-none'
-              )}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="password-input" className="sr-only">
+                {t('passwordDialog.placeholder')}
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password-input"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={t('passwordDialog.placeholder')}
+                  autoFocus
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={
+                    showPassword
+                      ? t('passwordDialog.hidePassword')
+                      : t('passwordDialog.showPassword')
+                  }
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
 
             {/* Remember password checkbox */}
             <div className="flex items-center justify-between">

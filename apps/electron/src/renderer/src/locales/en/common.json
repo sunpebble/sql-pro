@@ -700,6 +700,8 @@
     "rememberPassword": "Remember password",
     "storageUnavailable": "Secure storage is not available on this system",
     "forgetPassword": "Forget saved password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "open": "Open"
   },
   "app": {
