@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from '@sqlpro/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@sqlpro/ui/sheet';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
   AlertCircle,
   CheckCircle2,
@@ -27,7 +28,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useDebounce } from '@/hooks/useDebounce';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import {
   cleanupSqlLogListener,
   initSqlLogListener,
@@ -234,13 +235,21 @@ export function SqlLogPanel() {
                   {filteredLogs.length}
                 </Badge>
               </SheetTitle>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => setVisible(false)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => setVisible(false)}
+                    aria-label={t('actions.close')}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+                  {t('actions.close')}
+                </TooltipContent>
+              </Tooltip>
             </div>
           </SheetHeader>
 
@@ -251,6 +260,7 @@ export function SqlLogPanel() {
               <Search className="text-muted-foreground absolute top-1/2 left-2 h-4 w-4 -translate-y-1/2" />
               <Input
                 placeholder={t('sqlLog.searchPlaceholder')}
+                aria-label={t('sqlLog.searchPlaceholder')}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 className="h-8 pl-8"
@@ -266,7 +276,7 @@ export function SqlLogPanel() {
                 })
               }
             >
-              <SelectTrigger className="h-8 w-30">
+              <SelectTrigger className="h-8 w-30" aria-label={t('sqlLog.level')}>
                 <Filter className="mr-1 h-3 w-3" />
                 <SelectValue placeholder={t('sqlLog.level')} />
               </SelectTrigger>
