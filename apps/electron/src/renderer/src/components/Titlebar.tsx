@@ -95,6 +95,10 @@ export function Titlebar() {
                   variant="ghost"
                   size="icon"
                   className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
+                  aria-label={t('theme.tooltip', {
+                    theme: getThemeLabel(),
+                    defaultValue: 'Theme: {{theme}}',
+                  })}
                 >
                   {getThemeIcon()}
                 </Button>
@@ -151,6 +155,7 @@ export function Titlebar() {
               className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
               onClick={openSettings}
               data-action="open-settings"
+              aria-label={t('theme.settings', { defaultValue: 'Settings' })}
             >
               <Settings className="h-4 w-4" />
             </Button>

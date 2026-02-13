@@ -134,6 +134,7 @@ export const ActivityBar = memo(
                     data-active={isActive ? '' : undefined}
                     data-tour-target={item.tourTarget}
                     onClick={() => onViewChange(item.id)}
+                    aria-label={t(item.labelKey)}
                     className={cn(
                       'group rounded-base relative flex h-9 w-9 items-center justify-center',
                       'transition-all duration-150',
@@ -194,6 +195,11 @@ export const ActivityBar = memo(
               <button
                 type="button"
                 onClick={toggleSqlLog}
+                aria-label={
+                  sqlLogVisible
+                    ? t('toolbar.hideSqlLog', { defaultValue: 'Hide SQL Log' })
+                    : t('toolbar.showSqlLog', { defaultValue: 'Show SQL Log' })
+                }
                 className={cn(
                   'group rounded-base flex h-9 w-9 items-center justify-center',
                   'transition-all duration-150',
@@ -226,6 +232,11 @@ export const ActivityBar = memo(
                 <button
                   type="button"
                   onClick={onToggleSidebar}
+                  aria-label={
+                    sidebarCollapsed
+                      ? t('sidebar.show', { defaultValue: 'Show Sidebar' })
+                      : t('sidebar.hide', { defaultValue: 'Hide Sidebar' })
+                  }
                   className="group text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex h-9 w-9 items-center justify-center transition-all duration-150"
                 >
                   {sidebarCollapsed ? (
