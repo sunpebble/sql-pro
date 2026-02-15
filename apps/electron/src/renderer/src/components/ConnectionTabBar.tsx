@@ -333,6 +333,9 @@ const ConnectionTab = memo(
                     <TooltipTrigger>
                       <button
                         onClick={handleCloseClick}
+                        aria-label={t('connection.closeConnection', {
+                          defaultValue: 'Close connection',
+                        })}
                         className={cn(
                           'hover:bg-accent shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100',
                           isActive && 'opacity-70'
@@ -434,6 +437,10 @@ const ConnectionTab = memo(
                     )}
                     style={{ backgroundColor: color.value }}
                     title={color.name}
+                    aria-label={t('connection.setColor', {
+                      defaultValue: 'Set color to {{color}}',
+                      color: color.name,
+                    })}
                   >
                     {connectionColor === color.value && (
                       <CheckCircle className="h-4 w-4 text-white drop-shadow-md" />
