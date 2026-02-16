@@ -57,7 +57,11 @@ export function Titlebar() {
       data-tauri-drag-region
     >
       {/* macOS traffic light padding - approximately 84px on macOS */}
-      <div className="w-[84px] shrink-0" data-tauri-drag-region />
+      <div
+        className="w-[84px] shrink-0"
+        data-tauri-drag-region
+        aria-hidden="true"
+      />
 
       {/* Connection Tabs or App Logo - flexible width, also draggable in empty space */}
       {connection ? (
@@ -95,6 +99,9 @@ export function Titlebar() {
                   variant="ghost"
                   size="icon"
                   className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
+                  aria-label={t('commands.toggleTheme', {
+                    defaultValue: 'Toggle Theme',
+                  })}
                 >
                   {getThemeIcon()}
                 </Button>
@@ -151,6 +158,9 @@ export function Titlebar() {
               className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
               onClick={openSettings}
               data-action="open-settings"
+              aria-label={t('commands.openSettings', {
+                defaultValue: 'Open Settings',
+              })}
             >
               <Settings className="h-4 w-4" />
             </Button>

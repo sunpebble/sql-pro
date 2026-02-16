@@ -90,6 +90,7 @@ export function Toolbar() {
                   ],
               TOOLBAR_BUTTON_INTERACTIVE
             )}
+            aria-label={t('toolbar.aiAgent', { defaultValue: 'AI Agent' })}
           >
             <Bot className="h-4 w-4" />
           </Button>
@@ -152,6 +153,7 @@ export function Toolbar() {
                   'transition-all duration-150',
                   TOOLBAR_BUTTON_INTERACTIVE
                 )}
+                aria-label={t('toolbar.help', { defaultValue: 'Help' })}
               >
                 <HelpCircle className="h-4 w-4" />
               </Button>
