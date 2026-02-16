@@ -16,8 +16,8 @@ catalogs:
     # 开发工具
     typescript: ^5.9.3
     # UI 库
-    lucide-react: ^0.562.0
-    tailwind-merge: ^3.4.0
+    lucide-react: ^0.564.0
+    tailwind-merge: ^3.4.1
     class-variance-authority: ^0.7.1
     clsx: ^2.1.1
 

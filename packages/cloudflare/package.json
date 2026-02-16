@@ -14,13 +14,13 @@
     "db:migrate:prod": "wrangler d1 migrations apply sqlpro-db --remote"
   },
   "dependencies": {
-    "hono": "^4.11.5",
+    "hono": "^4.11.9",
     "nanoid": "^5.1.6",
-    "stripe": "^20.2.0"
+    "stripe": "^20.3.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260123.0",
+    "@cloudflare/workers-types": "^4.20260214.0",
     "typescript": "^5.9.3",
-    "wrangler": "^4.60.0"
+    "wrangler": "^4.65.0"
   }
 }
