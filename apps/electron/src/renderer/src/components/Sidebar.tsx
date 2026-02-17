@@ -878,6 +878,11 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 size="sm"
                 className="ml-auto h-7 w-7 shrink-0 p-0"
                 onClick={toggleExpandAll}
+                aria-label={
+                  isAllExpanded
+                    ? t('filter.collapseAll', { defaultValue: 'Collapse all' })
+                    : t('filter.expandAll', { defaultValue: 'Expand all' })
+                }
               >
                 {isAllExpanded ? (
                   <ChevronsDownUp className="h-3.5 w-3.5" />
@@ -1845,6 +1850,10 @@ function FilterTagsPopover({
                             size="sm"
                             className="text-muted-foreground hover:text-foreground h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
                             onClick={() => setEditingTag(tag)}
+                            aria-label={t('tags.editTag', {
+                              name: tag.name,
+                              defaultValue: 'Edit {{name}}',
+                            })}
                           >
                             <Edit2 className="h-3 w-3" />
                           </Button>
