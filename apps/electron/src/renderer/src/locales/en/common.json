@@ -700,7 +700,9 @@
     "rememberPassword": "Remember password",
     "storageUnavailable": "Secure storage is not available on this system",
     "forgetPassword": "Forget saved password",
-    "open": "Open"
+    "open": "Open",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "app": {
     "name": "SQL Pro",
