@@ -1,7 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from '@sqlpro/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { Info, Lock } from 'lucide-react';
+import { Eye, EyeOff, Info, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sqlPro } from '@/lib/api';
@@ -24,6 +24,7 @@ export function PasswordDialog({
 }: PasswordDialogProps) {
   const { t } = useTranslation('common');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberPassword, setRememberPassword] = useState(false);
   const [isStorageAvailable, setIsStorageAvailable] = useState(false);
   const [hasSavedPassword, setHasSavedPassword] = useState(false);
@@ -84,18 +85,43 @@ export function PasswordDialog({
           </div>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('passwordDialog.placeholder')}
-              autoFocus
-              className={cn(
-                'border-border bg-background rounded-base w-full border-2 px-3 py-2',
-                'placeholder:text-muted-foreground',
-                'focus:ring-main focus:ring-2 focus:ring-offset-2 focus:outline-none'
-              )}
-            />
+            <div className="relative w-full">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={t('passwordDialog.placeholder')}
+                autoFocus
+                aria-label={t('passwordDialog.passwordLabel', {
+                  defaultValue: 'Password',
+                })}
+                className={cn(
+                  'border-border bg-background rounded-base w-full border-2 px-3 py-2 pr-10',
+                  'placeholder:text-muted-foreground',
+                  'focus:ring-main focus:ring-2 focus:ring-offset-2 focus:outline-none'
+                )}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+                aria-label={
+                  showPassword
+                    ? t('passwordDialog.hidePassword', {
+                        defaultValue: 'Hide password',
+                      })
+                    : t('passwordDialog.showPassword', {
+                        defaultValue: 'Show password',
+                      })
+                }
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
 
             {/* Remember password checkbox */}
             <div className="flex items-center justify-between">
