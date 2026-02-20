@@ -878,6 +878,11 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
                 size="sm"
                 className="ml-auto h-7 w-7 shrink-0 p-0"
                 onClick={toggleExpandAll}
+                aria-label={
+                  isAllExpanded
+                    ? t('filter.collapseAll', { defaultValue: 'Collapse All' })
+                    : t('filter.expandAll', { defaultValue: 'Expand All' })
+                }
               >
                 {isAllExpanded ? (
                   <ChevronsDownUp className="h-3.5 w-3.5" />
