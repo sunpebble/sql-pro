@@ -65,7 +65,7 @@
     "@types/react-resizable": "^3.0.8",
     "@xyflow/react": "^12.10.0",
     "ai": "^6.0.48",
-    "ajv": "^8.17.1",
+    "ajv": "^8.18.0",
     "better-sqlite3-multiple-ciphers": "^12.6.2",
     "builder-util-runtime": "^9.5.1",
     "class-variance-authority": "^0.7.1",
