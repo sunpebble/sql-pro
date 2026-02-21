@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Alert, AlertDescription } from '@sqlpro/ui/alert';
 import { Button } from '@sqlpro/ui/button';
+import { PasswordInput } from '@sqlpro/ui/password-input';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, Info, KeyRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -172,9 +173,8 @@ export function ChangePasswordDialog({
               >
                 {t('changePassword.newPassword')}
               </label>
-              <input
+              <PasswordInput
                 id="newPassword"
-                type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder={
@@ -183,11 +183,7 @@ export function ChangePasswordDialog({
                     : t('changePassword.enterPassword')
                 }
                 autoFocus
-                className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2',
-                  'placeholder:text-muted-foreground',
-                  'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
-                )}
+                className="w-full"
               />
               {isCurrentlyEncrypted && (
                 <p
@@ -208,16 +204,13 @@ export function ChangePasswordDialog({
               >
                 {t('changePassword.confirmPassword')}
               </label>
-              <input
+              <PasswordInput
                 id="confirmPassword"
-                type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder={t('changePassword.confirmPlaceholder')}
                 className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2',
-                  'placeholder:text-muted-foreground',
-                  'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                  'w-full',
                   confirmPassword && !passwordsMatch && 'border-destructive'
                 )}
               />
