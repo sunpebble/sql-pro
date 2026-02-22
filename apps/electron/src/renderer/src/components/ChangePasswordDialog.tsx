@@ -6,6 +6,7 @@ import { AlertCircle, Info, KeyRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { PasswordInput } from '@/components/ui/password-input';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -172,9 +173,8 @@ export function ChangePasswordDialog({
               >
                 {t('changePassword.newPassword')}
               </label>
-              <input
+              <PasswordInput
                 id="newPassword"
-                type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder={
@@ -183,11 +183,6 @@ export function ChangePasswordDialog({
                     : t('changePassword.enterPassword')
                 }
                 autoFocus
-                className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2',
-                  'placeholder:text-muted-foreground',
-                  'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
-                )}
               />
               {isCurrentlyEncrypted && (
                 <p
@@ -208,18 +203,12 @@ export function ChangePasswordDialog({
               >
                 {t('changePassword.confirmPassword')}
               </label>
-              <input
+              <PasswordInput
                 id="confirmPassword"
-                type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder={t('changePassword.confirmPlaceholder')}
-                className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2',
-                  'placeholder:text-muted-foreground',
-                  'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
-                  confirmPassword && !passwordsMatch && 'border-destructive'
-                )}
+                aria-invalid={Boolean(confirmPassword && !passwordsMatch)}
               />
               {confirmPassword && !passwordsMatch && (
                 <p
