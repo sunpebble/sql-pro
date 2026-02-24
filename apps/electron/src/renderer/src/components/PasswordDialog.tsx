@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Info, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PasswordInput } from '@/components/ui/password-input';
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -84,17 +85,12 @@ export function PasswordDialog({
           </div>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <input
-              type="password"
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t('passwordDialog.placeholder')}
               autoFocus
-              className={cn(
-                'border-border bg-background rounded-base w-full border-2 px-3 py-2',
-                'placeholder:text-muted-foreground',
-                'focus:ring-main focus:ring-2 focus:ring-offset-2 focus:outline-none'
-              )}
+              className="rounded-base"
             />
 
             {/* Remember password checkbox */}
