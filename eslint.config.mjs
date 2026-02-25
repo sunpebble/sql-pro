@@ -32,6 +32,8 @@ export default antfu(
 
     rules: {
       'unicorn/number-literal-case': 'off',
+      // catalog 迁移已完成，禁用此规则以避免 electron-builder 兼容性问题
+      'pnpm/json-valid-catalog': 'off',
     },
   },
   // Allow console.log in Cloudflare Workers (backend)
@@ -39,13 +41,6 @@ export default antfu(
     files: ['packages/cloudflare/**/*.ts'],
     rules: {
       'no-console': 'off',
-    },
-  },
-  // electron-builder postinstall 无法解析 catalog: 协议，需要硬编码 electron 版本
-  {
-    files: ['apps/electron/package.json'],
-    rules: {
-      'pnpm/json-valid-catalog': 'off',
     },
   }
 );

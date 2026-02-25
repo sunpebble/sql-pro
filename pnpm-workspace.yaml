@@ -21,7 +21,7 @@ catalogs:
     typescript: ^5.9.3
     eslint: ^10.0.2
     prettier: ^3.8.1
-    vite: npm:rolldown-vite@latest
+    vite: ^7.3.1
     vitest: ^4.0.18
     tsx: ^4.21.0
     husky: ^9.1.7
