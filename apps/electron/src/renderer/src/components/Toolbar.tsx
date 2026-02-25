@@ -71,6 +71,7 @@ export function Toolbar() {
           <Button
             variant="ghost"
             size="icon"
+            aria-label={t('toolbar.aiAgent', { defaultValue: 'AI Agent' })}
             onClick={() => toggleAgentSidebar(connection.id)}
             className={cn(
               'rounded-base h-8 w-8',
@@ -144,6 +145,7 @@ export function Toolbar() {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label={t('toolbar.help', { defaultValue: 'Help' })}
                 className={cn(
                   'rounded-base h-8 w-8',
                   'text-muted-foreground hover:text-foreground',
