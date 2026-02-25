@@ -9,15 +9,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@libsql/client": "^0.17.0",
-    "hono": "^4.12.2",
-    "nanoid": "^5.1.6",
-    "resend": "^6.9.2",
-    "stripe": "^20.3.1"
+    "@libsql/client": "catalog:",
+    "hono": "catalog:",
+    "nanoid": "catalog:",
+    "resend": "catalog:",
+    "stripe": "catalog:"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260303.0",
-    "typescript": "^5.9.3",
-    "wrangler": "^4.68.0"
+    "@cloudflare/workers-types": "catalog:",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
   }
 }

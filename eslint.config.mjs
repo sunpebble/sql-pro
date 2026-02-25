@@ -40,5 +40,12 @@ export default antfu(
     rules: {
       'no-console': 'off',
     },
+  },
+  // electron-builder postinstall 无法解析 catalog: 协议，需要硬编码 electron 版本
+  {
+    files: ['apps/electron/package.json'],
+    rules: {
+      'pnpm/json-valid-catalog': 'off',
+    },
   }
 );
