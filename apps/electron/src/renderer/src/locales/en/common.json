@@ -697,6 +697,8 @@
     "title": "Encrypted Database",
     "description": "Enter the password to open",
     "placeholder": "Enter password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "rememberPassword": "Remember password",
     "storageUnavailable": "Secure storage is not available on this system",
     "forgetPassword": "Forget saved password",
