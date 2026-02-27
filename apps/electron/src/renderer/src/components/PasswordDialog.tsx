@@ -65,9 +65,9 @@ export function PasswordDialog({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
-        <Dialog.Content className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-base border-border shadow-shadow fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 border-2 p-6">
+        <Dialog.Content className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-base border-border fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 border p-6 shadow-sm">
           <div className="flex flex-col items-center text-center">
-            <div className="bg-main rounded-base border-border mb-4 flex h-12 w-12 items-center justify-center border-2">
+            <div className="bg-main rounded-base border-border mb-4 flex h-12 w-12 items-center justify-center border">
               <Lock className="text-main-foreground h-6 w-6" />
             </div>
             <Dialog.Title
@@ -98,7 +98,7 @@ export function PasswordDialog({
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+                className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
                 aria-label={
                   showPassword
                     ? t('passwordDialog.hidePassword')
@@ -126,7 +126,7 @@ export function PasswordDialog({
                   checked={rememberPassword}
                   onChange={(e) => setRememberPassword(e.target.checked)}
                   disabled={!isStorageAvailable}
-                  className="border-border rounded-base h-4 w-4 border-2"
+                  className="border-border rounded-base h-4 w-4 border"
                 />
                 <span>{t('passwordDialog.rememberPassword')}</span>
                 {!isStorageAvailable && (

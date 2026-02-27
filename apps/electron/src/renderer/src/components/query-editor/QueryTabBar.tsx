@@ -108,8 +108,8 @@ const TabItem = memo(
             className={cn(
               'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1 px-2 transition-colors',
               isActive
-                ? 'bg-background text-foreground border-border rounded-[5px] border-2'
-                : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-[5px] border-2 border-transparent bg-transparent'
+                ? 'bg-background text-foreground border-border rounded-md border'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-md border border-transparent bg-transparent'
             )}
             style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             onClick={onSelect}
@@ -124,7 +124,7 @@ const TabItem = memo(
                 onChange={(e) => setEditValue(e.target.value)}
                 onBlur={handleFinishEdit}
                 onKeyDown={handleKeyDown}
-                className="rounded-base bg-background h-5 flex-1 border-2 px-1 outline-none"
+                className="rounded-base bg-background h-5 flex-1 border px-1 outline-none"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
                 autoFocus
               />
@@ -233,7 +233,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
 
   return (
     <div
-      className={cn('bg-muted flex h-8 items-center border-b-2', className)}
+      className={cn('bg-muted flex h-8 items-center border-b', className)}
       role="tablist"
     >
       <div className="flex flex-1 items-center overflow-x-auto">
@@ -252,7 +252,7 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
           />
         ))}
       </div>
-      <div className="flex items-center border-l-2">
+      <div className="flex items-center border-l">
         <TooltipProvider delay={300}>
           <Tooltip>
             <TooltipTrigger>

@@ -49,7 +49,7 @@ export function DataDiffFilterBar({ className }: DataDiffFilterBarProps) {
   return (
     <div
       className={cn(
-        'border-border bg-muted/30 rounded-base flex flex-wrap items-center gap-3 border-2 p-3',
+        'border-border bg-muted/30 rounded-base flex flex-wrap items-center gap-3 border p-3',
         className
       )}
     >

@@ -27,7 +27,7 @@ export function CompareView({
   return (
     <div className={cn('flex h-full flex-col', className)}>
       {/* Tab Navigation */}
-      <div className="border-border flex shrink-0 items-center border-b-2 px-4 py-2">
+      <div className="border-border flex shrink-0 items-center border-b px-4 py-2">
         <Tabs
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as CompareTab)}

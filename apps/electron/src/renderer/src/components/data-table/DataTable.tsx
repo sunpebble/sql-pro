@@ -656,7 +656,7 @@ export const DataTable = function DataTable({
       viewportRef={containerRef}
       data-component="data-table"
       className={cn(
-        'bg-background rounded-base border-border border-2 outline-none',
+        'bg-background rounded-base border-border border outline-none',
         'focus-visible:ring-main focus-visible:ring-2 focus-visible:ring-offset-2',
         className
       )}

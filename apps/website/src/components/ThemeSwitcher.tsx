@@ -69,7 +69,7 @@ export default function ThemeSwitcher() {
 
   return (
     <div
-      className="bg-background border-border rounded-base shadow-shadow-sm flex items-center gap-0.5 border-2 p-1"
+      className="bg-background border-border rounded-base flex items-center gap-0.5 border p-1 shadow-sm"
       role="radiogroup"
       aria-label={t('a11y.themeSelector', 'Theme')}
     >

@@ -948,7 +948,7 @@ export function WelcomeScreen() {
       <div className="flex flex-1 items-center justify-center overflow-hidden">
         <div className="flex h-full max-h-[700px] w-full items-center">
           {/* Left Column - Feature Showcase (wider) */}
-          <div className="border-border flex w-[55%] justify-center border-r-2 p-10">
+          <div className="border-border flex w-[55%] justify-center border-r p-10">
             <div className="w-full max-w-lg">
               <FeatureShowcase
                 onStartTour={handleStartWelcomeTour}
@@ -964,7 +964,7 @@ export function WelcomeScreen() {
             <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
               {/* Logo & Title - neobrutalism style */}
               <div className="shrink-0 text-center">
-                <div className="rounded-base border-border bg-main shadow-shadow mx-auto mb-5 flex h-14 w-14 items-center justify-center border-2">
+                <div className="rounded-base border-border bg-main mx-auto mb-5 flex h-14 w-14 items-center justify-center border shadow-sm">
                   <Database className="text-main-foreground h-7 w-7" />
                 </div>
                 <h1
@@ -986,7 +986,7 @@ export function WelcomeScreen() {
               {/* Error Message */}
               {error && (
                 <div
-                  className="border-border bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border-2 p-3"
+                  className="border-border bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border p-3"
                   style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <AlertCircle className="h-4 w-4 shrink-0" />
@@ -1040,7 +1040,7 @@ export function WelcomeScreen() {
               {/* Recent Connections / Profile Manager */}
               <div>
                 {showProfiles ? (
-                  <div className="border-border bg-secondary-background rounded-base max-h-64 overflow-hidden border-2">
+                  <div className="border-border bg-secondary-background rounded-base max-h-64 overflow-hidden border">
                     <ProfileManager
                       onConnect={handleConnectFromProfile}
                       compact={true}

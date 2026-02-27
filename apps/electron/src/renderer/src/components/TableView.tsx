@@ -527,7 +527,7 @@ export function TableView({ tableOverride }: TableViewProps) {
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         {/* Selection Toolbar */}
         {selectedRowIds.length > 0 && (
-          <div className="border-main/30 bg-main/5 flex items-center justify-between gap-4 border-b-2 px-4 py-2">
+          <div className="border-main/30 bg-main/5 flex items-center justify-between gap-4 border-b px-4 py-2">
             <div className="flex items-center gap-3">
               <span
                 className="font-heading text-main"
@@ -579,7 +579,7 @@ export function TableView({ tableOverride }: TableViewProps) {
         )}
 
         {/* Table Header */}
-        <div className="flex items-center justify-between gap-2 border-b-2 px-4 py-2">
+        <div className="bg-background/50 flex items-center justify-between gap-2 border-b px-4 py-2 backdrop-blur-sm">
           <div className="flex min-w-0 items-center gap-2 overflow-hidden">
             <h2 className="truncate font-medium">{selectedTable.name}</h2>
             <span
@@ -728,7 +728,7 @@ export function TableView({ tableOverride }: TableViewProps) {
             )}
 
             {/* View Mode Toggle - Data/Images */}
-            <div className="rounded-base flex border-2">
+            <div className="rounded-base flex border">
               <Tooltip>
                 <TooltipTrigger>
                   <Button
@@ -854,7 +854,7 @@ export function TableView({ tableOverride }: TableViewProps) {
         <SelectionStats selectedRows={selectedRowsData} columns={columns} />
 
         {/* Pagination - Single Row Layout */}
-        <div className="bg-background flex shrink-0 items-center justify-center gap-2 border-t-2 px-2 py-2 sm:gap-3 sm:px-4">
+        <div className="bg-background/80 flex shrink-0 items-center justify-center gap-2 border-t px-2 py-2 backdrop-blur-sm sm:gap-3 sm:px-4">
           {/* Page Info - hidden on very small screens */}
           <div
             className="text-muted-foreground hidden whitespace-nowrap sm:block"

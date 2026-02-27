@@ -292,7 +292,7 @@ export function QueryBuilder() {
               {/* Help panel */}
               {storeNodes.length === 0 && (
                 <Panel position="top-center" className="mt-20">
-                  <div className="bg-card rounded-base shadow-shadow-lg max-w-md border-2 p-6 text-center">
+                  <div className="bg-card rounded-base max-w-md border p-6 text-center shadow-lg">
                     <h3 className="mb-2 font-semibold">
                       {t('queryBuilder.getStarted', 'Get Started')}
                     </h3>
@@ -352,7 +352,7 @@ export function QueryBuilder() {
             <div className="flex-1 overflow-auto p-4">
               <pre
                 className={cn(
-                  'bg-muted/30 rounded-base border-2 p-4 font-mono',
+                  'bg-muted/30 rounded-base border p-4 font-mono',
                   'break-words whitespace-pre-wrap'
                 )}
                 style={{ fontSize: 'var(--font-ui-size, 13px)' }}

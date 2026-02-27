@@ -13,7 +13,7 @@ export default function Hero() {
         <div className="animate-fade-up mb-12 flex max-w-[860px] flex-col items-center gap-6">
           {/* Badges */}
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <span className="animate-float bg-main text-main-foreground border-border rounded-base shadow-shadow-sm inline-flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-semibold tracking-wide uppercase">
+            <span className="animate-float bg-main text-main-foreground border-border rounded-base inline-flex items-center gap-2 border px-4 py-2.5 text-sm font-semibold tracking-wide uppercase shadow-sm">
               <svg
                 className="h-4 w-4"
                 viewBox="0 0 24 24"
@@ -26,10 +26,10 @@ export default function Hero() {
               </svg>
               Open Source
             </span>
-            <span className="text-muted-foreground bg-secondary-background border-border rounded-base border-2 px-3 py-1.5 font-mono text-xs">
+            <span className="text-muted-foreground bg-secondary-background border-border rounded-base border px-3 py-1.5 font-mono text-xs">
               MIT License
             </span>
-            <span className="text-muted-foreground bg-secondary-background border-border rounded-base border-2 px-3 py-1.5 font-mono text-xs">
+            <span className="text-muted-foreground bg-secondary-background border-border rounded-base border px-3 py-1.5 font-mono text-xs">
               v1.0.0
             </span>
           </div>
@@ -77,7 +77,7 @@ export default function Hero() {
             <span className="animate-pulse-ring bg-main/30 rounded-base absolute inset-0" />
             <a
               href="#download"
-              className="bg-main text-main-foreground border-border rounded-base shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY relative inline-flex items-center gap-2.5 border-2 px-8 py-4 text-base font-semibold no-underline transition-all duration-150 hover:shadow-none"
+              className="bg-main text-main-foreground border-border rounded-base relative inline-flex items-center gap-2.5 border px-8 py-4 text-base font-semibold no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none"
             >
               <svg
                 className="h-5 w-5"
@@ -98,7 +98,7 @@ export default function Hero() {
             href="https://github.com/anthropics/sql-pro"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-background text-foreground border-border rounded-base shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY inline-flex items-center gap-2 border-2 px-7 py-4 text-base font-medium no-underline transition-all duration-150 hover:shadow-none"
+            className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-7 py-4 text-base font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none"
             aria-label={t('a11y.socialLink', { name: 'GitHub' })}
           >
             <svg
@@ -121,7 +121,7 @@ export default function Hero() {
             muted
             loop
             playsInline
-            className="border-border rounded-base shadow-shadow-lg h-auto w-full border-2"
+            className="border-border rounded-base h-auto w-full border shadow-lg"
             aria-label="SQL Pro product demonstration video showing Monaco SQL editor, inline data editing, ER diagrams, and multi-database management"
           >
             {/* Fallback for browsers that don't support video */}

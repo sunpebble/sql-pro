@@ -545,7 +545,7 @@ export function EditableDataGrid({
                   'absolute left-0 flex w-full border-b',
                   virtualRow.index % 2 === 0 ? 'bg-background' : 'bg-muted/20',
                   isDeleted && 'bg-red-500/10 line-through opacity-50',
-                  isNew && 'border-l-2 border-l-green-500 bg-green-500/10'
+                  isNew && 'border-l border-l-green-500 bg-green-500/10'
                 )}
                 style={{
                   height: `${virtualRow.size}px`,

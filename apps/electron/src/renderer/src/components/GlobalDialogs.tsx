@@ -163,7 +163,7 @@ export function GlobalDialogs() {
       {/* Memory Monitor Panel - renders as a fixed sidebar when open */}
       {memoryMonitorOpen && (
         <div className="bg-background/80 fixed inset-0 z-50">
-          <div className="shadow-shadow border-border fixed top-0 right-0 bottom-0 z-50 border-l-2">
+          <div className="border-border fixed top-0 right-0 bottom-0 z-50 border-l shadow-sm">
             <MemoryMonitorPanel isOpen onClose={closeMemoryMonitor} />
           </div>
         </div>

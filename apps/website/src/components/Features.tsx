@@ -153,7 +153,7 @@ export default function Features() {
               : 'translate-y-8 opacity-0'
           }`}
         >
-          <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
+          <span className="bg-main text-main-foreground border-border rounded-base mb-5 inline-flex items-center gap-2 border px-4 py-2 text-sm font-semibold tracking-wide uppercase shadow-sm">
             <svg
               className="h-4 w-4"
               viewBox="0 0 24 24"
@@ -190,16 +190,16 @@ export default function Features() {
                 cardsRef.current[index] = el;
               }}
               data-index={index}
-              className={`bg-card border-border rounded-base flex min-h-[180px] flex-col gap-5 border-2 p-7 transition-all duration-300 ${sizeClasses[feature.size]} ${
+              className={`bg-card border-border rounded-base flex min-h-[180px] flex-col gap-5 border p-7 transition-all duration-300 ${sizeClasses[feature.size]} ${
                 visibleCards.has(index)
-                  ? 'shadow-shadow card-neo-lift translate-y-0 opacity-100'
+                  ? 'card-neo-lift translate-y-0 opacity-100 shadow-sm'
                   : 'translate-y-8 opacity-0'
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
               role="listitem"
             >
               <div
-                className={`bg-main text-main-foreground border-border rounded-base flex h-13 w-13 flex-shrink-0 items-center justify-center border-2 ${
+                className={`bg-main text-main-foreground border-border rounded-base flex h-13 w-13 flex-shrink-0 items-center justify-center border ${
                   feature.size === 'featured' ? 'h-14 w-14' : ''
                 } ${visibleCards.has(index) ? 'animate-icon-bounce' : ''}`}
                 style={

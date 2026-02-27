@@ -16,7 +16,7 @@ export default function TopBar() {
     <div
       className={`fixed top-0 right-0 z-[100] flex items-center gap-2 px-4 py-3 transition-all duration-300 sm:gap-1.5 md:gap-2 ${
         scrolled
-          ? 'bg-background/80 border-border rounded-bl-base shadow-shadow-sm border-b-2 border-l-2 backdrop-blur-md'
+          ? 'bg-background/80 border-border rounded-bl-base border-b border-l shadow-sm backdrop-blur-md'
           : ''
       }`}
     >

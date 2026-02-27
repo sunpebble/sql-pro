@@ -87,7 +87,7 @@ export function ProStatusCard({
               <Crown className="h-6 w-6 text-white" />
             </div>
             {isActive && (
-              <div className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-green-500 dark:border-gray-900">
+              <div className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full border border-white bg-green-500 dark:border-gray-900">
                 <Check className="h-3 w-3 text-white" />
               </div>
             )}

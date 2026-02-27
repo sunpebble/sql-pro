@@ -133,7 +133,7 @@ const markdownComponents: ComponentPropsWithoutRef<
   ),
   blockquote: ({ children, ...props }) => (
     <blockquote
-      className="border-muted-foreground/30 my-2 border-l-2 pl-3 italic"
+      className="border-muted-foreground/30 my-2 border-l pl-3 italic"
       {...props}
     >
       {children}

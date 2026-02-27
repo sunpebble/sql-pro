@@ -30,7 +30,7 @@ export default function FAQ() {
               : 'translate-y-8 opacity-0'
           }`}
         >
-          <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
+          <span className="bg-main text-main-foreground border-border rounded-base mb-5 inline-flex items-center gap-2 border px-4 py-2 text-sm font-semibold tracking-wide uppercase shadow-sm">
             <svg
               className="h-4 w-4"
               viewBox="0 0 24 24"
@@ -75,9 +75,9 @@ function FAQItem({ faqKey, index }: { faqKey: string; index: number }) {
   return (
     <div
       ref={ref}
-      className={`bg-card border-border rounded-base border-2 transition-all duration-300 ${
+      className={`bg-card border-border rounded-base border transition-all duration-300 ${
         isInView
-          ? 'shadow-shadow translate-y-0 opacity-100'
+          ? 'translate-y-0 opacity-100 shadow-sm'
           : 'translate-y-8 opacity-0'
       } ${isOpen ? 'border-main' : ''}`}
       style={{ transitionDelay: `${index * 50}ms` }}
@@ -112,7 +112,7 @@ function FAQItem({ faqKey, index }: { faqKey: string; index: number }) {
         aria-hidden={!isOpen}
       >
         <div>
-          <p className="text-muted-foreground border-border m-0 border-t-2 px-5 pt-4 pb-5 leading-relaxed">
+          <p className="text-muted-foreground border-border m-0 border-t px-5 pt-4 pb-5 leading-relaxed">
             {t(`faq.items.${faqKey}.answer`)}
           </p>
         </div>

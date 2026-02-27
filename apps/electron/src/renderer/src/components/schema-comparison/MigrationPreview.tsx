@@ -186,7 +186,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Options */}
-        <div className="rounded-base flex flex-wrap items-center gap-4 border-2 p-3">
+        <div className="rounded-base flex flex-wrap items-center gap-4 border p-3">
           <div className="flex items-center gap-2">
             <Switch
               id="reverse-migration"
@@ -394,7 +394,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
                 >
                   {t('migration.generatedSql')}
                 </Label>
-                <ScrollArea className="rounded-base h-100 border-2">
+                <ScrollArea className="rounded-base h-100 border">
                   <div className="p-4">
                     <SqlHighlight
                       code={migrationSQL.sql}

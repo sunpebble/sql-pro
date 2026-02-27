@@ -16,7 +16,7 @@ function Switch({
       data-slot="switch"
       data-size={size}
       className={cn(
-        'data-checked:bg-main data-unchecked:bg-muted peer group/switch border-border relative inline-flex shrink-0 items-center rounded-full border-2 transition-all outline-none',
+        'data-checked:bg-main data-unchecked:bg-muted peer group/switch relative inline-flex shrink-0 items-center rounded-full border-2 border-transparent shadow-sm transition-all duration-150 outline-none',
         'focus-visible:ring-main focus-visible:ring-2 focus-visible:ring-offset-2',
         'aria-invalid:border-destructive',
         'data-disabled:cursor-not-allowed data-disabled:opacity-50',
@@ -28,7 +28,7 @@ function Switch({
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
-        className="bg-background border-border pointer-events-none block rounded-full border-2 ring-0 transition-transform group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%+2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%+2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0.5 group-data-[size=sm]/switch:data-unchecked:translate-x-0.5"
+        className="bg-background pointer-events-none block rounded-full shadow-sm ring-0 transition-transform group-data-[size=default]/switch:size-5 group-data-[size=sm]/switch:size-4 group-data-[size=default]/switch:data-checked:translate-x-4 group-data-[size=sm]/switch:data-checked:translate-x-3 group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0"
       />
     </SwitchPrimitive.Root>
   );

@@ -52,7 +52,7 @@ export default function Testimonials() {
               : 'translate-y-8 opacity-0'
           }`}
         >
-          <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
+          <span className="bg-main text-main-foreground border-border rounded-base mb-5 inline-flex items-center gap-2 border px-4 py-2 text-sm font-semibold tracking-wide uppercase shadow-sm">
             <svg
               className="h-4 w-4"
               viewBox="0 0 24 24"
@@ -106,9 +106,9 @@ function TestimonialCard({
   return (
     <div
       ref={ref}
-      className={`group bg-card border-border rounded-base border-2 p-6 transition-all duration-300 ${
+      className={`group bg-card border-border rounded-base border p-6 transition-all duration-300 ${
         isInView
-          ? 'shadow-shadow card-neo-lift translate-y-0 opacity-100'
+          ? 'card-neo-lift translate-y-0 opacity-100 shadow-sm'
           : 'translate-y-8 opacity-0'
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
@@ -127,11 +127,11 @@ function TestimonialCard({
       <p className="text-foreground mb-6 text-base leading-relaxed">
         {t(`testimonials.quotes.${testimonial.key}`)}
       </p>
-      <div className="border-border flex items-center gap-3 border-t-2 pt-4">
+      <div className="border-border flex items-center gap-3 border-t pt-4">
         <img
           src={testimonial.avatar}
           alt=""
-          className="rounded-base border-border group-hover:ring-main h-12 w-12 border-2 transition-all duration-300 group-hover:ring-2 group-hover:ring-offset-2"
+          className="rounded-base border-border group-hover:ring-main h-12 w-12 border transition-all duration-300 group-hover:ring-2 group-hover:ring-offset-2"
           loading="lazy"
         />
         <div className="flex flex-col">

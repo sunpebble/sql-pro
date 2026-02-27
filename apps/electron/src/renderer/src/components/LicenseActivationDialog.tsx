@@ -180,7 +180,7 @@ export function LicenseActivationDialog({
     <div className="space-y-6">
       {/* Hero section */}
       <div className="text-center">
-        <div className="rounded-base border-border bg-main shadow-shadow mx-auto mb-4 flex h-16 w-16 items-center justify-center border-2">
+        <div className="rounded-base border-border bg-main mx-auto mb-4 flex h-16 w-16 items-center justify-center border shadow-sm">
           <Crown className="h-8 w-8 text-white" />
         </div>
         <h3
@@ -198,7 +198,7 @@ export function LicenseActivationDialog({
       </div>
 
       {/* Feature list */}
-      <div className="rounded-base border-border border-2 p-4">
+      <div className="rounded-base border-border border p-4">
         <ul className="space-y-2">
           {PRO_FEATURES.map((feature) => (
             <li
@@ -234,7 +234,7 @@ export function LicenseActivationDialog({
         </Button>
         <Button
           size="lg"
-          className="bg-main text-main-foreground h-auto flex-col gap-1 py-4 hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+          className="bg-main text-main-foreground h-auto flex-col gap-1 py-4 active:scale-95"
           onClick={() => setView('purchase')}
         >
           <CreditCard className="h-5 w-5" />
@@ -342,7 +342,7 @@ export function LicenseActivationDialog({
 
       {/* Purchase button */}
       <Button
-        className="bg-main text-main-foreground w-full hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+        className="bg-main text-main-foreground w-full active:scale-95"
         size="lg"
         onClick={handlePurchase}
         disabled={isLoading || !email}

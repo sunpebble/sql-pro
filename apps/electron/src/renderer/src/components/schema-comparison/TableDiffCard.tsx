@@ -263,7 +263,7 @@ export function TableDiffCard({
                 })}
               </p>
               {tableDiff.target.columns.length > 0 && (
-                <div className="bg-background/50 rounded-base border-2 p-2">
+                <div className="bg-background/50 rounded-base border p-2">
                   <div className="space-y-1">
                     {tableDiff.target.columns.map((col) => (
                       <div
@@ -308,7 +308,7 @@ export function TableDiffCard({
                 })}
               </p>
               {tableDiff.source.columns.length > 0 && (
-                <div className="bg-background/50 rounded-base border-2 p-2">
+                <div className="bg-background/50 rounded-base border p-2">
                   <div className="space-y-1">
                     {tableDiff.source.columns.map((col) => (
                       <div
@@ -407,7 +407,7 @@ function ColumnDiffList({
 
   return (
     <div
-      className="bg-background/50 rounded-base space-y-1 border-2 p-2"
+      className="bg-background/50 rounded-base space-y-1 border p-2"
       style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (
@@ -544,7 +544,7 @@ function IndexDiffList({
 
   return (
     <div
-      className="bg-background/50 rounded-base space-y-1 border-2 p-2"
+      className="bg-background/50 rounded-base space-y-1 border p-2"
       style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (
@@ -657,7 +657,7 @@ function ForeignKeyDiffList({
 
   return (
     <div
-      className="bg-background/50 rounded-base space-y-1 border-2 p-2"
+      className="bg-background/50 rounded-base space-y-1 border p-2"
       style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (
@@ -782,7 +782,7 @@ function TriggerDiffList({
 
   return (
     <div
-      className="bg-background/50 rounded-base space-y-1 border-2 p-2"
+      className="bg-background/50 rounded-base space-y-1 border p-2"
       style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
     >
       {filteredDiffs.map((diff) => (

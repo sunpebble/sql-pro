@@ -49,10 +49,7 @@ function BrandCard({
         },
 
         // Interactive hover effects
-        interactive && [
-          'hover:border-primary/30',
-          'hover:shadow-[0_16px_64px_rgba(0,0,0,0.5)]',
-        ],
+        interactive && ['hover:border-primary/30', 'hover:shadow-lg'],
 
         className
       )}

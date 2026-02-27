@@ -20,7 +20,7 @@ export default function OpenSource() {
         >
           {/* Info Section */}
           <div className="flex flex-col items-center gap-5 text-center lg:items-start lg:text-left">
-            <span className="rounded-base border-border bg-main text-main-foreground shadow-shadow-sm inline-flex w-fit items-center gap-2 border-2 px-4 py-2 text-xs font-semibold tracking-wide uppercase">
+            <span className="rounded-base border-border bg-main text-main-foreground inline-flex w-fit items-center gap-2 border px-4 py-2 text-xs font-semibold tracking-wide uppercase shadow-sm">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -50,7 +50,7 @@ export default function OpenSource() {
 
             {/* Features */}
             <div className="mt-2 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-medium transition-colors">
+              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border px-4 py-2.5 text-sm font-medium transition-colors">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -64,7 +64,7 @@ export default function OpenSource() {
                 </svg>
                 <span>{t('opensource.features.secure')}</span>
               </div>
-              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-medium transition-colors">
+              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border px-4 py-2.5 text-sm font-medium transition-colors">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -81,7 +81,7 @@ export default function OpenSource() {
                 </svg>
                 <span>{t('opensource.features.community')}</span>
               </div>
-              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-medium transition-colors">
+              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border px-4 py-2.5 text-sm font-medium transition-colors">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -103,7 +103,7 @@ export default function OpenSource() {
                 href="https://github.com/anthropics/sql-pro"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-neo-primary rounded-base border-border bg-main text-main-foreground shadow-shadow inline-flex items-center justify-center gap-2.5 border-2 px-6 py-3.5 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+                className="btn-neo-primary rounded-base border-border bg-main text-main-foreground inline-flex items-center justify-center gap-2.5 border px-6 py-3.5 text-base font-semibold shadow-sm transition-all active:scale-95"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -119,7 +119,7 @@ export default function OpenSource() {
                 href="https://github.com/anthropics/sql-pro/stargazers"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-base border-border bg-background shadow-shadow inline-flex items-center justify-center gap-2.5 border-2 px-6 py-3.5 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+                className="rounded-base border-border bg-background inline-flex items-center justify-center gap-2.5 border px-6 py-3.5 text-base font-semibold shadow-sm transition-all active:scale-95"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -138,9 +138,9 @@ export default function OpenSource() {
 
           {/* Visual - Terminal */}
           <div className="flex justify-center">
-            <div className="rounded-base border-border bg-card shadow-shadow-lg hover:shadow-shadow-lg w-full max-w-lg overflow-hidden border-2 transition-all duration-300 hover:-translate-y-1.5">
+            <div className="rounded-base border-border bg-card w-full max-w-lg overflow-hidden border shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
               {/* Terminal Header */}
-              <div className="border-border bg-secondary-background flex items-center gap-2 border-b-2 px-4 py-3">
+              <div className="border-border bg-secondary-background flex items-center gap-2 border-b px-4 py-3">
                 <div className="flex gap-2">
                   <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
                   <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />

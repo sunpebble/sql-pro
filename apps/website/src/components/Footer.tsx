@@ -25,7 +25,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="bg-background border-border border-t-2 py-8"
+      className="bg-background border-border border-t py-8"
       role="contentinfo"
     >
       <div className="mx-auto max-w-[1280px] px-5 md:px-12">
@@ -41,7 +41,7 @@ export default function Footer() {
               width="32"
               height="32"
               aria-hidden="true"
-              className="border-border rounded-base border-2"
+              className="border-border rounded-base border"
             />
             SQL Pro
           </a>

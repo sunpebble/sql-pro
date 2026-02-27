@@ -79,7 +79,7 @@ const TemplateCard = memo(
     return (
       <div
         className={cn(
-          'group rounded-base hover:border-main hover:bg-accent/30 relative flex cursor-pointer flex-col gap-2.5 border-2 p-4 transition-all duration-200',
+          'group rounded-base hover:border-main hover:bg-accent/30 relative flex cursor-pointer flex-col gap-2.5 border p-4 transition-all duration-200',
           template.isBuiltIn && 'border-dashed'
         )}
         onClick={() => onSelect(template.query)}
@@ -329,7 +329,7 @@ export const QueryTemplatesPicker = memo(
       <>
         <Dialog open={open} onOpenChange={onOpenChange}>
           <DialogContent className="max-w-4xl p-0">
-            <DialogHeader className="border-b-2 px-6 py-4">
+            <DialogHeader className="border-b px-6 py-4">
               <DialogTitle className="flex items-center gap-2">
                 <Code className="h-5 w-5" />
                 {t('queryTemplates.title')}
@@ -340,7 +340,7 @@ export const QueryTemplatesPicker = memo(
             </DialogHeader>
 
             {/* Search and Filter */}
-            <div className="flex flex-col gap-3 border-b-2 px-6 py-4 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-3 border-b px-6 py-4 sm:flex-row sm:items-center">
               <div className="relative flex-1">
                 <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                 <Input

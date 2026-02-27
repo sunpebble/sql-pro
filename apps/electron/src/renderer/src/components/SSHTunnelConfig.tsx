@@ -264,7 +264,7 @@ export function SSHTunnelConfig({
 
         {/* SSH configuration fields */}
         <CollapsibleContent>
-          <div className="border-primary/20 space-y-4 border-l-2 pt-2 pl-4">
+          <div className="border-primary/20 space-y-4 border-l pt-2 pl-4">
             {/* SSH Host */}
             <div className="space-y-2">
               <Label htmlFor="ssh-host">
@@ -340,7 +340,7 @@ export function SSHTunnelConfig({
 
             {/* Jump Host Configuration */}
             {showJumpHost && (
-              <div className="border-primary/10 space-y-4 border-l-2 pt-2 pl-4">
+              <div className="border-primary/10 space-y-4 border-l pt-2 pl-4">
                 <Label
                   className="text-muted-foreground font-medium"
                   style={{ fontSize: 'var(--font-ui-size, 13px)' }}

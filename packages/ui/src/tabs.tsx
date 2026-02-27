@@ -30,7 +30,7 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default: 'bg-muted border-2 border-border',
-        line: 'bg-transparent border-b-2 border-border',
+        line: 'bg-transparent border-b border-border',
       },
     },
     defaultVariants: {
@@ -66,7 +66,7 @@ function TabsTrigger({ className, style, ...props }: TabsPrimitive.Tab.Props) {
         // Default variant active state
         'group-data-[variant=default]/tabs-list:data-active:bg-background group-data-[variant=default]/tabs-list:data-active:border-border data-active:text-foreground',
         // Line variant
-        'group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:border-b-2 group-data-[variant=line]/tabs-list:border-transparent',
+        'group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent',
         'group-data-[variant=line]/tabs-list:data-active:border-main group-data-[variant=line]/tabs-list:data-active:bg-transparent',
         className
       )}

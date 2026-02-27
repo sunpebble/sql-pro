@@ -246,7 +246,7 @@ function EditQueryForm({
 
         {/* Parameters detected */}
         {parameters.length > 0 && (
-          <div className="bg-muted/50 rounded-base border-border border-2 p-3">
+          <div className="bg-muted/50 rounded-base border-border border p-3">
             <p
               className="font-medium"
               style={{ fontSize: 'var(--font-ui-size, 13px)' }}

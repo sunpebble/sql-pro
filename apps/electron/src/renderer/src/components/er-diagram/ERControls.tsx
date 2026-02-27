@@ -81,7 +81,7 @@ export function ERControls({ onResetLayout }: ERControlsProps) {
   return (
     <Panel
       position="bottom-center"
-      className="rounded-base bg-background shadow-shadow-sm border-border flex items-center gap-1 border-2 px-2 py-1.5"
+      className="rounded-base bg-background border-border flex items-center gap-1 border px-2 py-1.5 shadow-sm"
     >
       {/* Zoom Out */}
       <Tooltip>

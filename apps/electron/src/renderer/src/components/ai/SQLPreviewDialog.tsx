@@ -97,7 +97,7 @@ export function SQLPreviewDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="rounded-base border-border min-h-[200px] flex-1 overflow-hidden border-2">
+        <div className="rounded-base border-border min-h-[200px] flex-1 overflow-hidden border">
           <Editor
             height="100%"
             language="sql"

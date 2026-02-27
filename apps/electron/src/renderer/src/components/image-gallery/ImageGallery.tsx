@@ -102,7 +102,7 @@ const ImageThumbnail = memo(
     return (
       <div
         className={cn(
-          'group hover:border-primary rounded-base relative cursor-pointer overflow-hidden border-2 transition-all',
+          'group hover:border-primary rounded-base relative cursor-pointer overflow-hidden border transition-all',
           isSelected
             ? 'border-primary ring-primary/50 ring-2'
             : isFocused

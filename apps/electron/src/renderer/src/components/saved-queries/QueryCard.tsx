@@ -32,7 +32,7 @@ export const QueryCard = memo(
     return (
       <div
         className={cn(
-          'group hover:border-primary/50 hover:bg-accent/30 rounded-base border-border relative flex cursor-pointer flex-col gap-2.5 border-2 p-4 transition-all duration-200'
+          'group hover:border-primary/50 hover:bg-accent/30 rounded-base border-border relative flex cursor-pointer flex-col gap-2.5 border p-4 transition-all duration-200'
         )}
         onClick={onSelect}
       >

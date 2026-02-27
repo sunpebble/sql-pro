@@ -68,7 +68,7 @@ export default function Screenshots() {
           tabIndex={0}
         >
           <button
-            className="bg-background border-border rounded-base text-muted-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:bg-main hover:text-main-foreground absolute left-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border-2 transition-all duration-150 hover:shadow-none md:flex"
+            className="bg-background border-border rounded-base text-muted-foreground hover:bg-main hover:text-main-foreground absolute left-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none md:flex"
             onClick={goPrev}
             aria-label={t('screenshots.prev')}
             type="button"
@@ -109,10 +109,10 @@ export default function Screenshots() {
                   aria-hidden={offset !== 0}
                 >
                   <div
-                    className={`bg-background rounded-base relative overflow-hidden border-2 transition-all duration-300 ${
+                    className={`bg-background rounded-base relative overflow-hidden border transition-all duration-300 ${
                       offset === 0
-                        ? 'border-main shadow-shadow-lg'
-                        : 'border-border shadow-shadow'
+                        ? 'border-main shadow-lg'
+                        : 'border-border shadow-sm'
                     }`}
                   >
                     <img
@@ -137,7 +137,7 @@ export default function Screenshots() {
           </div>
 
           <button
-            className="bg-background border-border rounded-base text-muted-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:bg-main hover:text-main-foreground absolute right-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border-2 transition-all duration-150 hover:shadow-none md:flex"
+            className="bg-background border-border rounded-base text-muted-foreground hover:bg-main hover:text-main-foreground absolute right-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none md:flex"
             onClick={goNext}
             aria-label={t('screenshots.next')}
             type="button"
@@ -175,7 +175,7 @@ export default function Screenshots() {
           {screenshots.map((_, index) => (
             <button
               key={screenshotKeys[index]}
-              className={`border-border h-2.5 cursor-pointer rounded-full border-2 transition-all duration-150 ${
+              className={`border-border h-2.5 cursor-pointer rounded-full border transition-all duration-150 ${
                 index === current
                   ? 'bg-main w-8'
                   : 'bg-secondary-background hover:bg-muted-foreground w-2.5'

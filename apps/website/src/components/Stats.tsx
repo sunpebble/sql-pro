@@ -61,7 +61,7 @@ export default function Stats() {
           {stats.map((stat, index) => (
             <div
               key={stat.key}
-              className={`bg-card border-border rounded-base shadow-shadow flex flex-col items-center border-2 p-6 text-center transition-all duration-300 ${
+              className={`bg-card border-border rounded-base flex flex-col items-center border p-6 text-center shadow-sm transition-all duration-300 ${
                 isInView
                   ? 'translate-y-0 opacity-100'
                   : 'translate-y-4 opacity-0'

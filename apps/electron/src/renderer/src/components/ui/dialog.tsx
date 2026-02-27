@@ -72,7 +72,7 @@ function DialogContent({
     <DialogPrimitive.Popup
       data-slot="dialog-content"
       className={cn(
-        'bg-background data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 border-border shadow-shadow rounded-base fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 border-2 p-6 duration-100 outline-none sm:max-w-md',
+        'bg-background data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 border-border rounded-base fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 border p-6 shadow-sm duration-100 outline-none sm:max-w-md',
         // Data Sanctum decorated style - keep rounded corners
         decorated && 'ring-primary/30 dark:ring-primary/20',
         className

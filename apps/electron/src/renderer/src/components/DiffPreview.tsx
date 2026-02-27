@@ -538,12 +538,7 @@ function ChangeItem({
 
   return (
     <div
-      className={cn(
-        'border-l-2',
-        config.border,
-        config.bg,
-        'hover:bg-muted/30'
-      )}
+      className={cn('border-l', config.border, config.bg, 'hover:bg-muted/30')}
     >
       {/* Change Header */}
       <div

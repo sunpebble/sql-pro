@@ -224,7 +224,7 @@ export function WelcomeTour({
       <div
         ref={tooltipRef}
         className={cn(
-          'bg-card rounded-base border-border shadow-shadow fixed z-[10000] w-[320px] border-2 p-4',
+          'bg-card rounded-base border-border fixed z-[10000] w-[320px] border p-4 shadow-sm',
           'transition-all duration-300',
           isPositioned ? 'opacity-100' : 'opacity-0'
         )}
@@ -403,7 +403,7 @@ function SpotlightHighlight({
 
       {/* Spotlight ring/border highlight */}
       <div
-        className="pointer-events-none fixed z-[9999] border-2 border-white/80"
+        className="pointer-events-none fixed z-[9999] border border-white/80"
         style={{
           top: spotlightRect.top,
           left: spotlightRect.left,

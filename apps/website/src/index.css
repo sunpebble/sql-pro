@@ -1,4 +1,4 @@
-/* Neobrutalism Design System for SQL Pro Website */
+/* Modern Minimal & Glassmorphism Design System for SQL Pro Website */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @import 'tailwindcss';
@@ -7,11 +7,11 @@
 @source '../../../packages/ui/src';
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM THEME CONFIGURATION
+   THEME CONFIGURATION
    ═══════════════════════════════════════ */
 
 @theme inline {
-  /* Neobrutalism core design tokens */
+  /* Core design tokens */
   --color-main: var(--main);
   --color-main-foreground: var(--main-foreground);
   --color-background: var(--background);
@@ -34,18 +34,18 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
 
-  /* Border radius - neobrutalism uses smaller, consistent radii */
-  --radius-base: 5px;
-  --radius-sm: 3px;
-  --radius-md: 5px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
+  /* Border radius - modern uses slightly larger, consistent radii */
+  --radius-base: 8px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 
-  /* Box shadow offset values for neobrutalism effect */
-  --translate-box-shadow-x: 4px;
-  --translate-box-shadow-y: 4px;
-  --translate-reverse-box-shadow-x: -4px;
-  --translate-reverse-box-shadow-y: -4px;
+  /* Box shadow values for modern effect */
+  --shadow-shadow: var(--shadow);
+  --shadow-shadow-sm: var(--shadow-sm);
+  --shadow-shadow-lg: var(--shadow-lg);
+  --shadow-shadow-nav: var(--shadow-nav);
 
   /* Fonts */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -62,41 +62,41 @@
 
   /* Main/Primary color - Orange */
   --main: #f97316;
-  --main-foreground: #000000;
+  --main-foreground: #ffffff;
 
-  /* Core colors */
+  /* Core colors (zinc-based) */
   --background: #ffffff;
-  --foreground: #000000;
-  --secondary-background: #e0e0e0;
-  --overlay: rgba(0, 0, 0, 0.6);
+  --foreground: #09090b;
+  --secondary-background: #f4f4f5;
+  --overlay: rgba(0, 0, 0, 0.4);
 
-  /* Border - always black for neobrutalism */
-  --border: #000000;
-  --ring: #000000;
+  /* Border - subtle gray */
+  --border: #e4e4e7;
+  --ring: #f97316;
 
   /* Card */
   --card: #ffffff;
-  --card-foreground: #000000;
+  --card-foreground: #09090b;
 
   /* Popover */
   --popover: #ffffff;
-  --popover-foreground: #000000;
+  --popover-foreground: #09090b;
 
-  /* Primary (same as main for neobrutalism) */
+  /* Primary (same as main) */
   --primary: #f97316;
-  --primary-foreground: #000000;
+  --primary-foreground: #ffffff;
 
   /* Secondary */
-  --secondary: #e0e0e0;
-  --secondary-foreground: #000000;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #09090b;
 
   /* Muted */
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
 
   /* Accent */
-  --accent: #ffecd2;
-  --accent-foreground: #000000;
+  --accent: #fff7ed;
+  --accent-foreground: #ea580c;
 
   /* Destructive */
   --destructive: #ef4444;
@@ -106,11 +106,12 @@
   --warning: #f59e0b;
   --info: #3b82f6;
 
-  /* Neobrutalism shadow - solid black offset */
-  --shadow: 4px 4px 0px 0px #000000;
-  --shadow-sm: 2px 2px 0px 0px #000000;
-  --shadow-lg: 8px 8px 0px 0px #000000;
-  --shadow-nav: 3px 3px 0px 0px #000000;
+  /* Modern soft shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-nav: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 /* ═══════════════════════════════════════
@@ -122,50 +123,51 @@
 
   /* Main/Primary color - Brighter orange for dark mode */
   --main: #fb923c;
-  --main-foreground: #000000;
+  --main-foreground: #09090b;
 
   /* Core colors */
-  --background: #1a1a1a;
-  --foreground: #ffffff;
-  --secondary-background: #262626;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --secondary-background: #18181b;
   --overlay: rgba(0, 0, 0, 0.8);
 
-  /* Border - lighter for visibility on dark */
-  --border: #ffffff;
-  --ring: #ffffff;
+  /* Border - subtle dark */
+  --border: #27272a;
+  --ring: #fb923c;
 
   /* Card */
-  --card: #262626;
-  --card-foreground: #ffffff;
+  --card: #09090b;
+  --card-foreground: #fafafa;
 
   /* Popover */
-  --popover: #262626;
-  --popover-foreground: #ffffff;
+  --popover: #09090b;
+  --popover-foreground: #fafafa;
 
   /* Primary */
   --primary: #fb923c;
-  --primary-foreground: #000000;
+  --primary-foreground: #09090b;
 
   /* Secondary */
-  --secondary: #404040;
-  --secondary-foreground: #ffffff;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
 
   /* Muted */
-  --muted: #404040;
-  --muted-foreground: #a3a3a3;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
 
   /* Accent */
-  --accent: #44403c;
-  --accent-foreground: #ffffff;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
 
   /* Destructive */
   --destructive: #f87171;
 
-  /* Dark mode shadows with white border effect */
-  --shadow: 4px 4px 0px 0px #ffffff;
-  --shadow-sm: 2px 2px 0px 0px #ffffff;
-  --shadow-lg: 8px 8px 0px 0px #ffffff;
-  --shadow-nav: 3px 3px 0px 0px #ffffff;
+  /* Dark mode shadows (more subtle or glowing) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-nav: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
 }
 
 /* ═══════════════════════════════════════
@@ -189,12 +191,25 @@ body {
 }
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM UTILITY CLASSES
+   MODERN UTILITY CLASSES
    ═══════════════════════════════════════ */
 
 /* Base rounded corners */
 .rounded-base {
-  border-radius: 5px;
+  border-radius: var(--radius-base);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass {
+  background: rgba(9, 9, 11, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Shadow utilities */
@@ -212,36 +227,6 @@ body {
 
 .shadow-nav {
   box-shadow: var(--shadow-nav);
-}
-
-/* Hover translate effect - shadow disappears and element shifts */
-.translate-x-boxShadowX {
-  --tw-translate-x: 4px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
-    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-y-boxShadowY {
-  --tw-translate-y: 4px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
-    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-/* Reverse shadow effect */
-.translate-x-reverseBoxShadowX {
-  --tw-translate-x: -4px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
-    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-y-reverseBoxShadowY {
-  --tw-translate-y: -4px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
-    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 /* Font utilities */
@@ -273,6 +258,7 @@ h6 {
 h1 {
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 h2 {
@@ -285,7 +271,7 @@ h3 {
 }
 
 p {
-  color: var(--foreground);
+  color: var(--muted-foreground);
   line-height: 1.7;
 }
 
@@ -307,7 +293,7 @@ pre {
 }
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM BUTTON STYLES
+   MODERN BUTTON STYLES (Fast & Snappy)
    ═══════════════════════════════════════ */
 
 .btn-neo {
@@ -315,94 +301,99 @@ pre {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 24px;
+  padding: 10px 20px;
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
-  border: 2px solid var(--border);
-  border-radius: 5px;
-  transition: all 0.15s ease;
+  border-radius: var(--radius-md);
+  transition: all 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.btn-neo:active {
+  transform: scale(0.95);
 }
 
 .btn-neo-primary {
   background: var(--main);
   color: var(--main-foreground);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-neo-primary:hover {
-  transform: translate(4px, 4px);
-  box-shadow: none;
+  background: var(--main);
+  opacity: 0.9;
+  box-shadow: var(--shadow);
 }
 
 .btn-neo-secondary {
   background: var(--secondary-background);
   color: var(--foreground);
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .btn-neo-secondary:hover {
-  transform: translate(4px, 4px);
-  box-shadow: none;
+  background: var(--muted);
 }
 
 .btn-neo-outline {
   background: transparent;
   color: var(--foreground);
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .btn-neo-outline:hover {
-  transform: translate(4px, 4px);
-  box-shadow: none;
+  background: var(--secondary-background);
 }
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM CARD STYLES
+   MODERN CARD STYLES
    ═══════════════════════════════════════ */
 
 .card-neo {
   background: var(--card);
-  border: 2px solid var(--border);
-  border-radius: 5px;
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 24px;
-  transition: all 0.15s ease;
+  transition: all 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .card-neo:hover {
-  transform: translate(4px, 4px);
-  box-shadow: none;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
 .card-neo-static {
   background: var(--card);
-  border: 2px solid var(--border);
-  border-radius: 5px;
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 24px;
 }
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM INPUT STYLES
+   MODERN INPUT STYLES
    ═══════════════════════════════════════ */
 
 .input-neo {
   width: 100%;
   padding: 10px 14px;
   font-size: 14px;
-  background: var(--secondary-background);
-  border: 2px solid var(--border);
-  border-radius: 5px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   color: var(--foreground);
-  transition: all 0.15s ease;
+  transition: all 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: var(--shadow-sm);
 }
 
 .input-neo:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--main);
+  border-color: var(--main);
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
 }
 
 .input-neo::placeholder {
@@ -410,7 +401,7 @@ pre {
 }
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM BADGE STYLES
+   MODERN BADGE STYLES
    ═══════════════════════════════════════ */
 
 .badge-neo {
@@ -420,25 +411,33 @@ pre {
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 600;
-  border: 2px solid var(--border);
-  border-radius: 5px;
-  background: var(--main);
-  color: var(--main-foreground);
+  border-radius: 9999px;
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--main);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+.dark .badge-neo {
+  background: rgba(251, 146, 60, 0.1);
+  color: var(--main);
+  border: 1px solid rgba(251, 146, 60, 0.2);
 }
 
 .badge-neo-secondary {
   background: var(--secondary-background);
   color: var(--foreground);
+  border-radius: 9999px;
+  border: 1px solid var(--border);
 }
 
 /* ═══════════════════════════════════════
-   ANIMATIONS
+   ANIMATIONS (Fast & Snappy)
    ═══════════════════════════════════════ */
 
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -455,13 +454,10 @@ pre {
   }
 }
 
-@keyframes bounce-in {
+@keyframes scale-in-fast {
   0% {
     opacity: 0;
     transform: scale(0.95);
-  }
-  50% {
-    transform: scale(1.02);
   }
   100% {
     opacity: 1;
@@ -470,17 +466,17 @@ pre {
 }
 
 .animate-fade-up {
-  animation: fade-up 0.5s ease forwards;
+  animation: fade-up 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   opacity: 0;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.4s ease forwards;
+  animation: fade-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   opacity: 0;
 }
 
 .animate-bounce-in {
-  animation: bounce-in 0.5s ease forwards;
+  animation: scale-in-fast 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   opacity: 0;
 }
 
@@ -506,23 +502,21 @@ pre {
    ═══════════════════════════════════════ */
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--secondary-background);
-  border: 2px solid var(--border);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--main);
-  border: 2px solid var(--border);
-  border-radius: 0;
+  background: var(--border);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground);
+  background: var(--muted-foreground);
 }
 
 /* ═══════════════════════════════════════
@@ -530,8 +524,8 @@ pre {
    ═══════════════════════════════════════ */
 
 ::selection {
-  background: var(--main);
-  color: var(--main-foreground);
+  background: rgba(249, 115, 22, 0.2);
+  color: var(--foreground);
 }
 
 /* ═══════════════════════════════════════
@@ -575,37 +569,17 @@ pre {
     box-shadow: var(--shadow-sm);
   }
 
-  .btn-neo-primary:hover,
-  .btn-neo-secondary:hover,
-  .btn-neo-outline:hover {
-    transform: translate(2px, 2px);
-  }
-
   .card-neo:hover {
-    transform: translate(2px, 2px);
+    transform: translateY(-2px);
   }
 
-  /* Reduced animation intensity on mobile */
   .animate-float {
-    animation-duration: 2s;
+    animation-duration: 3s;
   }
 
   .card-neo-lift:hover {
     transform: translateY(-2px) scale(1.01);
   }
-}
-
-/* ═══════════════════════════════════════
-   BUTTON ACTIVE/PRESSED STATES
-   ═══════════════════════════════════════ */
-
-/* Active/pressed feedback for neobrutalism buttons */
-.btn-neo-primary:active,
-.btn-neo-secondary:active,
-.btn-neo-outline:active {
-  transform: translate(4px, 4px) scale(0.97);
-  box-shadow: none;
-  transition: all 0.1s ease;
 }
 
 /* ═══════════════════════════════════════
@@ -619,7 +593,7 @@ pre {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
   }
 }
 
@@ -645,45 +619,6 @@ pre {
   }
 }
 
-/* Slide up with fade in */
-@keyframes slide-up-fade {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Slide down with fade in */
-@keyframes slide-down-fade {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Scale bounce - smooth entrance */
-@keyframes scale-bounce {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 /* Blinking cursor for terminal */
 @keyframes typing-cursor {
   0%,
@@ -705,17 +640,6 @@ pre {
   }
 }
 
-/* Subtle icon bounce */
-@keyframes icon-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
 /* Underline slide for links */
 @keyframes underline-slide {
   0% {
@@ -726,70 +650,33 @@ pre {
   }
 }
 
-/* Small rotation wiggle */
-@keyframes wiggle {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-3deg);
-  }
-  75% {
-    transform: rotate(3deg);
-  }
-}
-
 /* ═══════════════════════════════════════
    UTILITY CLASSES FOR NEW ANIMATIONS
    ═══════════════════════════════════════ */
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite;
 }
 
 .animate-shimmer {
-  animation: shimmer-slide 2s infinite;
+  animation: shimmer-slide 2.5s infinite;
 }
 
 .animate-pulse-ring {
-  animation: pulse-ring 1s ease-out;
-}
-
-.animate-slide-up-fade {
-  animation: slide-up-fade 0.5s ease forwards;
-  opacity: 0;
-}
-
-.animate-slide-down-fade {
-  animation: slide-down-fade 0.4s ease forwards;
-  opacity: 0;
-}
-
-.animate-scale-bounce {
-  animation: scale-bounce 0.5s ease forwards;
-  opacity: 0;
-}
-
-.animate-icon-bounce {
-  animation: icon-bounce 0.4s ease;
-}
-
-.animate-wiggle {
-  animation: wiggle 0.5s ease;
+  animation: pulse-ring 1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* ═══════════════════════════════════════
    INTERACTIVE HOVER ENHANCEMENTS
    ═══════════════════════════════════════ */
 
-/* Subtle lift effect for cards with spring easing */
+/* Subtle lift effect for cards */
 .card-neo-lift {
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .card-neo-lift:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -815,24 +702,11 @@ pre {
   background: var(--main);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
 .link-underline:hover::after {
   transform: scaleX(1);
-}
-
-/* ═══════════════════════════════════════
-   FOCUS & INPUT ENHANCEMENTS
-   ═══════════════════════════════════════ */
-
-/* Enhanced focus state with orange glow */
-.input-neo:focus-within {
-  outline: none;
-  box-shadow:
-    0 0 0 3px rgba(249, 115, 22, 0.3),
-    0 0 0 1px var(--main);
-  border-color: var(--main);
 }
 
 /* ═══════════════════════════════════════
@@ -843,7 +717,7 @@ pre {
 .accordion-content {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s ease;
+  transition: grid-template-rows 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
   overflow: hidden;
 }
 
@@ -864,7 +738,6 @@ pre {
   width: 100%;
   height: 4px;
   background: var(--secondary-background);
-  border: 1px solid var(--border);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -898,11 +771,9 @@ pre {
 .delay-600 {
   animation-delay: 0.6s;
 }
-
 .delay-700 {
   animation-delay: 0.7s;
 }
-
 .delay-800 {
   animation-delay: 0.8s;
 }
