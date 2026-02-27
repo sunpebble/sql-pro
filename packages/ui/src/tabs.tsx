@@ -29,7 +29,7 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted border-2 border-border',
+        default: 'bg-muted border border-border',
         line: 'bg-transparent border-b border-border',
       },
     },
@@ -59,7 +59,7 @@ function TabsTrigger({ className, style, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-[3px] border-2 border-transparent px-3 py-1 font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
+        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-[3px] border border-transparent px-3 py-1 font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
         'group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start',
         'disabled:pointer-events-none disabled:opacity-50',
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",

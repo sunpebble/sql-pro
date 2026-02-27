@@ -88,7 +88,7 @@ export default function Download() {
               href="https://github.com/kunish-homelab/sql-pro/releases/latest"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-background text-foreground border-border rounded-base group relative inline-flex items-center gap-3 border px-8 py-4 text-lg font-semibold no-underline shadow-lg transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none"
+              className="bg-background text-foreground border-border rounded-base group relative inline-flex items-center gap-3 border px-8 py-4 text-lg font-semibold no-underline shadow-lg transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
               aria-describedby="download-arch"
             >
               <span className="group-hover:animate-wiggle h-6 w-6 transition-transform duration-300">

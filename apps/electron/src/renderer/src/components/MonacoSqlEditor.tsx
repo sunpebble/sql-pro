@@ -631,7 +631,7 @@ export function MonacoSqlEditor({
 
   return (
     <div ref={containerRef} className="relative flex flex-col">
-      {/* Editor container with Neobrutalism border */}
+      {/* Editor container */}
       <div
         className="rounded-base border-border overflow-hidden border"
         style={{ height: editorHeight }}

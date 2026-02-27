@@ -68,7 +68,7 @@ export default function Screenshots() {
           tabIndex={0}
         >
           <button
-            className="bg-background border-border rounded-base text-muted-foreground hover:bg-main hover:text-main-foreground absolute left-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none md:flex"
+            className="bg-background border-border rounded-base text-muted-foreground hover:bg-main hover:text-main-foreground absolute left-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md md:flex"
             onClick={goPrev}
             aria-label={t('screenshots.prev')}
             type="button"
@@ -137,7 +137,7 @@ export default function Screenshots() {
           </div>
 
           <button
-            className="bg-background border-border rounded-base text-muted-foreground hover:bg-main hover:text-main-foreground absolute right-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none md:flex"
+            className="bg-background border-border rounded-base text-muted-foreground hover:bg-main hover:text-main-foreground absolute right-0 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center border shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md md:flex"
             onClick={goNext}
             aria-label={t('screenshots.next')}
             type="button"

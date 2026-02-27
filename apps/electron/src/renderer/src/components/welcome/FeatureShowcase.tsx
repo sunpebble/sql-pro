@@ -129,7 +129,7 @@ export function FeatureShowcase({
           </Button>
         </div>
 
-        {/* Feature Grid - colorful neobrutalism cards */}
+        {/* Feature Grid */}
         <div className="grid grid-cols-3 gap-3">
           {featureKeys.map((feature) => (
             <div
@@ -162,7 +162,7 @@ export function FeatureShowcase({
           ))}
         </div>
 
-        {/* Tour CTA - neobrutalism style */}
+        {/* Tour CTA */}
         {!hasCompletedTour && (
           <Button
             variant="outline"

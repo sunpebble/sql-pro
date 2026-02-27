@@ -225,7 +225,7 @@ export default function UserMenu() {
       <div className="relative">
         <button
           type="button"
-          className="bg-background border-border rounded-base text-foreground focus-visible:ring-ring flex cursor-pointer items-center gap-2 border px-4 py-2 font-sans text-sm font-medium shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none focus-visible:ring-2 focus-visible:outline-none"
+          className="bg-background border-border rounded-base text-foreground focus-visible:ring-ring flex cursor-pointer items-center gap-2 border px-4 py-2 font-sans text-sm font-medium shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:outline-none"
           onClick={handleLogin}
           aria-label={t('auth.loginWithGithub', 'Sign in with GitHub')}
         >
@@ -243,7 +243,7 @@ export default function UserMenu() {
     <div className="relative" ref={menuRef}>
       <button
         type="button"
-        className="bg-background border-border focus-visible:ring-ring flex cursor-pointer items-center gap-1 rounded-full border p-0.5 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none focus-visible:ring-2 focus-visible:outline-none"
+        className="bg-background border-border focus-visible:ring-ring flex cursor-pointer items-center gap-1 rounded-full border p-0.5 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:outline-none"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="true"

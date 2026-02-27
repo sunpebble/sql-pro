@@ -11,7 +11,7 @@ import { useDialogStore } from '@/stores/dialog-store';
 
 /**
  * About dialog showing application information
- * Uses Neobrutalism design language
+ * Uses Modern Minimal & Glassmorphism design
  */
 export function AboutDialog() {
   const { t } = useTranslation('common');
@@ -24,7 +24,7 @@ export function AboutDialog() {
     >
       <DialogContent className="max-w-md">
         <DialogHeader className="text-center">
-          {/* Logo with neobrutalism frame */}
+          {/* Logo frame */}
           <div className="rounded-base border-border bg-main mx-auto mb-4 flex h-20 w-20 items-center justify-center border shadow-sm">
             <Database className="text-main-foreground h-10 w-10" />
           </div>

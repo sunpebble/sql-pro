@@ -8,17 +8,17 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Shared Tailwind class string for toolbar button micro-interactions.
- * Neobrutalism style: translate effect instead of scale.
+ * Quick micro-interaction for toolbar buttons.
  * - transition-all duration-150: Quick 150ms animation
  * - active:scale-95: Offset on hover
  * - active:translate-x-1 active:translate-y-1: Press effect
  */
 export const TOOLBAR_BUTTON_INTERACTIVE =
-  'transition-all duration-150 active:scale-95 active:translate-x-1 active:translate-y-1';
+  'transition-all duration-150 active:scale-95';
 
 /**
  * Shared Tailwind class string for tooltip content styling.
- * Neobrutalism style: solid background with border.
+ * Tooltip content styling.
  * - tooltip-kbd: Marker class for kbd styling inside tooltip
  * - bg-popover: Solid background (no transparency)
  * - border border-border: Thick border

@@ -77,7 +77,7 @@ export default function Hero() {
             <span className="animate-pulse-ring bg-main/30 rounded-base absolute inset-0" />
             <a
               href="#download"
-              className="bg-main text-main-foreground border-border rounded-base relative inline-flex items-center gap-2.5 border px-8 py-4 text-base font-semibold no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none"
+              className="bg-main text-main-foreground border-border rounded-base relative inline-flex items-center gap-2.5 border px-8 py-4 text-base font-semibold no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
             >
               <svg
                 className="h-5 w-5"
@@ -98,7 +98,7 @@ export default function Hero() {
             href="https://github.com/anthropics/sql-pro"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-7 py-4 text-base font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:shadow-none"
+            className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-7 py-4 text-base font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
             aria-label={t('a11y.socialLink', { name: 'GitHub' })}
           >
             <svg

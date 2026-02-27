@@ -962,7 +962,7 @@ export function WelcomeScreen() {
           {/* Right Column - Connection Area (focused) */}
           <div className="relative flex w-[45%] justify-center p-10">
             <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
-              {/* Logo & Title - neobrutalism style */}
+              {/* Logo & Title */}
               <div className="shrink-0 text-center">
                 <div className="rounded-base border-border bg-main mx-auto mb-5 flex h-14 w-14 items-center justify-center border shadow-sm">
                   <Database className="text-main-foreground h-7 w-7" />
@@ -994,7 +994,7 @@ export function WelcomeScreen() {
                 </div>
               )}
 
-              {/* Connection Buttons - neobrutalism style */}
+              {/* Connection Buttons */}
               <div className="shrink-0 space-y-3">
                 <Button
                   variant={isConnecting ? 'outline' : 'default'}

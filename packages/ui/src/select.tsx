@@ -81,7 +81,7 @@ function SelectTrigger({
       data-size={size}
       nativeButton={nativeButton}
       className={cn(
-        'bg-background border-border data-placeholder:text-muted-foreground flex w-fit items-center justify-between gap-1.5 rounded-[5px] border-2 py-2 pr-2 pl-3 [font-size:var(--font-ui-size,14px)] font-medium whitespace-nowrap transition-all outline-none',
+        'bg-background border-border data-placeholder:text-muted-foreground flex w-fit items-center justify-between gap-1.5 rounded-lg border py-2 pr-2 pl-3 [font-size:var(--font-ui-size,14px)] font-medium whitespace-nowrap transition-all outline-none',
         'focus-visible:ring-main focus-visible:ring-2 focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50',
         'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
@@ -130,7 +130,7 @@ function SelectContent({
           data-slot="select-content"
           className={cn(
             'bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-            'border-border relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-[5px] border-2 shadow-[4px_4px_0px_0px_var(--border)] duration-100',
+            'border-border relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg border shadow-md duration-100',
             className
           )}
           {...props}
