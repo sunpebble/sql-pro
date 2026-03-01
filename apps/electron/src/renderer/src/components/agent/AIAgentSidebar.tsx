@@ -324,6 +324,7 @@ export function AIAgentSidebar({
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label={t('agent.deleteSession', 'Delete Session')}
                       className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -545,6 +546,7 @@ export function AIAgentSidebar({
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label={t('common.close', 'Close')}
                 className="text-destructive hover:bg-destructive/10 hover:text-destructive h-6 w-6"
                 onClick={clearError}
                 title={t('common.close', 'Close')}
@@ -577,6 +579,7 @@ export function AIAgentSidebar({
                   type="button"
                   variant="ghost"
                   size="icon"
+                  aria-label={t('agent.cancel', 'Cancel')}
                   className="text-primary hover:bg-primary/10 hover:text-primary rounded-base h-8 w-8 shrink-0"
                   onClick={stop}
                 >
@@ -592,6 +595,7 @@ export function AIAgentSidebar({
               <TooltipTrigger>
                 <button
                   type="submit"
+                  aria-label={t('agent.send', 'Send')}
                   disabled={!input.trim() || !isConfigured}
                   className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-base flex h-8 w-8 shrink-0 items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-40"
                 >

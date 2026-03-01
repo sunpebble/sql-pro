@@ -1,0 +1,3 @@
+## 2025-03-01 - Added aria-label to AI Agent Toolbars
+**Learning:** Icon-only buttons in complex dialogs and sidebars (like AIAgentSidebar and AIAgentDialog) often rely on Tooltips for visual users, but still need explicit \`aria-label\` attributes for screen reader accessibility. TooltipContent is not automatically linked as an accessible name unless specific aria attributes (like \`aria-describedby\`) are used, so a direct \`aria-label\` on the \`<Button size="icon">\` is the most robust approach.
+**Action:** When adding new icon-only buttons with Tooltips in this codebase, ensure they also have a direct \`aria-label\` that matches the tooltip text.
