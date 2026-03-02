@@ -212,7 +212,12 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
             </p>
           </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={onClose}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          aria-label={t('common.close', { defaultValue: 'Close' })}
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>

@@ -60,7 +60,14 @@ export function SchemaDetailsPanel({
           <h2 className="font-semibold">
             {t('schema.title', { defaultValue: 'Schema Details' })}
           </h2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            aria-label={t('schema.closeDetails', {
+              defaultValue: 'Close details',
+            })}
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -106,7 +113,14 @@ export function SchemaDetailsPanel({
             </p>
           </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={onClose}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          aria-label={t('schema.closeDetails', {
+            defaultValue: 'Close details',
+          })}
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>
