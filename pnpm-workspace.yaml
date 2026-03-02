@@ -24,11 +24,11 @@ catalogs:
     vitest: ^4.0.18
     tsx: ^4.21.0
     husky: ^9.1.7
-    lint-staged: ^16.2.7
+    lint-staged: ^16.3.1
     '@vitejs/plugin-react': ^5.1.4
 
     # ESLint
-    '@antfu/eslint-config': ^7.4.3
+    '@antfu/eslint-config': ^7.6.1
     '@commitlint/cli': ^20.4.2
     '@commitlint/config-conventional': ^20.4.2
     '@eslint-react/eslint-plugin': ^2.13.0
@@ -37,10 +37,10 @@ catalogs:
     prettier-plugin-tailwindcss: ^0.7.2
 
     # Nx
-    nx: ^22.5.2
-    '@nx/js': ^22.5.2
-    '@nx/vite': ^22.5.2
-    '@nx/workspace': ^22.5.2
+    nx: ^22.5.3
+    '@nx/js': ^22.5.3
+    '@nx/vite': ^22.5.3
+    '@nx/workspace': ^22.5.3
 
     # Tailwind
     tailwindcss: ^4.2.1
@@ -59,9 +59,9 @@ catalogs:
     input-otp: ^1.4.2
     embla-carousel-react: ^8.6.0
     date-fns: ^4.1.0
-    react-day-picker: ^9.13.2
-    react-resizable-panels: ^4.6.5
-    recharts: ^3.6.0
+    react-day-picker: ^9.14.0
+    react-resizable-panels: ^4.7.0
+    recharts: ^3.7.0
     react-colorful: ^5.6.1
     framer-motion: ^12.34.3
     next-themes: ^0.4.6
@@ -69,26 +69,26 @@ catalogs:
     '@radix-ui/react-label': ^2.1.8
 
     # TanStack
-    '@tanstack/ai': ^0.5.1
-    '@tanstack/ai-anthropic': ^0.5.0
-    '@tanstack/ai-react': ^0.5.4
-    '@tanstack/db': ^0.5.28
+    '@tanstack/ai': ^0.6.1
+    '@tanstack/ai-anthropic': ^0.6.0
+    '@tanstack/ai-react': ^0.6.1
+    '@tanstack/db': ^0.5.30
     '@tanstack/query-core': ^5.90.20
-    '@tanstack/query-db-collection': ^1.0.25
-    '@tanstack/react-db': ^0.1.72
+    '@tanstack/query-db-collection': ^1.0.27
+    '@tanstack/react-db': ^0.1.74
     '@tanstack/react-query': ^5.90.21
-    '@tanstack/react-router': ^1.162.8
+    '@tanstack/react-router': ^1.163.3
     '@tanstack/react-table': ^8.21.3
     '@tanstack/react-virtual': ^3.13.19
 
     # AI SDK
-    '@ai-sdk/anthropic': ^3.0.46
-    '@ai-sdk/openai': ^3.0.31
-    '@ai-sdk/openai-compatible': ^2.0.30
-    '@ai-sdk/react': ^3.0.99
-    '@anthropic-ai/claude-agent-sdk': ^0.2.50
-    ai: ^6.0.97
-    openai: ^6.23.0
+    '@ai-sdk/anthropic': ^3.0.50
+    '@ai-sdk/openai': ^3.0.37
+    '@ai-sdk/openai-compatible': ^2.0.31
+    '@ai-sdk/react': ^3.0.107
+    '@anthropic-ai/claude-agent-sdk': ^0.2.63
+    ai: ^6.0.105
+    openai: ^6.25.0
 
     # DnD Kit
     '@dnd-kit/core': ^6.3.1
@@ -113,8 +113,8 @@ catalogs:
     # 数据库
     better-sqlite3-multiple-ciphers: ^12.6.2
     '@libsql/client': ^0.17.0
-    mysql2: ^3.18.0
-    pg: ^8.18.0
+    mysql2: ^3.18.2
+    pg: ^8.19.0
     '@qdrant/js-client-rest': ^1.17.0
 
     # Monaco
@@ -142,17 +142,17 @@ catalogs:
     ajv: ^8.18.0
 
     # Cloudflare
-    hono: ^4.12.2
-    wrangler: ^4.68.0
-    '@cloudflare/workers-types': ^4.20260303.0
-    stripe: ^20.3.1
+    hono: ^4.12.3
+    wrangler: ^4.69.0
+    '@cloudflare/workers-types': ^4.20260305.0
+    stripe: ^20.4.0
     nanoid: ^5.1.6
-    resend: ^6.9.2
+    resend: ^6.9.3
 
     # Remotion
-    '@remotion/cli': ^4.0.428
-    '@remotion/transitions': ^4.0.428
-    remotion: ^4.0.428
+    '@remotion/cli': ^4.0.431
+    '@remotion/transitions': ^4.0.431
+    remotion: ^4.0.431
 
     # 图表 & 可视化
     '@xyflow/react': ^12.10.1
@@ -164,7 +164,7 @@ catalogs:
     exceljs: ^4.4.0
     express: ^5.2.1
     html-to-image: ^1.11.13
-    minimatch: 10.2.2
+    minimatch: 10.2.4
     papaparse: ^5.5.3
     react-markdown: ^10.1.0
     react-resizable: ^3.1.3
@@ -180,12 +180,12 @@ catalogs:
 
     # Types
     '@types/better-sqlite3': ^7.6.13
-    '@types/dagre': ^0.7.53
+    '@types/dagre': ^0.7.54
     '@types/exceljs': ^1.3.2
     '@types/express': ^5.0.6
-    '@types/node': ^25.3.0
+    '@types/node': ^25.3.3
     '@types/papaparse': ^5.5.2
-    '@types/pg': ^8.16.0
+    '@types/pg': ^8.18.0
     '@types/react-resizable': ^3.0.8
     '@types/ssh2': ^1.15.5
 
@@ -193,7 +193,7 @@ catalogs:
     vitepress: 2.0.0-alpha.16
 
     # 其他
-    '@typescript/native-preview': 7.0.0-dev.20260223.1
+    '@typescript/native-preview': 7.0.0-dev.20260301.1
 
 overrides:
   '@img/sharp-darwin-arm64': 0.34.5
