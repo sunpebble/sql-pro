@@ -429,41 +429,12 @@
 }
 
 /* ═══════════════════════════════════════
-   GLASSMORPHISM & MODERN UTILITIES
+   UTILITY CLASSES
    ═══════════════════════════════════════ */
 
 /* Base rounded corners */
 .rounded-base {
   border-radius: var(--radius-md);
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-.dark .glass {
-  background: rgba(9, 9, 11, 0.7);
-}
-
-.glass-panel {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-.dark .glass-panel {
-  background: rgba(9, 9, 11, 0.5);
-}
-
-/* Shadow utilities */
-.shadow-shadow {
-  box-shadow: var(--shadow);
-}
-.shadow-shadow-sm {
-  box-shadow: var(--shadow-sm);
-}
-.shadow-shadow-lg {
-  box-shadow: var(--shadow-lg);
 }
 
 /* Font utilities */
@@ -715,60 +686,11 @@ th {
    MODERN COMPONENT PATTERNS
    ═══════════════════════════════════════ */
 
-/* Modern button hover/active effect */
-.btn-neo {
-  transition: all 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  border-radius: var(--radius-md);
-}
-
-.btn-neo:active {
-  transform: scale(0.95) !important;
-}
-
-/* Modern card hover effect */
-.card-neo {
-  transition: all 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-}
-
-.card-neo:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
 /* Primary text highlight */
 .text-gradient-primary {
   background-clip: text;
   -webkit-background-clip: text;
   color: var(--main);
-}
-
-/* Grid backgrounds (Modern thin lines) */
-.bg-grid-dot {
-  background-color: var(--background);
-  background-image: radial-gradient(
-    circle at center,
-    var(--border) 1px,
-    transparent 1px
-  );
-  background-size: 24px 24px;
-}
-
-.bg-grid-line {
-  background-color: var(--background);
-  background-image:
-    linear-gradient(to right, var(--border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Glass effect with gold accent */
-.glass-gold {
-  background-color: rgba(var(--card), 0.8);
-  backdrop-filter: blur(12px);
-  border-left: 3px solid var(--primary);
 }
 
 /* ═══════════════════════════════════════
@@ -829,24 +751,6 @@ th {
   background: var(--card);
 }
 
-.card-interactive {
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  padding: 0.75rem;
-  box-shadow: var(--shadow-sm);
-  transition: all 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  background: var(--card);
-}
-
-.card-interactive:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-.card-interactive:active {
-  transform: scale(0.98);
-}
-
 .setting-row {
   display: flex;
   align-items: center;
@@ -854,42 +758,6 @@ th {
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   padding: 0.75rem;
-}
-
-/* ═══════════════════════════════════════
-   LEGACY GOLD THEME COMPATIBILITY
-   ═══════════════════════════════════════ */
-
-:root {
-  --gold: var(--main);
-  --gold-bright: var(--main);
-  --gold-dark: #ea580c;
-  --gold-glow: rgba(249, 115, 22, 0.2);
-  --gold-subtle: rgba(249, 115, 22, 0.1);
-}
-
-.text-gradient-gold {
-  color: var(--main);
-}
-.glow-gold {
-  box-shadow: 0 0 10px var(--gold-glow);
-}
-.btn-gold-active {
-  color: var(--main);
-  background-color: var(--gold-subtle);
-}
-.hover-gold:hover {
-  color: var(--main);
-  background-color: var(--gold-subtle);
-}
-.text-gold {
-  color: var(--main);
-}
-.bg-gold {
-  background-color: var(--main);
-}
-.border-gold {
-  border-color: var(--main);
 }
 
 /* ═══════════════════════════════════════
@@ -972,20 +840,6 @@ th {
   border: 1px solid var(--border) !important;
   border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-lg) !important;
-}
-
-/* ═══════════════════════════════════════
-   BUTTON ACTIVE/PRESSED STATES
-   ═══════════════════════════════════════ */
-
-.btn-neo:active {
-  transform: scale(0.95) !important;
-  transition-duration: 50ms;
-}
-
-[class*='shadow-shadow']:active:not(:disabled):not([data-no-active]) {
-  transform: scale(0.98);
-  transition-duration: 50ms;
 }
 
 /* ═══════════════════════════════════════
