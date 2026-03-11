@@ -140,7 +140,7 @@ export const ReasoningTrigger = memo(
     return (
       <CollapsibleTrigger
         className={cn(
-          'flex w-full items-center gap-2 px-3 py-2 transition-colors hover:bg-[var(--gold,hsl(var(--primary)))]/5',
+          'hover:bg-primary/5 flex w-full items-center gap-2 px-3 py-2 transition-colors',
           className
         )}
         {...props}
@@ -149,18 +149,18 @@ export const ReasoningTrigger = memo(
           <>
             <ChevronDownIcon
               className={cn(
-                'h-3.5 w-3.5 text-[var(--gold,hsl(var(--primary)))] transition-transform',
+                'text-primary h-3.5 w-3.5 transition-transform',
                 isOpen ? 'rotate-0' : '-rotate-90'
               )}
             />
-            <BrainIcon className="h-3.5 w-3.5 text-[var(--gold,hsl(var(--primary)))]" />
-            <span className="font-medium text-[var(--gold,hsl(var(--primary)))]">
+            <BrainIcon className="text-primary h-3.5 w-3.5" />
+            <span className="text-primary font-medium">
               {isStreaming || duration === 0
                 ? title
                 : `Thought for ${duration}s`}
             </span>
             {isStreaming && (
-              <Loader2 className="ml-1 h-3 w-3 animate-spin text-[var(--gold,hsl(var(--primary)))]" />
+              <Loader2 className="text-primary ml-1 h-3 w-3 animate-spin" />
             )}
           </>
         )}
@@ -191,7 +191,7 @@ export const ReasoningContent = memo(
         <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
           {children}
           {isStreaming && (
-            <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-[var(--gold,hsl(var(--primary)))]" />
+            <span className="bg-primary ml-0.5 inline-block h-3 w-0.5 animate-pulse" />
           )}
         </div>
       </CollapsibleContent>

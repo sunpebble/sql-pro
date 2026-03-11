@@ -186,15 +186,15 @@ function Shimmer({ className }: { className?: string }) {
     <div className={cn('flex items-center gap-2 py-1', className)}>
       <div className="flex gap-1">
         <span
-          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--gold)]"
+          className="bg-primary h-1.5 w-1.5 animate-bounce rounded-full"
           style={{ animationDelay: '0ms' }}
         />
         <span
-          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--gold)]"
+          className="bg-primary h-1.5 w-1.5 animate-bounce rounded-full"
           style={{ animationDelay: '150ms' }}
         />
         <span
-          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--gold)]"
+          className="bg-primary h-1.5 w-1.5 animate-bounce rounded-full"
           style={{ animationDelay: '300ms' }}
         />
       </div>
@@ -231,7 +231,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
     <div
       className={cn(
         'rounded-base border-border bg-muted my-2 border',
-        isStreaming && 'border-[var(--gold)]/50',
+        isStreaming && 'border-primary/50',
         className
       )}
     >
@@ -239,20 +239,20 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center gap-2 px-3 py-2 transition-colors hover:bg-[var(--gold)]/5"
+        className="hover:bg-primary/5 flex w-full items-center gap-2 px-3 py-2 transition-colors"
         style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
       >
         {isExpanded ? (
-          <ChevronDown className="h-3.5 w-3.5 text-[var(--gold)]" />
+          <ChevronDown className="text-primary h-3.5 w-3.5" />
         ) : (
-          <ChevronRight className="h-3.5 w-3.5 text-[var(--gold)]" />
+          <ChevronRight className="text-primary h-3.5 w-3.5" />
         )}
-        <Brain className="h-3.5 w-3.5 text-[var(--gold)]" />
-        <span className="font-medium text-[var(--gold)]">
+        <Brain className="text-primary h-3.5 w-3.5" />
+        <span className="text-primary font-medium">
           {t('agent.reasoningTitle', 'Thinking')}
         </span>
         {isStreaming && (
-          <Loader2 className="ml-1 h-3 w-3 animate-spin text-[var(--gold)]" />
+          <Loader2 className="text-primary ml-1 h-3 w-3 animate-spin" />
         )}
         {!isExpanded && !isStreaming && (
           <span className="text-muted-foreground text-2xs ml-auto">
@@ -268,7 +268,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
         >
           {text}
           {isStreaming && (
-            <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-[var(--gold)]" />
+            <span className="bg-primary ml-0.5 inline-block h-3 w-0.5 animate-pulse" />
           )}
         </div>
       )}
@@ -669,7 +669,7 @@ function TextResponse({ text, isStreaming }: TextResponseProps) {
         {text}
       </Markdown>
       {isStreaming && (
-        <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-[var(--gold)]" />
+        <span className="bg-primary ml-0.5 inline-block h-4 w-0.5 animate-pulse" />
       )}
     </div>
   );
