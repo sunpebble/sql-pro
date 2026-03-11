@@ -34,3 +34,6 @@ coverage
 
 packages/docs/.vitepress/cache
 packages/license-api/.dev.vars
+
+# Superpowers brainstorm artifacts
+.superpowers
