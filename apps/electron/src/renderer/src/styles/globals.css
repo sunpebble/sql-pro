@@ -221,56 +221,63 @@
   color-scheme: dark;
 
   /* Main/Primary color */
-  --main: #fb923c;
+  --main: #fafafa;
   --main-foreground: #09090b;
 
   /* Core colors */
   --background: #09090b;
   --foreground: #fafafa;
   --secondary-background: #18181b;
-  --overlay: rgba(0, 0, 0, 0.8);
+  --overlay: rgba(9, 9, 11, 0.85);
 
   /* Border - subtle dark */
-  --border: #27272a;
-  --ring: #fb923c;
-  --input: #27272a;
+  --border: transparent;
+  --ring: #52525b;
+  --input: #111113;
 
   /* Card */
-  --card: #09090b;
+  --card: #111113;
   --card-foreground: #fafafa;
 
   /* Popover */
-  --popover: #09090b;
+  --popover: #111113;
   --popover-foreground: #fafafa;
 
   /* Primary */
-  --primary: #fb923c;
+  --primary: #fafafa;
   --primary-foreground: #09090b;
 
   /* Secondary */
-  --secondary: #27272a;
+  --secondary: #18181b;
   --secondary-foreground: #fafafa;
 
   /* Muted */
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
+  --muted: #111113;
+  --muted-foreground: #71717a;
 
   /* Accent */
-  --accent: #27272a;
+  --accent: #18181b;
   --accent-foreground: #fafafa;
 
   /* Destructive */
   --destructive: #f87171;
 
   /* Sidebar */
-  --sidebar: #09090b;
+  --sidebar: #0c0c0e;
   --sidebar-foreground: #fafafa;
-  --sidebar-primary: #fb923c;
+  --sidebar-primary: #fafafa;
   --sidebar-primary-foreground: #09090b;
   --sidebar-accent: #18181b;
   --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #fb923c;
+  --sidebar-border: transparent;
+  --sidebar-ring: #52525b;
+
+  /* Chart colors */
+  --chart-1: #e4e4e7;
+  --chart-2: #a1a1aa;
+  --chart-3: #71717a;
+  --chart-4: #52525b;
+  --chart-5: #3f3f46;
 
   /* Status colors */
   --success: #4ade80;
@@ -293,10 +300,9 @@
   --type-unknown-bg: rgba(107, 114, 128, 0.15);
 
   /* Dark mode shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-lg: none;
 }
 
 /* ═══════════════════════════════════════
