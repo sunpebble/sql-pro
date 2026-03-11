@@ -465,9 +465,6 @@
 [data-slot='tooltip-content'] {
   font-size: var(--font-ui-size);
   font-family: var(--font-ui-family, var(--font-sans));
-  /* Modern shadows for portals */
-  box-shadow: var(--shadow-lg) !important;
-  border: 1px solid var(--border) !important;
 }
 
 [data-ui-font] {
@@ -577,10 +574,10 @@ textarea,
 
 @keyframes row-highlight {
   0% {
-    background-color: rgba(249, 115, 22, 0.4);
+    background-color: rgba(161, 161, 170, 0.4);
   }
   50% {
-    background-color: rgba(249, 115, 22, 0.25);
+    background-color: rgba(161, 161, 170, 0.25);
   }
   100% {
     background-color: transparent;
@@ -802,44 +799,31 @@ th {
    ═══════════════════════════════════════ */
 
 .monaco-editor .suggest-widget {
-  border: 1px solid var(--border) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-lg) !important;
 }
 
 .monaco-editor .suggest-details {
-  border: 1px solid var(--border) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-lg) !important;
 }
 
 .monaco-editor .monaco-hover {
-  border: 1px solid var(--border) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-lg) !important;
 }
 
 .monaco-editor .find-widget {
-  border: 1px solid var(--border) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-lg) !important;
 }
 
 .monaco-editor .find-widget .monaco-inputbox {
-  border: 1px solid var(--border) !important;
   border-radius: var(--radius-sm) !important;
 }
 
 .monaco-editor .parameter-hints-widget {
-  border: 1px solid var(--border) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-lg) !important;
 }
 
 .monaco-editor .monaco-menu .monaco-action-bar.vertical {
-  border: 1px solid var(--border) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-lg) !important;
 }
 
 /* ═══════════════════════════════════════
@@ -922,16 +906,12 @@ th {
 
 [data-slot='dialog-overlay'] {
   background: var(--overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   transition: opacity 150ms ease;
 }
 
 [data-slot='dialog-content'] {
   animation: dialog-enter 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-lg);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
 }
 
 @keyframes dialog-enter {
@@ -976,7 +956,7 @@ th {
    ═══════════════════════════════════════ */
 
 ::selection {
-  background: rgba(249, 115, 22, 0.2);
+  background: rgba(161, 161, 170, 0.2);
   color: var(--foreground);
 }
 
