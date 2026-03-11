@@ -45,7 +45,7 @@ function DeveloperPanel({ onOpenChange }: DeveloperPanelProps) {
 
       <button
         onClick={handleOpenMemoryMonitor}
-        className="card-interactive flex w-full items-center justify-between"
+        className="bg-card hover:bg-accent flex w-full items-center justify-between rounded-lg transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-full">
