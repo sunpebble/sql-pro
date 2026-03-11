@@ -35,8 +35,6 @@ export * from './dropdown-menu';
 export * from './empty';
 export * from './field';
 export * from './form';
-// Branded Components
-export * from './gold-button';
 export * from './hover-card';
 export * from './input';
 export * from './input-group';
