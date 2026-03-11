@@ -230,7 +230,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
   return (
     <div
       className={cn(
-        'rounded-base my-2 border border-[var(--gold-muted)]/30 bg-[var(--gold-subtle)]',
+        'rounded-base border-border bg-muted my-2 border',
         isStreaming && 'border-[var(--gold)]/50',
         className
       )}
@@ -263,7 +263,7 @@ function Reasoning({ text, isStreaming, className }: ReasoningProps) {
       {/* ReasoningContent */}
       {isExpanded && (
         <div
-          className="text-muted-foreground border-t border-[var(--gold-muted)]/20 px-3 py-2.5 leading-relaxed whitespace-pre-wrap"
+          className="text-muted-foreground border-border border-t px-3 py-2.5 leading-relaxed whitespace-pre-wrap"
           style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         >
           {text}
