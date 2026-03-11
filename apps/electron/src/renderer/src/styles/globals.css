@@ -125,44 +125,44 @@
 :root {
   color-scheme: light;
 
-  /* Main/Primary color - Orange */
-  --main: #f97316;
-  --main-foreground: #ffffff;
+  /* Main/Primary color */
+  --main: #09090b;
+  --main-foreground: #fafafa;
 
   /* Core colors (zinc-based) */
   --background: #ffffff;
   --foreground: #09090b;
   --secondary-background: #f4f4f5;
-  --overlay: rgba(0, 0, 0, 0.4);
+  --overlay: rgba(228, 228, 231, 0.7);
 
   /* Border - subtle */
-  --border: #e4e4e7;
-  --ring: #f97316;
-  --input: #e4e4e7;
+  --border: transparent;
+  --ring: #a1a1aa;
+  --input: #fafafa;
 
   /* Card */
-  --card: #ffffff;
+  --card: #fafafa;
   --card-foreground: #09090b;
 
   /* Popover */
-  --popover: #ffffff;
+  --popover: #fafafa;
   --popover-foreground: #09090b;
 
   /* Primary */
-  --primary: #f97316;
-  --primary-foreground: #ffffff;
+  --primary: #09090b;
+  --primary-foreground: #fafafa;
 
   /* Secondary */
   --secondary: #f4f4f5;
-  --secondary-foreground: #09090b;
+  --secondary-foreground: #3f3f46;
 
   /* Muted */
-  --muted: #f4f4f5;
+  --muted: #fafafa;
   --muted-foreground: #71717a;
 
   /* Accent */
-  --accent: #fff7ed;
-  --accent-foreground: #ea580c;
+  --accent: #f4f4f5;
+  --accent-foreground: #3f3f46;
 
   /* Destructive */
   --destructive: #ef4444;
@@ -173,19 +173,19 @@
   /* Sidebar (zinc-50) */
   --sidebar: #fafafa;
   --sidebar-foreground: #09090b;
-  --sidebar-primary: #f97316;
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary: #09090b;
+  --sidebar-primary-foreground: #fafafa;
   --sidebar-accent: #f4f4f5;
   --sidebar-accent-foreground: #09090b;
-  --sidebar-border: #e4e4e7;
-  --sidebar-ring: #f97316;
+  --sidebar-border: transparent;
+  --sidebar-ring: #a1a1aa;
 
   /* Chart colors */
-  --chart-1: #f97316;
-  --chart-2: #3b82f6;
-  --chart-3: #22c55e;
-  --chart-4: #a855f7;
-  --chart-5: #f59e0b;
+  --chart-1: #18181b;
+  --chart-2: #3f3f46;
+  --chart-3: #71717a;
+  --chart-4: #a1a1aa;
+  --chart-5: #d4d4d8;
 
   /* Status colors */
   --success: #22c55e;
@@ -208,10 +208,9 @@
   --type-unknown-bg: rgba(156, 163, 175, 0.1);
 
   /* Modern Drop Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-lg: none;
 }
 
 /* ═══════════════════════════════════════
