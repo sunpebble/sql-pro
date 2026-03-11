@@ -15,8 +15,7 @@ function Toaster({ className, toastOptions, ...props }: ToasterProps) {
         classNames: {
           toast: cn(
             'group toast',
-            'bg-background/95 text-foreground border-border/60',
-            'group-[.toaster]:border group-[.toaster]:shadow-lg group-[.toaster]:backdrop-blur-sm',
+            'bg-background text-foreground',
             'group-[.toaster]:rounded-lg group-[.toaster]:p-4',
             toastOptions?.classNames?.toast
           ),
@@ -43,7 +42,6 @@ function Toaster({ className, toastOptions, ...props }: ToasterProps) {
           closeButton: cn(
             'group-[.toast]:bg-background group-[.toast]:text-muted-foreground',
             'group-[.toast]:hover:bg-muted group-[.toast]:hover:text-foreground',
-            'group-[.toast]:border-border/60 group-[.toast]:border',
             'group-[.toast]:rounded-full group-[.toast]:p-1',
             toastOptions?.classNames?.closeButton
           ),
