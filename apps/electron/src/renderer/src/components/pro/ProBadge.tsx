@@ -56,7 +56,7 @@ const sizeStyles: Record<'default' | 'sm' | 'lg', React.CSSProperties> = {
 
 /**
  * Badge component to indicate Pro features in the UI.
- * Shows a gold-colored badge with a crown icon.
+ * Shows a badge with a crown icon to indicate Pro features.
  */
 function ProBadge({
   className,

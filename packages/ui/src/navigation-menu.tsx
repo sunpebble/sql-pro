@@ -29,7 +29,6 @@ function NavigationMenuList({
   ...props
 }: NavigationMenuPrimitive.List.Props) {
   return (
-    // @ts-expect-error - base-ui type mismatch: exports HTMLDivElement ref but renders <ul>
     <NavigationMenuPrimitive.List
       data-slot="navigation-menu-list"
       className={cn(
@@ -46,7 +45,6 @@ function NavigationMenuItem({
   ...props
 }: NavigationMenuPrimitive.Item.Props) {
   return (
-    // @ts-expect-error - base-ui type mismatch: exports HTMLDivElement ref but renders <li>
     <NavigationMenuPrimitive.Item
       data-slot="navigation-menu-item"
       className={cn('relative', className)}
@@ -145,7 +143,6 @@ function NavigationMenuIndicator({
   ...props
 }: NavigationMenuPrimitive.Icon.Props) {
   return (
-    // @ts-expect-error - base-ui type mismatch: exports HTMLDivElement ref but renders <span>
     <NavigationMenuPrimitive.Icon
       data-slot="navigation-menu-indicator"
       className={cn(
