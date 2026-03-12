@@ -1,4 +1,5 @@
 import type { Row } from '@tanstack/react-table';
+import type { Virtualizer } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema, PendingChange } from '@/types/database';
 import { Checkbox } from '@sqlpro/ui/checkbox';
@@ -345,6 +346,8 @@ const DataRow = memo(
 
 interface TableBodyProps {
   rows: Row<TableRowData>[];
+  /** Row virtualizer instance from @tanstack/react-virtual */
+  rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
   // Editing props
   editable?: boolean;
   onCellClick?: (rowId: string, columnId: string) => void;
@@ -385,6 +388,7 @@ interface TableBodyProps {
 export const TableBody = memo(
   ({
     rows,
+    rowVirtualizer,
     editable = false,
     onCellClick,
     onCellDoubleClick,
@@ -451,31 +455,45 @@ export const TableBody = memo(
       return colonIndex > 0 ? editingCellKey.slice(0, colonIndex) : null;
     }, [editingCellKey]);
 
-    // Map rows to render with their indices
-    const rowsToRender = useMemo(
-      () => rows.map((row, index) => ({ index, row })),
-      [rows]
-    );
+    // Get virtual items from the virtualizer
+    const virtualItems = rowVirtualizer.getVirtualItems();
 
-    // Pre-compute drag range to avoid function calls in render loop
-    // This improves performance during scroll by not calling isInDragRange for each row
+    // Pre-compute drag range for virtual items only (not all rows)
     const dragRangeByIndex = useMemo(() => {
       if (!isInDragRange) return null;
       const result = new Map<number, boolean>();
-      for (const item of rowsToRender) {
-        result.set(item.index, isInDragRange(item.index));
+      for (const virtualItem of virtualItems) {
+        result.set(virtualItem.index, isInDragRange(virtualItem.index));
       }
       return result;
-    }, [rowsToRender, isInDragRange]);
+    }, [virtualItems, isInDragRange]);
 
     // Compute selected row count for context menu label
     const selectedRowCount = useMemo(() => {
       return rows.filter((row) => row.getIsSelected()).length;
     }, [rows]);
 
+    // Calculate padding for virtual space before and after visible rows
+    const [paddingTop, paddingBottom] = useMemo(() => {
+      if (virtualItems.length === 0) return [0, 0];
+      const first = virtualItems[0];
+      const last = virtualItems[virtualItems.length - 1];
+      return [first.start, rowVirtualizer.getTotalSize() - last.end];
+    }, [virtualItems, rowVirtualizer]);
+
     return (
       <tbody>
-        {rowsToRender.map(({ index: dataIndex, row }) => {
+        {/* Top spacer row for virtual scroll space */}
+        {paddingTop > 0 && (
+          <tr aria-hidden="true">
+            <td style={{ height: paddingTop, padding: 0, border: 'none' }} />
+          </tr>
+        )}
+
+        {/* Only render visible virtual items */}
+        {virtualItems.map((virtualItem) => {
+          const dataIndex = virtualItem.index;
+          const row = rows[dataIndex];
           if (!row) return null;
 
           const isGroupRow = row.getIsGrouped?.() ?? false;
@@ -535,6 +553,13 @@ export const TableBody = memo(
             />
           );
         })}
+
+        {/* Bottom spacer row for virtual scroll space */}
+        {paddingBottom > 0 && (
+          <tr aria-hidden="true">
+            <td style={{ height: paddingBottom, padding: 0, border: 'none' }} />
+          </tr>
+        )}
       </tbody>
     );
   }

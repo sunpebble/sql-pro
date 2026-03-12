@@ -3,19 +3,32 @@ import { useTranslation } from 'react-i18next';
 export default function Hero() {
   const { t } = useTranslation();
 
+  const tags = [
+    'SQLite & SQLCipher',
+    'Monaco Editor',
+    'Visual Diff',
+    'ER Diagrams',
+    'AI-Powered',
+  ];
+
   return (
     <section
-      className="relative flex min-h-screen items-center overflow-hidden py-24 md:py-32"
+      className="relative flex min-h-screen items-center overflow-hidden pt-16 pb-24 md:pb-32"
       aria-labelledby="hero-title"
     >
-      <div className="mx-auto flex max-w-[1280px] flex-col items-center px-5 text-center md:px-12">
+      {/* Background decorations */}
+      <div className="bg-grid-pattern pointer-events-none absolute inset-0 opacity-50" />
+      <div className="bg-main/5 pointer-events-none absolute top-1/4 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]" />
+      <div className="bg-main/3 pointer-events-none absolute right-0 bottom-0 h-[400px] w-[400px] rounded-full blur-[100px]" />
+
+      <div className="relative mx-auto flex max-w-[1280px] flex-col items-center px-5 text-center md:px-12">
         {/* Header Section */}
         <div className="animate-fade-up mb-12 flex max-w-[860px] flex-col items-center gap-6">
           {/* Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <span className="animate-float bg-main text-main-foreground border-border rounded-base inline-flex items-center gap-2 border px-4 py-2.5 text-sm font-semibold tracking-wide uppercase shadow-sm">
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <span className="bg-main/10 text-main border-main/20 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold">
               <svg
-                className="h-4 w-4"
+                className="h-3.5 w-3.5"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -26,18 +39,18 @@ export default function Hero() {
               </svg>
               Open Source
             </span>
-            <span className="text-muted-foreground bg-secondary-background border-border rounded-base border px-3 py-1.5 font-mono text-xs">
+            <span className="text-muted-foreground bg-secondary-background border-border rounded-full border px-3 py-1.5 font-mono text-xs">
               MIT License
             </span>
-            <span className="text-muted-foreground bg-secondary-background border-border rounded-base border px-3 py-1.5 font-mono text-xs">
+            <span className="text-muted-foreground bg-secondary-background border-border rounded-full border px-3 py-1.5 font-mono text-xs">
               v1.0.0
             </span>
           </div>
 
-          {/* Main Heading - keyword-rich for SEO */}
+          {/* Main Heading */}
           <h1
             id="hero-title"
-            className="text-foreground m-0 text-4xl leading-tight font-extrabold tracking-tight md:text-5xl lg:text-6xl"
+            className="text-foreground m-0 text-4xl leading-[1.1] font-extrabold tracking-tight md:text-5xl lg:text-6xl"
           >
             {t('hero.title')}
           </h1>
@@ -47,18 +60,12 @@ export default function Hero() {
             {t('hero.description')}
           </p>
 
-          {/* Key highlights as inline tags */}
+          {/* Feature tags */}
           <div className="flex flex-wrap items-center justify-center gap-2">
-            {[
-              'SQLite & SQLCipher',
-              'Monaco Editor',
-              'Visual Diff',
-              'ER Diagrams',
-              'AI-Powered',
-            ].map((tag, index) => (
+            {tags.map((tag, index) => (
               <span
                 key={tag}
-                className="animate-slide-up-fade text-foreground bg-secondary-background border-border rounded-base border px-3 py-1 text-xs font-medium"
+                className="animate-fade-up text-foreground/80 bg-secondary-background border-border rounded-full border px-3.5 py-1 text-xs font-medium"
                 style={{ animationDelay: `${0.4 + index * 0.08}s` }}
               >
                 {tag}
@@ -73,32 +80,29 @@ export default function Hero() {
           role="group"
           aria-label={t('a11y.mainNavigation')}
         >
-          <span className="relative">
-            <span className="animate-pulse-ring bg-main/30 rounded-base absolute inset-0" />
-            <a
-              href="#download"
-              className="bg-main text-main-foreground border-border rounded-base relative inline-flex items-center gap-2.5 border px-8 py-4 text-base font-semibold no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
+          <a
+            href="#download"
+            className="bg-main text-main-foreground rounded-base relative inline-flex items-center gap-2.5 px-8 py-3.5 text-base font-semibold no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+          >
+            <svg
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
             >
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              {t('hero.download')}
-            </a>
-          </span>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            {t('hero.download')}
+          </a>
           <a
             href="https://github.com/anthropics/sql-pro"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-7 py-4 text-base font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
+            className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-7 py-3.5 text-base font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
             aria-label={t('a11y.socialLink', { name: 'GitHub' })}
           >
             <svg
@@ -113,23 +117,38 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Product Video */}
-        <div className="animate-fade-up relative mx-auto w-full max-w-[1000px] transition-transform delay-200 duration-300 hover:scale-[1.01]">
-          <video
-            src="/promo.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="border-border rounded-base h-auto w-full border shadow-lg"
-            aria-label="SQL Pro product demonstration video showing Monaco SQL editor, inline data editing, ER diagrams, and multi-database management"
-          >
-            {/* Fallback for browsers that don't support video */}
-            <img
-              src="/screenshots/query-dark.png"
-              alt="SQL Pro — open-source SQLite database manager with Monaco SQL editor, autocomplete, and database sidebar navigation"
-            />
-          </video>
+        {/* Product Video with Window Chrome */}
+        <div className="animate-fade-up relative mx-auto w-full max-w-[1000px] delay-200">
+          <div className="border-border overflow-hidden rounded-xl border shadow-2xl transition-transform duration-300 hover:scale-[1.005]">
+            {/* macOS Window Title Bar */}
+            <div className="border-border bg-secondary-background flex items-center gap-2 border-b px-4 py-2.5">
+              <div className="flex gap-2">
+                <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
+                <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
+                <span className="h-3 w-3 rounded-full bg-[#27ca40]" />
+              </div>
+              <span className="text-muted-foreground flex-1 text-center text-xs font-medium">
+                SQL Pro
+              </span>
+              <div className="w-14" /> {/* Spacer for centering */}
+            </div>
+            <video
+              src="/promo.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="block h-auto w-full"
+              aria-label="SQL Pro product demonstration video showing Monaco SQL editor, inline data editing, ER diagrams, and multi-database management"
+            >
+              <img
+                src="/screenshots/query-dark.png"
+                alt="SQL Pro — open-source SQLite database manager with Monaco SQL editor, autocomplete, and database sidebar navigation"
+              />
+            </video>
+          </div>
+          {/* Glow effect behind video */}
+          <div className="bg-main/10 pointer-events-none absolute inset-0 -z-10 translate-y-4 rounded-xl blur-3xl" />
         </div>
       </div>
     </section>

@@ -20,6 +20,7 @@ import {
   EmptyTitle,
 } from '@sqlpro/ui/empty';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { Filter, Inbox, SearchX } from 'lucide-react';
 import {
   useCallback,
@@ -457,95 +458,112 @@ export const DataTable = function DataTable({
     [rows, onRowDelete]
   );
 
-  // Calculate visible range for all rows (no virtualization)
+  // Row height constant - must match the h-6 (24px) in DataRow className
+  const ROW_HEIGHT = 24;
+
+  // Row virtualizer for high-performance scrolling
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => containerRef.current,
+    estimateSize: () => ROW_HEIGHT,
+    overscan: 15,
+  });
+
+  // Get virtual items (this changes on scroll, triggering re-renders of dependent computations)
+  const virtualItems = rowVirtualizer.getVirtualItems();
+
+  // Calculate visible range from virtualizer for memory management
   const visibleRange = useMemo(() => {
-    return { startIndex: 0, endIndex: rows.length - 1 };
-  }, [rows.length]);
+    if (virtualItems.length === 0) {
+      return { startIndex: 0, endIndex: -1 };
+    }
+    return {
+      startIndex: virtualItems[0].index,
+      endIndex: virtualItems[virtualItems.length - 1].index,
+    };
+  }, [virtualItems]);
 
   // Auto-scroll to focused cell when navigating via keyboard
   useEffect(() => {
     if (focusedRowIndex < 0 || !focusedColumnId || !containerRef.current)
       return;
 
-    const container = containerRef.current;
-    const rowElement = container.querySelector(
-      `tr[data-row-index="${focusedRowIndex}"]`
-    ) as HTMLElement | null;
+    // Use virtualizer to scroll to the focused row - this ensures the row is
+    // rendered before we try to find its DOM element for horizontal scrolling
+    rowVirtualizer.scrollToIndex(focusedRowIndex, { align: 'auto' });
 
-    if (!rowElement) {
-      return;
-    }
+    // Wait for the virtualizer to render the target row before doing horizontal scroll
+    requestAnimationFrame(() => {
+      const container = containerRef.current;
+      if (!container) return;
 
-    // Find the focused cell within the row
-    const cellElement = rowElement.querySelector(
-      `td[data-column-id="${focusedColumnId}"]`
-    ) as HTMLElement | null;
+      const rowElement = container.querySelector(
+        `tr[data-row-index="${focusedRowIndex}"]`
+      ) as HTMLElement | null;
 
-    // Get actual header height from DOM
-    const thead = container.querySelector('thead');
-    const headerHeight = thead?.getBoundingClientRect().height ?? 0;
+      if (!rowElement) return;
 
-    // Calculate container bounds
-    const containerRect = container.getBoundingClientRect();
-    const rowRect = rowElement.getBoundingClientRect();
+      // Find the focused cell within the row
+      const cellElement = rowElement.querySelector(
+        `td[data-column-id="${focusedColumnId}"]`
+      ) as HTMLElement | null;
 
-    // Visible area for vertical scrolling (accounts for sticky header)
-    const visibleTop = containerRect.top + headerHeight;
-    const visibleBottom = containerRect.bottom;
+      // Horizontal scrolling only (vertical is handled by virtualizer)
+      if (cellElement) {
+        // Get actual header height from DOM
+        const containerRect = container.getBoundingClientRect();
 
-    // Vertical scrolling
-    if (rowRect.top < visibleTop) {
-      container.scrollTop -= visibleTop - rowRect.top;
-    } else if (rowRect.bottom > visibleBottom) {
-      container.scrollTop += rowRect.bottom - visibleBottom;
-    }
+        // Calculate the width of sticky elements on the left (selection column + pinned columns)
+        let stickyLeftWidth = 0;
 
-    // Horizontal scrolling
-    if (cellElement) {
-      const cellRect = cellElement.getBoundingClientRect();
+        // Check for selection column (sticky left-0)
+        if (enableSelection) {
+          const selectionCell = rowElement.querySelector(
+            'td.sticky'
+          ) as HTMLElement | null;
+          if (selectionCell) {
+            stickyLeftWidth = selectionCell.getBoundingClientRect().width;
+          }
+        }
 
-      // Calculate the width of sticky elements on the left (selection column + pinned columns)
-      let stickyLeftWidth = 0;
+        // Add pinned columns width
+        if (pinnedColumns.length > 0) {
+          const lastPinnedCell = rowElement.querySelector(
+            `td[data-column-id="${pinnedColumns[pinnedColumns.length - 1]}"]`
+          ) as HTMLElement | null;
+          if (lastPinnedCell) {
+            const lastPinnedRect = lastPinnedCell.getBoundingClientRect();
+            stickyLeftWidth = Math.max(
+              stickyLeftWidth,
+              lastPinnedRect.right - containerRect.left
+            );
+          }
+        }
 
-      // Check for selection column (sticky left-0)
-      if (enableSelection) {
-        const selectionCell = rowElement.querySelector(
-          'td.sticky'
-        ) as HTMLElement | null;
-        if (selectionCell) {
-          stickyLeftWidth = selectionCell.getBoundingClientRect().width;
+        const cellRect = cellElement.getBoundingClientRect();
+
+        // Visible horizontal area (accounts for sticky columns on the left)
+        const visibleLeft = containerRect.left + stickyLeftWidth;
+        const visibleRight = containerRect.right;
+        const scrollPadding = 4;
+
+        // Check if cell is hidden by sticky columns on the left
+        if (cellRect.left < visibleLeft + scrollPadding) {
+          container.scrollLeft -= visibleLeft - cellRect.left + scrollPadding;
+        }
+        // Check if cell is to the right of visible area
+        else if (cellRect.right > visibleRight - scrollPadding) {
+          container.scrollLeft += cellRect.right - visibleRight + scrollPadding;
         }
       }
-
-      // Add pinned columns width
-      if (pinnedColumns.length > 0) {
-        const lastPinnedCell = rowElement.querySelector(
-          `td[data-column-id="${pinnedColumns[pinnedColumns.length - 1]}"]`
-        ) as HTMLElement | null;
-        if (lastPinnedCell) {
-          const lastPinnedRect = lastPinnedCell.getBoundingClientRect();
-          stickyLeftWidth = Math.max(
-            stickyLeftWidth,
-            lastPinnedRect.right - containerRect.left
-          );
-        }
-      }
-
-      // Visible horizontal area (accounts for sticky columns on the left)
-      const visibleLeft = containerRect.left + stickyLeftWidth;
-      const visibleRight = containerRect.right;
-      const scrollPadding = 4;
-
-      // Check if cell is hidden by sticky columns on the left
-      if (cellRect.left < visibleLeft + scrollPadding) {
-        container.scrollLeft -= visibleLeft - cellRect.left + scrollPadding;
-      }
-      // Check if cell is to the right of visible area
-      else if (cellRect.right > visibleRight - scrollPadding) {
-        container.scrollLeft += cellRect.right - visibleRight + scrollPadding;
-      }
-    }
-  }, [focusedRowIndex, focusedColumnId, enableSelection, pinnedColumns]);
+    });
+  }, [
+    focusedRowIndex,
+    focusedColumnId,
+    enableSelection,
+    pinnedColumns,
+    rowVirtualizer,
+  ]);
 
   // Use virtual data management for memory-efficient row handling
   const virtualData = useVirtualData({
@@ -624,19 +642,25 @@ export const DataTable = function DataTable({
   // Expose imperative methods
   useImperativeHandle(ref, () => ({
     scrollToRow: (rowIndex: number, highlight = true) => {
-      const row = containerRef.current?.querySelector(
-        `[data-row-index="${rowIndex}"]`
-      );
-      if (row) {
-        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (highlight) {
-          // Add highlight animation class
-          row.classList.add('row-highlight-animation');
-          // Remove the class after animation completes
-          setTimeout(() => {
-            row.classList.remove('row-highlight-animation');
-          }, 2000);
-        }
+      // Use virtualizer for smooth scroll to row
+      rowVirtualizer.scrollToIndex(rowIndex, {
+        align: 'center',
+        behavior: 'smooth',
+      });
+
+      if (highlight) {
+        // Wait for virtualizer to render the row, then apply highlight
+        requestAnimationFrame(() => {
+          const row = containerRef.current?.querySelector(
+            `[data-row-index="${rowIndex}"]`
+          );
+          if (row) {
+            row.classList.add('row-highlight-animation');
+            setTimeout(() => {
+              row.classList.remove('row-highlight-animation');
+            }, 2000);
+          }
+        });
       }
     },
     focus: () => {
@@ -709,9 +733,10 @@ export const DataTable = function DataTable({
           ghostLineRef={ghostLineRef}
         />
 
-        {/* Table body - no virtualization */}
+        {/* Table body - virtualized rows */}
         <TableBody
           rows={rows}
+          rowVirtualizer={rowVirtualizer}
           editable={editable}
           onCellClick={handleCellClick}
           onCellDoubleClick={handleCellDoubleClick}
