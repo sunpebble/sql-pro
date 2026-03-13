@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeSwitcher from './ThemeSwitcher';
@@ -19,6 +19,7 @@ export default function TopBar() {
   const { t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuClosing, setMenuClosing] = useState(false);
   const [activeSection, setActiveSection] = useState('');
 
   // Scroll detection
@@ -38,7 +39,7 @@ export default function TopBar() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(`#${  entry.target.id}`);
+            setActiveSection(`#${entry.target.id}`);
           }
         });
       },
@@ -49,8 +50,38 @@ export default function TopBar() {
     return () => observer.disconnect();
   }, []);
 
+  // Body scroll lock when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.classList.add('menu-open');
+    } else {
+      document.body.classList.remove('menu-open');
+    }
+    return () => {
+      document.body.classList.remove('menu-open');
+    };
+  }, [mobileMenuOpen]);
+
+  // Close mobile menu with animation
+  const closeMobileMenu = useCallback(() => {
+    setMenuClosing(true);
+    setTimeout(() => {
+      setMobileMenuOpen(false);
+      setMenuClosing(false);
+    }, 150);
+  }, []);
+
   // Close mobile menu on navigation
-  const handleNavClick = () => setMobileMenuOpen(false);
+  const handleNavClick = () => closeMobileMenu();
+
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    if (mobileMenuOpen) {
+      closeMobileMenu();
+    } else {
+      setMobileMenuOpen(true);
+    }
+  };
 
   const getLabel = (labelKey: string, fallback: string) => {
     const translated = t(labelKey, { defaultValue: fallback });
@@ -65,7 +96,7 @@ export default function TopBar() {
           : ''
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-5 md:px-12">
+      <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-4 sm:px-5 md:px-12">
         {/* Logo */}
         <a
           href="#"
@@ -106,11 +137,11 @@ export default function TopBar() {
           </div>
           <UserMenu />
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger — 44x44px touch target */}
           <button
             type="button"
-            className="border-border bg-background text-foreground flex h-9 w-9 items-center justify-center rounded-md border transition-all duration-150 active:scale-95 md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="border-border bg-background text-foreground flex h-11 w-11 items-center justify-center rounded-md border transition-all duration-150 active:scale-95 md:hidden"
+            onClick={toggleMobileMenu}
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
           >
@@ -122,7 +153,7 @@ export default function TopBar() {
               stroke="currentColor"
               strokeWidth="2"
             >
-              {mobileMenuOpen ? (
+              {mobileMenuOpen && !menuClosing ? (
                 <path d="M18 6L6 18M6 6l12 12" />
               ) : (
                 <path d="M4 6h16M4 12h16M4 18h16" />
@@ -132,16 +163,20 @@ export default function TopBar() {
         </div>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* Mobile dropdown with enter/exit animation */}
       {mobileMenuOpen && (
-        <div className="border-border bg-background/95 animate-fade-in border-b backdrop-blur-md md:hidden">
-          <div className="flex flex-col gap-1 px-5 py-4">
+        <div
+          className={`border-border bg-background/95 border-b backdrop-blur-md md:hidden ${
+            menuClosing ? 'animate-slide-up-out' : 'animate-slide-down'
+          }`}
+        >
+          <div className="flex flex-col gap-1 px-4 py-4 sm:px-5">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={handleNavClick}
-                className={`rounded-md px-4 py-2.5 text-sm font-medium no-underline transition-all duration-150 ${
+                className={`rounded-md px-4 py-3 text-sm font-medium no-underline transition-all duration-150 ${
                   activeSection === link.href
                     ? 'text-main bg-main/10'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary-background'

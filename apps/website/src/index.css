@@ -562,6 +562,15 @@ pre {
    RESPONSIVE
    ═══════════════════════════════════════ */
 
+/* Body scroll lock when mobile menu is open */
+body.menu-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
 @media (max-width: 768px) {
   .shadow-shadow {
     box-shadow: var(--shadow-sm);
@@ -578,6 +587,43 @@ pre {
   .card-neo-lift:hover {
     transform: translateY(-2px) scale(1.01);
   }
+
+  /* Reduce card padding on mobile */
+  .card-neo,
+  .card-neo-static {
+    padding: 16px;
+  }
+}
+
+/* Slide-down animation for mobile menu */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.2s ease-out forwards;
+}
+
+.animate-slide-up-out {
+  animation: slide-up-out 0.15s ease-in forwards;
 }
 
 /* ═══════════════════════════════════════

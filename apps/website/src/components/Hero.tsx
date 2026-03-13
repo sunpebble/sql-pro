@@ -13,7 +13,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative flex min-h-screen items-center overflow-hidden pt-16 pb-24 md:pb-32"
+      className="relative flex min-h-screen items-center overflow-hidden pt-16 pb-16 md:pb-24 lg:pb-32"
       aria-labelledby="hero-title"
     >
       {/* Background decorations */}
@@ -21,12 +21,12 @@ export default function Hero() {
       <div className="bg-main/5 pointer-events-none absolute top-1/4 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]" />
       <div className="bg-main/3 pointer-events-none absolute right-0 bottom-0 h-[400px] w-[400px] rounded-full blur-[100px]" />
 
-      <div className="relative mx-auto flex max-w-[1280px] flex-col items-center px-5 text-center md:px-12">
+      <div className="relative mx-auto flex max-w-[1280px] flex-col items-center px-4 text-center sm:px-5 md:px-12">
         {/* Header Section */}
-        <div className="animate-fade-up mb-12 flex max-w-[860px] flex-col items-center gap-6">
+        <div className="animate-fade-up mb-8 flex max-w-[860px] flex-col items-center gap-5 sm:mb-12 sm:gap-6">
           {/* Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
-            <span className="bg-main/10 text-main border-main/20 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="bg-main/10 text-main border-main/20 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold sm:gap-2 sm:px-4 sm:py-1.5 sm:text-sm">
               <svg
                 className="h-3.5 w-3.5"
                 viewBox="0 0 24 24"
@@ -39,10 +39,10 @@ export default function Hero() {
               </svg>
               Open Source
             </span>
-            <span className="text-muted-foreground bg-secondary-background border-border rounded-full border px-3 py-1.5 font-mono text-xs">
+            <span className="text-muted-foreground bg-secondary-background border-border hidden rounded-full border px-3 py-1.5 font-mono text-xs sm:inline-flex">
               MIT License
             </span>
-            <span className="text-muted-foreground bg-secondary-background border-border rounded-full border px-3 py-1.5 font-mono text-xs">
+            <span className="text-muted-foreground bg-secondary-background border-border hidden rounded-full border px-3 py-1.5 font-mono text-xs sm:inline-flex">
               v1.0.0
             </span>
           </div>
@@ -50,13 +50,13 @@ export default function Hero() {
           {/* Main Heading */}
           <h1
             id="hero-title"
-            className="text-foreground m-0 text-4xl leading-[1.1] font-extrabold tracking-tight md:text-5xl lg:text-6xl"
+            className="text-foreground m-0 text-3xl leading-[1.1] font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
           >
             {t('hero.title')}
           </h1>
 
           {/* Description */}
-          <p className="text-muted-foreground max-w-[680px] text-lg leading-relaxed md:text-xl">
+          <p className="text-muted-foreground max-w-[680px] text-base leading-relaxed sm:text-lg md:text-xl">
             {t('hero.description')}
           </p>
 
@@ -76,13 +76,13 @@ export default function Hero() {
 
         {/* Actions */}
         <div
-          className="animate-fade-up mb-16 flex flex-wrap items-center justify-center gap-4 delay-100"
+          className="animate-fade-up mb-10 flex flex-wrap items-center justify-center gap-3 delay-100 sm:mb-16 sm:gap-4"
           role="group"
           aria-label={t('a11y.mainNavigation')}
         >
           <a
             href="#download"
-            className="bg-main text-main-foreground rounded-base relative inline-flex items-center gap-2.5 px-8 py-3.5 text-base font-semibold no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+            className="bg-main text-main-foreground rounded-base relative inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95 sm:gap-2.5 sm:px-8 sm:py-3.5 sm:text-base"
           >
             <svg
               className="h-5 w-5"
@@ -102,7 +102,7 @@ export default function Hero() {
             href="https://github.com/anthropics/sql-pro"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-7 py-3.5 text-base font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+            className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-5 py-3 text-sm font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95 sm:px-7 sm:py-3.5 sm:text-base"
             aria-label={t('a11y.socialLink', { name: 'GitHub' })}
           >
             <svg

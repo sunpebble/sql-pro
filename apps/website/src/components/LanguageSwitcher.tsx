@@ -21,7 +21,7 @@ export default function LanguageSwitcher() {
         id="language-select"
         value={i18n.language.split('-')[0]}
         onChange={handleChange}
-        className="bg-background border-border rounded-base text-foreground focus:ring-ring cursor-pointer appearance-none border py-2.5 pr-10 pl-3.5 font-sans text-sm font-medium shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md focus:ring-2 focus:outline-none"
+        className="bg-background border-border rounded-base text-foreground focus:ring-ring max-w-[140px] cursor-pointer appearance-none border py-2.5 pr-10 pl-3.5 font-sans text-sm font-medium shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md focus:ring-2 focus:outline-none"
         aria-label={t('a11y.languageSelector')}
       >
         {languages.map((lang) => (
