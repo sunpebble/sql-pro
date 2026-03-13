@@ -737,6 +737,7 @@ export const DataTable = function DataTable({
         <TableBody
           rows={rows}
           rowVirtualizer={rowVirtualizer}
+          virtualItems={virtualItems}
           editable={editable}
           onCellClick={handleCellClick}
           onCellDoubleClick={handleCellDoubleClick}

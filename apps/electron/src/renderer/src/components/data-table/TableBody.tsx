@@ -1,5 +1,5 @@
 import type { Row } from '@tanstack/react-table';
-import type { Virtualizer } from '@tanstack/react-virtual';
+import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema, PendingChange } from '@/types/database';
 import { Checkbox } from '@sqlpro/ui/checkbox';
@@ -348,6 +348,8 @@ interface TableBodyProps {
   rows: Row<TableRowData>[];
   /** Row virtualizer instance from @tanstack/react-virtual */
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
+  /** Virtual items array - passed as prop to ensure memo re-renders on scroll */
+  virtualItems: VirtualItem[];
   // Editing props
   editable?: boolean;
   onCellClick?: (rowId: string, columnId: string) => void;
@@ -389,6 +391,7 @@ export const TableBody = memo(
   ({
     rows,
     rowVirtualizer,
+    virtualItems,
     editable = false,
     onCellClick,
     onCellDoubleClick,
@@ -454,9 +457,6 @@ export const TableBody = memo(
       const colonIndex = editingCellKey.indexOf(':');
       return colonIndex > 0 ? editingCellKey.slice(0, colonIndex) : null;
     }, [editingCellKey]);
-
-    // Get virtual items from the virtualizer
-    const virtualItems = rowVirtualizer.getVirtualItems();
 
     // Pre-compute drag range for virtual items only (not all rows)
     const dragRangeByIndex = useMemo(() => {
