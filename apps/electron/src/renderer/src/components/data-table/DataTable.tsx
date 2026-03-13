@@ -230,16 +230,21 @@ export const DataTable = function DataTable({
 
   // Use useLayoutEffect to directly update CSS variables on the table element
   // This bypasses React's render cycle for immediate visual feedback during column resize
+  // Only set CSS properties when column sizes actually change to avoid triggering
+  // unnecessary style recalculations during scroll (when sizes haven't changed)
   useLayoutEffect(() => {
     const headers = table.getFlatHeaders();
     const tableEl = tableRef.current;
     if (!tableEl) return;
 
-    // Update ref and DOM directly
+    // Only update CSS variables for columns whose size actually changed
     for (const header of headers) {
       const size = header.getSize();
-      columnSizesRef.current.set(header.id, size);
-      tableEl.style.setProperty(`--col-${header.id}`, `${size}px`);
+      const prevSize = columnSizesRef.current.get(header.id);
+      if (prevSize !== size) {
+        columnSizesRef.current.set(header.id, size);
+        tableEl.style.setProperty(`--col-${header.id}`, `${size}px`);
+      }
     }
   });
 
@@ -462,11 +467,13 @@ export const DataTable = function DataTable({
   const ROW_HEIGHT = 24;
 
   // Row virtualizer for high-performance scrolling
+  // overscan: 50 rows × 24px = 1200px buffer above & below viewport
+  // This ensures smooth scrolling without blank flashes, even at high scroll speeds
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => containerRef.current,
     estimateSize: () => ROW_HEIGHT,
-    overscan: 15,
+    overscan: 50,
   });
 
   // Get virtual items (this changes on scroll, triggering re-renders of dependent computations)
@@ -692,10 +699,10 @@ export const DataTable = function DataTable({
       <GhostResizeLine ref={ghostLineRef} />
       <table
         ref={tableRef}
-        className="bg-background w-max min-w-full border-separate border-spacing-0"
+        className="bg-background min-w-full border-separate border-spacing-0"
         style={{
           tableLayout: 'fixed',
-          minWidth: table.getTotalSize(),
+          width: table.getTotalSize(),
           fontFamily: tableFont.family || 'inherit',
           fontSize: `${tableFont.size || 13}px`,
         }}
@@ -738,6 +745,9 @@ export const DataTable = function DataTable({
           rows={rows}
           rowVirtualizer={rowVirtualizer}
           virtualItems={virtualItems}
+          columnCount={
+            table.getVisibleLeafColumns().length + (enableSelection ? 1 : 0)
+          }
           editable={editable}
           onCellClick={handleCellClick}
           onCellDoubleClick={handleCellDoubleClick}

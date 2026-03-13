@@ -17,6 +17,17 @@ import { cn } from '@/lib/utils';
 import { GroupRow } from './GroupRow';
 import { TableCell } from './TableCell';
 
+// Row height must match the h-6 (24px) CSS class on DataRow <tr>
+const ROW_HEIGHT = 24;
+
+// Pre-computed striped background for <tbody>.
+// This repeating gradient matches the even/odd row coloring pattern.
+// During fast scrolling, spacer rows (which are transparent) reveal this
+// background instead of a blank white area, eliminating the flash effect.
+// Uses color-mix to pre-blend the muted/20 opacity with background color
+// so the gradient is fully opaque and renders correctly everywhere.
+const STRIPE_BACKGROUND = `repeating-linear-gradient(to bottom,var(--background) 0px,var(--background) ${ROW_HEIGHT}px,color-mix(in srgb,var(--muted) 20%,var(--background)) ${ROW_HEIGHT}px,color-mix(in srgb,var(--muted) 20%,var(--background)) ${ROW_HEIGHT * 2}px)`;
+
 interface DataRowProps {
   row: Row<TableRowData>;
   /** The actual row index in the data array (stable) */
@@ -235,9 +246,11 @@ const DataRow = memo(
         : t('row.copyRowAsSQL', { defaultValue: 'Copy Row as SQL INSERT' });
 
     // Build row className
+    // NOTE: No transition-colors on rows — during scroll the cursor crosses many rows,
+    // and CSS transitions on hover would cause a cascade of animated repaints that
+    // degrade scroll performance. Instant hover is also snappier (per design system).
     const rowClassName = cn(
       'group border-border h-6 border-b',
-      'transition-colors duration-100',
       isEven ? 'bg-background' : 'bg-muted/20',
       'hover:bg-muted/50',
       isDeleted && 'bg-destructive/10 line-through opacity-50',
@@ -261,7 +274,7 @@ const DataRow = memo(
           {/* Selection cell */}
           {enableSelection && (
             <td
-              className="bg-background group-hover:bg-muted/50 sticky left-0 z-10 cursor-default border-r px-2 transition-colors duration-100 select-none"
+              className="bg-background group-hover:bg-muted/50 sticky left-0 z-10 cursor-default border-r px-2 select-none"
               onClick={stopPropagation}
               onMouseDown={handleDragStart}
             >
@@ -350,6 +363,8 @@ interface TableBodyProps {
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
   /** Virtual items array - passed as prop to ensure memo re-renders on scroll */
   virtualItems: VirtualItem[];
+  /** Total column count (including selection column) for spacer row colSpan */
+  columnCount: number;
   // Editing props
   editable?: boolean;
   onCellClick?: (rowId: string, columnId: string) => void;
@@ -392,6 +407,7 @@ export const TableBody = memo(
     rows,
     rowVirtualizer,
     virtualItems,
+    columnCount,
     editable = false,
     onCellClick,
     onCellDoubleClick,
@@ -482,11 +498,14 @@ export const TableBody = memo(
     }, [virtualItems, rowVirtualizer]);
 
     return (
-      <tbody>
+      <tbody style={{ background: STRIPE_BACKGROUND }}>
         {/* Top spacer row for virtual scroll space */}
         {paddingTop > 0 && (
           <tr aria-hidden="true">
-            <td style={{ height: paddingTop, padding: 0, border: 'none' }} />
+            <td
+              colSpan={columnCount}
+              style={{ height: paddingTop, padding: 0, border: 'none' }}
+            />
           </tr>
         )}
 
@@ -557,7 +576,10 @@ export const TableBody = memo(
         {/* Bottom spacer row for virtual scroll space */}
         {paddingBottom > 0 && (
           <tr aria-hidden="true">
-            <td style={{ height: paddingBottom, padding: 0, border: 'none' }} />
+            <td
+              colSpan={columnCount}
+              style={{ height: paddingBottom, padding: 0, border: 'none' }}
+            />
           </tr>
         )}
       </tbody>
