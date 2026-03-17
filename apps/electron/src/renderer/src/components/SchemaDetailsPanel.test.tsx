@@ -18,7 +18,7 @@ const mockTable: TableSchema = {
   sql: 'CREATE TABLE test_table (id INTEGER PRIMARY KEY, name TEXT)',
 };
 
-describe('SchemaDetailsPanel', () => {
+describe('schemaDetailsPanel', () => {
   it('should render close button with accessible name when table is present', () => {
     render(<SchemaDetailsPanel table={mockTable} onClose={vi.fn()} />);
     const closeButton = screen.getByRole('button', { name: /common.close/i });
