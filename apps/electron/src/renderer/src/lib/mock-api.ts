@@ -1351,5 +1351,9 @@ export const mockSqlProAPI: any = {
       await delay(50);
       return { success: true };
     },
+    onBeforeQuit: (): (() => void) => {
+      // Return a no-op unsubscribe function in mock mode
+      return () => {};
+    },
   },
 };
