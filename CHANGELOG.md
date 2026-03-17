@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.1](https://github.com/kunish/sql-pro/compare/sql-pro-monorepo-v1.15.0...sql-pro-monorepo-v1.15.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* resolve CI failures from bulk dependency update ([#166](https://github.com/kunish/sql-pro/issues/166)) ([949bb4d](https://github.com/kunish/sql-pro/commit/949bb4d16867991bed602acd4384f75ca8f5b699))
+
 ## [1.15.0](https://github.com/kunish/sql-pro/compare/sql-pro-monorepo-v1.14.0...sql-pro-monorepo-v1.15.0) (2026-03-17)
 
 
