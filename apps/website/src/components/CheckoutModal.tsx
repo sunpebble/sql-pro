@@ -105,7 +105,7 @@ export default function CheckoutModal({
   return (
     <dialog
       ref={dialogRef}
-      className="rounded-base border-border bg-background shadow-shadow-lg fixed inset-0 m-auto w-[calc(100%-32px)] max-w-md overflow-hidden border-2 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+      className="rounded-base border-border bg-background fixed inset-0 m-auto w-[calc(100%-32px)] max-w-md overflow-hidden border p-0 shadow-lg backdrop:bg-black/60 backdrop:backdrop-blur-sm"
       onClick={handleBackdropClick}
       onKeyDown={(e) => {
         if (e.key === 'Escape') onClose();
@@ -115,7 +115,7 @@ export default function CheckoutModal({
       <div className="relative p-6 md:p-8">
         <button
           type="button"
-          className="rounded-base text-muted-foreground hover:border-border hover:bg-secondary-background hover:text-foreground absolute top-4 right-4 flex h-9 w-9 items-center justify-center border-2 border-transparent transition-all"
+          className="rounded-base text-muted-foreground hover:border-border hover:bg-secondary-background hover:text-foreground absolute top-4 right-4 flex h-9 w-9 items-center justify-center border border-transparent transition-all"
           onClick={onClose}
           aria-label={t('checkout.close')}
         >
@@ -141,7 +141,7 @@ export default function CheckoutModal({
         </h2>
 
         {/* Order Summary */}
-        <div className="rounded-base border-border mb-6 overflow-hidden border-2">
+        <div className="rounded-base border-border mb-6 overflow-hidden border">
           <div className="bg-secondary-background flex items-start justify-between gap-4 p-4">
             <div className="flex flex-col gap-1">
               <span className="font-semibold">
@@ -160,7 +160,7 @@ export default function CheckoutModal({
           </div>
 
           {/* Feature list */}
-          <ul className="border-border grid grid-cols-2 gap-2 border-t-2 p-3">
+          <ul className="border-border grid grid-cols-2 gap-2 border-t p-3">
             {features.map((feature) => (
               <li
                 key={feature}
@@ -199,7 +199,7 @@ export default function CheckoutModal({
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t('checkout.emailPlaceholder')}
             required
-            className="rounded-base border-border bg-background placeholder:text-muted-foreground focus:border-main focus:ring-main/20 w-full border-2 px-4 py-3 text-base transition-all focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-base border-border bg-background placeholder:text-muted-foreground focus:border-main focus:ring-main/20 w-full border px-4 py-3 text-base transition-all focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
             disabled={isLoading}
           />
           <p className="text-muted-foreground -mt-2 text-xs">
@@ -217,13 +217,13 @@ export default function CheckoutModal({
 
           <button
             type="submit"
-            className="rounded-base border-border bg-main text-main-foreground shadow-shadow disabled:hover:shadow-shadow mt-2 flex w-full items-center justify-center gap-2 border-2 px-4 py-4 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+            className="rounded-base border-border bg-main text-main-foreground mt-2 flex w-full items-center justify-center gap-2 border px-4 py-4 text-base font-semibold shadow-sm transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-sm"
             disabled={isLoading || !email}
           >
             {isLoading ? (
               <>
                 <span
-                  className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-transparent border-t-current"
+                  className="mr-2 h-4 w-4 animate-spin rounded-full border border-transparent border-t-current"
                   aria-hidden="true"
                 />
                 {t('checkout.processing')}
@@ -234,7 +234,7 @@ export default function CheckoutModal({
           </button>
 
           {/* Trust indicators */}
-          <div className="border-border mt-4 flex flex-col items-center justify-center gap-3 border-t-2 pt-4 sm:flex-row sm:gap-6">
+          <div className="border-border mt-4 flex flex-col items-center justify-center gap-3 border-t pt-4 sm:flex-row sm:gap-6">
             <div className="text-muted-foreground flex items-center gap-2 text-xs">
               <svg
                 width="16"

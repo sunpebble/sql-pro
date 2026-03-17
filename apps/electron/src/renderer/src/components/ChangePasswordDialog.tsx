@@ -2,7 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Alert, AlertDescription } from '@sqlpro/ui/alert';
 import { Button } from '@sqlpro/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
-import { AlertCircle, Info, KeyRound } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, Info, KeyRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -30,7 +30,9 @@ export function ChangePasswordDialog({
 }: ChangePasswordDialogProps) {
   const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberPassword, setRememberPassword] = useState(false);
   const [isStorageAvailable, setIsStorageAvailable] = useState(false);
   const [hasSavedPassword, setHasSavedPassword] = useState(false);
@@ -59,7 +61,9 @@ export function ChangePasswordDialog({
     if (!newOpen) {
       // Reset form state when closing
       setNewPassword('');
+      setShowNewPassword(false);
       setConfirmPassword('');
+      setShowConfirmPassword(false);
       setError(null);
       setIsLoading(false);
       setShowRemoveEncryptionConfirm(false);
@@ -132,7 +136,7 @@ export function ChangePasswordDialog({
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
-        <Dialog.Content className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-base border-border shadow-shadow fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 border-2 p-6">
+        <Dialog.Content className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-base border-border fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 border p-6 shadow-sm">
           <div className="flex flex-col items-center text-center">
             <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
               <KeyRound className="text-primary h-6 w-6" />
@@ -172,23 +176,42 @@ export function ChangePasswordDialog({
               >
                 {t('changePassword.newPassword')}
               </label>
-              <input
-                id="newPassword"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder={
-                  isCurrentlyEncrypted
-                    ? t('changePassword.newPasswordPlaceholder')
-                    : t('changePassword.enterPassword')
-                }
-                autoFocus
-                className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2',
-                  'placeholder:text-muted-foreground',
-                  'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
-                )}
-              />
+              <div className="relative">
+                <input
+                  id="newPassword"
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder={
+                    isCurrentlyEncrypted
+                      ? t('changePassword.newPasswordPlaceholder')
+                      : t('changePassword.enterPassword')
+                  }
+                  autoFocus
+                  className={cn(
+                    'border-input bg-background w-full rounded-md border px-3 py-2',
+                    'placeholder:text-muted-foreground',
+                    'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                    'pr-10'
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
+                  aria-label={
+                    showNewPassword
+                      ? t('passwordDialog.hidePassword')
+                      : t('passwordDialog.showPassword')
+                  }
+                >
+                  {showNewPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
               {isCurrentlyEncrypted && (
                 <p
                   className="text-muted-foreground"
@@ -208,19 +231,38 @@ export function ChangePasswordDialog({
               >
                 {t('changePassword.confirmPassword')}
               </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder={t('changePassword.confirmPlaceholder')}
-                className={cn(
-                  'border-input bg-background w-full rounded-md border px-3 py-2',
-                  'placeholder:text-muted-foreground',
-                  'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
-                  confirmPassword && !passwordsMatch && 'border-destructive'
-                )}
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder={t('changePassword.confirmPlaceholder')}
+                  className={cn(
+                    'border-input bg-background w-full rounded-md border px-3 py-2',
+                    'placeholder:text-muted-foreground',
+                    'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                    'pr-10',
+                    confirmPassword && !passwordsMatch && 'border-destructive'
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
+                  aria-label={
+                    showConfirmPassword
+                      ? t('passwordDialog.hidePassword')
+                      : t('passwordDialog.showPassword')
+                  }
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
               {confirmPassword && !passwordsMatch && (
                 <p
                   className="text-destructive"

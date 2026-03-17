@@ -82,7 +82,7 @@ export const ErrorDisplay = memo(
       >
         <div
           className={cn(
-            'rounded-base border-destructive bg-destructive/10 shadow-shadow-sm flex w-full max-w-lg flex-col gap-3 border-2 p-4',
+            'rounded-base border-destructive bg-destructive/10 flex w-full max-w-lg flex-col gap-3 border p-4 shadow-sm',
             hasEnhancedInfo && 'max-w-xl'
           )}
         >
@@ -118,7 +118,7 @@ export const ErrorDisplay = memo(
 
           {/* Suggestions */}
           {hasSuggestions && (
-            <div className="border-destructive/20 ml-8 border-t-2 pt-3">
+            <div className="border-destructive/20 ml-8 border-t pt-3">
               <div
                 className="font-heading text-foreground/80 mb-2 flex items-center gap-2"
                 style={{ fontSize: 'var(--font-ui-size, 13px)' }}
@@ -143,7 +143,7 @@ export const ErrorDisplay = memo(
 
           {/* Troubleshooting Steps */}
           {hasTroubleshootingSteps && (
-            <div className="border-destructive/20 ml-8 border-t-2 pt-3">
+            <div className="border-destructive/20 ml-8 border-t pt-3">
               <div
                 className="font-heading text-foreground/80 mb-2 flex items-center gap-2"
                 style={{ fontSize: 'var(--font-ui-size, 13px)' }}
@@ -167,7 +167,7 @@ export const ErrorDisplay = memo(
 
           {/* Documentation Link */}
           {documentationUrl && (
-            <div className="border-destructive/20 ml-8 border-t-2 pt-3">
+            <div className="border-destructive/20 ml-8 border-t pt-3">
               <a
                 href={documentationUrl}
                 target="_blank"

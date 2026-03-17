@@ -61,7 +61,7 @@ export function RootLayout() {
       {/* Global drag overlay for database files */}
       {isDragging && (
         <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-          <div className="bg-background/80 border-primary flex flex-col items-center justify-center rounded-2xl border-2 border-dashed px-16 py-12">
+          <div className="bg-background/80 border-primary flex flex-col items-center justify-center rounded-2xl border border-dashed px-16 py-12">
             <Upload className="text-primary mb-4 h-12 w-12" />
             <p
               className="text-primary font-medium"

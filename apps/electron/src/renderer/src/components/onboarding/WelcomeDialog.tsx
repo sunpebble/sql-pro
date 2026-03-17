@@ -1,6 +1,6 @@
+import { Button } from '@sqlpro/ui/button';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { DecoFrame } from '@sqlpro/ui/decorations';
-import { GoldButton } from '@sqlpro/ui/gold-button';
 import { GradientText } from '@sqlpro/ui/typography';
 import { Database, PlayCircle, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -76,7 +76,7 @@ export function WelcomeDialog({
         </DialogHeader>
 
         <DialogFooter className="mt-4 flex-col gap-2 sm:flex-col">
-          <GoldButton
+          <Button
             variant="default"
             size="lg"
             onClick={handleTakeTour}
@@ -84,11 +84,11 @@ export function WelcomeDialog({
           >
             <PlayCircle className="mr-2 h-4 w-4" />
             {t('welcomeDialog.takeTour')}
-          </GoldButton>
-          <GoldButton variant="ghost" onClick={handleSkip} className="w-full">
+          </Button>
+          <Button variant="ghost" onClick={handleSkip} className="w-full">
             <X className="mr-2 h-4 w-4" />
             {t('welcomeDialog.skipForNow')}
-          </GoldButton>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

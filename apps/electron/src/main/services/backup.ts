@@ -358,7 +358,7 @@ export async function restoreBackup(
           buffer += chunk;
 
           // Process all complete statements in the buffer
-          let index = buffer.indexOf(';');
+          const index = buffer.indexOf(';');
           while (index !== -1) {
             const statement = buffer.substring(0, index).trim();
             buffer = buffer.substring(index + 1);
@@ -366,6 +366,7 @@ export async function restoreBackup(
             if (statement && !statement.startsWith('--')) {
               processStatement(statement);
             }
+            index = buffer.indexOf(';');
           }
         }
 

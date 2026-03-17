@@ -104,7 +104,7 @@ export function QueryResults({ results }: QueryResultsProps) {
     <div className="flex h-full flex-col">
       {/* Result Set Tabs */}
       <div
-        className="bg-muted flex items-center gap-1 overflow-x-auto border-b-2 px-2 py-1"
+        className="bg-muted flex items-center gap-1 overflow-x-auto border-b px-2 py-1"
         role="tablist"
         aria-label={t('queryResults.resultSets')}
       >
@@ -114,10 +114,10 @@ export function QueryResults({ results }: QueryResultsProps) {
             key={`result-${resultSet.columns.join(',')}-${resultSet.rows.length}`}
             onClick={() => setActiveResultIndex(index)}
             className={cn(
-              'flex items-center gap-1.5 rounded-[5px] px-3 py-1 font-bold transition-colors',
+              'flex items-center gap-1.5 rounded-md px-3 py-1 font-bold transition-colors',
               activeResultIndex === index
-                ? 'bg-background text-foreground border-border border-2'
-                : 'text-muted-foreground hover:bg-muted hover:text-foreground border-2 border-transparent'
+                ? 'bg-background text-foreground border-border border'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent'
             )}
             style={{ fontSize: 'var(--font-ui-size, 14px)' }}
             role="tab"

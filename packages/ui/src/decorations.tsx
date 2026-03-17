@@ -36,7 +36,7 @@ function DecoFrame({
   };
 
   const colorMap = {
-    gold: 'before:border-[#C9A962] after:border-[#C9A962]',
+    gold: 'before:border-border after:border-border',
     ivory:
       'before:border-[rgba(248,246,241,0.25)] after:border-[rgba(248,246,241,0.25)]',
     subtle:
@@ -84,7 +84,7 @@ function DecoFrame({
               size === 'sm' && 'size-2',
               size === 'default' && 'size-3',
               size === 'lg' && 'size-4',
-              variant === 'gold' && 'border-[#C9A962]',
+              variant === 'gold' && 'border-border',
               variant === 'ivory' && 'border-[rgba(248,246,241,0.25)]',
               variant === 'subtle' && 'border-[rgba(248,246,241,0.08)]',
               animated &&
@@ -98,7 +98,7 @@ function DecoFrame({
               size === 'sm' && 'size-2',
               size === 'default' && 'size-3',
               size === 'lg' && 'size-4',
-              variant === 'gold' && 'border-[#C9A962]',
+              variant === 'gold' && 'border-border',
               variant === 'ivory' && 'border-[rgba(248,246,241,0.25)]',
               variant === 'subtle' && 'border-[rgba(248,246,241,0.08)]',
               animated &&
@@ -136,10 +136,10 @@ function GoldDivider({
   ...props
 }: GoldDividerProps) {
   const lineClasses = cn('flex-1', weight === 'thin' ? 'h-px' : 'h-[1px]', {
-    'bg-[#C9A962]': variant === 'solid',
-    'bg-gradient-to-r from-transparent via-[rgba(248,246,241,0.25)] to-transparent':
+    'bg-zinc-400 dark:bg-zinc-600': variant === 'solid',
+    'bg-gradient-to-r from-transparent via-zinc-300/25 dark:via-zinc-600/25 to-transparent':
       variant === 'gradient',
-    'border-t border-dashed border-[rgba(248,246,241,0.15)]':
+    'border-t border-dashed border-zinc-300/15 dark:border-zinc-600/15':
       variant === 'dashed',
   });
 
@@ -153,11 +153,7 @@ function GoldDivider({
 
       {diamond && (
         <div
-          className={cn(
-            'size-2 rotate-45',
-            'bg-[#C9A962]',
-            'shadow-[0_0_8px_rgba(212,175,55,0.4)]'
-          )}
+          className={cn('size-2 rotate-45', 'bg-zinc-400 dark:bg-zinc-600')}
         />
       )}
 
@@ -189,7 +185,7 @@ function DecoLine({
     <div
       data-slot="deco-line"
       className={cn(
-        'bg-[#C9A962]',
+        'bg-zinc-400 dark:bg-zinc-600',
         orientation === 'horizontal' ? 'h-px' : 'w-px',
         length,
         className

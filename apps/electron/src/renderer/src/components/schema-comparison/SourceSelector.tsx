@@ -272,7 +272,7 @@ export function SourceSelector({
               </Select>
             ) : (
               <div
-                className="text-muted-foreground rounded-base border-2 border-dashed p-4 text-center"
+                className="text-muted-foreground rounded-base border border-dashed p-4 text-center"
                 style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('compare.noConnections')}
@@ -326,7 +326,7 @@ export function SourceSelector({
               </Select>
             ) : (
               <div
-                className="text-muted-foreground rounded-base border-2 border-dashed p-4 text-center"
+                className="text-muted-foreground rounded-base border border-dashed p-4 text-center"
                 style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
                 {t('compare.noSnapshots')}

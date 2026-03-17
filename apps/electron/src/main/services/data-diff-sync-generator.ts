@@ -4,6 +4,7 @@ import type {
   RowDiff,
 } from '@shared/types';
 import { Buffer } from 'node:buffer';
+import { quoteIdentifier } from '@/utils/sql-sanitize';
 
 /**
  * Service for generating SQL sync statements from data comparison results.
@@ -162,14 +163,16 @@ class DataDiffSyncGeneratorService {
     }
 
     const fullTableName =
-      schema && schema !== 'main' ? `${schema}.${tableName}` : tableName;
+      schema && schema !== 'main'
+        ? `${quoteIdentifier(schema)}.${quoteIdentifier(tableName)}`
+        : quoteIdentifier(tableName);
 
     const columns = Object.keys(rowDiff.sourceRow);
     const values = columns.map((col) =>
       this.formatValue(rowDiff.sourceRow![col])
     );
 
-    const columnList = columns.join(', ');
+    const columnList = columns.map((col) => quoteIdentifier(col)).join(', ');
     const valueList = values.join(', ');
 
     return `INSERT INTO ${fullTableName} (${columnList}) VALUES (${valueList})`;
@@ -191,13 +194,15 @@ class DataDiffSyncGeneratorService {
     }
 
     const fullTableName =
-      schema && schema !== 'main' ? `${schema}.${tableName}` : tableName;
+      schema && schema !== 'main'
+        ? `${quoteIdentifier(schema)}.${quoteIdentifier(tableName)}`
+        : quoteIdentifier(tableName);
 
     // Build SET clause from changed columns
     const setClause = rowDiff.columnChanges
       .map((change) => {
         const value = this.formatValue(change.sourceValue);
-        return `${change.columnName} = ${value}`;
+        return `${quoteIdentifier(change.columnName)} = ${value}`;
       })
       .join(', ');
 
@@ -217,7 +222,9 @@ class DataDiffSyncGeneratorService {
     primaryKeys: string[]
   ): string {
     const fullTableName =
-      schema && schema !== 'main' ? `${schema}.${tableName}` : tableName;
+      schema && schema !== 'main'
+        ? `${quoteIdentifier(schema)}.${quoteIdentifier(tableName)}`
+        : quoteIdentifier(tableName);
 
     // Build WHERE clause from primary key
     const whereClause = this.buildWhereClause(rowDiff.primaryKey, primaryKeys);
@@ -235,11 +242,12 @@ class DataDiffSyncGeneratorService {
     return primaryKeyColumns
       .map((col) => {
         const value = primaryKey[col];
+        const quotedCol = quoteIdentifier(col);
         // Handle NULL values
         if (value === null || value === undefined) {
-          return `${col} IS NULL`;
+          return `${quotedCol} IS NULL`;
         }
-        return `${col} = ${this.formatValue(value)}`;
+        return `${quotedCol} = ${this.formatValue(value)}`;
       })
       .join(' AND ');
   }

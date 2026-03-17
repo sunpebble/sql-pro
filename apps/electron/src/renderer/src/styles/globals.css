@@ -9,14 +9,14 @@
 @custom-variant light (&:is(:not(.dark) *));
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM DESIGN SYSTEM - SQL Pro App
-   Bold borders, offset shadows, flat colors
+   MODERN MINIMAL & GLASSMORPHISM SYSTEM
+   Clean UI, soft shadows, fast animations
    ═══════════════════════════════════════ */
 
 @theme inline {
   --font-sans: 'Noto Sans Variable', 'Inter', sans-serif;
 
-  /* Neobrutalism core design tokens */
+  /* Core design tokens */
   --color-main: var(--main);
   --color-main-foreground: var(--main-foreground);
   --color-background: var(--background);
@@ -77,14 +77,14 @@
   --color-type-unknown: var(--type-unknown);
   --color-type-unknown-bg: var(--type-unknown-bg);
 
-  /* Border radius - neobrutalism uses smaller, consistent radii */
-  --radius-sm: 3px;
-  --radius-md: 5px;
+  /* Border radius - modern uses slightly larger, consistent radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
   --radius-lg: 8px;
-  --radius-xl: 10px;
-  --radius-2xl: 12px;
-  --radius-3xl: 12px;
-  --radius-4xl: 12px;
+  --radius-xl: 8px;
+  --radius-2xl: 8px;
+  --radius-3xl: 8px;
+  --radius-4xl: 8px;
 
   /* Extended font sizes */
   --font-size-2xs: 10px;
@@ -105,17 +105,17 @@
   --spacing-10: 40px;
   --spacing-12: 48px;
 
-  /* Transition durations */
+  /* Transition durations (Fast & Snappy) */
   --duration-fast: 100ms;
   --duration-normal: 150ms;
   --duration-slow: 200ms;
   --duration-slower: 300ms;
 
-  /* Transition easings */
-  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Transition easings (Snappy) */
+  --ease-default: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* ═══════════════════════════════════════
@@ -125,73 +125,73 @@
 :root {
   color-scheme: light;
 
-  /* Main/Primary color - Orange */
-  --main: #f97316;
-  --main-foreground: #000000;
+  /* Main/Primary color */
+  --main: #09090b;
+  --main-foreground: #fafafa;
 
-  /* Core colors */
+  /* Core colors (zinc-based) */
   --background: #ffffff;
-  --foreground: #000000;
-  --secondary-background: #e8e8e8;
-  --overlay: rgba(0, 0, 0, 0.6);
+  --foreground: #09090b;
+  --secondary-background: #f4f4f5;
+  --overlay: rgba(228, 228, 231, 0.7);
 
-  /* Border - black for neobrutalism */
-  --border: #000000;
-  --ring: #000000;
-  --input: #e8e8e8;
+  /* Border - subtle */
+  --border: transparent;
+  --ring: #a1a1aa;
+  --input: #fafafa;
 
   /* Card */
-  --card: #ffffff;
-  --card-foreground: #000000;
+  --card: #fafafa;
+  --card-foreground: #09090b;
 
   /* Popover */
-  --popover: #ffffff;
-  --popover-foreground: #000000;
+  --popover: #fafafa;
+  --popover-foreground: #09090b;
 
   /* Primary */
-  --primary: #f97316;
-  --primary-foreground: #000000;
+  --primary: #09090b;
+  --primary-foreground: #fafafa;
 
   /* Secondary */
-  --secondary: #e8e8e8;
-  --secondary-foreground: #000000;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #3f3f46;
 
   /* Muted */
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
+  --muted: #fafafa;
+  --muted-foreground: #71717a;
 
   /* Accent */
-  --accent: #ffecd2;
-  --accent-foreground: #000000;
+  --accent: #f4f4f5;
+  --accent-foreground: #3f3f46;
 
   /* Destructive */
   --destructive: #ef4444;
 
   /* Radius */
-  --radius: 5px;
+  --radius: 8px;
 
-  /* Sidebar */
-  --sidebar: #f5f5f5;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: #f97316;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #e8e8e8;
-  --sidebar-accent-foreground: #000000;
-  --sidebar-border: #000000;
-  --sidebar-ring: #f97316;
+  /* Sidebar (zinc-50) */
+  --sidebar: #fafafa;
+  --sidebar-foreground: #09090b;
+  --sidebar-primary: #09090b;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f4f4f5;
+  --sidebar-accent-foreground: #09090b;
+  --sidebar-border: transparent;
+  --sidebar-ring: #a1a1aa;
 
   /* Chart colors */
-  --chart-1: #f97316;
-  --chart-2: #3b82f6;
-  --chart-3: #22c55e;
-  --chart-4: #a855f7;
-  --chart-5: #f59e0b;
+  --chart-1: #18181b;
+  --chart-2: #3f3f46;
+  --chart-3: #71717a;
+  --chart-4: #a1a1aa;
+  --chart-5: #d4d4d8;
 
   /* Status colors */
   --success: #22c55e;
-  --success-foreground: #000000;
+  --success-foreground: #ffffff;
   --warning: #f59e0b;
-  --warning-foreground: #000000;
+  --warning-foreground: #ffffff;
   --info: #3b82f6;
   --info-foreground: #ffffff;
 
@@ -207,10 +207,10 @@
   --type-unknown: #9ca3af;
   --type-unknown-bg: rgba(156, 163, 175, 0.1);
 
-  /* Neobrutalism shadows */
-  --shadow: 4px 4px 0px 0px #000000;
-  --shadow-sm: 2px 2px 0px 0px #000000;
-  --shadow-lg: 6px 6px 0px 0px #000000;
+  /* Modern Drop Shadows */
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-lg: none;
 }
 
 /* ═══════════════════════════════════════
@@ -221,64 +221,71 @@
   color-scheme: dark;
 
   /* Main/Primary color */
-  --main: #fb923c;
-  --main-foreground: #000000;
+  --main: #fafafa;
+  --main-foreground: #09090b;
 
   /* Core colors */
-  --background: #1a1a1a;
-  --foreground: #ffffff;
-  --secondary-background: #2a2a2a;
-  --overlay: rgba(0, 0, 0, 0.8);
+  --background: #09090b;
+  --foreground: #fafafa;
+  --secondary-background: #18181b;
+  --overlay: rgba(9, 9, 11, 0.85);
 
-  /* Border - white for visibility */
-  --border: #ffffff;
-  --ring: #ffffff;
-  --input: #2a2a2a;
+  /* Border - subtle dark */
+  --border: transparent;
+  --ring: #52525b;
+  --input: #111113;
 
   /* Card */
-  --card: #262626;
-  --card-foreground: #ffffff;
+  --card: #111113;
+  --card-foreground: #fafafa;
 
   /* Popover */
-  --popover: #262626;
-  --popover-foreground: #ffffff;
+  --popover: #111113;
+  --popover-foreground: #fafafa;
 
   /* Primary */
-  --primary: #fb923c;
-  --primary-foreground: #000000;
+  --primary: #fafafa;
+  --primary-foreground: #09090b;
 
   /* Secondary */
-  --secondary: #404040;
-  --secondary-foreground: #ffffff;
+  --secondary: #18181b;
+  --secondary-foreground: #fafafa;
 
   /* Muted */
-  --muted: #404040;
-  --muted-foreground: #a3a3a3;
+  --muted: #111113;
+  --muted-foreground: #71717a;
 
   /* Accent */
-  --accent: #44403c;
-  --accent-foreground: #ffffff;
+  --accent: #18181b;
+  --accent-foreground: #fafafa;
 
   /* Destructive */
   --destructive: #f87171;
 
   /* Sidebar */
-  --sidebar: #1f1f1f;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #fb923c;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #2a2a2a;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #ffffff;
-  --sidebar-ring: #fb923c;
+  --sidebar: #0c0c0e;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #fafafa;
+  --sidebar-primary-foreground: #09090b;
+  --sidebar-accent: #18181b;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: transparent;
+  --sidebar-ring: #52525b;
+
+  /* Chart colors */
+  --chart-1: #e4e4e7;
+  --chart-2: #a1a1aa;
+  --chart-3: #71717a;
+  --chart-4: #52525b;
+  --chart-5: #3f3f46;
 
   /* Status colors */
   --success: #4ade80;
-  --success-foreground: #000000;
+  --success-foreground: #09090b;
   --warning: #fbbf24;
-  --warning-foreground: #000000;
+  --warning-foreground: #09090b;
   --info: #60a5fa;
-  --info-foreground: #000000;
+  --info-foreground: #09090b;
 
   /* Type category colors */
   --type-numeric: #60a5fa;
@@ -292,10 +299,10 @@
   --type-unknown: #6b7280;
   --type-unknown-bg: rgba(107, 114, 128, 0.15);
 
-  /* Dark mode shadows with white */
-  --shadow: 4px 4px 0px 0px #ffffff;
-  --shadow-sm: 2px 2px 0px 0px #ffffff;
-  --shadow-lg: 6px 6px 0px 0px #ffffff;
+  /* Dark mode shadows */
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-lg: none;
 }
 
 /* ═══════════════════════════════════════
@@ -342,24 +349,24 @@
     cursor: text;
   }
 
-  /* Neobrutalism scrollbars */
+  /* Scrollbars - modern, thin and subtle */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--secondary-background);
-    border-left: 2px solid var(--border);
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--main);
-    border: 2px solid var(--border);
+    background: var(--border);
+    border-radius: 4px;
+    border: 2px solid var(--background); /* Fake margin effect */
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--foreground);
+    background: var(--muted-foreground);
   }
 
   /* Focus ring */
@@ -422,41 +429,18 @@
 }
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM UTILITY CLASSES
+   UTILITY CLASSES
    ═══════════════════════════════════════ */
 
 /* Base rounded corners */
 .rounded-base {
-  border-radius: 5px;
-}
-
-/* Shadow utilities */
-.shadow-shadow {
-  box-shadow: var(--shadow);
-}
-
-.shadow-shadow-sm {
-  box-shadow: var(--shadow-sm);
-}
-
-.shadow-shadow-lg {
-  box-shadow: var(--shadow-lg);
-}
-
-/* Hover translate effect */
-.translate-x-boxShadowX {
-  --tw-translate-x: 4px;
-}
-
-.translate-y-boxShadowY {
-  --tw-translate-y: 4px;
+  border-radius: var(--radius-md);
 }
 
 /* Font utilities */
 .font-base {
   font-weight: 500;
 }
-
 .font-heading {
   font-weight: 700;
 }
@@ -474,8 +458,6 @@
   --font-editor-family: inherit;
 }
 
-/* Portal components (popover, dropdown, context-menu, sheet, tooltip) */
-/* These are rendered outside the React tree, so they need explicit font inheritance */
 [data-slot='popover-content'],
 [data-slot='dropdown-menu-content'],
 [data-slot='context-menu-content'],
@@ -537,21 +519,21 @@ textarea,
 }
 
 .react-flow.dark {
-  --xy-background-color-default: var(--background);
+  --xy-background-color-default: transparent;
   --xy-node-background-color-default: var(--card);
   --xy-node-border-color-default: var(--border);
   --xy-node-color-default: var(--foreground);
   --xy-edge-stroke-default: var(--foreground);
-  background-color: var(--background) !important;
+  background-color: transparent !important;
 }
 
 .react-flow.light {
-  --xy-background-color-default: var(--background);
+  --xy-background-color-default: transparent;
   --xy-node-background-color-default: var(--card);
   --xy-node-border-color-default: var(--border);
   --xy-node-color-default: var(--foreground);
   --xy-edge-stroke-default: var(--foreground);
-  background-color: var(--background) !important;
+  background-color: transparent !important;
 }
 
 .react-flow__node {
@@ -578,7 +560,7 @@ textarea,
 }
 
 /* ═══════════════════════════════════════
-   ANIMATIONS
+   ANIMATIONS (Fast & Snappy)
    ═══════════════════════════════════════ */
 
 @keyframes shimmer {
@@ -592,10 +574,10 @@ textarea,
 
 @keyframes row-highlight {
   0% {
-    background-color: rgba(249, 115, 22, 0.4);
+    background-color: rgba(161, 161, 170, 0.4);
   }
   50% {
-    background-color: rgba(249, 115, 22, 0.25);
+    background-color: rgba(161, 161, 170, 0.25);
   }
   100% {
     background-color: transparent;
@@ -603,7 +585,7 @@ textarea,
 }
 
 .row-highlight-animation {
-  animation: row-highlight 2s ease-out forwards;
+  animation: row-highlight 1.5s ease-out forwards;
 }
 
 .row-highlight-animation td {
@@ -613,7 +595,7 @@ textarea,
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -622,28 +604,28 @@ textarea,
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out forwards;
+  animation: fade-in-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   opacity: 0;
 }
 
 /* Stagger delays */
 .stagger-1 {
-  animation-delay: 0.1s;
+  animation-delay: 0.05s;
 }
 .stagger-2 {
-  animation-delay: 0.2s;
+  animation-delay: 0.1s;
 }
 .stagger-3 {
-  animation-delay: 0.3s;
+  animation-delay: 0.15s;
 }
 .stagger-4 {
-  animation-delay: 0.4s;
+  animation-delay: 0.2s;
 }
 .stagger-5 {
-  animation-delay: 0.5s;
+  animation-delay: 0.25s;
 }
 .stagger-6 {
-  animation-delay: 0.6s;
+  animation-delay: 0.3s;
 }
 
 @keyframes scale-in {
@@ -658,7 +640,7 @@ textarea,
 }
 
 .animate-scale-in {
-  animation: scale-in 0.4s ease-out forwards;
+  animation: scale-in 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   opacity: 0;
 }
 
@@ -698,64 +680,14 @@ th {
 }
 
 /* ═══════════════════════════════════════
-   NEOBRUTALISM COMPONENT PATTERNS
+   MODERN COMPONENT PATTERNS
    ═══════════════════════════════════════ */
 
-/* Neobrutalism button hover effect */
-.btn-neo {
-  transition: all 0.15s ease;
-}
-
-.btn-neo:hover {
-  transform: translate(4px, 4px);
-  box-shadow: none !important;
-}
-
-/* Neobrutalism card hover effect */
-.card-neo {
-  transition: all 0.15s ease;
-}
-
-.card-neo:hover {
-  transform: translate(4px, 4px);
-  box-shadow: none !important;
-}
-
-/* Primary text highlight (neobrutalism - solid color, no gradients) */
+/* Primary text highlight */
 .text-gradient-primary {
+  background-clip: text;
+  -webkit-background-clip: text;
   color: var(--main);
-}
-
-/* Emphasis shadow (neobrutalism - offset shadow only, no glow) */
-.glow-primary {
-  box-shadow: var(--shadow);
-}
-
-/* Grid backgrounds (neobrutalism - solid pattern backgrounds) */
-.bg-grid-dot {
-  background-color: var(--secondary-background);
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='rgba(0,0,0,0.08)'/%3E%3C/svg%3E");
-  background-size: 24px 24px;
-}
-
-.dark .bg-grid-dot {
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
-}
-
-.bg-grid-line {
-  background-color: var(--secondary-background);
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 0H0v24' fill='none' stroke='rgba(0,0,0,0.1)' stroke-width='1'/%3E%3C/svg%3E");
-  background-size: 24px 24px;
-}
-
-.dark .bg-grid-line {
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 0H0v24' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1'/%3E%3C/svg%3E");
-}
-
-/* Glass effect with gold accent */
-.glass-gold {
-  background-color: var(--card);
-  border-left: 3px solid var(--primary);
 }
 
 /* ═══════════════════════════════════════
@@ -768,7 +700,8 @@ th {
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  border-bottom: 2px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
 }
 
 .toolbar-section {
@@ -784,8 +717,8 @@ th {
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  border-bottom: 2px solid var(--border);
-  background-color: var(--card);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
 }
 
 .panel-header-title {
@@ -808,75 +741,20 @@ th {
    ═══════════════════════════════════════ */
 
 .card-base {
-  border-radius: 5px;
-  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
   padding: 1rem;
-  box-shadow: var(--shadow);
-}
-
-.card-interactive {
-  border-radius: 5px;
-  border: 2px solid var(--border);
-  padding: 0.75rem;
-  box-shadow: var(--shadow);
-  transition: all 0.15s ease;
-}
-
-.card-interactive:hover {
-  transform: translate(4px, 4px);
-  box-shadow: none;
+  box-shadow: var(--shadow-sm);
+  background: var(--card);
 }
 
 .setting-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 5px;
-  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
   padding: 0.75rem;
-}
-
-/* ═══════════════════════════════════════
-   LEGACY GOLD THEME COMPATIBILITY
-   Now maps to primary (orange) colors
-   ═══════════════════════════════════════ */
-
-:root {
-  --gold: var(--main);
-  --gold-bright: var(--main);
-  --gold-dark: #ea580c;
-  --gold-glow: rgba(249, 115, 22, 0.4);
-  --gold-subtle: rgba(249, 115, 22, 0.1);
-}
-
-.text-gradient-gold {
-  color: var(--main);
-}
-
-.glow-gold {
-  box-shadow: var(--shadow);
-}
-
-.btn-gold-active {
-  color: var(--main);
-  background-color: var(--gold-subtle);
-}
-
-.hover-gold:hover {
-  color: var(--main);
-  background-color: var(--gold-subtle);
-}
-
-.text-gold {
-  color: var(--main);
-}
-
-.bg-gold {
-  background-color: var(--main);
-}
-
-.border-gold {
-  border-color: var(--main);
 }
 
 /* ═══════════════════════════════════════
@@ -884,13 +762,10 @@ th {
    ═══════════════════════════════════════ */
 
 [data-slot='tooltip-content'] [data-slot='kbd'] {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: var(--popover-foreground);
-  border: 2px solid var(--border);
-}
-
-.dark [data-slot='tooltip-content'] [data-slot='kbd'] {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
 }
 
 /* ═══════════════════════════════════════
@@ -898,15 +773,16 @@ th {
    ═══════════════════════════════════════ */
 
 .tab-pill {
-  border-radius: 5px;
-  border: 2px solid transparent;
-  transition: all 0.15s ease;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: all 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .tab-pill-active {
-  background: var(--accent);
+  background: var(--background);
   color: var(--foreground);
   border-color: var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .tab-pill-inactive {
@@ -919,98 +795,61 @@ th {
 }
 
 /* ═══════════════════════════════════════
-   MONACO EDITOR NEOBRUTALISM ENHANCEMENTS
-   Note: Most styles are defined in monaco-sql-config.ts via defineTheme API.
-   These CSS rules add Neobrutalism-specific styling (borders, shadows, rounded corners)
-   that the Monaco theme API doesn't support.
+   MONACO EDITOR MODERN ENHANCEMENTS
    ═══════════════════════════════════════ */
 
-/* --- Suggest Widget (Neobrutalism border + shadow) --- */
 .monaco-editor .suggest-widget {
-  border-width: 2px !important;
-  border-radius: 5px !important;
-  box-shadow: 4px 4px 0px 0px var(--border) !important;
+  border-radius: var(--radius-md) !important;
 }
 
 .monaco-editor .suggest-details {
-  border-width: 2px !important;
-  border-radius: 5px !important;
-  box-shadow: 4px 4px 0px 0px var(--border) !important;
+  border-radius: var(--radius-md) !important;
 }
 
-/* --- Hover Widget (Neobrutalism border + shadow) --- */
 .monaco-editor .monaco-hover {
-  border-width: 2px !important;
-  border-radius: 5px !important;
-  box-shadow: 4px 4px 0px 0px var(--border) !important;
+  border-radius: var(--radius-md) !important;
 }
 
-/* --- Find Widget (Neobrutalism border + shadow) --- */
 .monaco-editor .find-widget {
-  border-width: 2px !important;
-  border-radius: 5px !important;
-  box-shadow: 4px 4px 0px 0px var(--border) !important;
+  border-radius: var(--radius-md) !important;
 }
 
 .monaco-editor .find-widget .monaco-inputbox {
-  border-width: 2px !important;
-  border-radius: 5px !important;
+  border-radius: var(--radius-sm) !important;
 }
 
-/* --- Parameter Hints (Neobrutalism border + shadow) --- */
 .monaco-editor .parameter-hints-widget {
-  border-width: 2px !important;
-  border-radius: 5px !important;
-  box-shadow: 4px 4px 0px 0px var(--border) !important;
+  border-radius: var(--radius-md) !important;
 }
 
-/* --- Context Menu (Neobrutalism border + shadow) --- */
 .monaco-editor .monaco-menu .monaco-action-bar.vertical {
-  border: 2px solid var(--border) !important;
-  border-radius: 5px !important;
-  box-shadow: 4px 4px 0px 0px var(--border) !important;
-}
-
-/* ═══════════════════════════════════════
-   BUTTON ACTIVE/PRESSED STATES
-   ═══════════════════════════════════════ */
-
-/* Neobrutalism pressed feedback — quick scale-down on click */
-.btn-neo:active {
-  transform: translate(4px, 4px) scale(0.97) !important;
-  box-shadow: none !important;
-  transition-duration: 50ms;
-}
-
-/* Generic active state for all interactive elements with shadow */
-[class*='shadow-shadow']:active:not(:disabled):not([data-no-active]) {
-  transition-duration: 50ms;
+  border-radius: var(--radius-md) !important;
 }
 
 /* ═══════════════════════════════════════
    SIDEBAR & NAVIGATION TRANSITIONS
    ═══════════════════════════════════════ */
 
-/* Smooth sidebar item selection */
 [data-slot='sidebar-menu-button'] {
-  transition: all 0.15s ease;
+  transition: all 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: var(--radius-md);
 }
 
-[data-slot='sidebar-menu-button']:hover {
-  transform: translateX(2px);
+[data-slot='sidebar-menu-button']:active {
+  transform: scale(0.96);
 }
 
 [data-slot='sidebar-menu-button'][data-active='true'] {
-  border-left: 3px solid var(--main);
+  background: var(--sidebar-accent);
+  color: var(--sidebar-accent-foreground);
 }
 
 /* ═══════════════════════════════════════
    TAB & PANEL TRANSITIONS
    ═══════════════════════════════════════ */
 
-/* Smooth tab content transitions */
 .tab-content-enter {
-  animation: tab-fade-in 0.15s ease-out;
+  animation: tab-fade-in 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @keyframes tab-fade-in {
@@ -1024,49 +863,31 @@ th {
   }
 }
 
-/* Panel resize smooth transition */
 [data-panel-group] [data-panel] {
   transition: flex-basis 0.1s ease;
-}
-
-/* ═══════════════════════════════════════
-   SCROLLBAR ENHANCEMENTS
-   ═══════════════════════════════════════ */
-
-::-webkit-scrollbar-thumb {
-  transition: background 0.15s ease;
-}
-
-/* Thin scrollbar variant for compact areas */
-.scrollbar-thin::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  border-width: 1px;
 }
 
 /* ═══════════════════════════════════════
    DATA TABLE MICRO-INTERACTIONS
    ═══════════════════════════════════════ */
 
-/* Row hover with left accent */
-[data-table-font] tr:hover td:first-child {
-  box-shadow: inset 3px 0 0 var(--main);
+[data-table-font] tr {
+  transition: background-color 150ms ease;
 }
 
-/* Smooth cell editing transition */
+[data-table-font] tr:hover {
+  background-color: var(--muted);
+}
+
 [data-editing='true'] {
-  box-shadow: inset 0 0 0 2px var(--main);
-  transition: box-shadow 0.15s ease;
+  box-shadow: inset 0 0 0 1px var(--main);
+  background-color: var(--background);
 }
 
-/* New row insertion animation */
 @keyframes row-insert {
   from {
     opacity: 0;
-    transform: scaleY(0.8);
+    transform: scaleY(0.9);
     transform-origin: top;
   }
   to {
@@ -1076,32 +897,31 @@ th {
 }
 
 .row-insert-animation {
-  animation: row-insert 0.2s ease-out;
+  animation: row-insert 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* ═══════════════════════════════════════
    DIALOG & MODAL POLISH
    ═══════════════════════════════════════ */
 
-/* Enhanced dialog backdrop */
 [data-slot='dialog-overlay'] {
-  backdrop-filter: blur(2px);
-  transition: opacity 0.2s ease;
+  background: var(--overlay);
+  transition: opacity 150ms ease;
 }
 
-/* Dialog content entrance */
 [data-slot='dialog-content'] {
-  animation: dialog-enter 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: dialog-enter 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: var(--radius-lg);
 }
 
 @keyframes dialog-enter {
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(8px);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: scale(1);
   }
 }
 
@@ -1127,7 +947,7 @@ th {
   }
   to {
     opacity: 0;
-    transform: translateY(-20%) scale(0.95);
+    transform: translateY(-10%) scale(0.95);
   }
 }
 
@@ -1136,11 +956,10 @@ th {
    ═══════════════════════════════════════ */
 
 ::selection {
-  background: var(--main);
-  color: var(--main-foreground);
+  background: rgba(161, 161, 170, 0.2);
+  color: var(--foreground);
 }
 
-/* Smooth focus ring transition */
 *:focus-visible {
   transition: outline-offset 0.1s ease;
 }

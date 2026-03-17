@@ -347,11 +347,11 @@ class PluginRuntime extends EventEmitter {
     plugin.isolate = isolate;
 
     try {
-      // Create context within isolate
-      const context = await isolate.createContext();
+      // Create sandbox for plugin execution
+      const sandboxCtx = await isolate.createContext();
 
       // Get reference to global object
-      const jail = context.global;
+      const jail = sandboxCtx.global;
 
       // Set up global reference
       await jail.set('global', jail.derefInto());
@@ -475,7 +475,7 @@ class PluginRuntime extends EventEmitter {
 
       // Compile and run
       const script = await isolate.compileScript(wrappedCode);
-      await script.run(context, { timeout: config.timeoutMs });
+      await script.run(sandboxCtx, { timeout: config.timeoutMs });
     } catch (error) {
       // Dispose isolate on error
       try {
@@ -504,13 +504,17 @@ class PluginRuntime extends EventEmitter {
       pluginPath: plugin.pluginPath,
     };
 
-    // Use Function constructor to create a sandboxed scope for plugin execution.
+    // Use Function constructor to create a scoped execution environment for plugin code.
     // This is NOT as secure as isolated-vm but works without native modules.
     // Security context: Plugin code comes from user-installed plugins (not arbitrary
     // user input), and this fallback is only used when isolated-vm is unavailable.
+    //
+    // Security hardening: We block access to dangerous Node.js globals by shadowing
+    // them as undefined parameters in the wrapper function.
     try {
       const wrappedCode = `
-        return (function(context, exports) {
+        return (function(context, exports, require, process, global, globalThis, __dirname, __filename, child_process, Buffer) {
+          "use strict";
           ${plugin.code}
           if (typeof exports.activate === 'function') {
             return exports.activate(context);
@@ -523,7 +527,21 @@ class PluginRuntime extends EventEmitter {
       // eslint-disable-next-line no-new-func
       const fn = new Function(wrappedCode)();
       const exports = {};
-      await Promise.resolve(fn(pluginContext, exports));
+      // Pass undefined for all blocked globals to shadow them from the plugin scope
+      await Promise.resolve(
+        fn(
+          pluginContext,
+          exports,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined
+        )
+      );
     } catch (error) {
       throw new Error(
         `Plugin activation failed: ${error instanceof Error ? error.message : String(error)}`

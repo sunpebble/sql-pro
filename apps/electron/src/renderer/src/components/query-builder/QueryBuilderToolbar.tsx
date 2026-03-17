@@ -412,7 +412,7 @@ function FilterRow({
   const needsValue = !['IS NULL', 'IS NOT NULL'].includes(filter.operator);
 
   return (
-    <div className="bg-muted/30 rounded-base flex items-center gap-2 border-2 p-2">
+    <div className="bg-muted/30 rounded-base flex items-center gap-2 border p-2">
       {index > 0 && (
         <Select
           value={filter.conjunction}
@@ -523,7 +523,7 @@ function SortRow({ sort, tableOptions, onUpdate, onRemove }: SortRowProps) {
   const columns = selectedTable?.columns || [];
 
   return (
-    <div className="bg-muted/30 rounded-base flex items-center gap-2 border-2 p-2">
+    <div className="bg-muted/30 rounded-base flex items-center gap-2 border p-2">
       <Select
         value={sort.table}
         onValueChange={(v) => {

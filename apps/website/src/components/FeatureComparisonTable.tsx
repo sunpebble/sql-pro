@@ -84,7 +84,7 @@ export default function FeatureComparisonTable() {
   };
 
   return (
-    <div className="border-border mt-12 border-t-2 pt-8 md:mt-16 md:pt-12">
+    <div className="border-border mt-12 border-t pt-8 md:mt-16 md:pt-12">
       <h3 className="mb-6 text-center text-lg font-bold md:mb-8 md:text-xl">
         {t('pricing.comparison.title')}
       </h3>
@@ -92,10 +92,10 @@ export default function FeatureComparisonTable() {
         <table className="mx-auto w-full max-w-3xl border-collapse text-sm">
           <thead>
             <tr>
-              <th className="border-border bg-secondary-background text-muted-foreground w-36 border-b-2 p-3 text-left text-xs font-semibold tracking-wide uppercase md:w-48 md:p-4">
+              <th className="border-border bg-secondary-background text-muted-foreground w-36 border-b p-3 text-left text-xs font-semibold tracking-wide uppercase md:w-48 md:p-4">
                 {t('pricing.comparison.feature')}
               </th>
-              <th className="border-border bg-secondary-background min-w-20 border-b-2 p-3 text-center align-bottom font-semibold md:min-w-28 md:p-4">
+              <th className="border-border bg-secondary-background min-w-20 border-b p-3 text-center align-bottom font-semibold md:min-w-28 md:p-4">
                 <span className="block text-sm font-semibold md:text-base">
                   {t('pricing.plans.monthly.title')}
                 </span>
@@ -103,7 +103,7 @@ export default function FeatureComparisonTable() {
                   {t('pricing.plans.monthly.price')}
                 </span>
               </th>
-              <th className="border-main bg-main/10 relative min-w-20 border-x-2 border-b-2 p-3 text-center align-bottom font-semibold md:min-w-28 md:p-4">
+              <th className="border-main bg-main/10 relative min-w-20 border-x border-b p-3 text-center align-bottom font-semibold md:min-w-28 md:p-4">
                 <div className="from-main to-main absolute top-0 right-0 left-0 h-1 bg-gradient-to-r" />
                 <span className="bg-main text-main-foreground mb-2 inline-block rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-wide uppercase">
                   {t('pricing.popular')}
@@ -115,7 +115,7 @@ export default function FeatureComparisonTable() {
                   {t('pricing.plans.yearly.price')}
                 </span>
               </th>
-              <th className="border-border bg-secondary-background min-w-20 border-b-2 p-3 text-center align-bottom font-semibold md:min-w-28 md:p-4">
+              <th className="border-border bg-secondary-background min-w-20 border-b p-3 text-center align-bottom font-semibold md:min-w-28 md:p-4">
                 <span className="block text-sm font-semibold md:text-base">
                   {t('pricing.plans.lifetime.title')}
                 </span>
@@ -134,7 +134,7 @@ export default function FeatureComparisonTable() {
                 <td className="border-border border-b p-3 text-center md:p-4">
                   {renderValue(planFeatures.monthly[feature.key])}
                 </td>
-                <td className="border-main bg-main/5 border-x-2 border-b p-3 text-center md:p-4">
+                <td className="border-main bg-main/5 border-x border-b p-3 text-center md:p-4">
                   {renderValue(planFeatures.yearly[feature.key])}
                 </td>
                 <td className="border-border border-b p-3 text-center md:p-4">

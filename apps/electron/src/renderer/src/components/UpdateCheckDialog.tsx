@@ -106,7 +106,7 @@ export function UpdateCheckDialog() {
 
         {updateInfo && (
           <div
-            className="bg-muted/50 rounded-base border-border space-y-2 border-2 p-3"
+            className="bg-muted/50 rounded-base border-border space-y-2 border p-3"
             style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             <div className="flex justify-between">

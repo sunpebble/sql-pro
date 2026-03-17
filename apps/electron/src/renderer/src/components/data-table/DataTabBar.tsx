@@ -153,8 +153,8 @@ const TabItem = memo(
                   className={cn(
                     'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-2.5 transition-colors',
                     isActive
-                      ? 'bg-background text-foreground border-border rounded-[5px] border-2'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-[5px] border-2 border-transparent bg-transparent'
+                      ? 'bg-background text-foreground border-border rounded-md border'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-md border border-transparent bg-transparent'
                   )}
                   style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   onClick={onSelect}
@@ -250,7 +250,7 @@ export const DataTabBar = memo(
     return (
       <div
         className={cn(
-          'bg-muted border-border flex h-8 shrink-0 items-center border-b-2',
+          'bg-muted border-border flex h-8 shrink-0 items-center border-b',
           className
         )}
         role="tablist"

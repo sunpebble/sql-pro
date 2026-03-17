@@ -271,7 +271,7 @@ export const TableCell = memo(
       return (
         <td
           className={cn(
-            'text-muted-foreground border-border border-r border-b px-1.5 py-0.5 whitespace-nowrap',
+            'text-muted-foreground border-border overflow-hidden border-r border-b px-1.5 py-0.5 whitespace-nowrap',
             pinnedClassName
           )}
           style={pinnedStyles}
@@ -337,7 +337,7 @@ export const TableCell = memo(
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={cn(
-          'border-border cursor-pointer border-r border-b px-1.5 py-0.5 whitespace-nowrap',
+          'border-border cursor-pointer overflow-hidden border-r border-b px-1.5 py-0.5 whitespace-nowrap',
           isFocused && 'ring-ring ring-2 ring-inset',
           hasChange && 'bg-amber-500/20',
           pinnedClassName
