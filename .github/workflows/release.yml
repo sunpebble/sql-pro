@@ -19,18 +19,18 @@ jobs:
 
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
-      # Root monorepo
-      root--release_created: ${{ steps.release.outputs['sql-pro-monorepo--release_created'] }}
-      root--tag_name: ${{ steps.release.outputs['sql-pro-monorepo--tag_name'] }}
-      root--version: ${{ steps.release.outputs['sql-pro-monorepo--version'] }}
-      # Electron app
-      electron--release_created: ${{ steps.release.outputs['sqlpro-app--release_created'] }}
-      electron--tag_name: ${{ steps.release.outputs['sqlpro-app--tag_name'] }}
-      electron--version: ${{ steps.release.outputs['sqlpro-app--version'] }}
-      # Website
-      website--release_created: ${{ steps.release.outputs['sqlpro-website--release_created'] }}
-      website--tag_name: ${{ steps.release.outputs['sqlpro-website--tag_name'] }}
-      website--version: ${{ steps.release.outputs['sqlpro-website--version'] }}
+      # Root monorepo (path "." uses unprefixed keys)
+      root--release_created: ${{ steps.release.outputs.release_created }}
+      root--tag_name: ${{ steps.release.outputs.tag_name }}
+      root--version: ${{ steps.release.outputs.version }}
+      # Electron app (path-based prefix: apps/electron)
+      electron--release_created: ${{ steps.release.outputs['apps/electron--release_created'] }}
+      electron--tag_name: ${{ steps.release.outputs['apps/electron--tag_name'] }}
+      electron--version: ${{ steps.release.outputs['apps/electron--version'] }}
+      # Website (path-based prefix: apps/website)
+      website--release_created: ${{ steps.release.outputs['apps/website--release_created'] }}
+      website--tag_name: ${{ steps.release.outputs['apps/website--tag_name'] }}
+      website--version: ${{ steps.release.outputs['apps/website--version'] }}
 
     steps:
       - name: Release Please
