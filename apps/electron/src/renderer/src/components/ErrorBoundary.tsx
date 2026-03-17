@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components -- Intentional: exports helper components (CollapsibleSection, StackTraceViewer, ComponentStackViewer, ErrorFallback) used internally for error display */
 import type { ErrorInfo, ReactNode } from 'react';
 import { Button } from '@sqlpro/ui/button';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';

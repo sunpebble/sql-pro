@@ -149,6 +149,7 @@ export function AIAgentDialog({
               variant="ghost"
               size="icon"
               onClick={createNewSession}
+              aria-label={t('agent.newSession', 'New Session')}
               title={t('agent.newSession', 'New Session')}
             >
               <Plus className="h-4 w-4" />
@@ -157,6 +158,7 @@ export function AIAgentDialog({
               variant="ghost"
               size="icon"
               onClick={clearMessages}
+              aria-label={t('agent.clearChat', 'Clear Chat')}
               title={t('agent.clearChat', 'Clear Chat')}
             >
               <Trash2 className="h-4 w-4" />
@@ -165,6 +167,7 @@ export function AIAgentDialog({
               variant="ghost"
               size="icon"
               onClick={() => setShowSettings(true)}
+              aria-label={t('agent.settings.title', 'Settings')}
               title={t('agent.settings.title', 'Settings')}
             >
               <Settings className="h-4 w-4" />
@@ -271,6 +274,7 @@ export function AIAgentDialog({
                 type="button"
                 variant="outline"
                 size="icon"
+                aria-label={t('agent.cancel', 'Cancel')}
                 onClick={cancelChat}
               >
                 <Square className="h-4 w-4" />
@@ -279,6 +283,7 @@ export function AIAgentDialog({
               <Button
                 type="submit"
                 size="icon"
+                aria-label={t('agent.send', 'Send')}
                 disabled={!input.trim() || !isConfigured}
               >
                 <Send className="h-4 w-4" />
