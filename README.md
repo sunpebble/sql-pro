@@ -100,6 +100,8 @@ Download the latest release for your platform:
 
 **Prerequisites:** Node.js 24+, pnpm 10+
 
+> **Using nvm?** Run `nvm install 24 && nvm use 24` to switch to the required version.
+
 ```bash
 # Clone the repository
 git clone https://github.com/kunish-homelab/sql-pro.git

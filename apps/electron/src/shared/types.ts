@@ -2862,6 +2862,11 @@ export interface FileChangeEvent {
   eventType: 'change' | 'rename';
 }
 
+// ============ Project URL Constants ============
+
+export const PROJECT_REPO_URL = 'https://github.com/kunish-homelab/sql-pro';
+export const PROJECT_ISSUES_URL = `${PROJECT_REPO_URL}/issues`;
+
 // ============ IPC Channel Constants ============
 
 export const IPC_CHANNELS = {
