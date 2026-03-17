@@ -84,7 +84,7 @@ export interface PluginServiceConfig {
 
 /** Default marketplace URL (to be configured) */
 const DEFAULT_MARKETPLACE_URL =
-  'https://raw.githubusercontent.com/example/sql-pro-plugins/main/registry.json';
+  'https://raw.githubusercontent.com/kunish-homelab/sql-pro-plugins/main/registry.json';
 
 /** Default cache duration: 1 hour */
 const DEFAULT_CACHE_DURATION = 60 * 60 * 1000;

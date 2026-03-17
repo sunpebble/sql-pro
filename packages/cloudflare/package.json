@@ -3,6 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "SQL Pro Website + License API (Cloudflare Workers + D1)",
   "scripts": {
     "dev": "wrangler dev",

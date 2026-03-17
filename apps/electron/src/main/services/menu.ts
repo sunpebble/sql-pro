@@ -391,14 +391,14 @@ export function createApplicationMenu(): void {
         {
           label: t('learnMore'),
           click: async () => {
-            await shell.openExternal('https://github.com/nicepkg/sql-pro');
+            await shell.openExternal('https://github.com/kunish-homelab/sql-pro');
           },
         },
         {
           label: t('reportIssue'),
           click: async () => {
             await shell.openExternal(
-              'https://github.com/nicepkg/sql-pro/issues'
+              'https://github.com/kunish-homelab/sql-pro/issues'
             );
           },
         },

@@ -2,6 +2,7 @@
   "name": "@sqlpro/video",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "SQL Pro product video built with Remotion",
   "scripts": {
     "studio": "remotion studio",

@@ -100,7 +100,7 @@ export default function OpenSource() {
             {/* Actions */}
             <div className="mt-4 flex flex-col gap-4 sm:flex-row">
               <a
-                href="https://github.com/anthropics/sql-pro"
+                href="https://github.com/kunish-homelab/sql-pro"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-main text-main-foreground rounded-base inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-base font-semibold shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
@@ -116,7 +116,7 @@ export default function OpenSource() {
                 {t('opensource.viewOnGithub')}
               </a>
               <a
-                href="https://github.com/anthropics/sql-pro/stargazers"
+                href="https://github.com/kunish-homelab/sql-pro/stargazers"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border-border bg-background rounded-base inline-flex items-center justify-center gap-2.5 border px-6 py-3.5 text-base font-semibold shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
@@ -155,7 +155,7 @@ export default function OpenSource() {
                 <div className="flex gap-2 whitespace-nowrap">
                   <span className="text-main">$</span>
                   <span>
-                    git clone https://github.com/anthropics/sql-pro.git
+                    git clone https://github.com/kunish-homelab/sql-pro.git
                   </span>
                 </div>
                 <div className="text-muted-foreground">

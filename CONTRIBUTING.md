@@ -24,7 +24,7 @@ This project adheres to a Code of Conduct that all contributors are expected to 
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js** 20 or later
+- **Node.js** 24 or later
 - **pnpm** 10 or later
 - **Git**
 
