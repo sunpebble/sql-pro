@@ -709,7 +709,7 @@ export function ImageGallery({
   // Empty state
   if (!isLoading && images.length === 0) {
     return (
-      <div className="bg-grid-dot text-muted-foreground flex h-full flex-col items-center justify-center gap-2">
+      <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2">
         <ImageOff className="h-12 w-12" />
         <p>{t('mediaGallery.noMedia', 'No media detected')}</p>
       </div>

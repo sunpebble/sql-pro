@@ -145,6 +145,11 @@ export function AgentSettingsPanel({
                 type="button"
                 variant="ghost"
                 size="icon"
+                aria-label={
+                  showApiKey
+                    ? t('common.hide', 'Hide')
+                    : t('common.show', 'Show')
+                }
                 className="absolute top-0 right-0"
                 onClick={() => setShowApiKey(!showApiKey)}
               >

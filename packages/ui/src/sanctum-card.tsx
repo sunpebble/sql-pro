@@ -36,8 +36,6 @@ function BrandCard({
         'group/brand-card relative flex flex-col overflow-hidden',
         // Background
         'bg-card',
-        // Border
-        'border-border/10 border',
         // Transitions
         'transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
 
@@ -49,7 +47,7 @@ function BrandCard({
         },
 
         // Interactive hover effects
-        interactive && ['hover:border-primary/30', 'hover:shadow-lg'],
+        interactive && [],
 
         className
       )}
@@ -60,11 +58,10 @@ function BrandCard({
         <div
           className={cn(
             'pointer-events-none absolute inset-3',
-            'border-border/10 border',
             'opacity-0 transition-all duration-300',
             // Animate inward on hover
             interactive &&
-              'group-hover/brand-card:border-primary/20 group-hover/brand-card:inset-4 group-hover/brand-card:opacity-100'
+              'group-hover/brand-card:inset-4 group-hover/brand-card:opacity-100'
           )}
         />
       )}

@@ -225,7 +225,7 @@ export default function UserMenu() {
       <div className="relative">
         <button
           type="button"
-          className="bg-background border-border rounded-base text-foreground focus-visible:ring-ring flex cursor-pointer items-center gap-2 border px-4 py-2 font-sans text-sm font-medium shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:outline-none"
+          className="bg-background border-border rounded-base text-foreground focus-visible:ring-ring flex cursor-pointer items-center gap-2 border px-3 py-2.5 font-sans text-sm font-medium shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:outline-none sm:px-4"
           onClick={handleLogin}
           aria-label={t('auth.loginWithGithub', 'Sign in with GitHub')}
         >
@@ -264,7 +264,7 @@ export default function UserMenu() {
 
       {isOpen && (
         <div
-          className="bg-background border-border rounded-base animate-fade-up absolute top-[calc(100%+8px)] right-0 z-50 min-w-[280px] overflow-hidden border shadow-lg"
+          className="bg-background border-border rounded-base animate-fade-up absolute top-[calc(100%+8px)] right-0 z-50 w-[calc(100vw-2rem)] max-w-[280px] overflow-hidden border shadow-lg sm:w-auto sm:min-w-[280px]"
           role="menu"
         >
           <div className="flex items-center gap-3 p-4">

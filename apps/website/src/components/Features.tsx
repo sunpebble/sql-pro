@@ -105,9 +105,9 @@ const icons: Record<string, ReactNode> = {
 };
 
 const sizeClasses: Record<FeatureSize, string> = {
-  featured: 'min-h-[200px] p-8',
-  wide: 'col-span-1 md:col-span-2 lg:col-span-3 flex-row items-center p-8 md:px-10',
-  default: '',
+  featured: 'md:min-h-[220px] p-6 sm:p-8',
+  wide: 'col-span-1 md:col-span-2 lg:col-span-3 flex-col md:flex-row md:items-center p-6 sm:p-8 md:px-10',
+  default: 'p-5 sm:p-7',
 };
 
 export default function Features() {
@@ -140,20 +140,23 @@ export default function Features() {
 
   return (
     <section
-      className="relative overflow-hidden py-24 md:py-32"
+      className="relative overflow-hidden py-16 md:py-24 lg:py-32"
       id="features"
       aria-labelledby="features-title"
     >
-      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
+      {/* Subtle background decoration */}
+      <div className="bg-grid-pattern pointer-events-none absolute inset-0 opacity-30" />
+
+      <div className="relative mx-auto max-w-[1280px] px-4 sm:px-5 md:px-12">
         <header
           ref={headerRef}
-          className={`mb-16 text-center transition-all duration-500 ${
+          className={`mb-10 text-center transition-all duration-500 sm:mb-16 ${
             headerVisible
               ? 'translate-y-0 opacity-100'
               : 'translate-y-8 opacity-0'
           }`}
         >
-          <span className="bg-main text-main-foreground border-border rounded-base mb-5 inline-flex items-center gap-2 border px-4 py-2 text-sm font-semibold tracking-wide uppercase shadow-sm">
+          <span className="bg-main/10 text-main border-main/20 mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold">
             <svg
               className="h-4 w-4"
               viewBox="0 0 24 24"
@@ -190,7 +193,7 @@ export default function Features() {
                 cardsRef.current[index] = el;
               }}
               data-index={index}
-              className={`bg-card border-border rounded-base flex min-h-[180px] flex-col gap-5 border p-7 transition-all duration-300 ${sizeClasses[feature.size]} ${
+              className={`bg-card border-border flex flex-col gap-4 rounded-xl border transition-all duration-300 sm:gap-5 ${sizeClasses[feature.size]} ${
                 visibleCards.has(index)
                   ? 'card-neo-lift translate-y-0 opacity-100 shadow-sm'
                   : 'translate-y-8 opacity-0'
@@ -199,8 +202,8 @@ export default function Features() {
               role="listitem"
             >
               <div
-                className={`bg-main text-main-foreground border-border rounded-base flex h-13 w-13 flex-shrink-0 items-center justify-center border ${
-                  feature.size === 'featured' ? 'h-14 w-14' : ''
+                className={`bg-main/10 text-main flex flex-shrink-0 items-center justify-center rounded-lg ${
+                  feature.size === 'featured' ? 'h-14 w-14' : 'h-12 w-12'
                 } ${visibleCards.has(index) ? 'animate-icon-bounce' : ''}`}
                 style={
                   visibleCards.has(index)
@@ -209,7 +212,9 @@ export default function Features() {
                 }
               >
                 <div
-                  className={`h-6 w-6 ${feature.size === 'featured' ? 'h-7 w-7' : ''}`}
+                  className={
+                    feature.size === 'featured' ? 'h-7 w-7' : 'h-6 w-6'
+                  }
                 >
                   {icons[feature.icon]}
                 </div>

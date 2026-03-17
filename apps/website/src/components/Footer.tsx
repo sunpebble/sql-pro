@@ -1,18 +1,12 @@
 import { useTranslation } from 'react-i18next';
 
 const essentialLinks = [
-  {
-    key: 'github',
-    href: 'https://github.com/kunish-homelab/sql-pro',
-  },
+  { key: 'github', href: 'https://github.com/kunish-homelab/sql-pro' },
   {
     key: 'releases',
     href: 'https://github.com/kunish-homelab/sql-pro/releases',
   },
-  {
-    key: 'docs',
-    href: 'https://kunish-homelab.github.io/sql-pro/',
-  },
+  { key: 'docs', href: 'https://kunish-homelab.github.io/sql-pro/' },
   {
     key: 'discussions',
     href: 'https://github.com/kunish-homelab/sql-pro/discussions',
@@ -25,30 +19,30 @@ export default function Footer() {
 
   return (
     <footer
-      className="bg-background border-border border-t py-8"
+      className="bg-background border-border border-t py-10"
       role="contentinfo"
     >
-      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-5 md:px-12">
         <div className="mb-6 flex flex-col items-center justify-between gap-6 md:flex-row">
           {/* Brand */}
           <a
             href="#"
-            className="text-foreground flex items-center gap-2 text-lg font-bold no-underline transition-transform duration-200 hover:scale-105"
+            className="text-foreground group flex items-center gap-2.5 text-lg font-bold no-underline"
           >
             <img
               src="/icon.svg"
               alt=""
-              width="32"
-              height="32"
+              width="28"
+              height="28"
               aria-hidden="true"
-              className="border-border rounded-base border"
+              className="border-border rounded-lg border transition-transform duration-200 group-hover:scale-105"
             />
             SQL Pro
           </a>
 
-          {/* Essential links - inline */}
+          {/* Essential links */}
           <nav
-            className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
+            className="flex flex-wrap items-center justify-center gap-1"
             aria-label="Footer navigation"
           >
             {essentialLinks.map((link) => (
@@ -57,7 +51,7 @@ export default function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-main link-underline text-sm font-medium no-underline transition-colors duration-150"
+                className="text-muted-foreground hover:text-foreground hover:bg-secondary-background rounded-md px-3 py-2 text-sm font-medium no-underline transition-all duration-150"
               >
                 {t(`footer.${link.key}`)}
               </a>

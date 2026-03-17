@@ -7,6 +7,7 @@ import type {
 } from '@/types/database';
 import { Button } from '@sqlpro/ui/button';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import {
   ChevronDown,
   ChevronRight,
@@ -22,7 +23,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
-import { cn } from '@/lib/utils';
+import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 
 interface SchemaDetailsPanelProps {
   table: TableSchema | null;
@@ -60,16 +61,21 @@ export function SchemaDetailsPanel({
           <h2 className="font-semibold">
             {t('schema.title', { defaultValue: 'Schema Details' })}
           </h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            aria-label={t('schema.closeDetails', {
-              defaultValue: 'Close details',
-            })}
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                aria-label={t('common.close', { defaultValue: 'Close' })}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+              {t('common.close', { defaultValue: 'Close' })}
+            </TooltipContent>
+          </Tooltip>
         </div>
         <div
           className="text-muted-foreground flex flex-1 items-center justify-center"
@@ -113,16 +119,21 @@ export function SchemaDetailsPanel({
             </p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          aria-label={t('schema.closeDetails', {
-            defaultValue: 'Close details',
-          })}
-        >
-          <X className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              aria-label={t('common.close', { defaultValue: 'Close' })}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent className={TOOLTIP_CONTENT_STYLE}>
+            {t('common.close', { defaultValue: 'Close' })}
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Content */}
@@ -130,6 +141,7 @@ export function SchemaDetailsPanel({
         <div className="space-y-4 p-4">
           {/* Columns Section */}
           <Section
+            id="section-columns"
             title={t('schema.columns', { defaultValue: 'Columns' })}
             icon={<Columns3 className="h-4 w-4" />}
             count={table.columns.length}
@@ -146,6 +158,7 @@ export function SchemaDetailsPanel({
           {/* Indexes Section */}
           {table.indexes.length > 0 && (
             <Section
+              id="section-indexes"
               title={t('schema.indexes', { defaultValue: 'Indexes' })}
               icon={<Key className="h-4 w-4" />}
               count={table.indexes.length}
@@ -159,6 +172,7 @@ export function SchemaDetailsPanel({
           {/* Foreign Keys Section */}
           {table.foreignKeys.length > 0 && (
             <Section
+              id="section-foreign-keys"
               title={t('schema.foreignKeys', { defaultValue: 'Foreign Keys' })}
               icon={<Link2 className="h-4 w-4" />}
               count={table.foreignKeys.length}
@@ -172,6 +186,7 @@ export function SchemaDetailsPanel({
           {/* Triggers Section (only for tables, not views) */}
           {!isView && table.triggers.length > 0 && (
             <Section
+              id="section-triggers"
               title={t('schema.triggers', { defaultValue: 'Triggers' })}
               icon={<Zap className="h-4 w-4" />}
               count={table.triggers.length}
@@ -185,6 +200,7 @@ export function SchemaDetailsPanel({
           {/* CREATE Statement Section */}
           {table.sql && (
             <Section
+              id="section-sql"
               title={t('schema.createStatement', {
                 defaultValue: 'CREATE Statement',
               })}
@@ -202,6 +218,7 @@ export function SchemaDetailsPanel({
 }
 
 interface SectionProps {
+  id: string;
   title: string;
   icon: React.ReactNode;
   count?: number;
@@ -211,6 +228,7 @@ interface SectionProps {
 }
 
 function Section({
+  id,
   title,
   icon,
   count,
@@ -218,11 +236,15 @@ function Section({
   onToggle,
   children,
 }: SectionProps) {
+  const contentId = `${id}-content`;
+
   return (
     <div className="bg-muted/30 rounded-base border-border border">
       <button
         type="button"
         onClick={onToggle}
+        aria-expanded={isExpanded}
+        aria-controls={contentId}
         className="hover:bg-accent/50 rounded-t-base flex w-full items-center gap-2 px-3 py-2 font-medium transition-colors"
         style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
@@ -242,7 +264,11 @@ function Section({
           </span>
         )}
       </button>
-      {isExpanded && <div className="border-t px-3 py-2">{children}</div>}
+      {isExpanded && (
+        <div id={contentId} className="border-t px-3 py-2">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

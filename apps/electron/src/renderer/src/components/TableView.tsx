@@ -539,6 +539,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                 variant="ghost"
                 size="sm"
                 onClick={clearSelection}
+                aria-label={t('table.clearSelection', {
+                  defaultValue: 'Clear selection',
+                })}
                 className="h-7"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
@@ -645,6 +648,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                   title={t('table.clearSearch', {
                     defaultValue: 'Clear search',
                   })}
+                  aria-label={t('table.clearSearch', {
+                    defaultValue: 'Clear search',
+                  })}
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -654,7 +660,14 @@ export function TableView({ tableOverride }: TableViewProps) {
             {/* Refresh button */}
             <Tooltip>
               <TooltipTrigger>
-                <Button variant="outline" size="sm" onClick={() => refetch()}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => refetch()}
+                  aria-label={t('table.refreshData', {
+                    defaultValue: 'Refresh table data',
+                  })}
+                >
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -673,6 +686,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                   size="sm"
                   onClick={() => setShowExportDialog(true)}
                   disabled={rows.length === 0}
+                  aria-label={t('table.exportData', {
+                    defaultValue: 'Export data',
+                  })}
                   data-action="export-data"
                 >
                   <Download className="h-4 w-4" />
@@ -692,6 +708,7 @@ export function TableView({ tableOverride }: TableViewProps) {
                     variant="outline"
                     size="sm"
                     onClick={handleAddRow}
+                    aria-label={t('table.addRow', { defaultValue: 'Add row' })}
                     data-action="add-row"
                   >
                     <Plus className="h-4 w-4" />
@@ -712,6 +729,10 @@ export function TableView({ tableOverride }: TableViewProps) {
                     variant="outline"
                     size="sm"
                     onClick={() => setShowDiffPreview(true)}
+                    aria-label={t('table.viewChangesCount', {
+                      count: changeCount,
+                      defaultValue: 'View {{count}} pending changes',
+                    })}
                   >
                     <FileText className="h-4 w-4" />
                     <span className="ml-1.5">{changeCount}</span>
@@ -736,6 +757,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                     size="sm"
                     className="rounded-r-none border-r"
                     onClick={() => setViewMode('data')}
+                    aria-label={t('table.dataView', {
+                      defaultValue: 'Data view',
+                    })}
                     data-action="view-data"
                   >
                     <Table2 className="h-4 w-4" />
@@ -755,6 +779,9 @@ export function TableView({ tableOverride }: TableViewProps) {
                     size="sm"
                     className="rounded-l-none"
                     onClick={() => setViewMode('images')}
+                    aria-label={t('table.mediaGallery', {
+                      defaultValue: 'Media gallery',
+                    })}
                     data-action="view-gallery"
                   >
                     <ImageIcon className="h-4 w-4" />
@@ -882,6 +909,7 @@ export function TableView({ tableOverride }: TableViewProps) {
               onClick={() => handlePageChange(1)}
               disabled={page <= 1 || isLoading}
               title={t('table.firstPage', { defaultValue: 'First page' })}
+              aria-label={t('table.firstPage', { defaultValue: 'First page' })}
             >
               <ChevronsLeft className="h-4 w-4" />
             </Button>
@@ -892,6 +920,9 @@ export function TableView({ tableOverride }: TableViewProps) {
               onClick={() => handlePageChange(page - 1)}
               disabled={page <= 1 || isLoading}
               title={t('table.previousPage', {
+                defaultValue: 'Previous page',
+              })}
+              aria-label={t('table.previousPage', {
                 defaultValue: 'Previous page',
               })}
             >
@@ -949,6 +980,7 @@ export function TableView({ tableOverride }: TableViewProps) {
               onClick={() => handlePageChange(page + 1)}
               disabled={page >= totalPages || isLoading}
               title={t('table.nextPage', { defaultValue: 'Next page' })}
+              aria-label={t('table.nextPage', { defaultValue: 'Next page' })}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -959,6 +991,7 @@ export function TableView({ tableOverride }: TableViewProps) {
               onClick={() => handlePageChange(totalPages)}
               disabled={page >= totalPages || isLoading}
               title={t('table.lastPage', { defaultValue: 'Last page' })}
+              aria-label={t('table.lastPage', { defaultValue: 'Last page' })}
             >
               <ChevronsRight className="h-4 w-4" />
             </Button>
