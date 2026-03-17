@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/kunish-homelab/sql-pro/compare/sqlpro-app-v1.10.0...sqlpro-app-v1.10.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* resolve CI failures from bulk dependency update ([#166](https://github.com/kunish-homelab/sql-pro/issues/166)) ([949bb4d](https://github.com/kunish-homelab/sql-pro/commit/949bb4d16867991bed602acd4384f75ca8f5b699))
+
 ## [1.10.0](https://github.com/kunish-homelab/sql-pro/compare/sqlpro-app-v1.9.0...sqlpro-app-v1.10.0) (2026-03-17)
 
 
