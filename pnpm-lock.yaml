@@ -262,8 +262,8 @@ catalogs:
       specifier: ^20.7.0
       version: 20.7.0
     hono:
-      specifier: ^4.12.2
-      version: 4.12.2
+      specifier: ^4.12.7
+      version: 4.12.8
     html-to-image:
       specifier: ^1.11.13
       version: 1.11.13
@@ -925,7 +925,7 @@ importers:
     dependencies:
       hono:
         specifier: 'catalog:'
-        version: 4.12.2
+        version: 4.12.8
       nanoid:
         specifier: 'catalog:'
         version: 5.1.6
@@ -969,7 +969,7 @@ importers:
         version: 0.17.0(encoding@0.1.13)
       hono:
         specifier: 'catalog:'
-        version: 4.12.2
+        version: 4.12.8
       nanoid:
         specifier: 'catalog:'
         version: 5.1.6
@@ -6555,6 +6555,7 @@ packages:
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   github-from-package@0.0.0:
@@ -6680,6 +6681,10 @@ packages:
 
   hono@4.12.2:
     resolution: {integrity: sha512-gJnaDHXKDayjt8ue0n8Gs0A007yKXj4Xzb8+cNjZeYsSzzwKc0Lr+OZgYwVfB0pHfUs17EPoLvrOsEaJ9mj+Tg==}
+    engines: {node: '>=16.9.0'}
+
+  hono@4.12.8:
+    resolution: {integrity: sha512-VJCEvtrezO1IAR+kqEYnxUOoStaQPGrCmX3j4wDTNOcD1uRPFpGlwQUIW8niPuvHXaTUxeOUl5MMDGrl+tmO9A==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -8799,6 +8804,7 @@ packages:
   rolldown-vite@7.3.1:
     resolution: {integrity: sha512-LYzdNAjRHhF2yA4JUQm/QyARyi216N2rpJ0lJZb8E9FU2y5v6Vk+xq/U4XBOxMefpWixT5H3TslmAHm1rqIq2w==}
     engines: {node: ^20.19.0 || >=22.12.0}
+    deprecated: Use this package to migrate from Vite 7 to Vite 8. For the most recent updates, migrate to Vite 8 once you're ready.
     hasBin: true
     peerDependencies:
       '@types/node': ^20.19.0 || >=22.12.0
@@ -14036,7 +14042,7 @@ snapshots:
       js-yaml: 4.1.1
       json5: 2.2.3
       lazy-val: 1.0.5
-      minimatch: 10.2.2
+      minimatch: 10.2.3
       plist: 3.1.0
       resedit: 1.7.2
       semver: 7.7.4
@@ -16282,6 +16288,8 @@ snapshots:
       hermes-estree: 0.25.1
 
   hono@4.12.2: {}
+
+  hono@4.12.8: {}
 
   hookable@5.5.3: {}
 

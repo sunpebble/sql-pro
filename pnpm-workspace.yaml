@@ -141,7 +141,7 @@ catalogs:
     ajv: ^8.18.0
 
     # Cloudflare
-    hono: ^4.12.2
+    hono: ^4.12.7
     wrangler: ^4.68.0
     '@cloudflare/workers-types': ^4.20260303.0
     stripe: ^20.3.1
