@@ -163,7 +163,7 @@ catalogs:
     exceljs: ^4.4.0
     express: ^5.2.1
     html-to-image: ^1.11.13
-    minimatch: 10.2.2
+    minimatch: 10.2.3
     papaparse: ^5.5.3
     react-markdown: ^10.1.0
     react-resizable: ^3.1.3
