@@ -753,6 +753,42 @@ export const mockSqlProAPI: any = {
         actualEndRow: startRow + data.slice(startRow, endRow).length,
       };
     },
+    executeQuery: async (_request: ExecuteQueryRequest): Promise<any> => {
+      await delay(300);
+      const query = _request.query?.trim().toLowerCase() || '';
+
+      // Simple query parsing for demo purposes
+      if (query.includes('select') && query.includes('from products')) {
+        const tableSchema = mockTables.find((t) => t.name === 'products');
+        const columns = tableSchema?.columns || [];
+        const data = mockTableData.products || [];
+
+        // Handle LIMIT clause
+        let limitedData = data;
+        const limitMatch = query.match(/limit\s+(\d+)/);
+        if (limitMatch) {
+          const limit = Number.parseInt(limitMatch[1], 10);
+          limitedData = data.slice(0, limit);
+        }
+
+        return {
+          success: true,
+          columns,
+          rows: limitedData,
+          totalRows: limitedData.length,
+          executionTime: 42,
+        };
+      }
+
+      // Default response for other queries
+      return {
+        success: true,
+        columns: [],
+        rows: [],
+        totalRows: 0,
+        executionTime: 15,
+      };
+    },
   },
   query: {
     execute: async (_request: ExecuteQueryRequest): Promise<any> => {
