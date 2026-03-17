@@ -2,7 +2,6 @@ import type { SplitPane } from '@/stores/query-tabs-store';
 import type { DatabaseSchema } from '@/types/database';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { Button } from '@sqlpro/ui/button';
-import { GoldButton } from '@sqlpro/ui/gold-button';
 import { AlertCircle, Clock, Loader2, Play, X, Zap } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -202,7 +201,7 @@ export const QueryPane = memo(
             >
               <Zap className="h-3.5 w-3.5" />
             </Button>
-            <GoldButton
+            <Button
               size="sm"
               className="h-7 gap-1 px-3"
               onClick={handleExecute}
@@ -214,7 +213,7 @@ export const QueryPane = memo(
                 <Play className="h-3.5 w-3.5" />
               )}
               Run
-            </GoldButton>
+            </Button>
             {showCloseButton && onClose && (
               <Button
                 variant="ghost"

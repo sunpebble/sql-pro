@@ -7,20 +7,20 @@ export default function OpenSource() {
 
   return (
     <section
-      className="relative overflow-hidden py-24 md:py-32"
+      className="relative overflow-hidden py-16 md:py-24 lg:py-32"
       id="opensource"
       aria-labelledby="opensource-title"
     >
-      <div className="container">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-5 md:px-12">
         <div
           ref={contentRef}
-          className={`grid grid-cols-1 items-center gap-12 transition-all duration-500 ease-out lg:grid-cols-2 lg:gap-16 ${
+          className={`grid grid-cols-1 items-center gap-8 transition-all duration-500 ease-out sm:gap-12 md:grid-cols-2 md:gap-16 ${
             isInView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}
         >
           {/* Info Section */}
-          <div className="flex flex-col items-center gap-5 text-center lg:items-start lg:text-left">
-            <span className="rounded-base border-border bg-main text-main-foreground inline-flex w-fit items-center gap-2 border px-4 py-2 text-xs font-semibold tracking-wide uppercase shadow-sm">
+          <div className="flex flex-col items-center gap-4 text-center sm:gap-5 md:items-start md:text-left">
+            <span className="bg-main/10 text-main border-main/20 inline-flex w-fit items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold tracking-wide uppercase">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -49,8 +49,8 @@ export default function OpenSource() {
             </p>
 
             {/* Features */}
-            <div className="mt-2 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border px-4 py-2.5 text-sm font-medium transition-colors">
+            <div className="mt-2 flex flex-wrap justify-center gap-2 sm:gap-3 md:justify-start">
+              <div className="border-border bg-card hover:bg-secondary-background flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -64,7 +64,7 @@ export default function OpenSource() {
                 </svg>
                 <span>{t('opensource.features.secure')}</span>
               </div>
-              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border px-4 py-2.5 text-sm font-medium transition-colors">
+              <div className="border-border bg-card hover:bg-secondary-background flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -81,7 +81,7 @@ export default function OpenSource() {
                 </svg>
                 <span>{t('opensource.features.community')}</span>
               </div>
-              <div className="rounded-base border-border bg-background hover:bg-secondary-background flex items-center gap-2 border px-4 py-2.5 text-sm font-medium transition-colors">
+              <div className="border-border bg-card hover:bg-secondary-background flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -103,7 +103,7 @@ export default function OpenSource() {
                 href="https://github.com/anthropics/sql-pro"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-neo-primary rounded-base border-border bg-main text-main-foreground inline-flex items-center justify-center gap-2.5 border px-6 py-3.5 text-base font-semibold shadow-sm transition-all active:scale-95"
+                className="bg-main text-main-foreground rounded-base inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-base font-semibold shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -119,7 +119,7 @@ export default function OpenSource() {
                 href="https://github.com/anthropics/sql-pro/stargazers"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-base border-border bg-background inline-flex items-center justify-center gap-2.5 border px-6 py-3.5 text-base font-semibold shadow-sm transition-all active:scale-95"
+                className="border-border bg-background rounded-base inline-flex items-center justify-center gap-2.5 border px-6 py-3.5 text-base font-semibold shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -138,7 +138,7 @@ export default function OpenSource() {
 
           {/* Visual - Terminal */}
           <div className="flex justify-center">
-            <div className="rounded-base border-border bg-card w-full max-w-lg overflow-hidden border shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+            <div className="border-border bg-card w-full max-w-lg overflow-hidden rounded-xl border shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
               {/* Terminal Header */}
               <div className="border-border bg-secondary-background flex items-center gap-2 border-b px-4 py-3">
                 <div className="flex gap-2">
@@ -151,8 +151,8 @@ export default function OpenSource() {
                 </span>
               </div>
               {/* Terminal Content */}
-              <div className="space-y-2 p-4 font-mono text-sm">
-                <div className="flex gap-2">
+              <div className="space-y-2.5 overflow-x-auto p-4 font-mono text-xs sm:p-5 sm:text-sm">
+                <div className="flex gap-2 whitespace-nowrap">
                   <span className="text-main">$</span>
                   <span>
                     git clone https://github.com/anthropics/sql-pro.git

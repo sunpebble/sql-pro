@@ -58,7 +58,7 @@ export function AnimatedLoader({
         <div className={cn('absolute inset-0', sizes.icon)}>
           <svg className="animate-spin" viewBox="0 0 50 50">
             <circle
-              className="stroke-gold/20"
+              className="stroke-primary/20"
               strokeWidth="4"
               fill="none"
               r="20"
@@ -66,7 +66,7 @@ export function AnimatedLoader({
               cy="25"
             />
             <circle
-              className="stroke-gold"
+              className="stroke-primary"
               strokeWidth="4"
               fill="none"
               r="20"

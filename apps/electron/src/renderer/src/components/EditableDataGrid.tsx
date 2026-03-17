@@ -568,7 +568,9 @@ export function EditableDataGrid({
                       key={col.name}
                       className={cn(
                         'flex items-center border-r px-2',
-                        isFocused && !isEditing && 'ring-gold ring-2 ring-inset'
+                        isFocused &&
+                          !isEditing &&
+                          'ring-primary ring-2 ring-inset'
                       )}
                       style={{
                         width: columnWidths[idx],

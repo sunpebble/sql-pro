@@ -5,7 +5,6 @@ import type {
 } from '@/stores/query-templates-store';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
-import { GoldButton } from '@sqlpro/ui/gold-button';
 import { Input } from '@sqlpro/ui/input';
 import {
   ResizableHandle,
@@ -705,7 +704,7 @@ export function QueryEditor() {
             <Zap className="h-4 w-4" />
             {t('queryEditor.analyze')}
           </Button>
-          <GoldButton
+          <Button
             size="sm"
             onClick={handleExecute}
             disabled={tabIsExecuting || !tabQuery.trim()}
@@ -718,7 +717,7 @@ export function QueryEditor() {
               <Play className="h-4 w-4" />
             )}
             {t('queryEditor.execute')}
-          </GoldButton>
+          </Button>
         </div>
       </div>
 

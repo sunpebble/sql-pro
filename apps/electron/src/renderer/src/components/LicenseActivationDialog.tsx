@@ -285,7 +285,7 @@ export function LicenseActivationDialog({
             className={cn(
               'relative cursor-pointer transition-all',
               selectedPlan === plan.id
-                ? 'ring-gold ring-2'
+                ? 'ring-primary ring-2'
                 : 'hover:border-primary/50'
             )}
             onClick={() => setSelectedPlan(plan.id)}

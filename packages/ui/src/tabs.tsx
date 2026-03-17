@@ -25,7 +25,7 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  'rounded-[5px] p-1 group-data-horizontal/tabs:h-10 data-[variant=line]:rounded-none data-[variant=line]:p-0 data-[variant=line]:gap-0 group/tabs-list text-muted-foreground inline-flex w-fit items-center justify-center gap-1 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col',
+  'rounded-md p-1 group-data-horizontal/tabs:h-10 data-[variant=line]:rounded-none data-[variant=line]:p-0 data-[variant=line]:gap-0 group/tabs-list text-muted-foreground inline-flex w-fit items-center justify-center gap-1 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col',
   {
     variants: {
       variant: {
@@ -59,7 +59,7 @@ function TabsTrigger({ className, style, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-[3px] border border-transparent px-3 py-1 font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
+        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-sm border border-transparent px-3 py-1 font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
         'group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start',
         'disabled:pointer-events-none disabled:opacity-50',
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",

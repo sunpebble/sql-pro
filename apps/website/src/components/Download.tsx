@@ -59,11 +59,21 @@ export default function Download() {
 
   return (
     <section
-      className="bg-main relative overflow-hidden py-24 md:py-32"
+      className="bg-main relative overflow-hidden py-16 md:py-24 lg:py-32"
       id="download"
       aria-labelledby="download-title"
     >
-      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
+      {/* Subtle pattern overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-10"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)',
+          backgroundSize: '20px 20px',
+        }}
+      />
+
+      <div className="relative mx-auto max-w-[1280px] px-4 sm:px-5 md:px-12">
         <div
           ref={contentRef}
           className={`flex flex-col items-center text-center transition-all duration-500 ${
@@ -82,31 +92,28 @@ export default function Download() {
           </h2>
 
           {/* Main Download Button */}
-          <span className="relative mb-8 inline-flex">
-            <span className="animate-pulse-ring bg-main/20 border-border rounded-base absolute inset-0 border" />
-            <a
-              href="https://github.com/kunish-homelab/sql-pro/releases/latest"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-background text-foreground border-border rounded-base group relative inline-flex items-center gap-3 border px-8 py-4 text-lg font-semibold no-underline shadow-lg transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
-              aria-describedby="download-arch"
-            >
-              <span className="group-hover:animate-wiggle h-6 w-6 transition-transform duration-300">
-                {platformIcons[platform]}
+          <a
+            href="https://github.com/kunish-homelab/sql-pro/releases/latest"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-background text-foreground group mb-8 inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold no-underline shadow-lg transition-all duration-150 hover:-translate-y-1 hover:shadow-xl active:scale-95"
+            aria-describedby="download-arch"
+          >
+            <span className="h-6 w-6 transition-transform duration-200 group-hover:scale-110">
+              {platformIcons[platform]}
+            </span>
+            <span className="flex flex-col items-start">
+              <span>
+                {t('download.downloadFor', { platform: platformName })}
               </span>
-              <span className="flex flex-col items-start">
-                <span>
-                  {t('download.downloadFor', { platform: platformName })}
-                </span>
-                <small
-                  id="download-arch"
-                  className="text-muted-foreground text-sm"
-                >
-                  {platformArch}
-                </small>
-              </span>
-            </a>
-          </span>
+              <small
+                id="download-arch"
+                className="text-muted-foreground text-sm"
+              >
+                {platformArch}
+              </small>
+            </span>
+          </a>
 
           {/* Other Platforms */}
           <nav
@@ -122,7 +129,7 @@ export default function Download() {
                 href="https://github.com/kunish-homelab/sql-pro/releases/latest"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-background/10 text-main-foreground border-main-foreground/20 rounded-base hover:bg-background hover:text-foreground hover:border-border group inline-flex items-center gap-2 border px-4 py-2 text-sm font-medium no-underline transition-all duration-150"
+                className="bg-background/10 text-main-foreground border-main-foreground/20 hover:bg-background hover:text-foreground hover:border-border group inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium no-underline transition-all duration-150 active:scale-95 sm:py-2"
                 title={t(`download.arch.${p}`)}
               >
                 <span className="h-4 w-4 transition-transform duration-200 group-hover:scale-110">
