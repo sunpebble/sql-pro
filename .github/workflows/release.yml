@@ -6,8 +6,7 @@ on:
       - main
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: release-${{ github.ref }}
@@ -16,6 +15,9 @@ concurrency:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
@@ -43,6 +45,8 @@ jobs:
   build-electron:
     needs: release-please
     if: ${{ needs.release-please.outputs.electron--release_created == 'true' }}
+    permissions:
+      contents: write
 
     strategy:
       fail-fast: false
@@ -99,11 +103,7 @@ jobs:
       - name: Package Electron app (${{ matrix.platform }})
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pnpm exec electron-builder \
-            --${{ matrix.platform }} \
-            --config electron-builder.config.js \
-            --publish never
+        run: pnpm exec electron-builder --${{ matrix.platform }} --config electron-builder.config.js --publish never
         working-directory: apps/electron
 
       - name: Upload artifacts to GitHub Release

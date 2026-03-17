@@ -37,8 +37,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    # Pre-existing test failures: vitest alias conflict between main/renderer @/ paths
-    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v6
