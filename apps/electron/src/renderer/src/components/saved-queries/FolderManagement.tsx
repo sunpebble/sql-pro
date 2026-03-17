@@ -44,7 +44,7 @@ export function FolderManagement({ onCreateFolder }: FolderManagementProps) {
   }
 
   return (
-    <div className="rounded-base border-border space-y-2 border-2 p-2">
+    <div className="rounded-base border-border space-y-2 border p-2">
       <Input
         value={name}
         onChange={(e) => setName(e.target.value)}

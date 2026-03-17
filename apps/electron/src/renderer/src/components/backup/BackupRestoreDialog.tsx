@@ -388,7 +388,7 @@ export function BackupRestoreDialog({
               </div>
 
               {selectedBackup && (
-                <div className="bg-muted/30 rounded-base space-y-2 border-2 p-4">
+                <div className="bg-muted/30 rounded-base space-y-2 border p-4">
                   <div className="flex justify-between">
                     <span
                       className="text-muted-foreground"
@@ -492,7 +492,7 @@ export function BackupRestoreDialog({
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </div>
-            <ScrollArea className="rounded-base flex-1 border-2">
+            <ScrollArea className="rounded-base flex-1 border">
               {backups.length === 0 ? (
                 <div className="text-muted-foreground flex h-32 items-center justify-center">
                   {t('backup.noBackups', 'No backups yet')}

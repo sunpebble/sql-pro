@@ -180,7 +180,7 @@ export function ProGate({
         >
           <FeatureIcon className="h-10 w-10 text-white" />
         </div>
-        <div className="bg-background absolute -right-1 -bottom-1 rounded-full border-2 border-amber-500/30 p-1.5">
+        <div className="bg-background absolute -right-1 -bottom-1 rounded-full border border-amber-500/30 p-1.5">
           <Lock className="h-4 w-4 text-amber-600" />
         </div>
       </div>

@@ -84,9 +84,9 @@ function ExecutionPlanNodeComponent({
   return (
     <div
       className={cn(
-        'bg-card text-card-foreground rounded-base border-border min-w-[280px] border-2',
+        'bg-card text-card-foreground rounded-base border-border min-w-[280px] border',
         'dark:border-zinc-700 dark:bg-zinc-900',
-        selected && 'ring-gold ring-2',
+        selected && 'ring-primary ring-2',
         hasWarning && [warningStyle.border, warningStyle.bg]
       )}
     >
@@ -94,7 +94,7 @@ function ExecutionPlanNodeComponent({
       <Handle
         type="target"
         position={Position.Top}
-        className="!border-primary !bg-primary !h-2 !w-2 !border-2"
+        className="!border-primary !bg-primary !h-2 !w-2 !border"
       />
 
       {/* Header with operation type */}
@@ -197,7 +197,7 @@ function ExecutionPlanNodeComponent({
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!border-primary !bg-primary !h-2 !w-2 !border-2"
+        className="!border-primary !bg-primary !h-2 !w-2 !border"
       />
     </div>
   );

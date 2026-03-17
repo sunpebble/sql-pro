@@ -203,7 +203,7 @@ export function AIAgentSidebar({
 
   if (showSettings || shouldShowSettings) {
     return (
-      <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
+      <div className="bg-card flex h-full flex-col overflow-hidden outline-none">
         <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">
             <div className="bg-primary/15 rounded-base flex h-7 w-7 items-center justify-center">
@@ -242,7 +242,7 @@ export function AIAgentSidebar({
 
   if (showHistory) {
     return (
-      <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
+      <div className="bg-card flex h-full flex-col overflow-hidden outline-none">
         <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">
             <div className="bg-primary/15 rounded-base flex h-7 w-7 items-center justify-center">
@@ -357,7 +357,7 @@ export function AIAgentSidebar({
   }
 
   return (
-    <div className="glass-gold bg-grid-dot flex h-full flex-col overflow-hidden outline-none">
+    <div className="bg-card flex h-full flex-col overflow-hidden outline-none">
       {/* Header */}
       <div className="border-primary/10 mt-1 flex h-10 shrink-0 items-center justify-between border-b px-3">
         <div className="flex items-center gap-2">

@@ -286,7 +286,7 @@ export function TourTooltip({
       className={cn(
         'fixed z-[10000] w-80 max-w-[calc(100vw-32px)]',
         'bg-popover text-popover-foreground',
-        'ring-border rounded-base shadow-shadow ring-2',
+        'ring-border rounded-base shadow-sm ring-2',
         'transition-all duration-300 ease-out',
         isPositioned ? 'opacity-100' : 'opacity-0'
       )}

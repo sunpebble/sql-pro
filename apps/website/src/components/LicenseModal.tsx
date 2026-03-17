@@ -140,10 +140,10 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
       }}
       aria-labelledby="license-title"
     >
-      <div className="animate-bounce-in rounded-base border-border bg-background shadow-shadow-lg relative max-h-[90vh] w-full max-w-md overflow-y-auto border-2 p-6 md:p-8">
+      <div className="animate-bounce-in rounded-base border-border bg-background relative max-h-[90vh] w-full max-w-md overflow-y-auto border p-6 shadow-lg md:p-8">
         <button
           type="button"
-          className="bg-secondary-background text-muted-foreground hover:border-border hover:text-foreground absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full border-2 border-transparent transition-all"
+          className="bg-secondary-background text-muted-foreground hover:border-border hover:text-foreground absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full border border-transparent transition-all"
           onClick={handleClose}
           aria-label={t('license.close')}
         >
@@ -189,7 +189,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
             <p className="text-muted-foreground mb-6">{license.email}</p>
 
             {/* License Key Box */}
-            <div className="rounded-base border-main bg-secondary-background mb-6 border-2 border-dashed p-4">
+            <div className="rounded-base border-main bg-secondary-background mb-6 border border-dashed p-4">
               <p className="text-muted-foreground mb-2 text-xs tracking-widest uppercase">
                 {t('license.keyLabel')}
               </p>
@@ -199,7 +199,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
                 </code>
                 <button
                   type="button"
-                  className="rounded-base border-border bg-main hover:bg-main/90 flex h-10 w-10 shrink-0 items-center justify-center border-2 text-white transition-all"
+                  className="rounded-base border-border bg-main hover:bg-main/90 flex h-10 w-10 shrink-0 items-center justify-center border text-white transition-all"
                   onClick={handleCopy}
                   aria-label={t('license.copy')}
                 >
@@ -277,7 +277,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
 
             <button
               type="button"
-              className="rounded-base border-border bg-main text-main-foreground shadow-shadow w-full border-2 px-4 py-3.5 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+              className="rounded-base border-border bg-main text-main-foreground w-full border px-4 py-3.5 text-base font-semibold shadow-sm transition-all active:scale-95"
               onClick={handleClose}
             >
               {t('license.done')}
@@ -311,7 +311,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t('license.emailPlaceholder')}
                 required
-                className="rounded-base border-border bg-background placeholder:text-muted-foreground focus:border-main w-full border-2 px-4 py-3.5 text-base transition-colors focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-base border-border bg-background placeholder:text-muted-foreground focus:border-main w-full border px-4 py-3.5 text-base transition-colors focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isLoading}
               />
 
@@ -326,13 +326,13 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
 
               <button
                 type="submit"
-                className="rounded-base border-border bg-main text-main-foreground shadow-shadow disabled:hover:shadow-shadow flex w-full items-center justify-center gap-2 border-2 px-4 py-3.5 text-base font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+                className="rounded-base border-border bg-main text-main-foreground flex w-full items-center justify-center gap-2 border px-4 py-3.5 text-base font-semibold shadow-sm transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-sm"
                 disabled={isLoading || !email}
               >
                 {isLoading ? (
                   <>
                     <span
-                      className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
+                      className="h-4 w-4 animate-spin rounded-full border border-current border-r-transparent"
                       aria-hidden="true"
                     />
                     {t('license.searching')}

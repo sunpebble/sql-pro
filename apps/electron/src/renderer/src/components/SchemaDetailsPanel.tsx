@@ -239,7 +239,7 @@ function Section({
   const contentId = `${id}-content`;
 
   return (
-    <div className="bg-muted/30 rounded-base border-border border-2">
+    <div className="bg-muted/30 rounded-base border-border border">
       <button
         type="button"
         onClick={onToggle}

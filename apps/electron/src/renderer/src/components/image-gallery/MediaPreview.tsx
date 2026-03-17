@@ -855,7 +855,7 @@ export function MediaPreview({
             disabled={!hasPrev}
             tabIndex={-1}
             className={cn(
-              'bg-background/90 border-border absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full border-2 p-2 transition-all focus:outline-none',
+              'bg-background/90 border-border absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full border p-2 transition-all focus:outline-none',
               hasPrev ? 'hover:bg-background' : 'cursor-not-allowed opacity-30'
             )}
           >
@@ -867,7 +867,7 @@ export function MediaPreview({
             disabled={!hasNext}
             tabIndex={-1}
             className={cn(
-              'bg-background/90 border-border absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full border-2 p-2 transition-all focus:outline-none',
+              'bg-background/90 border-border absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full border p-2 transition-all focus:outline-none',
               hasNext ? 'hover:bg-background' : 'cursor-not-allowed opacity-30'
             )}
           >

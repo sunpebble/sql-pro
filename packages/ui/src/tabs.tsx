@@ -25,12 +25,12 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  'rounded-[5px] p-1 group-data-horizontal/tabs:h-10 data-[variant=line]:rounded-none data-[variant=line]:p-0 data-[variant=line]:gap-0 group/tabs-list text-muted-foreground inline-flex w-fit items-center justify-center gap-1 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col',
+  'rounded-md p-1 group-data-horizontal/tabs:h-10 data-[variant=line]:rounded-none data-[variant=line]:p-0 data-[variant=line]:gap-0 group/tabs-list text-muted-foreground inline-flex w-fit items-center justify-center gap-1 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col',
   {
     variants: {
       variant: {
-        default: 'bg-muted border-2 border-border',
-        line: 'bg-transparent border-b-2 border-border',
+        default: 'bg-muted border border-border',
+        line: 'bg-transparent border-b border-border',
       },
     },
     defaultVariants: {
@@ -59,14 +59,14 @@ function TabsTrigger({ className, style, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-[3px] border-2 border-transparent px-3 py-1 font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
+        'focus-visible:ring-main text-foreground/60 hover:text-foreground relative inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-sm border border-transparent px-3 py-1 font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2',
         'group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start',
         'disabled:pointer-events-none disabled:opacity-50',
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         // Default variant active state
         'group-data-[variant=default]/tabs-list:data-active:bg-background group-data-[variant=default]/tabs-list:data-active:border-border data-active:text-foreground',
         // Line variant
-        'group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:border-b-2 group-data-[variant=line]/tabs-list:border-transparent',
+        'group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent',
         'group-data-[variant=line]/tabs-list:data-active:border-main group-data-[variant=line]/tabs-list:data-active:bg-transparent',
         className
       )}

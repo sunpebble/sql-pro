@@ -507,7 +507,7 @@ export function ResizableTable({
                   className="fixed inset-0 z-10"
                   onClick={() => setShowSortMenu(false)}
                 />
-                <div className="bg-background border-border/50 absolute right-0 z-20 mt-1 w-48 rounded-md border py-1 shadow-lg">
+                <div className="bg-background border-border absolute right-0 z-20 mt-1 w-48 rounded-md border py-1">
                   <button
                     onClick={() => handleSort('name')}
                     className={`hover:bg-muted/50 w-full px-3 py-2 text-left text-sm transition-colors ${sortField === 'name' ? 'bg-muted/30' : ''}`}
@@ -561,7 +561,7 @@ export function ResizableTable({
                   className="fixed inset-0 z-10"
                   onClick={() => setShowExportMenu(false)}
                 />
-                <div className="bg-background border-border/50 absolute right-0 z-20 mt-1 w-32 rounded-md border shadow-lg">
+                <div className="bg-background border-border absolute right-0 z-20 mt-1 w-32 rounded-md border">
                   <button
                     onClick={() => {
                       exportToCSV();

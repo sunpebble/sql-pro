@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
+import { Button } from '@sqlpro/ui/button';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { DecoFrame } from '@sqlpro/ui/decorations';
-import { GoldButton } from '@sqlpro/ui/gold-button';
 import { memo } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -44,7 +44,7 @@ export const EmptyView = memo(
     return (
       <div
         className={cn(
-          'bg-grid-dot flex h-full w-full flex-1 items-center justify-center p-8',
+          'flex h-full w-full flex-1 items-center justify-center p-8',
           className
         )}
       >
@@ -79,13 +79,13 @@ export const EmptyView = memo(
           {(action || secondaryAction) && (
             <div className="flex flex-wrap items-center justify-center gap-3">
               {action && (
-                <GoldButton onClick={action.onClick} className="gap-2">
+                <Button onClick={action.onClick} className="gap-2">
                   {action.icon && <action.icon className="h-4 w-4" />}
                   {action.label}
-                </GoldButton>
+                </Button>
               )}
               {secondaryAction && (
-                <GoldButton
+                <Button
                   variant="outline"
                   onClick={secondaryAction.onClick}
                   className="gap-2"
@@ -94,7 +94,7 @@ export const EmptyView = memo(
                     <secondaryAction.icon className="h-4 w-4" />
                   )}
                   {secondaryAction.label}
-                </GoldButton>
+                </Button>
               )}
             </div>
           )}

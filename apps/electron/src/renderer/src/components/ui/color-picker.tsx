@@ -18,7 +18,7 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
     <Popover>
       <PopoverTrigger
         className={cn(
-          'border-border focus:ring-primary/50 rounded-base h-6 w-6 border-2 transition-all focus:ring-2 focus:outline-none',
+          'border-border focus:ring-primary/50 rounded-base h-6 w-6 border transition-all focus:ring-2 focus:outline-none',
           className
         )}
         style={{ backgroundColor: color }}

@@ -33,7 +33,7 @@ export const Loader = memo(
         {...props}
       >
         <span
-          className="animate-bounce rounded-full bg-[var(--gold,hsl(var(--primary)))]"
+          className="bg-primary animate-bounce rounded-full"
           style={{
             width: size / 4,
             height: size / 4,
@@ -41,7 +41,7 @@ export const Loader = memo(
           }}
         />
         <span
-          className="animate-bounce rounded-full bg-[var(--gold,hsl(var(--primary)))]"
+          className="bg-primary animate-bounce rounded-full"
           style={{
             width: size / 4,
             height: size / 4,
@@ -49,7 +49,7 @@ export const Loader = memo(
           }}
         />
         <span
-          className="animate-bounce rounded-full bg-[var(--gold,hsl(var(--primary)))]"
+          className="bg-primary animate-bounce rounded-full"
           style={{
             width: size / 4,
             height: size / 4,

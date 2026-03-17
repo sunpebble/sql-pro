@@ -116,7 +116,7 @@ export const ActivityBar = memo(
         className={cn(
           'relative flex h-full w-12 shrink-0 flex-col py-3',
           'bg-background',
-          'border-border border-r-2'
+          'border-border border-r'
         )}
       >
         <div className="flex flex-1 flex-col items-center gap-1">
@@ -160,7 +160,7 @@ export const ActivityBar = memo(
                           'rounded-base px-1',
                           'text-2xs font-semibold',
                           'bg-main text-main-foreground',
-                          'border-border border-2'
+                          'border-border border'
                         )}
                       >
                         {badgeCount > 99 ? '99+' : badgeCount}

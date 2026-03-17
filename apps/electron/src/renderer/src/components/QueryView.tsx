@@ -14,14 +14,14 @@ export function QueryView() {
       <div
         className={cn(
           'flex h-9 shrink-0 items-center justify-between gap-3 px-3',
-          'border-border border-b-2',
+          'border-border border-b',
           'bg-muted'
         )}
       >
         <div
           className={cn(
-            'flex items-center gap-0.5 rounded-[5px] p-0.5',
-            'border-border border-2',
+            'flex items-center gap-0.5 rounded-md p-0.5',
+            'border-border border',
             'bg-muted'
           )}
         >
@@ -29,12 +29,12 @@ export function QueryView() {
             type="button"
             onClick={() => setMode('editor')}
             className={cn(
-              'flex items-center gap-1.5 rounded-[5px] px-3 py-1.5',
+              'flex items-center gap-1.5 rounded-md px-3 py-1.5',
               'font-bold',
               'transition-all duration-150',
               mode === 'editor'
-                ? 'bg-background text-foreground border-border border-2'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
+                ? 'bg-background text-foreground border-border border'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent'
             )}
             style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           >
@@ -45,12 +45,12 @@ export function QueryView() {
             type="button"
             onClick={() => setMode('builder')}
             className={cn(
-              'flex items-center gap-1.5 rounded-[5px] px-3 py-1.5',
+              'flex items-center gap-1.5 rounded-md px-3 py-1.5',
               'font-bold',
               'transition-all duration-150',
               mode === 'builder'
-                ? 'bg-background text-foreground border-border border-2'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted border-2 border-transparent'
+                ? 'bg-background text-foreground border-border border'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent'
             )}
             style={{ fontSize: 'var(--font-ui-size, 14px)' }}
           >

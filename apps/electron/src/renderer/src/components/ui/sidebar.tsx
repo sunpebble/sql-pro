@@ -241,7 +241,7 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="bg-sidebar group-data-[variant=floating]:border-border group-data-[variant=floating]:rounded-base group-data-[variant=floating]:shadow-shadow flex size-full flex-col group-data-[variant=floating]:border-2"
+          className="bg-sidebar group-data-[variant=floating]:border-border group-data-[variant=floating]:rounded-base flex size-full flex-col group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
         >
           {children}
         </div>
@@ -309,7 +309,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
     <main
       data-slot="sidebar-inset"
       className={cn(
-        'bg-background md:peer-data-[variant=inset]:rounded-base md:peer-data-[variant=inset]:border-border md:peer-data-[variant=inset]:shadow-shadow relative flex w-full flex-1 flex-col md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:border-2 md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
+        'bg-background md:peer-data-[variant=inset]:rounded-base md:peer-data-[variant=inset]:border-border relative flex w-full flex-1 flex-col md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
         className
       )}
       {...props}
@@ -483,7 +483,7 @@ const sidebarMenuButtonVariants = cva(
       variant: {
         default: 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
         outline:
-          'bg-background border-2 border-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-accent',
+          'bg-background border border-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-accent',
       },
       size: {
         default: 'h-8',

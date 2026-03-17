@@ -10,7 +10,7 @@
 import type { PluginInfo, PluginManifest } from '@shared/types/plugin';
 import type { ManifestValidationResult } from '@/utils/plugins/validate-manifest';
 import { Buffer } from 'node:buffer';
-import { exec } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import {
   createWriteStream,
   existsSync,
@@ -29,7 +29,7 @@ import {
   parseAndValidateManifest,
 } from '@/utils/plugins/validate-manifest';
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 // ============ Constants ============
 
@@ -443,12 +443,21 @@ class PluginLoader {
 
       // Extract archive using unzip command (works on macOS and Linux)
       // On Windows, use PowerShell's Expand-Archive
+      // Security: Use execFile with argument arrays to prevent command injection
       const isWindows = process.platform === 'win32';
-      const unzipCommand = isWindows
-        ? `powershell -Command "Expand-Archive -Path '${archivePath}' -DestinationPath '${tempExtractPath}' -Force"`
-        : `unzip -o "${archivePath}" -d "${tempExtractPath}"`;
-
-      await execAsync(unzipCommand);
+      if (isWindows) {
+        await execFileAsync('powershell', [
+          '-Command',
+          `Expand-Archive -Path '${archivePath}' -DestinationPath '${tempExtractPath}' -Force`,
+        ]);
+      } else {
+        await execFileAsync('unzip', [
+          '-o',
+          archivePath,
+          '-d',
+          tempExtractPath,
+        ]);
+      }
 
       // Check if plugin.json is at root or in a subdirectory
       let pluginDir = tempExtractPath;

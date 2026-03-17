@@ -236,7 +236,7 @@ export function TourSpotlight({
         <div
           className={cn(
             'pointer-events-none absolute',
-            'border-2 border-white/80',
+            'border border-white/80',
             'transition-all duration-300 ease-out'
           )}
           style={{

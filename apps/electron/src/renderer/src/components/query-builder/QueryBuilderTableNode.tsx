@@ -224,7 +224,7 @@ function QueryBuilderTableNodeComponent({
           position={Position.Left}
           id={`${column.name}-target`}
           className={cn(
-            '!absolute !-left-2 !h-2.5 !w-2.5 !rounded-full !border-2',
+            '!absolute !-left-2 !h-2.5 !w-2.5 !rounded-full !border',
             '!border-primary/60 !bg-background',
             'hover:!bg-primary !transition-all hover:!scale-125',
             (isPK || isFK) && '!border-primary !bg-primary/20',
@@ -294,7 +294,7 @@ function QueryBuilderTableNodeComponent({
           position={Position.Right}
           id={`${column.name}-source`}
           className={cn(
-            '!absolute !-right-2 !h-2.5 !w-2.5 !rounded-full !border-2',
+            '!absolute !-right-2 !h-2.5 !w-2.5 !rounded-full !border',
             '!border-primary/60 !bg-background',
             'hover:!bg-primary !transition-all hover:!scale-125',
             (isPK || isFK) && '!border-primary !bg-primary/20',
@@ -309,14 +309,14 @@ function QueryBuilderTableNodeComponent({
   return (
     <div
       className={cn(
-        'bg-card text-card-foreground rounded-base shadow-shadow relative min-w-[200px] overflow-visible border-2',
+        'bg-card text-card-foreground rounded-base relative min-w-[200px] overflow-visible border shadow-sm',
         'dark:border-zinc-700 dark:bg-zinc-900',
         selected && 'ring-primary ring-2'
       )}
     >
       <div
         className={cn(
-          'drag-handle flex cursor-grab items-center gap-2 rounded-t-[3px] border-b-2 px-3 py-2',
+          'drag-handle flex cursor-grab items-center gap-2 rounded-t-[3px] border-b px-3 py-2',
           'bg-primary/10 dark:bg-primary/5'
         )}
       >

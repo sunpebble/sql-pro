@@ -17,20 +17,20 @@ export default function FAQ() {
 
   return (
     <section
-      className="relative overflow-hidden py-24 md:py-32"
+      className="bg-secondary-background relative overflow-hidden py-16 md:py-24 lg:py-32"
       id="faq"
       aria-labelledby="faq-title"
     >
-      <div className="mx-auto max-w-[1280px] px-5 md:px-12">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-5 md:px-12">
         <header
           ref={headerRef}
-          className={`mb-16 text-center transition-all duration-500 ${
+          className={`mb-10 text-center transition-all duration-500 sm:mb-16 ${
             headerVisible
               ? 'translate-y-0 opacity-100'
               : 'translate-y-8 opacity-0'
           }`}
         >
-          <span className="bg-main text-main-foreground border-border rounded-base shadow-shadow-sm mb-5 inline-flex items-center gap-2 border-2 px-4 py-2 text-sm font-semibold tracking-wide uppercase">
+          <span className="bg-main/10 text-main border-main/20 mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold">
             <svg
               className="h-4 w-4"
               viewBox="0 0 24 24"
@@ -57,7 +57,7 @@ export default function FAQ() {
           </p>
         </header>
 
-        <div className="mx-auto flex max-w-[800px] flex-col gap-4">
+        <div className="mx-auto flex max-w-[800px] flex-col gap-3">
           {faqKeys.map((key, index) => (
             <FAQItem key={key} faqKey={key} index={index} />
           ))}
@@ -75,16 +75,16 @@ function FAQItem({ faqKey, index }: { faqKey: string; index: number }) {
   return (
     <div
       ref={ref}
-      className={`bg-card border-border rounded-base border-2 transition-all duration-300 ${
+      className={`bg-card border-border rounded-xl border transition-all duration-300 ${
         isInView
-          ? 'shadow-shadow translate-y-0 opacity-100'
+          ? 'translate-y-0 opacity-100 shadow-sm'
           : 'translate-y-8 opacity-0'
-      } ${isOpen ? 'border-main' : ''}`}
+      } ${isOpen ? 'border-main/50 shadow-md' : 'hover:border-border/80'}`}
       style={{ transitionDelay: `${index * 50}ms` }}
     >
       <button
         type="button"
-        className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4 border-none bg-transparent p-5 text-left text-base font-semibold"
+        className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4 border-none bg-transparent p-4 text-left text-sm font-semibold sm:p-5 sm:text-base"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls={`faq-answer-${faqKey}`}
@@ -112,7 +112,7 @@ function FAQItem({ faqKey, index }: { faqKey: string; index: number }) {
         aria-hidden={!isOpen}
       >
         <div>
-          <p className="text-muted-foreground border-border m-0 border-t-2 px-5 pt-4 pb-5 leading-relaxed">
+          <p className="text-muted-foreground border-border m-0 border-t px-4 pt-3 pb-4 text-sm leading-relaxed sm:px-5 sm:pt-4 sm:pb-5 sm:text-base">
             {t(`faq.items.${faqKey}.answer`)}
           </p>
         </div>

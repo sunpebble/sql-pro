@@ -212,7 +212,7 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
             </p>
           </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={onClose}>
+        <Button variant="ghost" size="icon" onClick={onClose} aria-label={t('common.close', { defaultValue: 'Close' })}>
           <X className="h-4 w-4" />
         </Button>
       </div>
@@ -538,12 +538,7 @@ function ChangeItem({
 
   return (
     <div
-      className={cn(
-        'border-l-2',
-        config.border,
-        config.bg,
-        'hover:bg-muted/30'
-      )}
+      className={cn('border-l', config.border, config.bg, 'hover:bg-muted/30')}
     >
       {/* Change Header */}
       <div

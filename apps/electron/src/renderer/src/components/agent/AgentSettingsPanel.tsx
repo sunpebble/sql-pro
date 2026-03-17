@@ -222,7 +222,7 @@ export function AgentSettingsPanel({
 
         <TabsContent value="execution" className="mt-4 space-y-4">
           <div className="space-y-4">
-            <div className="rounded-base border-border border-2 p-4">
+            <div className="rounded-base border-border border p-4">
               <h4 className="mb-3 font-medium">
                 {t('agent.settings.autoExecute', 'Auto-Execute Settings')}
               </h4>
@@ -290,7 +290,7 @@ export function AgentSettingsPanel({
               </div>
             </div>
 
-            <div className="rounded-base border-border border-2 p-4">
+            <div className="rounded-base border-border border p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <Label htmlFor="confirmDDL" className="cursor-pointer">

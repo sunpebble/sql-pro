@@ -326,7 +326,7 @@ export default function Account({ onClose }: AccountProps) {
           <h2 className="mb-4 text-lg font-semibold">
             {t('account.profile', 'Profile')}
           </h2>
-          <div className="rounded-base border-border bg-background flex flex-col items-start gap-4 border-2 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="rounded-base border-border bg-background flex flex-col items-start gap-4 border p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col items-center gap-4 sm:flex-row">
               {user?.avatarUrl ? (
                 <img
@@ -365,7 +365,7 @@ export default function Account({ onClose }: AccountProps) {
             {hasSubscription && (
               <button
                 type="button"
-                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:text-main flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:text-main flex items-center gap-2 border px-4 py-2.5 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-60"
                 onClick={openBillingPortal}
                 disabled={billingLoading}
               >
@@ -392,7 +392,7 @@ export default function Account({ onClose }: AccountProps) {
                 return (
                   <div
                     key={license.id}
-                    className="rounded-base border-border bg-background border-2 p-5 md:p-6"
+                    className="rounded-base border-border bg-background border p-5 md:p-6"
                   >
                     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                       <span className="bg-main text-main-foreground rounded-full px-3.5 py-1.5 text-sm font-semibold">
@@ -405,17 +405,17 @@ export default function Account({ onClose }: AccountProps) {
                       </span>
                     </div>
 
-                    <div className="border-border mb-5 border-b-2 pb-5">
+                    <div className="border-border mb-5 border-b pb-5">
                       <span className="text-muted-foreground mb-2 block text-xs font-medium tracking-wide uppercase">
                         {t('account.licenseKey', 'License Key')}
                       </span>
                       <div className="flex flex-col items-stretch gap-3 sm:flex-row">
-                        <code className="rounded-base border-border bg-secondary-background flex-1 truncate border-2 px-4 py-3 text-center font-mono text-sm sm:text-left">
+                        <code className="rounded-base border-border bg-secondary-background flex-1 truncate border px-4 py-3 text-center font-mono text-sm sm:text-left">
                           {license.licenseKey}
                         </code>
                         <button
                           type="button"
-                          className="rounded-base border-border bg-main text-main-foreground hover:bg-main/90 flex items-center justify-center gap-1.5 border-2 px-3.5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors"
+                          className="rounded-base border-border bg-main text-main-foreground hover:bg-main/90 flex items-center justify-center gap-1.5 border px-3.5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors"
                           onClick={() => copyLicenseKey(license.licenseKey)}
                         >
                           {copiedKey === license.licenseKey ? (
@@ -492,7 +492,7 @@ export default function Account({ onClose }: AccountProps) {
               })}
             </div>
           ) : (
-            <div className="rounded-base border-border bg-background border-2 border-dashed px-6 py-12 text-center">
+            <div className="rounded-base border-border bg-background border border-dashed px-6 py-12 text-center">
               <div className="bg-secondary-background text-muted-foreground mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <KeyIcon />
               </div>
@@ -507,7 +507,7 @@ export default function Account({ onClose }: AccountProps) {
               </p>
               <button
                 type="button"
-                className="rounded-base border-border bg-main text-main-foreground shadow-shadow inline-flex items-center gap-2 border-2 px-6 py-3 text-sm font-semibold transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+                className="rounded-base border-border bg-main text-main-foreground inline-flex items-center gap-2 border px-6 py-3 text-sm font-semibold shadow-sm transition-all active:scale-95"
                 onClick={() => {
                   onClose();
                   // Scroll to pricing section
@@ -533,7 +533,7 @@ export default function Account({ onClose }: AccountProps) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <button
                 type="button"
-                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:shadow-shadow flex items-center gap-3 border-2 px-5 py-4 text-sm font-medium transition-all hover:-translate-y-0.5"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 flex items-center gap-3 border px-5 py-4 text-sm font-medium transition-all hover:-translate-y-0.5 hover:shadow-sm"
                 onClick={() => {
                   onClose();
                   setTimeout(() => {
@@ -565,7 +565,7 @@ export default function Account({ onClose }: AccountProps) {
                 href="https://docs.sqlpro.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:shadow-shadow flex items-center gap-3 border-2 px-5 py-4 text-sm font-medium no-underline transition-all hover:-translate-y-0.5"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 flex items-center gap-3 border px-5 py-4 text-sm font-medium no-underline transition-all hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <div className="rounded-base bg-main/10 text-main flex h-10 w-10 items-center justify-center">
                   <svg
@@ -589,7 +589,7 @@ export default function Account({ onClose }: AccountProps) {
 
               <a
                 href="mailto:support@sqlpro.app"
-                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 hover:shadow-shadow flex items-center gap-3 border-2 px-5 py-4 text-sm font-medium no-underline transition-all hover:-translate-y-0.5"
+                className="rounded-base border-border bg-background hover:border-main hover:bg-main/10 flex items-center gap-3 border px-5 py-4 text-sm font-medium no-underline transition-all hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <div className="rounded-base bg-main/10 text-main flex h-10 w-10 items-center justify-center">
                   <svg

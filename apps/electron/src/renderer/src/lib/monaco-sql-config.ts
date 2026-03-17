@@ -2946,12 +2946,12 @@ function withAlpha(hex: string, alpha: number): string {
 }
 
 /**
- * Defines custom themes for Monaco Editor that match the application's Neobrutalism design.
+ * Defines custom themes for Monaco Editor that match the application's design system.
  * This function reads CSS variables from the document to stay in sync with the app theme.
  * (US2: Theme-Aware Editor, US3: SQL Syntax Highlighting)
  *
- * Neobrutalism style:
- * - Bold borders (2px)
+ * Theme style:
+ * - Subtle borders (1px)
  * - High contrast colors
  * - Orange accent color (--main)
  * - Black/white borders (--border)
@@ -2967,7 +2967,7 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
   const lightMuted = toHex(getCSSVar('--muted', '#f5f5f5'));
   const lightMutedFg = toHex(getCSSVar('--muted-foreground', '#737373'));
 
-  // Light theme - Neobrutalism with dynamic colors
+  // Light theme with dynamic colors
   monaco.editor.defineTheme('sql-pro-light', {
     base: 'vs',
     inherit: false, // Don't inherit - full control
@@ -3032,7 +3032,7 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
       // Gutter
       'editorGutter.background': lightBg,
 
-      // Suggest widget - Neobrutalism
+      // Suggest widget
       'editorSuggestWidget.background': lightCard,
       'editorSuggestWidget.border': lightBorder,
       'editorSuggestWidget.foreground': lightFg,
@@ -3120,14 +3120,14 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
   // For simplicity, use hardcoded dark values that match globals.css
   const darkMain = '#fb923c';
   const darkMainFg = '#000000';
-  const darkBg = '#1a1a1a';
+  const darkBg = '#09090b';
   const darkFg = '#ffffff';
   const darkBorder = '#ffffff';
-  const darkCard = '#262626';
+  const darkCard = '#27272a';
   const darkMuted = '#404040';
   const darkMutedFg = '#a3a3a3';
 
-  // Dark theme - Neobrutalism with dynamic colors
+  // Dark theme with dynamic colors
   monaco.editor.defineTheme('sql-pro-dark', {
     base: 'vs-dark',
     inherit: false, // Don't inherit - full control
@@ -3192,7 +3192,7 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
       // Gutter
       'editorGutter.background': darkBg,
 
-      // Suggest widget - Neobrutalism (white border in dark mode)
+      // Suggest widget
       'editorSuggestWidget.background': darkCard,
       'editorSuggestWidget.border': darkBorder,
       'editorSuggestWidget.foreground': darkFg,

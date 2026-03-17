@@ -69,7 +69,7 @@ export default function ThemeSwitcher() {
 
   return (
     <div
-      className="bg-background border-border rounded-base shadow-shadow-sm flex items-center gap-0.5 border-2 p-1"
+      className="bg-background border-border rounded-base flex items-center gap-0.5 border p-1 shadow-sm"
       role="radiogroup"
       aria-label={t('a11y.themeSelector', 'Theme')}
     >
@@ -80,7 +80,7 @@ export default function ThemeSwitcher() {
           role="radio"
           aria-checked={theme === option.value}
           aria-label={t(option.labelKey, option.value)}
-          className={`rounded-base flex h-8 w-8 cursor-pointer items-center justify-center border-none p-0 transition-all duration-150 ${
+          className={`rounded-base flex h-9 w-9 cursor-pointer items-center justify-center border-none p-0 transition-all duration-150 sm:h-8 sm:w-8 ${
             theme === option.value
               ? 'bg-main text-main-foreground'
               : 'text-muted-foreground hover:bg-secondary-background hover:text-foreground bg-transparent'

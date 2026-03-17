@@ -3,8 +3,8 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useOnboardingStore } from './onboarding-store';
 
-// Mock electron storage functions
-vi.mock('@/lib/electron-storage', () => ({
+// Mock storage functions
+vi.mock('@/lib/storage', () => ({
   persistOnboarding: vi.fn(),
   registerOnboardingHydrator: vi.fn((_callback) => {
     // Simulate rehydration immediately for testing if needed
@@ -168,7 +168,7 @@ describe('useOnboardingStore', () => {
   });
 
   it('should persist state changes', async () => {
-    const { persistOnboarding } = await import('@/lib/electron-storage');
+    const { persistOnboarding } = await import('@/lib/storage');
     const { result } = renderHook(() => useOnboardingStore());
 
     act(() => {

@@ -2,7 +2,6 @@ import type { SplitPane } from '@/stores/query-tabs-store';
 import type { DatabaseSchema } from '@/types/database';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { Button } from '@sqlpro/ui/button';
-import { GoldButton } from '@sqlpro/ui/gold-button';
 import { AlertCircle, Clock, Loader2, Play, X, Zap } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -176,12 +175,12 @@ export const QueryPane = memo(
         onClick={onActivate}
       >
         {/* Pane Header with Tab Selector */}
-        <div className="bg-muted flex items-center justify-between border-b-2 px-2 py-1">
+        <div className="bg-muted/50 flex items-center justify-between border-b px-2 py-1 backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <select
               value={tab.id}
               onChange={(e) => handleTabSelect(e.target.value)}
-              className="bg-background rounded-base h-7 border-2 px-2"
+              className="bg-background rounded-base h-7 border px-2"
               style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
               {tabs.map((t) => (
@@ -202,7 +201,7 @@ export const QueryPane = memo(
             >
               <Zap className="h-3.5 w-3.5" />
             </Button>
-            <GoldButton
+            <Button
               size="sm"
               className="h-7 gap-1 px-3"
               onClick={handleExecute}
@@ -214,7 +213,7 @@ export const QueryPane = memo(
                 <Play className="h-3.5 w-3.5" />
               )}
               Run
-            </GoldButton>
+            </Button>
             {showCloseButton && onClose && (
               <Button
                 variant="ghost"
@@ -233,7 +232,7 @@ export const QueryPane = memo(
         </div>
 
         {/* Editor */}
-        <div className="shrink-0 border-b-2">
+        <div className="shrink-0 border-b">
           <MonacoSqlEditor
             value={tab.query}
             onChange={handleQueryChange}
@@ -254,7 +253,7 @@ export const QueryPane = memo(
             </div>
           ) : tab.error ? (
             <div className="flex h-full items-center justify-center p-4">
-              <div className="rounded-base border-destructive bg-destructive/10 shadow-shadow-sm flex max-w-md items-start gap-3 border-2 p-4">
+              <div className="rounded-base border-destructive bg-destructive/10 flex max-w-md items-start gap-3 border p-4 shadow-sm">
                 <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-heading text-destructive">
@@ -275,7 +274,7 @@ export const QueryPane = memo(
             <div className="flex h-full flex-col">
               {/* Results Header */}
               <div
-                className="text-muted-foreground flex items-center gap-4 border-b-2 px-4 py-2"
+                className="text-muted-foreground flex items-center gap-4 border-b px-4 py-2"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <span>{tab.results.rowsAffected} rows</span>

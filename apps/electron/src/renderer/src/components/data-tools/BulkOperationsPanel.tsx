@@ -230,7 +230,7 @@ export const BulkOperationsPanel = memo(
                           key={format}
                           onClick={() => setExportFormat(format)}
                           className={cn(
-                            'rounded-base border-border flex flex-col items-center gap-2 border-2 p-4 transition-colors',
+                            'rounded-base border-border flex flex-col items-center gap-2 border p-4 transition-colors',
                             exportFormat === format
                               ? 'border-primary bg-primary/5'
                               : 'hover:border-primary/50'
@@ -337,7 +337,7 @@ export const BulkOperationsPanel = memo(
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleDrop}
                 className={cn(
-                  'rounded-base flex flex-col items-center justify-center gap-3 border-2 border-dashed p-8 transition-colors',
+                  'rounded-base flex flex-col items-center justify-center gap-3 border border-dashed p-8 transition-colors',
                   importFile
                     ? 'border-primary bg-primary/5'
                     : 'hover:border-primary/50'
@@ -466,7 +466,7 @@ export const BulkOperationsPanel = memo(
               {importResult && (
                 <div
                   className={cn(
-                    'rounded-base border-border flex items-start gap-3 border-2 p-4',
+                    'rounded-base border-border flex items-start gap-3 border p-4',
                     importResult.success
                       ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950'
                       : 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950'

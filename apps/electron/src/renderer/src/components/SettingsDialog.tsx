@@ -49,7 +49,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl"
         decorated
       >
-        <DialogHeader className="border-border shrink-0 border-b-2 px-6 pt-6 pb-4">
+        <DialogHeader className="border-border shrink-0 border-b px-6 pt-6 pb-4">
           <DialogTitle
             className="tracking-wide"
             style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.15)' }}
@@ -60,7 +60,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
         <div className="flex min-h-0 flex-1">
           {/* Left Navigation */}
-          <div className="border-border shrink-0 border-r-2 py-4 pl-4">
+          <div className="border-border shrink-0 border-r py-4 pl-4">
             <SettingsNav
               activeSection={activeSection}
               onSectionChange={setActiveSection}

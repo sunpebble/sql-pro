@@ -366,7 +366,7 @@ export function ExportDialog({
               </div>
             </div>
             <ScrollArea className="h-40">
-              <div className="rounded-base space-y-1 border-2 p-2">
+              <div className="rounded-base space-y-1 border p-2">
                 {columns.map((column) => (
                   <label
                     key={column.name}
@@ -404,7 +404,7 @@ export function ExportDialog({
               >
                 {t('sharing.csvOptions')}
               </Label>
-              <div className="rounded-base space-y-3 border-2 p-3">
+              <div className="rounded-base space-y-3 border p-3">
                 <div className="space-y-2">
                   <Label
                     htmlFor="delimiter"
@@ -454,7 +454,7 @@ export function ExportDialog({
               >
                 {t('sharing.jsonOptions')}
               </Label>
-              <div className="rounded-base space-y-3 border-2 p-3">
+              <div className="rounded-base space-y-3 border p-3">
                 <label className="flex cursor-pointer items-center gap-2">
                   <Checkbox
                     checked={prettyPrint}
@@ -478,7 +478,7 @@ export function ExportDialog({
               >
                 {t('sharing.excelOptions')}
               </Label>
-              <div className="rounded-base space-y-3 border-2 p-3">
+              <div className="rounded-base space-y-3 border p-3">
                 <div className="space-y-2">
                   <Label
                     htmlFor="sheet-name"

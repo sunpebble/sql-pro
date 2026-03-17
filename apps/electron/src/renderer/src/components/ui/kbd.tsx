@@ -13,7 +13,7 @@ function Kbd({ className, ...props }: React.ComponentProps<'kbd'>) {
     <kbd
       data-slot="kbd"
       className={cn(
-        "rounded-base border-border bg-muted text-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 border-2 px-1.5 font-mono font-medium select-none [&_svg:not([class*='size-'])]:size-3",
+        "rounded-base border-border bg-muted text-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 border px-1.5 font-mono font-medium select-none [&_svg:not([class*='size-'])]:size-3",
         className
       )}
       {...props}
@@ -87,8 +87,8 @@ function ShortcutKbd({
     <kbd
       data-slot="kbd"
       className={cn(
-        // Base styles - Neobrutalism
-        'rounded-base border-border bg-muted pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 border-2 px-1.5 font-mono font-medium select-none',
+        // Base styles
+        'rounded-base border-border bg-muted pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 border px-1.5 font-mono font-medium select-none',
         // Default text color
         'text-foreground',
         // Tooltip-specific colors
