@@ -98,7 +98,9 @@ Download the latest release for your platform:
 
 ### Build from Source
 
-**Prerequisites:** Node.js 20+, pnpm 10+
+**Prerequisites:** Node.js 24+, pnpm 10+
+
+> **Using nvm?** Run `nvm install 24 && nvm use 24` to switch to the required version.
 
 ```bash
 # Clone the repository
@@ -247,6 +249,10 @@ We're actively developing SQL Pro with exciting features planned. See our [detai
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔒 Security
+
+Found a vulnerability? Please see our [Security Policy](SECURITY.md) for responsible disclosure guidelines.
 
 ## 🙏 Acknowledgments
 

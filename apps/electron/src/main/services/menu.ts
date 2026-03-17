@@ -4,6 +4,8 @@ import {
   bindingToAccelerator,
   DEFAULT_SHORTCUTS,
   IPC_CHANNELS,
+  PROJECT_ISSUES_URL,
+  PROJECT_REPO_URL,
 } from '@shared/types';
 import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron';
 import { checkForUpdates } from './updater';
@@ -391,15 +393,13 @@ export function createApplicationMenu(): void {
         {
           label: t('learnMore'),
           click: async () => {
-            await shell.openExternal('https://github.com/nicepkg/sql-pro');
+            await shell.openExternal(PROJECT_REPO_URL);
           },
         },
         {
           label: t('reportIssue'),
           click: async () => {
-            await shell.openExternal(
-              'https://github.com/nicepkg/sql-pro/issues'
-            );
+            await shell.openExternal(PROJECT_ISSUES_URL);
           },
         },
       ],

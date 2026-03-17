@@ -14,7 +14,7 @@ import {  IpcHandler } from '../base/handler';
 
 // License API configuration
 const LICENSE_API_URL =
-  process.env.LICENSE_API_URL || 'https://sqlpro-dev.kunish-butt.workers.dev';
+  process.env.LICENSE_API_URL || 'https://api.sqlpro.app';
 
 // Local license storage
 interface LicenseCache {

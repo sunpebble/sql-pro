@@ -8,6 +8,7 @@ out
 
 # IDE
 .idea
+.vscode
 *.swp
 *.swo
 
@@ -34,6 +35,9 @@ coverage
 
 packages/docs/.vitepress/cache
 packages/license-api/.dev.vars
+
+# Build artifacts deployed to Cloudflare
+packages/cloudflare/public/assets/
 
 # Superpowers brainstorm artifacts
 .superpowers

@@ -99,7 +99,7 @@ export default function Hero() {
             {t('hero.download')}
           </a>
           <a
-            href="https://github.com/anthropics/sql-pro"
+            href="https://github.com/kunish-homelab/sql-pro"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-5 py-3 text-sm font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95 sm:px-7 sm:py-3.5 sm:text-base"
