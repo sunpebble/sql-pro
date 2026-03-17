@@ -324,7 +324,7 @@ export function QueryBuilder() {
               <div className="flex gap-1">
                 <Tooltip>
                   <TooltipTrigger>
-                    <Button variant="ghost" size="icon" onClick={handleCopySQL}>
+                    <Button variant="ghost" size="icon" onClick={handleCopySQL} aria-label={t('queryBuilder.copySQL', 'Copy SQL')}>
                       <Copy className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
