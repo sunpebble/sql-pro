@@ -187,3 +187,31 @@ sql-pro/
 │   └── ui/                # Shared UI components
 └── shared/                # Shared types and utilities
 ```
+
+## Cursor Cloud specific instructions
+
+### Node.js version
+
+This project requires **Node.js 24** (see `.node-version`). The VM snapshot has Node 24 installed via nvm and set as default. If something breaks, run `source ~/.nvm/nvm.sh && nvm use 24`.
+
+### Running services
+
+| Service              | Command                    | Port | Notes                                                                                                               |
+| -------------------- | -------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------- |
+| Website (dev)        | `pnpm website:dev`         | 5173 | Vite dev server for the marketing site                                                                              |
+| Electron (mock mode) | `DISPLAY=:1 pnpm dev:mock` | 5174 | Runs the full Electron app with mocked backend — no real DB needed. Requires `DISPLAY=:1` in headless environments. |
+| Electron (real mode) | `DISPLAY=:1 pnpm dev`      | —    | Requires real database connections. Use mock mode for UI-only work.                                                 |
+
+### Testing
+
+- `pnpm lint` — ESLint across all workspace projects. Warnings are expected (ref-naming, use-state naming conventions).
+- `pnpm typecheck` — Uses `tsgo` (TypeScript Go compiler). Runs fast (~5s).
+- `pnpm test:run` — Vitest single run. ~1500+ tests pass. **Caveat:** ~6 test files that depend on native Electron modules (`database.test.ts`, `backup.test.ts`, `PluginService.test.ts`, `PluginLoader.test.ts`, `QueryHookIntegration.test.ts`, `onboarding-store.test.ts`) show `0 test` and may hang indefinitely. If the test run doesn't complete, kill the process — the passing tests are reliable.
+
+### Electron dbus errors
+
+When running `pnpm dev` or `pnpm dev:mock` in the cloud VM, you'll see `dbus/bus.cc` errors in the console. These are harmless — the VM doesn't have a D-Bus session bus.
+
+### Husky git hooks
+
+Pre-commit runs `pnpm lint-staged` and `pnpm typecheck`. Commit messages must follow Conventional Commits (enforced by commitlint).
