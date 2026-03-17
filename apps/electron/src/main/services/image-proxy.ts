@@ -13,7 +13,7 @@
 
 import { Buffer } from 'node:buffer';
 import { access, readFile, stat } from 'node:fs/promises';
-import { basename, extname } from 'node:path';
+import { basename, extname, isAbsolute, normalize } from 'node:path';
 import { protocol } from 'electron';
 import sharp from 'sharp';
 
@@ -474,8 +474,23 @@ export function setupImageProxyHandler(): void {
           });
         }
 
+        // Security: Validate file path to prevent path traversal attacks
+        const normalizedPath = normalize(filePath);
+        if (!isAbsolute(normalizedPath)) {
+          return new Response('Only absolute file paths are allowed', {
+            status: 403,
+            headers: { 'content-type': 'text/plain' },
+          });
+        }
+        if (normalizedPath.includes('..')) {
+          return new Response('Path traversal is not allowed', {
+            status: 403,
+            headers: { 'content-type': 'text/plain' },
+          });
+        }
+
         // Read the local file
-        const buffer = await readFile(filePath);
+        const buffer = await readFile(normalizedPath);
         const ext = extname(filePath).toLowerCase();
         const mimeType = extToMime[ext] || detectMimeType(buffer);
         const isVideo = mimeType.startsWith('video/');
@@ -660,16 +675,23 @@ export async function getLocalFileMetadata(
   filePath: string
 ): Promise<ImageMetadata | null> {
   try {
+    // Security: Validate file path to prevent path traversal attacks
+    const normalizedPath = normalize(filePath);
+    if (!isAbsolute(normalizedPath) || normalizedPath.includes('..')) {
+      console.error('[ImageProxy] Invalid file path:', filePath);
+      return null;
+    }
+
     // Get file stats
-    const fileStat = await stat(filePath);
-    const buffer = await readFile(filePath);
+    const fileStat = await stat(normalizedPath);
+    const buffer = await readFile(normalizedPath);
     const metadata = await extractMetadata(buffer);
 
     // Add file info
     return {
       ...metadata,
-      fileName: basename(filePath),
-      filePath,
+      fileName: basename(normalizedPath),
+      filePath: normalizedPath,
       createdAt: fileStat.birthtime.toISOString(),
       modifiedAt: fileStat.mtime.toISOString(),
     };

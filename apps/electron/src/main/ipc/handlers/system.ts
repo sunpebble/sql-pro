@@ -18,11 +18,12 @@ import type {
   ShowItemInFolderRequest,
   ShowItemInFolderResponse,
 } from '@shared/types';
-import type {HandlerContext} from '../base/handler';
+import type { HandlerContext } from '../base/handler';
+import { isAbsolute, normalize } from 'node:path';
 import process from 'node:process';
 import { BrowserWindow, shell } from 'electron';
 import { windowManager } from '../../services/window-manager';
-import {  IpcHandler } from '../base/handler';
+import { IpcHandler } from '../base/handler';
 import { systemChannels, windowChannels } from '../contracts/all-channels';
 
 export class SystemHandler extends IpcHandler {
@@ -54,8 +55,17 @@ export class SystemHandler extends IpcHandler {
     request: ShowItemInFolderRequest,
     _ctx: HandlerContext
   ): Promise<ShowItemInFolderResponse> {
-    this.log('debug', 'Showing item in folder', { path: request.path });
-    shell.showItemInFolder(request.path);
+    // Security: Validate path to prevent path traversal
+    const normalizedPath = normalize(request.path);
+    if (!isAbsolute(normalizedPath) || normalizedPath.includes('..')) {
+      this.log('warn', 'Blocked invalid showItemInFolder path', {
+        path: request.path,
+      });
+      return { success: false } as ShowItemInFolderResponse;
+    }
+
+    this.log('debug', 'Showing item in folder', { path: normalizedPath });
+    shell.showItemInFolder(normalizedPath);
     return { success: true };
   }
 
@@ -63,8 +73,27 @@ export class SystemHandler extends IpcHandler {
     request: OpenExternalRequest,
     _ctx: HandlerContext
   ): Promise<OpenExternalResponse> {
-    this.log('debug', 'Opening external URL', { url: request.url });
-    await shell.openExternal(request.url);
+    // Security: Only allow http/https URLs to prevent arbitrary protocol execution
+    const url = request.url;
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        this.log('warn', 'Blocked non-http(s) openExternal request', { url });
+        return {
+          success: false,
+          error: 'Only http and https URLs are allowed',
+        } as OpenExternalResponse & { error: string };
+      }
+    } catch {
+      this.log('warn', 'Blocked invalid URL in openExternal', { url });
+      return {
+        success: false,
+        error: 'Invalid URL',
+      } as OpenExternalResponse & { error: string };
+    }
+
+    this.log('debug', 'Opening external URL', { url });
+    await shell.openExternal(url);
     return { success: true };
   }
 

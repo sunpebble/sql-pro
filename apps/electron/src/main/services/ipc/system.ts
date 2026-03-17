@@ -5,6 +5,7 @@ import type {
   OpenExternalRequest,
   ShowItemInFolderRequest,
 } from '@shared/types';
+import { isAbsolute, normalize } from 'node:path';
 import { IPC_CHANNELS } from '@shared/types';
 import { BrowserWindow, ipcMain, shell } from 'electron';
 import { sqlLogger } from '../sql-logger';
@@ -111,7 +112,13 @@ export function setupSystemHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER,
     createHandler(async (request: ShowItemInFolderRequest) => {
-      shell.showItemInFolder(request.path);
+      // Security: Validate path to prevent path traversal
+      const normalizedPath = normalize(request.path);
+      if (!isAbsolute(normalizedPath) || normalizedPath.includes('..')) {
+        return { success: false, error: 'Invalid file path' };
+      }
+
+      shell.showItemInFolder(normalizedPath);
       return { success: true };
     })
   );
@@ -120,7 +127,21 @@ export function setupSystemHandlers(): void {
   ipcMain.handle(
     IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL,
     createHandler(async (request: OpenExternalRequest) => {
-      await shell.openExternal(request.url);
+      // Security: Only allow http/https URLs to prevent arbitrary protocol execution
+      const url = request.url;
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+          return {
+            success: false,
+            error: 'Only http and https URLs are allowed',
+          };
+        }
+      } catch {
+        return { success: false, error: 'Invalid URL' };
+      }
+
+      await shell.openExternal(url);
       return { success: true };
     })
   );

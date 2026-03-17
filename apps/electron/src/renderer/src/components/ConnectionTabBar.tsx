@@ -267,8 +267,8 @@ const ConnectionTab = memo(
                   className={cn(
                     'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-1.5 transition-all',
                     isActive
-                      ? 'bg-background text-foreground border-border rounded-[5px] border-2'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-[5px] border-2 border-transparent bg-transparent',
+                      ? 'bg-background text-foreground border-border rounded-md border'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-md border border-transparent bg-transparent',
                     isDragging &&
                       'ring-primary/50 z-50 scale-105 cursor-grabbing opacity-90 shadow-lg ring-2'
                   )}
@@ -427,7 +427,7 @@ const ConnectionTab = memo(
                     key={color.value}
                     onClick={() => handleColorSelect(color.value)}
                     className={cn(
-                      'group rounded-base relative flex h-10 w-16 items-center justify-center border-2 transition-all hover:translate-x-0.5 hover:translate-y-0.5',
+                      'group rounded-base relative flex h-10 w-16 items-center justify-center border transition-all active:scale-95',
                       connectionColor === color.value
                         ? 'border-foreground ring-foreground/20 ring-2'
                         : 'border-border hover:border-foreground/50'

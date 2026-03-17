@@ -129,16 +129,16 @@ export function FeatureShowcase({
           </Button>
         </div>
 
-        {/* Feature Grid - colorful neobrutalism cards */}
+        {/* Feature Grid */}
         <div className="grid grid-cols-3 gap-3">
           {featureKeys.map((feature) => (
             <div
               key={feature.key}
-              className="group rounded-base border-border bg-card shadow-shadow-sm flex flex-col items-center gap-2 border-2 p-4 text-center transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+              className="group rounded-base border-border bg-card flex flex-col items-center gap-2 border p-4 text-center shadow-sm transition-all hover:shadow-none active:scale-95"
             >
               <div
                 className={cn(
-                  'rounded-base border-border flex h-9 w-9 items-center justify-center border-2 transition-all',
+                  'rounded-base border-border flex h-9 w-9 items-center justify-center border transition-all',
                   feature.bgColor,
                   feature.color,
                   'group-hover:scale-110'
@@ -162,7 +162,7 @@ export function FeatureShowcase({
           ))}
         </div>
 
-        {/* Tour CTA - neobrutalism style */}
+        {/* Tour CTA */}
         {!hasCompletedTour && (
           <Button
             variant="outline"

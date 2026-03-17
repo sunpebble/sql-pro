@@ -227,9 +227,9 @@ const TableRow = memo(({ table, maxRows, maxSize, index }: TableRowProps) => {
   return (
     <div
       className={cn(
-        'group rounded-base border-border flex items-center gap-4 border-2 p-3',
+        'group rounded-base border-border flex items-center gap-4 border p-3',
         'transition-all duration-200',
-        'hover:bg-muted/50 hover:translate-x-0.5 hover:translate-y-0.5'
+        'hover:bg-muted/50 active:scale-95'
       )}
     >
       <div className="bg-muted rounded-base flex h-8 w-8 items-center justify-center transition-transform duration-200">
@@ -312,7 +312,7 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
   if (chartData.length === 0) {
     return (
       <div
-        className="border-border bg-muted/20 rounded-base flex flex-col items-center justify-center gap-3 border-2 border-dashed"
+        className="border-border bg-muted/20 rounded-base flex flex-col items-center justify-center gap-3 border border-dashed"
         style={{ height }}
       >
         <div className="bg-muted/50 rounded-full p-3">
@@ -353,7 +353,7 @@ const TableSizeChart = memo(({ tables, height = 350 }: TableSizeChartProps) => {
               size?: number;
             };
             return (
-              <div className="bg-popover border-border rounded-base shadow-shadow border-2 px-3.5 py-2.5">
+              <div className="bg-popover border-border rounded-base border px-3.5 py-2.5 shadow-sm">
                 <p className="font-semibold">{data.fullName}</p>
                 <p
                   className="font-medium text-blue-500"
@@ -418,7 +418,7 @@ const DataTypeChart = memo(
     if (chartData.length === 0) {
       return (
         <div
-          className="border-border bg-muted/20 rounded-base flex flex-col items-center justify-center gap-3 border-2 border-dashed"
+          className="border-border bg-muted/20 rounded-base flex flex-col items-center justify-center gap-3 border border-dashed"
           style={{ height }}
         >
           <div className="bg-muted/50 rounded-full p-3">
@@ -464,7 +464,7 @@ const DataTypeChart = memo(
                 const data = payload[0].payload;
                 const percentage = ((data.value / total) * 100).toFixed(1);
                 return (
-                  <div className="bg-popover border-border rounded-base shadow-shadow border-2 px-3.5 py-2.5">
+                  <div className="bg-popover border-border rounded-base border px-3.5 py-2.5 shadow-sm">
                     <p className="font-semibold">{data.name}</p>
                     <p
                       className="text-muted-foreground"
@@ -618,9 +618,9 @@ const InsightsCard = memo(({ stats }: InsightsCardProps) => {
               key={insight.title}
               style={{ animationDelay: `${index * 75}ms` }}
               className={cn(
-                'group/insight rounded-base border-border flex items-start gap-3 border-2 p-3.5',
+                'group/insight rounded-base border-border flex items-start gap-3 border p-3.5',
                 'animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-300',
-                'transition-all hover:translate-x-0.5 hover:translate-y-0.5',
+                'transition-all active:scale-95',
                 insight.type === 'warning' && 'bg-amber-500/10',
                 insight.type === 'info' && 'bg-blue-500/10',
                 insight.type === 'success' && 'bg-green-500/10'
@@ -793,7 +793,7 @@ export const DashboardView = memo(() => {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* Header */}
-      <div className="border-border flex shrink-0 items-center justify-between border-b-2 px-6 py-4">
+      <div className="border-border flex shrink-0 items-center justify-between border-b px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="bg-primary/15 rounded-base p-2">
             <BarChart3 className="text-primary h-5 w-5" />
@@ -847,7 +847,7 @@ export const DashboardView = memo(() => {
         {/* Error State */}
         {error && (
           <div className="p-6">
-            <div className="border-destructive bg-destructive/10 rounded-base flex items-center gap-3 border-2 p-4">
+            <div className="border-destructive bg-destructive/10 rounded-base flex items-center gap-3 border p-4">
               <div className="bg-destructive/15 rounded-base p-2">
                 <X className="text-destructive h-5 w-5" />
               </div>
@@ -1107,10 +1107,10 @@ export const DashboardView = memo(() => {
                           key={item.type}
                           style={{ animationDelay: `${index * 30}ms` }}
                           className={cn(
-                            'group/type border-border rounded-base flex items-center gap-2 border-2 px-3 py-2',
+                            'group/type border-border rounded-base flex items-center gap-2 border px-3 py-2',
                             'bg-muted/30',
                             'animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-both duration-200',
-                            'transition-all hover:translate-x-0.5 hover:translate-y-0.5'
+                            'transition-all active:scale-95'
                           )}
                         >
                           <span

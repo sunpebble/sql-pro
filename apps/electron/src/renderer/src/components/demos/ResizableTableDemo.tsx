@@ -154,7 +154,7 @@ export function ResizableTableDemo() {
         </p>
       </div>
 
-      <div className="bg-card rounded-base border-border flex-1 overflow-hidden border-2">
+      <div className="bg-card rounded-base border-border flex-1 overflow-hidden border">
         <ResizableTable employees={sampleEmployees} title="Employees" />
       </div>
     </div>

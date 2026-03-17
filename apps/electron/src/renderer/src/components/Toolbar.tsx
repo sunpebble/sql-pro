@@ -45,10 +45,10 @@ export function Toolbar() {
             'rounded-base flex shrink-0 items-center gap-2 px-3 py-1.5',
             'font-medium',
             'bg-warning/20 text-warning-foreground',
-            'border-border border-2',
-            'shadow-shadow-sm',
+            'border-border border',
+            'shadow-sm',
             'transition-all duration-150',
-            'hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none',
+            'hover:shadow-none active:scale-95',
             'active:translate-x-1 active:translate-y-1'
           )}
           style={{ fontSize: 'var(--font-ui-size, 13px)' }}
@@ -77,14 +77,10 @@ export function Toolbar() {
               'rounded-base h-8 w-8',
               'transition-all duration-150',
               agentSidebarOpen
-                ? [
-                    'text-main bg-main/10',
-                    'border-main border-2',
-                    'shadow-shadow-sm',
-                  ]
+                ? ['text-main bg-main/10', 'border-main border', 'shadow-sm']
                 : [
                     'text-muted-foreground',
-                    'border-2 border-transparent',
+                    'border border-transparent',
                     'hover:text-foreground',
                     'hover:border-border',
                     'hover:bg-muted',
@@ -120,7 +116,7 @@ export function Toolbar() {
               'rounded-base h-8 gap-2 px-3',
               'font-medium',
               'text-muted-foreground hover:text-foreground',
-              'hover:border-border border-2 border-transparent',
+              'hover:border-border border border-transparent',
               'hover:bg-muted',
               'transition-all duration-150',
               TOOLBAR_BUTTON_INTERACTIVE
@@ -149,7 +145,7 @@ export function Toolbar() {
                 className={cn(
                   'rounded-base h-8 w-8',
                   'text-muted-foreground hover:text-foreground',
-                  'hover:border-border border-2 border-transparent',
+                  'hover:border-border border border-transparent',
                   'hover:bg-muted',
                   'transition-all duration-150',
                   TOOLBAR_BUTTON_INTERACTIVE

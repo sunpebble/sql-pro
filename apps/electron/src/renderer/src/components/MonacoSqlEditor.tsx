@@ -631,9 +631,9 @@ export function MonacoSqlEditor({
 
   return (
     <div ref={containerRef} className="relative flex flex-col">
-      {/* Editor container with Neobrutalism border */}
+      {/* Editor container */}
       <div
-        className="rounded-base border-border overflow-hidden border-2"
+        className="rounded-base border-border overflow-hidden border"
         style={{ height: editorHeight }}
       >
         <Editor
@@ -701,7 +701,7 @@ export function MonacoSqlEditor({
       {editorVimMode && (
         <div
           ref={vimStatusRef}
-          className="bg-muted/50 text-muted-foreground border-t-2 px-2 py-1 font-mono"
+          className="bg-muted/50 text-muted-foreground border-t px-2 py-1 font-mono"
           style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
         />
       )}

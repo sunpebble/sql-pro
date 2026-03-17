@@ -1,6 +1,6 @@
+import { Button } from '@sqlpro/ui/button';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
 import { DecoFrame } from '@sqlpro/ui/decorations';
-import { GoldButton } from '@sqlpro/ui/gold-button';
 import { Crown } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -72,13 +72,13 @@ export function ProSection() {
               </p>
             </div>
           </div>
-          <GoldButton
+          <Button
             variant={isPro ? 'outline' : 'default'}
             size="sm"
             onClick={() => setProDialogOpen(true)}
           >
             {isPro ? t('pro.manage') : t('pro.upgrade')}
-          </GoldButton>
+          </Button>
         </div>
       </div>
 

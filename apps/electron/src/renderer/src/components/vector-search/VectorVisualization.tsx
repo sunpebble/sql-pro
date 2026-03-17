@@ -822,7 +822,7 @@ export const VectorVisualization = memo(
           {/* Legend */}
           {!showLoading && hasMinimumData && !umapError && (
             <div
-              className="bg-background rounded-base border-border absolute bottom-3 left-3 flex flex-col gap-1.5 border-2 px-3 py-2"
+              className="bg-background rounded-base border-border absolute bottom-3 left-3 flex flex-col gap-1.5 border px-3 py-2"
               style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >
               <div className="flex items-center gap-2">
@@ -860,7 +860,7 @@ export const VectorVisualization = memo(
             hasMinimumData &&
             !umapError && (
               <div
-                className="bg-background rounded-base border-border absolute right-3 bottom-3 border-2 px-3 py-2"
+                className="bg-background rounded-base border-border absolute right-3 bottom-3 border px-3 py-2"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 <span className="text-muted-foreground">

@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import { Readable } from 'node:stream';
+
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { restoreBackup } from './backup';
 import { databaseService } from './database';
@@ -75,8 +76,8 @@ describe('restoreBackup', () => {
 
     // Mock for stream read (future implementation)
     vi.mocked(fs.createReadStream).mockImplementation(((
-      path: any,
-      options: any
+      _path: any,
+      _options: any
     ) => {
       const s = new Readable();
       s.push(sqlContent);
@@ -115,8 +116,8 @@ describe('restoreBackup', () => {
     const sqlContent = `DROP TABLE users; CREATE TABLE users (id INTEGER);`;
     vi.mocked(fs.readFileSync).mockReturnValue(sqlContent);
     vi.mocked(fs.createReadStream).mockImplementation(((
-      path: any,
-      options: any
+      _path: any,
+      _options: any
     ) => {
       const s = new Readable();
       s.push(sqlContent);
@@ -131,7 +132,8 @@ describe('restoreBackup', () => {
       dropExisting: false,
     });
 
-    expect(databaseService.execute).toHaveBeenCalledTimes(1);
+    // BEGIN TRANSACTION + CREATE TABLE + COMMIT = 3 calls (DROP skipped)
+    expect(databaseService.execute).toHaveBeenCalledTimes(3);
     expect(databaseService.execute).toHaveBeenCalledWith(
       mockConnectionId,
       expect.stringContaining('CREATE TABLE')
@@ -148,8 +150,8 @@ describe('restoreBackup', () => {
     } as any);
     vi.mocked(fs.readFileSync).mockReturnValue(sqlContent);
     vi.mocked(fs.createReadStream).mockImplementation(((
-      path: any,
-      options: any
+      _path: any,
+      _options: any
     ) => {
       const s = new Readable();
       s.push(sqlContent);
@@ -164,7 +166,8 @@ describe('restoreBackup', () => {
       dropExisting: true,
     });
 
-    expect(databaseService.execute).toHaveBeenCalledTimes(2);
+    // BEGIN TRANSACTION + DROP TABLE + CREATE TABLE + COMMIT = 4 calls
+    expect(databaseService.execute).toHaveBeenCalledTimes(4);
     expect(databaseService.execute).toHaveBeenCalledWith(
       mockConnectionId,
       expect.stringContaining('DROP TABLE')

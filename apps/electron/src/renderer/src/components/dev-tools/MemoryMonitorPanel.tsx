@@ -213,7 +213,7 @@ function MemoryGraph({
   }, [history, maxHeap]);
 
   return (
-    <div className="bg-muted/30 rounded-base border-border border-2 p-2">
+    <div className="bg-muted/30 rounded-base border-border border p-2">
       <canvas
         ref={canvasRef}
         width={280}
@@ -299,7 +299,7 @@ function CacheStatsSection({
   if (!stats) return null;
 
   return (
-    <div className="bg-muted/30 rounded-base border-border border-2">
+    <div className="bg-muted/30 rounded-base border-border border">
       <button
         type="button"
         onClick={onToggle}
@@ -386,7 +386,7 @@ function RendererMetricsSection({
   const { t } = useTranslation('common');
 
   return (
-    <div className="bg-muted/30 rounded-base border-border border-2">
+    <div className="bg-muted/30 rounded-base border-border border">
       <button
         type="button"
         onClick={onToggle}
@@ -661,7 +661,7 @@ export function MemoryMonitorPanel({
               >
                 {t('devTools.memoryMonitor.mainProcessMemory')}
               </h3>
-              <div className="bg-muted/30 rounded-base border-border grid grid-cols-2 gap-3 border-2 p-3">
+              <div className="bg-muted/30 rounded-base border-border grid grid-cols-2 gap-3 border p-3">
                 <StatItem
                   label={t('devTools.memoryMonitor.heapUsed')}
                   value={`${mainProcessStats.metrics.usedHeapMB.toFixed(1)} MB`}
@@ -721,7 +721,7 @@ export function MemoryMonitorPanel({
             />
 
             {/* Schema cache has different stats format */}
-            <div className="bg-muted/30 rounded-base border-border border-2">
+            <div className="bg-muted/30 rounded-base border-border border">
               <button
                 type="button"
                 onClick={() => toggleSection('schema')}

@@ -1,4 +1,5 @@
 import type { Row } from '@tanstack/react-table';
+import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema, PendingChange } from '@/types/database';
 import { Checkbox } from '@sqlpro/ui/checkbox';
@@ -15,6 +16,17 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { GroupRow } from './GroupRow';
 import { TableCell } from './TableCell';
+
+// Row height must match the h-6 (24px) CSS class on DataRow <tr>
+const ROW_HEIGHT = 24;
+
+// Pre-computed striped background for <tbody>.
+// This repeating gradient matches the even/odd row coloring pattern.
+// During fast scrolling, spacer rows (which are transparent) reveal this
+// background instead of a blank white area, eliminating the flash effect.
+// Uses color-mix to pre-blend the muted/20 opacity with background color
+// so the gradient is fully opaque and renders correctly everywhere.
+const STRIPE_BACKGROUND = `repeating-linear-gradient(to bottom,var(--background) 0px,var(--background) ${ROW_HEIGHT}px,color-mix(in srgb,var(--muted) 20%,var(--background)) ${ROW_HEIGHT}px,color-mix(in srgb,var(--muted) 20%,var(--background)) ${ROW_HEIGHT * 2}px)`;
 
 interface DataRowProps {
   row: Row<TableRowData>;
@@ -234,9 +246,11 @@ const DataRow = memo(
         : t('row.copyRowAsSQL', { defaultValue: 'Copy Row as SQL INSERT' });
 
     // Build row className
+    // NOTE: No transition-colors on rows — during scroll the cursor crosses many rows,
+    // and CSS transitions on hover would cause a cascade of animated repaints that
+    // degrade scroll performance. Instant hover is also snappier (per design system).
     const rowClassName = cn(
       'group border-border h-6 border-b',
-      'transition-colors duration-100',
       isEven ? 'bg-background' : 'bg-muted/20',
       'hover:bg-muted/50',
       isDeleted && 'bg-destructive/10 line-through opacity-50',
@@ -260,7 +274,7 @@ const DataRow = memo(
           {/* Selection cell */}
           {enableSelection && (
             <td
-              className="bg-background group-hover:bg-muted/50 sticky left-0 z-10 cursor-default border-r px-2 transition-colors duration-100 select-none"
+              className="bg-background group-hover:bg-muted/50 sticky left-0 z-10 cursor-default border-r px-2 select-none"
               onClick={stopPropagation}
               onMouseDown={handleDragStart}
             >
@@ -345,6 +359,12 @@ const DataRow = memo(
 
 interface TableBodyProps {
   rows: Row<TableRowData>[];
+  /** Row virtualizer instance from @tanstack/react-virtual */
+  rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
+  /** Virtual items array - passed as prop to ensure memo re-renders on scroll */
+  virtualItems: VirtualItem[];
+  /** Total column count (including selection column) for spacer row colSpan */
+  columnCount: number;
   // Editing props
   editable?: boolean;
   onCellClick?: (rowId: string, columnId: string) => void;
@@ -385,6 +405,9 @@ interface TableBodyProps {
 export const TableBody = memo(
   ({
     rows,
+    rowVirtualizer,
+    virtualItems,
+    columnCount,
     editable = false,
     onCellClick,
     onCellDoubleClick,
@@ -451,31 +474,45 @@ export const TableBody = memo(
       return colonIndex > 0 ? editingCellKey.slice(0, colonIndex) : null;
     }, [editingCellKey]);
 
-    // Map rows to render with their indices
-    const rowsToRender = useMemo(
-      () => rows.map((row, index) => ({ index, row })),
-      [rows]
-    );
-
-    // Pre-compute drag range to avoid function calls in render loop
-    // This improves performance during scroll by not calling isInDragRange for each row
+    // Pre-compute drag range for virtual items only (not all rows)
     const dragRangeByIndex = useMemo(() => {
       if (!isInDragRange) return null;
       const result = new Map<number, boolean>();
-      for (const item of rowsToRender) {
-        result.set(item.index, isInDragRange(item.index));
+      for (const virtualItem of virtualItems) {
+        result.set(virtualItem.index, isInDragRange(virtualItem.index));
       }
       return result;
-    }, [rowsToRender, isInDragRange]);
+    }, [virtualItems, isInDragRange]);
 
     // Compute selected row count for context menu label
     const selectedRowCount = useMemo(() => {
       return rows.filter((row) => row.getIsSelected()).length;
     }, [rows]);
 
+    // Calculate padding for virtual space before and after visible rows
+    const [paddingTop, paddingBottom] = useMemo(() => {
+      if (virtualItems.length === 0) return [0, 0];
+      const first = virtualItems[0];
+      const last = virtualItems[virtualItems.length - 1];
+      return [first.start, rowVirtualizer.getTotalSize() - last.end];
+    }, [virtualItems, rowVirtualizer]);
+
     return (
-      <tbody>
-        {rowsToRender.map(({ index: dataIndex, row }) => {
+      <tbody style={{ background: STRIPE_BACKGROUND }}>
+        {/* Top spacer row for virtual scroll space */}
+        {paddingTop > 0 && (
+          <tr aria-hidden="true">
+            <td
+              colSpan={columnCount}
+              style={{ height: paddingTop, padding: 0, border: 'none' }}
+            />
+          </tr>
+        )}
+
+        {/* Only render visible virtual items */}
+        {virtualItems.map((virtualItem) => {
+          const dataIndex = virtualItem.index;
+          const row = rows[dataIndex];
           if (!row) return null;
 
           const isGroupRow = row.getIsGrouped?.() ?? false;
@@ -535,6 +572,16 @@ export const TableBody = memo(
             />
           );
         })}
+
+        {/* Bottom spacer row for virtual scroll space */}
+        {paddingBottom > 0 && (
+          <tr aria-hidden="true">
+            <td
+              colSpan={columnCount}
+              style={{ height: paddingBottom, padding: 0, border: 'none' }}
+            />
+          </tr>
+        )}
       </tbody>
     );
   }

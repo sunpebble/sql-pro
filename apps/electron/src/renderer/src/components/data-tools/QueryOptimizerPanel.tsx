@@ -413,7 +413,7 @@ export const QueryOptimizerPanel = memo(
 
           {/* Error */}
           {error && (
-            <div className="border-destructive/50 bg-destructive/10 rounded-base flex items-start gap-3 border-2 p-4">
+            <div className="border-destructive/50 bg-destructive/10 rounded-base flex items-start gap-3 border p-4">
               <AlertCircle className="text-destructive h-5 w-5 shrink-0" />
               <div>
                 <p className="text-destructive font-medium">
@@ -552,7 +552,7 @@ export const QueryOptimizerPanel = memo(
                   )}
                   unexpectedErrorMessage={t('common.unexpectedError')}
                 >
-                  <ScrollArea className="bg-muted/30 rounded-base border-border h-48 border-2 p-2">
+                  <ScrollArea className="bg-muted/30 rounded-base border-border h-48 border p-2">
                     {rootNodes.length === 0 ? (
                       <div className="text-muted-foreground flex h-full items-center justify-center py-8">
                         {t('devTools.queryOptimizer.noPlanToDisplay')}
@@ -578,7 +578,7 @@ export const QueryOptimizerPanel = memo(
                   )}
                   unexpectedErrorMessage={t('common.unexpectedError')}
                 >
-                  <div className="bg-muted/30 query-optimizer-flow rounded-base border-border h-96 border-2">
+                  <div className="bg-muted/30 query-optimizer-flow rounded-base border-border h-96 border">
                     {flowNodes.length === 0 ? (
                       <div className="text-muted-foreground flex h-full items-center justify-center">
                         {t('devTools.queryOptimizer.noPlanToDisplay')}
@@ -626,7 +626,7 @@ export const QueryOptimizerPanel = memo(
                     <div
                       key={`${suggestion.type}-${suggestion.titleKey}`}
                       className={cn(
-                        'rounded-base border-border flex items-start gap-3 border-2 p-3',
+                        'rounded-base border-border flex items-start gap-3 border p-3',
                         suggestion.type === 'warning' &&
                           'border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950',
                         suggestion.type === 'index' &&
@@ -855,7 +855,7 @@ export const QueryOptimizerPanel = memo(
                       </h3>
                       <div
                         className={cn(
-                          'rounded-base border-border flex items-start gap-3 border-2 p-4',
+                          'rounded-base border-border flex items-start gap-3 border p-4',
                           selectedNode.data.warningType === 'full-scan' &&
                             'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/30',
                           selectedNode.data.warningType === 'temp-btree' &&

@@ -5,40 +5,24 @@ import { cva } from 'class-variance-authority';
 import { cn } from './lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-[5px] font-medium ring-offset-white transition-all gap-2 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none active:scale-[0.97] active:transition-duration-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-all gap-2 duration-150 ease-out [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none active:scale-95",
   {
     variants: {
       variant: {
-        // Neobrutalism default: solid color with border and offset shadow
-        default:
-          'bg-primary text-primary-foreground border-2 border-border shadow-[4px_4px_0px_0px_var(--border)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none',
-        // No shadow variant
-        noShadow: 'bg-primary text-primary-foreground border-2 border-border',
-        // Neutral/secondary with shadow
-        neutral:
-          'bg-secondary text-secondary-foreground border-2 border-border shadow-[4px_4px_0px_0px_var(--border)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none',
-        // Reverse shadow effect (shadow appears on hover)
-        reverse:
-          'bg-primary text-primary-foreground border-2 border-border hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_var(--border)]',
-        // Outline/ghost style
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        noShadow: 'bg-primary text-primary-foreground',
+        neutral: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        reverse: 'bg-primary text-primary-foreground',
         outline:
-          'bg-background text-foreground border-2 border-border shadow-[4px_4px_0px_0px_var(--border)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none',
-        // Ghost - minimal, no border
-        ghost: 'text-foreground hover:bg-muted border-2 border-transparent',
-        // Destructive
-        destructive:
-          'bg-destructive text-white border-2 border-border shadow-[4px_4px_0px_0px_var(--border)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none',
-        // Link style
-        link: 'text-primary underline-offset-4 hover:underline border-0',
-        // Secondary
+          'border border-border bg-background hover:bg-accent hover:text-accent-foreground',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        destructive: 'bg-destructive text-white hover:bg-destructive/90',
+        link: 'text-primary underline-offset-4 hover:underline',
         secondary:
-          'bg-secondary text-secondary-foreground border-2 border-border hover:bg-muted',
-        // Accent
-        accent:
-          'bg-accent text-accent-foreground border-2 border-border shadow-[4px_4px_0px_0px_var(--border)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none',
-        // Ghost Primary - for toolbar actions
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border',
+        accent: 'bg-accent text-accent-foreground hover:bg-accent/90',
         'ghost-primary':
-          'text-muted-foreground hover:text-primary hover:bg-primary/10 border-2 border-transparent',
+          'text-muted-foreground hover:text-primary hover:bg-primary/10',
       },
       size: {
         default: 'h-10 px-4 py-2',
