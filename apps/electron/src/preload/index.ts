@@ -1301,5 +1301,8 @@ export const sqlProAPI = {
   },
 };
 
+/** Derived type for the full SQL Pro API surface exposed to the renderer. */
+export type SqlProAPI = typeof sqlProAPI;
+
 contextBridge.exposeInMainWorld('sqlPro', sqlProAPI);
 contextBridge.exposeInMainWorld('electronAPI', electronAPI);

@@ -733,6 +733,38 @@ const mockPluginMethods = {
   },
 };
 
+// Mutable recent connections list shared between getRecentConnections and removeRecentConnection
+const mockRecentConnections = [
+  {
+    id: 'recent-1',
+    path: '/Users/demo/databases/shop.db',
+    filename: 'shop.db',
+    isEncrypted: false,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+  },
+  {
+    id: 'recent-2',
+    path: '/Users/demo/databases/inventory.db',
+    filename: 'inventory.db',
+    isEncrypted: false,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+  },
+  {
+    id: 'recent-3',
+    path: '/Users/demo/databases/analytics.db',
+    filename: 'analytics.db',
+    isEncrypted: true,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+  },
+  {
+    id: 'recent-4',
+    path: '/Users/demo/projects/webapp/data.sqlite',
+    filename: 'data.sqlite',
+    isEncrypted: false,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
+  },
+];
+
 // Mock SQL Pro API
 
 export const mockSqlProAPI: any = {
@@ -1418,8 +1450,8 @@ export const mockSqlProAPI: any = {
     },
     openExternal: async (request: string | { url: string }): Promise<any> => {
       const url = typeof request === 'string' ? request : request.url;
-      window.open(url, '_blank');
-      return { success: true };
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      return { success: opened !== null };
     },
   },
 
@@ -1427,8 +1459,8 @@ export const mockSqlProAPI: any = {
   shell: {
     openExternal: async (request: string | { url: string }): Promise<any> => {
       const url = typeof request === 'string' ? request : request.url;
-      window.open(url, '_blank');
-      return { success: true };
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      return { success: opened !== null };
     },
     showItemInFolder: async (): Promise<any> => {
       await delay(50);
@@ -1899,10 +1931,10 @@ export const mockSqlProAPI: any = {
     }): Promise<any> => {
       try {
         localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(value));
+        return { success: true };
       } catch {
-        // localStorage may be unavailable or full
+        return { success: false };
       }
-      return { success: true };
     },
     update: async ({
       key,
@@ -1927,18 +1959,18 @@ export const mockSqlProAPI: any = {
             ? { ...parsed, ...value }
             : value;
         localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(merged));
+        return { success: true };
       } catch {
-        // localStorage may be unavailable or full
+        return { success: false };
       }
-      return { success: true };
     },
     reset: async ({ key }: { key: string }): Promise<any> => {
       try {
         localStorage.removeItem(`sqlpro-store-${key}`);
+        return { success: true };
       } catch {
-        // Ignore
+        return { success: false };
       }
-      return { success: true };
     },
   },
 
@@ -1948,42 +1980,7 @@ export const mockSqlProAPI: any = {
       await delay(100);
       return {
         success: true,
-        connections: [
-          {
-            id: 'recent-1',
-            path: '/Users/demo/databases/shop.db',
-            filename: 'shop.db',
-            isEncrypted: false,
-            lastOpenedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
-          },
-          {
-            id: 'recent-2',
-            path: '/Users/demo/databases/inventory.db',
-            filename: 'inventory.db',
-            isEncrypted: false,
-            lastOpenedAt: new Date(
-              Date.now() - 1000 * 60 * 60 * 2
-            ).toISOString(), // 2 hours ago
-          },
-          {
-            id: 'recent-3',
-            path: '/Users/demo/databases/analytics.db',
-            filename: 'analytics.db',
-            isEncrypted: true,
-            lastOpenedAt: new Date(
-              Date.now() - 1000 * 60 * 60 * 24
-            ).toISOString(), // 1 day ago
-          },
-          {
-            id: 'recent-4',
-            path: '/Users/demo/projects/webapp/data.sqlite',
-            filename: 'data.sqlite',
-            isEncrypted: false,
-            lastOpenedAt: new Date(
-              Date.now() - 1000 * 60 * 60 * 24 * 3
-            ).toISOString(), // 3 days ago
-          },
-        ],
+        connections: [...mockRecentConnections],
       };
     },
     getPreferences: async (): Promise<any> => {
@@ -2007,7 +2004,12 @@ export const mockSqlProAPI: any = {
     confirmQuit: async (): Promise<any> => {
       return { success: true };
     },
-    removeRecentConnection: async (): Promise<any> => {
+    removeRecentConnection: async (request?: { id?: string }): Promise<any> => {
+      await delay(50);
+      if (request?.id) {
+        const idx = mockRecentConnections.findIndex((c) => c.id === request.id);
+        if (idx !== -1) mockRecentConnections.splice(idx, 1);
+      }
       return { success: true };
     },
   },
