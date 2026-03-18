@@ -1,4 +1,3 @@
-// Mock API for development and testing
 import type {
   AnalyzeQueryPlanRequest,
   ApplyChangesRequest,
@@ -7,6 +6,7 @@ import type {
   CompareConnectionsRequest,
   CompareConnectionToSnapshotRequest,
   CompareSnapshotsRequest,
+  CompareTablesRequest,
   DeleteQueryHistoryRequest,
   DeleteSchemaSnapshotRequest,
   ExecuteQueryRequest,
@@ -35,6 +35,8 @@ import type {
   UpdateConnectionRequest,
   ValidateChangesRequest,
 } from '@shared/types';
+// Mock API for development and testing
+import type { SqlProAPI } from '../../../preload/index';
 
 // Mock tables schema
 const mockTables: TableInfo[] = [
@@ -677,58 +679,58 @@ export function isMockMode(): boolean {
 
 // Shared mock method sets to avoid duplication between aliases
 const mockUpdateMethods = {
-  check: async (): Promise<any> => {
+  check: async () => {
     await delay(100);
-    return { updateAvailable: false };
+    return { success: true };
   },
-  download: async (): Promise<any> => {
+  download: async () => {
     await delay(200);
     return { success: false };
   },
-  install: async (): Promise<any> => {
+  install: async () => {
     await delay(200);
     return { success: false };
   },
 };
 
 const mockPluginMethods = {
-  list: async (): Promise<any> => {
+  list: async () => {
     await delay(100);
-    return { plugins: [] };
+    return { success: true, plugins: [] };
   },
-  get: async (): Promise<any> => {
+  get: async () => {
     await delay(100);
-    return { plugin: null };
+    return { success: false };
   },
-  install: async (): Promise<any> => {
+  install: async () => {
     await delay(200);
     return { success: false };
   },
-  uninstall: async (): Promise<any> => {
+  uninstall: async () => {
     await delay(200);
     return { success: true };
   },
-  enable: async (): Promise<any> => {
+  enable: async () => {
     await delay(100);
     return { success: true };
   },
-  disable: async (): Promise<any> => {
+  disable: async () => {
     await delay(100);
     return { success: true };
   },
-  update: async (): Promise<any> => {
+  update: async () => {
     await delay(200);
     return { success: true };
   },
-  fetchMarketplace: async (): Promise<any> => {
+  fetchMarketplace: async () => {
     await delay(300);
-    return { plugins: [] };
+    return { success: true, plugins: [] };
   },
-  checkUpdates: async (): Promise<any> => {
+  checkUpdates: async () => {
     await delay(200);
-    return { updates: [] };
+    return { success: true, updates: [] };
   },
-  onEvent: (): (() => void) => {
+  onEvent: () => {
     return () => {};
   },
 };
@@ -767,9 +769,12 @@ const mockRecentConnections = [
 
 // Mock SQL Pro API
 
-export const mockSqlProAPI: any = {
+// The mock implements a subset of SqlProAPI with some structural differences
+// (e.g., connection.getRecentConnections lives under app in the real API).
+// The cast ensures consumers get proper type checking via the SqlProAPI contract.
+export const mockSqlProAPI = {
   db: {
-    open: async (_request: OpenDatabaseRequest): Promise<any> => {
+    open: async (_request: OpenDatabaseRequest) => {
       await delay(300);
       return {
         success: true,
@@ -782,11 +787,11 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    close: async (_request: CloseDatabaseRequest): Promise<any> => {
+    close: async (_request: CloseDatabaseRequest) => {
       await delay(200);
       return { success: true };
     },
-    getSchema: async (_request: GetSchemaRequest): Promise<any> => {
+    getSchema: async (_request: GetSchemaRequest) => {
       await delay(400);
       return {
         success: true,
@@ -801,7 +806,7 @@ export const mockSqlProAPI: any = {
         views: mockViews,
       };
     },
-    getTableData: async (_request: GetTableDataRequest): Promise<any> => {
+    getTableData: async (_request: GetTableDataRequest) => {
       await delay(300);
       const tableName = _request.table;
       const data = mockTableData[tableName] || [];
@@ -820,9 +825,7 @@ export const mockSqlProAPI: any = {
         totalRows: data.length,
       };
     },
-    getTableRowRange: async (
-      _request: GetTableRowRangeRequest
-    ): Promise<any> => {
+    getTableRowRange: async (_request: GetTableRowRangeRequest) => {
       await delay(200);
       const tableName = _request.table;
       const data = mockTableData[tableName] || [];
@@ -843,7 +846,7 @@ export const mockSqlProAPI: any = {
         actualEndRow: startRow + data.slice(startRow, endRow).length,
       };
     },
-    executeQuery: async (_request: ExecuteQueryRequest): Promise<any> => {
+    executeQuery: async (_request: ExecuteQueryRequest) => {
       await delay(300);
       const query = _request.query?.trim().toLowerCase() || '';
 
@@ -881,7 +884,7 @@ export const mockSqlProAPI: any = {
     },
   },
   query: {
-    execute: async (_request: ExecuteQueryRequest): Promise<any> => {
+    execute: async (_request: ExecuteQueryRequest) => {
       await delay(400);
       return {
         rows: [],
@@ -890,23 +893,21 @@ export const mockSqlProAPI: any = {
         executionTime: 45,
       };
     },
-    validateChanges: async (_request: ValidateChangesRequest): Promise<any> => {
+    validateChanges: async (_request: ValidateChangesRequest) => {
       await delay(300);
       return {
         isValid: true,
         errors: [],
       };
     },
-    applyChanges: async (_request: ApplyChangesRequest): Promise<any> => {
+    applyChanges: async (_request: ApplyChangesRequest) => {
       await delay(500);
       return {
         success: true,
         affectedRows: 1,
       };
     },
-    analyzeQueryPlan: async (
-      _request: AnalyzeQueryPlanRequest
-    ): Promise<any> => {
+    analyzeQueryPlan: async (_request: AnalyzeQueryPlanRequest) => {
       await delay(300);
       return {
         plan: [
@@ -922,7 +923,7 @@ export const mockSqlProAPI: any = {
     },
   },
   history: {
-    get: async (_request: GetQueryHistoryRequest): Promise<any> => {
+    get: async (_request: GetQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
@@ -930,20 +931,20 @@ export const mockSqlProAPI: any = {
         total: 0,
       };
     },
-    save: async (_request: SaveQueryHistoryRequest): Promise<any> => {
+    save: async (_request: SaveQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
         id: 'mock-history-1',
       };
     },
-    delete: async (_request: DeleteQueryHistoryRequest): Promise<any> => {
+    delete: async (_request: DeleteQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    clear: async (_request: ClearQueryHistoryRequest): Promise<any> => {
+    clear: async (_request: ClearQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
@@ -951,7 +952,7 @@ export const mockSqlProAPI: any = {
     },
   },
   export: {
-    export: async (_request: ExportRequest): Promise<any> => {
+    export: async (_request: ExportRequest) => {
       await delay(500);
       return {
         success: true,
@@ -960,13 +961,13 @@ export const mockSqlProAPI: any = {
     },
   },
   file: {
-    openFileDialog: async (_request: OpenFileDialogRequest): Promise<any> => {
+    openFileDialog: async (_request: OpenFileDialogRequest) => {
       await delay(200);
       return {
         filePath: '/Users/demo/databases/shop.db',
       };
     },
-    saveFileDialog: async (_request: SaveFileDialogRequest): Promise<any> => {
+    saveFileDialog: async (_request: SaveFileDialogRequest) => {
       await delay(200);
       return {
         filePath: '/Users/demo/databases/export.csv',
@@ -974,23 +975,19 @@ export const mockSqlProAPI: any = {
     },
   },
   connection: {
-    getRecentConnections: async (): Promise<any> => {
+    getRecentConnections: async () => {
       await delay(200);
       return {
         connections: [],
       };
     },
-    updateConnection: async (
-      _request: UpdateConnectionRequest
-    ): Promise<any> => {
+    updateConnection: async (_request: UpdateConnectionRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    removeConnection: async (
-      _request: RemoveConnectionRequest
-    ): Promise<any> => {
+    removeConnection: async (_request: RemoveConnectionRequest) => {
       await delay(200);
       return {
         success: true,
@@ -998,14 +995,14 @@ export const mockSqlProAPI: any = {
     },
   },
   preferences: {
-    getPreferences: async (): Promise<any> => {
+    getPreferences: async () => {
       await delay(200);
       return {
         theme: 'dark',
         fontSize: 14,
       };
     },
-    setPreferences: async (_request: SetPreferencesRequest): Promise<any> => {
+    setPreferences: async (_request: SetPreferencesRequest) => {
       await delay(200);
       return {
         success: true,
@@ -1013,31 +1010,31 @@ export const mockSqlProAPI: any = {
     },
   },
   password: {
-    get: async (_request: GetPasswordRequest): Promise<any> => {
+    get: async (_request: GetPasswordRequest) => {
       await delay(200);
       return {
         password: 'mock-password',
       };
     },
-    has: async (_request: HasPasswordRequest): Promise<any> => {
+    has: async (_request: HasPasswordRequest) => {
       await delay(200);
       return {
         hasPassword: false,
       };
     },
-    save: async (_request: SavePasswordRequest): Promise<any> => {
+    save: async (_request: SavePasswordRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    remove: async (_request: RemovePasswordRequest): Promise<any> => {
+    remove: async (_request: RemovePasswordRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    isAvailable: async (): Promise<any> => {
+    isAvailable: async () => {
       await delay(200);
       return {
         available: true,
@@ -1045,7 +1042,7 @@ export const mockSqlProAPI: any = {
     },
   },
   ai: {
-    getAISettings: async (): Promise<any> => {
+    getAISettings: async () => {
       await delay(200);
       return {
         settings: {
@@ -1055,7 +1052,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    saveAISettings: async (_request: SaveAISettingsRequest): Promise<any> => {
+    saveAISettings: async (_request: SaveAISettingsRequest) => {
       await delay(200);
       return {
         success: true,
@@ -1063,7 +1060,7 @@ export const mockSqlProAPI: any = {
     },
   },
   pro: {
-    getStatus: async (): Promise<any> => {
+    getStatus: async () => {
       await delay(200);
       return {
         isActive: false,
@@ -1071,7 +1068,7 @@ export const mockSqlProAPI: any = {
         licenseKey: null,
       };
     },
-    activate: async (_request: ProActivateRequest): Promise<any> => {
+    activate: async (_request: ProActivateRequest) => {
       await delay(300);
       return {
         success: true,
@@ -1080,7 +1077,7 @@ export const mockSqlProAPI: any = {
         ).toISOString(),
       };
     },
-    deactivate: async (): Promise<any> => {
+    deactivate: async () => {
       await delay(200);
       return {
         success: true,
@@ -1088,7 +1085,7 @@ export const mockSqlProAPI: any = {
     },
   },
   schemaSnapshot: {
-    save: async (_request: SaveSchemaSnapshotRequest): Promise<any> => {
+    save: async (_request: SaveSchemaSnapshotRequest) => {
       await delay(300);
       return {
         success: true,
@@ -1103,7 +1100,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    getAll: async (): Promise<any> => {
+    getAll: async () => {
       await delay(200);
       return {
         snapshots: [
@@ -1117,7 +1114,7 @@ export const mockSqlProAPI: any = {
         ],
       };
     },
-    get: async (_request: GetSchemaSnapshotRequest): Promise<any> => {
+    get: async (_request: GetSchemaSnapshotRequest) => {
       await delay(200);
       return {
         snapshot: {
@@ -1129,7 +1126,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    delete: async (_request: DeleteSchemaSnapshotRequest): Promise<any> => {
+    delete: async (_request: DeleteSchemaSnapshotRequest) => {
       await delay(200);
       return {
         success: true,
@@ -1137,9 +1134,7 @@ export const mockSqlProAPI: any = {
     },
   },
   schemaComparison: {
-    compareConnections: async (
-      _request: CompareConnectionsRequest
-    ): Promise<any> => {
+    compareConnections: async (_request: CompareConnectionsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1177,7 +1172,7 @@ export const mockSqlProAPI: any = {
     },
     compareConnectionToSnapshot: async (
       _request: CompareConnectionToSnapshotRequest
-    ): Promise<any> => {
+    ) => {
       await delay(500);
       return {
         success: true,
@@ -1213,9 +1208,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    compareSnapshots: async (
-      _request: CompareSnapshotsRequest
-    ): Promise<any> => {
+    compareSnapshots: async (_request: CompareSnapshotsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1251,9 +1244,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    generateMigrationSQL: async (
-      _request: GenerateMigrationSQLRequest
-    ): Promise<any> => {
+    generateMigrationSQL: async (_request: GenerateMigrationSQLRequest) => {
       await delay(300);
       return {
         success: true,
@@ -1262,9 +1253,7 @@ export const mockSqlProAPI: any = {
         warnings: [],
       };
     },
-    exportReport: async (
-      _request: ExportComparisonReportRequest
-    ): Promise<any> => {
+    exportReport: async (_request: ExportComparisonReportRequest) => {
       await delay(400);
       return {
         success: true,
@@ -1275,9 +1264,7 @@ export const mockSqlProAPI: any = {
 
   // Comparison operations (alias for schemaComparison + data diff)
   comparison: {
-    compareConnections: async (
-      _request: CompareConnectionsRequest
-    ): Promise<any> => {
+    compareConnections: async (_request: CompareConnectionsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1309,7 +1296,7 @@ export const mockSqlProAPI: any = {
     },
     compareConnectionToSnapshot: async (
       _request: CompareConnectionToSnapshotRequest
-    ): Promise<any> => {
+    ) => {
       await delay(500);
       return {
         success: true,
@@ -1339,9 +1326,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    compareSnapshots: async (
-      _request: CompareSnapshotsRequest
-    ): Promise<any> => {
+    compareSnapshots: async (_request: CompareSnapshotsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1371,7 +1356,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    compareTables: async (_request: any): Promise<any> => {
+    compareTables: async (_request: CompareTablesRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1391,9 +1376,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    exportComparisonReport: async (
-      _request: ExportComparisonReportRequest
-    ): Promise<any> => {
+    exportComparisonReport: async (_request: ExportComparisonReportRequest) => {
       await delay(400);
       return {
         success: true,
@@ -1407,36 +1390,36 @@ export const mockSqlProAPI: any = {
     onAction: (): (() => void) => {
       return () => {};
     },
-    updateShortcuts: async (): Promise<any> => {
+    updateShortcuts: async () => {
       return { success: true };
     },
   },
 
   // Shortcuts operations (mock)
   shortcuts: {
-    update: async (): Promise<any> => {
+    update: async () => {
       return { success: true };
     },
   },
 
   // Language operations (mock)
   language: {
-    update: async (): Promise<any> => {
+    update: async () => {
       return { success: true };
     },
   },
 
   // Dialog operations (mock)
   dialog: {
-    openFile: async (): Promise<any> => {
+    openFile: async () => {
       await delay(100);
       return { canceled: true, filePaths: [] };
     },
-    saveFile: async (): Promise<any> => {
+    saveFile: async () => {
       await delay(100);
       return { canceled: true, filePath: '' };
     },
-    writeFile: async (): Promise<any> => {
+    writeFile: async () => {
       await delay(100);
       return { success: true };
     },
@@ -1444,11 +1427,11 @@ export const mockSqlProAPI: any = {
 
   // System operations (mock)
   system: {
-    showItemInFolder: async (): Promise<any> => {
+    showItemInFolder: async () => {
       await delay(50);
       return { success: true };
     },
-    openExternal: async (request: string | { url: string }): Promise<any> => {
+    openExternal: async (request: string | { url: string }) => {
       const url = typeof request === 'string' ? request : request.url;
       const opened = window.open(url, '_blank', 'noopener,noreferrer');
       return { success: opened !== null };
@@ -1457,12 +1440,12 @@ export const mockSqlProAPI: any = {
 
   // Shell operations (mock)
   shell: {
-    openExternal: async (request: string | { url: string }): Promise<any> => {
+    openExternal: async (request: string | { url: string }) => {
       const url = typeof request === 'string' ? request : request.url;
       const opened = window.open(url, '_blank', 'noopener,noreferrer');
       return { success: opened !== null };
     },
-    showItemInFolder: async (): Promise<any> => {
+    showItemInFolder: async () => {
       await delay(50);
       return { success: true };
     },
@@ -1470,23 +1453,23 @@ export const mockSqlProAPI: any = {
 
   // Window operations (mock)
   window: {
-    create: async (): Promise<any> => {
+    create: async () => {
       await delay(100);
       return { success: true };
     },
-    close: async (): Promise<any> => {
+    close: async () => {
       await delay(50);
       return { success: true };
     },
-    focus: async (): Promise<any> => {
+    focus: async () => {
       await delay(50);
       return { success: true };
     },
-    getAll: async (): Promise<any> => {
+    getAll: async () => {
       await delay(50);
       return { windows: [] };
     },
-    getCurrent: async (): Promise<any> => {
+    getCurrent: async () => {
       await delay(50);
       return { id: 'web-window-1' };
     },
@@ -1498,7 +1481,7 @@ export const mockSqlProAPI: any = {
 
   // Memory operations (mock)
   memory: {
-    getStats: async (): Promise<any> => {
+    getStats: async () => {
       await delay(50);
       return {
         heapUsed: 50 * 1024 * 1024,
@@ -1507,15 +1490,15 @@ export const mockSqlProAPI: any = {
         external: 10 * 1024 * 1024,
       };
     },
-    subscribe: async (): Promise<any> => {
+    subscribe: async () => {
       await delay(50);
       return { success: true };
     },
-    unsubscribe: async (): Promise<any> => {
+    unsubscribe: async () => {
       await delay(50);
       return { success: true };
     },
-    triggerGC: async (): Promise<any> => {
+    triggerGC: async () => {
       await delay(100);
       return { success: true };
     },
@@ -1529,27 +1512,27 @@ export const mockSqlProAPI: any = {
 
   // License operations (mock)
   license: {
-    getMachineId: async (): Promise<any> => {
+    getMachineId: async () => {
       await delay(50);
       return { machineId: 'web-browser-instance' };
     },
-    createCheckout: async (): Promise<any> => {
+    createCheckout: async () => {
       await delay(200);
       return { url: '' };
     },
-    activate: async (): Promise<any> => {
+    activate: async () => {
       await delay(300);
       return { success: false };
     },
-    verify: async (): Promise<any> => {
+    verify: async () => {
       await delay(200);
       return { valid: false };
     },
-    deactivate: async (): Promise<any> => {
+    deactivate: async () => {
       await delay(200);
       return { success: true };
     },
-    getPortalUrl: async (): Promise<any> => {
+    getPortalUrl: async () => {
       await delay(100);
       return { url: '' };
     },
@@ -1557,35 +1540,35 @@ export const mockSqlProAPI: any = {
 
   // SSH operations (mock)
   ssh: {
-    saveCredentials: async (): Promise<any> => {
+    saveCredentials: async () => {
       await delay(100);
       return { success: true };
     },
-    hasCredentials: async (): Promise<any> => {
+    hasCredentials: async () => {
       await delay(50);
       return { hasCredentials: false };
     },
-    getCredentials: async (): Promise<any> => {
+    getCredentials: async () => {
       await delay(50);
       return { credentials: null };
     },
-    removeCredentials: async (): Promise<any> => {
+    removeCredentials: async () => {
       await delay(100);
       return { success: true };
     },
-    getTunnelStatus: async (): Promise<any> => {
+    getTunnelStatus: async () => {
       await delay(50);
       return { connected: false };
     },
-    closeTunnel: async (): Promise<any> => {
+    closeTunnel: async () => {
       await delay(100);
       return { success: true };
     },
-    testConnection: async (): Promise<any> => {
+    testConnection: async () => {
       await delay(300);
       return { success: false, error: 'SSH not available in web mode' };
     },
-    hasTunnel: async (): Promise<any> => {
+    hasTunnel: async () => {
       await delay(50);
       return { hasTunnel: false };
     },
@@ -1593,19 +1576,19 @@ export const mockSqlProAPI: any = {
 
   // Backup operations (mock)
   backup: {
-    create: async (): Promise<any> => {
+    create: async () => {
       await delay(300);
       return { success: true };
     },
-    restore: async (): Promise<any> => {
+    restore: async () => {
       await delay(300);
       return { success: true };
     },
-    list: async (): Promise<any> => {
+    list: async () => {
       await delay(100);
       return { backups: [] };
     },
-    delete: async (): Promise<any> => {
+    delete: async () => {
       await delay(100);
       return { success: true };
     },
@@ -1613,27 +1596,27 @@ export const mockSqlProAPI: any = {
 
   // Profile operations (mock)
   profile: {
-    save: async (): Promise<any> => {
+    save: async () => {
       await delay(100);
       return { success: true };
     },
-    update: async (): Promise<any> => {
+    update: async () => {
       await delay(100);
       return { success: true };
     },
-    delete: async (): Promise<any> => {
+    delete: async () => {
       await delay(100);
       return { success: true };
     },
-    getAll: async (): Promise<any> => {
+    getAll: async () => {
       await delay(100);
       return { profiles: [] };
     },
-    export: async (): Promise<any> => {
+    export: async () => {
       await delay(200);
       return { success: true };
     },
-    import: async (): Promise<any> => {
+    import: async () => {
       await delay(200);
       return { success: true };
     },
@@ -1641,19 +1624,19 @@ export const mockSqlProAPI: any = {
 
   // Folder operations (mock)
   folder: {
-    create: async (): Promise<any> => {
+    create: async () => {
       await delay(100);
       return { success: true };
     },
-    update: async (): Promise<any> => {
+    update: async () => {
       await delay(100);
       return { success: true };
     },
-    delete: async (): Promise<any> => {
+    delete: async () => {
       await delay(100);
       return { success: true };
     },
-    getAll: async (): Promise<any> => {
+    getAll: async () => {
       await delay(100);
       return { folders: [] };
     },
@@ -1665,50 +1648,50 @@ export const mockSqlProAPI: any = {
 
   // Agent/AI operations (mock)
   agent: {
-    getSettings: async (): Promise<any> => {
+    getSettings: async () => {
       await delay(100);
       return { settings: { enabled: false } };
     },
-    saveSettings: async (): Promise<any> => {
+    saveSettings: async () => {
       await delay(100);
       return { success: true };
     },
-    sendChat: async (): Promise<any> => {
+    sendChat: async () => {
       await delay(300);
       return { response: 'AI features are not available in web mode' };
     },
-    cancelChat: async (): Promise<any> => {
+    cancelChat: async () => {
       await delay(50);
       return { success: true };
     },
     onChatStream: (): (() => void) => {
       return () => {};
     },
-    getSessions: async (): Promise<any> => {
+    getSessions: async () => {
       await delay(100);
       return { sessions: [] };
     },
-    getSession: async (): Promise<any> => {
+    getSession: async () => {
       await delay(100);
       return { session: null };
     },
-    deleteSession: async (): Promise<any> => {
+    deleteSession: async () => {
       await delay(100);
       return { success: true };
     },
-    clearHistory: async (): Promise<any> => {
+    clearHistory: async () => {
       await delay(100);
       return { success: true };
     },
-    nlGenerateSQL: async (): Promise<any> => {
+    nlGenerateSQL: async () => {
       await delay(200);
       return { sql: '' };
     },
-    nlExplainSQL: async (): Promise<any> => {
+    nlExplainSQL: async () => {
       await delay(200);
       return { explanation: '' };
     },
-    nlOptimizeSQL: async (): Promise<any> => {
+    nlOptimizeSQL: async () => {
       await delay(200);
       return { sql: '' };
     },
@@ -1716,31 +1699,31 @@ export const mockSqlProAPI: any = {
 
   // Image operations (mock)
   image: {
-    getMetadata: async (): Promise<any> => {
+    getMetadata: async () => {
       await delay(100);
       return { metadata: null };
     },
-    getFileMetadata: async (): Promise<any> => {
+    getFileMetadata: async () => {
       await delay(100);
       return { metadata: null };
     },
-    getCacheStats: async (): Promise<any> => {
+    getCacheStats: async () => {
       await delay(50);
       return { hits: 0, misses: 0, size: 0 };
     },
-    clearCache: async (): Promise<any> => {
+    clearCache: async () => {
       await delay(100);
       return { success: true };
     },
-    checkUrl: async (): Promise<any> => {
+    checkUrl: async () => {
       await delay(100);
       return { valid: false };
     },
-    validateUrl: async (): Promise<any> => {
+    validateUrl: async () => {
       await delay(100);
       return { valid: false };
     },
-    checkFile: async (): Promise<any> => {
+    checkFile: async () => {
       await delay(50);
       return { exists: false };
     },
@@ -1748,19 +1731,19 @@ export const mockSqlProAPI: any = {
 
   // Video operations (mock)
   video: {
-    getMetadata: async (): Promise<any> => {
+    getMetadata: async () => {
       await delay(100);
       return { metadata: null };
     },
-    checkUrl: async (): Promise<any> => {
+    checkUrl: async () => {
       await delay(100);
       return { valid: false };
     },
-    validateUrl: async (): Promise<any> => {
+    validateUrl: async () => {
       await delay(100);
       return { valid: false };
     },
-    checkFile: async (): Promise<any> => {
+    checkFile: async () => {
       await delay(50);
       return { exists: false };
     },
@@ -1768,27 +1751,27 @@ export const mockSqlProAPI: any = {
 
   // Sharing operations (mock)
   sharing: {
-    exportBundle: async (): Promise<any> => {
+    exportBundle: async () => {
       await delay(200);
       return { success: false };
     },
-    importBundle: async (): Promise<any> => {
+    importBundle: async () => {
       await delay(200);
       return { success: false };
     },
-    exportQuery: async (): Promise<any> => {
+    exportQuery: async () => {
       await delay(100);
       return { success: false };
     },
-    importQuery: async (): Promise<any> => {
+    importQuery: async () => {
       await delay(100);
       return { success: false };
     },
-    exportSchema: async (): Promise<any> => {
+    exportSchema: async () => {
       await delay(200);
       return { success: false };
     },
-    importSchema: async (): Promise<any> => {
+    importSchema: async () => {
       await delay(200);
       return { success: false };
     },
@@ -1796,11 +1779,11 @@ export const mockSqlProAPI: any = {
 
   // Data diff operations (mock)
   dataDiff: {
-    generateSyncSQL: async (): Promise<any> => {
+    generateSyncSQL: async () => {
       await delay(200);
       return { sql: '' };
     },
-    compareTables: async (): Promise<any> => {
+    compareTables: async () => {
       await delay(300);
       return { result: null };
     },
@@ -1808,15 +1791,15 @@ export const mockSqlProAPI: any = {
 
   // PgNotify operations (mock)
   pgNotify: {
-    subscribe: async (): Promise<any> => {
+    subscribe: async () => {
       await delay(100);
       return { success: true };
     },
-    unsubscribe: async (): Promise<any> => {
+    unsubscribe: async () => {
       await delay(100);
       return { success: true };
     },
-    getSubscriptions: async (): Promise<any> => {
+    getSubscriptions: async () => {
       await delay(50);
       return { subscriptions: [] };
     },
@@ -1827,23 +1810,23 @@ export const mockSqlProAPI: any = {
 
   // Database maintenance operations (mock)
   database: {
-    getDatabaseStats: async (): Promise<any> => {
+    getDatabaseStats: async () => {
       await delay(100);
       return { stats: {} };
     },
-    vacuum: async (): Promise<any> => {
+    vacuum: async () => {
       await delay(300);
       return { success: true };
     },
-    analyze: async (): Promise<any> => {
+    analyze: async () => {
       await delay(200);
       return { success: true };
     },
-    getSchema: async (): Promise<any> => {
+    getSchema: async () => {
       await delay(100);
       return { schema: {} };
     },
-    query: async (): Promise<any> => {
+    query: async () => {
       await delay(200);
       return { rows: [], columns: [] };
     },
@@ -1851,7 +1834,7 @@ export const mockSqlProAPI: any = {
 
   // Unsaved changes operations (mock)
   unsavedChanges: {
-    check: async (): Promise<any> => {
+    check: async () => {
       await delay(50);
       return { hasChanges: false };
     },
@@ -1859,11 +1842,11 @@ export const mockSqlProAPI: any = {
 
   // Schema export/import operations (mock)
   schema: {
-    export: async (): Promise<any> => {
+    export: async () => {
       await delay(200);
       return { success: false };
     },
-    import: async (): Promise<any> => {
+    import: async () => {
       await delay(200);
       return { success: false };
     },
@@ -1871,11 +1854,11 @@ export const mockSqlProAPI: any = {
 
   // Bundle operations (mock)
   bundle: {
-    export: async (): Promise<any> => {
+    export: async () => {
       await delay(200);
       return { success: false };
     },
-    import: async (): Promise<any> => {
+    import: async () => {
       await delay(200);
       return { success: false };
     },
@@ -1883,11 +1866,11 @@ export const mockSqlProAPI: any = {
 
   // Migration operations (mock)
   migration: {
-    generateSQL: async (): Promise<any> => {
+    generateSQL: async () => {
       await delay(200);
       return { sql: '' };
     },
-    generateSyncSQL: async (): Promise<any> => {
+    generateSyncSQL: async () => {
       await delay(200);
       return { sql: '' };
     },
@@ -1895,11 +1878,11 @@ export const mockSqlProAPI: any = {
 
   // SQL log operations (mock)
   sqlLog: {
-    get: async (): Promise<any> => {
+    get: async () => {
       await delay(100);
       return { logs: [] };
     },
-    clear: async (): Promise<any> => {
+    clear: async () => {
       await delay(100);
       return { success: true };
     },
@@ -1911,7 +1894,7 @@ export const mockSqlProAPI: any = {
 
   // Renderer store operations (mock - uses in-memory storage)
   rendererStore: {
-    get: async ({ key }: { key: string }): Promise<any> => {
+    get: async ({ key }: { key: string }) => {
       try {
         const stored = localStorage.getItem(`sqlpro-store-${key}`);
         return {
@@ -1922,13 +1905,7 @@ export const mockSqlProAPI: any = {
         return { success: false, data: undefined };
       }
     },
-    set: async ({
-      key,
-      value,
-    }: {
-      key: string;
-      value: unknown;
-    }): Promise<any> => {
+    set: async ({ key, value }: { key: string; value: unknown }) => {
       try {
         localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(value));
         return { success: true };
@@ -1936,13 +1913,7 @@ export const mockSqlProAPI: any = {
         return { success: false };
       }
     },
-    update: async ({
-      key,
-      value,
-    }: {
-      key: string;
-      value: unknown;
-    }): Promise<any> => {
+    update: async ({ key, value }: { key: string; value: unknown }) => {
       try {
         if (
           typeof value !== 'object' ||
@@ -1964,7 +1935,7 @@ export const mockSqlProAPI: any = {
         return { success: false };
       }
     },
-    reset: async ({ key }: { key: string }): Promise<any> => {
+    reset: async ({ key }: { key: string }) => {
       try {
         localStorage.removeItem(`sqlpro-store-${key}`);
         return { success: true };
@@ -1976,14 +1947,14 @@ export const mockSqlProAPI: any = {
 
   // App operations (mock)
   app: {
-    getRecentConnections: async (): Promise<any> => {
+    getRecentConnections: async () => {
       await delay(100);
       return {
         success: true,
         connections: [...mockRecentConnections],
       };
     },
-    getPreferences: async (): Promise<any> => {
+    getPreferences: async () => {
       await delay(50);
       return {
         success: true,
@@ -1994,19 +1965,17 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    setPreferences: async (): Promise<any> => {
+    setPreferences: async () => {
       await delay(50);
       return { success: true };
     },
     onBeforeQuit: (): (() => void) => {
       return () => {};
     },
-    confirmQuit: async (): Promise<any> => {
+    confirmQuit: async () => {
       return { success: true };
     },
-    removeRecentConnection: async (request?: {
-      connectionId?: string;
-    }): Promise<any> => {
+    removeRecentConnection: async (request?: { connectionId?: string }) => {
       await delay(50);
       if (request?.connectionId) {
         const idx = mockRecentConnections.findIndex(
@@ -2017,4 +1986,4 @@ export const mockSqlProAPI: any = {
       return { success: true };
     },
   },
-};
+} as unknown as SqlProAPI;
