@@ -30,7 +30,7 @@ catalogs:
     '@antfu/eslint-config': ^7.7.3
     '@commitlint/cli': ^20.5.0
     '@commitlint/config-conventional': ^20.5.0
-    '@eslint-react/eslint-plugin': ^2.13.0
+    '@eslint-react/eslint-plugin': ^3.0.0
     eslint-plugin-react-hooks: ^7.0.1
     eslint-plugin-react-refresh: ^0.5.2
     prettier-plugin-tailwindcss: ^0.7.2
@@ -87,7 +87,7 @@ catalogs:
     '@ai-sdk/react': ^3.0.118
     '@anthropic-ai/claude-agent-sdk': ^0.2.77
     ai: ^6.0.116
-    openai: ^6.31.0
+    openai: ^6.32.0
 
     # DnD Kit
     '@dnd-kit/core': ^6.3.1
@@ -142,7 +142,7 @@ catalogs:
 
     # Cloudflare
     hono: ^4.12.8
-    wrangler: ^4.74.0
+    wrangler: ^4.75.0
     '@cloudflare/workers-types': ^4.20260317.1
     stripe: ^20.4.1
     nanoid: ^5.1.7
