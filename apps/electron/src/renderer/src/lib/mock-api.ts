@@ -1312,6 +1312,490 @@ export const mockSqlProAPI: any = {
     },
   },
 
+  // Menu operations (mock)
+  menu: {
+    onAction: (): (() => void) => {
+      return () => {};
+    },
+    updateShortcuts: async (): Promise<any> => {
+      return { success: true };
+    },
+  },
+
+  // Shortcuts operations (mock)
+  shortcuts: {
+    update: async (): Promise<any> => {
+      return { success: true };
+    },
+  },
+
+  // Language operations (mock)
+  language: {
+    update: async (): Promise<any> => {
+      return { success: true };
+    },
+  },
+
+  // Dialog operations (mock)
+  dialog: {
+    openFile: async (): Promise<any> => {
+      return { canceled: true, filePaths: [] };
+    },
+    saveFile: async (): Promise<any> => {
+      return { canceled: true, filePath: '' };
+    },
+    writeFile: async (): Promise<any> => {
+      return { success: true };
+    },
+  },
+
+  // System operations (mock)
+  system: {
+    showItemInFolder: async (): Promise<any> => {
+      return { success: true };
+    },
+    openExternal: async (url: string): Promise<any> => {
+      window.open(url, '_blank');
+      return { success: true };
+    },
+  },
+
+  // Shell operations (mock)
+  shell: {
+    openExternal: async (url: string): Promise<any> => {
+      window.open(url, '_blank');
+      return { success: true };
+    },
+    showItemInFolder: async (): Promise<any> => {
+      return { success: true };
+    },
+  },
+
+  // Window operations (mock)
+  window: {
+    create: async (): Promise<any> => {
+      return { success: true };
+    },
+    close: async (): Promise<any> => {
+      return { success: true };
+    },
+    focus: async (): Promise<any> => {
+      return { success: true };
+    },
+    getAll: async (): Promise<any> => {
+      return { windows: [] };
+    },
+    getCurrent: async (): Promise<any> => {
+      return { id: 'web-window-1' };
+    },
+  },
+
+  // Update operations (mock)
+  update: {
+    check: async (): Promise<any> => {
+      return { updateAvailable: false };
+    },
+    download: async (): Promise<any> => {
+      return { success: false };
+    },
+    install: async (): Promise<any> => {
+      return { success: false };
+    },
+  },
+  updates: {
+    check: async (): Promise<any> => {
+      return { updateAvailable: false };
+    },
+    download: async (): Promise<any> => {
+      return { success: false };
+    },
+    install: async (): Promise<any> => {
+      return { success: false };
+    },
+  },
+
+  // Memory operations (mock)
+  memory: {
+    getStats: async (): Promise<any> => {
+      return {
+        heapUsed: 50 * 1024 * 1024,
+        heapTotal: 100 * 1024 * 1024,
+        rss: 150 * 1024 * 1024,
+        external: 10 * 1024 * 1024,
+      };
+    },
+    subscribe: async (): Promise<any> => {
+      return { success: true };
+    },
+    unsubscribe: async (): Promise<any> => {
+      return { success: true };
+    },
+    triggerGC: async (): Promise<any> => {
+      return { success: true };
+    },
+    onStatsUpdate: (): (() => void) => {
+      return () => {};
+    },
+    onPressureChange: (): (() => void) => {
+      return () => {};
+    },
+  },
+
+  // License operations (mock)
+  license: {
+    getMachineId: async (): Promise<any> => {
+      return { machineId: 'web-browser-instance' };
+    },
+    createCheckout: async (): Promise<any> => {
+      return { url: '' };
+    },
+    activate: async (): Promise<any> => {
+      return { success: false };
+    },
+    verify: async (): Promise<any> => {
+      return { valid: false };
+    },
+    deactivate: async (): Promise<any> => {
+      return { success: true };
+    },
+    getPortalUrl: async (): Promise<any> => {
+      return { url: '' };
+    },
+  },
+
+  // SSH operations (mock)
+  ssh: {
+    saveCredentials: async (): Promise<any> => {
+      return { success: true };
+    },
+    hasCredentials: async (): Promise<any> => {
+      return { hasCredentials: false };
+    },
+    getCredentials: async (): Promise<any> => {
+      return { credentials: null };
+    },
+    removeCredentials: async (): Promise<any> => {
+      return { success: true };
+    },
+    getTunnelStatus: async (): Promise<any> => {
+      return { connected: false };
+    },
+    closeTunnel: async (): Promise<any> => {
+      return { success: true };
+    },
+    testConnection: async (): Promise<any> => {
+      return { success: false, error: 'SSH not available in web mode' };
+    },
+    hasTunnel: async (): Promise<any> => {
+      return { hasTunnel: false };
+    },
+  },
+
+  // Backup operations (mock)
+  backup: {
+    create: async (): Promise<any> => {
+      return { success: true };
+    },
+    restore: async (): Promise<any> => {
+      return { success: true };
+    },
+    list: async (): Promise<any> => {
+      return { backups: [] };
+    },
+    delete: async (): Promise<any> => {
+      return { success: true };
+    },
+  },
+
+  // Profile operations (mock)
+  profile: {
+    save: async (): Promise<any> => {
+      return { success: true };
+    },
+    update: async (): Promise<any> => {
+      return { success: true };
+    },
+    delete: async (): Promise<any> => {
+      return { success: true };
+    },
+    getAll: async (): Promise<any> => {
+      return { profiles: [] };
+    },
+    export: async (): Promise<any> => {
+      return { success: true };
+    },
+    import: async (): Promise<any> => {
+      return { success: true };
+    },
+  },
+
+  // Folder operations (mock)
+  folder: {
+    create: async (): Promise<any> => {
+      return { success: true };
+    },
+    update: async (): Promise<any> => {
+      return { success: true };
+    },
+    delete: async (): Promise<any> => {
+      return { success: true };
+    },
+    getAll: async (): Promise<any> => {
+      return { folders: [] };
+    },
+  },
+
+  // Plugin operations (mock)
+  plugin: {
+    list: async (): Promise<any> => {
+      return { plugins: [] };
+    },
+    get: async (): Promise<any> => {
+      return { plugin: null };
+    },
+    install: async (): Promise<any> => {
+      return { success: false };
+    },
+    uninstall: async (): Promise<any> => {
+      return { success: true };
+    },
+    enable: async (): Promise<any> => {
+      return { success: true };
+    },
+    disable: async (): Promise<any> => {
+      return { success: true };
+    },
+    update: async (): Promise<any> => {
+      return { success: true };
+    },
+    fetchMarketplace: async (): Promise<any> => {
+      return { plugins: [] };
+    },
+    checkUpdates: async (): Promise<any> => {
+      return { updates: [] };
+    },
+    onEvent: (): (() => void) => {
+      return () => {};
+    },
+  },
+  plugins: {
+    list: async (): Promise<any> => {
+      return { plugins: [] };
+    },
+    get: async (): Promise<any> => {
+      return { plugin: null };
+    },
+    install: async (): Promise<any> => {
+      return { success: false };
+    },
+    uninstall: async (): Promise<any> => {
+      return { success: true };
+    },
+    enable: async (): Promise<any> => {
+      return { success: true };
+    },
+    disable: async (): Promise<any> => {
+      return { success: true };
+    },
+    update: async (): Promise<any> => {
+      return { success: true };
+    },
+    fetchMarketplace: async (): Promise<any> => {
+      return { plugins: [] };
+    },
+    checkUpdates: async (): Promise<any> => {
+      return { updates: [] };
+    },
+    onEvent: (): (() => void) => {
+      return () => {};
+    },
+  },
+
+  // Agent/AI operations (mock)
+  agent: {
+    getSettings: async (): Promise<any> => {
+      return { settings: { enabled: false } };
+    },
+    saveSettings: async (): Promise<any> => {
+      return { success: true };
+    },
+    sendChat: async (): Promise<any> => {
+      return { response: 'AI features are not available in web mode' };
+    },
+    cancelChat: async (): Promise<any> => {
+      return { success: true };
+    },
+    onChatStream: (): (() => void) => {
+      return () => {};
+    },
+    getSessions: async (): Promise<any> => {
+      return { sessions: [] };
+    },
+    getSession: async (): Promise<any> => {
+      return { session: null };
+    },
+    deleteSession: async (): Promise<any> => {
+      return { success: true };
+    },
+    clearHistory: async (): Promise<any> => {
+      return { success: true };
+    },
+    nlGenerateSQL: async (): Promise<any> => {
+      return { sql: '' };
+    },
+    nlExplainSQL: async (): Promise<any> => {
+      return { explanation: '' };
+    },
+    nlOptimizeSQL: async (): Promise<any> => {
+      return { sql: '' };
+    },
+  },
+
+  // Image operations (mock)
+  image: {
+    getMetadata: async (): Promise<any> => {
+      return { metadata: null };
+    },
+    getFileMetadata: async (): Promise<any> => {
+      return { metadata: null };
+    },
+    getCacheStats: async (): Promise<any> => {
+      return { hits: 0, misses: 0, size: 0 };
+    },
+    clearCache: async (): Promise<any> => {
+      return { success: true };
+    },
+    checkUrl: async (): Promise<any> => {
+      return { valid: false };
+    },
+    validateUrl: async (): Promise<any> => {
+      return { valid: false };
+    },
+    checkFile: async (): Promise<any> => {
+      return { exists: false };
+    },
+  },
+
+  // Video operations (mock)
+  video: {
+    getMetadata: async (): Promise<any> => {
+      return { metadata: null };
+    },
+    checkUrl: async (): Promise<any> => {
+      return { valid: false };
+    },
+    validateUrl: async (): Promise<any> => {
+      return { valid: false };
+    },
+    checkFile: async (): Promise<any> => {
+      return { exists: false };
+    },
+  },
+
+  // Sharing operations (mock)
+  sharing: {
+    exportBundle: async (): Promise<any> => {
+      return { success: false };
+    },
+    importBundle: async (): Promise<any> => {
+      return { success: false };
+    },
+    exportQuery: async (): Promise<any> => {
+      return { success: false };
+    },
+    importQuery: async (): Promise<any> => {
+      return { success: false };
+    },
+    exportSchema: async (): Promise<any> => {
+      return { success: false };
+    },
+    importSchema: async (): Promise<any> => {
+      return { success: false };
+    },
+  },
+
+  // Data diff operations (mock)
+  dataDiff: {
+    generateSyncSQL: async (): Promise<any> => {
+      return { sql: '' };
+    },
+    compareTables: async (): Promise<any> => {
+      return { result: null };
+    },
+  },
+
+  // PgNotify operations (mock)
+  pgNotify: {
+    subscribe: async (): Promise<any> => {
+      return { success: true };
+    },
+    unsubscribe: async (): Promise<any> => {
+      return { success: true };
+    },
+    getSubscriptions: async (): Promise<any> => {
+      return { subscriptions: [] };
+    },
+    onEvent: (): (() => void) => {
+      return () => {};
+    },
+  },
+
+  // Database maintenance operations (mock)
+  database: {
+    getDatabaseStats: async (): Promise<any> => {
+      return { stats: {} };
+    },
+    vacuum: async (): Promise<any> => {
+      return { success: true };
+    },
+    analyze: async (): Promise<any> => {
+      return { success: true };
+    },
+    getSchema: async (): Promise<any> => {
+      return { schema: {} };
+    },
+    query: async (): Promise<any> => {
+      return { rows: [], columns: [] };
+    },
+  },
+
+  // Unsaved changes operations (mock)
+  unsavedChanges: {
+    check: async (): Promise<any> => {
+      return { hasChanges: false };
+    },
+  },
+
+  // Schema export/import operations (mock)
+  schema: {
+    export: async (): Promise<any> => {
+      return { success: false };
+    },
+    import: async (): Promise<any> => {
+      return { success: false };
+    },
+  },
+
+  // Bundle operations (mock)
+  bundle: {
+    export: async (): Promise<any> => {
+      return { success: false };
+    },
+    import: async (): Promise<any> => {
+      return { success: false };
+    },
+  },
+
+  // Migration operations (mock)
+  migration: {
+    generateSQL: async (): Promise<any> => {
+      return { sql: '' };
+    },
+    generateSyncSQL: async (): Promise<any> => {
+      return { sql: '' };
+    },
+  },
+
   // SQL log operations (mock)
   sqlLog: {
     get: async (): Promise<any> => {
@@ -1325,6 +1809,61 @@ export const mockSqlProAPI: any = {
     onEntry: (): (() => void) => {
       // Return a no-op unsubscribe function in mock mode
       return () => {};
+    },
+  },
+
+  // Renderer store operations (mock - uses in-memory storage)
+  rendererStore: {
+    get: async ({ key }: { key: string }): Promise<any> => {
+      try {
+        const stored = localStorage.getItem(`sqlpro-store-${key}`);
+        return {
+          success: true,
+          data: stored ? JSON.parse(stored) : undefined,
+        };
+      } catch {
+        return { success: true, data: undefined };
+      }
+    },
+    set: async ({
+      key,
+      value,
+    }: {
+      key: string;
+      value: unknown;
+    }): Promise<any> => {
+      try {
+        localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(value));
+      } catch {
+        // localStorage may be unavailable or full
+      }
+      return { success: true };
+    },
+    update: async ({
+      key,
+      value,
+    }: {
+      key: string;
+      value: unknown;
+    }): Promise<any> => {
+      try {
+        const existing = localStorage.getItem(`sqlpro-store-${key}`);
+        const merged = existing
+          ? { ...JSON.parse(existing), ...(value as Record<string, unknown>) }
+          : value;
+        localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(merged));
+      } catch {
+        // localStorage may be unavailable or full
+      }
+      return { success: true };
+    },
+    reset: async ({ key }: { key: string }): Promise<any> => {
+      try {
+        localStorage.removeItem(`sqlpro-store-${key}`);
+      } catch {
+        // Ignore
+      }
+      return { success: true };
     },
   },
 
@@ -1388,8 +1927,13 @@ export const mockSqlProAPI: any = {
       return { success: true };
     },
     onBeforeQuit: (): (() => void) => {
-      // Return a no-op unsubscribe function in mock mode
       return () => {};
+    },
+    confirmQuit: async (): Promise<any> => {
+      return { success: true };
+    },
+    removeRecentConnection: async (): Promise<any> => {
+      return { success: true };
     },
   },
 };
