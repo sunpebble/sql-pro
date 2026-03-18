@@ -1919,7 +1919,7 @@ export const mockSqlProAPI: any = {
           data: stored ? JSON.parse(stored) : undefined,
         };
       } catch {
-        return { success: true, data: undefined };
+        return { success: false, data: undefined };
       }
     },
     set: async ({
