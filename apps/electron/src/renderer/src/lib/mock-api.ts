@@ -2004,10 +2004,14 @@ export const mockSqlProAPI: any = {
     confirmQuit: async (): Promise<any> => {
       return { success: true };
     },
-    removeRecentConnection: async (request?: { id?: string }): Promise<any> => {
+    removeRecentConnection: async (request?: {
+      connectionId?: string;
+    }): Promise<any> => {
       await delay(50);
-      if (request?.id) {
-        const idx = mockRecentConnections.findIndex((c) => c.id === request.id);
+      if (request?.connectionId) {
+        const idx = mockRecentConnections.findIndex(
+          (c) => c.id === request.connectionId
+        );
         if (idx !== -1) mockRecentConnections.splice(idx, 1);
       }
       return { success: true };
