@@ -41,6 +41,7 @@ export default defineConfig({
           if (id.includes('node_modules/monaco-editor')) {
             return 'vendor-monaco';
           }
+          return undefined;
         },
       },
     },
