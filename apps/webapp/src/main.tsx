@@ -1,11 +1,10 @@
 import * as React from 'react';
+
 import ReactDOM from 'react-dom/client';
-
 import App from '@/App';
-
-// Install global shims before any renderer code runs. Some renderer modules
-// access window.sqlPro directly (not via the sqlPro proxy from lib/api.ts),
-// so we need the mock API available on the window object.
+// Install global shims FIRST, before any renderer code runs. Some renderer
+// modules access window.sqlPro directly (not via the sqlPro proxy), so the
+// mock API must be on the window object before side-effect store imports.
 import { mockSqlProAPI } from '@/lib/mock-api';
 import { hydrateStores, initializeStorage } from '@/lib/storage';
 import { initializeTableOrganizationStore } from '@/stores/table-organization-store';
