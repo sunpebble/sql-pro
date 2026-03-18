@@ -1,13 +1,12 @@
 /// <reference types="vite/client" />
 /// <reference types="@testing-library/jest-dom" />
 
-// Import the preload types
 import type { ElectronAPI } from '@electron-toolkit/preload';
+import type { SqlProAPI } from '../../preload/index';
 
-// Declare the global window extensions exposed by preload
 declare global {
   interface Window {
-    sqlPro: typeof import('../../preload/index').sqlProAPI;
+    sqlPro: SqlProAPI;
     electronAPI: ElectronAPI;
   }
 }

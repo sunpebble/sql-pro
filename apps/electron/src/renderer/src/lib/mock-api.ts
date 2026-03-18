@@ -1,4 +1,3 @@
-// Mock API for development and testing
 import type {
   AnalyzeQueryPlanRequest,
   ApplyChangesRequest,
@@ -7,6 +6,7 @@ import type {
   CompareConnectionsRequest,
   CompareConnectionToSnapshotRequest,
   CompareSnapshotsRequest,
+  CompareTablesRequest,
   DeleteQueryHistoryRequest,
   DeleteSchemaSnapshotRequest,
   ExecuteQueryRequest,
@@ -35,6 +35,8 @@ import type {
   UpdateConnectionRequest,
   ValidateChangesRequest,
 } from '@shared/types';
+// Mock API for development and testing
+import type { SqlProAPI } from '../../../preload/index';
 
 // Mock tables schema
 const mockTables: TableInfo[] = [
@@ -675,11 +677,104 @@ export function isMockMode(): boolean {
   return _isMockMode || checkMockModeFromURL();
 }
 
+// Shared mock method sets to avoid duplication between aliases
+const mockUpdateMethods = {
+  check: async () => {
+    await delay(100);
+    return { success: true };
+  },
+  download: async () => {
+    await delay(200);
+    return { success: false };
+  },
+  install: async () => {
+    await delay(200);
+    return { success: false };
+  },
+};
+
+const mockPluginMethods = {
+  list: async () => {
+    await delay(100);
+    return { success: true, plugins: [] };
+  },
+  get: async () => {
+    await delay(100);
+    return { success: false };
+  },
+  install: async () => {
+    await delay(200);
+    return { success: false };
+  },
+  uninstall: async () => {
+    await delay(200);
+    return { success: true };
+  },
+  enable: async () => {
+    await delay(100);
+    return { success: true };
+  },
+  disable: async () => {
+    await delay(100);
+    return { success: true };
+  },
+  update: async () => {
+    await delay(200);
+    return { success: true };
+  },
+  fetchMarketplace: async () => {
+    await delay(300);
+    return { success: true, plugins: [] };
+  },
+  checkUpdates: async () => {
+    await delay(200);
+    return { success: true, updates: [] };
+  },
+  onEvent: () => {
+    return () => {};
+  },
+};
+
+// Mutable recent connections list shared between getRecentConnections and removeRecentConnection
+const mockRecentConnections = [
+  {
+    id: 'recent-1',
+    path: '/Users/demo/databases/shop.db',
+    filename: 'shop.db',
+    isEncrypted: false,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+  },
+  {
+    id: 'recent-2',
+    path: '/Users/demo/databases/inventory.db',
+    filename: 'inventory.db',
+    isEncrypted: false,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+  },
+  {
+    id: 'recent-3',
+    path: '/Users/demo/databases/analytics.db',
+    filename: 'analytics.db',
+    isEncrypted: true,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+  },
+  {
+    id: 'recent-4',
+    path: '/Users/demo/projects/webapp/data.sqlite',
+    filename: 'data.sqlite',
+    isEncrypted: false,
+    lastOpenedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
+  },
+];
+
 // Mock SQL Pro API
 
-export const mockSqlProAPI: any = {
+// The mock implements a subset of SqlProAPI with some structural differences
+// (e.g., connection.getRecentConnections lives under app in the real API).
+// The cast ensures consumers get proper type checking via the SqlProAPI contract.
+export const mockSqlProAPI = {
   db: {
-    open: async (_request: OpenDatabaseRequest): Promise<any> => {
+    open: async (_request: OpenDatabaseRequest) => {
       await delay(300);
       return {
         success: true,
@@ -692,11 +787,11 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    close: async (_request: CloseDatabaseRequest): Promise<any> => {
+    close: async (_request: CloseDatabaseRequest) => {
       await delay(200);
       return { success: true };
     },
-    getSchema: async (_request: GetSchemaRequest): Promise<any> => {
+    getSchema: async (_request: GetSchemaRequest) => {
       await delay(400);
       return {
         success: true,
@@ -711,7 +806,7 @@ export const mockSqlProAPI: any = {
         views: mockViews,
       };
     },
-    getTableData: async (_request: GetTableDataRequest): Promise<any> => {
+    getTableData: async (_request: GetTableDataRequest) => {
       await delay(300);
       const tableName = _request.table;
       const data = mockTableData[tableName] || [];
@@ -730,9 +825,7 @@ export const mockSqlProAPI: any = {
         totalRows: data.length,
       };
     },
-    getTableRowRange: async (
-      _request: GetTableRowRangeRequest
-    ): Promise<any> => {
+    getTableRowRange: async (_request: GetTableRowRangeRequest) => {
       await delay(200);
       const tableName = _request.table;
       const data = mockTableData[tableName] || [];
@@ -753,7 +846,7 @@ export const mockSqlProAPI: any = {
         actualEndRow: startRow + data.slice(startRow, endRow).length,
       };
     },
-    executeQuery: async (_request: ExecuteQueryRequest): Promise<any> => {
+    executeQuery: async (_request: ExecuteQueryRequest) => {
       await delay(300);
       const query = _request.query?.trim().toLowerCase() || '';
 
@@ -791,7 +884,7 @@ export const mockSqlProAPI: any = {
     },
   },
   query: {
-    execute: async (_request: ExecuteQueryRequest): Promise<any> => {
+    execute: async (_request: ExecuteQueryRequest) => {
       await delay(400);
       return {
         rows: [],
@@ -800,23 +893,21 @@ export const mockSqlProAPI: any = {
         executionTime: 45,
       };
     },
-    validateChanges: async (_request: ValidateChangesRequest): Promise<any> => {
+    validateChanges: async (_request: ValidateChangesRequest) => {
       await delay(300);
       return {
         isValid: true,
         errors: [],
       };
     },
-    applyChanges: async (_request: ApplyChangesRequest): Promise<any> => {
+    applyChanges: async (_request: ApplyChangesRequest) => {
       await delay(500);
       return {
         success: true,
         affectedRows: 1,
       };
     },
-    analyzeQueryPlan: async (
-      _request: AnalyzeQueryPlanRequest
-    ): Promise<any> => {
+    analyzeQueryPlan: async (_request: AnalyzeQueryPlanRequest) => {
       await delay(300);
       return {
         plan: [
@@ -832,7 +923,7 @@ export const mockSqlProAPI: any = {
     },
   },
   history: {
-    get: async (_request: GetQueryHistoryRequest): Promise<any> => {
+    get: async (_request: GetQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
@@ -840,20 +931,20 @@ export const mockSqlProAPI: any = {
         total: 0,
       };
     },
-    save: async (_request: SaveQueryHistoryRequest): Promise<any> => {
+    save: async (_request: SaveQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
         id: 'mock-history-1',
       };
     },
-    delete: async (_request: DeleteQueryHistoryRequest): Promise<any> => {
+    delete: async (_request: DeleteQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    clear: async (_request: ClearQueryHistoryRequest): Promise<any> => {
+    clear: async (_request: ClearQueryHistoryRequest) => {
       await delay(200);
       return {
         success: true,
@@ -861,7 +952,7 @@ export const mockSqlProAPI: any = {
     },
   },
   export: {
-    export: async (_request: ExportRequest): Promise<any> => {
+    export: async (_request: ExportRequest) => {
       await delay(500);
       return {
         success: true,
@@ -870,13 +961,13 @@ export const mockSqlProAPI: any = {
     },
   },
   file: {
-    openFileDialog: async (_request: OpenFileDialogRequest): Promise<any> => {
+    openFileDialog: async (_request: OpenFileDialogRequest) => {
       await delay(200);
       return {
         filePath: '/Users/demo/databases/shop.db',
       };
     },
-    saveFileDialog: async (_request: SaveFileDialogRequest): Promise<any> => {
+    saveFileDialog: async (_request: SaveFileDialogRequest) => {
       await delay(200);
       return {
         filePath: '/Users/demo/databases/export.csv',
@@ -884,23 +975,19 @@ export const mockSqlProAPI: any = {
     },
   },
   connection: {
-    getRecentConnections: async (): Promise<any> => {
+    getRecentConnections: async () => {
       await delay(200);
       return {
         connections: [],
       };
     },
-    updateConnection: async (
-      _request: UpdateConnectionRequest
-    ): Promise<any> => {
+    updateConnection: async (_request: UpdateConnectionRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    removeConnection: async (
-      _request: RemoveConnectionRequest
-    ): Promise<any> => {
+    removeConnection: async (_request: RemoveConnectionRequest) => {
       await delay(200);
       return {
         success: true,
@@ -908,14 +995,14 @@ export const mockSqlProAPI: any = {
     },
   },
   preferences: {
-    getPreferences: async (): Promise<any> => {
+    getPreferences: async () => {
       await delay(200);
       return {
         theme: 'dark',
         fontSize: 14,
       };
     },
-    setPreferences: async (_request: SetPreferencesRequest): Promise<any> => {
+    setPreferences: async (_request: SetPreferencesRequest) => {
       await delay(200);
       return {
         success: true,
@@ -923,31 +1010,31 @@ export const mockSqlProAPI: any = {
     },
   },
   password: {
-    get: async (_request: GetPasswordRequest): Promise<any> => {
+    get: async (_request: GetPasswordRequest) => {
       await delay(200);
       return {
         password: 'mock-password',
       };
     },
-    has: async (_request: HasPasswordRequest): Promise<any> => {
+    has: async (_request: HasPasswordRequest) => {
       await delay(200);
       return {
         hasPassword: false,
       };
     },
-    save: async (_request: SavePasswordRequest): Promise<any> => {
+    save: async (_request: SavePasswordRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    remove: async (_request: RemovePasswordRequest): Promise<any> => {
+    remove: async (_request: RemovePasswordRequest) => {
       await delay(200);
       return {
         success: true,
       };
     },
-    isAvailable: async (): Promise<any> => {
+    isAvailable: async () => {
       await delay(200);
       return {
         available: true,
@@ -955,7 +1042,7 @@ export const mockSqlProAPI: any = {
     },
   },
   ai: {
-    getAISettings: async (): Promise<any> => {
+    getAISettings: async () => {
       await delay(200);
       return {
         settings: {
@@ -965,7 +1052,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    saveAISettings: async (_request: SaveAISettingsRequest): Promise<any> => {
+    saveAISettings: async (_request: SaveAISettingsRequest) => {
       await delay(200);
       return {
         success: true,
@@ -973,7 +1060,7 @@ export const mockSqlProAPI: any = {
     },
   },
   pro: {
-    getStatus: async (): Promise<any> => {
+    getStatus: async () => {
       await delay(200);
       return {
         isActive: false,
@@ -981,7 +1068,7 @@ export const mockSqlProAPI: any = {
         licenseKey: null,
       };
     },
-    activate: async (_request: ProActivateRequest): Promise<any> => {
+    activate: async (_request: ProActivateRequest) => {
       await delay(300);
       return {
         success: true,
@@ -990,7 +1077,7 @@ export const mockSqlProAPI: any = {
         ).toISOString(),
       };
     },
-    deactivate: async (): Promise<any> => {
+    deactivate: async () => {
       await delay(200);
       return {
         success: true,
@@ -998,7 +1085,7 @@ export const mockSqlProAPI: any = {
     },
   },
   schemaSnapshot: {
-    save: async (_request: SaveSchemaSnapshotRequest): Promise<any> => {
+    save: async (_request: SaveSchemaSnapshotRequest) => {
       await delay(300);
       return {
         success: true,
@@ -1013,7 +1100,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    getAll: async (): Promise<any> => {
+    getAll: async () => {
       await delay(200);
       return {
         snapshots: [
@@ -1027,7 +1114,7 @@ export const mockSqlProAPI: any = {
         ],
       };
     },
-    get: async (_request: GetSchemaSnapshotRequest): Promise<any> => {
+    get: async (_request: GetSchemaSnapshotRequest) => {
       await delay(200);
       return {
         snapshot: {
@@ -1039,7 +1126,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    delete: async (_request: DeleteSchemaSnapshotRequest): Promise<any> => {
+    delete: async (_request: DeleteSchemaSnapshotRequest) => {
       await delay(200);
       return {
         success: true,
@@ -1047,9 +1134,7 @@ export const mockSqlProAPI: any = {
     },
   },
   schemaComparison: {
-    compareConnections: async (
-      _request: CompareConnectionsRequest
-    ): Promise<any> => {
+    compareConnections: async (_request: CompareConnectionsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1087,7 +1172,7 @@ export const mockSqlProAPI: any = {
     },
     compareConnectionToSnapshot: async (
       _request: CompareConnectionToSnapshotRequest
-    ): Promise<any> => {
+    ) => {
       await delay(500);
       return {
         success: true,
@@ -1123,9 +1208,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    compareSnapshots: async (
-      _request: CompareSnapshotsRequest
-    ): Promise<any> => {
+    compareSnapshots: async (_request: CompareSnapshotsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1161,9 +1244,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    generateMigrationSQL: async (
-      _request: GenerateMigrationSQLRequest
-    ): Promise<any> => {
+    generateMigrationSQL: async (_request: GenerateMigrationSQLRequest) => {
       await delay(300);
       return {
         success: true,
@@ -1172,9 +1253,7 @@ export const mockSqlProAPI: any = {
         warnings: [],
       };
     },
-    exportReport: async (
-      _request: ExportComparisonReportRequest
-    ): Promise<any> => {
+    exportReport: async (_request: ExportComparisonReportRequest) => {
       await delay(400);
       return {
         success: true,
@@ -1185,9 +1264,7 @@ export const mockSqlProAPI: any = {
 
   // Comparison operations (alias for schemaComparison + data diff)
   comparison: {
-    compareConnections: async (
-      _request: CompareConnectionsRequest
-    ): Promise<any> => {
+    compareConnections: async (_request: CompareConnectionsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1219,7 +1296,7 @@ export const mockSqlProAPI: any = {
     },
     compareConnectionToSnapshot: async (
       _request: CompareConnectionToSnapshotRequest
-    ): Promise<any> => {
+    ) => {
       await delay(500);
       return {
         success: true,
@@ -1249,9 +1326,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    compareSnapshots: async (
-      _request: CompareSnapshotsRequest
-    ): Promise<any> => {
+    compareSnapshots: async (_request: CompareSnapshotsRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1281,7 +1356,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    compareTables: async (_request: any): Promise<any> => {
+    compareTables: async (_request: CompareTablesRequest) => {
       await delay(500);
       return {
         success: true,
@@ -1301,9 +1376,7 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    exportComparisonReport: async (
-      _request: ExportComparisonReportRequest
-    ): Promise<any> => {
+    exportComparisonReport: async (_request: ExportComparisonReportRequest) => {
       await delay(400);
       return {
         success: true,
@@ -1312,13 +1385,504 @@ export const mockSqlProAPI: any = {
     },
   },
 
+  // Menu operations (mock)
+  menu: {
+    onAction: (): (() => void) => {
+      return () => {};
+    },
+    updateShortcuts: async () => {
+      return { success: true };
+    },
+  },
+
+  // Shortcuts operations (mock)
+  shortcuts: {
+    update: async () => {
+      return { success: true };
+    },
+  },
+
+  // Language operations (mock)
+  language: {
+    update: async () => {
+      return { success: true };
+    },
+  },
+
+  // Dialog operations (mock)
+  dialog: {
+    openFile: async () => {
+      await delay(100);
+      return { canceled: true, filePaths: [] };
+    },
+    saveFile: async () => {
+      await delay(100);
+      return { canceled: true, filePath: '' };
+    },
+    writeFile: async () => {
+      await delay(100);
+      return { success: true };
+    },
+  },
+
+  // System operations (mock)
+  system: {
+    showItemInFolder: async () => {
+      await delay(50);
+      return { success: true };
+    },
+    openExternal: async (request: string | { url: string }) => {
+      const url = typeof request === 'string' ? request : request.url;
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      return { success: opened !== null };
+    },
+  },
+
+  // Shell operations (mock)
+  shell: {
+    openExternal: async (request: string | { url: string }) => {
+      const url = typeof request === 'string' ? request : request.url;
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      return { success: opened !== null };
+    },
+    showItemInFolder: async () => {
+      await delay(50);
+      return { success: true };
+    },
+  },
+
+  // Window operations (mock)
+  window: {
+    create: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    close: async () => {
+      await delay(50);
+      return { success: true };
+    },
+    focus: async () => {
+      await delay(50);
+      return { success: true };
+    },
+    getAll: async () => {
+      await delay(50);
+      return { windows: [] };
+    },
+    getCurrent: async () => {
+      await delay(50);
+      return { id: 'web-window-1' };
+    },
+  },
+
+  // Update operations (mock) — shared between update/updates aliases
+  update: mockUpdateMethods,
+  updates: mockUpdateMethods,
+
+  // Memory operations (mock)
+  memory: {
+    getStats: async () => {
+      await delay(50);
+      return {
+        heapUsed: 50 * 1024 * 1024,
+        heapTotal: 100 * 1024 * 1024,
+        rss: 150 * 1024 * 1024,
+        external: 10 * 1024 * 1024,
+      };
+    },
+    subscribe: async () => {
+      await delay(50);
+      return { success: true };
+    },
+    unsubscribe: async () => {
+      await delay(50);
+      return { success: true };
+    },
+    triggerGC: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    onStatsUpdate: (): (() => void) => {
+      return () => {};
+    },
+    onPressureChange: (): (() => void) => {
+      return () => {};
+    },
+  },
+
+  // License operations (mock)
+  license: {
+    getMachineId: async () => {
+      await delay(50);
+      return { machineId: 'web-browser-instance' };
+    },
+    createCheckout: async () => {
+      await delay(200);
+      return { url: '' };
+    },
+    activate: async () => {
+      await delay(300);
+      return { success: false };
+    },
+    verify: async () => {
+      await delay(200);
+      return { valid: false };
+    },
+    deactivate: async () => {
+      await delay(200);
+      return { success: true };
+    },
+    getPortalUrl: async () => {
+      await delay(100);
+      return { url: '' };
+    },
+  },
+
+  // SSH operations (mock)
+  ssh: {
+    saveCredentials: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    hasCredentials: async () => {
+      await delay(50);
+      return { hasCredentials: false };
+    },
+    getCredentials: async () => {
+      await delay(50);
+      return { credentials: null };
+    },
+    removeCredentials: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    getTunnelStatus: async () => {
+      await delay(50);
+      return { connected: false };
+    },
+    closeTunnel: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    testConnection: async () => {
+      await delay(300);
+      return { success: false, error: 'SSH not available in web mode' };
+    },
+    hasTunnel: async () => {
+      await delay(50);
+      return { hasTunnel: false };
+    },
+  },
+
+  // Backup operations (mock)
+  backup: {
+    create: async () => {
+      await delay(300);
+      return { success: true };
+    },
+    restore: async () => {
+      await delay(300);
+      return { success: true };
+    },
+    list: async () => {
+      await delay(100);
+      return { backups: [] };
+    },
+    delete: async () => {
+      await delay(100);
+      return { success: true };
+    },
+  },
+
+  // Profile operations (mock)
+  profile: {
+    save: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    update: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    delete: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    getAll: async () => {
+      await delay(100);
+      return { profiles: [] };
+    },
+    export: async () => {
+      await delay(200);
+      return { success: true };
+    },
+    import: async () => {
+      await delay(200);
+      return { success: true };
+    },
+  },
+
+  // Folder operations (mock)
+  folder: {
+    create: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    update: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    delete: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    getAll: async () => {
+      await delay(100);
+      return { folders: [] };
+    },
+  },
+
+  // Plugin operations (mock) — shared between plugin/plugins aliases
+  plugin: mockPluginMethods,
+  plugins: mockPluginMethods,
+
+  // Agent/AI operations (mock)
+  agent: {
+    getSettings: async () => {
+      await delay(100);
+      return { settings: { enabled: false } };
+    },
+    saveSettings: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    sendChat: async () => {
+      await delay(300);
+      return { response: 'AI features are not available in web mode' };
+    },
+    cancelChat: async () => {
+      await delay(50);
+      return { success: true };
+    },
+    onChatStream: (): (() => void) => {
+      return () => {};
+    },
+    getSessions: async () => {
+      await delay(100);
+      return { sessions: [] };
+    },
+    getSession: async () => {
+      await delay(100);
+      return { session: null };
+    },
+    deleteSession: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    clearHistory: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    nlGenerateSQL: async () => {
+      await delay(200);
+      return { sql: '' };
+    },
+    nlExplainSQL: async () => {
+      await delay(200);
+      return { explanation: '' };
+    },
+    nlOptimizeSQL: async () => {
+      await delay(200);
+      return { sql: '' };
+    },
+  },
+
+  // Image operations (mock)
+  image: {
+    getMetadata: async () => {
+      await delay(100);
+      return { metadata: null };
+    },
+    getFileMetadata: async () => {
+      await delay(100);
+      return { metadata: null };
+    },
+    getCacheStats: async () => {
+      await delay(50);
+      return { hits: 0, misses: 0, size: 0 };
+    },
+    clearCache: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    checkUrl: async () => {
+      await delay(100);
+      return { valid: false };
+    },
+    validateUrl: async () => {
+      await delay(100);
+      return { valid: false };
+    },
+    checkFile: async () => {
+      await delay(50);
+      return { exists: false };
+    },
+  },
+
+  // Video operations (mock)
+  video: {
+    getMetadata: async () => {
+      await delay(100);
+      return { metadata: null };
+    },
+    checkUrl: async () => {
+      await delay(100);
+      return { valid: false };
+    },
+    validateUrl: async () => {
+      await delay(100);
+      return { valid: false };
+    },
+    checkFile: async () => {
+      await delay(50);
+      return { exists: false };
+    },
+  },
+
+  // Sharing operations (mock)
+  sharing: {
+    exportBundle: async () => {
+      await delay(200);
+      return { success: false };
+    },
+    importBundle: async () => {
+      await delay(200);
+      return { success: false };
+    },
+    exportQuery: async () => {
+      await delay(100);
+      return { success: false };
+    },
+    importQuery: async () => {
+      await delay(100);
+      return { success: false };
+    },
+    exportSchema: async () => {
+      await delay(200);
+      return { success: false };
+    },
+    importSchema: async () => {
+      await delay(200);
+      return { success: false };
+    },
+  },
+
+  // Data diff operations (mock)
+  dataDiff: {
+    generateSyncSQL: async () => {
+      await delay(200);
+      return { sql: '' };
+    },
+    compareTables: async () => {
+      await delay(300);
+      return { result: null };
+    },
+  },
+
+  // PgNotify operations (mock)
+  pgNotify: {
+    subscribe: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    unsubscribe: async () => {
+      await delay(100);
+      return { success: true };
+    },
+    getSubscriptions: async () => {
+      await delay(50);
+      return { subscriptions: [] };
+    },
+    onEvent: (): (() => void) => {
+      return () => {};
+    },
+  },
+
+  // Database maintenance operations (mock)
+  database: {
+    getDatabaseStats: async () => {
+      await delay(100);
+      return { stats: {} };
+    },
+    vacuum: async () => {
+      await delay(300);
+      return { success: true };
+    },
+    analyze: async () => {
+      await delay(200);
+      return { success: true };
+    },
+    getSchema: async () => {
+      await delay(100);
+      return { schema: {} };
+    },
+    query: async () => {
+      await delay(200);
+      return { rows: [], columns: [] };
+    },
+  },
+
+  // Unsaved changes operations (mock)
+  unsavedChanges: {
+    check: async () => {
+      await delay(50);
+      return { hasChanges: false };
+    },
+  },
+
+  // Schema export/import operations (mock)
+  schema: {
+    export: async () => {
+      await delay(200);
+      return { success: false };
+    },
+    import: async () => {
+      await delay(200);
+      return { success: false };
+    },
+  },
+
+  // Bundle operations (mock)
+  bundle: {
+    export: async () => {
+      await delay(200);
+      return { success: false };
+    },
+    import: async () => {
+      await delay(200);
+      return { success: false };
+    },
+  },
+
+  // Migration operations (mock)
+  migration: {
+    generateSQL: async () => {
+      await delay(200);
+      return { sql: '' };
+    },
+    generateSyncSQL: async () => {
+      await delay(200);
+      return { sql: '' };
+    },
+  },
+
   // SQL log operations (mock)
   sqlLog: {
-    get: async (): Promise<any> => {
+    get: async () => {
       await delay(100);
       return { logs: [] };
     },
-    clear: async (): Promise<any> => {
+    clear: async () => {
       await delay(100);
       return { success: true };
     },
@@ -1328,51 +1892,69 @@ export const mockSqlProAPI: any = {
     },
   },
 
+  // Renderer store operations (mock - uses in-memory storage)
+  rendererStore: {
+    get: async ({ key }: { key: string }) => {
+      try {
+        const stored = localStorage.getItem(`sqlpro-store-${key}`);
+        return {
+          success: true,
+          data: stored ? JSON.parse(stored) : undefined,
+        };
+      } catch {
+        return { success: false, data: undefined };
+      }
+    },
+    set: async ({ key, value }: { key: string; value: unknown }) => {
+      try {
+        localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(value));
+        return { success: true };
+      } catch {
+        return { success: false };
+      }
+    },
+    update: async ({ key, value }: { key: string; value: unknown }) => {
+      try {
+        if (
+          typeof value !== 'object' ||
+          value === null ||
+          Array.isArray(value)
+        ) {
+          localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(value));
+          return { success: true };
+        }
+        const existing = localStorage.getItem(`sqlpro-store-${key}`);
+        const parsed = existing ? JSON.parse(existing) : null;
+        const merged =
+          parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+            ? { ...parsed, ...value }
+            : value;
+        localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(merged));
+        return { success: true };
+      } catch {
+        return { success: false };
+      }
+    },
+    reset: async ({ key }: { key: string }) => {
+      try {
+        localStorage.removeItem(`sqlpro-store-${key}`);
+        return { success: true };
+      } catch {
+        return { success: false };
+      }
+    },
+  },
+
   // App operations (mock)
   app: {
-    getRecentConnections: async (): Promise<any> => {
+    getRecentConnections: async () => {
       await delay(100);
       return {
         success: true,
-        connections: [
-          {
-            id: 'recent-1',
-            path: '/Users/demo/databases/shop.db',
-            filename: 'shop.db',
-            isEncrypted: false,
-            lastOpenedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
-          },
-          {
-            id: 'recent-2',
-            path: '/Users/demo/databases/inventory.db',
-            filename: 'inventory.db',
-            isEncrypted: false,
-            lastOpenedAt: new Date(
-              Date.now() - 1000 * 60 * 60 * 2
-            ).toISOString(), // 2 hours ago
-          },
-          {
-            id: 'recent-3',
-            path: '/Users/demo/databases/analytics.db',
-            filename: 'analytics.db',
-            isEncrypted: true,
-            lastOpenedAt: new Date(
-              Date.now() - 1000 * 60 * 60 * 24
-            ).toISOString(), // 1 day ago
-          },
-          {
-            id: 'recent-4',
-            path: '/Users/demo/projects/webapp/data.sqlite',
-            filename: 'data.sqlite',
-            isEncrypted: false,
-            lastOpenedAt: new Date(
-              Date.now() - 1000 * 60 * 60 * 24 * 3
-            ).toISOString(), // 3 days ago
-          },
-        ],
+        connections: [...mockRecentConnections],
       };
     },
-    getPreferences: async (): Promise<any> => {
+    getPreferences: async () => {
       await delay(50);
       return {
         success: true,
@@ -1383,13 +1965,25 @@ export const mockSqlProAPI: any = {
         },
       };
     },
-    setPreferences: async (): Promise<any> => {
+    setPreferences: async () => {
       await delay(50);
       return { success: true };
     },
     onBeforeQuit: (): (() => void) => {
-      // Return a no-op unsubscribe function in mock mode
       return () => {};
     },
+    confirmQuit: async () => {
+      return { success: true };
+    },
+    removeRecentConnection: async (request?: { connectionId?: string }) => {
+      await delay(50);
+      if (request?.connectionId) {
+        const idx = mockRecentConnections.findIndex(
+          (c) => c.id === request.connectionId
+        );
+        if (idx !== -1) mockRecentConnections.splice(idx, 1);
+      }
+      return { success: true };
+    },
   },
-};
+} as unknown as SqlProAPI;
