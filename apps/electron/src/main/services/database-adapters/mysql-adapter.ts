@@ -842,7 +842,11 @@ export class MySQLAdapter implements DatabaseAdapter {
     }
   }
 
-  executeQuery(_connectionId: string, _query: string) {
+  executeQuery(
+    _connectionId: string,
+    _query: string,
+    _params?: unknown[]
+  ) {
     return {
       success: false as const,
       error: 'Use executeQueryAsync for MySQL connections',
@@ -851,7 +855,8 @@ export class MySQLAdapter implements DatabaseAdapter {
 
   async executeQueryAsync(
     connectionId: string,
-    query: string
+    query: string,
+    params?: unknown[]
   ): Promise<
     | {
         success: true;
@@ -875,7 +880,7 @@ export class MySQLAdapter implements DatabaseAdapter {
 
     try {
       if (isSelect) {
-        const [rows] = (await conn.connection.query(query)) as [
+        const [rows] = (await conn.connection.query(query, params ?? [])) as [
           Array<Record<string, unknown>>,
           unknown,
         ];
@@ -888,7 +893,7 @@ export class MySQLAdapter implements DatabaseAdapter {
           rows: rows as Record<string, unknown>[],
         };
       } else {
-        const [result] = (await conn.connection.execute(query)) as [
+        const [result] = (await conn.connection.execute(query, params ?? [])) as [
           { affectedRows?: number; insertId?: number },
           unknown,
         ];

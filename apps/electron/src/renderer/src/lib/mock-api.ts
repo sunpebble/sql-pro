@@ -36,7 +36,7 @@ import type {
   ValidateChangesRequest,
 } from '@shared/types';
 // Mock API for development and testing
-import type { SqlProAPI } from '../../../preload/index';
+import type { SqlProAPI } from '@shared/types/sql-pro-api';
 
 // Mock tables schema
 const mockTables: TableInfo[] = [

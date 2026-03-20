@@ -671,6 +671,7 @@ export interface GetColumnDistributionResponse {
 export interface ExecuteQueryRequest {
   connectionId: string;
   query: string;
+  params?: unknown[];
 }
 
 /** Single result set from a SELECT query */
@@ -703,6 +704,36 @@ export interface ExecuteQueryResponse {
   suggestions?: string[];
   /** URL to relevant SQLite documentation */
   documentationUrl?: string;
+}
+
+/** Payload for `database:get-stats` / vacuum / analyze-style calls */
+export interface DatabaseConnectionIdRequest {
+  connectionId: string;
+}
+
+export interface DatabaseTableStat {
+  name: string;
+  rowCount: number;
+  size: number;
+}
+
+export interface DatabaseFileStats {
+  pageSize: number;
+  pageCount: number;
+  totalSize: number;
+  freePages: number;
+  tables: DatabaseTableStat[];
+}
+
+export interface GetDatabaseStatsResponse {
+  success: boolean;
+  stats?: DatabaseFileStats;
+  error?: string;
+}
+
+export interface DatabaseMaintenanceResponse {
+  success: boolean;
+  error?: string;
 }
 
 // ============ Change Types ============
@@ -799,6 +830,14 @@ export interface WriteFileResponse {
   error?: string;
   /** Number of bytes written to the file */
   bytesWritten?: number;
+}
+
+export interface FileExistsRequest {
+  path: string;
+}
+
+export interface FileExistsResponse {
+  exists: boolean;
 }
 
 // ============ Export Types ============
@@ -2446,6 +2485,120 @@ export interface ImportSchemaResponse {
   error?: string;
 }
 
+// ============ SSH IPC Request Types ============
+
+export interface SSHCredentialsInput {
+  password?: string;
+  privateKey?: string;
+  passphrase?: string;
+  jumpHostPassword?: string;
+  jumpHostPrivateKey?: string;
+  jumpHostPassphrase?: string;
+}
+
+export interface SSHProfileRequest {
+  profileId: string;
+}
+
+export interface SSHConnectionRequest {
+  connectionId: string;
+}
+
+export interface SSHSaveCredentialsRequest extends SSHProfileRequest {
+  credentials: SSHCredentialsInput;
+}
+
+/** SSH tunnel layout as sent over IPC (renderer ↔ main). */
+export interface SSHTunnelIpcConfig {
+  ssh: {
+    enabled: boolean;
+    host: string;
+    port?: number;
+    username: string;
+    authMethod: 'password' | 'privateKey';
+  };
+  jumpHost?: {
+    enabled: boolean;
+    host: string;
+    port?: number;
+    username: string;
+    authMethod: 'password' | 'privateKey';
+  };
+  remoteHost: string;
+  remotePort: number;
+  localPort?: number;
+}
+
+export interface SSHTestConnectionRequest {
+  config: SSHTunnelIpcConfig;
+  credentials: SSHCredentialsInput;
+}
+
+export interface SSHSaveCredentialsResponse {
+  success: boolean;
+  error?: string;
+}
+
+export interface SSHHasCredentialsResponse {
+  hasCredentials: boolean;
+}
+
+/** Credential fields returned from the secure store (includes profile id). */
+export interface SSHStoredCredentialPayload extends SSHProfileRequest {
+  password?: string;
+  privateKey?: string;
+  passphrase?: string;
+  jumpHostPassword?: string;
+  jumpHostPrivateKey?: string;
+  jumpHostPassphrase?: string;
+}
+
+export interface SSHGetCredentialsResponse {
+  success: boolean;
+  credentials?: SSHStoredCredentialPayload;
+  error?: string;
+}
+
+export interface SSHRemoveCredentialsResponse {
+  success: boolean;
+  error?: string;
+}
+
+export type SSHTunnelLifecycleState =
+  | 'disconnected'
+  | 'connecting'
+  | 'connected'
+  | 'reconnecting'
+  | 'error';
+
+export interface SSHTunnelStatusPayload {
+  state: SSHTunnelLifecycleState;
+  localPort?: number;
+  error?: string;
+  reconnectAttempts?: number;
+}
+
+export interface SSHGetTunnelStatusResponse {
+  success: boolean;
+  status: SSHTunnelStatusPayload | null;
+  error?: string;
+}
+
+export interface SSHCloseTunnelResponse {
+  success: boolean;
+  error?: string;
+}
+
+export interface SSHTestConnectionResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
+export interface SSHHasTunnelResponse {
+  hasTunnel: boolean;
+}
+
 // ============ Shareable Types ============
 
 export interface ShareableMetadata {
@@ -2521,6 +2674,124 @@ export interface CompressionInfo {
   compressedSize?: number;
 }
 
+// ============ Media Types ============
+
+export interface ImageMetadata {
+  width: number;
+  height: number;
+  format: string;
+  size: number;
+  space?: string;
+  channels?: number;
+  depth?: string;
+  hasAlpha?: boolean;
+  isAnimated?: boolean;
+  density?: number;
+  pages?: number;
+  orientation?: number;
+  chromaSubsampling?: string;
+  isProgressive?: boolean;
+  compression?: string;
+  resolutionUnit?: string;
+  iccProfile?: string;
+}
+
+export interface ImageFileMetadata extends ImageMetadata {
+  fileName?: string;
+  filePath?: string;
+  createdAt?: string;
+  modifiedAt?: string;
+}
+
+export interface ImageCheckUrlResponse {
+  success: boolean;
+  isImage: boolean;
+  isVideo?: boolean;
+  mimeType?: string;
+  contentLength?: number;
+  error?: string;
+}
+
+export interface ImageValidateUrlResponse {
+  success: boolean;
+  isValid: boolean;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+  format?: string;
+  size?: number;
+  error?: string;
+}
+
+export interface ImageCheckFileResponse {
+  success: boolean;
+  exists: boolean;
+  error?: string;
+}
+
+export interface ImageGetMetadataResponse {
+  success: boolean;
+  metadata?: ImageMetadata;
+  error?: string;
+}
+
+export interface ImageGetFileMetadataResponse {
+  success: boolean;
+  metadata?: ImageFileMetadata;
+  error?: string;
+}
+
+export interface ImageGetCacheStatsResponse {
+  success: boolean;
+  stats: {
+    entries: number;
+    size: number;
+    maxEntries: number;
+    maxSize: number;
+  };
+}
+
+export interface VideoMetadata {
+  width: number;
+  height: number;
+  duration: number;
+  format: string;
+  codec: string;
+  bitrate?: number;
+  fps?: number;
+  size: number;
+}
+
+export interface VideoGetMetadataResponse {
+  success: boolean;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
+export interface VideoCheckUrlResponse {
+  success: boolean;
+  isVideo: boolean;
+  mimeType?: string;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
+export interface VideoValidateUrlResponse {
+  success: boolean;
+  isVideo: boolean;
+  mimeType?: string;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
+export interface VideoCheckFileResponse {
+  success: boolean;
+  isVideo: boolean;
+  mimeType?: string;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
 // ============ IPC Channel Definitions ============
 
 export interface IPCChannels {
@@ -2555,6 +2826,7 @@ export interface IPCChannels {
 
   // File Operations
   'file:write': [WriteFileRequest, WriteFileResponse];
+  'file:exists': [FileExistsRequest, FileExistsResponse];
 
   // Export
   'export:data': [ExportRequest, ExportResponse];
@@ -2897,6 +3169,7 @@ export const IPC_CHANNELS = {
   DIALOG_SAVE_FILE: 'dialog:save-file',
 
   // File Operations
+  FILE_EXISTS: 'file:exists',
   FILE_WRITE: 'file:write',
 
   // Export
@@ -3115,6 +3388,11 @@ export const IPC_CHANNELS = {
 
   // Prevent quit
   PREVENT_QUIT: 'app:prevent-quit',
+  APP_CONFIRM_QUIT: 'app:confirm-quit',
+  APP_REMOVE_RECENT_CONNECTION: 'app:remove-recent-connection',
+
+  // Table
+  TABLE_GET_COLUMN_DISTRIBUTION: 'table:get-column-distribution',
 
   // PRO
   PRO_CLEAR_STATUS: 'pro:clear-status',
@@ -3134,6 +3412,40 @@ export const IPC_CHANNELS = {
   // Schema export/import aliases
   SCHEMA_EXPORT: 'export:schema',
   SCHEMA_IMPORT: 'import:schema',
+  SHARING_EXPORT_BUNDLE: 'sharing:export-bundle',
+  SHARING_IMPORT_BUNDLE: 'sharing:import-bundle',
+  SHARING_EXPORT_QUERY: 'sharing:export-query',
+  SHARING_IMPORT_QUERY: 'sharing:import-query',
+
+  // Image
+  IMAGE_GET_METADATA: 'image:get-metadata',
+  IMAGE_GET_FILE_METADATA: 'image:get-file-metadata',
+  IMAGE_GET_CACHE_STATS: 'image:get-cache-stats',
+  IMAGE_CLEAR_CACHE: 'image:clear-cache',
+  IMAGE_CHECK_URL: 'image:check-url',
+  IMAGE_VALIDATE_URL: 'image:validate-url',
+  IMAGE_CHECK_FILE: 'image:check-file',
+
+  // Video
+  VIDEO_GET_METADATA: 'video:get-metadata',
+  VIDEO_CHECK_URL: 'video:check-url',
+  VIDEO_VALIDATE_URL: 'video:validate-url',
+  VIDEO_CHECK_FILE: 'video:check-file',
+
+  // SSH
+  SSH_SAVE_CREDENTIALS: 'ssh:save-credentials',
+  SSH_HAS_CREDENTIALS: 'ssh:has-credentials',
+  SSH_GET_CREDENTIALS: 'ssh:get-credentials',
+  SSH_REMOVE_CREDENTIALS: 'ssh:remove-credentials',
+  SSH_GET_TUNNEL_STATUS: 'ssh:get-tunnel-status',
+  SSH_CLOSE_TUNNEL: 'ssh:close-tunnel',
+  SSH_TEST_CONNECTION: 'ssh:test-connection',
+  SSH_HAS_TUNNEL: 'ssh:has-tunnel',
+
+  // Database extended
+  DATABASE_GET_STATS: 'database:get-stats',
+  DATABASE_VACUUM: 'database:vacuum',
+  DATABASE_ANALYZE: 'database:analyze',
 
   // Memory monitoring
   MEMORY_GET_STATS: 'memory:get-stats',

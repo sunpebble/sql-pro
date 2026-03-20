@@ -1,4 +1,6 @@
 import type {
+  FileExistsRequest,
+  FileExistsResponse,
   OpenFileDialogRequest,
   SaveFileDialogRequest,
   WriteFileRequest,
@@ -6,7 +8,8 @@ import type {
 } from '@shared/types';
 import { Buffer } from 'node:buffer';
 import { randomBytes } from 'node:crypto';
-import { rename, unlink, writeFile } from 'node:fs/promises';
+import { constants as fsConstants } from 'node:fs';
+import { access, rename, unlink, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { IPC_CHANNELS } from '@shared/types';
 import { dialog, ipcMain } from 'electron';
@@ -49,6 +52,28 @@ export function setupDialogHandlers(): void {
       }
 
       return { success: true, filePath: result.filePath };
+    }
+  );
+
+  // File: path exists (main process; avoids renderer fs access)
+  ipcMain.handle(
+    IPC_CHANNELS.FILE_EXISTS,
+    async (_event, request: unknown): Promise<FileExistsResponse> => {
+      if (
+        !request ||
+        typeof request !== 'object' ||
+        typeof (request as FileExistsRequest).path !== 'string' ||
+        (request as FileExistsRequest).path.length === 0
+      ) {
+        return { exists: false };
+      }
+      const { path: filePath } = request as FileExistsRequest;
+      try {
+        await access(filePath, fsConstants.F_OK);
+        return { exists: true };
+      } catch {
+        return { exists: false };
+      }
     }
   );
 

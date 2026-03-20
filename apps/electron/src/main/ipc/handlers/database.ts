@@ -509,13 +509,22 @@ export class DatabaseHandler extends IpcHandler {
     }
 
     const startTime = Date.now();
+    if (request.params !== undefined && !Array.isArray(request.params)) {
+      return {
+        success: false,
+        error: 'Query params must be an array when provided',
+        errorCode: 'QUERY_EXECUTION_ERROR',
+        executionTime: Date.now() - startTime,
+      };
+    }
     let result: unknown;
 
     // Check if connection is async (MySQL/PostgreSQL)
     if (databaseManager.isAsyncConnection(request.connectionId)) {
       result = await databaseManager.executeQueryAsync(
         request.connectionId,
-        request.query
+        request.query,
+        request.params
       );
     } else {
       // Try database manager for new connections
@@ -523,13 +532,15 @@ export class DatabaseHandler extends IpcHandler {
       if (conn) {
         result = databaseManager.executeQuery(
           request.connectionId,
-          request.query
+          request.query,
+          request.params
         );
       } else {
         // Fall back to legacy database service
         result = databaseService.executeQuery(
           request.connectionId,
-          request.query
+          request.query,
+          request.params
         );
       }
     }

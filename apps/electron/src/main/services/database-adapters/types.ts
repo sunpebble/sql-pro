@@ -153,7 +153,8 @@ export interface DatabaseAdapter {
    */
   executeQueryAsync?: (
     connectionId: string,
-    query: string
+    query: string,
+    params?: unknown[]
   ) => Promise<
     | {
         success: true;
@@ -330,7 +331,8 @@ export interface DatabaseAdapter {
    */
   executeQuery: (
     connectionId: string,
-    query: string
+    query: string,
+    params?: unknown[]
   ) =>
     | {
         success: true;

@@ -599,18 +599,22 @@ class DatabaseManager {
   /**
    * Execute one or more SQL statements
    */
-  executeQuery(connectionId: string, query: string) {
+  executeQuery(connectionId: string, query: string, params?: unknown[]) {
     const adapter = this.getConnectionAdapter(connectionId);
     if (!adapter) {
       return { success: false as const, error: 'Connection not found' };
     }
-    return adapter.executeQuery(connectionId, query);
+    return adapter.executeQuery(connectionId, query, params);
   }
 
   /**
    * Execute query async (for MySQL/PostgreSQL)
    */
-  async executeQueryAsync(connectionId: string, query: string) {
+  async executeQueryAsync(
+    connectionId: string,
+    query: string,
+    params?: unknown[]
+  ) {
     const managed = this.connections.get(connectionId);
     if (!managed) {
       return { success: false as const, error: 'Connection not found' };
@@ -619,10 +623,10 @@ class DatabaseManager {
     const adapter = managed.adapter;
 
     if (adapter.executeQueryAsync) {
-      return adapter.executeQueryAsync(connectionId, query);
+      return adapter.executeQueryAsync(connectionId, query, params);
     }
 
-    return adapter.executeQuery(connectionId, query);
+    return adapter.executeQuery(connectionId, query, params);
   }
 
   /**
