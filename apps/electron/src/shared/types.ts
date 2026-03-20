@@ -706,6 +706,36 @@ export interface ExecuteQueryResponse {
   documentationUrl?: string;
 }
 
+/** Payload for `database:get-stats` / vacuum / analyze-style calls */
+export interface DatabaseConnectionIdRequest {
+  connectionId: string;
+}
+
+export interface DatabaseTableStat {
+  name: string;
+  rowCount: number;
+  size: number;
+}
+
+export interface DatabaseFileStats {
+  pageSize: number;
+  pageCount: number;
+  totalSize: number;
+  freePages: number;
+  tables: DatabaseTableStat[];
+}
+
+export interface GetDatabaseStatsResponse {
+  success: boolean;
+  stats?: DatabaseFileStats;
+  error?: string;
+}
+
+export interface DatabaseMaintenanceResponse {
+  success: boolean;
+  error?: string;
+}
+
 // ============ Change Types ============
 
 export type ChangeType = 'insert' | 'update' | 'delete';

@@ -30,6 +30,8 @@ import type {
   CreateFolderRequest,
   CreateFolderResponse,
   CreateWindowResponse,
+  DatabaseConnectionIdRequest,
+  DatabaseMaintenanceResponse,
   DeleteBackupRequest,
   DeleteBackupResponse,
   DeleteFolderRequest,
@@ -65,6 +67,7 @@ import type {
   GetColumnDistributionRequest,
   GetColumnDistributionResponse,
   GetCurrentWindowResponse,
+  GetDatabaseStatsResponse,
   GetFoldersRequest,
   GetFoldersResponse,
   GetMemoryStatsRequest,
@@ -211,6 +214,7 @@ import type {
   GetRendererStateRequest,
   GetRendererStateResponse,
   RendererStoreSchema,
+  ResetRendererStateRequest,
   SetRendererStateRequest,
   SetRendererStateResponse,
   UpdateRendererStateRequest,
@@ -234,6 +238,62 @@ export interface SqlProApiDeps {
 /** Platform-agnostic factory: Electron preload passes ipcRenderer + webUtils. */
 export function createSqlProAPI(deps: SqlProApiDeps) {
   const { invoke, on, off, getPathForFile } = deps;
+
+  const updateNamespace = {
+    check: (silent = true): Promise<{ success: boolean; error?: string }> =>
+      invoke(IPC_CHANNELS.UPDATE_CHECK, silent),
+    download: (): Promise<{ success: boolean; error?: string }> =>
+      invoke(IPC_CHANNELS.UPDATE_DOWNLOAD),
+    install: (): Promise<{ success: boolean; error?: string }> =>
+      invoke(IPC_CHANNELS.UPDATE_INSTALL),
+  };
+
+  const systemNamespace = {
+    showItemInFolder: (
+      request: ShowItemInFolderRequest
+    ): Promise<ShowItemInFolderResponse> =>
+      invoke(IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER, request),
+    openExternal: (
+      request: OpenExternalRequest
+    ): Promise<OpenExternalResponse> =>
+      invoke(IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL, request),
+  };
+
+  const pluginNamespace = {
+    list: (request?: ListPluginsRequest): Promise<ListPluginsResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_LIST, request || {}),
+    get: (request: GetPluginRequest): Promise<GetPluginResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_GET, request),
+    install: (request: InstallPluginRequest): Promise<InstallPluginResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_INSTALL, request),
+    uninstall: (
+      request: UninstallPluginRequest
+    ): Promise<UninstallPluginResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_UNINSTALL, request),
+    enable: (request: EnablePluginRequest): Promise<EnablePluginResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_ENABLE, request),
+    disable: (request: DisablePluginRequest): Promise<DisablePluginResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_DISABLE, request),
+    update: (request: UpdatePluginRequest): Promise<UpdatePluginResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_UPDATE, request),
+    fetchMarketplace: (
+      request?: FetchMarketplaceRequest
+    ): Promise<FetchMarketplaceResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_FETCH_MARKETPLACE, request || {}),
+    checkUpdates: (
+      request: CheckUpdatesRequest
+    ): Promise<CheckUpdatesResponse> =>
+      invoke(IPC_CHANNELS.PLUGIN_CHECK_UPDATES, request),
+    onEvent: (callback: (event: PluginEvent) => void): (() => void) => {
+      const handler = (
+        _event: unknown,
+        pluginEvent: PluginEvent
+      ) => callback(pluginEvent);
+      on(IPC_CHANNELS.PLUGIN_EVENT, handler);
+      return () => off(IPC_CHANNELS.PLUGIN_EVENT, handler);
+    },
+  };
+
   return {
   // Database operations
   db: {
@@ -763,36 +823,20 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
   },
 
   // System operations
-  system: {
-    showItemInFolder: (
-      request: ShowItemInFolderRequest
-    ): Promise<ShowItemInFolderResponse> =>
-      invoke(IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER, request),
-    openExternal: (
-      request: OpenExternalRequest
-    ): Promise<OpenExternalResponse> =>
-      invoke(IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL, request),
-  },
+  system: systemNamespace,
+
+  /**
+   * @deprecated Use `system` instead. Same implementation as `system` (single IPC surface).
+   */
+  shell: systemNamespace,
 
   // Auto-update operations
-  update: {
-    check: (silent = true): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_CHECK, silent),
-    download: (): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_DOWNLOAD),
-    install: (): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_INSTALL),
-  },
+  update: updateNamespace,
 
-  // Alias for backwards compatibility
-  updates: {
-    check: (silent = true): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_CHECK, silent),
-    download: (): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_DOWNLOAD),
-    install: (): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_INSTALL),
-  },
+  /**
+   * @deprecated Use `update` instead. Same implementation as `update`.
+   */
+  updates: updateNamespace,
 
   // Schema snapshot operations
   schemaSnapshot: {
@@ -868,94 +912,30 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
   },
 
   // Plugin operations
-  plugin: {
-    list: (request?: ListPluginsRequest): Promise<ListPluginsResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_LIST, request || {}),
-    get: (request: GetPluginRequest): Promise<GetPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_GET, request),
-    install: (request: InstallPluginRequest): Promise<InstallPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_INSTALL, request),
-    uninstall: (
-      request: UninstallPluginRequest
-    ): Promise<UninstallPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_UNINSTALL, request),
-    enable: (request: EnablePluginRequest): Promise<EnablePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_ENABLE, request),
-    disable: (request: DisablePluginRequest): Promise<DisablePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_DISABLE, request),
-    update: (request: UpdatePluginRequest): Promise<UpdatePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_UPDATE, request),
-    fetchMarketplace: (
-      request?: FetchMarketplaceRequest
-    ): Promise<FetchMarketplaceResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_FETCH_MARKETPLACE, request || {}),
-    checkUpdates: (
-      request: CheckUpdatesRequest
-    ): Promise<CheckUpdatesResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_CHECK_UPDATES, request),
-    onEvent: (callback: (event: PluginEvent) => void): (() => void) => {
-      const handler = (
-        _event: unknown,
-        pluginEvent: PluginEvent
-      ) => callback(pluginEvent);
-      on(IPC_CHANNELS.PLUGIN_EVENT, handler);
-      return () => off(IPC_CHANNELS.PLUGIN_EVENT, handler);
-    },
-  },
+  plugin: pluginNamespace,
 
-  // Alias for backwards compatibility
-  plugins: {
-    list: (request?: ListPluginsRequest): Promise<ListPluginsResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_LIST, request || {}),
-    get: (request: GetPluginRequest): Promise<GetPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_GET, request),
-    install: (request: InstallPluginRequest): Promise<InstallPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_INSTALL, request),
-    uninstall: (
-      request: UninstallPluginRequest
-    ): Promise<UninstallPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_UNINSTALL, request),
-    enable: (request: EnablePluginRequest): Promise<EnablePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_ENABLE, request),
-    disable: (request: DisablePluginRequest): Promise<DisablePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_DISABLE, request),
-    update: (request: UpdatePluginRequest): Promise<UpdatePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_UPDATE, request),
-    fetchMarketplace: (
-      request?: FetchMarketplaceRequest
-    ): Promise<FetchMarketplaceResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_FETCH_MARKETPLACE, request || {}),
-    checkUpdates: (
-      request: CheckUpdatesRequest
-    ): Promise<CheckUpdatesResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_CHECK_UPDATES, request),
-    onEvent: (callback: (event: PluginEvent) => void): (() => void) => {
-      const handler = (
-        _event: unknown,
-        pluginEvent: PluginEvent
-      ) => callback(pluginEvent);
-      on(IPC_CHANNELS.PLUGIN_EVENT, handler);
-      return () => off(IPC_CHANNELS.PLUGIN_EVENT, handler);
-    },
-  },
+  /**
+   * @deprecated Use `plugin` instead. Same implementation as `plugin`.
+   */
+  plugins: pluginNamespace,
 
   // Renderer store persistence operations
   rendererStore: {
     get: <K extends keyof RendererStoreSchema>(
-      request: GetRendererStateRequest
+      request: GetRendererStateRequest<K>
     ): Promise<GetRendererStateResponse<RendererStoreSchema[K]>> =>
       invoke(RENDERER_STORE_CHANNELS.GET, request),
     set: <K extends keyof RendererStoreSchema>(
-      request: SetRendererStateRequest<RendererStoreSchema[K]>
+      request: SetRendererStateRequest<K>
     ): Promise<SetRendererStateResponse> =>
       invoke(RENDERER_STORE_CHANNELS.SET, request),
     update: <K extends keyof RendererStoreSchema>(
-      request: UpdateRendererStateRequest<Partial<RendererStoreSchema[K]>>
+      request: UpdateRendererStateRequest<K>
     ): Promise<UpdateRendererStateResponse> =>
       invoke(RENDERER_STORE_CHANNELS.UPDATE, request),
-    reset: (request: {
-      key: keyof RendererStoreSchema;
-    }): Promise<SetRendererStateResponse> =>
+    reset: <K extends keyof RendererStoreSchema>(
+      request: ResetRendererStateRequest<K>
+    ): Promise<SetRendererStateResponse> =>
       invoke(RENDERER_STORE_CHANNELS.RESET, request),
   },
 
@@ -1014,40 +994,19 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       invoke(IPC_CHANNELS.VIDEO_CHECK_FILE, request),
   },
 
-  // Shell operations
-  shell: {
-    openExternal: (
-      request: OpenExternalRequest
-    ): Promise<OpenExternalResponse> =>
-      invoke(IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL, request),
-    showItemInFolder: (
-      request: ShowItemInFolderRequest
-    ): Promise<ShowItemInFolderResponse> =>
-      invoke(IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER, request),
-  },
-
   // Database operations (extended)
   database: {
-    getDatabaseStats: (request: {
-      connectionId: string;
-    }): Promise<{
-      success: boolean;
-      stats?: {
-        pageSize: number;
-        pageCount: number;
-        totalSize: number;
-        freePages: number;
-        tables: { name: string; rowCount: number; size: number }[];
-      };
-      error?: string;
-    }> => invoke(IPC_CHANNELS.DATABASE_GET_STATS, request),
-    vacuum: (request: {
-      connectionId: string;
-    }): Promise<{ success: boolean; error?: string }> =>
+    getDatabaseStats: (
+      request: DatabaseConnectionIdRequest
+    ): Promise<GetDatabaseStatsResponse> =>
+      invoke(IPC_CHANNELS.DATABASE_GET_STATS, request),
+    vacuum: (
+      request: DatabaseConnectionIdRequest
+    ): Promise<DatabaseMaintenanceResponse> =>
       invoke(IPC_CHANNELS.DATABASE_VACUUM, request),
-    analyze: (request: {
-      connectionId: string;
-    }): Promise<{ success: boolean; error?: string }> =>
+    analyze: (
+      request: DatabaseConnectionIdRequest
+    ): Promise<DatabaseMaintenanceResponse> =>
       invoke(IPC_CHANNELS.DATABASE_ANALYZE, request),
     // Aliases for schema and query to match component usage
     getSchema: (connectionId: string): Promise<GetSchemaResponse> =>

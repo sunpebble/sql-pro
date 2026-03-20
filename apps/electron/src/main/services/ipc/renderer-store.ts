@@ -4,7 +4,7 @@
 
 import type {
   GetRendererStateRequest,
-  RendererStoreSchema,
+  ResetRendererStateRequest,
   SetRendererStateRequest,
   UpdateRendererStateRequest,
 } from '@shared/types/renderer-store';
@@ -32,10 +32,7 @@ export function setupRendererStoreHandlers(): void {
   ipcMain.handle(
     RENDERER_STORE_CHANNELS.SET,
     createHandler(async (request: SetRendererStateRequest) => {
-      setRendererState(
-        request.key,
-        request.value as RendererStoreSchema[typeof request.key]
-      );
+      setRendererState(request.key, request.value);
       return {};
     })
   );
@@ -44,10 +41,7 @@ export function setupRendererStoreHandlers(): void {
   ipcMain.handle(
     RENDERER_STORE_CHANNELS.UPDATE,
     createHandler(async (request: UpdateRendererStateRequest) => {
-      updateRendererState(
-        request.key,
-        request.updates as Partial<RendererStoreSchema[typeof request.key]>
-      );
+      updateRendererState(request.key, request.updates);
       return {};
     })
   );
@@ -55,7 +49,7 @@ export function setupRendererStoreHandlers(): void {
   // Reset state for a specific key to defaults
   ipcMain.handle(
     RENDERER_STORE_CHANNELS.RESET,
-    createHandler(async (request: { key: keyof RendererStoreSchema }) => {
+    createHandler(async (request: ResetRendererStateRequest) => {
       resetRendererState(request.key);
       return {};
     })

@@ -6,7 +6,7 @@
 
 import type {
   GetRendererStateRequest,
-  RendererStoreSchema,
+  ResetRendererStateRequest,
   SetRendererStateRequest,
   UpdateRendererStateRequest,
 } from '@shared/types/renderer-store';
@@ -44,10 +44,7 @@ export class RendererStoreHandler extends IpcHandler {
     request: SetRendererStateRequest,
     _ctx: HandlerContext
   ): Promise<Record<string, never>> {
-    setRendererState(
-      request.key,
-      request.value as RendererStoreSchema[typeof request.key]
-    );
+    setRendererState(request.key, request.value);
     return {};
   }
 
@@ -55,15 +52,12 @@ export class RendererStoreHandler extends IpcHandler {
     request: UpdateRendererStateRequest,
     _ctx: HandlerContext
   ): Promise<Record<string, never>> {
-    updateRendererState(
-      request.key,
-      request.updates as Partial<RendererStoreSchema[typeof request.key]>
-    );
+    updateRendererState(request.key, request.updates);
     return {};
   }
 
   private async reset(
-    request: { key: keyof RendererStoreSchema },
+    request: ResetRendererStateRequest,
     _ctx: HandlerContext
   ): Promise<Record<string, never>> {
     resetRendererState(request.key);
