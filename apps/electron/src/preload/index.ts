@@ -6,8 +6,7 @@ import { contextBridge, ipcRenderer, webUtils } from 'electron';
 export type { SqlProAPI };
 
 export const sqlProAPI = createSqlProAPI({
-  invoke: (channel, ...args) =>
-    ipcRenderer.invoke(channel as never, ...(args as never[])),
+  invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
   on: (channel, listener) => ipcRenderer.on(channel, listener),
   off: (channel, listener) => ipcRenderer.off(channel, listener),
   getPathForFile: (file) => webUtils.getPathForFile(file),

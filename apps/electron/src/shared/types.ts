@@ -832,6 +832,14 @@ export interface WriteFileResponse {
   bytesWritten?: number;
 }
 
+export interface FileExistsRequest {
+  path: string;
+}
+
+export interface FileExistsResponse {
+  exists: boolean;
+}
+
 // ============ Export Types ============
 
 /** Supported export formats */
@@ -2750,6 +2758,7 @@ export interface IPCChannels {
 
   // File Operations
   'file:write': [WriteFileRequest, WriteFileResponse];
+  'file:exists': [FileExistsRequest, FileExistsResponse];
 
   // Export
   'export:data': [ExportRequest, ExportResponse];
