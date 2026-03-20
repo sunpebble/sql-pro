@@ -1119,9 +1119,9 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         jumpHostPassphrase?: string;
       }
     ): Promise<{ success: boolean }> =>
-      invoke('ssh:save-credentials', profileId, credentials),
+      invoke('ssh:save-credentials', { profileId, credentials }),
     hasCredentials: (profileId: string): Promise<{ hasCredentials: boolean }> =>
-      invoke('ssh:has-credentials', profileId),
+      invoke('ssh:has-credentials', { profileId }),
     getCredentials: (
       profileId: string
     ): Promise<{
@@ -1135,9 +1135,9 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         jumpHostPrivateKey?: string;
         jumpHostPassphrase?: string;
       };
-    }> => invoke('ssh:get-credentials', profileId),
+    }> => invoke('ssh:get-credentials', { profileId }),
     removeCredentials: (profileId: string): Promise<{ success: boolean }> =>
-      invoke('ssh:remove-credentials', profileId),
+      invoke('ssh:remove-credentials', { profileId }),
     getTunnelStatus: (
       connectionId: string
     ): Promise<{
@@ -1153,9 +1153,9 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         error?: string;
         reconnectAttempts?: number;
       } | null;
-    }> => invoke('ssh:get-tunnel-status', connectionId),
+    }> => invoke('ssh:get-tunnel-status', { connectionId }),
     closeTunnel: (connectionId: string): Promise<{ success: boolean }> =>
-      invoke('ssh:close-tunnel', connectionId),
+      invoke('ssh:close-tunnel', { connectionId }),
     testConnection: (
       config: {
         ssh: {
@@ -1185,9 +1185,9 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         jumpHostPassphrase?: string;
       }
     ): Promise<{ success: boolean; message?: string; error?: string }> =>
-      invoke('ssh:test-connection', config, credentials),
+      invoke('ssh:test-connection', { config, credentials }),
     hasTunnel: (connectionId: string): Promise<{ hasTunnel: boolean }> =>
-      invoke('ssh:has-tunnel', connectionId),
+      invoke('ssh:has-tunnel', { connectionId }),
   },
   };
 }
