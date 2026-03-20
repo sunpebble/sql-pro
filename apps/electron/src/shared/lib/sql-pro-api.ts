@@ -437,7 +437,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
   file: {
     getPathForFile: (file: File): string => getPathForFile(file),
     exists: (request: { path: string }): Promise<{ exists: boolean }> =>
-      invoke('file:exists', request),
+      invoke(IPC_CHANNELS.FILE_EXISTS, request),
     write: (request: WriteFileRequest): Promise<WriteFileResponse> =>
       invoke(IPC_CHANNELS.FILE_WRITE, request),
   },
@@ -963,28 +963,31 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
   image: {
     getMetadata: (request: {
       url: string;
-    }): Promise<ImageGetMetadataResponse> => invoke('image:get-metadata', request),
+    }): Promise<ImageGetMetadataResponse> =>
+      invoke(IPC_CHANNELS.IMAGE_GET_METADATA, request),
     getFileMetadata: (request: {
       path: string;
     }): Promise<ImageGetFileMetadataResponse> =>
-      invoke('image:get-file-metadata', request),
+      invoke(IPC_CHANNELS.IMAGE_GET_FILE_METADATA, request),
     getCacheStats: (): Promise<ImageGetCacheStatsResponse> =>
-      invoke('image:get-cache-stats'),
+      invoke(IPC_CHANNELS.IMAGE_GET_CACHE_STATS),
     clearCache: (): Promise<{ success: boolean }> =>
-      invoke('image:clear-cache'),
+      invoke(IPC_CHANNELS.IMAGE_CLEAR_CACHE),
     /** Check if URL is media (image or video) using HEAD request preflight */
     checkUrl: (request: {
       url: string;
-    }): Promise<ImageCheckUrlResponse> => invoke('image:check-url', request),
+    }): Promise<ImageCheckUrlResponse> =>
+      invoke(IPC_CHANNELS.IMAGE_CHECK_URL, request),
     /** Full validation: HEAD check + Sharp metadata extraction */
     validateUrl: (request: {
       url: string;
     }): Promise<ImageValidateUrlResponse> =>
-      invoke('image:validate-url', request),
+      invoke(IPC_CHANNELS.IMAGE_VALIDATE_URL, request),
     /** Check if local file exists */
     checkFile: (request: {
       path: string;
-    }): Promise<ImageCheckFileResponse> => invoke('image:check-file', request),
+    }): Promise<ImageCheckFileResponse> =>
+      invoke(IPC_CHANNELS.IMAGE_CHECK_FILE, request),
   },
 
   // Video operations (ffprobe-based detection)
@@ -992,20 +995,23 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
     /** Get video metadata using ffprobe */
     getMetadata: (request: {
       url: string;
-    }): Promise<VideoGetMetadataResponse> => invoke('video:get-metadata', request),
+    }): Promise<VideoGetMetadataResponse> =>
+      invoke(IPC_CHANNELS.VIDEO_GET_METADATA, request),
     /** Check if URL is a video using HEAD request + magic bytes */
     checkUrl: (request: {
       url: string;
-    }): Promise<VideoCheckUrlResponse> => invoke('video:check-url', request),
+    }): Promise<VideoCheckUrlResponse> =>
+      invoke(IPC_CHANNELS.VIDEO_CHECK_URL, request),
     /** Full video validation using ffprobe */
     validateUrl: (request: {
       url: string;
     }): Promise<VideoValidateUrlResponse> =>
-      invoke('video:validate-url', request),
+      invoke(IPC_CHANNELS.VIDEO_VALIDATE_URL, request),
     /** Check if local file is a video */
     checkFile: (request: {
       path: string;
-    }): Promise<VideoCheckFileResponse> => invoke('video:check-file', request),
+    }): Promise<VideoCheckFileResponse> =>
+      invoke(IPC_CHANNELS.VIDEO_CHECK_FILE, request),
   },
 
   // Shell operations
@@ -1063,15 +1069,15 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
     exportBundle: (
       request: ExportBundleRequest
     ): Promise<ExportBundleResponse> =>
-      invoke('sharing:export-bundle', request),
+      invoke(IPC_CHANNELS.SHARING_EXPORT_BUNDLE, request),
     importBundle: (
       request: ImportBundleRequest
     ): Promise<ImportBundleResponse> =>
-      invoke('sharing:import-bundle', request),
+      invoke(IPC_CHANNELS.SHARING_IMPORT_BUNDLE, request),
     exportQuery: (request: ExportQueryRequest): Promise<ExportQueryResponse> =>
-      invoke('sharing:export-query', request),
+      invoke(IPC_CHANNELS.SHARING_EXPORT_QUERY, request),
     importQuery: (request: ImportQueryRequest): Promise<ImportQueryResponse> =>
-      invoke('sharing:import-query', request),
+      invoke(IPC_CHANNELS.SHARING_IMPORT_QUERY, request),
     exportSchema: (
       request: ExportSchemaRequest
     ): Promise<ExportSchemaResponse> =>

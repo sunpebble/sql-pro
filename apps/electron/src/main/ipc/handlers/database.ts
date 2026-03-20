@@ -515,7 +515,8 @@ export class DatabaseHandler extends IpcHandler {
     if (databaseManager.isAsyncConnection(request.connectionId)) {
       result = await databaseManager.executeQueryAsync(
         request.connectionId,
-        request.query
+        request.query,
+        request.params
       );
     } else {
       // Try database manager for new connections
@@ -523,13 +524,15 @@ export class DatabaseHandler extends IpcHandler {
       if (conn) {
         result = databaseManager.executeQuery(
           request.connectionId,
-          request.query
+          request.query,
+          request.params
         );
       } else {
         // Fall back to legacy database service
         result = databaseService.executeQuery(
           request.connectionId,
-          request.query
+          request.query,
+          request.params
         );
       }
     }

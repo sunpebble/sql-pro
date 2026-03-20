@@ -671,6 +671,7 @@ export interface GetColumnDistributionResponse {
 export interface ExecuteQueryRequest {
   connectionId: string;
   query: string;
+  params?: unknown[];
 }
 
 /** Single result set from a SELECT query */
@@ -3015,6 +3016,7 @@ export const IPC_CHANNELS = {
   DIALOG_SAVE_FILE: 'dialog:save-file',
 
   // File Operations
+  FILE_EXISTS: 'file:exists',
   FILE_WRITE: 'file:write',
 
   // Export
@@ -3257,6 +3259,25 @@ export const IPC_CHANNELS = {
   // Schema export/import aliases
   SCHEMA_EXPORT: 'export:schema',
   SCHEMA_IMPORT: 'import:schema',
+  SHARING_EXPORT_BUNDLE: 'sharing:export-bundle',
+  SHARING_IMPORT_BUNDLE: 'sharing:import-bundle',
+  SHARING_EXPORT_QUERY: 'sharing:export-query',
+  SHARING_IMPORT_QUERY: 'sharing:import-query',
+
+  // Image
+  IMAGE_GET_METADATA: 'image:get-metadata',
+  IMAGE_GET_FILE_METADATA: 'image:get-file-metadata',
+  IMAGE_GET_CACHE_STATS: 'image:get-cache-stats',
+  IMAGE_CLEAR_CACHE: 'image:clear-cache',
+  IMAGE_CHECK_URL: 'image:check-url',
+  IMAGE_VALIDATE_URL: 'image:validate-url',
+  IMAGE_CHECK_FILE: 'image:check-file',
+
+  // Video
+  VIDEO_GET_METADATA: 'video:get-metadata',
+  VIDEO_CHECK_URL: 'video:check-url',
+  VIDEO_VALIDATE_URL: 'video:validate-url',
+  VIDEO_CHECK_FILE: 'video:check-file',
 
   // Memory monitoring
   MEMORY_GET_STATS: 'memory:get-stats',

@@ -679,7 +679,8 @@ export class QdrantAdapter implements DatabaseAdapter {
 
   executeQuery(
     _connectionId: string,
-    _query: string
+    _query: string,
+    _params?: unknown[]
   ):
     | {
         success: true;
