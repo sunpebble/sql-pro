@@ -7,10 +7,109 @@
  * - Connection testing
  */
 
+import type {
+  SSHConnectionRequest,
+  SSHCredentialsInput,
+  SSHProfileRequest,
+  SSHSaveCredentialsRequest,
+  SSHTestConnectionRequest,
+} from '@shared/types';
 import type { SSHCredential, SSHTunnelConfig } from '../ssh/types';
+import { IPC_CHANNELS } from '@shared/types';
 import { ipcMain } from 'electron';
 import { logger } from '../../lib/logger';
 import { sshCredentialStore, tunnelManager } from '../ssh';
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isOptionalString(value: unknown): value is string | undefined {
+  return value === undefined || typeof value === 'string';
+}
+
+function isValidCredentials(value: unknown): value is SSHCredentialsInput {
+  if (!isObject(value)) return false;
+  return (
+    isOptionalString(value.password) &&
+    isOptionalString(value.privateKey) &&
+    isOptionalString(value.passphrase) &&
+    isOptionalString(value.jumpHostPassword) &&
+    isOptionalString(value.jumpHostPrivateKey) &&
+    isOptionalString(value.jumpHostPassphrase)
+  );
+}
+
+function asProfileRequest(request: unknown): SSHProfileRequest | null {
+  if (!isObject(request) || typeof request.profileId !== 'string') return null;
+  return { profileId: request.profileId };
+}
+
+function asConnectionRequest(request: unknown): SSHConnectionRequest | null {
+  if (!isObject(request) || typeof request.connectionId !== 'string')
+    return null;
+  return { connectionId: request.connectionId };
+}
+
+function asSaveCredentialsRequest(
+  request: unknown
+): SSHSaveCredentialsRequest | null {
+  if (!isObject(request) || typeof request.profileId !== 'string') return null;
+  if (!isValidCredentials(request.credentials)) return null;
+  return { profileId: request.profileId, credentials: request.credentials };
+}
+
+function isValidSSHConfig(value: unknown): value is SSHTunnelConfig {
+  if (!isObject(value) || !isObject(value.ssh)) return false;
+  const ssh = value.ssh;
+  if (
+    typeof ssh.enabled !== 'boolean' ||
+    typeof ssh.host !== 'string' ||
+    typeof ssh.username !== 'string' ||
+    (ssh.port !== undefined && typeof ssh.port !== 'number') ||
+    (ssh.authMethod !== 'password' && ssh.authMethod !== 'privateKey')
+  ) {
+    return false;
+  }
+  if (
+    typeof value.remoteHost !== 'string' ||
+    typeof value.remotePort !== 'number' ||
+    (value.localPort !== undefined && typeof value.localPort !== 'number')
+  ) {
+    return false;
+  }
+  if (value.jumpHost !== undefined) {
+    if (!isObject(value.jumpHost)) return false;
+    const jumpHost = value.jumpHost;
+    if (
+      typeof jumpHost.enabled !== 'boolean' ||
+      typeof jumpHost.host !== 'string' ||
+      typeof jumpHost.username !== 'string' ||
+      (jumpHost.port !== undefined && typeof jumpHost.port !== 'number') ||
+      (jumpHost.authMethod !== 'password' &&
+        jumpHost.authMethod !== 'privateKey')
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function asTestConnectionRequest(
+  request: unknown
+): SSHTestConnectionRequest | null {
+  if (!isObject(request)) return null;
+  if (
+    !isValidSSHConfig(request.config) ||
+    !isValidCredentials(request.credentials)
+  ) {
+    return null;
+  }
+  return {
+    config: request.config,
+    credentials: request.credentials,
+  };
+}
 
 /**
  * Register all SSH-related IPC handlers
@@ -18,24 +117,32 @@ import { sshCredentialStore, tunnelManager } from '../ssh';
 export function setupSSHHandlers(): void {
   // Save SSH credentials securely
   ipcMain.handle(
-    'ssh:save-credentials',
-    async (
-      _,
-      profileId: string,
-      credentials: Partial<Omit<SSHCredential, 'profileId'>>
-    ) => {
+    IPC_CHANNELS.SSH_SAVE_CREDENTIALS,
+    async (_, request: unknown) => {
+      const payload = asSaveCredentialsRequest(request);
+      if (!payload) {
+        return {
+          success: false,
+          error: 'Invalid SSH save-credentials payload',
+        };
+      }
       logger.info('Saving SSH credentials', {
-        profileId,
-        hasPassword: !!credentials.password,
-        hasPrivateKey: !!credentials.privateKey,
-        hasPassphrase: !!credentials.passphrase,
+        profileId: payload.profileId,
+        hasPassword: !!payload.credentials.password,
+        hasPrivateKey: !!payload.credentials.privateKey,
+        hasPassphrase: !!payload.credentials.passphrase,
       });
-      const success = sshCredentialStore.saveCredential(profileId, credentials);
+      const success = sshCredentialStore.saveCredential(
+        payload.profileId,
+        payload.credentials
+      );
       if (success) {
-        logger.info('SSH credentials saved successfully', { profileId });
+        logger.info('SSH credentials saved successfully', {
+          profileId: payload.profileId,
+        });
       } else {
         logger.error('Failed to save SSH credentials', undefined, {
-          profileId,
+          profileId: payload.profileId,
         });
       }
       return { success };
@@ -43,85 +150,140 @@ export function setupSSHHandlers(): void {
   );
 
   // Check if credentials exist for profile
-  ipcMain.handle('ssh:has-credentials', async (_, profileId: string) => {
-    const hasCredentials = sshCredentialStore.hasCredential(profileId);
-    logger.debug('Checking SSH credentials existence', {
-      profileId,
-      hasCredentials,
-    });
-    return { hasCredentials };
-  });
+  ipcMain.handle(
+    IPC_CHANNELS.SSH_HAS_CREDENTIALS,
+    async (_, request: unknown) => {
+      const payload = asProfileRequest(request);
+      if (!payload) {
+        return { hasCredentials: false };
+      }
+      const hasCredentials = sshCredentialStore.hasCredential(
+        payload.profileId
+      );
+      logger.debug('Checking SSH credentials existence', {
+        profileId: payload.profileId,
+        hasCredentials,
+      });
+      return { hasCredentials };
+    }
+  );
 
   // Get credentials for profile
-  ipcMain.handle('ssh:get-credentials', async (_, profileId: string) => {
-    logger.debug('Retrieving SSH credentials', { profileId });
-    const credentials = sshCredentialStore.getCredential(profileId);
-    if (credentials) {
-      logger.debug('SSH credentials retrieved successfully', { profileId });
-    } else {
-      logger.warn('SSH credentials not found', { profileId });
+  ipcMain.handle(
+    IPC_CHANNELS.SSH_GET_CREDENTIALS,
+    async (_, request: unknown) => {
+      const payload = asProfileRequest(request);
+      if (!payload) {
+        return { success: false, error: 'Invalid SSH get-credentials payload' };
+      }
+      logger.debug('Retrieving SSH credentials', {
+        profileId: payload.profileId,
+      });
+      const credentials = sshCredentialStore.getCredential(payload.profileId);
+      if (credentials) {
+        logger.debug('SSH credentials retrieved successfully', {
+          profileId: payload.profileId,
+        });
+      } else {
+        logger.warn('SSH credentials not found', {
+          profileId: payload.profileId,
+        });
+      }
+      return { success: !!credentials, credentials };
     }
-    return { success: !!credentials, credentials };
-  });
+  );
 
   // Remove credentials
-  ipcMain.handle('ssh:remove-credentials', async (_, profileId: string) => {
-    logger.info('Removing SSH credentials', { profileId });
-    const success = sshCredentialStore.removeCredential(profileId);
-    if (success) {
-      logger.info('SSH credentials removed successfully', { profileId });
-    } else {
-      logger.warn('Failed to remove SSH credentials', { profileId });
+  ipcMain.handle(
+    IPC_CHANNELS.SSH_REMOVE_CREDENTIALS,
+    async (_, request: unknown) => {
+      const payload = asProfileRequest(request);
+      if (!payload) {
+        return {
+          success: false,
+          error: 'Invalid SSH remove-credentials payload',
+        };
+      }
+      logger.info('Removing SSH credentials', { profileId: payload.profileId });
+      const success = sshCredentialStore.removeCredential(payload.profileId);
+      if (success) {
+        logger.info('SSH credentials removed successfully', {
+          profileId: payload.profileId,
+        });
+      } else {
+        logger.warn('Failed to remove SSH credentials', {
+          profileId: payload.profileId,
+        });
+      }
+      return { success };
     }
-    return { success };
-  });
+  );
 
   // Get tunnel status
-  ipcMain.handle('ssh:get-tunnel-status', async (_, connectionId: string) => {
-    logger.debug('Getting SSH tunnel status', { connectionId });
-    const status = tunnelManager.getTunnelStatus(connectionId);
-    return { success: true, status };
-  });
+  ipcMain.handle(
+    IPC_CHANNELS.SSH_GET_TUNNEL_STATUS,
+    async (_, request: unknown) => {
+      const payload = asConnectionRequest(request);
+      if (!payload) {
+        return {
+          success: false,
+          status: null,
+          error: 'Invalid SSH status payload',
+        };
+      }
+      logger.debug('Getting SSH tunnel status', {
+        connectionId: payload.connectionId,
+      });
+      const status = tunnelManager.getTunnelStatus(payload.connectionId);
+      return { success: true, status };
+    }
+  );
 
   // Close specific tunnel
-  ipcMain.handle('ssh:close-tunnel', async (_, connectionId: string) => {
-    logger.info('Closing SSH tunnel', { connectionId });
-    await tunnelManager.closeTunnel(connectionId);
-    logger.info('SSH tunnel closed successfully', { connectionId });
+  ipcMain.handle(IPC_CHANNELS.SSH_CLOSE_TUNNEL, async (_, request: unknown) => {
+    const payload = asConnectionRequest(request);
+    if (!payload) {
+      return { success: false, error: 'Invalid SSH close-tunnel payload' };
+    }
+    logger.info('Closing SSH tunnel', { connectionId: payload.connectionId });
+    await tunnelManager.closeTunnel(payload.connectionId);
+    logger.info('SSH tunnel closed successfully', {
+      connectionId: payload.connectionId,
+    });
     return { success: true };
   });
 
   // Test SSH connection (without creating persistent tunnel)
   ipcMain.handle(
-    'ssh:test-connection',
-    async (
-      _,
-      config: SSHTunnelConfig,
-      credentials: Partial<Omit<SSHCredential, 'profileId'>>
-    ) => {
+    IPC_CHANNELS.SSH_TEST_CONNECTION,
+    async (_, request: unknown) => {
+      const payload = asTestConnectionRequest(request);
+      if (!payload) {
+        return { success: false, error: 'Invalid SSH test-connection payload' };
+      }
       const testId = `test-${Date.now()}`;
       logger.info('Testing SSH connection', {
-        host: config.ssh.host,
-        port: config.ssh.port,
-        username: config.ssh.username,
-        hasPassword: !!credentials.password,
-        hasPrivateKey: !!credentials.privateKey,
+        host: payload.config.ssh.host,
+        port: payload.config.ssh.port,
+        username: payload.config.ssh.username,
+        hasPassword: !!payload.credentials.password,
+        hasPrivateKey: !!payload.credentials.privateKey,
       });
       try {
         // Build full credentials object for testing
         const fullCredentials: SSHCredential = {
           profileId: testId,
-          ...credentials,
+          ...payload.credentials,
         };
 
         const localPort = await tunnelManager.createTunnel(
           testId,
-          config,
+          payload.config,
           fullCredentials
         );
         await tunnelManager.closeTunnel(testId);
         logger.info('SSH connection test successful', {
-          host: config.ssh.host,
+          host: payload.config.ssh.host,
           localPort,
         });
         return {
@@ -130,8 +292,8 @@ export function setupSSHHandlers(): void {
         };
       } catch (error) {
         logger.error('SSH connection test failed', error, {
-          host: config.ssh.host,
-          port: config.ssh.port,
+          host: payload.config.ssh.host,
+          port: payload.config.ssh.port,
         });
         return {
           success: false,
@@ -143,9 +305,16 @@ export function setupSSHHandlers(): void {
   );
 
   // Check if tunnel exists for connection
-  ipcMain.handle('ssh:has-tunnel', async (_, connectionId: string) => {
-    const hasTunnel = tunnelManager.hasTunnel(connectionId);
-    logger.debug('Checking SSH tunnel existence', { connectionId, hasTunnel });
+  ipcMain.handle(IPC_CHANNELS.SSH_HAS_TUNNEL, async (_, request: unknown) => {
+    const payload = asConnectionRequest(request);
+    if (!payload) {
+      return { hasTunnel: false };
+    }
+    const hasTunnel = tunnelManager.hasTunnel(payload.connectionId);
+    logger.debug('Checking SSH tunnel existence', {
+      connectionId: payload.connectionId,
+      hasTunnel,
+    });
     return { hasTunnel };
   });
 }

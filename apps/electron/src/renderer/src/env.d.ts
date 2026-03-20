@@ -2,7 +2,7 @@
 /// <reference types="@testing-library/jest-dom" />
 
 import type { ElectronAPI } from '@electron-toolkit/preload';
-import type { SqlProAPI } from '../../preload/index';
+import type { SqlProAPI } from '@shared/types/sql-pro-api';
 
 declare global {
   interface Window {

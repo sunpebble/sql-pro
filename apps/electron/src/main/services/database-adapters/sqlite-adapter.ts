@@ -1545,7 +1545,7 @@ export class SQLiteAdapter implements DatabaseAdapter {
     return statements;
   }
 
-  executeQuery(connectionId: string, query: string) {
+  executeQuery(connectionId: string, query: string, params?: unknown[]) {
     const conn = this.connections.get(connectionId);
     if (!conn) {
       return { success: false as const, error: 'Connection not found' };
@@ -1558,7 +1558,14 @@ export class SQLiteAdapter implements DatabaseAdapter {
     }
 
     if (statements.length === 1) {
-      return this.executeSingleStatement(connectionId, statements[0]);
+      return this.executeSingleStatement(connectionId, statements[0], params);
+    }
+
+    if ((params?.length || 0) > 0) {
+      return {
+        success: false as const,
+        error: 'Query parameters are only supported for single statements',
+      };
     }
 
     const resultSets: Array<{
@@ -1673,7 +1680,8 @@ export class SQLiteAdapter implements DatabaseAdapter {
 
   private executeSingleStatement(
     connectionId: string,
-    query: string
+    query: string,
+    params?: unknown[]
   ):
     | {
         success: true;
@@ -1700,7 +1708,7 @@ export class SQLiteAdapter implements DatabaseAdapter {
       trimmed.startsWith('EXPLAIN') ||
       trimmed.startsWith('WITH')
     ) {
-      const result = this.query(connectionId, query);
+      const result = this.query(connectionId, query, params);
       if (result.success) {
         const rows = result.rows.map((row) => {
           const record: Record<string, unknown> = {};
@@ -1717,7 +1725,7 @@ export class SQLiteAdapter implements DatabaseAdapter {
       }
       return result;
     } else {
-      return this.execute(connectionId, query);
+      return this.execute(connectionId, query, params);
     }
   }
 

@@ -100,8 +100,10 @@ export interface RendererStoreSchema {
 
 // ============ IPC Request/Response Types ============
 
-export interface GetRendererStateRequest {
-  key: keyof RendererStoreSchema;
+export interface GetRendererStateRequest<
+  K extends keyof RendererStoreSchema = keyof RendererStoreSchema,
+> {
+  key: K;
 }
 
 export interface GetRendererStateResponse<T = unknown> {
@@ -110,9 +112,11 @@ export interface GetRendererStateResponse<T = unknown> {
   error?: string;
 }
 
-export interface SetRendererStateRequest<T = unknown> {
-  key: keyof RendererStoreSchema;
-  value: T;
+export interface SetRendererStateRequest<
+  K extends keyof RendererStoreSchema = keyof RendererStoreSchema,
+> {
+  key: K;
+  value: RendererStoreSchema[K];
 }
 
 export interface SetRendererStateResponse {
@@ -120,9 +124,17 @@ export interface SetRendererStateResponse {
   error?: string;
 }
 
-export interface UpdateRendererStateRequest<T = unknown> {
-  key: keyof RendererStoreSchema;
-  updates: Partial<T>;
+export interface UpdateRendererStateRequest<
+  K extends keyof RendererStoreSchema = keyof RendererStoreSchema,
+> {
+  key: K;
+  updates: Partial<RendererStoreSchema[K]>;
+}
+
+export interface ResetRendererStateRequest<
+  K extends keyof RendererStoreSchema = keyof RendererStoreSchema,
+> {
+  key: K;
 }
 
 export interface UpdateRendererStateResponse {

@@ -1781,7 +1781,7 @@ class DatabaseService {
     return statements;
   }
 
-  executeQuery(connectionId: string, query: string) {
+  executeQuery(connectionId: string, query: string, params?: unknown[]) {
     const conn = this.connections.get(connectionId);
     if (!conn) {
       return { success: false, error: 'Connection not found' };
@@ -1796,7 +1796,14 @@ class DatabaseService {
 
     // For single statement, use the original logic
     if (statements.length === 1) {
-      return this.executeSingleStatement(connectionId, statements[0]);
+      return this.executeSingleStatement(connectionId, statements[0], params);
+    }
+
+    if ((params?.length || 0) > 0) {
+      return {
+        success: false,
+        error: 'Query parameters are only supported for single statements',
+      };
     }
 
     // For multiple statements, execute them sequentially
@@ -1923,7 +1930,8 @@ class DatabaseService {
    */
   private executeSingleStatement(
     connectionId: string,
-    query: string
+    query: string,
+    params?: unknown[]
   ):
     | {
         success: true;
@@ -1951,7 +1959,7 @@ class DatabaseService {
       trimmed.startsWith('EXPLAIN') ||
       trimmed.startsWith('WITH')
     ) {
-      const result = this.query(connectionId, query);
+      const result = this.query(connectionId, query, params);
       if (result.success) {
         // Convert array format to record format
         const rows = result.rows.map((row) => {
@@ -1969,7 +1977,7 @@ class DatabaseService {
       }
       return result;
     } else {
-      return this.execute(connectionId, query);
+      return this.execute(connectionId, query, params);
     }
   }
 

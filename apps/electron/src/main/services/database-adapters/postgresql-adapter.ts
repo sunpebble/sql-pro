@@ -1065,7 +1065,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
     }
   }
 
-  executeQuery(_connectionId: string, _query: string) {
+  executeQuery(_connectionId: string, _query: string, _params?: unknown[]) {
     return {
       success: false as const,
       error: 'Use executeQueryAsync for PostgreSQL connections',
@@ -1074,7 +1074,8 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
 
   async executeQueryAsync(
     connectionId: string,
-    query: string
+    query: string,
+    params?: unknown[]
   ): Promise<
     | {
         success: true;
@@ -1094,7 +1095,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
     const isSelect = trimmed.startsWith('SELECT') || trimmed.startsWith('WITH');
 
     try {
-      const result = await conn.client.query(query);
+      const result = await conn.client.query(query, params ?? []);
 
       if (isSelect) {
         const rows = result.rows as Array<Record<string, unknown>>;

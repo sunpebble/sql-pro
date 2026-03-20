@@ -576,7 +576,8 @@ export class TursoAdapter implements DatabaseAdapter {
 
   async executeQueryAsync(
     connectionId: string,
-    query: string
+    query: string,
+    params?: unknown[]
   ): Promise<
     | {
         success: true;
@@ -593,7 +594,10 @@ export class TursoAdapter implements DatabaseAdapter {
     }
 
     try {
-      const result = await conn.client.execute(query);
+      const result =
+        params && params.length > 0
+          ? await conn.client.execute({ sql: query, args: params as any[] })
+          : await conn.client.execute(query);
 
       // Convert rows to records
       const rows = result.rows.map((row) => {
@@ -875,7 +879,7 @@ export class TursoAdapter implements DatabaseAdapter {
     };
   }
 
-  executeQuery(_connectionId: string, _query: string) {
+  executeQuery(_connectionId: string, _query: string, _params?: unknown[]) {
     return {
       success: false as const,
       error: 'Use executeQueryAsync for Turso connections',
