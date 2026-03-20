@@ -96,6 +96,12 @@ import type {
   GetTableRowRangeResponse,
   HasPasswordRequest,
   HasPasswordResponse,
+  ImageCheckFileResponse,
+  ImageCheckUrlResponse,
+  ImageGetCacheStatsResponse,
+  ImageGetFileMetadataResponse,
+  ImageGetMetadataResponse,
+  ImageValidateUrlResponse,
   ImportBundleRequest,
   ImportBundleResponse,
   ImportProfilesRequest,
@@ -162,6 +168,10 @@ import type {
   ValidateChangesResponse,
   VectorSearchRequest,
   VectorSearchResponse,
+  VideoCheckFileResponse,
+  VideoCheckUrlResponse,
+  VideoGetMetadataResponse,
+  VideoValidateUrlResponse,
   WriteFileRequest,
   WriteFileResponse,
 } from '@shared/types';
@@ -276,7 +286,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
     getColumnDistribution: (
       request: GetColumnDistributionRequest
     ): Promise<GetColumnDistributionResponse> =>
-      invoke('table:get-column-distribution', request),
+      invoke(IPC_CHANNELS.TABLE_GET_COLUMN_DISTRIBUTION, request),
     // Qdrant Vector Search operations
     vectorSearch: (
       request: VectorSearchRequest
@@ -354,11 +364,11 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       return () => off(IPC_CHANNELS.PREVENT_QUIT, handler);
     },
     confirmQuit: (shouldQuit: boolean): Promise<{ success: boolean }> =>
-      invoke('app:confirm-quit', { shouldQuit }),
+      invoke(IPC_CHANNELS.APP_CONFIRM_QUIT, { shouldQuit }),
     removeRecentConnection: (request: {
       connectionId: string;
     }): Promise<{ success: boolean }> =>
-      invoke('app:remove-recent-connection', request),
+      invoke(IPC_CHANNELS.APP_REMOVE_RECENT_CONNECTION, request),
   },
 
   // Unsaved changes operations
@@ -953,101 +963,28 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
   image: {
     getMetadata: (request: {
       url: string;
-    }): Promise<{
-      success: boolean;
-      metadata?: {
-        width: number;
-        height: number;
-        format: string;
-        size: number;
-        space?: string;
-        channels?: number;
-        depth?: string;
-        hasAlpha?: boolean;
-        isAnimated?: boolean;
-        density?: number;
-        pages?: number;
-        orientation?: number;
-        chromaSubsampling?: string;
-        isProgressive?: boolean;
-        compression?: string;
-        resolutionUnit?: string;
-        iccProfile?: string;
-      };
-      error?: string;
-    }> => invoke('image:get-metadata', request),
+    }): Promise<ImageGetMetadataResponse> => invoke('image:get-metadata', request),
     getFileMetadata: (request: {
       path: string;
-    }): Promise<{
-      success: boolean;
-      metadata?: {
-        width: number;
-        height: number;
-        format: string;
-        size: number;
-        space?: string;
-        channels?: number;
-        depth?: string;
-        hasAlpha?: boolean;
-        isAnimated?: boolean;
-        density?: number;
-        pages?: number;
-        orientation?: number;
-        chromaSubsampling?: string;
-        isProgressive?: boolean;
-        compression?: string;
-        resolutionUnit?: string;
-        iccProfile?: string;
-        fileName?: string;
-        filePath?: string;
-        createdAt?: string;
-        modifiedAt?: string;
-      };
-      error?: string;
-    }> => invoke('image:get-file-metadata', request),
-    getCacheStats: (): Promise<{
-      success: boolean;
-      stats: {
-        entries: number;
-        size: number;
-        maxEntries: number;
-        maxSize: number;
-      };
-    }> => invoke('image:get-cache-stats'),
+    }): Promise<ImageGetFileMetadataResponse> =>
+      invoke('image:get-file-metadata', request),
+    getCacheStats: (): Promise<ImageGetCacheStatsResponse> =>
+      invoke('image:get-cache-stats'),
     clearCache: (): Promise<{ success: boolean }> =>
       invoke('image:clear-cache'),
     /** Check if URL is media (image or video) using HEAD request preflight */
     checkUrl: (request: {
       url: string;
-    }): Promise<{
-      success: boolean;
-      isImage: boolean;
-      isVideo?: boolean;
-      mimeType?: string;
-      contentLength?: number;
-      error?: string;
-    }> => invoke('image:check-url', request),
+    }): Promise<ImageCheckUrlResponse> => invoke('image:check-url', request),
     /** Full validation: HEAD check + Sharp metadata extraction */
     validateUrl: (request: {
       url: string;
-    }): Promise<{
-      success: boolean;
-      isValid: boolean;
-      mimeType?: string;
-      width?: number;
-      height?: number;
-      format?: string;
-      size?: number;
-      error?: string;
-    }> => invoke('image:validate-url', request),
+    }): Promise<ImageValidateUrlResponse> =>
+      invoke('image:validate-url', request),
     /** Check if local file exists */
     checkFile: (request: {
       path: string;
-    }): Promise<{
-      success: boolean;
-      exists: boolean;
-      error?: string;
-    }> => invoke('image:check-file', request),
+    }): Promise<ImageCheckFileResponse> => invoke('image:check-file', request),
   },
 
   // Video operations (ffprobe-based detection)
@@ -1055,77 +992,20 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
     /** Get video metadata using ffprobe */
     getMetadata: (request: {
       url: string;
-    }): Promise<{
-      success: boolean;
-      metadata?: {
-        width: number;
-        height: number;
-        duration: number;
-        format: string;
-        codec: string;
-        bitrate?: number;
-        fps?: number;
-        size: number;
-      };
-      error?: string;
-    }> => invoke('video:get-metadata', request),
+    }): Promise<VideoGetMetadataResponse> => invoke('video:get-metadata', request),
     /** Check if URL is a video using HEAD request + magic bytes */
     checkUrl: (request: {
       url: string;
-    }): Promise<{
-      success: boolean;
-      isVideo: boolean;
-      mimeType?: string;
-      metadata?: {
-        width: number;
-        height: number;
-        duration: number;
-        format: string;
-        codec: string;
-        bitrate?: number;
-        fps?: number;
-        size: number;
-      };
-      error?: string;
-    }> => invoke('video:check-url', request),
+    }): Promise<VideoCheckUrlResponse> => invoke('video:check-url', request),
     /** Full video validation using ffprobe */
     validateUrl: (request: {
       url: string;
-    }): Promise<{
-      success: boolean;
-      isVideo: boolean;
-      mimeType?: string;
-      metadata?: {
-        width: number;
-        height: number;
-        duration: number;
-        format: string;
-        codec: string;
-        bitrate?: number;
-        fps?: number;
-        size: number;
-      };
-      error?: string;
-    }> => invoke('video:validate-url', request),
+    }): Promise<VideoValidateUrlResponse> =>
+      invoke('video:validate-url', request),
     /** Check if local file is a video */
     checkFile: (request: {
       path: string;
-    }): Promise<{
-      success: boolean;
-      isVideo: boolean;
-      mimeType?: string;
-      metadata?: {
-        width: number;
-        height: number;
-        duration: number;
-        format: string;
-        codec: string;
-        bitrate?: number;
-        fps?: number;
-        size: number;
-      };
-      error?: string;
-    }> => invoke('video:check-file', request),
+    }): Promise<VideoCheckFileResponse> => invoke('video:check-file', request),
   },
 
   // Shell operations

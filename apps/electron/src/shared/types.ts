@@ -2521,6 +2521,124 @@ export interface CompressionInfo {
   compressedSize?: number;
 }
 
+// ============ Media Types ============
+
+export interface ImageMetadata {
+  width: number;
+  height: number;
+  format: string;
+  size: number;
+  space?: string;
+  channels?: number;
+  depth?: string;
+  hasAlpha?: boolean;
+  isAnimated?: boolean;
+  density?: number;
+  pages?: number;
+  orientation?: number;
+  chromaSubsampling?: string;
+  isProgressive?: boolean;
+  compression?: string;
+  resolutionUnit?: string;
+  iccProfile?: string;
+}
+
+export interface ImageFileMetadata extends ImageMetadata {
+  fileName?: string;
+  filePath?: string;
+  createdAt?: string;
+  modifiedAt?: string;
+}
+
+export interface ImageCheckUrlResponse {
+  success: boolean;
+  isImage: boolean;
+  isVideo?: boolean;
+  mimeType?: string;
+  contentLength?: number;
+  error?: string;
+}
+
+export interface ImageValidateUrlResponse {
+  success: boolean;
+  isValid: boolean;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+  format?: string;
+  size?: number;
+  error?: string;
+}
+
+export interface ImageCheckFileResponse {
+  success: boolean;
+  exists: boolean;
+  error?: string;
+}
+
+export interface ImageGetMetadataResponse {
+  success: boolean;
+  metadata?: ImageMetadata;
+  error?: string;
+}
+
+export interface ImageGetFileMetadataResponse {
+  success: boolean;
+  metadata?: ImageFileMetadata;
+  error?: string;
+}
+
+export interface ImageGetCacheStatsResponse {
+  success: boolean;
+  stats: {
+    entries: number;
+    size: number;
+    maxEntries: number;
+    maxSize: number;
+  };
+}
+
+export interface VideoMetadata {
+  width: number;
+  height: number;
+  duration: number;
+  format: string;
+  codec: string;
+  bitrate?: number;
+  fps?: number;
+  size: number;
+}
+
+export interface VideoGetMetadataResponse {
+  success: boolean;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
+export interface VideoCheckUrlResponse {
+  success: boolean;
+  isVideo: boolean;
+  mimeType?: string;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
+export interface VideoValidateUrlResponse {
+  success: boolean;
+  isVideo: boolean;
+  mimeType?: string;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
+export interface VideoCheckFileResponse {
+  success: boolean;
+  isVideo: boolean;
+  mimeType?: string;
+  metadata?: VideoMetadata;
+  error?: string;
+}
+
 // ============ IPC Channel Definitions ============
 
 export interface IPCChannels {
@@ -3115,6 +3233,11 @@ export const IPC_CHANNELS = {
 
   // Prevent quit
   PREVENT_QUIT: 'app:prevent-quit',
+  APP_CONFIRM_QUIT: 'app:confirm-quit',
+  APP_REMOVE_RECENT_CONNECTION: 'app:remove-recent-connection',
+
+  // Table
+  TABLE_GET_COLUMN_DISTRIBUTION: 'table:get-column-distribution',
 
   // PRO
   PRO_CLEAR_STATUS: 'pro:clear-status',

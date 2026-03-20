@@ -1,4 +1,4 @@
-import type { SqlProAPI } from '@shared/lib/sql-pro-api';
+import type { SqlProAPI } from '@shared/types/sql-pro-api';
 import { electronAPI } from '@electron-toolkit/preload';
 import { createSqlProAPI } from '@shared/lib/sql-pro-api';
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
