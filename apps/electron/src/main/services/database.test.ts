@@ -6,7 +6,9 @@
  * These tests verify the error enhancement integration logic.
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { MockInstance } from 'vitest';
 import * as errorParser from '@/lib/error-parser';
+import { databaseService } from './database';
 
 // Mock the error parser module to verify it's being called correctly
 vi.mock('../lib/error-parser', async () => {
@@ -320,5 +322,85 @@ describe('databaseService - Expected Connection Error Response Structure', () =>
     expect(steps).toBeDefined();
     expect(Array.isArray(steps)).toBe(true);
     expect(steps!.length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('databaseService - executeQuery params handling', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('passes params to executeSingleStatement for single statements', () => {
+    (databaseService as any).connections.set('conn', {
+      id: 'conn',
+      db: {},
+      path: ':memory:',
+      filename: 'memory',
+      isEncrypted: false,
+      isReadOnly: false,
+    });
+
+    const splitSpy = vi.spyOn(
+      databaseService as never,
+      'splitStatements' as never
+    ) as unknown as MockInstance;
+    splitSpy.mockReturnValue(['SELECT * FROM users WHERE id = ?']);
+    const executeSingleStatementSpy = vi.spyOn(
+      databaseService as never,
+      'executeSingleStatement' as never
+    ) as unknown as MockInstance;
+    executeSingleStatementSpy.mockReturnValue({
+      success: true,
+      columns: ['id'],
+      rows: [{ id: 1 }],
+    });
+
+    const result = databaseService.executeQuery(
+      'conn',
+      'SELECT * FROM users WHERE id = ?',
+      [1]
+    );
+
+    expect(splitSpy).toHaveBeenCalledWith('SELECT * FROM users WHERE id = ?');
+    expect(executeSingleStatementSpy).toHaveBeenCalledWith(
+      'conn',
+      'SELECT * FROM users WHERE id = ?',
+      [1]
+    );
+    expect(result).toEqual({
+      success: true,
+      columns: ['id'],
+      rows: [{ id: 1 }],
+    });
+  });
+
+  it('rejects multi-statements when params are provided', () => {
+    (databaseService as any).connections.set('conn', {
+      id: 'conn',
+      db: {},
+      path: ':memory:',
+      filename: 'memory',
+      isEncrypted: false,
+      isReadOnly: false,
+    });
+
+    const splitSpy = vi.spyOn(
+      databaseService as never,
+      'splitStatements' as never
+    ) as unknown as MockInstance;
+    splitSpy.mockReturnValue(['SELECT 1', 'SELECT 2']);
+
+    const executeSingleStatementSpy = vi.spyOn(
+      databaseService as never,
+      'executeSingleStatement' as never
+    );
+
+    const result = databaseService.executeQuery('conn', 'SELECT 1; SELECT 2;', [1]);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Query parameters are only supported for single statements',
+    });
+    expect(executeSingleStatementSpy).not.toHaveBeenCalled();
   });
 });
