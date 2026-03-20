@@ -1040,15 +1040,15 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         tables: { name: string; rowCount: number; size: number }[];
       };
       error?: string;
-    }> => invoke('database:get-stats', request),
+    }> => invoke(IPC_CHANNELS.DATABASE_GET_STATS, request),
     vacuum: (request: {
       connectionId: string;
     }): Promise<{ success: boolean; error?: string }> =>
-      invoke('database:vacuum', request),
+      invoke(IPC_CHANNELS.DATABASE_VACUUM, request),
     analyze: (request: {
       connectionId: string;
     }): Promise<{ success: boolean; error?: string }> =>
-      invoke('database:analyze', request),
+      invoke(IPC_CHANNELS.DATABASE_ANALYZE, request),
     // Aliases for schema and query to match component usage
     getSchema: (connectionId: string): Promise<GetSchemaResponse> =>
       invoke(IPC_CHANNELS.DB_GET_SCHEMA, { connectionId }),

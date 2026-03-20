@@ -2447,6 +2447,52 @@ export interface ImportSchemaResponse {
   error?: string;
 }
 
+// ============ SSH IPC Request Types ============
+
+export interface SSHCredentialsInput {
+  password?: string;
+  privateKey?: string;
+  passphrase?: string;
+  jumpHostPassword?: string;
+  jumpHostPrivateKey?: string;
+  jumpHostPassphrase?: string;
+}
+
+export interface SSHProfileRequest {
+  profileId: string;
+}
+
+export interface SSHConnectionRequest {
+  connectionId: string;
+}
+
+export interface SSHSaveCredentialsRequest extends SSHProfileRequest {
+  credentials: SSHCredentialsInput;
+}
+
+export interface SSHTestConnectionRequest {
+  config: {
+    ssh: {
+      enabled: boolean;
+      host: string;
+      port?: number;
+      username: string;
+      authMethod: 'password' | 'privateKey';
+    };
+    jumpHost?: {
+      enabled: boolean;
+      host: string;
+      port?: number;
+      username: string;
+      authMethod: 'password' | 'privateKey';
+    };
+    remoteHost: string;
+    remotePort: number;
+    localPort?: number;
+  };
+  credentials: SSHCredentialsInput;
+}
+
 // ============ Shareable Types ============
 
 export interface ShareableMetadata {
@@ -3278,6 +3324,11 @@ export const IPC_CHANNELS = {
   VIDEO_CHECK_URL: 'video:check-url',
   VIDEO_VALIDATE_URL: 'video:validate-url',
   VIDEO_CHECK_FILE: 'video:check-file',
+
+  // Database extended
+  DATABASE_GET_STATS: 'database:get-stats',
+  DATABASE_VACUUM: 'database:vacuum',
+  DATABASE_ANALYZE: 'database:analyze',
 
   // Memory monitoring
   MEMORY_GET_STATS: 'memory:get-stats',
