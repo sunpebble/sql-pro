@@ -161,6 +161,16 @@ import type {
   ShowItemInFolderRequest,
   ShowItemInFolderResponse,
   SqlLogEntry,
+  SSHCloseTunnelResponse,
+  SSHCredentialsInput,
+  SSHGetCredentialsResponse,
+  SSHGetTunnelStatusResponse,
+  SSHHasCredentialsResponse,
+  SSHHasTunnelResponse,
+  SSHRemoveCredentialsResponse,
+  SSHSaveCredentialsResponse,
+  SSHTestConnectionResponse,
+  SSHTunnelIpcConfig,
   TestConnectionRequest,
   TestConnectionResponse,
   UpdateConnectionRequest,
@@ -1074,85 +1084,35 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
     ssh: {
       saveCredentials: (
         profileId: string,
-        credentials: {
-          password?: string;
-          privateKey?: string;
-          passphrase?: string;
-          jumpHostPassword?: string;
-          jumpHostPrivateKey?: string;
-          jumpHostPassphrase?: string;
-        }
-      ): Promise<{ success: boolean }> =>
+        credentials: SSHCredentialsInput
+      ): Promise<SSHSaveCredentialsResponse> =>
         invoke(IPC_CHANNELS.SSH_SAVE_CREDENTIALS, { profileId, credentials }),
       hasCredentials: (
         profileId: string
-      ): Promise<{ hasCredentials: boolean }> =>
+      ): Promise<SSHHasCredentialsResponse> =>
         invoke(IPC_CHANNELS.SSH_HAS_CREDENTIALS, { profileId }),
       getCredentials: (
         profileId: string
-      ): Promise<{
-        success: boolean;
-        credentials?: {
-          profileId: string;
-          password?: string;
-          privateKey?: string;
-          passphrase?: string;
-          jumpHostPassword?: string;
-          jumpHostPrivateKey?: string;
-          jumpHostPassphrase?: string;
-        };
-      }> => invoke(IPC_CHANNELS.SSH_GET_CREDENTIALS, { profileId }),
-      removeCredentials: (profileId: string): Promise<{ success: boolean }> =>
+      ): Promise<SSHGetCredentialsResponse> =>
+        invoke(IPC_CHANNELS.SSH_GET_CREDENTIALS, { profileId }),
+      removeCredentials: (
+        profileId: string
+      ): Promise<SSHRemoveCredentialsResponse> =>
         invoke(IPC_CHANNELS.SSH_REMOVE_CREDENTIALS, { profileId }),
       getTunnelStatus: (
         connectionId: string
-      ): Promise<{
-        success: boolean;
-        status: {
-          state:
-            | 'disconnected'
-            | 'connecting'
-            | 'connected'
-            | 'reconnecting'
-            | 'error';
-          localPort?: number;
-          error?: string;
-          reconnectAttempts?: number;
-        } | null;
-      }> => invoke(IPC_CHANNELS.SSH_GET_TUNNEL_STATUS, { connectionId }),
-      closeTunnel: (connectionId: string): Promise<{ success: boolean }> =>
+      ): Promise<SSHGetTunnelStatusResponse> =>
+        invoke(IPC_CHANNELS.SSH_GET_TUNNEL_STATUS, { connectionId }),
+      closeTunnel: (
+        connectionId: string
+      ): Promise<SSHCloseTunnelResponse> =>
         invoke(IPC_CHANNELS.SSH_CLOSE_TUNNEL, { connectionId }),
       testConnection: (
-        config: {
-          ssh: {
-            enabled: boolean;
-            host: string;
-            port?: number;
-            username: string;
-            authMethod: 'password' | 'privateKey';
-          };
-          jumpHost?: {
-            enabled: boolean;
-            host: string;
-            port?: number;
-            username: string;
-            authMethod: 'password' | 'privateKey';
-          };
-          remoteHost: string;
-          remotePort: number;
-          localPort?: number;
-        },
-        credentials: {
-          password?: string;
-          privateKey?: string;
-          passphrase?: string;
-          jumpHostPassword?: string;
-          jumpHostPrivateKey?: string;
-          jumpHostPassphrase?: string;
-        }
-      ): Promise<{ success: boolean; message?: string; error?: string }> =>
+        config: SSHTunnelIpcConfig,
+        credentials: SSHCredentialsInput
+      ): Promise<SSHTestConnectionResponse> =>
         invoke(IPC_CHANNELS.SSH_TEST_CONNECTION, { config, credentials }),
-      hasTunnel: (connectionId: string): Promise<{ hasTunnel: boolean }> =>
+      hasTunnel: (connectionId: string): Promise<SSHHasTunnelResponse> =>
         invoke(IPC_CHANNELS.SSH_HAS_TUNNEL, { connectionId }),
     },
   };

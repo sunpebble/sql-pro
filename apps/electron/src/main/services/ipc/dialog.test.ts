@@ -1,8 +1,9 @@
-import type { WriteFileRequest } from '@shared/types';
+import type { FileExistsResponse, WriteFileRequest } from '@shared/types';
 import { Buffer } from 'node:buffer';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { IPC_CHANNELS } from '@shared/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 /**
@@ -955,5 +956,38 @@ INSERT INTO posts (content) VALUES ('Hello World! 👋');`;
       const fileContent = fs.readFileSync(testFilePath, 'utf8');
       expect(fileContent).toBe(testContent);
     });
+  });
+});
+
+describe('file exists IPC handler', () => {
+  it('returns exists true for a real file', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'file-exists-test-'));
+    try {
+      const p = path.join(dir, 'a.txt');
+      fs.writeFileSync(p, 'x');
+      const result = await invokeHandler<FileExistsResponse>(
+        IPC_CHANNELS.FILE_EXISTS,
+        { path: p }
+      );
+      expect(result.exists).toBe(true);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('returns exists false for a missing path', async () => {
+    const result = await invokeHandler<FileExistsResponse>(
+      IPC_CHANNELS.FILE_EXISTS,
+      { path: path.join(os.tmpdir(), 'nonexistent-file-xyz-12345') }
+    );
+    expect(result.exists).toBe(false);
+  });
+
+  it('returns exists false for invalid payload', async () => {
+    const result = await invokeHandler<FileExistsResponse>(
+      IPC_CHANNELS.FILE_EXISTS,
+      {} as { path: string }
+    );
+    expect(result.exists).toBe(false);
   });
 });
