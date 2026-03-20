@@ -439,6 +439,14 @@ export function setupDatabaseHandlers(): void {
       }
 
       const startTime = Date.now();
+      if (request.params !== undefined && !Array.isArray(request.params)) {
+        return {
+          success: false,
+          error: 'Query params must be an array when provided',
+          errorCode: 'QUERY_EXECUTION_ERROR' as const,
+          executionTime: Date.now() - startTime,
+        };
+      }
 
       // Check if connection is async (MySQL/PostgreSQL)
       let result: any;

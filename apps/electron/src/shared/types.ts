@@ -3325,6 +3325,16 @@ export const IPC_CHANNELS = {
   VIDEO_VALIDATE_URL: 'video:validate-url',
   VIDEO_CHECK_FILE: 'video:check-file',
 
+  // SSH
+  SSH_SAVE_CREDENTIALS: 'ssh:save-credentials',
+  SSH_HAS_CREDENTIALS: 'ssh:has-credentials',
+  SSH_GET_CREDENTIALS: 'ssh:get-credentials',
+  SSH_REMOVE_CREDENTIALS: 'ssh:remove-credentials',
+  SSH_GET_TUNNEL_STATUS: 'ssh:get-tunnel-status',
+  SSH_CLOSE_TUNNEL: 'ssh:close-tunnel',
+  SSH_TEST_CONNECTION: 'ssh:test-connection',
+  SSH_HAS_TUNNEL: 'ssh:has-tunnel',
+
   // Database extended
   DATABASE_GET_STATS: 'database:get-stats',
   DATABASE_VACUUM: 'database:vacuum',

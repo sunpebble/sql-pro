@@ -509,6 +509,14 @@ export class DatabaseHandler extends IpcHandler {
     }
 
     const startTime = Date.now();
+    if (request.params !== undefined && !Array.isArray(request.params)) {
+      return {
+        success: false,
+        error: 'Query params must be an array when provided',
+        errorCode: 'QUERY_EXECUTION_ERROR',
+        executionTime: Date.now() - startTime,
+      };
+    }
     let result: unknown;
 
     // Check if connection is async (MySQL/PostgreSQL)
