@@ -879,11 +879,7 @@ export class TursoAdapter implements DatabaseAdapter {
     };
   }
 
-  executeQuery(
-    _connectionId: string,
-    _query: string,
-    _params?: unknown[]
-  ) {
+  executeQuery(_connectionId: string, _query: string, _params?: unknown[]) {
     return {
       success: false as const,
       error: 'Use executeQueryAsync for Turso connections',

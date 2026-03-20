@@ -10,7 +10,7 @@ import type {
   SetRendererStateRequest,
   UpdateRendererStateRequest,
 } from '@shared/types/renderer-store';
-import type {HandlerContext} from '../base/handler';
+import type { HandlerContext } from '../base/handler';
 import { RENDERER_STORE_CHANNELS } from '@shared/types/renderer-store';
 import {
   getRendererState,
@@ -18,7 +18,7 @@ import {
   setRendererState,
   updateRendererState,
 } from '../../services/renderer-store';
-import {  IpcHandler } from '../base/handler';
+import { IpcHandler } from '../base/handler';
 
 export class RendererStoreHandler extends IpcHandler {
   constructor() {

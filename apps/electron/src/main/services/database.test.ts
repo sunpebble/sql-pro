@@ -1,3 +1,4 @@
+import type { MockInstance } from 'vitest';
 /**
  * Tests for DatabaseService error enhancement (both query and connection errors).
  *
@@ -6,7 +7,6 @@
  * These tests verify the error enhancement integration logic.
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { MockInstance } from 'vitest';
 import * as errorParser from '@/lib/error-parser';
 import { databaseService } from './database';
 
@@ -395,7 +395,11 @@ describe('databaseService - executeQuery params handling', () => {
       'executeSingleStatement' as never
     );
 
-    const result = databaseService.executeQuery('conn', 'SELECT 1; SELECT 2;', [1]);
+    const result = databaseService.executeQuery(
+      'conn',
+      'SELECT 1; SELECT 2;',
+      [1]
+    );
 
     expect(result).toEqual({
       success: false,

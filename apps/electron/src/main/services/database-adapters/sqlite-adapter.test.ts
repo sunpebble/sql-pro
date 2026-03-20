@@ -2,7 +2,7 @@ import type { MockInstance } from 'vitest';
 import { describe, expect, it, vi } from 'vitest';
 import { SQLiteAdapter } from './sqlite-adapter';
 
-describe('SQLiteAdapter executeQuery params handling', () => {
+describe('sQLiteAdapter executeQuery params handling', () => {
   it('uses executeSingleStatement for single statement with params', () => {
     const adapter = new SQLiteAdapter();
 
@@ -19,9 +19,7 @@ describe('SQLiteAdapter executeQuery params handling', () => {
       adapter as never,
       'splitStatements' as never
     ) as unknown as MockInstance;
-    splitSpy.mockReturnValue([
-      'SELECT * FROM users WHERE id = ?',
-    ]);
+    splitSpy.mockReturnValue(['SELECT * FROM users WHERE id = ?']);
     const executeSingleStatementSpy = vi.spyOn(
       adapter as never,
       'executeSingleStatement' as never
@@ -119,10 +117,7 @@ describe('SQLiteAdapter executeQuery params handling', () => {
       adapter as never,
       'splitStatements' as never
     ) as unknown as MockInstance;
-    splitSpy.mockReturnValue([
-      'SELECT 1',
-      'SELECT 2',
-    ]);
+    splitSpy.mockReturnValue(['SELECT 1', 'SELECT 2']);
     const executeSingleStatementSpy = vi.spyOn(
       adapter as never,
       'executeSingleStatement' as never

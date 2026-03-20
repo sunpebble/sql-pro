@@ -1087,13 +1087,9 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         credentials: SSHCredentialsInput
       ): Promise<SSHSaveCredentialsResponse> =>
         invoke(IPC_CHANNELS.SSH_SAVE_CREDENTIALS, { profileId, credentials }),
-      hasCredentials: (
-        profileId: string
-      ): Promise<SSHHasCredentialsResponse> =>
+      hasCredentials: (profileId: string): Promise<SSHHasCredentialsResponse> =>
         invoke(IPC_CHANNELS.SSH_HAS_CREDENTIALS, { profileId }),
-      getCredentials: (
-        profileId: string
-      ): Promise<SSHGetCredentialsResponse> =>
+      getCredentials: (profileId: string): Promise<SSHGetCredentialsResponse> =>
         invoke(IPC_CHANNELS.SSH_GET_CREDENTIALS, { profileId }),
       removeCredentials: (
         profileId: string
@@ -1103,9 +1099,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         connectionId: string
       ): Promise<SSHGetTunnelStatusResponse> =>
         invoke(IPC_CHANNELS.SSH_GET_TUNNEL_STATUS, { connectionId }),
-      closeTunnel: (
-        connectionId: string
-      ): Promise<SSHCloseTunnelResponse> =>
+      closeTunnel: (connectionId: string): Promise<SSHCloseTunnelResponse> =>
         invoke(IPC_CHANNELS.SSH_CLOSE_TUNNEL, { connectionId }),
       testConnection: (
         config: SSHTunnelIpcConfig,

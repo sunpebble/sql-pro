@@ -842,11 +842,7 @@ export class MySQLAdapter implements DatabaseAdapter {
     }
   }
 
-  executeQuery(
-    _connectionId: string,
-    _query: string,
-    _params?: unknown[]
-  ) {
+  executeQuery(_connectionId: string, _query: string, _params?: unknown[]) {
     return {
       success: false as const,
       error: 'Use executeQueryAsync for MySQL connections',
@@ -893,10 +889,10 @@ export class MySQLAdapter implements DatabaseAdapter {
           rows: rows as Record<string, unknown>[],
         };
       } else {
-        const [result] = (await conn.connection.execute(query, params ?? [])) as [
-          { affectedRows?: number; insertId?: number },
-          unknown,
-        ];
+        const [result] = (await conn.connection.execute(
+          query,
+          params ?? []
+        )) as [{ affectedRows?: number; insertId?: number }, unknown];
         return {
           success: true,
           changes: (result as { affectedRows?: number }).affectedRows ?? 0,

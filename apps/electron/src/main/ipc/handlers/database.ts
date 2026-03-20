@@ -43,13 +43,13 @@ import type {
   VectorSearchRequest,
   VectorSearchResponse,
 } from '@shared/types';
-import type {HandlerContext} from '../base/handler';
+import type { HandlerContext } from '../base/handler';
 import { databaseManager, databaseService } from '../../services/database';
 import { qdrantAdapter } from '../../services/database-adapters';
 import { fileWatcherService } from '../../services/file-watcher';
 import { pgNotifyService } from '../../services/pg-notify-service';
 import { addRecentConnection } from '../../services/store';
-import {  IpcHandler } from '../base/handler';
+import { IpcHandler } from '../base/handler';
 import {
   changesChannels,
   databaseChannels,
