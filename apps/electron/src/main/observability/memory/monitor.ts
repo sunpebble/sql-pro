@@ -90,7 +90,8 @@ export class MemoryMonitor {
       this.history = this.history.slice(-this.maxHistorySize);
     }
 
-    const heapPercentage = (metrics.heapUsed / metrics.heapTotal) * 100;
+    const heapPercentage =
+      metrics.heapTotal > 0 ? (metrics.heapUsed / metrics.heapTotal) * 100 : 0;
 
     try {
       const logger = getLogger().child('memory');
@@ -121,10 +122,9 @@ export class MemoryMonitor {
           return m.heapUsed > recentHistory[i - 1].heapUsed;
         });
 
-        if (isGrowing) {
+        if (isGrowing && recentHistory[0].heapUsed > 0) {
           const growthRate =
-            ((recentHistory[recentHistory.length - 1].heapUsed -
-              recentHistory[0].heapUsed) /
+            ((recentHistory.at(-1)!.heapUsed - recentHistory[0].heapUsed) /
               recentHistory[0].heapUsed) *
             100;
 

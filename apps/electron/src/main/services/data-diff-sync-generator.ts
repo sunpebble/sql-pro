@@ -6,6 +6,9 @@ import type {
 import { Buffer } from 'node:buffer';
 import { quoteIdentifier } from '@/utils/sql-sanitize';
 
+// Regex for escaping single quotes
+const SINGLE_QUOTE_REGEX = /'/g;
+
 /**
  * Service for generating SQL sync statements from data comparison results.
  * Generates INSERT, UPDATE, and DELETE statements to sync target to match source.
@@ -292,7 +295,7 @@ class DataDiffSyncGeneratorService {
    */
   private escapeString(str: string): string {
     // In SQLite, single quotes are escaped by doubling them
-    return str.replace(/'/g, "''");
+    return str.replace(SINGLE_QUOTE_REGEX, "''");
   }
 }
 

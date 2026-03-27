@@ -242,7 +242,7 @@ vi.mock('node:child_process', async (importOriginal) => {
       // Simulate successful unzip
       mockState.extractionCalled = true;
       if (callback) {
-        setTimeout(() => callback(null), 0);
+        setTimeout(callback, 0, null);
       }
       return { on: vi.fn() };
     }),
@@ -269,7 +269,7 @@ vi.mock('node:util', async (importOriginal) => {
           JSON.stringify(helloWorldManifest)
         );
         mockState.files.set(`${extractPath}/index.js`, helloWorldPluginCode);
-        setTimeout(() => resolve({ stdout: '', stderr: '' }), 0);
+        setTimeout(resolve, 0, { stdout: '', stderr: '' });
       });
     }),
   };

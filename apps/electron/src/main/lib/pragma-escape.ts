@@ -7,6 +7,11 @@
 
 import { Buffer } from 'node:buffer';
 
+// Regex for escaping single quotes in PRAGMA values
+const SINGLE_QUOTE_REGEX = /'/g;
+// Regex for escaping double quotes in identifiers
+const DOUBLE_QUOTE_REGEX = /"/g;
+
 /**
  * Escapes a password/key value for use in PRAGMA key/rekey statements.
  *
@@ -23,7 +28,7 @@ import { Buffer } from 'node:buffer';
  */
 export function escapePragmaKey(password: string): string {
   // Escape single quotes by doubling them (SQL standard escaping)
-  return password.replace(/'/g, "''");
+  return password.replace(SINGLE_QUOTE_REGEX, "''");
 }
 
 /**
@@ -80,5 +85,5 @@ export function buildPragmaRekeyValue(newPassword: string): string {
  */
 export function escapePragmaIdentifier(identifier: string): string {
   // Escape double quotes by doubling them
-  return identifier.replace(/"/g, '""');
+  return identifier.replace(DOUBLE_QUOTE_REGEX, '""');
 }

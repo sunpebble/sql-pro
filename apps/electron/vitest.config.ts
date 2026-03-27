@@ -2,6 +2,9 @@ import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  // Ensure path aliases and `include` globs resolve when Vitest is invoked from the monorepo root
+  // (e.g. `pnpm vitest run apps/electron/... --config apps/electron/vitest.config.ts`).
+  root: __dirname,
   esbuild: {
     jsx: 'automatic',
   },
@@ -67,7 +70,6 @@ export default defineConfig({
             'dist',
             'out',
             'src/main/services/plugin/*.integration.test.ts',
-            'src/main/services/plugin/*.e2e.test.ts',
           ],
           testTimeout: 30000,
           hookTimeout: 30000,

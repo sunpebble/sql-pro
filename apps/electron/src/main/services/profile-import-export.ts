@@ -2,6 +2,9 @@ import fs from 'node:fs';
 import { z } from 'zod';
 import { getFolders, getProfiles, saveFolder, saveProfile } from './store';
 
+// Regex for semantic version validation
+const SEMVER_REGEX = /^\d+\.\d+\.\d+$/;
+
 /**
  * Profile import/export service for backing up and sharing connection profiles.
  * This module provides functions to export profiles to JSON files and import them back.
@@ -280,7 +283,7 @@ export function parseImportData(jsonString: string): ProfileExportData {
 
   // Validate version compatibility
   const exportData = result.data;
-  if (!exportData.version || !exportData.version.match(/^\d+\.\d+\.\d+$/)) {
+  if (!exportData.version || !SEMVER_REGEX.test(exportData.version)) {
     throw new Error(
       `Invalid or missing version in import file. Expected format: X.Y.Z (e.g., 1.0.0)`
     );

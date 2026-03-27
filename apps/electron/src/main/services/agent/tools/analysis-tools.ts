@@ -4,8 +4,20 @@
 import type { ToolExecutionResult } from '@shared/types/agent';
 import { tool } from 'ai';
 import { z } from 'zod';
+import { isValidSqlIdentifier, sanitizeIdentifier } from '@/utils/sql-sanitize';
 import { databaseService } from '../../database';
 import { databaseManager } from '../../database-adapters/database-manager';
+
+// Regex patterns for SQL analysis
+const SQL_KEYWORDS_REGEX = /\b(?:ORDER|GROUP|LIMIT)\b/i;
+const COLUMN_MATCH_REGEX = /["']?\w+["']?\s*[=<>]/g;
+const COLUMN_CLEAN_REGEX = /[=<>'\s"]/g;
+const JOIN_END_REGEX = /\b(?:WHERE|ORDER|JOIN|LEFT|RIGHT|INNER|OUTER|LIMIT)\b/i;
+
+function getSqlDialect(connectionId: string): 'standard' | 'mysql' {
+  const conn = databaseManager.getConnection(connectionId);
+  return conn?.databaseType === 'mysql' ? 'mysql' : 'standard';
+}
 
 /**
  * Create table analysis tool
@@ -29,11 +41,28 @@ export function createAnalyzeTableTool(connectionId: string) {
     }): Promise<ToolExecutionResult> => {
       try {
         const isAsync = databaseManager.isAsyncConnection(connectionId);
+        const dialect = getSqlDialect(connectionId);
+
+        if (!isValidSqlIdentifier(tableName)) {
+          return { success: false, error: 'Invalid table name' };
+        }
+        if (
+          schema !== undefined &&
+          schema !== '' &&
+          !isValidSqlIdentifier(schema)
+        ) {
+          return { success: false, error: 'Invalid schema name' };
+        }
+
+        const quotedTable = sanitizeIdentifier(tableName, dialect);
+        const quotedSchema = schema
+          ? sanitizeIdentifier(schema, dialect)
+          : undefined;
 
         // Get row count
-        const countSql = schema
-          ? `SELECT COUNT(*) as total FROM "${schema}"."${tableName}"`
-          : `SELECT COUNT(*) as total FROM "${tableName}"`;
+        const countSql = quotedSchema
+          ? `SELECT COUNT(*) as total FROM ${quotedSchema}.${quotedTable}`
+          : `SELECT COUNT(*) as total FROM ${quotedTable}`;
 
         let countResult;
         if (isAsync) {
@@ -100,20 +129,23 @@ export function createAnalyzeTableTool(connectionId: string) {
 
         // Analyze each column (limit to prevent huge queries)
         for (const colName of targetColumns.slice(0, 10)) {
+          if (!isValidSqlIdentifier(colName)) continue;
+
           const col = table.columns?.find(
             (c: { name: string }) => c.name === colName
           );
           if (!col) continue;
 
-          const quotedTable = schema
-            ? `"${schema}"."${tableName}"`
-            : `"${tableName}"`;
+          const quotedFrom = quotedSchema
+            ? `${quotedSchema}.${quotedTable}`
+            : quotedTable;
+          const quotedCol = sanitizeIdentifier(colName, dialect);
           const statsQuery = `
             SELECT
               COUNT(*) as total,
-              COUNT("${colName}") as non_null,
-              COUNT(DISTINCT "${colName}") as distinct_values
-            FROM ${quotedTable}
+              COUNT(${quotedCol}) as non_null,
+              COUNT(DISTINCT ${quotedCol}) as distinct_values
+            FROM ${quotedFrom}
           `;
 
           let statsResult;
@@ -224,14 +256,14 @@ export function createSuggestIndexTool(connectionId: string) {
         if (whereIdx !== -1) {
           const afterWhere = sql.slice(whereIdx + 5);
           // Find end of WHERE clause
-          const endMatch = afterWhere.match(/\b(?:ORDER|GROUP|LIMIT)\b/i);
+          const endMatch = afterWhere.match(SQL_KEYWORDS_REGEX);
           const whereClause = endMatch
             ? afterWhere.slice(0, endMatch.index)
             : afterWhere;
-          const columnMatches = whereClause.match(/["']?\w+["']?\s*[=<>]/g);
+          const columnMatches = whereClause.match(COLUMN_MATCH_REGEX);
           if (columnMatches) {
             columnMatches.forEach((match: string) => {
-              const col = match.replace(/[=<>\s"']/g, '');
+              const col = match.replace(COLUMN_CLEAN_REGEX, '');
               suggestions.push(`Consider index on column: ${col}`);
             });
           }
@@ -250,19 +282,12 @@ export function createSuggestIndexTool(connectionId: string) {
         }
 
         // Check JOIN conditions
-        const joinRegex = /\bJOIN\b/gi;
-        for (
-          let joinExec = joinRegex.exec(sql);
-          joinExec !== null;
-          joinExec = joinRegex.exec(sql)
-        ) {
-          const afterJoin = sql.slice(joinExec.index + 4);
+        for (const joinExec of sql.matchAll(/\bJOIN\b/gi)) {
+          const afterJoin = sql.slice(joinExec.index! + 4);
           const onIdx = afterJoin.toUpperCase().indexOf(' ON ');
           if (onIdx !== -1) {
             const afterOn = afterJoin.slice(onIdx + 4);
-            const endIdx = afterOn.search(
-              /\b(?:WHERE|ORDER|JOIN|LEFT|RIGHT|INNER|OUTER|LIMIT)\b/i
-            );
+            const endIdx = afterOn.search(JOIN_END_REGEX);
             const onClause = endIdx !== -1 ? afterOn.slice(0, endIdx) : afterOn;
             if (onClause.trim()) {
               suggestions.push(`Consider index for JOIN: ${onClause.trim()}`);
@@ -319,9 +344,46 @@ export function createCompareDataTool(connectionId: string) {
     }): Promise<ToolExecutionResult> => {
       try {
         const isAsync = databaseManager.isAsyncConnection(connectionId);
+        const dialect = getSqlDialect(connectionId);
 
-        const sourceQuery = sourceSql || `SELECT * FROM "${sourceTable}"`;
-        const targetQuery = targetSql || `SELECT * FROM "${targetTable}"`;
+        if (!sourceSql && !sourceTable) {
+          return {
+            success: false,
+            error: 'Provide sourceTable or sourceSql',
+          };
+        }
+        if (!targetSql && !targetTable) {
+          return {
+            success: false,
+            error: 'Provide targetTable or targetSql',
+          };
+        }
+
+        if (!sourceSql && sourceTable) {
+          if (!isValidSqlIdentifier(sourceTable)) {
+            return { success: false, error: 'Invalid source table name' };
+          }
+        }
+        if (!targetSql && targetTable) {
+          if (!isValidSqlIdentifier(targetTable)) {
+            return { success: false, error: 'Invalid target table name' };
+          }
+        }
+        for (const k of keyColumns) {
+          if (!isValidSqlIdentifier(k)) {
+            return {
+              success: false,
+              error: `Invalid key column name: ${k}`,
+            };
+          }
+        }
+
+        const sourceQuery =
+          sourceSql ||
+          `SELECT * FROM ${sanitizeIdentifier(sourceTable!, dialect)}`;
+        const targetQuery =
+          targetSql ||
+          `SELECT * FROM ${sanitizeIdentifier(targetTable!, dialect)}`;
 
         // Get source and target data
         let sourceResult, targetResult;

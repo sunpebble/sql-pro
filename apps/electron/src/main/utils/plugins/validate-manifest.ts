@@ -15,6 +15,9 @@ const VALID_PERMISSIONS: PluginPermission[] = [
   'connection:info',
 ];
 
+// Regex for leading slash removal
+const LEADING_SLASH_REGEX = /^\//;
+
 /**
  * JSON Schema definition for PluginManifest.
  * Validates all required and optional fields according to the plugin specification.
@@ -272,7 +275,7 @@ function formatValidationErrors(
     }
 
     return {
-      path: path === '/' ? '/' : path.replace(/^\//, ''),
+      path: path === '/' ? '/' : path.replace(LEADING_SLASH_REGEX, ''),
       message,
       value,
       expected,

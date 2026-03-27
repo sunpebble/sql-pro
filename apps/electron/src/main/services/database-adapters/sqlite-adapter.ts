@@ -113,6 +113,9 @@ function calculateDepth(nodes: QueryPlanNode[], currentDepth = 0): number {
   return maxDepth;
 }
 
+// Regex for replacing SELECT * with SELECT COUNT(*) in SQL queries
+const SELECT_COUNT_REGEX = /SELECT \*/;
+
 /**
  * SQLite database adapter implementation
  */
@@ -1202,7 +1205,10 @@ export class SQLiteAdapter implements DatabaseAdapter {
         sql += ` ORDER BY "${sortColumn}" ${sortDirection === 'desc' ? 'DESC' : 'ASC'}`;
       }
 
-      const countSql = sql.replace(/SELECT \*/, 'SELECT COUNT(*) as count');
+      const countSql = sql.replace(
+        SELECT_COUNT_REGEX,
+        'SELECT COUNT(*) as count'
+      );
       const countStartTime = performance.now();
       const countResult = conn.db.prepare(countSql).get(...params) as {
         count: number;
@@ -1387,7 +1393,10 @@ export class SQLiteAdapter implements DatabaseAdapter {
 
       if (filters && filters.length > 0) {
         // For filtered queries, get exact count
-        const countSql = sql.replace(/SELECT \*/, 'SELECT COUNT(*) as count');
+        const countSql = sql.replace(
+          SELECT_COUNT_REGEX,
+          'SELECT COUNT(*) as count'
+        );
         const countStartTime = performance.now();
         const countResult = conn.db.prepare(countSql).get(...params) as {
           count: number;

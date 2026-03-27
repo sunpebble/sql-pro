@@ -89,6 +89,9 @@ const DEFAULT_MARKETPLACE_URL =
 /** Default cache duration: 1 hour */
 const DEFAULT_CACHE_DURATION = 60 * 60 * 1000;
 
+// Regex for version prefix
+const VERSION_PREFIX_REGEX = /^v/;
+
 // ============ Storage Instance ============
 
 // Lazy-initialize store to ensure app is ready before accessing userData path
@@ -1206,7 +1209,7 @@ class PluginService extends EventEmitter {
   private isNewerVersion(a: string, b: string): boolean {
     const parseVersion = (v: string): number[] => {
       return v
-        .replace(/^v/, '')
+        .replace(VERSION_PREFIX_REGEX, '')
         .split('.')
         .map((n) => Number.parseInt(n, 10) || 0);
     };

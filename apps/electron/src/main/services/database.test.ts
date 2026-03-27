@@ -10,6 +10,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as errorParser from '@/lib/error-parser';
 import { databaseService } from './database';
 
+// Regex for matching HTTPS URLs in tests
+const HTTPS_URL_REGEX = /^https:\/\//;
+
 // Mock the error parser module to verify it's being called correctly
 vi.mock('../lib/error-parser', async () => {
   const actual = await vi.importActual('../lib/error-parser');
@@ -87,7 +90,7 @@ describe('databaseService - Error Enhancement Integration', () => {
       );
 
       expect(result.documentationUrl).toBeDefined();
-      expect(result.documentationUrl).toMatch(/^https:\/\//);
+      expect(result.documentationUrl).toMatch(HTTPS_URL_REGEX);
     });
   });
 });
@@ -197,7 +200,7 @@ describe('databaseService - Connection Error Enhancement Integration', () => {
       );
 
       expect(result.documentationUrl).toBeDefined();
-      expect(result.documentationUrl).toMatch(/^https:\/\//);
+      expect(result.documentationUrl).toMatch(HTTPS_URL_REGEX);
     });
   });
 });

@@ -1,5 +1,4 @@
 import type { UIFilterState, UIOperator } from './filter-utils';
-
 import { describe, expect, it } from 'vitest';
 import {
   convertUIFiltersToAPIFilters,
@@ -18,6 +17,9 @@ import {
   TEXT_OPERATORS,
   validateFilterValue,
 } from './filter-utils';
+
+// Regex for filter ID format validation
+const FILTER_ID_FORMAT_REGEX = /^filter-\d+-[a-z0-9]+$/;
 
 describe('detectColumnTypeCategory', () => {
   describe('numeric types', () => {
@@ -1347,7 +1349,7 @@ describe('generateFilterId', () => {
 
   it('should generate IDs with expected format', () => {
     const id = generateFilterId();
-    expect(id).toMatch(/^filter-\d+-[a-z0-9]+$/);
+    expect(id).toMatch(FILTER_ID_FORMAT_REGEX);
   });
 });
 

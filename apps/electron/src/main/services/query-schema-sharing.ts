@@ -13,6 +13,13 @@ import { promisify } from 'node:util';
 import { gunzip, gzip } from 'node:zlib';
 import { z } from 'zod';
 
+// Regex for semantic version validation
+const SEMVER_REGEX = /^\d+\.\d+\.\d+$/;
+
+// Regex for SQL comment removal
+const SINGLE_LINE_COMMENT_REGEX = /--[^\n]*/g;
+const MULTI_LINE_COMMENT_REGEX = /\/\*[\s\S]*?\*\//g;
+
 /**
  * Query and Schema sharing service for exporting and importing queries,
  * schema definitions, and query bundles.
@@ -129,7 +136,7 @@ function isCompressed(data: string | Buffer): boolean {
  * Zod schema for validating ShareableMetadata.
  */
 const ShareableMetadataSchema = z.object({
-  version: z.string().regex(/^\d+\.\d+\.\d+$/),
+  version: z.string().regex(SEMVER_REGEX),
   exportedAt: z.string(),
   appVersion: z.string().optional(),
   author: z.string().optional(),
@@ -263,8 +270,8 @@ export async function exportQuery(
   // Basic SQL syntax check - ensure it contains valid SQL keywords
   // Strip SQL comments (-- and /* */) before checking
   const sqlWithoutComments = query.sql
-    .replace(/--[^\n]*/g, '') // Remove single-line comments
-    .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
+    .replace(SINGLE_LINE_COMMENT_REGEX, '') // Remove single-line comments
+    .replace(MULTI_LINE_COMMENT_REGEX, '') // Remove multi-line comments
     .trim()
     .toUpperCase();
 
@@ -704,7 +711,7 @@ function validateVersionCompatibility(importVersion: string): {
 } {
   const warnings: string[] = [];
 
-  if (!importVersion || !importVersion.match(/^\d+\.\d+\.\d+$/)) {
+  if (!importVersion || !SEMVER_REGEX.test(importVersion)) {
     return {
       compatible: false,
       warnings: [
@@ -797,8 +804,8 @@ function validateQueryStructure(query: ShareableQuery): {
 
     // Validate SQL has some basic structure (not just whitespace/comments)
     const sqlWithoutComments = query.sql
-      .replace(/--[^\n]*/g, '')
-      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(SINGLE_LINE_COMMENT_REGEX, '')
+      .replace(MULTI_LINE_COMMENT_REGEX, '')
       .trim();
 
     if (sqlWithoutComments.length === 0) {
@@ -1190,8 +1197,8 @@ function validateBundleStructure(bundle: ShareableBundle): {
 
         // Validate SQL has executable statements
         const sqlWithoutComments = query.sql
-          .replace(/--[^\n]*/g, '')
-          .replace(/\/\*[\s\S]*?\*\//g, '')
+          .replace(SINGLE_LINE_COMMENT_REGEX, '')
+          .replace(MULTI_LINE_COMMENT_REGEX, '')
           .trim();
 
         if (sqlWithoutComments.length === 0) {

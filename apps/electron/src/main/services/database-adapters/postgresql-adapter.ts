@@ -58,6 +58,11 @@ function generateId(prefix: string): string {
   return `${prefix}_${idCounter}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
+// Regex patterns for version parsing and SQL transformation
+const POSTGRESQL_VERSION_REGEX = /PostgreSQL\s+[\d.]+/;
+const SELECT_STAR_REGEX = /SELECT \*/;
+const ORDER_BY_QUOTED_REGEX = / ORDER BY "[^"]+" (ASC|DESC)/;
+
 /**
  * PostgreSQL database adapter implementation
  * Also handles Supabase connections since Supabase uses PostgreSQL
@@ -375,7 +380,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
       let serverVersion: string | undefined;
       if (versionRow?.version) {
         // Parse version string like "PostgreSQL 15.1 on x86_64-pc-linux-gnu..."
-        const match = versionRow.version.match(/PostgreSQL\s+[\d.]+/);
+        const match = versionRow.version.match(POSTGRESQL_VERSION_REGEX);
         serverVersion = match ? match[0] : versionRow.version.split(' on ')[0];
       }
 
@@ -1012,8 +1017,8 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
 
       // Get count (without ORDER BY clause since it's not needed for counting)
       const countSql = sql
-        .replace(/SELECT \*/, 'SELECT COUNT(*)')
-        .replace(/ ORDER BY "[^"]+" (ASC|DESC)/, '');
+        .replace(SELECT_STAR_REGEX, 'SELECT COUNT(*)')
+        .replace(ORDER_BY_QUOTED_REGEX, '');
       const countResult = await conn.client.query(countSql, params);
       const totalRows = Number(
         (countResult.rows[0] as { count: string }).count

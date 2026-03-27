@@ -6,6 +6,11 @@
  * network error detection, user-friendly formatting, and logging.
  */
 
+// Regex patterns for cleaning error messages
+const ERROR_PREFIX_REGEX = /^Error:\s*/i;
+const UNCAUGHT_PREFIX_REGEX = /^Uncaught\s*/i;
+const EXCEPTION_PREFIX_REGEX = /^Exception:\s*/i;
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -199,9 +204,9 @@ export function formatErrorForUser(error: unknown, context?: string): string {
 
   // Clean up common technical prefixes
   let cleanMessage = message
-    .replace(/^Error:\s*/i, '')
-    .replace(/^Uncaught\s*/i, '')
-    .replace(/^Exception:\s*/i, '');
+    .replace(ERROR_PREFIX_REGEX, '')
+    .replace(UNCAUGHT_PREFIX_REGEX, '')
+    .replace(EXCEPTION_PREFIX_REGEX, '');
 
   // Capitalize first letter
   if (cleanMessage.length > 0) {

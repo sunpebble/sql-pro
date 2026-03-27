@@ -8,6 +8,15 @@
  * with user-provided identifiers.
  */
 
+// Regex for valid SQL identifier characters
+const VALID_SQL_IDENTIFIER_REGEX = /^[\p{L}\p{N}_\- .]+$/u;
+
+// Regex for double quote escaping
+const DOUBLE_QUOTE_REGEX = /"/g;
+
+// Regex for backtick escaping
+const BACKTICK_REGEX = /`/g;
+
 /**
  * Validates that a SQL identifier (table name, column name, etc.) contains
  * only safe characters. Rejects identifiers with characters that could be
@@ -24,7 +33,7 @@ export function isValidSqlIdentifier(identifier: string): boolean {
   if (identifier.length > 128) return false;
   // Allow alphanumeric, underscores, hyphens, dots, spaces, and unicode letters
   // Reject quotes, semicolons, comments, and other dangerous characters
-  return /^[\p{L}\p{N}_\- .]+$/u.test(identifier);
+  return VALID_SQL_IDENTIFIER_REGEX.test(identifier);
 }
 
 /**
@@ -44,7 +53,7 @@ export function quoteIdentifier(identifier: string): string {
     throw new Error('SQL identifier cannot be empty');
   }
   // Double any existing double-quotes and wrap in double-quotes
-  return `"${identifier.replace(/"/g, '""')}"`;
+  return `"${identifier.replace(DOUBLE_QUOTE_REGEX, '""')}"`;
 }
 
 /**
@@ -63,7 +72,7 @@ export function quoteIdentifierMySQL(identifier: string): string {
     throw new Error('SQL identifier cannot be empty');
   }
   // Double any existing backticks and wrap in backticks
-  return `\`${identifier.replace(/`/g, '``')}\``;
+  return `\`${identifier.replace(BACKTICK_REGEX, '``')}\``;
 }
 
 /**

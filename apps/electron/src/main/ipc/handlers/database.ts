@@ -1,10 +1,3 @@
-/**
- * Database IPC Handler
- *
- * Handles all database-related IPC operations using the new handler base class.
- * This provides unified error handling, logging, and type safety.
- */
-
 import type {
   AnalyzeQueryPlanRequest,
   AnalyzeQueryPlanResponse,
@@ -58,6 +51,10 @@ import {
   schemaChannels,
   vectorChannels,
 } from '../contracts/all-channels';
+
+// Regex to detect modifying SQL keywords
+const MODIFYING_KEYWORDS_REGEX =
+  /^\s*(?:INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|REPLACE)/i;
 
 export class DatabaseHandler extends IpcHandler {
   constructor() {
@@ -490,9 +487,7 @@ export class DatabaseHandler extends IpcHandler {
     request: ExecuteQueryRequest,
     _ctx: HandlerContext
   ): Promise<ExecuteQueryResponse> {
-    const modifyingKeywords =
-      /^\s*(?:INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|REPLACE)/i;
-    const isModifying = modifyingKeywords.test(request.query);
+    const isModifying = MODIFYING_KEYWORDS_REGEX.test(request.query);
 
     this.log('info', 'Executing query', {
       connectionId: request.connectionId,

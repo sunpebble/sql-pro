@@ -5,6 +5,8 @@ import * as RechartsPrimitive from 'recharts';
 
 import { cn } from './lib/utils';
 
+const REGEX_COLON = /:/g;
+
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
 
@@ -79,7 +81,7 @@ function ChartContainer({
   >['children'];
 }) {
   const uniqueId = React.useId();
-  const chartId = `chart-${id || uniqueId.replace(/:/g, '')}`;
+  const chartId = `chart-${id || uniqueId.replace(REGEX_COLON, '')}`;
 
   return (
     <ChartContext value={{ config }}>
