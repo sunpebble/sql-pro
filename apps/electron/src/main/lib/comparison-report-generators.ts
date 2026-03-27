@@ -1,5 +1,8 @@
 import type { SchemaComparisonResult, TableDiff } from '@shared/types';
 
+// Regex to match HTML special characters for escaping
+const HTML_ESCAPE_REGEX = /[&<>"']/g;
+
 /**
  * Report generators for schema comparison results.
  * These utilities convert comparison results to different report formats (HTML, JSON, Markdown).
@@ -639,7 +642,7 @@ function escapeHtml(text: string): string {
     '"': '&quot;',
     "'": '&#039;',
   };
-  return text.replace(/[&<>"']/g, (char) => map[char] || char);
+  return text.replace(HTML_ESCAPE_REGEX, (char) => map[char] || char);
 }
 
 /**
@@ -647,6 +650,9 @@ function escapeHtml(text: string): string {
  */
 function formatTimestamp(isoString: string): string {
   const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) {
+    return escapeHtml(isoString);
+  }
   return date.toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',

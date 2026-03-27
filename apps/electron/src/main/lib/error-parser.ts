@@ -14,6 +14,18 @@ import type {
   ErrorPosition,
 } from '@shared/types';
 
+// Regex patterns for error position extraction
+const POSITION_OFFSET_REGEX = /at (?:position|offset) (\d+)/i;
+const LINE_COLUMN_REGEX = /(?:near )?line\s*(\d+)[\s,]+column\s*(\d+)/i;
+const NEAR_TOKEN_REGEX = /near "([^"]+)"/i;
+
+// Regex patterns for encryption detection
+const ENCRYPTION_PATTERNS = [
+  /file is not a database/i,
+  /encrypted/i,
+  /not a database or encrypted/i,
+];
+
 /**
  * Documentation URLs for different error categories.
  */
@@ -319,16 +331,14 @@ export function parseErrorPosition(
   query?: string
 ): ErrorPosition | undefined {
   // Pattern: "at position N" or "at offset N"
-  const positionMatch = errorMessage.match(/at (?:position|offset) (\d+)/i);
+  const positionMatch = errorMessage.match(POSITION_OFFSET_REGEX);
   if (positionMatch && query) {
     const offset = Number.parseInt(positionMatch[1], 10);
     return offsetToLineColumn(query, offset);
   }
 
   // Pattern: "near line N column M" or "line N, column M"
-  const lineColMatch = errorMessage.match(
-    /(?:near )?line\s*(\d+)[\s,]+column\s*(\d+)/i
-  );
+  const lineColMatch = errorMessage.match(LINE_COLUMN_REGEX);
   if (lineColMatch) {
     return {
       line: Number.parseInt(lineColMatch[1], 10),
@@ -337,7 +347,7 @@ export function parseErrorPosition(
   }
 
   // For "near X" errors, try to find the position of X in the query
-  const nearMatch = errorMessage.match(/near "([^"]+)"/i);
+  const nearMatch = errorMessage.match(NEAR_TOKEN_REGEX);
   if (nearMatch && query) {
     const token = nearMatch[1];
     const tokenIndex = query.toUpperCase().indexOf(token.toUpperCase());
@@ -482,13 +492,7 @@ export function enhanceConnectionError(
  * Determines if an error message suggests the database needs a password.
  */
 export function needsPassword(errorMessage: string): boolean {
-  const encryptionPatterns = [
-    /file is not a database/i,
-    /encrypted/i,
-    /not a database or encrypted/i,
-  ];
-
-  return encryptionPatterns.some((pattern) => pattern.test(errorMessage));
+  return ENCRYPTION_PATTERNS.some((pattern) => pattern.test(errorMessage));
 }
 
 /**

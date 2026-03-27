@@ -38,6 +38,9 @@ import type {
 // Mock API for development and testing
 import type { SqlProAPI } from '@shared/types/sql-pro-api';
 
+// Static regex patterns
+const LIMIT_REGEX = /limit\s+(\d+)/i;
+
 // Mock tables schema
 const mockTables: TableInfo[] = [
   {
@@ -858,7 +861,7 @@ export const mockSqlProAPI = {
 
         // Handle LIMIT clause
         let limitedData = data;
-        const limitMatch = query.match(/limit\s+(\d+)/);
+        const limitMatch = query.match(LIMIT_REGEX);
         if (limitMatch) {
           const limit = Number.parseInt(limitMatch[1], 10);
           limitedData = data.slice(0, limit);

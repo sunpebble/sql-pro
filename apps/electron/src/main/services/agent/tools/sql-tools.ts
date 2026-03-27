@@ -11,15 +11,8 @@ import { z } from 'zod';
 import { databaseService } from '../../database';
 import { databaseManager } from '../../database-adapters/database-manager';
 
-/**
- * Check if connection exists in either manager
- */
-function _hasConnection(connectionId: string): boolean {
-  return (
-    databaseManager.getConnection(connectionId) !== null ||
-    databaseService.getConnection(connectionId) !== null
-  );
-}
+// Regex for DDL operations
+const DDL_REGEX = /^(?:CREATE|ALTER|DROP|TRUNCATE|RENAME)/;
 
 /**
  * Detect SQL operation type from query string
@@ -31,7 +24,7 @@ export function detectSqlOperationType(sql: string): SqlOperationType {
   if (trimmed.startsWith('INSERT')) return 'INSERT';
   if (trimmed.startsWith('UPDATE')) return 'UPDATE';
   if (trimmed.startsWith('DELETE')) return 'DELETE';
-  if (/^(?:CREATE|ALTER|DROP|TRUNCATE|RENAME)/.test(trimmed)) return 'DDL';
+  if (DDL_REGEX.test(trimmed)) return 'DDL';
   return 'OTHER';
 }
 

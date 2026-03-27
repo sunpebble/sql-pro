@@ -1,11 +1,17 @@
 import type { ColumnInfo } from '@shared/types';
 import { Buffer } from 'node:buffer';
+import ExcelJS from 'exceljs';
+import Papa from 'papaparse';
+
+// Regex for escaping double quotes in identifiers
+const DOUBLE_QUOTE_REGEX = /"/g;
+// Regex for escaping single quotes in SQL values
+const SINGLE_QUOTE_REGEX = /'/g;
+
 /**
  * Export generators for various data formats.
  * These utilities convert row data to different export formats (CSV, JSON, SQL, Excel).
  */
-import ExcelJS from 'exceljs';
-import Papa from 'papaparse';
 
 // ============ CSV Generator ============
 
@@ -121,7 +127,7 @@ export interface SQLExportOptions {
  */
 function escapeIdentifier(identifier: string): string {
   // Escape any double quotes by doubling them, then wrap in double quotes
-  return `"${identifier.replace(/"/g, '""')}"`;
+  return `"${identifier.replace(DOUBLE_QUOTE_REGEX, '""')}"`;
 }
 
 /**
@@ -139,7 +145,7 @@ function escapeSQLValue(value: unknown): string {
 
   // Handle strings - escape single quotes by doubling them
   if (typeof value === 'string') {
-    return `'${value.replace(/'/g, "''")}'`;
+    return `'${value.replace(SINGLE_QUOTE_REGEX, "''")}'`;
   }
 
   // Handle booleans - SQLite uses 1/0
@@ -163,7 +169,7 @@ function escapeSQLValue(value: unknown): string {
   }
 
   // Fallback for other types - convert to string and escape
-  return `'${String(value).replace(/'/g, "''")}'`;
+  return `'${String(value).replace(SINGLE_QUOTE_REGEX, "''")}'`;
 }
 
 /**

@@ -171,7 +171,7 @@ export function useTableNavigation() {
 
     if (!selectedTable) {
       // No table selected, select the last one
-      selectTable(navigableTables[navigableTables.length - 1]);
+      selectTable(navigableTables.at(-1)!);
       return;
     }
 
@@ -182,7 +182,7 @@ export function useTableNavigation() {
 
     if (currentIndex === -1) {
       // Current table not in list (maybe filtered out), select last
-      selectTable(navigableTables[navigableTables.length - 1]);
+      selectTable(navigableTables.at(-1)!);
       return;
     }
 

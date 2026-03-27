@@ -42,6 +42,9 @@ const MANIFEST_FILENAME = 'plugin.json';
 /** Plugin archive extension */
 const PLUGIN_ARCHIVE_EXTENSION = '.sqlpro-plugin';
 
+// Regex for non-numeric prefix
+const NON_NUMERIC_PREFIX_REGEX = /^\D*/;
+
 // ============ Types ============
 
 /**
@@ -168,7 +171,7 @@ function satisfiesVersion(version: string, range: string): boolean {
 
   // Extract numeric parts from version strings
   const parseVersion = (v: string): number[] => {
-    const cleaned = v.replace(/^\D*/, '');
+    const cleaned = v.replace(NON_NUMERIC_PREFIX_REGEX, '');
     return cleaned.split('.').map((n) => Number.parseInt(n, 10) || 0);
   };
 

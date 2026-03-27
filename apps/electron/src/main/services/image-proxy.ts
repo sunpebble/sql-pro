@@ -92,6 +92,9 @@ const imageCache = new Map<string, CachedImage>();
 /** Current total cache size in bytes */
 let currentCacheSize = 0;
 
+// Regex for printable ASCII characters
+const PRINTABLE_ASCII_REGEX = /^[\x20-\x7E]+$/;
+
 /**
  * Get an image from cache, updating LRU order
  */
@@ -300,7 +303,7 @@ async function extractMetadata(buffer: Buffer): Promise<ImageMetadata> {
           const nullIndex = slice.indexOf(0);
           if (nullIndex > 0) {
             const profileName = slice.subarray(0, nullIndex).toString('ascii');
-            if (profileName && /^[\x20-\x7E]+$/.test(profileName)) {
+            if (profileName && PRINTABLE_ASCII_REGEX.test(profileName)) {
               iccProfile = profileName;
             }
           }
@@ -346,6 +349,31 @@ async function extractMetadata(buffer: Buffer): Promise<ImageMetadata> {
       size: buffer.length,
     };
   }
+}
+
+/**
+ * Parse and clamp HTTP Range (bytes=) to valid buffer slice indices.
+ */
+function parseClampedByteRange(
+  rangeHeader: string | null,
+  bufferLength: number
+): { start: number; end: number } | null {
+  if (!rangeHeader || bufferLength <= 0) return null;
+  const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
+  if (!match) return null;
+  const maxIndex = bufferLength - 1;
+  let start = Number.parseInt(match[1], 10);
+  let end = match[2] ? Number.parseInt(match[2], 10) : maxIndex;
+  if (Number.isNaN(start)) start = 0;
+  if (Number.isNaN(end)) end = maxIndex;
+  start = Math.min(Math.max(0, start), maxIndex);
+  end = Math.min(Math.max(0, end), maxIndex);
+  if (start > end) {
+    const t = start;
+    start = end;
+    end = t;
+  }
+  return { start, end };
 }
 
 /**
@@ -498,12 +526,9 @@ export function setupImageProxyHandler(): void {
         // Handle Range requests for video streaming
         const rangeHeader = request.headers.get('range');
         if (rangeHeader && isVideo) {
-          const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
-          if (match) {
-            const start = Number.parseInt(match[1], 10);
-            const end = match[2]
-              ? Number.parseInt(match[2], 10)
-              : buffer.length - 1;
+          const range = parseClampedByteRange(rangeHeader, buffer.length);
+          if (range) {
+            const { start, end } = range;
             const chunkSize = end - start + 1;
 
             return new Response(buffer.subarray(start, end + 1), {
@@ -576,12 +601,12 @@ export function setupImageProxyHandler(): void {
         // Handle Range requests for video streaming
         const rangeHeader = request.headers.get('range');
         if (rangeHeader && cached.mimeType.startsWith('video/')) {
-          const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
-          if (match) {
-            const start = Number.parseInt(match[1], 10);
-            const end = match[2]
-              ? Number.parseInt(match[2], 10)
-              : cached.size - 1;
+          const range = parseClampedByteRange(
+            rangeHeader,
+            cached.buffer.length
+          );
+          if (range) {
+            const { start, end } = range;
             const chunkSize = end - start + 1;
 
             // Return partial content for Range request

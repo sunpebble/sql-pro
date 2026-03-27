@@ -6,6 +6,14 @@ import {
   validateSql,
 } from './monaco-sql-config';
 
+// Static regex patterns for tests
+const JOIN_ON_REGEX = /JOIN.*ON/;
+const PAREN_OPEN_REGEX = /\(/g;
+const PAREN_CLOSE_REGEX = /\)/g;
+const SELECT_GLOBAL_REGEX = /SELECT/g;
+const WHEN_GLOBAL_REGEX = /WHEN/g;
+const JOIN_GLOBAL_REGEX = /JOIN/g;
+
 describe('formatSql', () => {
   describe('edge cases and empty input', () => {
     it('should return empty string for empty input', () => {
@@ -137,7 +145,7 @@ describe('formatSql', () => {
       const result = formatSql(
         'select * from users join orders on users.id = orders.user_id'
       );
-      expect(result).toMatch(/JOIN.*ON/);
+      expect(result).toMatch(JOIN_ON_REGEX);
     });
   });
 
@@ -378,8 +386,8 @@ describe('formatSql', () => {
       const result = formatSql(
         'select * from users where ((a = 1) and (b = 2))'
       );
-      expect(result.match(/\(/g)?.length).toBe(3);
-      expect(result.match(/\)/g)?.length).toBe(3);
+      expect(result.match(PAREN_OPEN_REGEX)?.length).toBe(3);
+      expect(result.match(PAREN_CLOSE_REGEX)?.length).toBe(3);
     });
   });
 
@@ -1534,7 +1542,7 @@ describe('formatSql edge cases', () => {
     it('should format three consecutive statements', () => {
       const sql = 'select 1; select 2; select 3;';
       const result = formatSql(sql);
-      expect(result.match(/SELECT/g)?.length).toBe(3);
+      expect(result.match(SELECT_GLOBAL_REGEX)?.length).toBe(3);
       expect(result).toContain(';');
     });
 
@@ -1555,7 +1563,7 @@ describe('formatSql edge cases', () => {
         'select case when a = 1 then "one" when a = 2 then "two" when a = 3 then "three" else "other" end from t';
       const result = formatSql(sql);
       expect(result).toContain('CASE');
-      expect(result.match(/WHEN/g)?.length).toBe(3);
+      expect(result.match(WHEN_GLOBAL_REGEX)?.length).toBe(3);
       expect(result).toContain('ELSE');
       expect(result).toContain('END');
     });
@@ -1629,7 +1637,7 @@ describe('formatSql edge cases', () => {
       const sql =
         'select * from a join b on a.id = b.id join c on b.id = c.id join d on c.id = d.id';
       const result = formatSql(sql);
-      expect(result.match(/JOIN/g)?.length).toBeGreaterThanOrEqual(3);
+      expect(result.match(JOIN_GLOBAL_REGEX)?.length).toBeGreaterThanOrEqual(3);
     });
 
     it('should handle self-join with different aliases', () => {

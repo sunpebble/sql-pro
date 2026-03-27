@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Resizable } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 
+const REGEX_QUOTE = /"/g;
+
 export interface Employee {
   id: string;
   name: string;
@@ -413,7 +415,9 @@ export function ResizableTable({
     const csvContent = [
       headers.join(','),
       ...rows.map((row) =>
-        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        row
+          .map((cell) => `"${String(cell).replace(REGEX_QUOTE, '""')}"`)
+          .join(',')
       ),
     ].join('\n');
 
@@ -422,6 +426,7 @@ export function ResizableTable({
     link.href = URL.createObjectURL(blob);
     link.download = `employees-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
+    URL.revokeObjectURL(link.href);
   };
 
   const exportToJSON = () => {
@@ -433,6 +438,7 @@ export function ResizableTable({
     link.href = URL.createObjectURL(blob);
     link.download = `employees-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
+    URL.revokeObjectURL(link.href);
   };
 
   const shouldAnimate = enableAnimations && !shouldReduceMotion;

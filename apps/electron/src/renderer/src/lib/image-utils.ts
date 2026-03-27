@@ -1,6 +1,27 @@
 import type { ColumnSchema } from '@/types/database';
 
 // ============================================================================
+// Regex Patterns
+// ============================================================================
+
+// Windows path detection (e.g., C:/ or C:\)
+const WINDOWS_PATH_REGEX = /^[a-z]:[/\\]/i;
+
+// URL image format query params
+const IMAGE_FORMAT_PARAM_REGEX = /^(?:jpg|jpeg|png|gif|webp|svg)$/i;
+const IMAGE_TYPE_PARAM_REGEX = /^image/i;
+const VIDEO_FORMAT_PARAM_REGEX = /^(?:mp4|webm|mov|avi|mkv)$/i;
+const VIDEO_TYPE_PARAM_REGEX = /^video/i;
+
+// Base64 data URL patterns
+const BASE64_IMAGE_REGEX = /^data:image\/[a-z+]+;base64,/i;
+const BASE64_VIDEO_REGEX = /^data:video\/[a-z0-9+]+;base64,/i;
+
+// Data URL mime type extraction
+const IMAGE_MIME_EXTRACT_REGEX = /^data:image\/([a-z+]+);/i;
+const VIDEO_MIME_EXTRACT_REGEX = /^data:video\/([a-z0-9+]+);/i;
+
+// ============================================================================
 // Timeout Utility
 // ============================================================================
 
@@ -308,7 +329,7 @@ export function isLocalImagePath(value: string): boolean {
 
   // Check for common path patterns (Unix and Windows)
   const isUnixPath = trimmed.startsWith('/');
-  const isWindowsPath = /^[a-z]:[/\\]/i.test(trimmed);
+  const isWindowsPath = WINDOWS_PATH_REGEX.test(trimmed);
   const isRelativePath = trimmed.startsWith('./') || trimmed.startsWith('../');
 
   if (!isUnixPath && !isWindowsPath && !isRelativePath) return false;
@@ -327,7 +348,7 @@ export function isLocalVideoPath(value: string): boolean {
 
   // Check for common path patterns (Unix and Windows)
   const isUnixPath = trimmed.startsWith('/');
-  const isWindowsPath = /^[a-z]:[/\\]/i.test(trimmed);
+  const isWindowsPath = WINDOWS_PATH_REGEX.test(trimmed);
   const isRelativePath = trimmed.startsWith('./') || trimmed.startsWith('../');
 
   if (!isUnixPath && !isWindowsPath && !isRelativePath) return false;
@@ -383,8 +404,8 @@ export function isImageUrl(value: string): boolean {
     // Check query params for image indicators
     const params = url.searchParams;
     if (
-      params.get('format')?.match(/^(jpg|jpeg|png|gif|webp|svg)$/i) ||
-      params.get('type')?.match(/^image/i)
+      IMAGE_FORMAT_PARAM_REGEX.test(params.get('format') || '') ||
+      IMAGE_TYPE_PARAM_REGEX.test(params.get('type') || '')
     ) {
       return true;
     }
@@ -426,7 +447,7 @@ export async function isImageUrlAsync(value: string): Promise<boolean> {
  */
 export function isBase64Image(value: string): boolean {
   if (!value || typeof value !== 'string') return false;
-  return /^data:image\/[a-z+]+;base64,/i.test(value.trim());
+  return BASE64_IMAGE_REGEX.test(value.trim());
 }
 
 /**
@@ -434,7 +455,7 @@ export function isBase64Image(value: string): boolean {
  */
 export function isBase64Video(value: string): boolean {
   if (!value || typeof value !== 'string') return false;
-  return /^data:video\/[a-z0-9+]+;base64,/i.test(value.trim());
+  return BASE64_VIDEO_REGEX.test(value.trim());
 }
 
 /**
@@ -462,8 +483,8 @@ export function isVideoUrl(value: string): boolean {
     // Check query params for video indicators
     const params = url.searchParams;
     if (
-      params.get('format')?.match(/^(mp4|webm|mov|avi|mkv)$/i) ||
-      params.get('type')?.match(/^video/i)
+      VIDEO_FORMAT_PARAM_REGEX.test(params.get('format') || '') ||
+      VIDEO_TYPE_PARAM_REGEX.test(params.get('type') || '')
     ) {
       return true;
     }
@@ -1250,7 +1271,7 @@ export function getImageExtension(source: ImageSource): string {
       return mimeToExt[source.mimeType] ?? 'bin';
     }
     case 'base64': {
-      const match = source.dataUrl.match(/^data:image\/([a-z+]+);/i);
+      const match = IMAGE_MIME_EXTRACT_REGEX.exec(source.dataUrl);
       return match?.[1] ?? 'bin';
     }
     case 'url': {
@@ -1304,9 +1325,9 @@ export function getMediaExtension(source: MediaSource): string {
       return mimeToExt[source.mimeType] ?? 'bin';
     }
     case 'base64': {
-      const imageMatch = source.dataUrl.match(/^data:image\/([a-z+]+);/i);
+      const imageMatch = IMAGE_MIME_EXTRACT_REGEX.exec(source.dataUrl);
       if (imageMatch) return imageMatch[1];
-      const videoMatch = source.dataUrl.match(/^data:video\/([a-z0-9+]+);/i);
+      const videoMatch = VIDEO_MIME_EXTRACT_REGEX.exec(source.dataUrl);
       if (videoMatch) return videoMatch[1];
       return 'bin';
     }

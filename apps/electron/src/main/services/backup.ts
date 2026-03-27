@@ -14,7 +14,17 @@ import type {
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { app } from 'electron';
+import { sanitizeIdentifier } from '@/utils/sql-sanitize';
 import { databaseService } from './database';
+
+// Regex patterns for backup filename generation
+const TIMESTAMP_REPLACE_REGEX = /[:.]/g;
+const SAFE_NAME_REGEX = /[^\w-]/g;
+// Regex for escaping single quotes in SQL
+const SINGLE_QUOTE_REGEX = /'/g;
+// Regex for matching SQL statements to filter by table
+const SQL_TABLE_MATCH_REGEX =
+  /(?:CREATE TABLE|INSERT INTO|DROP TABLE IF EXISTS)\s+"?(\w+)"?/i;
 
 // Default backup directory
 const getBackupDir = (): string => {
@@ -57,8 +67,10 @@ const generateBackupId = (): string => {
 
 // Generate backup filename
 const generateBackupFilename = (name: string, format: BackupFormat): string => {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const safeName = name.replace(/[^\w-]/g, '_');
+  const timestamp = new Date()
+    .toISOString()
+    .replace(TIMESTAMP_REPLACE_REGEX, '-');
+  const safeName = name.replace(SAFE_NAME_REGEX, '_');
   const ext = format === 'sqlite' ? 'db' : 'sql';
   return `${safeName}_${timestamp}.${ext}`;
 };
@@ -77,7 +89,15 @@ export async function createBackup(
 
     const outputDir = request.outputDir || getBackupDir();
     const filename = generateBackupFilename(request.name, request.format);
-    const filePath = path.join(outputDir, filename);
+    const resolvedOut = path.resolve(outputDir);
+    const filePath = path.resolve(resolvedOut, filename);
+    const relativeToOut = path.relative(resolvedOut, filePath);
+    if (relativeToOut.startsWith('..') || path.isAbsolute(relativeToOut)) {
+      return {
+        success: false,
+        error: 'Invalid backup output directory',
+      };
+    }
 
     // Get schema for table count and row count estimation
     const schemaResult = databaseService.getSchema(request.connectionId);
@@ -93,7 +113,7 @@ export async function createBackup(
       // Use VACUUM INTO to create a clean backup
       const vacuumResult = databaseService.execute(
         request.connectionId,
-        `VACUUM INTO '${filePath.replace(/'/g, "''")}'`
+        `VACUUM INTO '${filePath.replace(SINGLE_QUOTE_REGEX, "''")}'`
       );
 
       if (!vacuumResult.success) {
@@ -110,7 +130,7 @@ export async function createBackup(
       for (const tableName of tables) {
         const countResult = databaseService.query(
           request.connectionId,
-          `SELECT COUNT(*) as count FROM "${tableName}"`
+          `SELECT COUNT(*) as count FROM ${sanitizeIdentifier(tableName)}`
         );
         if (countResult.success && countResult.rows?.[0]) {
           totalRows += Number(countResult.rows[0][0]) || 0;
@@ -133,14 +153,14 @@ export async function createBackup(
         // Get CREATE TABLE statement
         const createResult = databaseService.query(
           request.connectionId,
-          `SELECT sql FROM sqlite_master WHERE type='table' AND name='${tableName.replace(/'/g, "''")}'`
+          `SELECT sql FROM sqlite_master WHERE type='table' AND name='${tableName.replace(SINGLE_QUOTE_REGEX, "''")}'`
         );
 
         if (createResult.success && createResult.rows?.[0]) {
           const createSql = createResult.rows[0][0] as string | null;
           if (createSql) {
             sqlContent += `-- Table: ${tableName}\n`;
-            sqlContent += `DROP TABLE IF EXISTS "${tableName}";\n`;
+            sqlContent += `DROP TABLE IF EXISTS ${sanitizeIdentifier(tableName)};\n`;
             sqlContent += `${createSql};\n\n`;
           }
         }
@@ -149,7 +169,7 @@ export async function createBackup(
         if (!request.schemaOnly) {
           const dataResult = databaseService.query(
             request.connectionId,
-            `SELECT * FROM "${tableName}"`
+            `SELECT * FROM ${sanitizeIdentifier(tableName)}`
           );
 
           if (
@@ -168,10 +188,10 @@ export async function createBackup(
                 if (typeof value === 'number') return String(value);
                 if (typeof value === 'boolean') return value ? '1' : '0';
                 // Escape single quotes
-                return `'${String(value).replace(/'/g, "''")}'`;
+                return `'${String(value).replace(SINGLE_QUOTE_REGEX, "''")}'`;
               });
 
-              sqlContent += `INSERT INTO "${tableName}" (${columns.map((c) => `"${c}"`).join(', ')}) VALUES (${values.join(', ')});\n`;
+              sqlContent += `INSERT INTO ${sanitizeIdentifier(tableName)} (${columns.map((c) => sanitizeIdentifier(c)).join(', ')}) VALUES (${values.join(', ')});\n`;
             }
             sqlContent += '\n';
           }
@@ -180,7 +200,7 @@ export async function createBackup(
         // Get indexes for this table
         const indexResult = databaseService.query(
           request.connectionId,
-          `SELECT sql FROM sqlite_master WHERE type='index' AND tbl_name='${tableName.replace(/'/g, "''")}' AND sql IS NOT NULL`
+          `SELECT sql FROM sqlite_master WHERE type='index' AND tbl_name='${tableName.replace(SINGLE_QUOTE_REGEX, "''")}' AND sql IS NOT NULL`
         );
 
         if (indexResult.success && indexResult.rows) {
@@ -322,9 +342,7 @@ export async function restoreBackup(
 
         // Filter by table if specified
         if (request.tables && request.tables.length > 0) {
-          const tableMatch = statement.match(
-            /(?:CREATE TABLE|INSERT INTO|DROP TABLE IF EXISTS)\s+"?(\w+)"?/i
-          );
+          const tableMatch = statement.match(SQL_TABLE_MATCH_REGEX);
           if (tableMatch && tableMatch[1]) {
             const reqTables = request.tables as string[];
             if (!reqTables.includes(tableMatch[1])) {

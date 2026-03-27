@@ -27,6 +27,10 @@ import { fileWatcherService } from '../file-watcher';
 import { pgNotifyService } from '../pg-notify-service';
 import { addRecentConnection } from '../store';
 
+// Regex for detecting modifying SQL operations
+const MODIFYING_KEYWORDS_REGEX =
+  /^\s*(?:INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|REPLACE)/i;
+
 export function setupDatabaseHandlers(): void {
   // Database: Test Connection
   ipcMain.handle(
@@ -420,9 +424,7 @@ export function setupDatabaseHandlers(): void {
     IPC_CHANNELS.DB_EXECUTE_QUERY,
     async (_event, request: ExecuteQueryRequest) => {
       // Check if this is a modifying query (INSERT, UPDATE, DELETE, etc.)
-      const modifyingKeywords =
-        /^\s*(?:INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|REPLACE)/i;
-      const isModifying = modifyingKeywords.test(request.query);
+      const isModifying = MODIFYING_KEYWORDS_REGEX.test(request.query);
 
       logger.info('Executing query', {
         connectionId: request.connectionId,

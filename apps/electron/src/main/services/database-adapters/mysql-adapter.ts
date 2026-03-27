@@ -49,6 +49,10 @@ function generateId(): string {
   return `mysql_${idCounter}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
+// Regex patterns for SQL transformation
+const SELECT_STAR_REGEX = /SELECT \*/;
+const ORDER_BY_REGEX = / ORDER BY `[^`]+` (ASC|DESC)/;
+
 /**
  * MySQL database adapter implementation
  */
@@ -806,8 +810,8 @@ export class MySQLAdapter implements DatabaseAdapter {
 
       // Get count (without ORDER BY clause since it's not needed for counting)
       const countSql = sql
-        .replace(/SELECT \*/, 'SELECT COUNT(*) as count')
-        .replace(/ ORDER BY `[^`]+` (ASC|DESC)/, '');
+        .replace(SELECT_STAR_REGEX, 'SELECT COUNT(*) as count')
+        .replace(ORDER_BY_REGEX, '');
       const [countResult] = (await conn.connection.query(countSql, params)) as [
         Array<{ count: number }>,
         unknown,

@@ -7,6 +7,9 @@ import { createAnthropic } from '@ai-sdk/anthropic';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 
+// Regex to remove trailing slashes from URLs
+const TRAILING_SLASH_REGEX = /\/+$/;
+
 /**
  * Result of creating a chat model
  */
@@ -57,7 +60,7 @@ function normalizeBaseUrl(baseUrl: string): string {
   if (!baseUrl) return baseUrl;
 
   // Remove trailing slash
-  let url = baseUrl.replace(/\/+$/, '');
+  let url = baseUrl.replace(TRAILING_SLASH_REGEX, '');
 
   // If URL doesn't end with /v1 and doesn't contain /v1/, add it
   // This handles proxy services like new-api, one-api that need /v1

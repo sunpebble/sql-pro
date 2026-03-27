@@ -181,7 +181,7 @@ function estimateRowSize(row: VirtualRowData): number {
 
   // Use for-in loop instead of Object.entries() to avoid array allocation
   for (const key in row) {
-    if (!Object.prototype.hasOwnProperty.call(row, key)) continue;
+    if (!Object.hasOwn(row, key)) continue;
 
     const value = row[key];
 
@@ -379,11 +379,9 @@ export function useVirtualData<T extends VirtualRowData>(
         }));
       }
 
-      // Notify if rows are needed that might have been released
+      // Notify when the visible/desired window moved (avoid stale retainedRange closure)
       if (onRowsNeeded && aggressiveRelease && hasDesiredRangeChanged) {
-        if (newStart < retainedRange.start || newEnd > retainedRange.end) {
-          onRowsNeeded(newStart, newEnd);
-        }
+        onRowsNeeded(desiredRange.start, desiredRange.end);
       }
     }
   }, [
