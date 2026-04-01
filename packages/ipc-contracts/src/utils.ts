@@ -1,5 +1,4 @@
-import type { z } from 'zod';
-import type { IpcChannel, IpcStreamChannel, SchemaChannel } from './types';
+import type { IpcChannel, IpcStreamChannel } from './types';
 
 /**
  * Create a typed IPC channel
@@ -24,24 +23,6 @@ export function streamChannel<TInput = void, TChunk = unknown>(
     name,
     _input: undefined as unknown as TInput,
     _chunk: undefined as unknown as TChunk,
-  };
-}
-
-/**
- * Create a schema-validated channel
- */
-export function schemaChannel<
-  TInputSchema extends z.ZodType,
-  TOutputSchema extends z.ZodType,
->(
-  name: string,
-  inputSchema: TInputSchema,
-  outputSchema: TOutputSchema
-): SchemaChannel<TInputSchema, TOutputSchema> {
-  return {
-    name,
-    inputSchema,
-    outputSchema,
   };
 }
 

@@ -8,9 +8,10 @@
  */
 
 import type { IpcChannel } from '@sqlpro/ipc-contracts';
-import type {IpcMainInvokeEvent} from 'electron';
+import type { IpcMainInvokeEvent } from 'electron';
 import process from 'node:process';
-import { ipcMain  } from 'electron';
+import { ipcMain } from 'electron';
+import { validateIpcSender } from '../../utils/plugins/validateIpcSender';
 
 export interface HandlerContext {
   event: IpcMainInvokeEvent;
@@ -64,6 +65,10 @@ export abstract class IpcHandler {
     const channelName = channel.name;
 
     ipcMain.handle(channelName, async (event, input: TInput) => {
+      if (!validateIpcSender(event)) {
+        return { success: false, error: 'Unauthorized IPC sender' };
+      }
+
       const startTime = performance.now();
       const ctx: HandlerContext = { event, startTime };
 
@@ -106,6 +111,10 @@ export abstract class IpcHandler {
     handler: (input: TInput, ctx: HandlerContext) => Promise<TOutput>
   ): void {
     ipcMain.handle(channelName, async (event, input: TInput) => {
+      if (!validateIpcSender(event)) {
+        return { success: false, error: 'Unauthorized IPC sender' };
+      }
+
       const startTime = performance.now();
       const ctx: HandlerContext = { event, startTime };
 

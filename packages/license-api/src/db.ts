@@ -2,16 +2,30 @@ import type { Client, Row } from '@libsql/client';
 import type { Env, License, MachineActivation } from './types';
 import { createClient } from '@libsql/client';
 
-let dbClient: Client | null = null;
-
 export function getDb(env: Env): Client {
-  if (!dbClient) {
-    dbClient = createClient({
-      url: env.TURSO_DATABASE_URL,
-      authToken: env.TURSO_AUTH_TOKEN,
-    });
+  return createClient({
+    url: env.TURSO_DATABASE_URL,
+    authToken: env.TURSO_AUTH_TOKEN,
+  });
+}
+
+// ============ Enum Validators ============
+
+const validPlans = ['monthly', 'yearly', 'lifetime'] as const;
+const validStatuses = ['active', 'canceled', 'expired', 'past_due'] as const;
+
+function validatePlan(value: string): License['plan'] {
+  if (!(validPlans as readonly string[]).includes(value)) {
+    throw new Error(`Invalid plan value in database: ${value}`);
   }
-  return dbClient;
+  return value as License['plan'];
+}
+
+function validateStatus(value: string): License['status'] {
+  if (!(validStatuses as readonly string[]).includes(value)) {
+    throw new Error(`Invalid status value in database: ${value}`);
+  }
+  return value as License['status'];
 }
 
 // ============ Type-Safe Row Parsers ============
@@ -57,8 +71,8 @@ function parseLicenseRow(row: Row): License {
     license_key: getString(row, 'license_key'),
     stripe_customer_id: getString(row, 'stripe_customer_id'),
     stripe_subscription_id: getStringOrNull(row, 'stripe_subscription_id'),
-    plan: getString(row, 'plan') as License['plan'],
-    status: getString(row, 'status') as License['status'],
+    plan: validatePlan(getString(row, 'plan')),
+    status: validateStatus(getString(row, 'status')),
     current_period_end: getString(row, 'current_period_end'),
     max_machines: getNumber(row, 'max_machines'),
     created_at: getString(row, 'created_at'),

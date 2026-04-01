@@ -449,10 +449,21 @@ class PluginLoader {
       // Security: Use execFile with argument arrays to prevent command injection
       const isWindows = process.platform === 'win32';
       if (isWindows) {
-        await execFileAsync('powershell', [
-          '-Command',
-          `Expand-Archive -Path '${archivePath}' -DestinationPath '${tempExtractPath}' -Force`,
-        ]);
+        await execFileAsync(
+          'powershell',
+          [
+            '-NoProfile',
+            '-Command',
+            'Expand-Archive -LiteralPath $env:ARCHIVE_PATH -DestinationPath $env:DEST_PATH -Force',
+          ],
+          {
+            env: {
+              ...process.env,
+              ARCHIVE_PATH: archivePath,
+              DEST_PATH: tempExtractPath,
+            },
+          }
+        );
       } else {
         await execFileAsync('unzip', [
           '-o',

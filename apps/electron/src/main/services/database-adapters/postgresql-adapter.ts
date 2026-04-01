@@ -27,6 +27,7 @@ import type {
   OpenResult,
 } from './types';
 import { sqlLogger } from '../sql-logger';
+import { generateId } from './utils';
 
 // PostgreSQL types - we'll use dynamic import to avoid issues if not installed
 interface PGClient {
@@ -49,13 +50,6 @@ interface PostgreSQLConnectionInfo {
   filename: string;
   isReadOnly: boolean;
   databaseType: DatabaseType;
-}
-
-// Simple ID generator
-let idCounter = 0;
-function generateId(prefix: string): string {
-  idCounter += 1;
-  return `${prefix}_${idCounter}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
 // Regex patterns for version parsing and SQL transformation

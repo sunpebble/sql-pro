@@ -1,5 +1,3 @@
-import type { z } from 'zod';
-
 /**
  * Represents an IPC channel with typed input and output
  */
@@ -12,7 +10,7 @@ export interface IpcChannel<TInput = void, TOutput = void> {
 /**
  * Represents a streaming IPC channel
  */
-export interface IpcStreamChannel<TInput = void, TChunk = unknown> {
+export interface IpcStreamChannel<TInput = void, TChunk = void> {
   readonly name: string;
   readonly _input: TInput;
   readonly _chunk: TChunk;
@@ -53,22 +51,18 @@ export type IpcResponse<T> =
   | { success: false; error: IpcError };
 
 /**
+ * Minimal IPC sender interface for identifying the source of an IPC message.
+ */
+export interface IpcSender {
+  readonly id: number;
+  readonly url: string;
+}
+
+/**
  * Handler function type for main process
  * Note: Electron types are available when used in main process context
  */
 export type IpcHandler<TInput, TOutput> = (
   input: TInput,
-  event: { sender: unknown; frameId: number }
+  event: { sender: IpcSender; frameId: number }
 ) => Promise<TOutput>;
-
-/**
- * Schema-based channel definition
- */
-export interface SchemaChannel<
-  TInputSchema extends z.ZodType,
-  TOutputSchema extends z.ZodType,
-> {
-  readonly name: string;
-  readonly inputSchema: TInputSchema;
-  readonly outputSchema: TOutputSchema;
-}

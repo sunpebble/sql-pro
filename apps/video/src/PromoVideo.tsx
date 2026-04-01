@@ -6,46 +6,28 @@ import { AbsoluteFill, useVideoConfig } from 'remotion';
 import { FeatureScene } from './components/FeatureScene';
 import { IntroScene } from './components/IntroScene';
 import { OutroScene } from './components/OutroScene';
-import { seconds } from './constants';
+import {
+  FEATURE_DURATION_S,
+  features,
+  INTRO_DURATION_S,
+  OUTRO_DURATION_S,
+  seconds,
+  TRANSITION_DURATION_S,
+} from './constants';
 
 export interface PromoVideoProps {
   title: string;
   tagline: string;
 }
 
-// Feature data for showcasing
-const features = [
-  {
-    title: 'Smart Query Editor',
-    description:
-      'Monaco editor with SQL syntax highlighting, autocomplete, Vim mode, and query history.',
-    screenshot: 'screenshots/query-dark.png',
-    align: 'left' as const,
-  },
-  {
-    title: 'Visual Data Editing',
-    description:
-      'Inline editing with diff preview. See exactly what changed before saving.',
-    screenshot: 'screenshots/table-dark.png',
-    align: 'right' as const,
-  },
-  {
-    title: 'Multi-Database Support',
-    description:
-      'SQLite, SQLCipher encryption. Open multiple databases in tabs.',
-    screenshot: 'screenshots/database-dark.png',
-    align: 'left' as const,
-  },
-];
-
 export const PromoVideo = ({ title, tagline }: PromoVideoProps) => {
   const { fps } = useVideoConfig();
 
-  // Timing configuration
-  const introDuration = seconds(5);
-  const featureDuration = seconds(8);
-  const outroDuration = seconds(6);
-  const transitionDuration = Math.round(0.8 * fps); // 0.8 seconds
+  // Timing configuration (derived from shared constants)
+  const introDuration = seconds(INTRO_DURATION_S);
+  const featureDuration = seconds(FEATURE_DURATION_S);
+  const outroDuration = seconds(OUTRO_DURATION_S);
+  const transitionDuration = Math.round(TRANSITION_DURATION_S * fps);
 
   return (
     <AbsoluteFill>

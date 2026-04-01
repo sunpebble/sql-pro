@@ -15,7 +15,6 @@ import type {
   NotificationOptions,
   PanelOptions,
   PluginAPI,
-  PluginContext,
   PluginInstance,
   PluginIsolateConfig,
   PluginManifest,
@@ -493,60 +492,12 @@ class PluginRuntime extends EventEmitter {
    * This is less secure but allows development without native modules.
    */
   private async executePluginActivationFallback(
-    plugin: RunningPlugin
+    _plugin: RunningPlugin
   ): Promise<void> {
-    // Create a limited Plugin API
-    const pluginAPI = this.createPluginAPI(plugin);
-
-    const pluginContext: PluginContext = {
-      api: pluginAPI,
-      manifest: plugin.manifest,
-      pluginPath: plugin.pluginPath,
-    };
-
-    // Use Function constructor to create a scoped execution environment for plugin code.
-    // This is NOT as secure as isolated-vm but works without native modules.
-    // Security context: Plugin code comes from user-installed plugins (not arbitrary
-    // user input), and this fallback is only used when isolated-vm is unavailable.
-    //
-    // Security hardening: We block access to dangerous Node.js globals by shadowing
-    // them as undefined parameters in the wrapper function.
-    try {
-      const wrappedCode = `
-        return (function(context, exports, require, process, global, globalThis, __dirname, __filename, child_process, Buffer) {
-          "use strict";
-          ${plugin.code}
-          if (typeof exports.activate === 'function') {
-            return exports.activate(context);
-          }
-          return undefined;
-        });
-      `;
-
-      // Function constructor is required for dynamic plugin code execution.
-      // eslint-disable-next-line no-new-func
-      const fn = new Function(wrappedCode)();
-      const exports = {};
-      // Pass undefined for all blocked globals to shadow them from the plugin scope
-      await Promise.resolve(
-        fn(
-          pluginContext,
-          exports,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined
-        )
-      );
-    } catch (error) {
-      throw new Error(
-        `Plugin activation failed: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
+    throw new Error(
+      'Plugin sandbox (isolated-vm) is not available. Cannot safely execute third-party plugins. ' +
+        'Please install isolated-vm: npm install isolated-vm'
+    );
   }
 
   /**

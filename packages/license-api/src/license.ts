@@ -4,6 +4,10 @@ import { customAlphabet } from 'nanoid';
 const ALPHABET = 'ABCDEFGHJKMNPQRSTVWXYZ0123456789';
 const nanoid = customAlphabet(ALPHABET, 4);
 
+function assertNever(x: never): never {
+  throw new Error(`Unexpected value: ${x}`);
+}
+
 /**
  * Generate a license key in format: SQLPRO-XXXX-XXXX-XXXX-XXXX
  */
@@ -34,7 +38,7 @@ export function getMaxMachinesForPlan(
     case 'lifetime':
       return 5;
     default:
-      return 2;
+      return assertNever(plan);
   }
 }
 
@@ -54,6 +58,6 @@ export function calculatePeriodEnd(
       // 100 years from now
       return new Date(now.setFullYear(now.getFullYear() + 100));
     default:
-      return new Date(now.setMonth(now.getMonth() + 1));
+      return assertNever(plan);
   }
 }

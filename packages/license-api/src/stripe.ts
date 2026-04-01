@@ -1,13 +1,8 @@
 import type { Env } from './types';
 import Stripe from 'stripe';
 
-let stripeClient: Stripe | null = null;
-
 export function getStripe(env: Env): Stripe {
-  if (!stripeClient) {
-    stripeClient = new Stripe(env.STRIPE_SECRET_KEY);
-  }
-  return stripeClient;
+  return new Stripe(env.STRIPE_SECRET_KEY);
 }
 
 // Stripe Price IDs for SQL Pro subscriptions

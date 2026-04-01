@@ -24,7 +24,9 @@ import type {
   DatabaseAdapter,
   OpenResult,
 } from './types';
+import { sanitizeIdentifier } from '@/utils/sql-sanitize';
 import { sqlLogger } from '../sql-logger';
+import { generateId } from './utils';
 
 // MySQL2 types - we'll use dynamic import to avoid issues if not installed
 interface MySQLConnection {
@@ -40,13 +42,6 @@ interface MySQLConnectionInfo {
   config: DatabaseConnectionConfig;
   filename: string;
   isReadOnly: boolean;
-}
-
-// Simple ID generator
-let idCounter = 0;
-function generateId(): string {
-  idCounter += 1;
-  return `mysql_${idCounter}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
 // Regex patterns for SQL transformation
@@ -114,7 +109,7 @@ export class MySQLAdapter implements DatabaseAdapter {
       // Test connection
       await connection.ping();
 
-      const id = generateId();
+      const id = generateId('mysql');
       const filename =
         config.name ||
         `${config.host}:${config.port || 3306}/${config.database || ''}`;
@@ -560,7 +555,7 @@ export class MySQLAdapter implements DatabaseAdapter {
 
     // Get row count
     const [countResult] = (await conn.connection.query(
-      `SELECT COUNT(*) as count FROM \`${database}\`.\`${tableName}\``
+      `SELECT COUNT(*) as count FROM ${sanitizeIdentifier(database, 'mysql')}.${sanitizeIdentifier(tableName, 'mysql')}`
     )) as [Array<{ count: number }>, unknown];
     const rowCount = countResult[0]?.count ?? 0;
 

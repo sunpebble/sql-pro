@@ -41,7 +41,12 @@ const app = new Hono<{ Bindings: Env }>();
 app.use(
   '*',
   cors({
-    origin: '*',
+    origin: (origin, c) => {
+      const allowed = (c.env.ALLOWED_ORIGINS || 'https://sqlpro.app').split(
+        ','
+      );
+      return allowed.includes(origin) ? origin : null;
+    },
     allowMethods: ['GET', 'POST', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
   })
@@ -52,8 +57,13 @@ app.get('/', (c) => {
   return c.json({ status: 'ok', service: 'sql-pro-license-api' });
 });
 
-// Initialize database (run once)
+// Initialize database (run once, requires admin secret)
 app.post('/api/init', async (c) => {
+  const auth = c.req.header('Authorization');
+  if (auth !== `Bearer ${c.env.ADMIN_SECRET}`) {
+    return c.json({ success: false, error: 'Unauthorized' }, 401);
+  }
+
   try {
     await initDb(c.env);
     return c.json({ success: true });

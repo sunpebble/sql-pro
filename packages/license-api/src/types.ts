@@ -43,16 +43,17 @@ export interface VerifyRequest {
   machineId: string;
 }
 
-export interface VerifyResponse {
-  valid: boolean;
-  license?: {
-    email: string;
-    plan: string;
-    status: string;
-    expiresAt: string;
-  };
-  error?: string;
-}
+export type VerifyResponse =
+  | {
+      valid: true;
+      license: {
+        email: string;
+        plan: License['plan'];
+        status: License['status'];
+        expiresAt: string;
+      };
+    }
+  | { valid: false; error: string };
 
 // Environment bindings
 export interface Env {
@@ -63,4 +64,6 @@ export interface Env {
   RESEND_API_KEY: string;
   RESEND_FROM_EMAIL: string;
   ENVIRONMENT: string;
+  ADMIN_SECRET: string;
+  ALLOWED_ORIGINS?: string;
 }

@@ -26,7 +26,6 @@ export type { Channels } from '@sqlpro/ipc-contracts';
 export {
   channel,
   createChannelNamespace,
-  schemaChannel,
   streamChannel,
 } from '@sqlpro/ipc-contracts';
 
@@ -39,6 +38,5 @@ export type {
   IpcHandler,
   IpcResponse,
   IpcStreamChannel,
-  SchemaChannel,
   StreamChunk,
 } from '@sqlpro/ipc-contracts';
