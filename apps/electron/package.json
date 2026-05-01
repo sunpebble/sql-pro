@@ -135,7 +135,7 @@
     "@types/ssh2": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "electron": "41.0.4",
+    "electron": "41.4.0",
     "electron-builder": "catalog:",
     "electron-vite": "catalog:",
     "happy-dom": "catalog:",
