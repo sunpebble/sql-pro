@@ -1,1 +1,0 @@
-export { ResizableTableDemo } from './ResizableTableDemo';

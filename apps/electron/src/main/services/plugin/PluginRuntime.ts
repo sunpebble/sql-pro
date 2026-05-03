@@ -25,6 +25,7 @@ import type {
   QueryResults,
 } from '@shared/types/plugin';
 import process from 'node:process';
+import { app } from 'electron';
 import EventEmitter from 'eventemitter3';
 
 // ============ Types ============
@@ -274,6 +275,8 @@ class PluginRuntime extends EventEmitter {
         errorCode = 'EXECUTION_TIMEOUT';
       } else if (errorMessage.includes('memory')) {
         errorCode = 'MEMORY_LIMIT_EXCEEDED';
+      } else if (errorMessage.includes('runtime is not available')) {
+        errorCode = 'RUNTIME_NOT_AVAILABLE';
       }
 
       return {
@@ -292,6 +295,12 @@ class PluginRuntime extends EventEmitter {
     config: PluginIsolateConfig
   ): Promise<void> {
     if (!this.runtimeAvailable || !this.isolatedVmModule) {
+      if (process.env.NODE_ENV === 'production' || app.isPackaged) {
+        throw new Error(
+          'Plugin runtime is not available in production or packaged apps. Install isolated-vm to execute plugins safely.'
+        );
+      }
+
       // Fallback: execute in non-sandboxed mode (for development/testing)
       await this.executePluginActivationFallback(plugin);
       return;
@@ -492,12 +501,60 @@ class PluginRuntime extends EventEmitter {
    * This is less secure but allows development without native modules.
    */
   private async executePluginActivationFallback(
-    _plugin: RunningPlugin
+    plugin: RunningPlugin
   ): Promise<void> {
-    throw new Error(
-      'Plugin sandbox (isolated-vm) is not available. Cannot safely execute third-party plugins. ' +
-        'Please install isolated-vm: npm install isolated-vm'
+    const pluginAPI = this.createPluginAPI(plugin);
+    const context = {
+      manifest: plugin.manifest,
+      pluginPath: plugin.pluginPath,
+    };
+    const module = { exports: {} as Record<string, unknown> };
+
+    // Fallback mode intentionally executes plugin code without isolation for tests/dev.
+    // eslint-disable-next-line no-new-func
+    const executePlugin = new Function(
+      'context',
+      'api',
+      'module',
+      'exports',
+      `
+        ${plugin.code}
+
+        if (typeof module.exports === 'function') {
+          return module.exports({
+            manifest: context.manifest,
+            pluginPath: context.pluginPath,
+            api,
+          });
+        }
+
+        if (typeof module.exports?.activate === 'function') {
+          return module.exports.activate({
+            manifest: context.manifest,
+            pluginPath: context.pluginPath,
+            api,
+          });
+        }
+
+        if (typeof exports.activate === 'function') {
+          return exports.activate({
+            manifest: context.manifest,
+            pluginPath: context.pluginPath,
+            api,
+          });
+        }
+
+        if (typeof activate === 'function') {
+          return activate({
+            manifest: context.manifest,
+            pluginPath: context.pluginPath,
+            api,
+          });
+        }
+      `
     );
+
+    void executePlugin(context, pluginAPI, module, module.exports);
   }
 
   /**

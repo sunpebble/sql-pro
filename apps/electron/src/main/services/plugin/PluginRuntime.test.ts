@@ -4,16 +4,23 @@ import type {
   QueryError,
   QueryResults,
 } from '@shared/types/plugin';
+import process from 'node:process';
 /**
  * Tests for PluginRuntime service.
  *
  * Tests plugin loading, execution, hooks, and cleanup.
  * Uses mocks for isolated-vm since it requires native modules.
  */
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-// Import after setting up test environment
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PluginRuntime } from './PluginRuntime';
+
+const electronMock = vi.hoisted(() => ({
+  app: {
+    isPackaged: false,
+  },
+}));
+
+vi.mock('electron', () => electronMock);
 
 describe('pluginRuntime', () => {
   let runtime: PluginRuntime;
@@ -28,6 +35,14 @@ describe('pluginRuntime', () => {
   };
 
   const pluginPath = '/path/to/plugin';
+  const originalNodeEnv = process.env.NODE_ENV;
+  const restoreNodeEnv = () => {
+    if (originalNodeEnv === undefined) {
+      delete process.env.NODE_ENV;
+    } else {
+      process.env.NODE_ENV = originalNodeEnv;
+    }
+  };
   const simplePluginCode = `
     // Simple plugin code
     function activate(context) {
@@ -37,9 +52,15 @@ describe('pluginRuntime', () => {
   `;
 
   beforeEach(async () => {
+    restoreNodeEnv();
+    electronMock.app.isPackaged = false;
     runtime = new PluginRuntime();
     // Initialize will fail without isolated-vm, but runtime will work in fallback mode
     await runtime.initialize();
+  });
+
+  afterEach(() => {
+    restoreNodeEnv();
   });
 
   describe('initialize', () => {
@@ -90,6 +111,69 @@ describe('pluginRuntime', () => {
         expect(result.data).toBeDefined();
         expect(typeof result.data).toBe('string');
       }
+    });
+
+    it('should reject fallback activation in production when runtime is unavailable', async () => {
+      process.env.NODE_ENV = 'production';
+
+      const productionRuntime = new PluginRuntime();
+      await productionRuntime.initialize();
+
+      const result = await productionRuntime.loadPlugin(
+        testManifest.id,
+        testManifest,
+        simplePluginCode,
+        pluginPath
+      );
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.errorCode).toBe('RUNTIME_NOT_AVAILABLE');
+        expect(result.error).toContain('not available in production');
+      }
+    });
+
+    it('should reject fallback activation in packaged apps when runtime is unavailable', async () => {
+      delete process.env.NODE_ENV;
+      electronMock.app.isPackaged = true;
+
+      const packagedRuntime = new PluginRuntime();
+      await packagedRuntime.initialize();
+
+      const result = await packagedRuntime.loadPlugin(
+        testManifest.id,
+        testManifest,
+        simplePluginCode,
+        pluginPath
+      );
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.errorCode).toBe('RUNTIME_NOT_AVAILABLE');
+        expect(result.error).toContain('packaged apps');
+      }
+    });
+
+    it('should not wait indefinitely for fallback async activation', async () => {
+      const asyncPluginCode = `
+        exports.activate = function() {
+          return new Promise(() => {});
+        };
+      `;
+
+      const result = await Promise.race([
+        runtime.loadPlugin(
+          testManifest.id,
+          testManifest,
+          asyncPluginCode,
+          pluginPath
+        ),
+        new Promise<'timed-out'>((resolve) => {
+          setTimeout(resolve, 25, 'timed-out');
+        }),
+      ]);
+
+      expect(result).not.toBe('timed-out');
     });
 
     it('should return error if plugin is already loaded', async () => {
