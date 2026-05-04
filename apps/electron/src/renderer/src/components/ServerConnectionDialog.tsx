@@ -8,6 +8,10 @@ import type {
   DatabaseType,
   TestConnectionResponse,
 } from '@shared/types';
+import {
+  isMySQLCompatibleDatabaseType,
+  isPostgreSQLCompatibleDatabaseType,
+} from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
 import { Checkbox } from '@sqlpro/ui/checkbox';
 import { Input } from '@sqlpro/ui/input';
@@ -29,8 +33,15 @@ import { SSHTunnelConfig } from './SSHTunnelConfig';
 const DEFAULT_PORTS: Record<DatabaseType, number> = {
   sqlite: 0,
   mysql: 3306,
+  mariadb: 3306,
+  mongodb: 27017,
   postgresql: 5432,
   supabase: 5432,
+  neon: 5432,
+  planetscale: 5432,
+  clickhouse: 8123,
+  redis: 6379,
+  sqlserver: 1433,
   qdrant: 6333,
   turso: 0,
 };
@@ -38,11 +49,101 @@ const DEFAULT_PORTS: Record<DatabaseType, number> = {
 const DATABASE_LABELS: Record<DatabaseType, string> = {
   sqlite: 'SQLite',
   mysql: 'MySQL',
+  mariadb: 'MariaDB',
+  mongodb: 'MongoDB',
   postgresql: 'PostgreSQL',
   supabase: 'Supabase',
+  neon: 'Neon',
+  planetscale: 'PlanetScale Postgres',
+  clickhouse: 'ClickHouse',
+  redis: 'Redis',
+  sqlserver: 'Microsoft SQL Server',
   qdrant: 'Qdrant',
   turso: 'Turso',
 };
+
+function defaultDatabaseFor(databaseType: DatabaseType): string {
+  switch (databaseType) {
+    case 'supabase':
+      return 'postgres';
+    case 'clickhouse':
+      return 'default';
+    case 'mongodb':
+      return 'admin';
+    case 'redis':
+      return '0';
+    case 'sqlserver':
+      return 'master';
+    default:
+      return '';
+  }
+}
+
+function defaultUsernameFor(databaseType: DatabaseType): string {
+  switch (databaseType) {
+    case 'supabase':
+      return 'postgres';
+    case 'clickhouse':
+      return 'default';
+    default:
+      return '';
+  }
+}
+
+function connectionStringPlaceholderFor(databaseType: DatabaseType): string {
+  switch (databaseType) {
+    case 'mysql':
+    case 'mariadb':
+      return 'mysql://user:password@host:port/database';
+    case 'clickhouse':
+      return 'http://user:password@host:8123/database';
+    case 'mongodb':
+      return 'mongodb://user:password@host:27017/database';
+    case 'redis':
+      return 'redis://user:password@host:6379/0';
+    case 'sqlserver':
+      return 'sqlserver://user:password@host:1433/database';
+    default:
+      return 'postgresql://user:password@host:port/database';
+  }
+}
+
+function databasePlaceholderFor(databaseType: DatabaseType): string {
+  switch (databaseType) {
+    case 'postgresql':
+    case 'supabase':
+    case 'neon':
+    case 'planetscale':
+      return 'postgres';
+    case 'clickhouse':
+      return 'default';
+    case 'mongodb':
+      return 'admin';
+    case 'redis':
+      return '0';
+    case 'sqlserver':
+      return 'master';
+    default:
+      return 'mydb';
+  }
+}
+
+function usernamePlaceholderFor(databaseType: DatabaseType): string {
+  switch (databaseType) {
+    case 'mysql':
+    case 'mariadb':
+      return 'root';
+    case 'clickhouse':
+    case 'redis':
+      return 'default';
+    case 'mongodb':
+      return 'admin';
+    case 'sqlserver':
+      return 'sa';
+    default:
+      return 'postgres';
+  }
+}
 
 /**
  * Parse a PostgreSQL/MySQL connection string URL
@@ -89,7 +190,11 @@ function parseConnectionString(connectionString: string): {
     // Check for SSL in query params
     const sslParam =
       url.searchParams.get('sslmode') || url.searchParams.get('ssl');
-    if (sslParam && sslParam !== 'disable') {
+    if (
+      url.protocol === 'https:' ||
+      url.protocol === 'rediss:' ||
+      (sslParam && sslParam !== 'disable')
+    ) {
       result.ssl = true;
     }
 
@@ -126,6 +231,10 @@ export function ServerConnectionDialog({
   const isSupabase = databaseType === 'supabase';
   const isQdrant = databaseType === 'qdrant';
   const isTurso = databaseType === 'turso';
+  const isMySqlCompatible = isMySQLCompatibleDatabaseType(databaseType);
+  const usesPostgresForm =
+    !isSupabase && isPostgreSQLCompatibleDatabaseType(databaseType);
+  const supportsSSHTunnel = isMySqlCompatible || usesPostgresForm;
   const isEditMode = mode === 'edit';
 
   // Form state
@@ -257,8 +366,8 @@ export function ServerConnectionDialog({
         // Reset for new connection
         setHost('');
         setPort(DEFAULT_PORTS[databaseType].toString());
-        setDatabase(databaseType === 'supabase' ? 'postgres' : '');
-        setUsername(databaseType === 'supabase' ? 'postgres' : '');
+        setDatabase(defaultDatabaseFor(databaseType));
+        setUsername(defaultUsernameFor(databaseType));
         setPassword('');
         setDisplayName('');
         setUseSSL(databaseType === 'supabase');
@@ -298,6 +407,14 @@ export function ServerConnectionDialog({
     }
   }, [open, databaseType, isEditMode, initialConfig]);
 
+  const buildConnectionName = () => {
+    if (displayName) return displayName;
+    if (isSupabase) return supabaseUrl;
+    if (isQdrant) return `${qdrantHost}:${qdrantPort}`;
+    if (isTurso) return `${tursoDatabase}@${tursoOrganization}`;
+    return `${host}:${port}/${database}`;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -306,15 +423,7 @@ export function ServerConnectionDialog({
 
     const config: DatabaseConnectionConfig = {
       type: databaseType,
-      name:
-        displayName ||
-        (isSupabase
-          ? supabaseUrl
-          : isQdrant
-            ? `${qdrantHost}:${qdrantPort}`
-            : isTurso
-              ? `${tursoDatabase}@${tursoOrganization}`
-              : `${host}:${port}/${database}`),
+      name: buildConnectionName(),
       readOnly,
     };
 
@@ -356,11 +465,8 @@ export function ServerConnectionDialog({
       config.password = password;
       config.ssl = useSSL;
 
-      // Add SSH tunnel config for MySQL/PostgreSQL
-      if (
-        sshEnabled &&
-        (databaseType === 'mysql' || databaseType === 'postgresql')
-      ) {
+      // Add SSH tunnel config for MySQL/PostgreSQL-compatible connections
+      if (sshEnabled && supportsSSHTunnel) {
         config.ssh = {
           enabled: true,
           host: sshHost,
@@ -395,7 +501,7 @@ export function ServerConnectionDialog({
     onConnect(config);
   };
 
-  // Form validation - include SSH validation for MySQL/PostgreSQL
+  // Form validation - include SSH validation for server databases
   const isSshValid =
     !sshEnabled ||
     (sshHost && sshUsername && (!showJumpHost || (jumpHost && jumpUsername)));
@@ -449,8 +555,8 @@ export function ServerConnectionDialog({
 
           <ScrollArea className="h-[50vh] overflow-x-hidden">
             <div className="space-y-4 px-1 pr-5">
-              {/* Quick import from connection string (for MySQL/PostgreSQL only) */}
-              {!isSupabase && !isQdrant && !isEditMode && (
+              {/* Quick import from connection string for server databases */}
+              {!isSupabase && !isQdrant && !isTurso && !isEditMode && (
                 <div className="space-y-2">
                   <Label htmlFor="connectionString">
                     {t('connection.importFromUrl')}{' '}
@@ -465,11 +571,7 @@ export function ServerConnectionDialog({
                   </Label>
                   <Input
                     id="connectionString"
-                    placeholder={
-                      databaseType === 'mysql'
-                        ? 'mysql://user:password@host:port/database'
-                        : 'postgresql://user:password@host:port/database'
-                    }
+                    placeholder={connectionStringPlaceholderFor(databaseType)}
                     onChange={(e) => {
                       const parsed = parseConnectionString(e.target.value);
                       if (parsed) {
@@ -861,9 +963,7 @@ export function ServerConnectionDialog({
                     </Label>
                     <Input
                       id="database"
-                      placeholder={
-                        databaseType === 'postgresql' ? 'postgres' : 'mydb'
-                      }
+                      placeholder={databasePlaceholderFor(databaseType)}
                       value={database}
                       onChange={(e) => setDatabase(e.target.value)}
                       required
@@ -875,9 +975,7 @@ export function ServerConnectionDialog({
                     <Label htmlFor="username">{t('connection.username')}</Label>
                     <Input
                       id="username"
-                      placeholder={
-                        databaseType === 'mysql' ? 'root' : 'postgres'
-                      }
+                      placeholder={usernamePlaceholderFor(databaseType)}
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                     />
@@ -908,8 +1006,8 @@ export function ServerConnectionDialog({
                   </div>
                 </>
               )}
-              \{/* SSH Tunnel Configuration - only for MySQL/PostgreSQL */}
-              {(databaseType === 'mysql' || databaseType === 'postgresql') && (
+              {/* SSH Tunnel Configuration */}
+              {supportsSSHTunnel && (
                 <div className="pt-2">
                   <SSHTunnelConfig
                     enabled={sshEnabled}
@@ -1020,15 +1118,7 @@ export function ServerConnectionDialog({
 
                     const config: DatabaseConnectionConfig = {
                       type: databaseType,
-                      name:
-                        displayName ||
-                        (isQdrant
-                          ? `${qdrantHost}:${qdrantPort}`
-                          : isSupabase
-                            ? supabaseUrl
-                            : isTurso
-                              ? `${tursoDatabase}@${tursoOrganization}`
-                              : `${host}:${port}/${database}`),
+                      name: buildConnectionName(),
                       readOnly,
                     };
 

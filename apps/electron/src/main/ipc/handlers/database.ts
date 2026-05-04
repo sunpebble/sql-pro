@@ -37,6 +37,7 @@ import type {
   VectorSearchResponse,
 } from '@shared/types';
 import type { HandlerContext } from '../base/handler';
+import { isPostgreSQLCompatibleDatabaseType } from '@shared/types';
 import { databaseManager, databaseService } from '../../services/database';
 import { qdrantAdapter } from '../../services/database-adapters';
 import { fileWatcherService } from '../../services/file-watcher';
@@ -159,8 +160,7 @@ export class DatabaseHandler extends IpcHandler {
 
         // Register for PostgreSQL LISTEN/NOTIFY
         if (
-          result.connection.databaseType === 'postgresql' ||
-          result.connection.databaseType === 'supabase'
+          isPostgreSQLCompatibleDatabaseType(result.connection.databaseType)
         ) {
           pgNotifyService.registerConnection(
             result.connection.id,

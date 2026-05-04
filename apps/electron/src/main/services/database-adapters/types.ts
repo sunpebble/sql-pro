@@ -436,8 +436,15 @@ export interface DatabaseAdapter {
 export const DEFAULT_PORTS: Record<DatabaseType, number> = {
   sqlite: 0, // Not applicable
   mysql: 3306,
+  mariadb: 3306,
+  mongodb: 27017,
   postgresql: 5432,
   supabase: 5432, // Supabase uses PostgreSQL
+  neon: 5432,
+  planetscale: 5432,
+  clickhouse: 8123,
+  redis: 6379,
+  sqlserver: 1433,
   qdrant: 6333, // Qdrant REST API default port
   turso: 0, // Not applicable - uses HTTPS URLs
 };
@@ -448,8 +455,15 @@ export const DEFAULT_PORTS: Record<DatabaseType, number> = {
 export const DATABASE_TYPE_NAMES: Record<DatabaseType, string> = {
   sqlite: 'SQLite',
   mysql: 'MySQL',
+  mariadb: 'MariaDB',
+  mongodb: 'MongoDB',
   postgresql: 'PostgreSQL',
   supabase: 'Supabase',
+  neon: 'Neon',
+  planetscale: 'PlanetScale Postgres',
+  clickhouse: 'ClickHouse',
+  redis: 'Redis',
+  sqlserver: 'Microsoft SQL Server',
   qdrant: 'Qdrant',
   turso: 'Turso',
 };

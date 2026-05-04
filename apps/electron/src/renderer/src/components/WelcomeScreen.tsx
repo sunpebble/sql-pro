@@ -21,6 +21,7 @@ import {
   AlertCircle,
   BookmarkPlus,
   Box,
+  Braces,
   Clock,
   Cloud,
   Database,
@@ -89,12 +90,28 @@ function getDatabaseIcon(type?: DatabaseType) {
   switch (type) {
     case 'mysql':
       return { Icon: Server, color: 'text-orange-500', label: 'MySQL' };
+    case 'mariadb':
+      return { Icon: Server, color: 'text-amber-600', label: 'MariaDB' };
+    case 'mongodb':
+      return { Icon: Braces, color: 'text-green-600', label: 'MongoDB' };
     case 'postgresql':
       return { Icon: Server, color: 'text-indigo-500', label: 'PostgreSQL' };
     case 'supabase':
       return { Icon: Cloud, color: 'text-green-500', label: 'Supabase' };
+    case 'neon':
+      return { Icon: Cloud, color: 'text-emerald-500', label: 'Neon' };
+    case 'planetscale':
+      return { Icon: Cloud, color: 'text-violet-500', label: 'PlanetScale' };
+    case 'clickhouse':
+      return { Icon: Server, color: 'text-yellow-500', label: 'ClickHouse' };
+    case 'redis':
+      return { Icon: KeyRound, color: 'text-red-500', label: 'Redis' };
+    case 'sqlserver':
+      return { Icon: Server, color: 'text-sky-600', label: 'SQL Server' };
     case 'qdrant':
       return { Icon: Box, color: 'text-purple-500', label: 'Qdrant' };
+    case 'turso':
+      return { Icon: Cloud, color: 'text-cyan-500', label: 'Turso' };
     case 'sqlite':
     default:
       return { Icon: Database, color: 'text-blue-500', label: 'SQLite' };
@@ -822,7 +839,7 @@ export function WelcomeScreen() {
           setProfileToSave(null);
           // Refresh profiles by toggling the view
           setShowProfiles(false);
-          setTimeout(() => setShowProfiles(true), 100);
+          setTimeout(setShowProfiles, 100, true);
         } else {
           setError(result.error || t('welcomeScreen.failedToSaveProfile'));
         }

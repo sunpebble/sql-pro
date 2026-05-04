@@ -7,7 +7,10 @@
  */
 
 import type { DatabaseConnectionConfig } from '@shared/types';
-import { IPC_CHANNELS } from '@shared/types';
+import {
+  IPC_CHANNELS,
+  isPostgreSQLCompatibleDatabaseType,
+} from '@shared/types';
 import { BrowserWindow } from 'electron';
 
 // Types for pg module
@@ -127,11 +130,11 @@ class PgNotifyService {
     }
 
     // Only works for PostgreSQL/Supabase
-    if (config.type !== 'postgresql' && config.type !== 'supabase') {
+    if (!isPostgreSQLCompatibleDatabaseType(config.type)) {
       return {
         success: false,
         error:
-          'LISTEN/NOTIFY is only supported for PostgreSQL and Supabase connections',
+          'LISTEN/NOTIFY is only supported for PostgreSQL-compatible connections',
       };
     }
 

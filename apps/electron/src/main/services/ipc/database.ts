@@ -18,7 +18,10 @@ import type {
   ValidateChangesRequest,
   VectorSearchRequest,
 } from '@shared/types';
-import { IPC_CHANNELS } from '@shared/types';
+import {
+  IPC_CHANNELS,
+  isPostgreSQLCompatibleDatabaseType,
+} from '@shared/types';
 import { ipcMain } from 'electron';
 import { logger } from '../../lib/logger';
 import { databaseManager, databaseService } from '../database';
@@ -94,8 +97,7 @@ export function setupDatabaseHandlers(): void {
 
           // Register for LISTEN/NOTIFY (PostgreSQL/Supabase only)
           if (
-            result.connection.databaseType === 'postgresql' ||
-            result.connection.databaseType === 'supabase'
+            isPostgreSQLCompatibleDatabaseType(result.connection.databaseType)
           ) {
             pgNotifyService.registerConnection(
               result.connection.id,

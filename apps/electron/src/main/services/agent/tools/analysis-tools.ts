@@ -2,6 +2,7 @@
 // Analyze tables, suggest indexes, compare data
 
 import type { ToolExecutionResult } from '@shared/types/agent';
+import { isMySQLCompatibleDatabaseType } from '@shared/types';
 import { tool } from 'ai';
 import { z } from 'zod';
 import { isValidSqlIdentifier, sanitizeIdentifier } from '@/utils/sql-sanitize';
@@ -16,7 +17,9 @@ const JOIN_END_REGEX = /\b(?:WHERE|ORDER|JOIN|LEFT|RIGHT|INNER|OUTER|LIMIT)\b/i;
 
 function getSqlDialect(connectionId: string): 'standard' | 'mysql' {
   const conn = databaseManager.getConnection(connectionId);
-  return conn?.databaseType === 'mysql' ? 'mysql' : 'standard';
+  return isMySQLCompatibleDatabaseType(conn?.databaseType)
+    ? 'mysql'
+    : 'standard';
 }
 
 /**

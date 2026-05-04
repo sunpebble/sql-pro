@@ -42,6 +42,7 @@ interface MySQLConnectionInfo {
   config: DatabaseConnectionConfig;
   filename: string;
   isReadOnly: boolean;
+  databaseType: DatabaseConnectionConfig['type'];
 }
 
 // Regex patterns for SQL transformation
@@ -109,7 +110,8 @@ export class MySQLAdapter implements DatabaseAdapter {
       // Test connection
       await connection.ping();
 
-      const id = generateId('mysql');
+      const databaseType = config.type || 'mysql';
+      const id = generateId(databaseType === 'mariadb' ? 'mariadb' : 'mysql');
       const filename =
         config.name ||
         `${config.host}:${config.port || 3306}/${config.database || ''}`;
@@ -120,6 +122,7 @@ export class MySQLAdapter implements DatabaseAdapter {
         config,
         filename,
         isReadOnly: config.readOnly ?? false,
+        databaseType,
       };
 
       this.connections.set(id, connectionInfo);
@@ -139,7 +142,7 @@ export class MySQLAdapter implements DatabaseAdapter {
           filename,
           isEncrypted: !!config.ssl,
           isReadOnly: config.readOnly ?? false,
-          databaseType: 'mysql',
+          databaseType,
         },
       };
     } catch (error) {
@@ -344,7 +347,7 @@ export class MySQLAdapter implements DatabaseAdapter {
       filename: conn.filename,
       isEncrypted: !!conn.config.ssl,
       isReadOnly: conn.isReadOnly,
-      databaseType: 'mysql',
+      databaseType: conn.databaseType,
     };
   }
 

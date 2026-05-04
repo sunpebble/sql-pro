@@ -10,6 +10,14 @@
       "name": "MySQL",
       "description": "MySQL/MariaDB 服务器"
     },
+    "mariadb": {
+      "name": "MariaDB",
+      "description": "MariaDB 服务器"
+    },
+    "mongodb": {
+      "name": "MongoDB",
+      "description": "文档数据库"
+    },
     "postgresql": {
       "name": "PostgreSQL",
       "description": "PostgreSQL 服务器"
@@ -17,6 +25,26 @@
     "supabase": {
       "name": "Supabase",
       "description": "Supabase PostgreSQL"
+    },
+    "neon": {
+      "name": "Neon",
+      "description": "Serverless PostgreSQL"
+    },
+    "planetscale": {
+      "name": "PlanetScale",
+      "description": "PlanetScale Postgres"
+    },
+    "clickhouse": {
+      "name": "ClickHouse",
+      "description": "分析型数据库"
+    },
+    "redis": {
+      "name": "Redis",
+      "description": "键值数据库"
+    },
+    "sqlserver": {
+      "name": "SQL Server",
+      "description": "Microsoft SQL Server"
     },
     "qdrant": {
       "name": "Qdrant",

@@ -12,8 +12,15 @@ export interface DatabaseConnection {
   databaseType?:
     | 'sqlite'
     | 'mysql'
+    | 'mariadb'
+    | 'mongodb'
     | 'postgresql'
     | 'supabase'
+    | 'neon'
+    | 'planetscale'
+    | 'clickhouse'
+    | 'redis'
+    | 'sqlserver'
     | 'qdrant'
     | 'turso';
 }

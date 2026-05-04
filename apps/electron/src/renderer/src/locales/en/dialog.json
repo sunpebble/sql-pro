@@ -10,6 +10,14 @@
       "name": "MySQL",
       "description": "MySQL/MariaDB server"
     },
+    "mariadb": {
+      "name": "MariaDB",
+      "description": "MariaDB server"
+    },
+    "mongodb": {
+      "name": "MongoDB",
+      "description": "Document database"
+    },
     "postgresql": {
       "name": "PostgreSQL",
       "description": "PostgreSQL server"
@@ -17,6 +25,26 @@
     "supabase": {
       "name": "Supabase",
       "description": "Supabase PostgreSQL"
+    },
+    "neon": {
+      "name": "Neon",
+      "description": "Serverless PostgreSQL"
+    },
+    "planetscale": {
+      "name": "PlanetScale",
+      "description": "PlanetScale Postgres"
+    },
+    "clickhouse": {
+      "name": "ClickHouse",
+      "description": "Analytics database"
+    },
+    "redis": {
+      "name": "Redis",
+      "description": "Key-value database"
+    },
+    "sqlserver": {
+      "name": "SQL Server",
+      "description": "Microsoft SQL Server"
     },
     "qdrant": {
       "name": "Qdrant",

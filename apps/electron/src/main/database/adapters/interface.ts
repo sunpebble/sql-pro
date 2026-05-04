@@ -163,7 +163,8 @@ export interface IDatabaseAdapter {
   /**
    * Get database schema (sync version)
    */
-  getSchema: (connectionId: string) => | {
+  getSchema: (connectionId: string) =>
+    | {
         success: true;
         schemas: SchemaInfo[];
         tables: TableInfo[];
@@ -191,7 +192,8 @@ export interface IDatabaseAdapter {
     connectionId: string,
     tableName: string,
     schema?: string
-  ) => | { success: true; structure: TableInfo }
+  ) =>
+    | { success: true; structure: TableInfo }
     | { success: false; error: string };
 
   /**
@@ -216,7 +218,8 @@ export interface IDatabaseAdapter {
     connectionId: string,
     sql: string,
     params?: unknown[]
-  ) => | { success: true; changes: number; lastInsertRowid: number }
+  ) =>
+    | { success: true; changes: number; lastInsertRowid: number }
     | {
         success: false;
         error: string;
@@ -249,7 +252,8 @@ export interface IDatabaseAdapter {
     connectionId: string,
     sql: string,
     params?: unknown[]
-  ) => | { success: true; columns: string[]; rows: unknown[][] }
+  ) =>
+    | { success: true; columns: string[]; rows: unknown[][] }
     | {
         success: false;
         error: string;
@@ -277,7 +281,8 @@ export interface IDatabaseAdapter {
   executeQuery: (
     connectionId: string,
     query: string
-  ) => | {
+  ) =>
+    | {
         success: true;
         columns?: string[];
         rows?: Record<string, unknown>[];
@@ -400,7 +405,8 @@ export interface IDatabaseAdapter {
   explainQuery: (
     connectionId: string,
     sql: string
-  ) => | { success: true; plan: QueryPlanNode; stats: QueryPlanStats }
+  ) =>
+    | { success: true; plan: QueryPlanNode; stats: QueryPlanStats }
     | { success: false; error: string };
 
   /**
@@ -424,7 +430,8 @@ export interface IDatabaseAdapter {
   validateChanges: (
     connectionId: string,
     changes: PendingChangeInfo[]
-  ) => | { success: true; results: ValidationResult[] }
+  ) =>
+    | { success: true; results: ValidationResult[] }
     | { success: false; error: string };
 
   /**
@@ -433,7 +440,8 @@ export interface IDatabaseAdapter {
   applyChanges: (
     connectionId: string,
     changes: PendingChangeInfo[]
-  ) => | { success: true; appliedCount: number }
+  ) =>
+    | { success: true; appliedCount: number }
     | { success: false; error: string };
 
   /**
@@ -451,7 +459,8 @@ export interface IDatabaseAdapter {
    */
   getPendingChanges: (
     connectionId: string
-  ) => | { success: true; changes: PendingChangeInfo[] }
+  ) =>
+    | { success: true; changes: PendingChangeInfo[] }
     | { success: false; error: string };
 }
 
@@ -465,8 +474,15 @@ export interface IDatabaseAdapter {
 export const DEFAULT_PORTS: Record<DatabaseType, number> = {
   sqlite: 0, // Not applicable
   mysql: 3306,
+  mariadb: 3306,
+  mongodb: 27017,
   postgresql: 5432,
   supabase: 5432, // Supabase uses PostgreSQL
+  neon: 5432,
+  planetscale: 5432,
+  clickhouse: 8123,
+  redis: 6379,
+  sqlserver: 1433,
   qdrant: 6333, // Qdrant REST API default port
   turso: 0, // Not applicable - uses HTTPS URLs
 };
@@ -477,8 +493,15 @@ export const DEFAULT_PORTS: Record<DatabaseType, number> = {
 export const DATABASE_TYPE_NAMES: Record<DatabaseType, string> = {
   sqlite: 'SQLite',
   mysql: 'MySQL',
+  mariadb: 'MariaDB',
+  mongodb: 'MongoDB',
   postgresql: 'PostgreSQL',
   supabase: 'Supabase',
+  neon: 'Neon',
+  planetscale: 'PlanetScale Postgres',
+  clickhouse: 'ClickHouse',
+  redis: 'Redis',
+  sqlserver: 'Microsoft SQL Server',
   qdrant: 'Qdrant',
   turso: 'Turso',
 };

@@ -4,6 +4,10 @@ import type { ExportOptions } from './ExportDialog';
 import type { UIFilterState } from '@/lib/filter-utils';
 import type { PageSizeOption } from '@/stores/settings-store';
 import type { PendingChange, SortState, TableSchema } from '@/types/database';
+import {
+  isMySQLCompatibleDatabaseType,
+  isPostgreSQLCompatibleDatabaseType,
+} from '@shared/types';
 import { Button } from '@sqlpro/ui/button';
 import { Input } from '@sqlpro/ui/input';
 import {
@@ -210,10 +214,10 @@ export function TableView({ tableOverride }: TableViewProps) {
   }, [filters]);
 
   // Auto-refresh configuration
-  const isPostgres =
-    connection?.databaseType === 'postgresql' ||
-    connection?.databaseType === 'supabase';
-  const isMySql = connection?.databaseType === 'mysql';
+  const isPostgres = isPostgreSQLCompatibleDatabaseType(
+    connection?.databaseType
+  );
+  const isMySql = isMySQLCompatibleDatabaseType(connection?.databaseType);
 
   // PostgreSQL LISTEN/NOTIFY auto-refresh (real-time when triggers are set up)
   usePgNotify(isPostgres ? activeConnectionId : null, 'table_changes', {

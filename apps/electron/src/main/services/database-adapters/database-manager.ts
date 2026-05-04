@@ -23,11 +23,19 @@ import type {
   DatabaseAdapter,
   OpenResult,
 } from './types';
+import {
+  isMySQLCompatibleDatabaseType,
+  isPostgreSQLCompatibleDatabaseType,
+} from '@shared/types';
 import { sshCredentialStore, tunnelManager } from '../ssh';
+import { ClickHouseAdapter } from './clickhouse-adapter';
+import { MongoDBAdapter } from './mongodb-adapter';
 import { MySQLAdapter } from './mysql-adapter';
 import { PostgreSQLAdapter } from './postgresql-adapter';
 import { qdrantAdapter } from './qdrant-adapter';
+import { RedisAdapter } from './redis-adapter';
 import { SQLiteAdapter } from './sqlite-adapter';
+import { SQLServerAdapter } from './sqlserver-adapter';
 import { TursoAdapter } from './turso-adapter';
 
 /**
@@ -51,9 +59,17 @@ class DatabaseManager {
   constructor() {
     // Initialize adapters
     this.adapters.set('sqlite', new SQLiteAdapter());
-    this.adapters.set('mysql', new MySQLAdapter());
+    const mysqlAdapter = new MySQLAdapter();
+    this.adapters.set('mysql', mysqlAdapter);
+    this.adapters.set('mariadb', mysqlAdapter);
+    this.adapters.set('mongodb', new MongoDBAdapter());
     this.adapters.set('postgresql', new PostgreSQLAdapter('postgresql'));
     this.adapters.set('supabase', new PostgreSQLAdapter('supabase'));
+    this.adapters.set('neon', new PostgreSQLAdapter('neon'));
+    this.adapters.set('planetscale', new PostgreSQLAdapter('planetscale'));
+    this.adapters.set('clickhouse', new ClickHouseAdapter());
+    this.adapters.set('redis', new RedisAdapter());
+    this.adapters.set('sqlserver', new SQLServerAdapter());
     // Use the singleton qdrantAdapter to ensure IPC handlers use the same instance
     this.adapters.set('qdrant', qdrantAdapter);
     this.adapters.set('turso', new TursoAdapter());
@@ -111,7 +127,8 @@ class DatabaseManager {
 
     if (
       config.ssh?.enabled &&
-      (type === 'mysql' || type === 'postgresql' || type === 'supabase')
+      (isMySQLCompatibleDatabaseType(type) ||
+        isPostgreSQLCompatibleDatabaseType(type))
     ) {
       try {
         // Generate a unique profile ID for credential lookup
@@ -137,7 +154,8 @@ class DatabaseManager {
 
         // Store original host/port for tunnel config
         originalHost = config.host || 'localhost';
-        originalPort = config.port || (type === 'mysql' ? 3306 : 5432);
+        originalPort =
+          config.port || (isMySQLCompatibleDatabaseType(type) ? 3306 : 5432);
 
         // Build SSH tunnel configuration
         const tunnelConfig: SSHTunnelConfig = {
@@ -233,7 +251,9 @@ class DatabaseManager {
               authMethod: config.ssh.authMethod,
             },
             remoteHost: originalHost || 'localhost',
-            remotePort: originalPort || (type === 'mysql' ? 3306 : 5432),
+            remotePort:
+              originalPort ||
+              (isMySQLCompatibleDatabaseType(type) ? 3306 : 5432),
             localPort: currentLocalPort, // Reuse the same port
           };
 

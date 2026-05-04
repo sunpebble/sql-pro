@@ -7,6 +7,7 @@ import type {
   QueryOptimization,
   SQLExplanation,
 } from '@shared/types/agent';
+import { isMySQLCompatibleDatabaseType } from '@shared/types';
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import { databaseManager } from '../database-adapters/database-manager';
@@ -76,7 +77,7 @@ const QueryOptimizationSchema = z.object({
  */
 function getDialect(connectionId: string): 'mysql' | 'postgresql' {
   const connType = databaseManager.getConnectionType(connectionId);
-  if (connType === 'mysql') return 'mysql';
+  if (isMySQLCompatibleDatabaseType(connType ?? undefined)) return 'mysql';
   return 'postgresql';
 }
 

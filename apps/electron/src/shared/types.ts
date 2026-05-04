@@ -84,10 +84,44 @@ export interface EnhancedErrorInfo {
 export type DatabaseType =
   | 'sqlite'
   | 'mysql'
+  | 'mariadb'
+  | 'mongodb'
   | 'postgresql'
   | 'supabase'
+  | 'neon'
+  | 'planetscale'
+  | 'clickhouse'
+  | 'redis'
+  | 'sqlserver'
   | 'qdrant'
   | 'turso';
+
+export const MYSQL_COMPATIBLE_DATABASE_TYPES = ['mysql', 'mariadb'] as const;
+
+export const POSTGRESQL_COMPATIBLE_DATABASE_TYPES = [
+  'postgresql',
+  'supabase',
+  'neon',
+  'planetscale',
+] as const;
+
+export function isMySQLCompatibleDatabaseType(
+  type: DatabaseType | undefined
+): boolean {
+  return (
+    !!type &&
+    (MYSQL_COMPATIBLE_DATABASE_TYPES as readonly string[]).includes(type)
+  );
+}
+
+export function isPostgreSQLCompatibleDatabaseType(
+  type: DatabaseType | undefined
+): boolean {
+  return (
+    !!type &&
+    (POSTGRESQL_COMPATIBLE_DATABASE_TYPES as readonly string[]).includes(type)
+  );
+}
 
 /**
  * Connection configuration for different database types
