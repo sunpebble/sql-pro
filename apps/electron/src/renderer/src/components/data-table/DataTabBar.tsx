@@ -151,10 +151,10 @@ const TabItem = memo(
                   role="tab"
                   aria-selected={isActive}
                   className={cn(
-                    'group relative flex h-8 max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-2.5 transition-colors',
+                    'group relative flex h-7 max-w-44 min-w-24 cursor-pointer items-center gap-1.5 px-2.5 transition-colors',
                     isActive
-                      ? 'bg-background text-foreground border-border rounded-md border'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-md border border-transparent bg-transparent'
+                      ? 'bg-card text-foreground border-border/80 rounded-md border shadow-sm'
+                      : 'text-muted-foreground hover:bg-card/[0.55] hover:text-foreground rounded-md border border-transparent bg-transparent'
                   )}
                   style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                   onClick={onSelect}
@@ -250,13 +250,13 @@ export const DataTabBar = memo(
     return (
       <div
         className={cn(
-          'bg-muted border-border flex h-8 shrink-0 items-center border-b',
+          'bg-secondary-background/[0.65] border-border/70 flex h-9 shrink-0 items-center border-b px-1',
           className
         )}
         role="tablist"
       >
-        <ScrollArea orientation="horizontal" className="h-8 flex-1">
-          <div className="flex h-8 items-center">
+        <ScrollArea orientation="horizontal" className="h-9 flex-1">
+          <div className="flex h-9 items-center gap-1">
             {tabs.map((tab, index) => (
               <TabItem
                 key={tab.id}
@@ -274,7 +274,7 @@ export const DataTabBar = memo(
         </ScrollArea>
 
         {onToggleSchemaDetails && (
-          <div className="border-border/30 flex shrink-0 items-center gap-1 border-l px-2">
+          <div className="border-border/50 flex shrink-0 items-center gap-1 border-l px-2">
             <TooltipProvider delay={300}>
               <Tooltip>
                 <TooltipTrigger>
@@ -282,17 +282,17 @@ export const DataTabBar = memo(
                     variant="ghost"
                     size="icon"
                     className={cn(
-                      'h-6 w-6',
-                      'transition-all duration-200',
+                      'h-7 w-7',
+                      'transition-all duration-150',
                       schemaDetailsOpen
                         ? [
                             'text-primary',
-                            'bg-primary/15',
-                            'ring-primary/25 ring-1',
+                            'bg-primary/10',
+                            'ring-primary/20 ring-1',
                           ]
                         : [
                             'text-muted-foreground hover:text-foreground',
-                            'hover:bg-muted/50',
+                            'hover:bg-card/[0.55]',
                           ]
                     )}
                     onClick={onToggleSchemaDetails}

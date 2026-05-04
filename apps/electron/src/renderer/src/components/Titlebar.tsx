@@ -53,11 +53,11 @@ export function Titlebar() {
 
   return (
     <div
-      className="command-bar titlebar bg-background/80 border-border/50 flex h-12 shrink-0 items-center border-b backdrop-blur-md"
+      className="command-bar titlebar bg-background/[0.78] border-border/70 flex h-10 shrink-0 items-center border-b backdrop-blur-md"
       data-tauri-drag-region
     >
       {/* macOS traffic light padding - approximately 84px on macOS */}
-      <div className="w-[84px] shrink-0" data-tauri-drag-region />
+      <div className="w-[80px] shrink-0" data-tauri-drag-region />
 
       {/* Connection Tabs or App Logo - flexible width, also draggable in empty space */}
       {connection ? (
@@ -68,9 +68,9 @@ export function Titlebar() {
           className="flex min-w-0 flex-1 items-center justify-center"
           data-tauri-drag-region
         >
-          <Database className="text-primary mr-2 h-4 w-4 shrink-0" />
+          <Database className="text-main mr-2 h-4 w-4 shrink-0" />
           <span
-            className="text-primary font-medium tracking-wide"
+            className="text-foreground font-medium tracking-wide"
             style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
             SQL Pro
@@ -79,12 +79,12 @@ export function Titlebar() {
       )}
 
       {/* Right side controls - non-draggable */}
-      <div className="titlebar-no-drag flex shrink-0 items-center gap-1.5 px-3">
+      <div className="titlebar-no-drag flex shrink-0 items-center gap-1 px-2.5">
         {/* Toolbar controls (changes indicator, layout, commands, help) */}
         {connection && <Toolbar />}
 
         {/* Separator */}
-        <div className="bg-border mx-1 h-5 w-px" />
+        <div className="bg-border mx-1 h-4 w-px" />
 
         {/* Theme Switcher */}
         <DropdownMenu>
@@ -98,7 +98,7 @@ export function Titlebar() {
                     theme: getThemeLabel(),
                     defaultValue: 'Theme: {{theme}}',
                   })}
-                  className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
+                  className="rounded-base text-muted-foreground hover:border-border hover:bg-muted/60 hover:text-foreground h-7 w-7"
                 >
                   {getThemeIcon()}
                 </Button>
@@ -153,7 +153,7 @@ export function Titlebar() {
               variant="ghost"
               size="icon"
               aria-label={t('theme.settings', { defaultValue: 'Settings' })}
-              className="rounded-base text-muted-foreground hover:border-border hover:text-foreground h-8 w-8"
+              className="rounded-base text-muted-foreground hover:border-border hover:bg-muted/60 hover:text-foreground h-7 w-7"
               onClick={openSettings}
               data-action="open-settings"
             >

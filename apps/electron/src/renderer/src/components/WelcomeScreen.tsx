@@ -940,13 +940,13 @@ export function WelcomeScreen() {
   return (
     <div className="bg-background relative flex h-full flex-col overflow-hidden">
       {/* Top Right Controls */}
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger>
             <Button
               variant={showProfiles ? 'default' : 'ghost'}
               size="icon"
-              className="h-8 w-8"
+              className="h-7 w-7"
               onClick={() => setShowProfiles(!showProfiles)}
               data-tour-target="profiles-button"
             >
@@ -965,7 +965,7 @@ export function WelcomeScreen() {
       <div className="flex flex-1 items-center justify-center overflow-hidden">
         <div className="flex h-full max-h-[700px] w-full items-center">
           {/* Left Column - Feature Showcase (wider) */}
-          <div className="border-border flex w-[55%] justify-center border-r p-10">
+          <div className="border-border/70 flex w-[55%] justify-center border-r p-10">
             <div className="w-full max-w-lg">
               <FeatureShowcase
                 onStartTour={handleStartWelcomeTour}
@@ -981,8 +981,8 @@ export function WelcomeScreen() {
             <div className="relative z-10 flex w-full max-w-sm flex-col space-y-8">
               {/* Logo & Title */}
               <div className="shrink-0 text-center">
-                <div className="rounded-base border-border bg-main mx-auto mb-5 flex h-14 w-14 items-center justify-center border shadow-sm">
-                  <Database className="text-main-foreground h-7 w-7" />
+                <div className="rounded-base border-border/70 bg-card mx-auto mb-5 flex h-12 w-12 items-center justify-center border shadow-sm">
+                  <Database className="text-main h-6 w-6" />
                 </div>
                 <h1
                   className="text-foreground font-bold tracking-tight"
@@ -1003,7 +1003,7 @@ export function WelcomeScreen() {
               {/* Error Message */}
               {error && (
                 <div
-                  className="border-border bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border p-3"
+                  className="border-destructive/20 bg-destructive/10 text-destructive rounded-base flex items-center gap-2.5 border p-3"
                   style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                 >
                   <AlertCircle className="h-4 w-4 shrink-0" />
@@ -1057,7 +1057,7 @@ export function WelcomeScreen() {
               {/* Recent Connections / Profile Manager */}
               <div>
                 {showProfiles ? (
-                  <div className="border-border bg-secondary-background rounded-base max-h-64 overflow-hidden border">
+                  <div className="border-border/70 bg-card/75 rounded-base max-h-64 overflow-hidden border shadow-sm">
                     <ProfileManager
                       onConnect={handleConnectFromProfile}
                       compact={true}
@@ -1091,7 +1091,7 @@ export function WelcomeScreen() {
                             >
                               <Button
                                 variant="ghost"
-                                className="h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
+                                className="hover:bg-muted/60 h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
                                 onClick={() => handleRecentClick(conn)}
                                 disabled={isConnecting}
                               >

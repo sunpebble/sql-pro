@@ -265,10 +265,10 @@ const ConnectionTab = memo(
                   ref={setNodeRef}
                   aria-selected={isActive}
                   className={cn(
-                    'group relative flex h-full max-w-45 min-w-25 cursor-pointer items-center gap-1.5 px-1.5 transition-all',
+                    'group relative mx-0.5 flex h-7 max-w-44 min-w-26 cursor-pointer items-center gap-1.5 px-2 transition-all',
                     isActive
-                      ? 'bg-background text-foreground border-border rounded-md border'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground rounded-md border border-transparent bg-transparent',
+                      ? 'bg-card/90 text-foreground border-border/80 rounded-md border shadow-sm'
+                      : 'text-muted-foreground hover:bg-card/[0.55] hover:text-foreground rounded-md border border-transparent bg-transparent',
                     isDragging &&
                       'ring-primary/50 z-50 scale-105 cursor-grabbing opacity-90 shadow-lg ring-2'
                   )}
@@ -284,12 +284,12 @@ const ConnectionTab = memo(
                   {/* Connection color indicator */}
                   {isActive && (
                     <span
-                      className="absolute top-1/2 left-0 h-4 w-1 -translate-y-1/2 rounded-full"
+                      className="absolute top-1/2 left-0.5 h-3.5 w-px -translate-y-1/2 rounded-full"
                       style={{ backgroundColor: connectionColor }}
                     />
                   )}
                   <StatusIcon
-                    className={cn('h-3.5 w-3.5 shrink-0', statusColorClass)}
+                    className={cn('h-3 w-3 shrink-0', statusColorClass)}
                   />
                   {hasUnsavedChanges && (
                     <Tooltip>
@@ -311,23 +311,6 @@ const ConnectionTab = memo(
                     <span className="block truncate">
                       {connection.filename}
                     </span>
-                    {/* Show parent directory for context */}
-                    {connection.path &&
-                      (() => {
-                        const parts = connection.path.split('/');
-                        const parentDir =
-                          parts.length > 1 ? parts[parts.length - 2] : null;
-                        return parentDir ? (
-                          <span
-                            className="text-muted-foreground block truncate leading-tight"
-                            style={{
-                              fontSize: 'calc(var(--font-ui-size, 13px) * 0.7)',
-                            }}
-                          >
-                            {parentDir}
-                          </span>
-                        ) : null;
-                      })()}
                   </div>
                   <Tooltip>
                     <TooltipTrigger>
@@ -636,7 +619,10 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
         onDragCancel={handleDragCancel}
       >
         <div
-          className={cn('bg-muted flex h-full items-center', className)}
+          className={cn(
+            'bg-secondary-background/50 flex h-full items-center',
+            className
+          )}
           role="tablist"
         >
           <SortableContext
@@ -644,7 +630,7 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
             strategy={horizontalListSortingStrategy}
           >
             <div
-              className="scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/40 flex h-full flex-1 items-center overflow-x-auto"
+              className="scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/40 flex h-full flex-1 items-center overflow-x-auto px-1"
               data-tauri-drag-region
             >
               {connections.map((connection) => (

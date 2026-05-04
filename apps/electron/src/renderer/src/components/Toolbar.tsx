@@ -32,7 +32,7 @@ export function Toolbar() {
   return (
     <div
       className={cn(
-        'flex shrink-0 items-center gap-1.5',
+        'flex shrink-0 items-center gap-1',
         'animate-fade-in-up opacity-0 [animation-delay:0.15s]'
       )}
       data-tour-target="toolbar"
@@ -48,8 +48,7 @@ export function Toolbar() {
             'border-border border',
             'shadow-sm',
             'transition-all duration-150',
-            'hover:shadow-none active:scale-95',
-            'active:translate-x-1 active:translate-y-1'
+            'hover:bg-warning/25 active:scale-95'
           )}
           style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
@@ -64,7 +63,7 @@ export function Toolbar() {
         </button>
       )}
 
-      <div className="bg-border mx-1 h-5 w-px" />
+      <div className="bg-border mx-1 h-4 w-px" />
 
       <Tooltip>
         <TooltipTrigger>
@@ -74,16 +73,16 @@ export function Toolbar() {
             aria-label={t('toolbar.aiAgent', { defaultValue: 'AI Agent' })}
             onClick={() => toggleAgentSidebar(connection.id)}
             className={cn(
-              'rounded-base h-8 w-8',
+              'rounded-base h-7 w-7',
               'transition-all duration-150',
               agentSidebarOpen
-                ? ['text-main bg-main/10', 'border-main border', 'shadow-sm']
+                ? ['text-main bg-main/10', 'border-main/25 border']
                 : [
                     'text-muted-foreground',
                     'border border-transparent',
                     'hover:text-foreground',
-                    'hover:border-border',
-                    'hover:bg-muted',
+                    'hover:border-border/70',
+                    'hover:bg-muted/60',
                   ],
               TOOLBAR_BUTTON_INTERACTIVE
             )}
@@ -96,7 +95,7 @@ export function Toolbar() {
         </TooltipContent>
       </Tooltip>
 
-      <div className="bg-border mx-1 h-5 w-px" />
+      <div className="bg-border mx-1 h-4 w-px" />
 
       <Tooltip>
         <TooltipTrigger>
@@ -113,11 +112,11 @@ export function Toolbar() {
               );
             }}
             className={cn(
-              'rounded-base h-8 gap-2 px-3',
+              'rounded-base h-7 gap-2 px-2.5',
               'font-medium',
               'text-muted-foreground hover:text-foreground',
-              'hover:border-border border border-transparent',
-              'hover:bg-muted',
+              'hover:border-border/70 border border-transparent',
+              'hover:bg-muted/60',
               'transition-all duration-150',
               TOOLBAR_BUTTON_INTERACTIVE
             )}
@@ -143,10 +142,10 @@ export function Toolbar() {
                 size="icon"
                 aria-label={t('toolbar.help', { defaultValue: 'Help' })}
                 className={cn(
-                  'rounded-base h-8 w-8',
+                  'rounded-base h-7 w-7',
                   'text-muted-foreground hover:text-foreground',
-                  'hover:border-border border border-transparent',
-                  'hover:bg-muted',
+                  'hover:border-border/70 border border-transparent',
+                  'hover:bg-muted/60',
                   'transition-all duration-150',
                   TOOLBAR_BUTTON_INTERACTIVE
                 )}

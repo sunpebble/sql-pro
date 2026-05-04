@@ -150,9 +150,9 @@ export function DatabaseView() {
             'bg-background'
           )}
         >
-          <div className="bg-grid-subtle pointer-events-none absolute inset-0 opacity-20 dark:opacity-15" />
-          <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.012] dark:opacity-[0.02]" />
-          <div className="bg-primary/5 pointer-events-none absolute inset-0" />
+          <div className="bg-grid-subtle pointer-events-none absolute inset-0 opacity-[0.05] dark:opacity-[0.04]" />
+          <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.008] dark:opacity-[0.012]" />
+          <div className="bg-main/[0.018] pointer-events-none absolute inset-0" />
 
           {activeView === 'data' && (
             <div className="flex h-full min-h-0 flex-1 flex-col">

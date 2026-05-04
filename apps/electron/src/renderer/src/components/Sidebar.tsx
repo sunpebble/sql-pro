@@ -765,15 +765,15 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
   return (
     <div
       ref={containerRef}
-      className="bg-sidebar/95 border-border/50 flex h-full w-full flex-col overflow-hidden border-r backdrop-blur-md outline-none"
+      className="bg-sidebar/[0.92] border-sidebar-border/70 text-sidebar-foreground flex h-full w-full flex-col overflow-hidden border-r backdrop-blur-md outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       data-tour-target="sidebar"
     >
       {/* Search - matches DataTabBar height */}
-      <div className="border-border mt-1 flex h-8 shrink-0 items-center border-b px-1.5">
+      <div className="border-sidebar-border/60 flex h-9 shrink-0 items-center border-b px-2">
         <div className="relative flex-1">
-          <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
+          <Search className="text-sidebar-foreground/[0.45] absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
           <input
             ref={searchInputRef}
             type="text"
@@ -788,22 +788,22 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
-            className="placeholder:text-muted-foreground focus:ring-main rounded-base h-6 w-full bg-transparent pr-2 pl-6 focus:ring-2 focus:outline-none"
+            className="placeholder:text-sidebar-foreground/[0.45] focus:border-main/[0.35] focus:ring-main/[0.15] rounded-base bg-background/[0.35] text-sidebar-foreground h-6 w-full border border-transparent pr-2 pl-6 transition-colors focus:ring-2 focus:outline-none"
             style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           />
         </div>
       </div>
 
       {/* Sort and Filter Controls */}
-      <ScrollArea className="border-border h-8 w-full shrink-0 border-b">
-        <div className="flex h-full min-w-0 items-center gap-1 px-1.5">
+      <ScrollArea className="border-sidebar-border/60 h-9 w-full shrink-0 border-b">
+        <div className="flex h-full min-w-0 items-center gap-1 px-2">
           {/* Sort Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 shrink-0 gap-1 px-2"
+                className="text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground h-7 shrink-0 gap-1 px-2"
               >
                 <SortAsc className="h-3.5 w-3.5 shrink-0" />
                 <span
@@ -876,7 +876,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="ml-auto h-7 w-7 shrink-0 p-0"
+                className="text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground ml-auto h-7 w-7 shrink-0 p-0"
                 onClick={toggleExpandAll}
               >
                 {isAllExpanded ? (
@@ -897,7 +897,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       {/* Schema Tree */}
       <ScrollArea className="min-h-0 min-w-0 flex-1">
         <div
-          className="min-w-0 overflow-hidden p-1.5"
+          className="min-w-0 overflow-hidden p-2"
           style={{
             fontFamily: tableFont.family || 'inherit',
             fontSize: `${tableFont.size || 13}px`,
@@ -1177,7 +1177,7 @@ function SchemaSection({
       {showSchemaHeader && (
         <button
           onClick={onToggleSchema}
-          className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-2 px-2 py-1 font-medium"
+          className="text-sidebar-foreground/[0.58] hover:text-sidebar-foreground hover:bg-sidebar-accent/70 rounded-base flex w-full items-center gap-2 px-2 py-1 font-medium"
           style={{ fontSize: 'var(--font-ui-size, 13px)' }}
         >
           {isSchemaExpanded ? (
@@ -1198,7 +1198,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(tablesKey)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
+                className="text-sidebar-foreground/[0.52] hover:text-sidebar-foreground hover:bg-sidebar-accent/70 rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {tablesExpanded ? (
@@ -1207,7 +1207,7 @@ function SchemaSection({
                   <ChevronRight className="h-2.5 w-2.5 transition-transform" />
                 )}
                 {t('schema.tables')}
-                <span className="text-muted-foreground/60 font-normal">
+                <span className="text-sidebar-foreground/[0.42] font-normal">
                   ({schemaInfo.tables.length})
                 </span>
               </button>
@@ -1264,7 +1264,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(viewsKey)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
+                className="text-sidebar-foreground/[0.52] hover:text-sidebar-foreground hover:bg-sidebar-accent/70 rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {viewsExpanded ? (
@@ -1273,7 +1273,7 @@ function SchemaSection({
                   <ChevronRight className="h-2.5 w-2.5 transition-transform" />
                 )}
                 {t('schema.views')}
-                <span className="text-muted-foreground/60 font-normal">
+                <span className="text-sidebar-foreground/[0.42] font-normal">
                   ({schemaInfo.views.length})
                 </span>
               </button>
@@ -1331,7 +1331,7 @@ function SchemaSection({
             <div>
               <button
                 onClick={() => onToggleSection(triggersKey)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
+                className="text-sidebar-foreground/[0.52] hover:text-sidebar-foreground hover:bg-sidebar-accent/70 rounded-base flex w-full items-center gap-1.5 px-2 py-1 font-medium"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
                 {triggersExpanded ? (
@@ -1340,7 +1340,7 @@ function SchemaSection({
                   <ChevronRight className="h-2.5 w-2.5 transition-transform" />
                 )}
                 {t('schema.triggers')}
-                <span className="text-muted-foreground/60 font-normal">
+                <span className="text-sidebar-foreground/[0.42] font-normal">
                   ({schemaInfo.triggers.length})
                 </span>
               </button>
@@ -1423,8 +1423,8 @@ function TableItem({
           className={cn(
             'rounded-base flex w-full cursor-pointer items-center gap-1.5 overflow-hidden px-2 py-0.5 transition-colors',
             isSelected
-              ? 'bg-main/15 text-main font-medium'
-              : 'hover:bg-muted text-foreground',
+              ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-[inset_0_0_0_1px_var(--sidebar-border)]'
+              : 'text-sidebar-foreground/[0.76] hover:bg-sidebar-accent/70 hover:text-sidebar-foreground',
             isFocused && !isSelected && 'ring-main ring-2 ring-inset'
           )}
         >
@@ -1433,14 +1433,14 @@ function TableItem({
             <Eye
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-main' : 'text-muted-foreground'
+                isSelected ? 'text-main' : 'text-sidebar-foreground/[0.45]'
               )}
             />
           ) : (
             <Table
               className={cn(
                 'h-3.5 w-3.5 shrink-0',
-                isSelected ? 'text-main' : 'text-muted-foreground'
+                isSelected ? 'text-main' : 'text-sidebar-foreground/[0.45]'
               )}
             />
           )}
@@ -1463,7 +1463,7 @@ function TableItem({
             <span
               className={cn(
                 'shrink-0 tabular-nums',
-                isSelected ? 'text-main' : 'text-muted-foreground'
+                isSelected ? 'text-main' : 'text-sidebar-foreground/[0.42]'
               )}
               style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
             >

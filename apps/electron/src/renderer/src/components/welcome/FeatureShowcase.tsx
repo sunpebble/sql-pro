@@ -34,56 +34,56 @@ const featureKeys: FeatureKey[] = [
   {
     icon: <Database className="h-4.5 w-4.5" />,
     key: 'schemaBrowser',
-    color: 'text-blue-500 dark:text-blue-400',
-    bgColor: 'bg-blue-50 dark:bg-blue-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <Edit className="h-4.5 w-4.5" />,
     key: 'inlineEditing',
-    color: 'text-amber-500 dark:text-amber-400',
-    bgColor: 'bg-amber-50 dark:bg-amber-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <Code className="h-4.5 w-4.5" />,
     key: 'sqlEditor',
-    color: 'text-emerald-500 dark:text-emerald-400',
-    bgColor: 'bg-emerald-50 dark:bg-emerald-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <GitFork className="h-4.5 w-4.5" />,
     key: 'erDiagram',
-    color: 'text-purple-500 dark:text-purple-400',
-    bgColor: 'bg-purple-50 dark:bg-purple-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <GitCompare className="h-4.5 w-4.5" />,
     key: 'schemaCompare',
-    color: 'text-rose-500 dark:text-rose-400',
-    bgColor: 'bg-rose-50 dark:bg-rose-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <ArrowLeftRight className="h-4.5 w-4.5" />,
     key: 'dataDiff',
-    color: 'text-cyan-500 dark:text-cyan-400',
-    bgColor: 'bg-cyan-50 dark:bg-cyan-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <Command className="h-4.5 w-4.5" />,
     key: 'commandPalette',
-    color: 'text-orange-500 dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <Keyboard className="h-4.5 w-4.5" />,
     key: 'vimMode',
-    color: 'text-lime-600 dark:text-lime-400',
-    bgColor: 'bg-lime-50 dark:bg-lime-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
   {
     icon: <Settings className="h-4.5 w-4.5" />,
     key: 'customizable',
-    color: 'text-indigo-500 dark:text-indigo-400',
-    bgColor: 'bg-indigo-50 dark:bg-indigo-500/10',
+    color: 'text-muted-foreground group-hover:text-main',
+    bgColor: 'bg-muted/50',
   },
 ];
 
@@ -134,14 +134,13 @@ export function FeatureShowcase({
           {featureKeys.map((feature) => (
             <div
               key={feature.key}
-              className="group rounded-base border-border bg-card flex flex-col items-center gap-2 border p-4 text-center shadow-sm transition-all hover:shadow-none active:scale-95"
+              className="group rounded-base border-border/70 bg-card/70 hover:bg-card flex flex-col items-center gap-2 border p-4 text-center shadow-sm transition-all duration-150 active:scale-[0.98]"
             >
               <div
                 className={cn(
-                  'rounded-base border-border flex h-9 w-9 items-center justify-center border transition-all',
+                  'rounded-base border-border/60 flex h-8 w-8 items-center justify-center border transition-all duration-150',
                   feature.bgColor,
-                  feature.color,
-                  'group-hover:scale-110'
+                  feature.color
                 )}
               >
                 {feature.icon}
