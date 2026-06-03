@@ -10,8 +10,12 @@ import type {
 
 import { toast } from 'sonner';
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
-import { isElectronEnvironment } from '@/lib/storage';
+import { debounce } from '@/lib/debounce';
+import {
+  getCachedSavedQueries,
+  persistSavedQueries,
+  registerSavedQueriesHydrator,
+} from '@/lib/storage';
 
 // Re-export types for consumers
 export type {
@@ -401,22 +405,16 @@ export const useActiveFolderId = () =>
 // ============ Persistence ============
 
 /**
- * Debounce helper for persistence
+ * Apply persisted saved queries state to the store.
  */
-function debounce<T extends (...args: Parameters<T>) => void>(
-  fn: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-  return (...args: Parameters<T>) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      fn(...args);
-      timeoutId = null;
-    }, delay);
-  };
+function hydrateSavedQueries(data: {
+  queries?: SavedQuery[];
+  folders?: QueryFolder[];
+}): void {
+  useSavedQueriesStore.setState({
+    queries: data.queries || [],
+    folders: data.folders || [],
+  });
 }
 
 /**
@@ -424,18 +422,10 @@ function debounce<T extends (...args: Parameters<T>) => void>(
  */
 const persistState = debounce(
   (state: { queries: SavedQuery[]; folders: QueryFolder[] }) => {
-    if (!isElectronEnvironment()) return;
-    sqlPro.rendererStore
-      .set({
-        key: 'savedQueries',
-        value: {
-          queries: state.queries,
-          folders: state.folders,
-        },
-      })
-      .catch((error: unknown) => {
-        console.error('Failed to persist saved queries state:', error);
-      });
+    persistSavedQueries({
+      queries: state.queries,
+      folders: state.folders,
+    });
   },
   500
 );
@@ -445,27 +435,18 @@ useSavedQueriesStore.subscribe((state) => {
   persistState({ queries: state.queries, folders: state.folders });
 });
 
+// Register hydrator for loading persisted saved queries state
+registerSavedQueriesHydrator((data) => {
+  hydrateSavedQueries(data);
+});
+
 /**
  * Initialize saved queries store from persisted state.
- * Call this early in app startup.
+ * Delegates to the centralized storage cache populated by initializeStorage().
  */
-export async function initializeSavedQueriesStore(): Promise<void> {
-  if (!isElectronEnvironment()) return;
-
-  try {
-    const result = await sqlPro.rendererStore.get({ key: 'savedQueries' });
-    if (result.success && result.data) {
-      const { queries, folders } = result.data as {
-        queries?: SavedQuery[];
-        folders?: QueryFolder[];
-      };
-
-      useSavedQueriesStore.setState({
-        queries: queries || [],
-        folders: folders || [],
-      });
-    }
-  } catch (error) {
-    console.error('Failed to initialize saved queries store:', error);
+export function initializeSavedQueriesStore(): void {
+  const cached = getCachedSavedQueries();
+  if (cached) {
+    hydrateSavedQueries(cached);
   }
 }

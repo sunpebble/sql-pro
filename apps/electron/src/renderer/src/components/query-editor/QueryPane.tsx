@@ -79,7 +79,7 @@ export const QueryPane = memo(
           const queryResult = {
             columns: result.columns || [],
             rows: result.rows || [],
-            rowsAffected: result.rowsAffected || 0,
+            rowsAffected: result.rowsAffected || result.totalChanges || 0,
             lastInsertRowId: result.lastInsertRowId,
           };
           updateTabResults(
@@ -92,12 +92,12 @@ export const QueryPane = memo(
           updateTabError(
             connectionId,
             tab.id,
-            result.error || t('query.queryFailed')
+            result.error || t('queryEditor.queryFailed')
           );
         }
       } catch (err) {
         const errorMessage =
-          err instanceof Error ? err.message : t('common.unknownError');
+          err instanceof Error ? err.message : t('queryEditor.unknownError');
         updateTabError(connectionId, tab.id, errorMessage);
       } finally {
         setTabExecuting(connectionId, tab.id, false);
@@ -277,7 +277,17 @@ export const QueryPane = memo(
                 className="text-muted-foreground flex items-center gap-4 border-b px-4 py-2"
                 style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)' }}
               >
-                <span>{tab.results.rowsAffected} rows</span>
+                <span>
+                  {tab.results.rows.length > 0
+                    ? t('queryEditor.rowsCount', {
+                        count: tab.results.rows.length,
+                      })
+                    : tab.results.rowsAffected > 0
+                      ? t('queryEditor.rowsAffected', {
+                          count: tab.results.rowsAffected,
+                        })
+                      : t('queryEditor.queryExecuted')}
+                </span>
                 {tab.executionTime !== null && (
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />

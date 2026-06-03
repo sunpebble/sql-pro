@@ -6,7 +6,6 @@ export { DatabaseView } from './DatabaseView';
 export { DataGrid } from './DataGrid';
 export { DiffPreview } from './DiffPreview';
 export { EditableCell } from './EditableCell';
-export { EditableDataGrid } from './EditableDataGrid';
 export { MonacoSqlEditor } from './MonacoSqlEditor';
 export { PasswordDialog } from './PasswordDialog';
 export { QueryEditor } from './QueryEditor';

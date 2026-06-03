@@ -536,7 +536,8 @@
     "connectionAndSnapshotRequired": "Connection ID and snapshot ID are required",
     "snapshotAndConnectionRequired": "Snapshot ID and connection ID are required",
     "snapshotIdsRequired": "Snapshot IDs are required",
-    "invalidComparisonConfig": "Invalid comparison configuration"
+    "invalidComparisonConfig": "Invalid comparison configuration",
+    "noTablesForConnection": "No tables found for this connection"
   },
   "exportReport": {
     "title": "Export Comparison Report",
@@ -682,7 +683,16 @@
     },
     "recentConnections": "Recent Connections",
     "savedProfiles": "Saved Profiles",
-    "databaseFileNotFound": "Database file not found at this location"
+    "databaseFileNotFound": "Database file not found at this location",
+    "selectProfilePrompt": "Select a profile to view details",
+    "passwordSaved": "Password saved",
+    "passwordSavedKeychainUnavailable": "Password saved (keychain may be unavailable)",
+    "cannotDuplicateMissingFile": "Cannot duplicate profile: Database file not found at {{path}}. Please ensure the file exists before duplicating.",
+    "duplicateFolderName": "A folder named \"{{name}}\" already exists at this level. Please choose a different name.",
+    "deleteFolderEmpty": "Delete folder \"{{name}}\"?",
+    "deleteFolderWithSubfolders": "Folder \"{{name}}\" contains subfolders. Delete anyway? Contents will be moved to root level.",
+    "deleteFolderWithProfiles": "Folder \"{{name}}\" contains profiles. Delete anyway? Contents will be moved to root level.",
+    "deleteFolderWithBoth": "Folder \"{{name}}\" contains subfolders and profiles. Delete anyway? Contents will be moved to root level."
   },
   "about": {
     "title": "SQL Pro",
@@ -1507,7 +1517,11 @@
       "showing": "{{count}} of {{total}} plugins",
       "matching": "matching \"{{query}}\"",
       "summary": "{{enabled}} enabled, {{disabled}} disabled"
-    }
+    },
+    "uninstallConfirmTitle": "Uninstall plugin?",
+    "uninstallConfirmDesc": "This will permanently remove the plugin and its data. This action cannot be undone.",
+    "toggleFailed": "Failed to update the plugin. Please try again.",
+    "uninstallFailed": "Failed to uninstall the plugin. Please try again."
   },
   "queryTabs": {
     "closeTab": "Close tab",
@@ -1832,7 +1846,10 @@
     "restoreFailed": "Failed to restore backup: {{error}}",
     "deleted": "Backup deleted",
     "deleteFailed": "Failed to delete backup: {{error}}",
-    "selectBackup": "Please select a backup to restore"
+    "selectBackup": "Please select a backup to restore",
+    "crossDbRestoreTitle": "Restore from a different database?",
+    "crossDbRestoreDesc": "This backup was created from \"{{backupDb}}\" but you are restoring into \"{{activeDb}}\". This will overwrite the current database.",
+    "crossDbRestoreDropWarning": "Existing tables will be dropped first."
   },
   "sharing": {
     "exportQuery": "Export Query",
@@ -2360,7 +2377,16 @@
     "changeCount_other": "{{count}} changes",
     "newValues": "New Values",
     "deletedValues": "Deleted Values",
-    "currentValues": "Current Values"
+    "currentValues": "Current Values",
+    "primaryKeyHeader": "Primary Key",
+    "changesHeader": "Changes",
+    "columnsChanged": "{{count}} columns changed",
+    "rowAdded": "Row exists in source only",
+    "rowRemoved": "Row exists in target only",
+    "noRowsFound": "No rows match the current filters",
+    "pageInfo": "Page {{page}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next"
   },
   "shortcuts": {
     "navigateRows": "Navigate rows",
@@ -2554,7 +2580,9 @@
       "deleteConfirm": "Delete folder?",
       "deleteWithQueries": "Delete folder and all queries inside",
       "moveToRoot": "Move queries to root and delete folder"
-    }
+    },
+    "deleteConfirmTitle": "Delete query?",
+    "deleteConfirmDesc": "This saved query will be permanently deleted. This action cannot be undone."
   },
   "ssh": {
     "tunnel": "SSH",

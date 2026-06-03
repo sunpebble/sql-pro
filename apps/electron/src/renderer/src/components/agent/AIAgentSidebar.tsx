@@ -96,7 +96,7 @@ export function AIAgentSidebar({
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  });
+  }, [messages]);
 
   useEffect(() => {
     const timer = setTimeout(() => textareaRef.current?.focus(), 150);
@@ -122,7 +122,7 @@ export function AIAgentSidebar({
 
   useLayoutEffect(() => {
     adjustTextareaHeight();
-  });
+  }, [input, adjustTextareaHeight]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -172,7 +172,8 @@ export function AIAgentSidebar({
       query: tableName
         ? t(
             'agent.quickAction.tableSchemaQuery',
-            `Describe the structure of the ${tableName} table`
+            'Describe the structure of the {{table}} table',
+            { table: tableName }
           )
         : t('agent.quickAction.schemaQuery', 'Show me the database schema'),
     },
@@ -185,7 +186,8 @@ export function AIAgentSidebar({
       query: tableName
         ? t(
             'agent.quickAction.analyzeTableQuery',
-            `Analyze the ${tableName} table - show row count, column types, and sample data`
+            'Analyze the {{table}} table - show row count, column types, and sample data',
+            { table: tableName }
           )
         : t(
             'agent.quickAction.analyzeDbQuery',
@@ -472,7 +474,7 @@ export function AIAgentSidebar({
       </div>
 
       {/* Messages Area */}
-      <ScrollArea className="flex-1" ref={scrollRef}>
+      <ScrollArea className="flex-1" viewportRef={scrollRef}>
         <div className="space-y-3 p-3">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-8 text-center">

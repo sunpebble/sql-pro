@@ -78,13 +78,17 @@ export function TableImageGallery({
     // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Immediate sync update before async
     setMediaColumns(syncMediaColumns);
 
+    let cancelled = false;
+
     // Then run async detection for URLs without clear media extensions
     const runAsyncDetection = async () => {
       setIsDetecting(true);
       try {
         const asyncColumns = await detectMediaColumnsAsync(columns, rows, 20);
+        if (cancelled) return;
         setMediaColumns(asyncColumns);
       } catch (error) {
+        if (cancelled) return;
         // Log error with context for debugging
         const errorMessage =
           error instanceof Error ? error.message : String(error);
@@ -99,11 +103,15 @@ export function TableImageGallery({
         // Keep sync results on error - this is a graceful degradation
         // No toast needed as sync detection already provides results
       } finally {
-        setIsDetecting(false);
+        if (!cancelled) setIsDetecting(false);
       }
     };
 
     runAsyncDetection();
+
+    return () => {
+      cancelled = true;
+    };
   }, [columns, rows, syncMediaColumns]);
 
   // Reset selected column if it's no longer available
@@ -128,6 +136,8 @@ export function TableImageGallery({
     const columnsToScan = validSelectedColumn
       ? mediaColumns.filter((c) => c.column === validSelectedColumn)
       : mediaColumns;
+
+    let cancelled = false;
 
     // Build items with async validation for URLs
     const buildItems = async () => {
@@ -170,6 +180,7 @@ export function TableImageGallery({
 
       try {
         const results = await Promise.all(promises);
+        if (cancelled) return;
         for (const result of results) {
           if (result) {
             items.push({
@@ -182,6 +193,7 @@ export function TableImageGallery({
           }
         }
       } catch (error) {
+        if (cancelled) return;
         // Log error with context for debugging
         const errorMessage =
           error instanceof Error ? error.message : String(error);
@@ -199,11 +211,17 @@ export function TableImageGallery({
         );
       }
 
-      setMediaItems(items);
-      setIsBuildingItems(false);
+      if (!cancelled) {
+        setMediaItems(items);
+        setIsBuildingItems(false);
+      }
     };
 
     buildItems();
+
+    return () => {
+      cancelled = true;
+    };
   }, [rows, columns, mediaColumns, validSelectedColumn, t]);
 
   // Handle export selected images

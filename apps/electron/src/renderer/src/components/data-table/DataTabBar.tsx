@@ -17,6 +17,7 @@ import {
 import { Eye, PanelRightClose, PanelRightOpen, Table, X } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn, TOOLTIP_CONTENT_FLEX, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
@@ -129,6 +130,7 @@ const TabItem = memo(
     tabsCount,
   }: TabItemProps) => {
     const { t } = useTranslation('common');
+    const { copy } = useCopyToClipboard();
     const handleCloseClick = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -203,7 +205,7 @@ const TabItem = memo(
           <ContextMenuItem
             onClick={() => {
               // Copy table name to clipboard
-              navigator.clipboard.writeText(tab.table.name);
+              copy(tab.table.name, { successMessage: t('clipboard.copied') });
             }}
           >
             {t('tabs.copyTableName')}

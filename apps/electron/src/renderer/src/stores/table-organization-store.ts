@@ -2,8 +2,12 @@ import type { TableMetadata, TagDefinition } from '@shared/types/tag';
 import { DEFAULT_TAG_COLOR, PRESET_TAG_COLORS } from '@shared/types/tag';
 
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
-import { isElectronEnvironment } from '@/lib/storage';
+import { debounce } from '@/lib/debounce';
+import {
+  getCachedTableOrganization,
+  persistTableOrganization,
+  registerTableOrganizationHydrator,
+} from '@/lib/storage';
 
 // Re-export types for consumers
 export type { TableMetadata, TagDefinition } from '@shared/types/tag';
@@ -415,22 +419,31 @@ export const useActiveTagFilter = () =>
 // ============ Persistence ============
 
 /**
- * Debounce helper for persistence
+ * Apply persisted table organization state to the store.
+ * Handles migration from the legacy string[] tags format.
  */
-function debounce<T extends (...args: Parameters<T>) => void>(
-  fn: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-  return (...args: Parameters<T>) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
+function hydrateTableOrganization(data: {
+  tags?: TagDefinition[] | string[];
+  tableMetadata?: Record<string, TableMetadata>;
+}): void {
+  const { tags, tableMetadata } = data;
+
+  // Handle migration from old string[] format if needed
+  let migratedTags: TagDefinition[] = [];
+  if (Array.isArray(tags) && tags.length > 0) {
+    if (typeof tags[0] === 'string') {
+      // Old format: string[]
+      migratedTags = migrateOldTags(tags as unknown as string[]);
+    } else {
+      // New format: TagDefinition[]
+      migratedTags = tags as TagDefinition[];
     }
-    timeoutId = setTimeout(() => {
-      fn(...args);
-      timeoutId = null;
-    }, delay);
-  };
+  }
+
+  useTableOrganizationStore.setState({
+    tags: migratedTags,
+    tableMetadata: tableMetadata || {},
+  });
 }
 
 /**
@@ -441,18 +454,10 @@ const persistState = debounce(
     tags: TagDefinition[];
     tableMetadata: Record<string, TableMetadata>;
   }) => {
-    if (!isElectronEnvironment()) return;
-    sqlPro.rendererStore
-      .set({
-        key: 'tableOrganization',
-        value: {
-          tags: state.tags,
-          tableMetadata: state.tableMetadata,
-        },
-      })
-      .catch((error: unknown) => {
-        console.error('Failed to persist table organization state:', error);
-      });
+    persistTableOrganization({
+      tags: state.tags,
+      tableMetadata: state.tableMetadata,
+    });
   },
   500
 );
@@ -462,39 +467,18 @@ useTableOrganizationStore.subscribe((state) => {
   persistState({ tags: state.tags, tableMetadata: state.tableMetadata });
 });
 
+// Register hydrator for loading persisted table organization state
+registerTableOrganizationHydrator((data) => {
+  hydrateTableOrganization(data);
+});
+
 /**
  * Initialize table organization store from persisted state.
- * Call this early in app startup.
+ * Delegates to the centralized storage cache populated by initializeStorage().
  */
-export async function initializeTableOrganizationStore(): Promise<void> {
-  if (!isElectronEnvironment()) return;
-
-  try {
-    const result = await sqlPro.rendererStore.get({ key: 'tableOrganization' });
-    if (result.success && result.data) {
-      const { tags, tableMetadata } = result.data as {
-        tags?: TagDefinition[] | string[];
-        tableMetadata?: Record<string, TableMetadata>;
-      };
-
-      // Handle migration from old string[] format if needed
-      let migratedTags: TagDefinition[] = [];
-      if (Array.isArray(tags) && tags.length > 0) {
-        if (typeof tags[0] === 'string') {
-          // Old format: string[]
-          migratedTags = migrateOldTags(tags as unknown as string[]);
-        } else {
-          // New format: TagDefinition[]
-          migratedTags = tags as TagDefinition[];
-        }
-      }
-
-      useTableOrganizationStore.setState({
-        tags: migratedTags,
-        tableMetadata: tableMetadata || {},
-      });
-    }
-  } catch (error) {
-    console.error('Failed to initialize table organization store:', error);
+export function initializeTableOrganizationStore(): void {
+  const cached = getCachedTableOrganization();
+  if (cached) {
+    hydrateTableOrganization(cached);
   }
 }

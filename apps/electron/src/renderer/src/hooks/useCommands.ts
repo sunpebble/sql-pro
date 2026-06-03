@@ -1,4 +1,3 @@
-import type { GetSchemaResponse } from '@shared/types';
 import type { Command } from '@/stores/command-palette-store';
 import {
   BarChart3,
@@ -26,13 +25,12 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
-import { invalidateTableData } from '@/lib/query-refresh';
-import { router } from '@/routes';
+import { invalidateTableData, refreshSchema } from '@/lib/query-refresh';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useChangesStore } from '@/stores/changes-store';
 import { useCommandPaletteStore } from '@/stores/command-palette-store';
+import { useCompareViewStore } from '@/stores/compare-view-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useConnectionSwitcherStore } from '@/stores/connection-switcher-store';
 import { useDataTabsStore } from '@/stores/data-tabs-store';
@@ -166,6 +164,15 @@ export function useCommands() {
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable;
 
+      // When the Compare view is active, it owns Cmd+R / Cmd+F via its own
+      // panel-level listeners (reset filters / focus diff search). Let the
+      // global capture-phase handlers bail without acting or preventing the
+      // default so those bubble-phase panel listeners win. Detected via the
+      // same [data-tab][data-active] mechanism used by view-scoped commands.
+      const isCompareViewActive = !!document.querySelector(
+        '[data-tab="compare"][data-active]'
+      );
+
       // Command palette shortcut - works everywhere
       const commandPaletteBinding = getShortcut('action.command-palette');
       if (matchesBinding(e, commandPaletteBinding)) {
@@ -174,9 +181,10 @@ export function useCommands() {
         return;
       }
 
-      // Focus search shortcut - works everywhere
+      // Focus search shortcut - works everywhere except the Compare view,
+      // where the panel's own focus-diff-search handler owns this binding.
       const focusSearchBinding = getShortcut('action.focus-search');
-      if (matchesBinding(e, focusSearchBinding)) {
+      if (matchesBinding(e, focusSearchBinding) && !isCompareViewActive) {
         e.preventDefault();
         const searchInput = document.querySelector<HTMLInputElement>(
           'input[placeholder*="Search"]'
@@ -248,22 +256,25 @@ export function useCommands() {
         return;
       }
 
-      // Schema Compare shortcut
+      // Schema Compare shortcut - opens the Compare view on its 'schema' tab.
       const schemaCompareBinding = getShortcut('nav.schema-compare');
       if (matchesBinding(e, schemaCompareBinding)) {
         e.preventDefault();
+        useCompareViewStore.getState().setActiveTab('schema');
         document
           .querySelector<HTMLButtonElement>('[data-tab="compare"]')
           ?.click();
         return;
       }
 
-      // Data Diff shortcut
+      // Data Diff shortcut - Data Diff lives as the 'data' inner tab of the
+      // Compare view, so request that tab then open the Compare view.
       const dataDiffBinding = getShortcut('nav.data-diff');
       if (matchesBinding(e, dataDiffBinding)) {
         e.preventDefault();
+        useCompareViewStore.getState().setActiveTab('data');
         document
-          .querySelector<HTMLButtonElement>('[data-tab="dataDiff"]')
+          .querySelector<HTMLButtonElement>('[data-tab="compare"]')
           ?.click();
         return;
       }
@@ -290,8 +301,10 @@ export function useCommands() {
       }
 
       // Refresh table shortcut - works everywhere (prevent browser refresh)
+      // except the Compare view, where the panel's own reset-filters handler
+      // owns this binding.
       const refreshTableBinding = getShortcut('action.refresh-table');
-      if (matchesBinding(e, refreshTableBinding)) {
+      if (matchesBinding(e, refreshTableBinding) && !isCompareViewActive) {
         e.preventDefault();
         if (activeConnectionId) {
           invalidateTableData(activeConnectionId);
@@ -304,33 +317,9 @@ export function useCommands() {
       if (matchesBinding(e, refreshSchemaBinding)) {
         e.preventDefault();
         e.stopPropagation();
-        const {
-          connection,
-          activeConnectionId,
-          setSchema,
-          invalidateSchemaCache,
-        } = connectionStoreRef.current!;
-        if (connection && activeConnectionId) {
-          // Invalidate cache first to force fresh data
-          invalidateSchemaCache(activeConnectionId);
-          // Fetch fresh schema
-          sqlPro.db
-            .getSchema({ connectionId: connection.id })
-            .then((result: GetSchemaResponse) => {
-              if (result.success) {
-                setSchema(activeConnectionId, {
-                  schemas: result.schemas || [],
-                  tables: result.tables || [],
-                  views: result.views || [],
-                });
-                toast.success(t('toast.schemaRefreshed'));
-              } else {
-                toast.error(t('toast.failedToRefreshSchema'));
-              }
-            })
-            .catch(() => {
-              toast.error(t('toast.failedToRefreshSchema'));
-            });
+        const { activeConnectionId } = connectionStoreRef.current!;
+        if (activeConnectionId) {
+          refreshSchema(activeConnectionId, t);
         }
         return;
       }
@@ -573,24 +562,10 @@ export function useCommands() {
 
         const connectionStore = connectionStoreRef.current;
         const dataTabsStore = dataTabsStoreRef.current;
-        const changesStore = changesStoreRef.current;
-        const tableDataStore = tableDataStoreRef.current;
 
-        if (
-          !connectionStore ||
-          !dataTabsStore ||
-          !changesStore ||
-          !tableDataStore
-        )
-          return;
+        if (!connectionStore || !dataTabsStore) return;
 
-        const {
-          activeConnectionId,
-          connection,
-          connections,
-          removeConnection,
-          setSelectedTable,
-        } = connectionStore;
+        const { activeConnectionId, connection } = connectionStore;
         if (!activeConnectionId || !connection) return;
 
         // Get tabs for current connection
@@ -601,20 +576,9 @@ export function useCommands() {
           // Close the active tab
           dataTabsStore.closeTab(activeConnectionId, activeTab.id);
         } else {
-          // No tabs left, close the connection
-          const hasOtherConnections = connections.size > 1;
-
-          sqlPro.db.close({ connectionId: connection.id }).then(() => {
-            removeConnection(activeConnectionId);
-            setSelectedTable(null);
-            changesStore.clearChangesForConnection(activeConnectionId);
-            tableDataStore.resetConnection(activeConnectionId);
-
-            // Only navigate to welcome page if no other connections
-            if (!hasOtherConnections) {
-              router.navigate({ to: '/' });
-            }
-          });
+          // No tabs left, close the connection through the shared guarded
+          // close so pending row edits are not silently discarded.
+          useDialogStore.getState().requestCloseConnection(activeConnectionId);
         }
         return;
       }
@@ -720,6 +684,7 @@ export function useCommands() {
         category: 'navigation',
         keywords: ['schema', 'compare', 'comparison', 'diff', 'migration'],
         action: () => {
+          useCompareViewStore.getState().setActiveTab('schema');
           document
             .querySelector<HTMLButtonElement>('[data-tab="compare"]')
             ?.click();

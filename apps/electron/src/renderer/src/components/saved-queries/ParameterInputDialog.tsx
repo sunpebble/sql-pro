@@ -1,6 +1,11 @@
 import type { QueryParameter } from '@shared/types/saved-query';
 
 import { Button } from '@sqlpro/ui/button';
+import { Input } from '@sqlpro/ui/input';
+import { Label } from '@sqlpro/ui/label';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import {
   Dialog,
   DialogContent,
@@ -8,11 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@sqlpro/ui/dialog';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+} from '@/components/ui/dialog';
 
 interface ParameterInputDialogProps {
   open: boolean;

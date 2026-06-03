@@ -1,12 +1,21 @@
 import type { SavedQuery } from '@shared/types/saved-query';
 
 import { Button } from '@sqlpro/ui/button';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@sqlpro/ui/empty';
 import { Input } from '@sqlpro/ui/input';
 import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { FileText, FolderOpen, Search, X } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   Dialog,
   DialogContent,
@@ -43,6 +52,7 @@ export const SavedQueriesBrowser = memo(
     } = useSavedQueriesStore();
 
     const [editingQuery, setEditingQuery] = useState<SavedQuery | null>(null);
+    const [deletingQueryId, setDeletingQueryId] = useState<string | null>(null);
 
     const filteredQueries = useMemo(
       () => getFilteredQueries(),
@@ -66,12 +76,19 @@ export const SavedQueriesBrowser = memo(
       [onRun, onOpenChange]
     );
 
-    const handleDelete = useCallback(
-      (id: string) => {
-        deleteQuery(id);
-      },
-      [deleteQuery]
-    );
+    const handleDelete = useCallback((id: string) => {
+      setDeletingQueryId(id);
+    }, []);
+
+    const handleConfirmDelete = useCallback(() => {
+      if (!deletingQueryId) return;
+
+      deleteQuery(deletingQueryId);
+      toast.success(
+        t('savedQueries.deleted', { defaultValue: 'Query deleted' })
+      );
+      setDeletingQueryId(null);
+    }, [deletingQueryId, deleteQuery, t]);
 
     const handleCreateFolder = useCallback(
       (name: string, color?: string) => {
@@ -176,28 +193,29 @@ export const SavedQueriesBrowser = memo(
                 <ScrollArea className="flex-1">
                   <div className="p-4">
                     {filteredQueries.length === 0 ? (
-                      <div className="text-muted-foreground flex flex-col items-center justify-center py-16">
-                        <FileText className="mb-3 h-12 w-12 opacity-40" />
-                        <p className="font-medium">
-                          {t('savedQueries.noQueriesFound', {
-                            defaultValue: 'No queries found',
-                          })}
-                        </p>
-                        <p
-                          className="opacity-70"
-                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                        >
-                          {searchQuery
-                            ? t('savedQueries.tryAdjustingSearch', {
-                                defaultValue:
-                                  'Try adjusting your search or filters',
-                              })
-                            : t('savedQueries.saveFirstQuery', {
-                                defaultValue:
-                                  'Save a query from the editor to get started',
-                              })}
-                        </p>
-                      </div>
+                      <Empty className="border-0 py-16">
+                        <EmptyHeader>
+                          <EmptyMedia variant="icon">
+                            <FileText className="size-5" />
+                          </EmptyMedia>
+                          <EmptyTitle>
+                            {t('savedQueries.noQueriesFound', {
+                              defaultValue: 'No queries found',
+                            })}
+                          </EmptyTitle>
+                          <EmptyDescription>
+                            {searchQuery
+                              ? t('savedQueries.tryAdjustingSearch', {
+                                  defaultValue:
+                                    'Try adjusting your search or filters',
+                                })
+                              : t('savedQueries.saveFirstQuery', {
+                                  defaultValue:
+                                    'Save a query from the editor to get started',
+                                })}
+                          </EmptyDescription>
+                        </EmptyHeader>
+                      </Empty>
                     ) : (
                       <div className="grid grid-cols-2 gap-4">
                         {filteredQueries.map((query) => (
@@ -226,6 +244,25 @@ export const SavedQueriesBrowser = memo(
             if (!open) setEditingQuery(null);
           }}
           query={editingQuery}
+        />
+
+        {/* Delete confirmation */}
+        <ConfirmDialog
+          open={deletingQueryId !== null}
+          onOpenChange={(open) => {
+            if (!open) setDeletingQueryId(null);
+          }}
+          variant="destructive"
+          title={t('savedQueries.deleteConfirmTitle', {
+            defaultValue: 'Delete query?',
+          })}
+          description={t('savedQueries.deleteConfirmDesc', {
+            defaultValue:
+              'This saved query will be permanently deleted. This action cannot be undone.',
+          })}
+          confirmLabel={t('savedQueries.delete', { defaultValue: 'Delete' })}
+          cancelLabel={t('common.cancel', { defaultValue: 'Cancel' })}
+          onConfirm={handleConfirmDelete}
         />
       </>
     );

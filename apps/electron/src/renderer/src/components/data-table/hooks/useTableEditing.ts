@@ -4,6 +4,7 @@ import type { TableRowData } from './useTableCore';
 import type { ColumnSchema } from '@/types/database';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
 import { useSettingsStore } from '@/stores/settings-store';
 
@@ -50,6 +51,7 @@ export function useTableEditing({
   onRowInsert,
 }: UseTableEditingOptions): UseTableEditingReturn {
   const { t } = useTranslation('common');
+  const { copy } = useCopyToClipboard();
   const [focusedCell, setFocusedCell] = useState<CellPosition | null>(null);
   const [editingCell, setEditingCell] = useState<CellPosition | null>(null);
 
@@ -589,7 +591,7 @@ export function useTableEditing({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const handleCopy = async (_e: ClipboardEvent) => {
+    const handleCopy = (_e: ClipboardEvent) => {
       if (!focusedCell || editingCell) return;
 
       const row = table
@@ -600,11 +602,7 @@ export function useTableEditing({
       const value = row.original[focusedCell.columnId];
       const text = value === null ? '' : String(value);
 
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch (err) {
-        console.error('Failed to copy:', err);
-      }
+      copy(text, { successMessage: t('clipboard.copied') });
     };
 
     const handlePaste = async (_e: ClipboardEvent) => {
@@ -626,7 +624,16 @@ export function useTableEditing({
       container.removeEventListener('copy', handleCopy);
       container.removeEventListener('paste', handlePaste);
     };
-  }, [focusedCell, editingCell, editable, table, handleCellSave, containerRef]);
+  }, [
+    focusedCell,
+    editingCell,
+    editable,
+    table,
+    handleCellSave,
+    containerRef,
+    copy,
+    t,
+  ]);
 
   return {
     focusedCell,

@@ -1,16 +1,12 @@
-import type { GetSchemaResponse } from '@shared/types';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 import { sqlPro } from '@/lib/api';
-import { invalidateTableData } from '@/lib/query-refresh';
+import { invalidateTableData, refreshSchema } from '@/lib/query-refresh';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
-import { useChangesStore } from '@/stores/changes-store';
 import { useCommandPaletteStore } from '@/stores/command-palette-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
-import { useTableDataStore } from '@/stores/table-data-store';
 
 // Check if window API is available (always true in Tauri since we import sqlPro)
 const hasWindowAPI = (): boolean => {
@@ -34,8 +30,6 @@ export function useMenuActions() {
 
     const cleanup = sqlPro.menu.onAction((action: string) => {
       const connectionStore = useConnectionStore.getState();
-      const changesStore = useChangesStore.getState();
-      const tableDataStore = useTableDataStore.getState();
 
       switch (action) {
         case 'open-database': {
@@ -73,60 +67,21 @@ export function useMenuActions() {
         }
 
         case 'close-database': {
-          const {
-            connection,
-            activeConnectionId,
-            connections,
-            removeConnection,
-            setSelectedTable,
-          } = connectionStore;
+          const { connection, activeConnectionId } = connectionStore;
           if (connection && activeConnectionId) {
-            // Check if there are other connections before closing
-            const hasOtherConnections = connections.size > 1;
-
-            sqlPro.db.close({ connectionId: connection.id }).then(() => {
-              removeConnection(activeConnectionId);
-              setSelectedTable(null);
-              changesStore.clearChangesForConnection(activeConnectionId);
-              tableDataStore.resetConnection(activeConnectionId);
-
-              // Only navigate to welcome page if no other connections
-              if (!hasOtherConnections) {
-                navigate({ to: '/' });
-              }
-            });
+            // Route through the shared guarded close so pending row edits are
+            // not silently discarded (matches the tab X behavior).
+            useDialogStore
+              .getState()
+              .requestCloseConnection(activeConnectionId);
           }
           break;
         }
 
         case 'refresh-schema': {
-          const {
-            connection,
-            activeConnectionId,
-            setSchema,
-            invalidateSchemaCache,
-          } = connectionStore;
-          if (connection && activeConnectionId) {
-            const toastId = toast.loading(t('toast.refreshing'));
-            // Invalidate cache first to force fresh data
-            invalidateSchemaCache(activeConnectionId);
-            sqlPro.db
-              .getSchema({ connectionId: connection.id })
-              .then((result: GetSchemaResponse) => {
-                if (result.success) {
-                  setSchema(activeConnectionId, {
-                    schemas: result.schemas || [],
-                    tables: result.tables || [],
-                    views: result.views || [],
-                  });
-                  toast.success(t('toast.refreshed'), { id: toastId });
-                } else {
-                  toast.error(t('toast.failedToRefresh'), { id: toastId });
-                }
-              })
-              .catch(() => {
-                toast.error(t('toast.failedToRefresh'), { id: toastId });
-              });
+          const { activeConnectionId } = connectionStore;
+          if (activeConnectionId) {
+            refreshSchema(activeConnectionId, t);
           }
           break;
         }
@@ -210,7 +165,7 @@ export function useMenuActions() {
 
         case 'switch-to-schema-compare': {
           document
-            .querySelector<HTMLButtonElement>('[data-tab="schema-compare"]')
+            .querySelector<HTMLButtonElement>('[data-tab="compare"]')
             ?.click();
           break;
         }

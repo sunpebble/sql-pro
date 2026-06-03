@@ -2410,10 +2410,13 @@ export interface ExportBundleRequest {
       name: string;
       description?: string;
       sql: string;
+      notes?: string;
       tags?: string[];
       order?: number;
     }>;
     documentation?: string;
+    databaseContext?: string;
+    tags?: string[];
   };
   compress?: boolean;
   filePath?: string;

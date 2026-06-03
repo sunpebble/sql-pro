@@ -71,14 +71,31 @@ export function setupExportHandlers(): void {
 
   // Export: Bundle
   ipcMain.handle(
-    IPC_CHANNELS.EXPORT_BUNDLE,
-    createHandler(async (_request: ExportBundleRequest) => {
+    IPC_CHANNELS.SHARING_EXPORT_BUNDLE,
+    createHandler(async (request: ExportBundleRequest) => {
+      const bundleInput = request.bundle;
+      if (!bundleInput) {
+        throw new Error('Bundle data is required');
+      }
+
       const { data } = await exportBundle({
-        name: 'bundle',
-        queries: [],
-        schemas: [],
+        name: bundleInput.name,
+        description: bundleInput.description,
+        documentation: bundleInput.documentation,
+        databaseContext: bundleInput.databaseContext,
+        tags: bundleInput.tags,
+        queries: (bundleInput.queries ?? []).map((query) => ({
+          id: query.id,
+          name: query.name,
+          description: query.description,
+          sql: query.sql,
+          notes: query.notes,
+          tags: query.tags,
+          order: query.order,
+        })),
       });
-      return { success: true, data };
+
+      return { data, filePath: request.filePath };
     })
   );
 

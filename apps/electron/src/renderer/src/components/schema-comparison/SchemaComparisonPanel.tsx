@@ -128,17 +128,22 @@ export function SchemaComparisonPanel({
             break;
           case 'r':
           case 'R':
-            // Cmd/Ctrl+R: Reset filters
+            // Cmd/Ctrl+R: Reset filters. Always prevent the browser hard
+            // refresh while this panel is mounted; the global refresh-table
+            // handler intentionally bails inside the Compare view so this is
+            // the sole owner of Cmd+R here.
+            e.preventDefault();
             if (comparisonResult) {
-              e.preventDefault();
               resetFilters();
             }
             break;
           case 'f':
           case 'F':
-            // Cmd/Ctrl+F: Focus search input
+            // Cmd/Ctrl+F: Focus search input. Always prevent default while
+            // this panel is mounted; the global focus-search handler bails
+            // inside the Compare view so this is the sole owner of Cmd+F here.
+            e.preventDefault();
             if (comparisonResult) {
-              e.preventDefault();
               // Find and focus the search input in DiffFilterBar
               const searchInput = document.querySelector(
                 'input[data-testid="diff-filter-search"]'
@@ -355,7 +360,7 @@ export function SchemaComparisonPanel({
           )}
 
           {/* Selection Cards */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="relative grid gap-4 md:grid-cols-2">
             {/* Source Selector */}
             <Card>
               <CardContent className="pt-6">
@@ -368,7 +373,7 @@ export function SchemaComparisonPanel({
             </Card>
 
             {/* Arrow Indicator */}
-            <div className="hidden items-center justify-center md:absolute md:top-50 md:left-1/2 md:flex md:-translate-x-1/2">
+            <div className="hidden items-center justify-center md:absolute md:top-1/2 md:left-1/2 md:flex md:-translate-x-1/2 md:-translate-y-1/2">
               <ArrowLeftRight className="text-muted-foreground h-6 w-6" />
             </div>
 

@@ -27,6 +27,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   Dialog,
   DialogContent,
@@ -79,6 +80,13 @@ export function BackupRestoreDialog({
     null
   );
   const [dropExisting, setDropExisting] = useState(false);
+  // Confirmation when restoring a backup whose source database differs from
+  // the active connection (overwriting a different DB is a data-loss hazard).
+  const [crossDbConfirmOpen, setCrossDbConfirmOpen] = useState(false);
+
+  // Identity of the active connection's database, matching how the backend
+  // records a backup's databaseName (connection.filename || connection.path).
+  const activeDbName = connection?.filename || connection?.path || '';
 
   const loadBackups = useCallback(async () => {
     try {
@@ -166,11 +174,8 @@ export function BackupRestoreDialog({
     loadBackups,
   ]);
 
-  const handleRestore = useCallback(async () => {
+  const performRestore = useCallback(async () => {
     if (!selectedBackup || !activeConnectionId) {
-      toast.error(
-        t('backup.selectBackup', 'Please select a backup to restore')
-      );
       return;
     }
 
@@ -212,6 +217,28 @@ export function BackupRestoreDialog({
     }
   }, [selectedBackup, activeConnectionId, dropExisting, t, onOpenChange]);
 
+  const handleRestore = useCallback(() => {
+    if (!selectedBackup || !activeConnectionId) {
+      toast.error(
+        t('backup.selectBackup', 'Please select a backup to restore')
+      );
+      return;
+    }
+
+    // Guard against overwriting a database with a backup taken from a
+    // different database — the dropdown lists backups from every database.
+    if (
+      selectedBackup.databaseName &&
+      activeDbName &&
+      selectedBackup.databaseName !== activeDbName
+    ) {
+      setCrossDbConfirmOpen(true);
+      return;
+    }
+
+    void performRestore();
+  }, [selectedBackup, activeConnectionId, activeDbName, performRestore, t]);
+
   const handleDeleteBackup = useCallback(
     async (backup: BackupMetadata) => {
       try {
@@ -238,354 +265,383 @@ export function BackupRestoreDialog({
   );
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[85vh] flex-col sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Archive className="h-5 w-5" />
-            {t('backup.title', 'Backup & Restore')}
-          </DialogTitle>
-          <DialogDescription>
-            {t(
-              'backup.description',
-              'Create backups of your database and restore from previous backups'
-            )}
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="flex max-h-[85vh] flex-col sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Archive className="h-5 w-5" />
+              {t('backup.title', 'Backup & Restore')}
+            </DialogTitle>
+            <DialogDescription>
+              {t(
+                'backup.description',
+                'Create backups of your database and restore from previous backups'
+              )}
+            </DialogDescription>
+          </DialogHeader>
 
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as typeof activeTab)}
-          className="flex flex-1 flex-col overflow-hidden"
-        >
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="backup" className="flex items-center gap-2">
-              <Download className="h-4 w-4" />
-              {t('backup.createBackup', 'Create Backup')}
-            </TabsTrigger>
-            <TabsTrigger value="restore" className="flex items-center gap-2">
-              <Upload className="h-4 w-4" />
-              {t('backup.restore', 'Restore')}
-            </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              {t('backup.history', 'History')}
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Create Backup Tab */}
-          <TabsContent
-            value="backup"
-            className="flex-1 space-y-4 overflow-auto"
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+            className="flex flex-1 flex-col overflow-hidden"
           >
-            <div className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <Label>{t('backup.backupName', 'Backup Name')}</Label>
-                <Input
-                  value={backupName}
-                  onChange={(e) => setBackupName(e.target.value)}
-                  placeholder={t(
-                    'backup.namePlaceholder',
-                    'my-database-backup'
-                  )}
-                />
-              </div>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="backup" className="flex items-center gap-2">
+                <Download className="h-4 w-4" />
+                {t('backup.createBackup', 'Create Backup')}
+              </TabsTrigger>
+              <TabsTrigger value="restore" className="flex items-center gap-2">
+                <Upload className="h-4 w-4" />
+                {t('backup.restore', 'Restore')}
+              </TabsTrigger>
+              <TabsTrigger value="history" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                {t('backup.history', 'History')}
+              </TabsTrigger>
+            </TabsList>
 
-              <div className="space-y-2">
-                <Label>{t('backup.format', 'Format')}</Label>
-                <Select
-                  value={backupFormat}
-                  onValueChange={(v: string) =>
-                    v && setBackupFormat(v as BackupFormat)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sql">
-                      <span className="flex items-center gap-2">
-                        <FileCode className="h-4 w-4" />
-                        SQL Dump (.sql)
-                      </span>
-                    </SelectItem>
-                    {connection?.databaseType === 'sqlite' && (
-                      <SelectItem value="sqlite">
-                        <span className="flex items-center gap-2">
-                          <HardDrive className="h-4 w-4" />
-                          SQLite File (.db)
-                        </span>
-                      </SelectItem>
+            {/* Create Backup Tab */}
+            <TabsContent
+              value="backup"
+              className="flex-1 space-y-4 overflow-auto"
+            >
+              <div className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label>{t('backup.backupName', 'Backup Name')}</Label>
+                  <Input
+                    value={backupName}
+                    onChange={(e) => setBackupName(e.target.value)}
+                    placeholder={t(
+                      'backup.namePlaceholder',
+                      'my-database-backup'
                     )}
-                  </SelectContent>
-                </Select>
-              </div>
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>
-                  {t('backup.description', 'Description (optional)')}
-                </Label>
-                <Textarea
-                  value={backupDescription}
-                  onChange={(e) => setBackupDescription(e.target.value)}
-                  placeholder={t(
-                    'backup.descriptionPlaceholder',
-                    'Add notes about this backup...'
-                  )}
-                  rows={3}
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="schemaOnly"
-                  checked={schemaOnly}
-                  onCheckedChange={setSchemaOnly}
-                />
-                <Label htmlFor="schemaOnly">
-                  {t('backup.schemaOnly', 'Schema only (no data)')}
-                </Label>
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Restore Tab */}
-          <TabsContent
-            value="restore"
-            className="flex flex-1 flex-col space-y-4 overflow-hidden"
-          >
-            <div className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <Label>
-                  {t('backup.selectBackupToRestore', 'Select Backup')}
-                </Label>
-                <Select
-                  value={selectedBackup?.id || ''}
-                  onValueChange={(v: string) => {
-                    const backup = backups.find((b) => b.id === v);
-                    setSelectedBackup(backup || null);
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue
-                      placeholder={t(
-                        'backup.chooseBackup',
-                        'Choose a backup...'
-                      )}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {backups.map((backup) => (
-                      <SelectItem key={backup.id} value={backup.id}>
+                <div className="space-y-2">
+                  <Label>{t('backup.format', 'Format')}</Label>
+                  <Select
+                    value={backupFormat}
+                    onValueChange={(v: string) =>
+                      v && setBackupFormat(v as BackupFormat)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sql">
                         <span className="flex items-center gap-2">
-                          <Database className="h-4 w-4" />
-                          {backup.name} - {formatDate(backup.createdAt)}
+                          <FileCode className="h-4 w-4" />
+                          SQL Dump (.sql)
                         </span>
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                      {connection?.databaseType === 'sqlite' && (
+                        <SelectItem value="sqlite">
+                          <span className="flex items-center gap-2">
+                            <HardDrive className="h-4 w-4" />
+                            SQLite File (.db)
+                          </span>
+                        </SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {selectedBackup && (
-                <div className="bg-muted/30 rounded-base space-y-2 border p-4">
-                  <div className="flex justify-between">
-                    <span
-                      className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {t('backup.database', 'Database')}:
-                    </span>
-                    <span
-                      className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {selectedBackup.databaseName}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span
-                      className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {t('backup.tables', 'Tables')}:
-                    </span>
-                    <span
-                      className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {selectedBackup.tableCount}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span
-                      className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {t('backup.rows', 'Rows')}:
-                    </span>
-                    <span
-                      className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {selectedBackup.totalRows.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span
-                      className="text-muted-foreground"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {t('backup.size', 'Size')}:
-                    </span>
-                    <span
-                      className="font-medium"
-                      style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                    >
-                      {formatBytes(selectedBackup.fileSize)}
-                    </span>
-                  </div>
-                  {selectedBackup.description && (
-                    <div className="border-t pt-2">
+                <div className="space-y-2">
+                  <Label>
+                    {t('backup.description', 'Description (optional)')}
+                  </Label>
+                  <Textarea
+                    value={backupDescription}
+                    onChange={(e) => setBackupDescription(e.target.value)}
+                    placeholder={t(
+                      'backup.descriptionPlaceholder',
+                      'Add notes about this backup...'
+                    )}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="schemaOnly"
+                    checked={schemaOnly}
+                    onCheckedChange={setSchemaOnly}
+                  />
+                  <Label htmlFor="schemaOnly">
+                    {t('backup.schemaOnly', 'Schema only (no data)')}
+                  </Label>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Restore Tab */}
+            <TabsContent
+              value="restore"
+              className="flex flex-1 flex-col space-y-4 overflow-hidden"
+            >
+              <div className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label>
+                    {t('backup.selectBackupToRestore', 'Select Backup')}
+                  </Label>
+                  <Select
+                    value={selectedBackup?.id || ''}
+                    onValueChange={(v: string) => {
+                      const backup = backups.find((b) => b.id === v);
+                      setSelectedBackup(backup || null);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder={t(
+                          'backup.chooseBackup',
+                          'Choose a backup...'
+                        )}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {backups.map((backup) => (
+                        <SelectItem key={backup.id} value={backup.id}>
+                          <span className="flex items-center gap-2">
+                            <Database className="h-4 w-4" />
+                            {backup.name} - {formatDate(backup.createdAt)}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {selectedBackup && (
+                  <div className="bg-muted/30 rounded-base space-y-2 border p-4">
+                    <div className="flex justify-between">
                       <span
                         className="text-muted-foreground"
                         style={{ fontSize: 'var(--font-ui-size, 13px)' }}
                       >
-                        {selectedBackup.description}
+                        {t('backup.database', 'Database')}:
+                      </span>
+                      <span
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                      >
+                        {selectedBackup.databaseName}
                       </span>
                     </div>
-                  )}
-                </div>
-              )}
+                    <div className="flex justify-between">
+                      <span
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                      >
+                        {t('backup.tables', 'Tables')}:
+                      </span>
+                      <span
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                      >
+                        {selectedBackup.tableCount}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                      >
+                        {t('backup.rows', 'Rows')}:
+                      </span>
+                      <span
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                      >
+                        {selectedBackup.totalRows.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span
+                        className="text-muted-foreground"
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                      >
+                        {t('backup.size', 'Size')}:
+                      </span>
+                      <span
+                        className="font-medium"
+                        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                      >
+                        {formatBytes(selectedBackup.fileSize)}
+                      </span>
+                    </div>
+                    {selectedBackup.description && (
+                      <div className="border-t pt-2">
+                        <span
+                          className="text-muted-foreground"
+                          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                        >
+                          {selectedBackup.description}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
 
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="dropExisting"
-                  checked={dropExisting}
-                  onCheckedChange={setDropExisting}
-                />
-                <Label htmlFor="dropExisting">
-                  {t(
-                    'backup.dropExisting',
-                    'Drop existing tables before restore'
-                  )}
-                </Label>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="dropExisting"
+                    checked={dropExisting}
+                    onCheckedChange={setDropExisting}
+                  />
+                  <Label htmlFor="dropExisting">
+                    {t(
+                      'backup.dropExisting',
+                      'Drop existing tables before restore'
+                    )}
+                  </Label>
+                </div>
               </div>
-            </div>
-          </TabsContent>
+            </TabsContent>
 
-          {/* History Tab */}
-          <TabsContent
-            value="history"
-            className="flex flex-1 flex-col overflow-hidden"
-          >
-            <div className="flex items-center justify-between py-2">
-              <span
-                className="text-muted-foreground"
-                style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-              >
-                {t('backup.backupCount', '{{count}} backups', {
-                  count: backups.length,
-                })}
-              </span>
-              <Button variant="ghost" size="sm" onClick={loadBackups}>
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-            </div>
-            <ScrollArea className="rounded-base flex-1 border">
-              {backups.length === 0 ? (
-                <div className="text-muted-foreground flex h-32 items-center justify-center">
-                  {t('backup.noBackups', 'No backups yet')}
-                </div>
-              ) : (
-                <div className="divide-y">
-                  {backups.map((backup) => (
-                    <div
-                      key={backup.id}
-                      className="hover:bg-muted/50 flex items-center justify-between p-3"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="bg-primary/10 rounded-base p-2">
-                          {backup.format === 'sql' ? (
-                            <FileCode className="text-primary h-4 w-4" />
-                          ) : (
-                            <HardDrive className="text-primary h-4 w-4" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-medium">{backup.name}</div>
-                          <div
-                            className="text-muted-foreground"
-                            style={{
-                              fontSize:
-                                'calc(var(--font-ui-size, 13px) * 0.85)',
-                            }}
-                          >
-                            {formatDate(backup.createdAt)} •{' '}
-                            {formatBytes(backup.fileSize)} • {backup.tableCount}{' '}
-                            tables • {backup.totalRows} rows
+            {/* History Tab */}
+            <TabsContent
+              value="history"
+              className="flex flex-1 flex-col overflow-hidden"
+            >
+              <div className="flex items-center justify-between py-2">
+                <span
+                  className="text-muted-foreground"
+                  style={{ fontSize: 'var(--font-ui-size, 13px)' }}
+                >
+                  {t('backup.backupCount', '{{count}} backups', {
+                    count: backups.length,
+                  })}
+                </span>
+                <Button variant="ghost" size="sm" onClick={loadBackups}>
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+              </div>
+              <ScrollArea className="rounded-base flex-1 border">
+                {backups.length === 0 ? (
+                  <div className="text-muted-foreground flex h-32 items-center justify-center">
+                    {t('backup.noBackups', 'No backups yet')}
+                  </div>
+                ) : (
+                  <div className="divide-y">
+                    {backups.map((backup) => (
+                      <div
+                        key={backup.id}
+                        className="hover:bg-muted/50 flex items-center justify-between p-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="bg-primary/10 rounded-base p-2">
+                            {backup.format === 'sql' ? (
+                              <FileCode className="text-primary h-4 w-4" />
+                            ) : (
+                              <HardDrive className="text-primary h-4 w-4" />
+                            )}
                           </div>
-                          {backup.description && (
+                          <div>
+                            <div className="font-medium">{backup.name}</div>
                             <div
-                              className="text-muted-foreground mt-1"
+                              className="text-muted-foreground"
                               style={{
                                 fontSize:
                                   'calc(var(--font-ui-size, 13px) * 0.85)',
                               }}
                             >
-                              {backup.description}
+                              {formatDate(backup.createdAt)} •{' '}
+                              {formatBytes(backup.fileSize)} •{' '}
+                              {backup.tableCount} tables • {backup.totalRows}{' '}
+                              rows
                             </div>
-                          )}
+                            {backup.description && (
+                              <div
+                                className="text-muted-foreground mt-1"
+                                style={{
+                                  fontSize:
+                                    'calc(var(--font-ui-size, 13px) * 0.85)',
+                                }}
+                              >
+                                {backup.description}
+                              </div>
+                            )}
+                          </div>
                         </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteBackup(backup)}
+                        >
+                          <Trash2 className="text-destructive h-4 w-4" />
+                        </Button>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteBackup(backup)}
-                      >
-                        <Trash2 className="text-destructive h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </TabsContent>
+          </Tabs>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('actions.close', 'Close')}
-          </Button>
-          {activeTab === 'backup' && (
-            <Button
-              onClick={handleCreateBackup}
-              disabled={isLoading || !backupName}
-            >
-              {isLoading ? (
-                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="mr-2 h-4 w-4" />
-              )}
-              {t('backup.createBackup', 'Create Backup')}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              {t('actions.close', 'Close')}
             </Button>
-          )}
-          {activeTab === 'restore' && (
-            <Button
-              onClick={handleRestore}
-              disabled={isLoading || !selectedBackup}
-              variant="destructive"
-            >
-              {isLoading ? (
-                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Upload className="mr-2 h-4 w-4" />
-              )}
-              {t('backup.restoreBackup', 'Restore Backup')}
-            </Button>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            {activeTab === 'backup' && (
+              <Button
+                onClick={handleCreateBackup}
+                disabled={isLoading || !backupName}
+              >
+                {isLoading ? (
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="mr-2 h-4 w-4" />
+                )}
+                {t('backup.createBackup', 'Create Backup')}
+              </Button>
+            )}
+            {activeTab === 'restore' && (
+              <Button
+                onClick={handleRestore}
+                disabled={isLoading || !selectedBackup}
+                variant="destructive"
+              >
+                {isLoading ? (
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="mr-2 h-4 w-4" />
+                )}
+                {t('backup.restoreBackup', 'Restore Backup')}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <ConfirmDialog
+        open={crossDbConfirmOpen}
+        onOpenChange={setCrossDbConfirmOpen}
+        variant="destructive"
+        title={t(
+          'backup.crossDbRestoreTitle',
+          'Restore from a different database?'
+        )}
+        description={
+          t(
+            'backup.crossDbRestoreDesc',
+            'This backup was created from "{{backupDb}}" but you are restoring into "{{activeDb}}". This will overwrite the current database.',
+            {
+              backupDb: selectedBackup?.databaseName ?? '',
+              activeDb: activeDbName,
+            }
+          ) +
+          (dropExisting
+            ? ` ${t('backup.crossDbRestoreDropWarning', 'Existing tables will be dropped first.')}`
+            : '')
+        }
+        onConfirm={() => {
+          setCrossDbConfirmOpen(false);
+          void performRestore();
+        }}
+      />
+    </>
   );
 }

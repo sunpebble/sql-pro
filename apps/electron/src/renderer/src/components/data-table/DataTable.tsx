@@ -32,6 +32,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useDebouncedCallback } from '@/hooks/useDebounce';
 import { useVirtualData } from '@/hooks/useVirtualData';
 import { generateSQLInsert } from '@/lib/sql-insert-generator';
@@ -141,6 +142,7 @@ export interface DataTableRef {
   scrollToRow: (rowIndex: number, highlight?: boolean) => void;
   focus: () => void;
   resetAllColumnSizes: () => void;
+  clearSelection: () => void;
   /** Release rows outside the current viewport buffer from memory */
   releaseOutOfBufferRows?: () => void;
   /** Get current virtual data statistics */
@@ -184,6 +186,8 @@ export const DataTable = function DataTable({
   isLoadingMore = false,
   tableName,
 }: DataTableProps & { ref?: React.RefObject<DataTableRef | null> }) {
+  const { t } = useTranslation('common');
+  const { copy } = useCopyToClipboard();
   const containerRef = useRef<HTMLDivElement>(null);
   const ghostLineRef = useRef<GhostResizeLineRef>(null);
   const tableFont = useTableFont();
@@ -198,6 +202,7 @@ export const DataTable = function DataTable({
     pinnedColumns,
     toggleColumnPin,
     selectedRowIds,
+    clearRowSelection,
   } = useTableCore({
     columns,
     data,
@@ -418,9 +423,9 @@ export const DataTable = function DataTable({
       });
 
       // Copy to clipboard
-      navigator.clipboard.writeText(sql);
+      copy(sql, { successMessage: t('clipboard.copied') });
     },
-    [tableName, table, rows, columns]
+    [tableName, table, rows, columns, copy, t]
   );
 
   /**
@@ -443,9 +448,9 @@ export const DataTable = function DataTable({
       }
 
       // Copy as tab-separated values
-      navigator.clipboard.writeText(values.join('\t'));
+      copy(values.join('\t'), { successMessage: t('clipboard.copied') });
     },
-    [rows, columns]
+    [rows, columns, copy, t]
   );
 
   /**
@@ -486,7 +491,7 @@ export const DataTable = function DataTable({
     }
     return {
       startIndex: virtualItems[0].index,
-      endIndex: virtualItems[virtualItems.length - 1].index,
+      endIndex: virtualItems.at(-1)!.index,
     };
   }, [virtualItems]);
 
@@ -536,7 +541,7 @@ export const DataTable = function DataTable({
         // Add pinned columns width
         if (pinnedColumns.length > 0) {
           const lastPinnedCell = rowElement.querySelector(
-            `td[data-column-id="${pinnedColumns[pinnedColumns.length - 1]}"]`
+            `td[data-column-id="${pinnedColumns.at(-1)}"]`
           ) as HTMLElement | null;
           if (lastPinnedCell) {
             const lastPinnedRect = lastPinnedCell.getBoundingClientRect();
@@ -674,6 +679,7 @@ export const DataTable = function DataTable({
       containerRef.current?.focus();
     },
     resetAllColumnSizes,
+    clearSelection: clearRowSelection,
     releaseOutOfBufferRows: enableVirtualDataManagement
       ? virtualData.releaseOutOfBufferRows
       : undefined,

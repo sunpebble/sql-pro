@@ -5,7 +5,6 @@
       "@/*": ["./src/renderer/src/*"],
       "@shared/*": ["./src/shared/*"],
       "@app/*": ["./src/renderer/src/app/*"],
-      "@features/*": ["./src/renderer/src/features/*"],
       "@shared-ui/*": ["./src/renderer/src/shared/*"]
     },
     "types": ["@testing-library/jest-dom", "vitest/globals"]

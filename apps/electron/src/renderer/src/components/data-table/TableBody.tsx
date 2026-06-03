@@ -13,6 +13,7 @@ import {
 import { ClipboardCopy, Copy, FileText, Trash2 } from 'lucide-react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/utils';
 import { GroupRow } from './GroupRow';
 import { TableCell } from './TableCell';
@@ -165,6 +166,8 @@ const DataRow = memo(
     onDeleteRow,
     t,
   }: DataRowProps) => {
+    const { copy } = useCopyToClipboard();
+
     // Use stable dataIndex for even/odd styling (not virtual index)
     const isEven = dataIndex % 2 === 0;
 
@@ -229,9 +232,9 @@ const DataRow = memo(
         const value = contextMenuCell.value;
         const text =
           value === null ? 'NULL' : value === undefined ? '' : String(value);
-        navigator.clipboard.writeText(text);
+        copy(text, { successMessage: t('clipboard.copied') });
       }
-    }, [contextMenuCell]);
+    }, [contextMenuCell, copy, t]);
 
     // Get all cells for this row - this is called once per row
     const allCells = row.getVisibleCells();
@@ -304,8 +307,7 @@ const DataRow = memo(
 
             // Pinning info
             const isPinned = pinnedColumns.includes(columnId);
-            const isLastPinned =
-              isPinned && pinnedColumns[pinnedColumns.length - 1] === columnId;
+            const isLastPinned = isPinned && pinnedColumns.at(-1) === columnId;
 
             return (
               <TableCell
@@ -493,7 +495,7 @@ export const TableBody = memo(
     const [paddingTop, paddingBottom] = useMemo(() => {
       if (virtualItems.length === 0) return [0, 0];
       const first = virtualItems[0];
-      const last = virtualItems[virtualItems.length - 1];
+      const last = virtualItems.at(-1)!;
       return [first.start, rowVirtualizer.getTotalSize() - last.end];
     }, [virtualItems, rowVirtualizer]);
 

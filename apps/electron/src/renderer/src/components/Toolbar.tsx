@@ -15,6 +15,7 @@ import {
   TOOLTIP_CONTENT_STYLE,
 } from '@/lib/utils';
 import { useChangesStore } from '@/stores/changes-store';
+import { useCommandPaletteStore } from '@/stores/command-palette-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
 import { useOnboardingStore } from '@/stores/onboarding-store';
@@ -24,6 +25,7 @@ export function Toolbar() {
   const { hasChanges, changes } = useChangesStore();
   const { startTour } = useOnboardingStore();
   const openChangesPanel = useDialogStore((s) => s.openChangesPanel);
+  const toggleCommandPalette = useCommandPaletteStore((s) => s.toggle);
   const { agentSidebarOpen, toggleAgentSidebar } = useDialogStore();
   const { t } = useTranslation('common');
 
@@ -102,15 +104,7 @@ export function Toolbar() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => {
-              window.dispatchEvent(
-                new KeyboardEvent('keydown', {
-                  key: 'k',
-                  metaKey: true,
-                  bubbles: true,
-                })
-              );
-            }}
+            onClick={toggleCommandPalette}
             className={cn(
               'rounded-base h-7 gap-2 px-2.5',
               'font-medium',

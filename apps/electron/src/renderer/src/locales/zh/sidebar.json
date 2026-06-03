@@ -127,7 +127,9 @@
     "save": "保存",
     "delete": "删除",
     "errorNameRequired": "标签名称不能为空",
-    "errorDuplicate": "标签名称已存在"
+    "errorDuplicate": "标签名称已存在",
+    "deleteTagTitle": "删除标签？",
+    "deleteTagDesc": "此操作会从所有已标记的对象中移除该标签，且无法撤销。"
   },
   "newQuery": "新建查询"
 }

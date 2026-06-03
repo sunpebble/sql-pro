@@ -47,6 +47,7 @@ import {
 import { useTheme } from 'next-themes';
 import { Component, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -332,12 +333,15 @@ export const QueryOptimizerPanel = memo(
         await exportDiagramAsPng(container, {
           filename: `query-execution-plan-${Date.now()}.png`,
         });
-      } catch {
-        // Error is logged by exportDiagramAsPng
+      } catch (err) {
+        console.error('Query plan PNG export failed:', err);
+        toast.error(
+          t('devTools.queryOptimizer.exportFailed', 'Failed to export diagram')
+        );
       } finally {
         setIsExporting(false);
       }
-    }, []);
+    }, [t]);
 
     // Handle text export
     const handleExportText = useCallback(() => {
@@ -354,10 +358,13 @@ export const QueryOptimizerPanel = memo(
         link.href = url;
         link.click();
         URL.revokeObjectURL(url);
-      } catch {
-        // Silent error handling
+      } catch (err) {
+        console.error('Query plan text export failed:', err);
+        toast.error(
+          t('devTools.queryOptimizer.exportFailed', 'Failed to export plan')
+        );
       }
-    }, [plan, stats, query]);
+    }, [plan, stats, query, t]);
 
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>

@@ -6,6 +6,7 @@ import {
   hasPreviousStep,
   TOUR_CONFIG,
 } from '../../lib/tour-steps';
+import { useCommandPaletteStore } from '../../stores/command-palette-store';
 import { useOnboardingStore } from '../../stores/onboarding-store';
 import { TourSpotlight } from './TourSpotlight';
 import { TourTooltip } from './TourTooltip';
@@ -52,6 +53,9 @@ export function Tour({ onSwitchTab }: TourProps) {
   // Track if step action has been executed
   const lastExecutedStepRef = useRef<number>(-1);
 
+  // Command palette open action (preferred over synthetic keyboard events)
+  const openCommandPalette = useCommandPaletteStore((s) => s.open);
+
   // Get current tour step
   const step = getTourStepByIndex(currentStep);
 
@@ -73,22 +77,16 @@ export function Tour({ onSwitchTab }: TourProps) {
           }
           break;
         case 'open-command-palette':
-          // Trigger command palette via keyboard shortcut simulation
-          // This will be handled by the global shortcut handler
-          document.dispatchEvent(
-            new KeyboardEvent('keydown', {
-              key: 'k',
-              metaKey: true,
-              bubbles: true,
-            })
-          );
+          // Open via the store action directly so it works regardless of the
+          // active keyboard preset or platform (macOS/Windows/Linux).
+          openCommandPalette();
           break;
         case 'wait':
           await new Promise((resolve) => setTimeout(resolve, action.duration));
           break;
       }
     },
-    [onSwitchTab]
+    [onSwitchTab, openCommandPalette]
   );
 
   /**

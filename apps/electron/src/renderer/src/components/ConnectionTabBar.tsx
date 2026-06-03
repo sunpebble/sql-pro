@@ -1,5 +1,4 @@
 import type { DragCancelEvent, DragEndEvent } from '@dnd-kit/core';
-import type { PendingChangeInfo } from '@shared/types';
 import type { DatabaseConnection } from '@/types/database';
 import {
   closestCenter,
@@ -48,16 +47,12 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
-import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
-import { sqlPro } from '@/lib/api';
-import { queryClient } from '@/lib/query-client';
+import { refreshSchema } from '@/lib/query-refresh';
 import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 import { useChangesStore } from '@/stores/changes-store';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
-import { useTableDataStore } from '@/stores/table-data-store';
 
 // Preset colors for connection tabs (using OKLch for consistency)
 const PRESET_COLORS = [
@@ -102,8 +97,7 @@ interface ConnectionTabProps {
 const ConnectionTab = memo(
   ({ connection, isActive, onSelect, onClose }: ConnectionTabProps) => {
     const { t } = useTranslation('common');
-    const { getConnectionColor, setConnectionColor, setSchema } =
-      useConnectionStore();
+    const { getConnectionColor, setConnectionColor } = useConnectionStore();
     const connectionColor =
       getConnectionColor(connection.id) || 'oklch(0.59 0.20 255)'; // default blue
 
@@ -135,45 +129,19 @@ const ConnectionTab = memo(
       }
     }, []);
 
-    // Handle refresh schema
+    // Handle refresh schema - delegates to the shared canonical action.
+    // Local isRefreshing only drives the button spinner UI; re-entrancy is
+    // guarded inside refreshSchema for all entry points.
     const handleRefreshSchema = useCallback(async () => {
       if (isRefreshing) return;
 
       setIsRefreshing(true);
-      const toastId = toast.loading(t('connection.refreshing'));
-
       try {
-        const result = await sqlPro.db.getSchema({
-          connectionId: connection.id,
-        });
-
-        if (result.success) {
-          setSchema(connection.id, {
-            schemas: result.schemas || [],
-            tables: result.tables || [],
-            views: result.views || [],
-          });
-        }
-
-        // Invalidate and refetch table data queries for this connection
-        await queryClient.invalidateQueries({
-          predicate: (query) => {
-            const queryKey = query.queryKey;
-            return (
-              Array.isArray(queryKey) &&
-              queryKey[0] === 'tableData' &&
-              queryKey[1] === connection.id
-            );
-          },
-        });
-
-        toast.success(t('connection.refreshed'), { id: toastId });
-      } catch {
-        toast.error(t('connection.refreshFailed'), { id: toastId });
+        await refreshSchema(connection.id, t);
       } finally {
         setIsRefreshing(false);
       }
-    }, [connection.id, isRefreshing, setSchema, t]);
+    }, [connection.id, isRefreshing, t]);
 
     // Handle connection settings
     const handleConnectionSettings = useCallback(() => {
@@ -236,6 +204,13 @@ const ConnectionTab = memo(
           ? 'text-red-500'
           : 'text-muted-foreground';
 
+    const statusLabel =
+      connection.status === 'connected'
+        ? t('status.connected', 'Connected')
+        : connection.status === 'error'
+          ? t('status.error', 'Error')
+          : t('status.disconnected', 'Disconnected');
+
     const handleCloseClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       onClose();
@@ -280,6 +255,7 @@ const ConnectionTab = memo(
                   onClick={handleClick}
                   {...attributes}
                   {...listeners}
+                  role="tab"
                 >
                   {/* Connection color indicator */}
                   {isActive && (
@@ -290,6 +266,8 @@ const ConnectionTab = memo(
                   )}
                   <StatusIcon
                     className={cn('h-3 w-3 shrink-0', statusColorClass)}
+                    aria-label={statusLabel}
+                    role="img"
                   />
                   {hasUnsavedChanges && (
                     <Tooltip>
@@ -316,6 +294,10 @@ const ConnectionTab = memo(
                     <TooltipTrigger>
                       <button
                         onClick={handleCloseClick}
+                        aria-label={t(
+                          'connection.closeConnection',
+                          'Close connection'
+                        )}
                         className={cn(
                           'hover:bg-accent shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100',
                           isActive && 'opacity-70'
@@ -439,28 +421,18 @@ const ConnectionTab = memo(
 ConnectionTab.displayName = 'ConnectionTab';
 
 export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
-  const { t } = useTranslation('common');
   const {
     activeConnectionId,
     connectionTabOrder,
     getAllConnections,
     setActiveConnection,
-    removeConnection,
     reorderConnections,
-    setSelectedTable,
   } = useConnectionStore();
-  const {
-    hasChangesForConnection,
-    getChangesForConnection,
-    clearChangesForConnection,
-  } = useChangesStore();
-  const { resetConnection } = useTableDataStore();
-
-  // Unsaved changes dialog state
-  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
-  const [pendingCloseConnectionId, setPendingCloseConnectionId] = useState<
-    string | null
-  >(null);
+  // Delegate close (with the unsaved-changes guard) to the shared store action
+  // so tab X, the app menu, and Cmd+W all share a single source of truth.
+  const requestCloseConnection = useDialogStore(
+    (s) => s.requestCloseConnection
+  );
 
   const allConnections = getAllConnections();
 
@@ -475,96 +447,13 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
   );
   const connections = [...orderedConnections, ...unorderedConnections];
 
-  // Perform the actual disconnect
-  const performDisconnect = useCallback(
-    async (connectionId: string) => {
-      const conn = allConnections.find((c) => c.id === connectionId);
-      if (conn) {
-        await sqlPro.db.close({ connectionId: conn.id });
-        removeConnection(connectionId);
-        setSelectedTable(null);
-        clearChangesForConnection(connectionId);
-        resetConnection(connectionId);
-      }
-    },
-    [
-      allConnections,
-      removeConnection,
-      setSelectedTable,
-      clearChangesForConnection,
-      resetConnection,
-    ]
-  );
-
-  // Handle close with unsaved changes check
+  // Handle close - delegates to the shared guarded close action.
   const handleClose = useCallback(
     (connectionId: string) => {
-      if (hasChangesForConnection(connectionId)) {
-        setPendingCloseConnectionId(connectionId);
-        setShowUnsavedDialog(true);
-      } else {
-        performDisconnect(connectionId);
-      }
+      requestCloseConnection(connectionId);
     },
-    [hasChangesForConnection, performDisconnect]
+    [requestCloseConnection]
   );
-
-  // Handle save and disconnect
-  const handleSaveAndDisconnect = useCallback(async () => {
-    if (!pendingCloseConnectionId) return;
-
-    const conn = allConnections.find((c) => c.id === pendingCloseConnectionId);
-    if (!conn) return;
-
-    const pendingChanges = getChangesForConnection(pendingCloseConnectionId);
-
-    // Convert PendingChange[] to PendingChangeInfo[] for IPC
-    const changeInfos: PendingChangeInfo[] = pendingChanges.map((c) => ({
-      id: c.id,
-      table: c.table,
-      schema: c.schema,
-      rowId: c.rowId,
-      type: c.type,
-      oldValues: c.oldValues,
-      newValues: c.newValues,
-      primaryKeyColumn: c.primaryKeyColumn,
-    }));
-
-    // Apply changes via IPC
-    const response = await sqlPro.db.applyChanges({
-      connectionId: conn.id,
-      changes: changeInfos,
-    });
-
-    if (!response.success) {
-      throw new Error(response.error || t('connection.failedToApplyChanges'));
-    }
-
-    // Clear changes and disconnect
-    await performDisconnect(pendingCloseConnectionId);
-    setShowUnsavedDialog(false);
-    setPendingCloseConnectionId(null);
-  }, [
-    pendingCloseConnectionId,
-    allConnections,
-    getChangesForConnection,
-    performDisconnect,
-    t,
-  ]);
-
-  // Handle discard and disconnect
-  const handleDiscardAndDisconnect = useCallback(() => {
-    if (!pendingCloseConnectionId) return;
-    performDisconnect(pendingCloseConnectionId);
-    setShowUnsavedDialog(false);
-    setPendingCloseConnectionId(null);
-  }, [pendingCloseConnectionId, performDisconnect]);
-
-  // Handle cancel
-  const handleCancelDisconnect = useCallback(() => {
-    setShowUnsavedDialog(false);
-    setPendingCloseConnectionId(null);
-  }, []);
 
   // Set up sensors for drag and drop with activation constraint
   // Require at least 8px movement before starting drag to allow clicks
@@ -599,11 +488,6 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
     // No action needed - tab will return to original position automatically
     // This handler ensures the drag operation is properly cancelled
   };
-
-  // Get pending changes for dialog
-  const pendingChangesForDialog = pendingCloseConnectionId
-    ? getChangesForConnection(pendingCloseConnectionId)
-    : [];
 
   if (connections.length === 0) {
     return null;
@@ -646,19 +530,6 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
           </SortableContext>
         </div>
       </DndContext>
-
-      {/* Unsaved Changes Dialog */}
-      {pendingCloseConnectionId && (
-        <UnsavedChangesDialog
-          open={showUnsavedDialog}
-          onOpenChange={setShowUnsavedDialog}
-          changes={pendingChangesForDialog}
-          connectionId={pendingCloseConnectionId}
-          onSave={handleSaveAndDisconnect}
-          onDiscard={handleDiscardAndDisconnect}
-          onCancel={handleCancelDisconnect}
-        />
-      )}
     </>
   );
 });

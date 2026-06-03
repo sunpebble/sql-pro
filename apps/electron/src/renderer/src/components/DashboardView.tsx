@@ -51,6 +51,9 @@ import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 
+// Matches all double quotes so identifiers can be safely escaped (" -> "").
+const DOUBLE_QUOTE_RE = /"/g;
+
 const CHART_COLORS = [
   '#3b82f6',
   '#22c55e',
@@ -700,15 +703,17 @@ export const DashboardView = memo(() => {
       }
 
       const tablePromises = schemaResult.tables.map(async (table) => {
+        const quotedName = `"${table.name.replace(DOUBLE_QUOTE_RE, '""')}"`;
         const [countResult, sizeResult] = await Promise.all([
           sqlPro.database.query(
             activeConnectionId,
-            `SELECT COUNT(*) as count FROM "${table.name}"`
+            `SELECT COUNT(*) as count FROM ${quotedName}`
           ),
           sqlPro.database
             .query(
               activeConnectionId,
-              `SELECT SUM(pgsize) as size FROM dbstat WHERE name = '${table.name}'`
+              'SELECT SUM(pgsize) as size FROM dbstat WHERE name = ?',
+              [table.name]
             )
             .catch(() => ({ success: false, rows: [] })),
         ]);

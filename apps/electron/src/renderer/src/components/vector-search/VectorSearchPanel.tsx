@@ -225,10 +225,11 @@ export const VectorSearchPanel = memo(
     // Handle search
     const handleSearch = useCallback(async () => {
       let query = '';
+      let searchResults: VectorSearchResult[] = [];
       switch (searchMode) {
         case 'text':
           query = textQuery;
-          await searchByText(
+          searchResults = await searchByText(
             textQuery,
             topK,
             scoreThreshold || undefined,
@@ -239,7 +240,7 @@ export const VectorSearchPanel = memo(
           const vector = validateVectorInput(vectorInput);
           if (vector) {
             query = `[${vector.length} dimensions]`;
-            await searchByVector(
+            searchResults = await searchByVector(
               vector,
               topK,
               scoreThreshold || undefined,
@@ -250,23 +251,20 @@ export const VectorSearchPanel = memo(
         }
         case 'similar':
           query = `Similar to: ${pointId}`;
-          await searchSimilar(pointId, topK, filter);
+          searchResults = await searchSimilar(pointId, topK, filter);
           break;
       }
 
-      // Add to history after search completes (if we have results)
+      // Add to history after search completes, using the returned results
+      // so the recorded counts reflect this search (not stale closure state).
       if (query) {
-        // We'll add history entry after results are available via useEffect
-        // For now, store the query for the history entry
-        setTimeout(() => {
-          addHistoryEntry({
-            collection,
-            mode: searchMode,
-            query,
-            resultsCount: results.length,
-            topScore: results[0]?.score,
-          });
-        }, 100);
+        addHistoryEntry({
+          collection,
+          mode: searchMode,
+          query,
+          resultsCount: searchResults.length,
+          topScore: searchResults[0]?.score,
+        });
       }
     }, [
       searchMode,
@@ -277,7 +275,6 @@ export const VectorSearchPanel = memo(
       scoreThreshold,
       filter,
       collection,
-      results,
       searchByText,
       searchByVector,
       searchSimilar,

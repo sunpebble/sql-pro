@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { exportDiagramAsPng, exportDiagramAsSvg } from './utils/export-diagram';
 
 interface ERControlsProps {
@@ -33,33 +34,39 @@ export function ERControls({ onResetLayout }: ERControlsProps) {
   const zoom = useStore((state) => state.transform[2]);
   const zoomPercentage = Math.round(zoom * 100);
 
-  const handleExport = useCallback(async (format: 'png' | 'svg') => {
-    setIsExporting(true);
-    try {
-      const element = document.querySelector(
-        '.react-flow__viewport'
-      ) as HTMLElement;
+  const handleExport = useCallback(
+    async (format: 'png' | 'svg') => {
+      setIsExporting(true);
+      try {
+        const element = document.querySelector(
+          '.react-flow__viewport'
+        ) as HTMLElement;
 
-      if (!element) {
-        console.error('Could not find React Flow viewport element');
-        return;
-      }
+        if (!element) {
+          console.error('Could not find React Flow viewport element');
+          return;
+        }
 
-      const container = element.closest('.react-flow') as HTMLElement;
-      if (!container) {
-        console.error('Could not find React Flow container');
-        return;
-      }
+        const container = element.closest('.react-flow') as HTMLElement;
+        if (!container) {
+          console.error('Could not find React Flow container');
+          return;
+        }
 
-      if (format === 'png') {
-        await exportDiagramAsPng(container);
-      } else {
-        await exportDiagramAsSvg(container);
+        if (format === 'png') {
+          await exportDiagramAsPng(container);
+        } else {
+          await exportDiagramAsSvg(container);
+        }
+      } catch (err) {
+        console.error('ER diagram export failed:', err);
+        toast.error(t('erDiagram.exportFailed', 'Failed to export diagram'));
+      } finally {
+        setIsExporting(false);
       }
-    } finally {
-      setIsExporting(false);
-    }
-  }, []);
+    },
+    [t]
+  );
 
   const handleFitView = useCallback(() => {
     fitView({ padding: 0.2, duration: 200 });

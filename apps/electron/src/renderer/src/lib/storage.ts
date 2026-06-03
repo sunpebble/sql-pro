@@ -9,8 +9,10 @@ import type {
   RendererDiagramState,
   RendererOnboardingState,
   RendererPanelWidths,
+  RendererSavedQueriesState,
   RendererSettingsState,
   RendererStoreSchema,
+  RendererTableOrganizationState,
 } from '@shared/types/renderer-store';
 
 // Re-export types for compatibility
@@ -19,8 +21,10 @@ export type {
   RendererDiagramState,
   RendererOnboardingState,
   RendererPanelWidths,
+  RendererSavedQueriesState,
   RendererSettingsState,
   RendererStoreSchema,
+  RendererTableOrganizationState,
 };
 
 // ============ Cache for loaded data ============
@@ -31,6 +35,8 @@ interface StorageCache {
   panelWidths: RendererPanelWidths | null;
   connectionUi: RendererConnectionState | null;
   onboarding: RendererOnboardingState | null;
+  savedQueries: RendererSavedQueriesState | null;
+  tableOrganization: RendererTableOrganizationState | null;
 }
 
 const cache: StorageCache = {
@@ -39,6 +45,8 @@ const cache: StorageCache = {
   panelWidths: null,
   connectionUi: null,
   onboarding: null,
+  savedQueries: null,
+  tableOrganization: null,
 };
 
 let initialized = false;
@@ -72,6 +80,8 @@ export async function initializeStorage(): Promise<void> {
         'panelWidths',
         'connectionUi',
         'onboarding',
+        'savedQueries',
+        'tableOrganization',
       ];
 
       await Promise.all(
@@ -93,6 +103,13 @@ export async function initializeStorage(): Promise<void> {
                 break;
               case 'onboarding':
                 cache.onboarding = result.data as RendererOnboardingState;
+                break;
+              case 'savedQueries':
+                cache.savedQueries = result.data as RendererSavedQueriesState;
+                break;
+              case 'tableOrganization':
+                cache.tableOrganization =
+                  result.data as RendererTableOrganizationState;
                 break;
             }
           }
@@ -155,6 +172,14 @@ export function getCachedOnboarding(): RendererOnboardingState | null {
   return cache.onboarding;
 }
 
+export function getCachedSavedQueries(): RendererSavedQueriesState | null {
+  return cache.savedQueries;
+}
+
+export function getCachedTableOrganization(): RendererTableOrganizationState | null {
+  return cache.tableOrganization;
+}
+
 // ============ Persistence Functions ============
 
 export function persistSettings(settings: RendererSettingsState): void {
@@ -211,6 +236,30 @@ export function persistOnboarding(onboarding: RendererOnboardingState): void {
     });
 }
 
+export function persistSavedQueries(
+  savedQueries: RendererSavedQueriesState
+): void {
+  cache.savedQueries = savedQueries;
+  if (!isElectronEnvironment()) return;
+  window.sqlPro.rendererStore
+    .set({ key: 'savedQueries', value: savedQueries })
+    .catch((error: unknown) => {
+      console.error('Failed to persist saved queries state:', error);
+    });
+}
+
+export function persistTableOrganization(
+  tableOrganization: RendererTableOrganizationState
+): void {
+  cache.tableOrganization = tableOrganization;
+  if (!isElectronEnvironment()) return;
+  window.sqlPro.rendererStore
+    .set({ key: 'tableOrganization', value: tableOrganization })
+    .catch((error: unknown) => {
+      console.error('Failed to persist table organization state:', error);
+    });
+}
+
 // ============ Store Hydration ============
 
 type StoreHydrator<T> = (data: T) => void;
@@ -220,6 +269,9 @@ const storeHydrators = {
   diagram: null as StoreHydrator<RendererDiagramState> | null,
   connectionUi: null as StoreHydrator<RendererConnectionState> | null,
   onboarding: null as StoreHydrator<RendererOnboardingState> | null,
+  savedQueries: null as StoreHydrator<RendererSavedQueriesState> | null,
+  tableOrganization:
+    null as StoreHydrator<RendererTableOrganizationState> | null,
 };
 
 export function registerSettingsHydrator(
@@ -246,6 +298,18 @@ export function registerOnboardingHydrator(
   storeHydrators.onboarding = hydrator;
 }
 
+export function registerSavedQueriesHydrator(
+  hydrator: StoreHydrator<RendererSavedQueriesState>
+): void {
+  storeHydrators.savedQueries = hydrator;
+}
+
+export function registerTableOrganizationHydrator(
+  hydrator: StoreHydrator<RendererTableOrganizationState>
+): void {
+  storeHydrators.tableOrganization = hydrator;
+}
+
 export function hydrateStores(): void {
   if (cache.settings && storeHydrators.settings) {
     storeHydrators.settings(cache.settings);
@@ -259,5 +323,11 @@ export function hydrateStores(): void {
   // Skip onboarding hydration in development mode to always trigger tour
   if (cache.onboarding && storeHydrators.onboarding && !import.meta.env.DEV) {
     storeHydrators.onboarding(cache.onboarding);
+  }
+  if (cache.savedQueries && storeHydrators.savedQueries) {
+    storeHydrators.savedQueries(cache.savedQueries);
+  }
+  if (cache.tableOrganization && storeHydrators.tableOrganization) {
+    storeHydrators.tableOrganization(cache.tableOrganization);
   }
 }

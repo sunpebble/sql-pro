@@ -1,9 +1,11 @@
-import type { RecentConnection } from '@shared/types';
+import type { PendingChangeInfo, RecentConnection } from '@shared/types';
 import type { ConnectionSettings } from './ConnectionSettingsDialog';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MemoryMonitorPanel } from '@/components/dev-tools';
 import { sqlPro } from '@/lib/api';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useChangesStore } from '@/stores/changes-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
 import { AboutDialog } from './AboutDialog';
@@ -12,6 +14,7 @@ import { ChangePasswordDialog } from './ChangePasswordDialog';
 import { ConnectionSettingsDialog } from './ConnectionSettingsDialog';
 import { KeyboardShortcutsSettings } from './KeyboardShortcutsSettings';
 import { SettingsDialog } from './SettingsDialog';
+import { UnsavedChangesDialog } from './UnsavedChangesDialog';
 import { UpdateCheckDialog } from './UpdateCheckDialog';
 
 /**
@@ -19,9 +22,71 @@ import { UpdateCheckDialog } from './UpdateCheckDialog';
  * This should be placed in the root layout to ensure dialogs are available everywhere.
  */
 export function GlobalDialogs() {
+  const { t } = useTranslation('common');
   const setRecentConnections = useConnectionStore(
     (s) => s.setRecentConnections
   );
+
+  // Close-connection unsaved-changes guard (shared by tab X, menu, and Cmd+W)
+  const closeConnectionDialogOpen = useDialogStore(
+    (s) => s.closeConnectionDialogOpen
+  );
+  const pendingCloseConnectionId = useDialogStore(
+    (s) => s.pendingCloseConnectionId
+  );
+  const performConnectionClose = useDialogStore(
+    (s) => s.performConnectionClose
+  );
+  const setCloseConnectionDialogOpen = useDialogStore(
+    (s) => s.setCloseConnectionDialogOpen
+  );
+  const cancelCloseConnection = useDialogStore((s) => s.cancelCloseConnection);
+  const getChangesForConnection = useChangesStore(
+    (s) => s.getChangesForConnection
+  );
+
+  const pendingCloseChanges = pendingCloseConnectionId
+    ? getChangesForConnection(pendingCloseConnectionId)
+    : [];
+
+  // Save pending edits, then disconnect (errors keep the dialog open).
+  const handleSaveAndClose = useCallback(async () => {
+    if (!pendingCloseConnectionId) return;
+
+    const changeInfos: PendingChangeInfo[] = getChangesForConnection(
+      pendingCloseConnectionId
+    ).map((c) => ({
+      id: c.id,
+      table: c.table,
+      schema: c.schema,
+      rowId: c.rowId,
+      type: c.type,
+      oldValues: c.oldValues,
+      newValues: c.newValues,
+      primaryKeyColumn: c.primaryKeyColumn,
+    }));
+
+    const response = await sqlPro.db.applyChanges({
+      connectionId: pendingCloseConnectionId,
+      changes: changeInfos,
+    });
+
+    if (!response.success) {
+      throw new Error(response.error || t('connection.failedToApplyChanges'));
+    }
+
+    await performConnectionClose(pendingCloseConnectionId);
+  }, [
+    pendingCloseConnectionId,
+    getChangesForConnection,
+    performConnectionClose,
+    t,
+  ]);
+
+  const handleDiscardAndClose = useCallback(() => {
+    if (!pendingCloseConnectionId) return;
+    void performConnectionClose(pendingCloseConnectionId);
+  }, [pendingCloseConnectionId, performConnectionClose]);
 
   // Settings dialog state from store
   const settingsOpen = useDialogStore((s) => s.settingsOpen);
@@ -182,6 +247,19 @@ export function GlobalDialogs() {
           if (!open) closeBackupDialog();
         }}
       />
+
+      {/* Unsaved-changes guard for closing a connection (tab X, menu, Cmd+W) */}
+      {pendingCloseConnectionId && (
+        <UnsavedChangesDialog
+          open={closeConnectionDialogOpen}
+          onOpenChange={setCloseConnectionDialogOpen}
+          changes={pendingCloseChanges}
+          connectionId={pendingCloseConnectionId}
+          onSave={handleSaveAndClose}
+          onDiscard={handleDiscardAndClose}
+          onCancel={cancelCloseConnection}
+        />
+      )}
     </>
   );
 }

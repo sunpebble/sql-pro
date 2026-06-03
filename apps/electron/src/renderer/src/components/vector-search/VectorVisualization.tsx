@@ -2,8 +2,8 @@
  * VectorVisualization component for rendering 2D/3D projections of high-dimensional vectors.
  *
  * Uses UMAP dimensionality reduction to project vectors into 2D or 3D space,
- * then renders them on a canvas. Background points are shown in gray,
- * while search results are highlighted in blue.
+ * then renders them on a canvas. Background points use the muted-foreground
+ * theme token, while search results are highlighted with the primary token.
  *
  * Features:
  * - Hover to see point details in tooltip
@@ -61,12 +61,63 @@ const POINT_RADIUS_BACKGROUND = 4;
 const POINT_RADIUS_RESULT = 6;
 const POINT_RADIUS_HOVER_SCALE = 1.8;
 
-/** Colors */
-const COLOR_BACKGROUND = 'rgba(156, 163, 175, 0.5)'; // gray-400 with opacity
-const COLOR_BACKGROUND_HOVER = 'rgba(156, 163, 175, 0.9)';
-const COLOR_RESULT = 'rgba(59, 130, 246, 0.8)'; // blue-500 with opacity
-const COLOR_RESULT_HOVER = 'rgba(59, 130, 246, 1)';
-const COLOR_RESULT_STROKE = 'rgba(37, 99, 235, 1)'; // blue-600
+/** Alpha levels applied onto theme-resolved colors */
+const ALPHA_BACKGROUND = 0.5;
+const ALPHA_BACKGROUND_HOVER = 0.9;
+const ALPHA_RESULT = 0.8;
+const ALPHA_RESULT_HOVER = 1;
+const ALPHA_RESULT_STROKE = 1;
+
+/** Fallback RGB channels if a token cannot be resolved (gray-400 / blue-500) */
+const FALLBACK_RGB_BACKGROUND: RGB = { r: 156, g: 163, b: 175 };
+const FALLBACK_RGB_RESULT: RGB = { r: 59, g: 130, b: 246 };
+
+/** Resolved RGB channels for a CSS color token */
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+/**
+ * Resolve a CSS custom property (e.g. `--primary`) to concrete RGB channels.
+ *
+ * Canvas fills cannot use `var()` directly, so we let the browser normalize the
+ * token by assigning it to a temporary element's `color` and reading the computed
+ * value (always `rgb(r, g, b)` / `rgba(...)` regardless of source format such as
+ * hex, hsl or oklch). The element is scoped under `scope` so it inherits the
+ * active theme.
+ */
+function resolveTokenRgb(
+  token: string,
+  scope: HTMLElement | null,
+  fallback: RGB
+): RGB {
+  const host = scope ?? document.body;
+  const probe = document.createElement('span');
+  probe.style.color = `var(${token})`;
+  probe.style.display = 'none';
+  host.appendChild(probe);
+  try {
+    const computed = getComputedStyle(probe).color;
+    const match = computed.match(
+      /rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i
+    );
+    if (!match) return fallback;
+    return {
+      r: Number(match[1]),
+      g: Number(match[2]),
+      b: Number(match[3]),
+    };
+  } finally {
+    host.removeChild(probe);
+  }
+}
+
+/** Build an `rgba()` string from resolved channels and an alpha level */
+function rgba({ r, g, b }: RGB, alpha: number): string {
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 /** Hit test radius multiplier for easier selection */
 const HIT_TEST_MULTIPLIER = 2;
@@ -276,6 +327,20 @@ export const VectorVisualization = memo(
       const { width, height } = canvasSize;
       if (width === 0 || height === 0) return;
 
+      // Resolve theme tokens to concrete RGB channels at draw time so canvas
+      // fills follow the active theme (background -> --muted-foreground,
+      // results -> --primary). Scope to the canvas so the active theme applies.
+      const backgroundRgb = resolveTokenRgb(
+        '--muted-foreground',
+        canvas.parentElement ?? canvas,
+        FALLBACK_RGB_BACKGROUND
+      );
+      const resultRgb = resolveTokenRgb(
+        '--primary',
+        canvas.parentElement ?? canvas,
+        FALLBACK_RGB_RESULT
+      );
+
       // Set canvas resolution for high DPI displays
       const dpr = window.devicePixelRatio || 1;
       canvas.width = width * dpr;
@@ -414,23 +479,29 @@ export const VectorVisualization = memo(
             (isHovered
               ? POINT_RADIUS_RESULT * POINT_RADIUS_HOVER_SCALE
               : POINT_RADIUS_RESULT) * depthScale;
-          fillColor = isHovered ? COLOR_RESULT_HOVER : COLOR_RESULT;
-          strokeColor = COLOR_RESULT_STROKE;
+          fillColor = rgba(
+            resultRgb,
+            isHovered ? ALPHA_RESULT_HOVER : ALPHA_RESULT
+          );
+          strokeColor = rgba(resultRgb, ALPHA_RESULT_STROKE);
         } else {
           radius =
             (isHovered
               ? POINT_RADIUS_BACKGROUND * POINT_RADIUS_HOVER_SCALE
               : POINT_RADIUS_BACKGROUND) * depthScale;
-          fillColor = isHovered ? COLOR_BACKGROUND_HOVER : COLOR_BACKGROUND;
+          fillColor = rgba(
+            backgroundRgb,
+            isHovered ? ALPHA_BACKGROUND_HOVER : ALPHA_BACKGROUND
+          );
         }
 
         // In 3D mode, adjust opacity based on depth
         if (dimensionMode === '3d' && !isHovered) {
           const depthOpacity = 0.3 + 0.7 * ((point.nz + 1) / 2);
           if (point.isSearchResult) {
-            fillColor = `rgba(59, 130, 246, ${0.8 * depthOpacity})`;
+            fillColor = rgba(resultRgb, ALPHA_RESULT * depthOpacity);
           } else {
-            fillColor = `rgba(156, 163, 175, ${0.5 * depthOpacity})`;
+            fillColor = rgba(backgroundRgb, ALPHA_BACKGROUND * depthOpacity);
           }
         }
 
@@ -625,7 +696,7 @@ export const VectorVisualization = memo(
             <ToggleGroup
               value={[dimensionMode]}
               onValueChange={(values) => {
-                const newValue = values[values.length - 1] as DimensionMode;
+                const newValue = values.at(-1) as DimensionMode;
                 if (newValue) {
                   setDimensionMode(newValue);
                   if (newValue === '3d') {
@@ -787,7 +858,7 @@ export const VectorVisualization = memo(
                       Score:
                     </span>
                     <span
-                      className="font-mono font-medium text-blue-500"
+                      className="text-primary font-mono font-medium"
                       style={{
                         fontSize: 'calc(var(--font-ui-size, 13px) * 0.85)',
                       }}
@@ -828,7 +899,10 @@ export const VectorVisualization = memo(
               <div className="flex items-center gap-2">
                 <span
                   className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: COLOR_BACKGROUND }}
+                  style={{
+                    backgroundColor:
+                      'color-mix(in oklab, var(--muted-foreground) 50%, transparent)',
+                  }}
                 />
                 <span className="text-muted-foreground">
                   {t('vectorSearch.backgroundPoints', 'Background points')}
@@ -841,8 +915,9 @@ export const VectorVisualization = memo(
                 <span
                   className="h-2.5 w-2.5 rounded-full border"
                   style={{
-                    backgroundColor: COLOR_RESULT,
-                    borderColor: COLOR_RESULT_STROKE,
+                    backgroundColor:
+                      'color-mix(in oklab, var(--primary) 80%, transparent)',
+                    borderColor: 'var(--primary)',
                   }}
                 />
                 <span className="text-muted-foreground">

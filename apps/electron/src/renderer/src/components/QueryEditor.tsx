@@ -60,14 +60,7 @@ import {
   QueryExportDialog,
   QueryImportDialog,
 } from '@/components/sharing';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { sqlPro } from '@/lib/api';
@@ -371,97 +364,83 @@ export function QueryEditor() {
     }
   }, [connection?.path, loadHistory]);
 
-  // Keyboard shortcuts for history toggle
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // History toggle: Cmd/Ctrl+H
-      if ((e.metaKey || e.ctrlKey) && e.key === 'h' && !e.shiftKey) {
-        e.preventDefault();
-        if (showSidePanel) {
-          setShowSidePanel(false);
+  const handleExecute = useCallback(
+    async (queryOverride?: string) => {
+      const queryToRun = (queryOverride ?? tabQuery).trim();
+      if (!connection || !activeConnectionId || !queryToRun || !activeTabId)
+        return;
+
+      setTabExecuting(activeConnectionId, activeTabId, true);
+      setIsExecuting(true);
+      setError(null);
+      setResults(null);
+      updateTabError(activeConnectionId, activeTabId, null);
+
+      try {
+        const result = await sqlPro.db.executeQuery({
+          connectionId: connection.id,
+          query: queryToRun,
+        });
+
+        if (result.success) {
+          const queryResult = {
+            columns: result.columns || [],
+            rows: result.rows || [],
+            rowsAffected: result.rowsAffected || result.totalChanges || 0,
+            lastInsertRowId: result.lastInsertRowId,
+            executedStatements: result.executedStatements,
+            resultSets: result.resultSets,
+          };
+          setResults(queryResult);
+          setExecutionTime(result.executionTime || 0);
+          updateTabResults(
+            activeConnectionId,
+            activeTabId,
+            queryResult,
+            result.executionTime || 0
+          );
+          addToHistory(
+            connection.path,
+            queryToRun,
+            true,
+            result.executionTime || 0
+          );
         } else {
-          setShowSidePanel(true);
+          setError(result.error || t('queryEditor.queryFailed'));
+          updateTabError(
+            activeConnectionId,
+            activeTabId,
+            result.error || t('queryEditor.queryFailed')
+          );
+          addToHistory(connection.path, queryToRun, false, 0, result.error);
         }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : t('queryEditor.unknownError');
+        setError(errorMessage);
+        updateTabError(activeConnectionId, activeTabId, errorMessage);
+        addToHistory(connection.path, queryToRun, false, 0, errorMessage);
+      } finally {
+        setTabExecuting(activeConnectionId, activeTabId, false);
+        setIsExecuting(false);
       }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showSidePanel]);
-
-  const handleExecute = useCallback(async () => {
-    if (!connection || !activeConnectionId || !tabQuery.trim() || !activeTabId)
-      return;
-
-    setTabExecuting(activeConnectionId, activeTabId, true);
-    setIsExecuting(true);
-    setError(null);
-    setResults(null);
-    updateTabError(activeConnectionId, activeTabId, null);
-
-    try {
-      const result = await sqlPro.db.executeQuery({
-        connectionId: connection.id,
-        query: tabQuery.trim(),
-      });
-
-      if (result.success) {
-        const queryResult = {
-          columns: result.columns || [],
-          rows: result.rows || [],
-          rowsAffected: result.rowsAffected || result.totalChanges || 0,
-          lastInsertRowId: result.lastInsertRowId,
-          executedStatements: result.executedStatements,
-          resultSets: result.resultSets,
-        };
-        setResults(queryResult);
-        setExecutionTime(result.executionTime || 0);
-        updateTabResults(
-          activeConnectionId,
-          activeTabId,
-          queryResult,
-          result.executionTime || 0
-        );
-        addToHistory(
-          connection.path,
-          tabQuery.trim(),
-          true,
-          result.executionTime || 0
-        );
-      } else {
-        setError(result.error || t('queryEditor.queryFailed'));
-        updateTabError(
-          activeConnectionId,
-          activeTabId,
-          result.error || t('queryEditor.queryFailed')
-        );
-        addToHistory(connection.path, tabQuery.trim(), false, 0, result.error);
-      }
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : t('queryEditor.unknownError');
-      setError(errorMessage);
-      updateTabError(activeConnectionId, activeTabId, errorMessage);
-      addToHistory(connection.path, tabQuery.trim(), false, 0, errorMessage);
-    } finally {
-      setTabExecuting(activeConnectionId, activeTabId, false);
-      setIsExecuting(false);
-    }
-  }, [
-    connection,
-    activeConnectionId,
-    tabQuery,
-    activeTabId,
-    setTabExecuting,
-    setIsExecuting,
-    setError,
-    setResults,
-    updateTabError,
-    setExecutionTime,
-    updateTabResults,
-    addToHistory,
-    t,
-  ]);
+    },
+    [
+      connection,
+      activeConnectionId,
+      tabQuery,
+      activeTabId,
+      setTabExecuting,
+      setIsExecuting,
+      setError,
+      setResults,
+      updateTabError,
+      setExecutionTime,
+      updateTabResults,
+      addToHistory,
+      t,
+    ]
+  );
 
   const handleQueryChange = useCallback(
     (query: string) => {
@@ -554,18 +533,10 @@ export function QueryEditor() {
         // No parameters - load and execute directly
         handleQueryChange(query.query);
         recordExecution(query.id);
-        // Execute after state update
-        setTimeout(() => {
-          const executeBtn = document.querySelector(
-            '[data-action="execute-query"]'
-          );
-          if (executeBtn instanceof HTMLButtonElement) {
-            executeBtn.click();
-          }
-        }, 0);
+        void handleExecute(query.query);
       }
     },
-    [handleQueryChange, recordExecution]
+    [handleQueryChange, recordExecution, handleExecute]
   );
 
   const handleParameterSubmit = useCallback(
@@ -575,21 +546,12 @@ export function QueryEditor() {
       const substitutedQuery = substituteParameters(pendingQuery.query, values);
       handleQueryChange(substitutedQuery);
       recordExecution(pendingQuery.id);
-
-      // Execute after state update
-      setTimeout(() => {
-        const executeBtn = document.querySelector(
-          '[data-action="execute-query"]'
-        );
-        if (executeBtn instanceof HTMLButtonElement) {
-          executeBtn.click();
-        }
-      }, 0);
+      void handleExecute(substitutedQuery);
 
       setPendingQuery(null);
       setPendingParams([]);
     },
-    [pendingQuery, handleQueryChange, recordExecution]
+    [pendingQuery, handleQueryChange, recordExecution, handleExecute]
   );
 
   const handleAnalyze = useCallback(
@@ -683,7 +645,7 @@ export function QueryEditor() {
             size="sm"
             onClick={() => setShowSidePanel(!showSidePanel)}
             className="gap-1"
-            data-action="toggle-side-panel"
+            data-action="toggle-history"
           >
             {showSidePanel ? (
               <PanelRightClose className="h-4 w-4" />
@@ -706,7 +668,7 @@ export function QueryEditor() {
           </Button>
           <Button
             size="sm"
-            onClick={handleExecute}
+            onClick={() => handleExecute()}
             disabled={tabIsExecuting || !tabQuery.trim()}
             className="gap-1"
             data-action="execute-query"
@@ -1270,7 +1232,10 @@ export function QueryEditor() {
                                                 'calc(var(--font-ui-size, 13px) * 0.85)',
                                             }}
                                           >
-                                            Failed
+                                            {t(
+                                              'queryEditor.historyFilters.failed',
+                                              'Failed'
+                                            )}
                                           </span>
                                         )}
                                         <span
@@ -1323,7 +1288,10 @@ export function QueryEditor() {
                                                 'calc(var(--font-ui-size, 13px) * 0.85)',
                                             }}
                                           >
-                                            Failed
+                                            {t(
+                                              'queryEditor.historyFilters.failed',
+                                              'Failed'
+                                            )}
                                           </span>
                                         )}
                                         <span
@@ -1371,27 +1339,16 @@ export function QueryEditor() {
       </div>
 
       {/* Clear All Confirmation Dialog */}
-      <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('queryEditor.clearQueryHistory')}</DialogTitle>
-            <DialogDescription>
-              {t('queryEditor.clearHistoryDesc')}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowClearConfirm(false)}
-            >
-              {t('actions.cancel')}
-            </Button>
-            <Button variant="destructive" onClick={handleClearAllHistory}>
-              {t('queryEditor.clearAll')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={showClearConfirm}
+        onOpenChange={setShowClearConfirm}
+        title={t('queryEditor.clearQueryHistory')}
+        description={t('queryEditor.clearHistoryDesc')}
+        confirmLabel={t('queryEditor.clearAll')}
+        cancelLabel={t('actions.cancel')}
+        variant="destructive"
+        onConfirm={handleClearAllHistory}
+      />
 
       {/* New Template Dialog */}
       <NewTemplateDialog

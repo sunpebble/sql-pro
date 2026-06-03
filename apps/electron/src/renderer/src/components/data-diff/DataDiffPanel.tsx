@@ -23,9 +23,11 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
+import { sqlPro } from '@/lib/api';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDataDiffStore } from '@/stores/data-diff-store';
+import { RowDiffTable } from './RowDiffTable';
 
 interface DataDiffPanelProps {
   className?: string;
@@ -110,9 +112,12 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
             break;
           case 'r':
           case 'R':
-            // Cmd/Ctrl+R: Reset filters
+            // Cmd/Ctrl+R: Reset filters. Always prevent the browser hard
+            // refresh while this panel is mounted; the global refresh-table
+            // handler intentionally bails inside the Compare view so this is
+            // the sole owner of Cmd+R here.
+            e.preventDefault();
             if (comparisonResult) {
-              e.preventDefault();
               resetFilters();
             }
             break;
@@ -152,7 +157,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
     setComparisonError(null);
 
     try {
-      const response = await window.sqlPro.comparison.compareTables({
+      const response = await sqlPro.comparison.compareTables({
         sourceConnectionId: source.connectionId,
         sourceTable: source.tableName,
         sourceSchema: source.schemaName || 'main',
@@ -288,7 +293,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
           )}
 
           {/* Selection Cards */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="relative grid gap-4 md:grid-cols-2">
             {/* Source Selector */}
             <Card>
               <CardHeader>
@@ -389,12 +394,20 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                       ))}
                     </SelectContent>
                   </Select>
+                  {source?.connectionId && sourceTables.length === 0 && (
+                    <p className="text-muted-foreground text-xs">
+                      {t(
+                        'compare.noTablesForConnection',
+                        'No tables found for this connection'
+                      )}
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>
 
             {/* Arrow Indicator */}
-            <div className="hidden items-center justify-center md:absolute md:top-50 md:left-1/2 md:flex md:-translate-x-1/2">
+            <div className="hidden items-center justify-center md:absolute md:top-1/2 md:left-1/2 md:flex md:-translate-x-1/2 md:-translate-y-1/2">
               <ArrowLeftRight className="text-muted-foreground h-6 w-6" />
             </div>
 
@@ -498,6 +511,14 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                       ))}
                     </SelectContent>
                   </Select>
+                  {target?.connectionId && targetTables.length === 0 && (
+                    <p className="text-muted-foreground text-xs">
+                      {t(
+                        'compare.noTablesForConnection',
+                        'No tables found for this connection'
+                      )}
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -646,18 +667,13 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
                 </CardContent>
               </Card>
 
-              {/* Detailed Diff View - Placeholder for future components */}
+              {/* Detailed Row Diff View */}
               <Card>
                 <CardHeader>
                   <CardTitle>{t('compare.rowDifferences')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p
-                    className="text-muted-foreground"
-                    style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-                  >
-                    {t('compare.detailedDiffPlaceholder')}
-                  </p>
+                  <RowDiffTable comparisonResult={comparisonResult} />
                 </CardContent>
               </Card>
             </div>

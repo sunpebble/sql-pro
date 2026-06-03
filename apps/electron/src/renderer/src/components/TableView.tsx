@@ -410,6 +410,7 @@ export function TableView({ tableOverride }: TableViewProps) {
       deleteRow(rowId);
     });
     setSelectedRowIds([]);
+    dataTableRef.current?.clearSelection();
   }, [selectedRowIds, deleteRow]);
 
   // Handle bulk edit of selected rows
@@ -434,6 +435,7 @@ export function TableView({ tableOverride }: TableViewProps) {
 
       // Clear selection and close dialog
       setSelectedRowIds([]);
+      dataTableRef.current?.clearSelection();
     },
     [selectedRowIds, columns, updateRow]
   );
@@ -446,6 +448,7 @@ export function TableView({ tableOverride }: TableViewProps) {
   // Clear selection
   const clearSelection = useCallback(() => {
     setSelectedRowIds([]);
+    dataTableRef.current?.clearSelection();
   }, []);
 
   // Handle adding a new row

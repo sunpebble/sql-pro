@@ -4,6 +4,8 @@
 import Editor from '@monaco-editor/react';
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
+import { AlertTriangle, Info, Pencil, Play, X } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -11,9 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@sqlpro/ui/dialog';
-import { AlertTriangle, Info, Pencil, Play, X } from 'lucide-react';
-import { useCallback, useState } from 'react';
+} from '@/components/ui/dialog';
 import { useAIQueryStore } from '@/stores/ai-query-store';
 import { useQueryStore } from '@/stores/query-store';
 import { useEditorFont } from '@/stores/settings-store';

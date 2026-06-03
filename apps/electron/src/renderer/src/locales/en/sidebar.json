@@ -127,7 +127,9 @@
     "save": "Save",
     "delete": "Delete",
     "errorNameRequired": "Tag name is required",
-    "errorDuplicate": "Tag name already exists"
+    "errorDuplicate": "Tag name already exists",
+    "deleteTagTitle": "Delete tag?",
+    "deleteTagDesc": "This will remove the tag from all tagged objects. This action cannot be undone."
   },
   "newQuery": "New Query"
 }

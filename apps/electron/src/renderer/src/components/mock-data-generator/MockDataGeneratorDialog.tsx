@@ -285,9 +285,10 @@ export function MockDataGeneratorDialog({
                 min={1}
                 max={10000}
                 value={rowCount}
-                onChange={(e) =>
-                  setRowCount(Number.parseInt(e.target.value) || 100)
-                }
+                onChange={(e) => {
+                  const n = Number.parseInt(e.target.value, 10);
+                  setRowCount(Number.isNaN(n) ? 100 : n);
+                }}
                 className="w-32"
               />
             </div>
@@ -493,14 +494,15 @@ function ColumnConfigRow({
               type="number"
               placeholder={t('mockData.min', 'Min')}
               value={config.options?.min ?? ''}
-              onChange={(e) =>
+              onChange={(e) => {
+                const n = Number.parseInt(e.target.value, 10);
                 onUpdate({
                   options: {
                     ...config.options,
-                    min: Number.parseInt(e.target.value) || 0,
+                    min: Number.isNaN(n) ? 0 : n,
                   },
-                })
-              }
+                });
+              }}
               className="h-7 w-20"
             />
             <span className="text-muted-foreground">-</span>
@@ -508,14 +510,15 @@ function ColumnConfigRow({
               type="number"
               placeholder={t('mockData.max', 'Max')}
               value={config.options?.max ?? ''}
-              onChange={(e) =>
+              onChange={(e) => {
+                const n = Number.parseInt(e.target.value, 10);
                 onUpdate({
                   options: {
                     ...config.options,
-                    max: Number.parseInt(e.target.value) || 1000,
+                    max: Number.isNaN(n) ? 1000 : n,
                   },
-                })
-              }
+                });
+              }}
               className="h-7 w-20"
             />
           </div>
@@ -548,14 +551,15 @@ function ColumnConfigRow({
               type="number"
               placeholder={t('mockData.startValue', 'Start')}
               value={config.options?.startValue ?? 1}
-              onChange={(e) =>
+              onChange={(e) => {
+                const n = Number.parseInt(e.target.value, 10);
                 onUpdate({
                   options: {
                     ...config.options,
-                    startValue: Number.parseInt(e.target.value) || 1,
+                    startValue: Number.isNaN(n) ? 1 : n,
                   },
-                })
-              }
+                });
+              }}
               className="h-7 w-20"
             />
             <Input
@@ -585,14 +589,15 @@ function ColumnConfigRow({
               min={0}
               max={100}
               value={config.options?.truePercentage ?? 50}
-              onChange={(e) =>
+              onChange={(e) => {
+                const n = Number.parseInt(e.target.value, 10);
                 onUpdate({
                   options: {
                     ...config.options,
-                    truePercentage: Number.parseInt(e.target.value) || 50,
+                    truePercentage: Number.isNaN(n) ? 50 : n,
                   },
-                })
-              }
+                });
+              }}
               className="h-7 w-16"
             />
           </div>
@@ -654,11 +659,12 @@ function ColumnConfigRow({
               min={0}
               max={100}
               value={config.nullPercentage}
-              onChange={(e) =>
+              onChange={(e) => {
+                const n = Number.parseInt(e.target.value, 10);
                 onUpdate({
-                  nullPercentage: Number.parseInt(e.target.value) || 0,
-                })
-              }
+                  nullPercentage: Number.isNaN(n) ? 0 : n,
+                });
+              }}
               className="h-7 w-14"
             />
             <span

@@ -20,6 +20,7 @@ import {
 
 import { cn } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
+import { useCompareViewStore } from '@/stores/compare-view-store';
 import { useEditorFont, useSettingsStore } from '@/stores/settings-store';
 import { useThemeStore } from '@/stores/theme-store';
 
@@ -255,14 +256,16 @@ export function MonacoSqlEditor({
         }
       );
 
-      // Cmd+Ctrl+5: Switch to Data Diff
+      // Cmd+Ctrl+5: Switch to Data Diff (the 'data' inner tab of the Compare
+      // view), so request that tab then open the Compare view.
       editor.addCommand(
         monacoInstance.KeyMod.CtrlCmd |
           monacoInstance.KeyMod.WinCtrl |
           monacoInstance.KeyCode.Digit5,
         () => {
+          useCompareViewStore.getState().setActiveTab('data');
           document
-            .querySelector<HTMLButtonElement>('[data-tab="dataDiff"]')
+            .querySelector<HTMLButtonElement>('[data-tab="compare"]')
             ?.click();
         }
       );

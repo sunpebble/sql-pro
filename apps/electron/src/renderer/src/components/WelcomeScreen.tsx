@@ -301,6 +301,11 @@ export function WelcomeScreen() {
                 }
                 setPendingPath(null);
                 setPendingSettings(null);
+              } else {
+                // Saved password is now invalid (e.g. DB password changed externally).
+                // Re-prompt the user instead of silently dead-ending.
+                setPendingPath(path);
+                setPasswordDialogOpen(true);
               }
               return;
             }

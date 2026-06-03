@@ -32,20 +32,20 @@ interface UseVectorSearchReturn {
     limit: number,
     threshold?: number,
     filter?: QdrantSearchFilter
-  ) => Promise<void>;
+  ) => Promise<VectorSearchResult[]>;
   /** Search by raw vector array */
   searchByVector: (
     vector: number[],
     limit: number,
     threshold?: number,
     filter?: QdrantSearchFilter
-  ) => Promise<void>;
+  ) => Promise<VectorSearchResult[]>;
   /** Find similar points by point ID */
   searchSimilar: (
     pointId: string | number,
     limit: number,
     filter?: QdrantSearchFilter
-  ) => Promise<void>;
+  ) => Promise<VectorSearchResult[]>;
   /** Batch search with multiple vectors */
   batchSearch: (
     vectors: number[][],
@@ -187,15 +187,15 @@ export function useVectorSearch(
       limit: number,
       threshold?: number,
       searchFilter?: QdrantSearchFilter
-    ) => {
+    ): Promise<VectorSearchResult[]> => {
       if (!connectionId) {
         setError(t('vectorSearch.noConnection'));
-        return;
+        return [];
       }
 
       if (!text.trim()) {
         setError(t('vectorSearch.searchTextEmpty'));
-        return;
+        return [];
       }
 
       setIsSearching(true);
@@ -205,7 +205,7 @@ export function useVectorSearch(
       const vector = await embedText(text);
       if (!vector) {
         setIsSearching(false);
-        return; // embedText sets the error
+        return []; // embedText sets the error
       }
 
       try {
@@ -222,14 +222,17 @@ export function useVectorSearch(
 
         if (response.success) {
           setResults(response.results);
+          return response.results;
         } else {
           setError(response.error);
           setResults([]);
+          return [];
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         setError(message);
         setResults([]);
+        return [];
       } finally {
         setIsSearching(false);
       }
@@ -246,15 +249,15 @@ export function useVectorSearch(
       limit: number,
       threshold?: number,
       searchFilter?: QdrantSearchFilter
-    ) => {
+    ): Promise<VectorSearchResult[]> => {
       if (!connectionId) {
         setError(t('vectorSearch.noConnection'));
-        return;
+        return [];
       }
 
       if (!Array.isArray(vector) || vector.length === 0) {
         setError(t('vectorSearch.vectorEmptyOrInvalid'));
-        return;
+        return [];
       }
 
       setIsSearching(true);
@@ -274,14 +277,17 @@ export function useVectorSearch(
 
         if (response.success) {
           setResults(response.results);
+          return response.results;
         } else {
           setError(response.error);
           setResults([]);
+          return [];
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         setError(message);
         setResults([]);
+        return [];
       } finally {
         setIsSearching(false);
       }
@@ -297,15 +303,15 @@ export function useVectorSearch(
       pointId: string | number,
       limit: number,
       searchFilter?: QdrantSearchFilter
-    ) => {
+    ): Promise<VectorSearchResult[]> => {
       if (!connectionId) {
         setError(t('vectorSearch.noConnection'));
-        return;
+        return [];
       }
 
       if (pointId === '' || pointId === null || pointId === undefined) {
         setError(t('vectorSearch.pointIdRequired'));
-        return;
+        return [];
       }
 
       setIsSearching(true);
@@ -322,14 +328,17 @@ export function useVectorSearch(
 
         if (response.success) {
           setResults(response.results);
+          return response.results;
         } else {
           setError(response.error);
           setResults([]);
+          return [];
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         setError(message);
         setResults([]);
+        return [];
       } finally {
         setIsSearching(false);
       }

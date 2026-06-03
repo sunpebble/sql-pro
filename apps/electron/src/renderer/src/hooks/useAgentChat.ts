@@ -61,14 +61,11 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
     sendMessage: sdkSendMessage,
     stop,
     setMessages,
+    clearError,
   } = useChat({
     id: currentSessionId,
     transport,
   });
-
-  const clearError = useCallback(() => {
-    // useChat doesn't expose clearError, errors are handled via status
-  }, []);
 
   const sendMessage = useCallback(
     (text: string) => {

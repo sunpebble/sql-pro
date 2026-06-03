@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   Dialog,
@@ -29,6 +30,9 @@ import { useConnectionStore } from '@/stores/connection-store';
 import { FolderTree } from './FolderTree';
 import { ProfileForm } from './ProfileForm';
 import { SkeletonProfileList } from './SkeletonProfileList';
+
+// Splits a file path on both POSIX (/) and Windows (\) separators.
+const PATH_SEPARATOR_RE = /[\\/]/;
 
 export interface ProfileManagerProps {
   /** Callback when a profile is connected */
@@ -159,7 +163,7 @@ export function ProfileManager({
       if (foldersResult.success && foldersResult.folders) {
         setFolders(foldersResult.folders);
       } else {
-        setError(foldersResult.error || t('profiles.failedToLoadFolders'));
+        toast.error(foldersResult.error || t('profiles.failedToLoadFolders'));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('common.unknownError'));
@@ -220,8 +224,12 @@ export function ProfileManager({
     async (profile: ConnectionProfile) => {
       // Check if database file exists
       if (missingDbPaths.has(profile.path)) {
-        setError(
-          `Cannot duplicate profile: Database file not found at ${profile.path}. Please ensure the file exists before duplicating.`
+        toast.error(
+          t(
+            'profiles.cannotDuplicateMissingFile',
+            'Cannot duplicate profile: Database file not found at {{path}}. Please ensure the file exists before duplicating.',
+            { path: profile.path }
+          )
         );
         return;
       }
@@ -246,15 +254,17 @@ export function ProfileManager({
           const errorMsg =
             result.error || t('profiles.failedToDuplicateProfile');
           if (errorMsg.includes('keychain') || errorMsg.includes('password')) {
-            setError(
+            toast.error(
               `${errorMsg}${!keychainAvailable ? ' (Keychain is unavailable on this system)' : ''}`
             );
           } else {
-            setError(errorMsg);
+            toast.error(errorMsg);
           }
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : t('common.unknownError'));
+        toast.error(
+          err instanceof Error ? err.message : t('common.unknownError')
+        );
       }
     },
     [addProfile, missingDbPaths, keychainAvailable, t]
@@ -288,10 +298,12 @@ export function ProfileManager({
           selectProfile(null);
         }
       } else {
-        setError(result.error || t('profiles.failedToDeleteProfile'));
+        toast.error(result.error || t('profiles.failedToDeleteProfile'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('common.unknownError'));
+      toast.error(
+        err instanceof Error ? err.message : t('common.unknownError')
+      );
     } finally {
       setPendingDeleteProfileId(null);
     }
@@ -327,10 +339,12 @@ export function ProfileManager({
           setEditDialogOpen(false);
           setEditingProfile(null);
         } else {
-          setError(result.error || t('profiles.failedToUpdateProfile'));
+          toast.error(result.error || t('profiles.failedToUpdateProfile'));
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : t('common.unknownError'));
+        toast.error(
+          err instanceof Error ? err.message : t('common.unknownError')
+        );
       }
     },
     [editingProfile, updateProfile, t]
@@ -376,23 +390,35 @@ export function ProfileManager({
       );
 
       let message: string;
-      if (hasSubfolders || hasProfiles) {
-        const contents = [
-          hasSubfolders && 'subfolders',
-          hasProfiles && 'profiles',
-        ]
-          .filter(Boolean)
-          .join(' and ');
-        message = `Folder "${folder.name}" contains ${contents}. Delete anyway? Contents will be moved to root level.`;
+      if (hasSubfolders && hasProfiles) {
+        message = t(
+          'profiles.deleteFolderWithBoth',
+          'Folder "{{name}}" contains subfolders and profiles. Delete anyway? Contents will be moved to root level.',
+          { name: folder.name }
+        );
+      } else if (hasSubfolders) {
+        message = t(
+          'profiles.deleteFolderWithSubfolders',
+          'Folder "{{name}}" contains subfolders. Delete anyway? Contents will be moved to root level.',
+          { name: folder.name }
+        );
+      } else if (hasProfiles) {
+        message = t(
+          'profiles.deleteFolderWithProfiles',
+          'Folder "{{name}}" contains profiles. Delete anyway? Contents will be moved to root level.',
+          { name: folder.name }
+        );
       } else {
-        message = `Delete folder "${folder.name}"?`;
+        message = t('profiles.deleteFolderEmpty', 'Delete folder "{{name}}"?', {
+          name: folder.name,
+        });
       }
 
       setPendingDeleteFolderId(folderId);
       setDeleteFolderMessage(message);
       setDeleteFolderConfirmOpen(true);
     },
-    [folders, profiles]
+    [folders, profiles, t]
   );
 
   // Confirm folder deletion
@@ -423,10 +449,12 @@ export function ProfileManager({
             updateProfile(p.id, { folderId: undefined });
           });
       } else {
-        setError(result.error || t('profiles.failedToDeleteFolder'));
+        toast.error(result.error || t('profiles.failedToDeleteFolder'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('common.unknownError'));
+      toast.error(
+        err instanceof Error ? err.message : t('common.unknownError')
+      );
     } finally {
       setPendingDeleteFolderId(null);
     }
@@ -447,13 +475,13 @@ export function ProfileManager({
 
       const trimmedName = folderName.trim();
       if (!trimmedName) {
-        setError(t('profiles.folderNameEmpty'));
+        toast.error(t('profiles.folderNameEmpty'));
         return;
       }
 
       // Validate folder name length
       if (trimmedName.length > 100) {
-        setError(t('profiles.folderNameTooLong'));
+        toast.error(t('profiles.folderNameTooLong'));
         return;
       }
 
@@ -470,8 +498,12 @@ export function ProfileManager({
       );
 
       if (duplicateName) {
-        setError(
-          `A folder named "${trimmedName}" already exists at this level. Please choose a different name.`
+        toast.error(
+          t(
+            'profiles.duplicateFolderName',
+            'A folder named "{{name}}" already exists at this level. Please choose a different name.',
+            { name: trimmedName }
+          )
         );
         return;
       }
@@ -489,14 +521,13 @@ export function ProfileManager({
             setFolderDialogOpen(false);
             setFolderName('');
             setEditingFolder(null);
-            setError(null); // Clear any previous errors
           } else {
-            setError(result.error || t('profiles.failedToCreateFolder'));
+            toast.error(result.error || t('profiles.failedToCreateFolder'));
           }
         } catch (err) {
           const errorMsg =
             err instanceof Error ? err.message : t('database.unknownError');
-          setError(
+          toast.error(
             t('profiles.failedToCreateFolderWithError', { error: errorMsg })
           );
         }
@@ -515,14 +546,13 @@ export function ProfileManager({
             setFolderDialogOpen(false);
             setFolderName('');
             setEditingFolder(null);
-            setError(null); // Clear any previous errors
           } else {
-            setError(result.error || t('profiles.failedToRenameFolder'));
+            toast.error(result.error || t('profiles.failedToRenameFolder'));
           }
         } catch (err) {
           const errorMsg =
             err instanceof Error ? err.message : t('database.unknownError');
-          setError(
+          toast.error(
             t('profiles.failedToRenameFolderWithError', { error: errorMsg })
           );
         }
@@ -557,10 +587,12 @@ export function ProfileManager({
         if (result.success && result.profile) {
           updateProfile(profileId, { folderId });
         } else {
-          setError(result.error || t('profiles.failedToMoveProfile'));
+          toast.error(result.error || t('profiles.failedToMoveProfile'));
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : t('common.unknownError'));
+        toast.error(
+          err instanceof Error ? err.message : t('common.unknownError')
+        );
       }
     },
     [profiles, updateProfile, t]
@@ -573,7 +605,8 @@ export function ProfileManager({
         title: t('dialog.openDatabase'),
       });
       if (result.success && !result.canceled && result.filePath) {
-        const filename = result.filePath.split('/').pop() || result.filePath;
+        const filename =
+          result.filePath.split(PATH_SEPARATOR_RE).pop() || result.filePath;
         // Try to open the file to check if it's encrypted
         const probeResult = await sqlPro.db.open({
           path: result.filePath,
@@ -592,7 +625,7 @@ export function ProfileManager({
         setAddConnectionDialogOpen(true);
       }
     } catch (err) {
-      setError(
+      toast.error(
         err instanceof Error
           ? err.message
           : t('profiles.failedToOpenFileDialog')
@@ -627,10 +660,12 @@ export function ProfileManager({
           setAddConnectionDialogOpen(false);
           setPendingNewConnection(null);
         } else {
-          setError(result.error || t('profiles.failedToSaveProfile'));
+          toast.error(result.error || t('profiles.failedToSaveProfile'));
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : t('common.unknownError'));
+        toast.error(
+          err instanceof Error ? err.message : t('common.unknownError')
+        );
       }
     },
     [pendingNewConnection, addProfile, t]
@@ -942,14 +977,14 @@ export function ProfileManager({
                     onClick={() => handleConnectProfile(selectedProfile)}
                     disabled={isConnectionLoading}
                   >
-                    Connect
+                    {t('profiles.connect')}
                   </Button>
                   <Button
                     className="w-full"
                     variant="outline"
                     onClick={() => handleEditProfile(selectedProfile)}
                   >
-                    Edit Profile
+                    {t('profileManager.editProfile')}
                   </Button>
                 </div>
               </div>
@@ -958,7 +993,10 @@ export function ProfileManager({
                 className="text-muted-foreground flex h-full items-center justify-center text-center"
                 style={{ fontSize: 'var(--font-ui-size, 13px)' }}
               >
-                Select a profile to view details
+                {t(
+                  'profiles.selectProfilePrompt',
+                  'Select a profile to view details'
+                )}
               </div>
             )}
           </div>
@@ -1125,6 +1163,7 @@ function HasSavedPasswordIndicator({
   path: string;
   keychainAvailable?: boolean;
 }) {
+  const { t } = useTranslation('common');
   const [hasSaved, setHasSaved] = useState(false);
 
   useEffect(() => {
@@ -1152,8 +1191,11 @@ function HasSavedPasswordIndicator({
       </TooltipTrigger>
       <TooltipContent>
         {keychainAvailable
-          ? 'Password saved'
-          : 'Password saved (keychain may be unavailable)'}
+          ? t('profiles.passwordSaved', 'Password saved')
+          : t(
+              'profiles.passwordSavedKeychainUnavailable',
+              'Password saved (keychain may be unavailable)'
+            )}
       </TooltipContent>
     </Tooltip>
   );

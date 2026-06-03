@@ -119,6 +119,9 @@ export function QueryBundleExportDialog({
         bundle: {
           name: bundleName.trim(),
           description: bundleDescription.trim() || undefined,
+          documentation: documentation.trim() || undefined,
+          databaseContext: databaseContext.trim() || undefined,
+          tags: parseBundleTags.length > 0 ? parseBundleTags : undefined,
           queries: queries.map((query, index) => {
             const metadata = getQueryMetadata(query.id);
             const parsedTags = metadata.tags
@@ -131,6 +134,7 @@ export function QueryBundleExportDialog({
               name: metadata.name.trim() || `Query ${index + 1}`,
               description: metadata.description.trim() || undefined,
               sql: query.queryText ?? '',
+              notes: metadata.notes.trim() || undefined,
               tags: parsedTags.length > 0 ? parsedTags : undefined,
               order: index,
             };
@@ -157,6 +161,9 @@ export function QueryBundleExportDialog({
   }, [
     bundleName,
     bundleDescription,
+    documentation,
+    databaseContext,
+    parseBundleTags,
     compress,
     queries,
     isValid,

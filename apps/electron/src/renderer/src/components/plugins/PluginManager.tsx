@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useAsyncOperation } from '@/hooks/useAsyncOperation';
 import { cn } from '@/lib/utils';
 import { PluginCard } from './PluginCard';
@@ -105,6 +107,14 @@ export function PluginManager({
   onPluginsChange,
 }: PluginManagerProps) {
   const { t } = useTranslation();
+  // Stable fetcher so the onEvent subscription effect doesn't re-subscribe every render
+  const fetchPluginsFn = React.useCallback(async () => {
+    const response = await window.sqlPro.plugin.list();
+    if (response.success && response.plugins) {
+      return response.plugins as PluginInfo[];
+    }
+    throw new Error(response.error || t('plugins.failedToFetchPlugins'));
+  }, [t]);
   // Use useAsyncOperation for fetching plugins
   const {
     data: plugins,
@@ -112,16 +122,11 @@ export function PluginManager({
     error,
     execute: fetchPlugins,
     reset: resetPlugins,
-  } = useAsyncOperation(
-    async () => {
-      const response = await window.sqlPro.plugin.list();
-      if (response.success && response.plugins) {
-        return response.plugins as PluginInfo[];
-      }
-      throw new Error(response.error || t('plugins.failedToFetchPlugins'));
-    },
-    { retries: 2, retryDelay: 500, initialData: [] }
-  );
+  } = useAsyncOperation(fetchPluginsFn, {
+    retries: 2,
+    retryDelay: 500,
+    initialData: [],
+  });
 
   // UI state
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -137,6 +142,12 @@ export function PluginManager({
     null
   );
   const [detailViewOpen, setDetailViewOpen] = React.useState(false);
+
+  // Uninstall confirmation state
+  const [pendingUninstallId, setPendingUninstallId] = React.useState<
+    string | null
+  >(null);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   // Fetch plugins on mount
   React.useEffect(() => {
@@ -192,6 +203,13 @@ export function PluginManager({
             `Failed to ${enabled ? 'enable' : 'disable'} plugin:`,
             response.error
           );
+          toast.error(
+            response.error ||
+              t(
+                'plugins.toggleFailed',
+                'Failed to update the plugin. Please try again.'
+              )
+          );
         }
         // Plugin events will trigger a refresh
       } catch (err) {
@@ -199,17 +217,34 @@ export function PluginManager({
           `Failed to ${enabled ? 'enable' : 'disable'} plugin:`,
           err
         );
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : t(
+                'plugins.toggleFailed',
+                'Failed to update the plugin. Please try again.'
+              )
+        );
       } finally {
         setCurrentOperation(null);
       }
     },
-    []
+    [t]
   );
 
   /**
-   * Handle uninstalling a plugin
+   * Open the uninstall confirmation dialog for a plugin.
+   * The destructive operation only runs after the user confirms.
    */
-  const handleUninstall = React.useCallback(
+  const handleRequestUninstall = React.useCallback((pluginId: string) => {
+    setPendingUninstallId(pluginId);
+    setConfirmOpen(true);
+  }, []);
+
+  /**
+   * Perform the actual uninstall after confirmation.
+   */
+  const performUninstall = React.useCallback(
     async (pluginId: string) => {
       setCurrentOperation({ pluginId, operation: 'uninstall' });
 
@@ -224,16 +259,41 @@ export function PluginManager({
           }
         } else {
           console.error('Failed to uninstall plugin:', response.error);
+          toast.error(
+            response.error ||
+              t(
+                'plugins.uninstallFailed',
+                'Failed to uninstall the plugin. Please try again.'
+              )
+          );
         }
         // Plugin events will trigger a refresh
       } catch (err) {
         console.error('Failed to uninstall plugin:', err);
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : t(
+                'plugins.uninstallFailed',
+                'Failed to uninstall the plugin. Please try again.'
+              )
+        );
       } finally {
         setCurrentOperation(null);
       }
     },
-    [selectedPlugin]
+    [selectedPlugin, t]
   );
+
+  /**
+   * Confirm handler for the uninstall dialog.
+   */
+  const handleConfirmUninstall = React.useCallback(() => {
+    if (pendingUninstallId) {
+      performUninstall(pendingUninstallId);
+    }
+    setPendingUninstallId(null);
+  }, [pendingUninstallId, performUninstall]);
 
   /**
    * Handle viewing plugin details
@@ -490,7 +550,7 @@ export function PluginManager({
                   isLoading={isPluginLoading(plugin.manifest.id)}
                   onViewDetails={handleViewDetails}
                   onToggleEnabled={handleToggleEnabled}
-                  onUninstall={handleUninstall}
+                  onUninstall={handleRequestUninstall}
                 />
               ))}
             </div>
@@ -532,7 +592,22 @@ export function PluginManager({
           selectedPlugin ? isPluginLoading(selectedPlugin.manifest.id) : false
         }
         onToggleEnabled={handleToggleEnabled}
-        onUninstall={handleUninstall}
+        onUninstall={handleRequestUninstall}
+      />
+
+      {/* Uninstall Confirmation Dialog */}
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={t('plugins.uninstallConfirmTitle', 'Uninstall plugin?')}
+        description={t(
+          'plugins.uninstallConfirmDesc',
+          'This will permanently remove the plugin and its data. This action cannot be undone.'
+        )}
+        confirmLabel={t('pluginCard.uninstall')}
+        variant="destructive"
+        onConfirm={handleConfirmUninstall}
+        onCancel={() => setPendingUninstallId(null)}
       />
     </div>
   );

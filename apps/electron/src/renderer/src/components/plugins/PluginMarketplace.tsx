@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -243,20 +244,15 @@ export function PluginMarketplace({
             setDetailViewOpen(false);
           }
         } else {
-          // Show error in state or toast
-          setState((prev) => ({
-            ...prev,
-            error: response.error || t('plugins.failedToInstallPlugin'),
-          }));
+          // Surface install failures via toast; reserve state.error for marketplace LOAD failures
+          toast.error(response.error || t('plugins.failedToInstallPlugin'));
         }
       } catch (error) {
-        setState((prev) => ({
-          ...prev,
-          error:
-            error instanceof Error
-              ? error.message
-              : t('plugins.failedToInstallPlugin'),
-        }));
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : t('plugins.failedToInstallPlugin')
+        );
       } finally {
         setInstallingPluginId(null);
       }

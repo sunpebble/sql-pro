@@ -1,12 +1,12 @@
+import type { CompareTab } from '@/stores/compare-view-store';
 import { Tabs, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
 import { GitCompare, Table2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { useCompareViewStore } from '@/stores/compare-view-store';
 import { DataDiffPanel } from './data-diff/DataDiffPanel';
 import { SchemaComparisonPanel } from './schema-comparison';
-
-type CompareTab = 'schema' | 'data';
 
 interface CompareViewProps {
   className?: string;
@@ -15,14 +15,22 @@ interface CompareViewProps {
 
 /**
  * Unified Compare view that combines Schema Compare and Data Compare
- * in a single tab-based interface.
+ * in a single tab-based interface. The active inner tab lives in a shared
+ * store so global navigation actions can target a specific tab.
  */
-export function CompareView({
-  className,
-  defaultTab = 'schema',
-}: CompareViewProps) {
-  const [activeTab, setActiveTab] = useState<CompareTab>(defaultTab);
+export function CompareView({ className, defaultTab }: CompareViewProps) {
+  const activeTab = useCompareViewStore((s) => s.activeTab);
+  const setActiveTab = useCompareViewStore((s) => s.setActiveTab);
   const { t } = useTranslation('common');
+
+  // Honor an explicit defaultTab once on mount (caller-driven initial tab).
+  useEffect(() => {
+    if (defaultTab) {
+      setActiveTab(defaultTab);
+    }
+    // Only run when a defaultTab is explicitly provided by the caller.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={cn('flex h-full flex-col', className)}>

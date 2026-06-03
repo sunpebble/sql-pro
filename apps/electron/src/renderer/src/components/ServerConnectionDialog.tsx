@@ -407,6 +407,48 @@ export function ServerConnectionDialog({
     }
   }, [open, databaseType, isEditMode, initialConfig]);
 
+  // Clear stale Test Connection result when any connection-affecting field changes
+  useEffect(() => {
+    if (testResult) {
+      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional invalidation of stale test result */
+      setTestResult(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    host,
+    port,
+    database,
+    username,
+    password,
+    useSSL,
+    supabaseUrl,
+    supabaseKey,
+    qdrantHost,
+    qdrantPort,
+    qdrantApiKey,
+    qdrantUseTLS,
+    tursoAuthToken,
+    tursoOrganization,
+    tursoDatabase,
+    tursoBranch,
+    sshEnabled,
+    sshHost,
+    sshPort,
+    sshUsername,
+    sshAuthMethod,
+    sshPassword,
+    sshPrivateKeyPath,
+    sshPassphrase,
+    showJumpHost,
+    jumpHost,
+    jumpPort,
+    jumpUsername,
+    jumpAuthMethod,
+    jumpPassword,
+    jumpPrivateKeyPath,
+    jumpPassphrase,
+  ]);
+
   const buildConnectionName = () => {
     if (displayName) return displayName;
     if (isSupabase) return supabaseUrl;
@@ -415,12 +457,8 @@ export function ServerConnectionDialog({
     return `${host}:${port}/${database}`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Immediately block UI to prevent interaction gap
-    setIsSubmitting(true);
-
+  // Single source of truth for the connection config used by both submit and test
+  const buildConfig = (): DatabaseConnectionConfig => {
     const config: DatabaseConnectionConfig = {
       type: databaseType,
       name: buildConnectionName(),
@@ -498,6 +536,16 @@ export function ServerConnectionDialog({
       }
     }
 
+    return config;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Immediately block UI to prevent interaction gap
+    setIsSubmitting(true);
+
+    const config = buildConfig();
     onConnect(config);
   };
 
@@ -1116,46 +1164,7 @@ export function ServerConnectionDialog({
                     setIsTesting(true);
                     setTestResult(null);
 
-                    const config: DatabaseConnectionConfig = {
-                      type: databaseType,
-                      name: buildConnectionName(),
-                      readOnly,
-                    };
-
-                    if (isTurso) {
-                      config.tursoAuthToken = tursoAuthToken;
-                      config.tursoOrganization = tursoOrganization;
-                      config.tursoDatabase = tursoDatabase;
-                      if (tursoBranch) {
-                        config.tursoBranch = tursoBranch;
-                      }
-                    } else if (isQdrant) {
-                      config.qdrantHost = qdrantHost;
-                      config.qdrantPort = Number.parseInt(qdrantPort, 10);
-                      if (qdrantApiKey) {
-                        config.qdrantApiKey = qdrantApiKey;
-                      }
-                      config.qdrantUseTLS = qdrantUseTLS;
-                    } else if (isSupabase) {
-                      config.supabaseUrl = supabaseUrl;
-                      config.supabaseKey = supabaseKey;
-                      config.ssl = true;
-                      if (host) config.host = host;
-                      if (
-                        port &&
-                        port !== DEFAULT_PORTS[databaseType].toString()
-                      ) {
-                        config.port = Number.parseInt(port, 10);
-                      }
-                      if (username) config.username = username;
-                    } else {
-                      config.host = host;
-                      config.port = Number.parseInt(port, 10);
-                      config.database = database;
-                      config.username = username;
-                      config.password = password;
-                      config.ssl = useSSL;
-                    }
+                    const config = buildConfig();
 
                     try {
                       const result = await window.sqlPro.db.testConnection({

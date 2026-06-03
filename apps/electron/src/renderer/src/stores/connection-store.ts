@@ -176,6 +176,10 @@ const initialState = {
   schema: null,
 };
 
+// Module-level registry of active tunnel-status pollers, keyed by connection id.
+// Avoids leaking timers across re-entrant polls and survives store recreation.
+const tunnelPollIntervals = new Map<string, ReturnType<typeof setInterval>>();
+
 export const useConnectionStore = create<ConnectionState>()((set, get) => ({
   ...initialState,
 
@@ -688,6 +692,9 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
   },
 
   pollTunnelStatus: (connectionId) => {
+    // Clear any existing poller for this connection so re-entry is idempotent
+    get().stopPollingTunnelStatus(connectionId);
+
     // Poll tunnel status from main process
     const poll = async () => {
       try {
@@ -706,21 +713,15 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
     // Set up interval polling (every 5 seconds)
     const intervalId = setInterval(poll, 5000);
 
-    // Store interval ID for cleanup (using a simple approach with window)
-    (window as unknown as Record<string, unknown>)[
-      `tunnelPoll_${connectionId}`
-    ] = intervalId;
+    // Store interval ID for cleanup
+    tunnelPollIntervals.set(connectionId, intervalId);
   },
 
   stopPollingTunnelStatus: (connectionId) => {
-    const intervalId = (window as unknown as Record<string, unknown>)[
-      `tunnelPoll_${connectionId}`
-    ] as NodeJS.Timeout | undefined;
+    const intervalId = tunnelPollIntervals.get(connectionId);
     if (intervalId) {
       clearInterval(intervalId);
-      delete (window as unknown as Record<string, unknown>)[
-        `tunnelPoll_${connectionId}`
-      ];
+      tunnelPollIntervals.delete(connectionId);
     }
     // Clear the status
     get().setTunnelStatus(connectionId, null);
@@ -730,6 +731,12 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
   reset: () => {
     // Clean up all memory caches
     memoryCleanup.performCleanup('manual');
+
+    // Stop and clear any active tunnel-status pollers to avoid leaking timers
+    for (const intervalId of tunnelPollIntervals.values()) {
+      clearInterval(intervalId);
+    }
+    tunnelPollIntervals.clear();
 
     return set({
       connections: new Map(),

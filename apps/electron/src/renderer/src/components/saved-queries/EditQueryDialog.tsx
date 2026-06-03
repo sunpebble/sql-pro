@@ -2,14 +2,6 @@ import type { QueryParameter, SavedQuery } from '@shared/types/saved-query';
 
 import { Badge } from '@sqlpro/ui/badge';
 import { Button } from '@sqlpro/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@sqlpro/ui/dialog';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
 import {
@@ -24,6 +16,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   parseParameters,
   useSavedQueriesStore,

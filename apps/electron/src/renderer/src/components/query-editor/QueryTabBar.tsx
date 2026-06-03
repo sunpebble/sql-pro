@@ -39,7 +39,6 @@ interface TabItemProps {
   onClose: () => void;
   onDuplicate: () => void;
   onCloseOthers: () => void;
-  onRename: () => void;
   tabsCount: number;
 }
 
@@ -52,7 +51,6 @@ const TabItem = memo(
     onClose,
     onDuplicate,
     onCloseOthers,
-    onRename,
     tabsCount,
   }: TabItemProps) => {
     const { t } = useTranslation('common');
@@ -159,7 +157,7 @@ const TabItem = memo(
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem onClick={onRename}>
+          <ContextMenuItem onClick={handleStartEdit}>
             {t('queryTabs.rename')}
           </ContextMenuItem>
           <ContextMenuItem onClick={onDuplicate}>
@@ -247,7 +245,6 @@ export const QueryTabBar = memo(({ className }: QueryTabBarProps) => {
             onClose={() => closeTab(activeConnectionId, tab.id)}
             onDuplicate={() => duplicateTab(activeConnectionId, tab.id)}
             onCloseOthers={() => closeOtherTabs(activeConnectionId, tab.id)}
-            onRename={() => {}}
             tabsCount={tabs.length}
           />
         ))}

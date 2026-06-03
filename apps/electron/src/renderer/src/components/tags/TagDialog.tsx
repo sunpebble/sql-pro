@@ -2,19 +2,20 @@ import type { TagDefinition } from '@shared/types/tag';
 
 import { DEFAULT_TAG_COLOR } from '@shared/types/tag';
 import { Button } from '@sqlpro/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@sqlpro/ui/dialog';
 import { Input } from '@sqlpro/ui/input';
 import { Label } from '@sqlpro/ui/label';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ColorPicker } from '@/components/ui/color-picker';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface CreateTagDialogProps {
   open: boolean;
@@ -177,6 +178,7 @@ function EditTagForm({
   const [name, setName] = useState(tag.name);
   const [color, setColor] = useState(tag.color);
   const [error, setError] = useState<string | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const handleUpdate = () => {
     const trimmedName = name.trim();
@@ -207,11 +209,6 @@ function EditTagForm({
     if (Object.keys(updates).length > 0) {
       onUpdateTag(tag.id, updates);
     }
-    onOpenChange(false);
-  };
-
-  const handleDelete = () => {
-    onDeleteTag(tag.id);
     onOpenChange(false);
   };
 
@@ -259,7 +256,7 @@ function EditTagForm({
       <DialogFooter className="flex-col gap-2 sm:flex-row">
         <Button
           variant="destructive"
-          onClick={handleDelete}
+          onClick={() => setDeleteConfirmOpen(true)}
           className="sm:mr-auto"
         >
           {t('tags.delete', { defaultValue: 'Delete' })}
@@ -271,6 +268,21 @@ function EditTagForm({
           {t('tags.save', { defaultValue: 'Save' })}
         </Button>
       </DialogFooter>
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        variant="destructive"
+        title={t('tags.deleteTagTitle', { defaultValue: 'Delete tag?' })}
+        description={t('tags.deleteTagDesc', {
+          defaultValue:
+            'This will remove the tag from all tagged objects. This action cannot be undone.',
+        })}
+        confirmLabel={t('tags.delete', { defaultValue: 'Delete' })}
+        onConfirm={() => {
+          onDeleteTag(tag.id);
+          onOpenChange(false);
+        }}
+      />
     </>
   );
 }
