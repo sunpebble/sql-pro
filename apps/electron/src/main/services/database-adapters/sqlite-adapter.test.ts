@@ -2,6 +2,24 @@ import type { MockInstance } from 'vitest';
 import { describe, expect, it, vi } from 'vitest';
 import { SQLiteAdapter } from './sqlite-adapter';
 
+// Mock Electron so the service import chain (sql-logger / ssh-credential-store →
+// electron) resolves without the real Electron binary, which is unavailable in the
+// headless CI test runner.
+vi.mock('electron', () => ({
+  app: {
+    isPackaged: false,
+    getPath: vi.fn(() => '/tmp'),
+  },
+  BrowserWindow: {
+    getAllWindows: vi.fn(() => []),
+  },
+  safeStorage: {
+    isEncryptionAvailable: vi.fn(() => false),
+    encryptString: vi.fn((value: string) => value),
+    decryptString: vi.fn((value: string) => value),
+  },
+}));
+
 describe('sQLiteAdapter executeQuery params handling', () => {
   it('uses executeSingleStatement for single statement with params', () => {
     const adapter = new SQLiteAdapter();

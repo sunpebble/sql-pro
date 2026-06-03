@@ -28,6 +28,24 @@ import {
   saveProfile,
 } from '../store';
 
+// Mock Electron so the service import chain (sql-logger / ssh-credential-store →
+// electron) resolves without the real Electron binary, which is unavailable in the
+// headless CI test runner.
+vi.mock('electron', () => ({
+  app: {
+    isPackaged: false,
+    getPath: vi.fn(() => '/tmp'),
+  },
+  BrowserWindow: {
+    getAllWindows: vi.fn(() => []),
+  },
+  safeStorage: {
+    isEncryptionAvailable: vi.fn(() => false),
+    encryptString: vi.fn((value: string) => value),
+    decryptString: vi.fn((value: string) => value),
+  },
+}));
+
 // Mock electron-store before importing store functions
 vi.mock('electron-store', () => {
   const mockStore = new Map<string, unknown>();

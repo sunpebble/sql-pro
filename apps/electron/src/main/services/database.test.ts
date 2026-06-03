@@ -10,6 +10,24 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as errorParser from '@/lib/error-parser';
 import { databaseService } from './database';
 
+// Mock Electron so the service import chain (sql-logger / ssh-credential-store →
+// electron) resolves without the real Electron binary, which is unavailable in the
+// headless CI test runner.
+vi.mock('electron', () => ({
+  app: {
+    isPackaged: false,
+    getPath: vi.fn(() => '/tmp'),
+  },
+  BrowserWindow: {
+    getAllWindows: vi.fn(() => []),
+  },
+  safeStorage: {
+    isEncryptionAvailable: vi.fn(() => false),
+    encryptString: vi.fn((value: string) => value),
+    decryptString: vi.fn((value: string) => value),
+  },
+}));
+
 // Regex for matching HTTPS URLs in tests
 const HTTPS_URL_REGEX = /^https:\/\//;
 
