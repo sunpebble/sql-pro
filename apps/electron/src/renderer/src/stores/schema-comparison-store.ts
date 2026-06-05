@@ -43,6 +43,9 @@ export interface DiffFilters {
   searchText: string;
 }
 
+/** 详细差异视图模式:结构化卡片 或 SQL 文本 diff。 */
+export type SchemaDiffViewMode = 'structured' | 'sql';
+
 /**
  * UI state for expanded/collapsed sections
  */
@@ -69,6 +72,9 @@ interface SchemaComparisonState {
 
   // Filter state
   filters: DiffFilters;
+
+  // Detailed diff view mode (structured cards vs SQL text diff)
+  viewMode: SchemaDiffViewMode;
 
   // UI state for expanded/collapsed sections
   expandedSections: ExpandedSections;
@@ -101,6 +107,9 @@ interface SchemaComparisonState {
   ) => void;
   setSearchText: (text: string) => void;
   resetFilters: () => void;
+
+  // Actions - View Mode
+  setViewMode: (mode: SchemaDiffViewMode) => void;
 
   // Actions - Expanded Sections
   toggleTableExpanded: (tableName: string) => void;
@@ -142,6 +151,7 @@ const initialState = {
   target: null,
   availableSnapshots: [],
   isLoadingSnapshots: false,
+  viewMode: 'structured' as SchemaDiffViewMode,
   filters: { ...defaultFilters },
   expandedSections: { ...defaultExpandedSections, tables: new Map() },
 };
@@ -230,6 +240,8 @@ export const useSchemaComparisonStore = create<SchemaComparisonState>(
       set({
         filters: { ...defaultFilters },
       }),
+
+    setViewMode: (viewMode) => set({ viewMode }),
 
     // Expanded Sections Actions
     toggleTableExpanded: (tableName) =>
