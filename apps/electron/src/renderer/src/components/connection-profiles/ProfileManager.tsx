@@ -27,7 +27,7 @@ import {
 import { sqlPro } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
-import { FolderTree } from './FolderTree';
+import { FolderTreeView } from './FolderTreeView';
 import { ProfileForm } from './ProfileForm';
 import { SkeletonProfileList } from './SkeletonProfileList';
 
@@ -798,7 +798,7 @@ export function ProfileManager({
                   >
                     {t('profiles.savedProfiles')}
                   </h3>
-                  <FolderTree
+                  <FolderTreeView
                     folders={Array.from(folders.values())}
                     profiles={savedProfiles}
                     expandedFolderIds={expandedFolderIds}

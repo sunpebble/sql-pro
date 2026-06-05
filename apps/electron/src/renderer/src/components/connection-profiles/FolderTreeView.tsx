@@ -1,10 +1,43 @@
+import type { ConnectionProfile, ProfileFolder } from '@shared/types';
 import type { ReactNode } from 'react';
-import type { FolderTreeProps } from './FolderTree';
 import { FileTree, useFileTree } from '@pierre/trees/react';
 import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { buildFolderTreePaths } from '@/lib/folder-tree-paths';
 import { cn } from '@/lib/utils';
+
+export interface FolderTreeProps {
+  /** All available folders */
+  folders: ProfileFolder[];
+  /** All available profiles */
+  profiles: ConnectionProfile[];
+  /** Set of expanded folder IDs */
+  expandedFolderIds: Set<string>;
+  /** Selected profile ID */
+  selectedProfileId: string | null;
+  /** Callback when a folder is toggled */
+  onToggleFolder: (folderId: string) => void;
+  /** Callback when a profile is selected */
+  onSelectProfile: (profileId: string) => void;
+  /** Callback when a profile is double-clicked to connect */
+  onConnectProfile: (profile: ConnectionProfile) => void;
+  /** Callback when creating a new folder */
+  onCreateFolder: (parentId?: string) => void;
+  /** Callback when renaming a folder */
+  onRenameFolder: (folderId: string) => void;
+  /** Callback when deleting a folder */
+  onDeleteFolder: (folderId: string) => void;
+  /** Callback when deleting a profile */
+  onDeleteProfile: (profileId: string) => void;
+  /** Callback when editing a profile */
+  onEditProfile: (profile: ConnectionProfile) => void;
+  /** Callback when duplicating a profile */
+  onDuplicateProfile: (profile: ConnectionProfile) => void;
+  /** Callback when drag starts */
+  onDragStart?: (profileId: string) => void;
+  /** Callback when drop occurs on folder */
+  onDropOnFolder?: (profileId: string, folderId: string | undefined) => void;
+}
 
 /**
  * 试点:用 @pierre/trees 的 path-first FileTree 替换手写 FolderTree。
