@@ -48,6 +48,8 @@
     "@hookform/resolvers": "catalog:",
     "@libsql/client": "catalog:",
     "@monaco-editor/react": "catalog:",
+    "@pierre/diffs": "^1.2.7",
+    "@pierre/trees": "1.0.0-beta.4",
     "@qdrant/js-client-rest": "catalog:",
     "@radix-ui/react-label": "catalog:",
     "@sqlpro/ui": "workspace:*",
