@@ -29,5 +29,6 @@
     "appsDir": "apps",
     "libsDir": "packages"
   },
-  "neverConnectToCloud": true
+  "neverConnectToCloud": true,
+  "analytics": false
 }
