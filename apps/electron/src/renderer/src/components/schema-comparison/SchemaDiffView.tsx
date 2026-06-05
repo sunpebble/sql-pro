@@ -3,6 +3,8 @@ import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { FileQuestion } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SqlDiffView } from '@/components/diff/SqlDiffView';
+import { buildSchemaPatch } from '@/lib/sql-diff';
 import { cn } from '@/lib/utils';
 import { useSchemaComparisonStore } from '@/stores/schema-comparison-store';
 import { TableDiffCard } from './TableDiffCard';
@@ -22,8 +24,13 @@ export function SchemaDiffView({
   className,
 }: SchemaDiffViewProps) {
   const { t } = useTranslation('common');
-  const { filters, expandedSections, toggleTableExpanded } =
-    useSchemaComparisonStore();
+  const {
+    filters,
+    expandedSections,
+    toggleTableExpanded,
+    viewMode,
+    setViewMode,
+  } = useSchemaComparisonStore();
 
   // Filter tables based on current filters
   const filteredTables = useMemo(() => {
@@ -58,47 +65,77 @@ export function SchemaDiffView({
     return tables;
   }, [comparisonResult.tableDiffs, filters]);
 
-  if (filteredTables.length === 0) {
-    return (
-      <div
-        className={cn(
-          'flex flex-col items-center justify-center py-12',
-          className
-        )}
+  const emptyState = (
+    <div className="flex flex-col items-center justify-center py-12">
+      <FileQuestion className="text-muted-foreground mb-4 h-12 w-12 opacity-30" />
+      <p className="text-muted-foreground font-medium">
+        {t('schemaDiff.noDifferencesFound')}
+      </p>
+      <p
+        className="text-muted-foreground"
+        style={{ fontSize: 'var(--font-ui-size, 13px)' }}
       >
-        <FileQuestion className="text-muted-foreground mb-4 h-12 w-12 opacity-30" />
-        <p className="text-muted-foreground font-medium">
-          {t('schemaDiff.noDifferencesFound')}
-        </p>
-        <p
-          className="text-muted-foreground"
-          style={{ fontSize: 'var(--font-ui-size, 13px)' }}
-        >
-          {filters.showOnlyDifferences || filters.searchText
-            ? t('schemaDiff.tryAdjustingFilters')
-            : t('schemaDiff.schemasIdentical')}
-        </p>
-      </div>
+        {filters.showOnlyDifferences || filters.searchText
+          ? t('schemaDiff.tryAdjustingFilters')
+          : t('schemaDiff.schemasIdentical')}
+      </p>
+    </div>
+  );
+
+  const structuredContent =
+    filteredTables.length === 0 ? (
+      emptyState
+    ) : (
+      <ScrollArea className="h-full">
+        <div className="space-y-3 p-4">
+          {filteredTables.map((tableDiff) => (
+            <TableDiffCard
+              key={`${tableDiff.schema}.${tableDiff.name}`}
+              tableDiff={tableDiff}
+              isExpanded={expandedSections.tables.get(tableDiff.name) ?? true}
+              onToggle={() => toggleTableExpanded(tableDiff.name)}
+              showOnlyDifferences={filters.showOnlyDifferences}
+              showColumns={filters.objectTypes.columns}
+              showIndexes={filters.objectTypes.indexes}
+              showForeignKeys={filters.objectTypes.foreignKeys}
+              showTriggers={filters.objectTypes.triggers}
+            />
+          ))}
+        </div>
+      </ScrollArea>
     );
-  }
 
   return (
-    <ScrollArea className={cn('h-full', className)}>
-      <div className="space-y-3 p-4">
-        {filteredTables.map((tableDiff) => (
-          <TableDiffCard
-            key={`${tableDiff.schema}.${tableDiff.name}`}
-            tableDiff={tableDiff}
-            isExpanded={expandedSections.tables.get(tableDiff.name) ?? true}
-            onToggle={() => toggleTableExpanded(tableDiff.name)}
-            showOnlyDifferences={filters.showOnlyDifferences}
-            showColumns={filters.objectTypes.columns}
-            showIndexes={filters.objectTypes.indexes}
-            showForeignKeys={filters.objectTypes.foreignKeys}
-            showTriggers={filters.objectTypes.triggers}
-          />
-        ))}
+    <div className={cn('flex h-full flex-col', className)}>
+      {/* 试点:视图切换文案暂硬编码,推广时接入 i18n */}
+      <div className="flex items-center gap-1 border-b px-4 py-2">
+        <button
+          type="button"
+          onClick={() => setViewMode('structured')}
+          data-active={viewMode === 'structured'}
+          className="text-muted-foreground data-[active=true]:bg-accent data-[active=true]:text-foreground rounded px-2 py-1 text-sm"
+        >
+          Structured
+        </button>
+        <button
+          type="button"
+          onClick={() => setViewMode('sql')}
+          data-active={viewMode === 'sql'}
+          className="text-muted-foreground data-[active=true]:bg-accent data-[active=true]:text-foreground rounded px-2 py-1 text-sm"
+        >
+          SQL Diff
+        </button>
       </div>
-    </ScrollArea>
+
+      {viewMode === 'sql' ? (
+        <ScrollArea className="h-full">
+          <div className="p-4">
+            <SqlDiffView patch={buildSchemaPatch(filteredTables)} />
+          </div>
+        </ScrollArea>
+      ) : (
+        structuredContent
+      )}
+    </div>
   );
 }
