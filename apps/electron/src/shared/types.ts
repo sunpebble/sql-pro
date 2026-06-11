@@ -1,5 +1,10 @@
 // Shared types for IPC communication between main and renderer
 // These types define the contract for all database operations
+//
+// NOTE: Maintained for backward compatibility during gradual migration.
+// Canonical type location is now shared/domains/<domain>/types.ts
+// with colocated channels + API factory per domain.
+// New code SHOULD import from domain modules. See CONTEXT.md.
 
 // ============ Auto-Update Types ============
 

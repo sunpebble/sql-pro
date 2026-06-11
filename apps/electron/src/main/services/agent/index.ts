@@ -15,8 +15,8 @@ import type {
 import type { UIMessage } from 'ai';
 import { AGENT_IPC_CHANNELS } from '@shared/types/agent';
 import { BrowserWindow, ipcMain } from 'electron';
-import { createHandler } from '../ipc/utils';
 import { handleChat } from './chat-handler';
+import { createHandler } from './handler-utils';
 import { agentHistoryStore } from './history-store';
 import { explainSQL, generateSQL, optimizeSQL } from './nl-query-handler';
 import { agentSettingsStore } from './settings-store';

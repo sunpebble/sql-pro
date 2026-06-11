@@ -17,13 +17,13 @@ import {
   windowManager,
 } from './core';
 
+import { cleanupAllHandlers, registerAllHandlers } from './ipc/handlers/index';
 // Services
 import { fileWatcherService } from './services/file-watcher';
 import {
   registerImageProxyScheme,
   setupImageProxyHandler,
 } from './services/image-proxy';
-import { cleanupIpcHandlers, setupIpcHandlers } from './services/ipc-handlers';
 import { pluginService } from './services/plugin/PluginService';
 import { removeRecentConnection } from './services/store';
 import { checkForUpdatesOnStartup, initAutoUpdater } from './services/updater';
@@ -52,8 +52,8 @@ app.whenReady().then(async () => {
   // Initialize lifecycle manager (sets app name, user model ID, dock icon)
   await lifecycleManager.initialize();
 
-  // Setup IPC handlers for database operations
-  setupIpcHandlers();
+  // Setup IPC handlers via IpcHandler-based system
+  registerAllHandlers();
 
   // Setup image proxy protocol handler
   setupImageProxyHandler();
@@ -93,7 +93,7 @@ app.whenReady().then(async () => {
   lifecycleManager.onCleanup(async () => {
     await pluginService.shutdown();
     fileWatcherService.unwatchAll();
-    cleanupIpcHandlers();
+    cleanupAllHandlers();
   });
 
   // Create the main window with state persistence

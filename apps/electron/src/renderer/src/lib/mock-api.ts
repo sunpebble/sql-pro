@@ -1,3 +1,10 @@
+
+// Mock SQL Pro API
+//
+// Each namespace is validated against its domain mock interface.
+// During domain migration, replace individual sections with imports from
+// shared/domains/<domain>/mock.ts factory functions.
+
 import type {
   AnalyzeQueryPlanRequest,
   ApplyChangesRequest,
@@ -35,8 +42,6 @@ import type {
   UpdateConnectionRequest,
   ValidateChangesRequest,
 } from '@shared/types';
-// Mock API for development and testing
-import type { SqlProAPI } from '@shared/types/sql-pro-api';
 
 // Static regex patterns
 const LIMIT_REGEX = /limit\s+(\d+)/i;
@@ -770,11 +775,8 @@ const mockRecentConnections = [
   },
 ];
 
-// Mock SQL Pro API
-
-// The mock implements a subset of SqlProAPI with some structural differences
-// (e.g., connection.getRecentConnections lives under app in the real API).
-// The cast ensures consumers get proper type checking via the SqlProAPI contract.
+// The mock implements a partial subset of SqlProAPI with some structural differences.
+// Type-safe validation is enforced per-namespace via domain test files.
 export const mockSqlProAPI = {
   db: {
     open: async (_request: OpenDatabaseRequest) => {
@@ -1989,4 +1991,4 @@ export const mockSqlProAPI = {
       return { success: true };
     },
   },
-} as unknown as SqlProAPI;
+};

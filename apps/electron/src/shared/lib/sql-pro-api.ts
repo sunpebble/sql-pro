@@ -233,9 +233,47 @@ import type {
   UpdateRendererStateResponse,
 } from '@shared/types/renderer-store';
 import type { UIMessage } from 'ai';
-import { IPC_CHANNELS } from '@shared/types';
-import { AGENT_IPC_CHANNELS } from '@shared/types/agent';
-import { RENDERER_STORE_CHANNELS } from '@shared/types/renderer-store';
+import { dataChannels as domainDataChannels } from '@shared/domains/data/channels';
+// Domain channel imports (migration: replaces legacy IPC_CHANNELS)
+import {
+  connectionChannels,
+  imageChannels,
+  vectorChannels,
+  videoChannels,
+} from '@shared/domains/database/channels';
+import {
+  backupChannels,
+  exportChannels,
+} from '@shared/domains/export/channels';
+import { licenseChannels, proChannels } from '@shared/domains/license/channels';
+import { pluginChannels } from '@shared/domains/plugin/channels';
+import {
+  folderChannels,
+  preferencesChannels,
+  profileChannels,
+} from '@shared/domains/profile/channels';
+import {
+  changesChannels,
+  historyChannels,
+  queryChannels,
+  sqlLogChannels,
+} from '@shared/domains/query/channels';
+import { schemaChannels as domainSchemaChannels,
+  schemaComparisonChannels,
+  schemaSnapshotChannels } from '@shared/domains/schema/channels';
+import { sshChannels } from '@shared/domains/ssh/channels';
+import {
+  memoryChannels,
+  rendererStoreChannels,
+} from '@shared/domains/storage/channels';
+import {
+  dialogChannels,
+  systemChannels as domainSystemChannels,
+  menuChannels,
+  passwordChannels,
+  updateChannels,
+  windowChannels,
+} from '@shared/domains/system/channels';
 
 /** IPC bridge injected by Electron preload or web mocks. */
 export interface SqlProApiDeps {
@@ -253,134 +291,134 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
 
   const updateNamespace = {
     check: (silent = true): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_CHECK, silent),
+      invoke(updateChannels.check.name, silent),
     download: (): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_DOWNLOAD),
+      invoke(updateChannels.download.name),
     install: (): Promise<{ success: boolean; error?: string }> =>
-      invoke(IPC_CHANNELS.UPDATE_INSTALL),
+      invoke(updateChannels.install.name),
   };
 
   const systemNamespace = {
     showItemInFolder: (
       request: ShowItemInFolderRequest
     ): Promise<ShowItemInFolderResponse> =>
-      invoke(IPC_CHANNELS.SYSTEM_SHOW_ITEM_IN_FOLDER, request),
+      invoke(domainSystemChannels.showItemInFolder.name, request),
     openExternal: (
       request: OpenExternalRequest
     ): Promise<OpenExternalResponse> =>
-      invoke(IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL, request),
+      invoke(domainSystemChannels.openExternal.name, request),
   };
 
   const pluginNamespace = {
     list: (request?: ListPluginsRequest): Promise<ListPluginsResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_LIST, request || {}),
+      invoke(pluginChannels.list.name, request || {}),
     get: (request: GetPluginRequest): Promise<GetPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_GET, request),
+      invoke(pluginChannels.list.name, request),
     install: (request: InstallPluginRequest): Promise<InstallPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_INSTALL, request),
+      invoke(pluginChannels.install.name, request),
     uninstall: (
       request: UninstallPluginRequest
     ): Promise<UninstallPluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_UNINSTALL, request),
+      invoke(pluginChannels.uninstall.name, request),
     enable: (request: EnablePluginRequest): Promise<EnablePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_ENABLE, request),
+      invoke(pluginChannels.enable.name, request),
     disable: (request: DisablePluginRequest): Promise<DisablePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_DISABLE, request),
+      invoke(pluginChannels.disable.name, request),
     update: (request: UpdatePluginRequest): Promise<UpdatePluginResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_UPDATE, request),
+      invoke(pluginChannels.list.name, request),
     fetchMarketplace: (
       request?: FetchMarketplaceRequest
     ): Promise<FetchMarketplaceResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_FETCH_MARKETPLACE, request || {}),
+      invoke(pluginChannels.list.name, request || {}),
     checkUpdates: (
       request: CheckUpdatesRequest
     ): Promise<CheckUpdatesResponse> =>
-      invoke(IPC_CHANNELS.PLUGIN_CHECK_UPDATES, request),
+      invoke(pluginChannels.list.name, request),
     onEvent: (callback: (event: PluginEvent) => void): (() => void) => {
       const handler = (_event: unknown, pluginEvent: PluginEvent) =>
         callback(pluginEvent);
-      on(IPC_CHANNELS.PLUGIN_EVENT, handler);
-      return () => off(IPC_CHANNELS.PLUGIN_EVENT, handler);
+      on(pluginChannels.onEvent.name, handler);
+      return () => off(pluginChannels.onEvent.name, handler);
     },
   };
 
   return {
-    // Database operations
+    // Database operations (migrated to new IpcHandler-based system via domain channels)
     db: {
       open: (request: OpenDatabaseRequest): Promise<OpenDatabaseResponse> =>
-        invoke(IPC_CHANNELS.DB_OPEN, request),
+        invoke(connectionChannels.open.name, request),
       close: (request: CloseDatabaseRequest): Promise<CloseDatabaseResponse> =>
-        invoke(IPC_CHANNELS.DB_CLOSE, request),
+        invoke(connectionChannels.close.name, request),
       getSchema: (request: GetSchemaRequest): Promise<GetSchemaResponse> =>
-        invoke(IPC_CHANNELS.DB_GET_SCHEMA, request),
+        invoke(domainSchemaChannels.get.name, request),
       getSchemaList: (
         request: GetSchemaListRequest
       ): Promise<GetSchemaListResponse> =>
-        invoke(IPC_CHANNELS.DB_GET_SCHEMA_LIST, request),
+        invoke(domainSchemaChannels.getList.name, request),
       getTableDetails: (
         request: GetTableDetailsRequest
       ): Promise<GetTableDetailsResponse> =>
-        invoke(IPC_CHANNELS.DB_GET_TABLE_DETAILS, request),
+        invoke(domainSchemaChannels.getTableDetails.name, request),
       getTableData: (
         request: GetTableDataRequest
       ): Promise<GetTableDataResponse> =>
-        invoke(IPC_CHANNELS.DB_GET_TABLE_DATA, request),
+        invoke(domainDataChannels.getTableData.name, request),
       getTableRowRange: (
         request: GetTableRowRangeRequest
       ): Promise<GetTableRowRangeResponse> =>
-        invoke(IPC_CHANNELS.DB_GET_TABLE_ROW_RANGE, request),
+        invoke(domainDataChannels.getTableRowRange.name, request),
       executeQuery: (
         request: ExecuteQueryRequest
       ): Promise<ExecuteQueryResponse> =>
-        invoke(IPC_CHANNELS.DB_EXECUTE_QUERY, request),
+        invoke(queryChannels.execute.name, request),
       validateChanges: (
         request: ValidateChangesRequest
       ): Promise<ValidateChangesResponse> =>
-        invoke(IPC_CHANNELS.DB_VALIDATE_CHANGES, request),
+        invoke(changesChannels.validate.name, request),
       applyChanges: (
         request: ApplyChangesRequest
       ): Promise<ApplyChangesResponse> =>
-        invoke(IPC_CHANNELS.DB_APPLY_CHANGES, request),
+        invoke(changesChannels.apply.name, request),
       analyzeQueryPlan: (
         request: AnalyzeQueryPlanRequest
       ): Promise<AnalyzeQueryPlanResponse> =>
-        invoke(IPC_CHANNELS.DB_ANALYZE_PLAN, request),
+        invoke(queryChannels.analyzePlan.name, request),
       testConnection: (
         request: TestConnectionRequest
       ): Promise<TestConnectionResponse> =>
-        invoke(IPC_CHANNELS.DB_TEST_CONNECTION, request),
+        invoke(connectionChannels.testConnection.name, request),
       changePassword: (
         request: ChangePasswordRequest
       ): Promise<ChangePasswordResponse> =>
-        invoke(IPC_CHANNELS.DB_CHANGE_PASSWORD, request),
+        invoke(connectionChannels.changePassword.name, request),
       getColumnDistribution: (
         request: GetColumnDistributionRequest
       ): Promise<GetColumnDistributionResponse> =>
-        invoke(IPC_CHANNELS.TABLE_GET_COLUMN_DISTRIBUTION, request),
+        invoke(domainDataChannels.getColumnDistribution.name, request),
       // Qdrant Vector Search operations
       vectorSearch: (
         request: VectorSearchRequest
       ): Promise<VectorSearchResponse> =>
-        invoke(IPC_CHANNELS.DB_VECTOR_SEARCH, request),
+        invoke(vectorChannels.search.name, request),
       batchVectorSearch: (
         request: BatchVectorSearchRequest
       ): Promise<BatchVectorSearchResponse> =>
-        invoke(IPC_CHANNELS.DB_BATCH_VECTOR_SEARCH, request),
+        invoke(vectorChannels.batchSearch.name, request),
       searchSimilar: (
         request: SearchSimilarRequest
       ): Promise<SearchSimilarResponse> =>
-        invoke(IPC_CHANNELS.DB_SEARCH_SIMILAR, request),
+        invoke(vectorChannels.searchSimilar.name, request),
       getPointsWithVectors: (
         request: GetPointsWithVectorsRequest
       ): Promise<GetPointsWithVectorsResponse> =>
-        invoke(IPC_CHANNELS.DB_GET_POINTS_WITH_VECTORS, request),
+        invoke(vectorChannels.getPointsWithVectors.name, request),
       onFileChanged: (
         callback: (event: FileChangeEvent) => void
       ): (() => void) => {
         const handler = (_event: unknown, fileChangeEvent: FileChangeEvent) =>
           callback(fileChangeEvent);
-        on(IPC_CHANNELS.DB_FILE_CHANGED, handler);
-        return () => off(IPC_CHANNELS.DB_FILE_CHANGED, handler);
+        on(connectionChannels.fileChanged.name, handler);
+        return () => off(connectionChannels.fileChanged.name, handler);
       },
     },
 
@@ -389,56 +427,56 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       openFile: (
         request?: OpenFileDialogRequest
       ): Promise<OpenFileDialogResponse> =>
-        invoke(IPC_CHANNELS.DIALOG_OPEN_FILE, request || {}),
+        invoke(dialogChannels.openFile.name, request || {}),
       saveFile: (
         request?: SaveFileDialogRequest
       ): Promise<SaveFileDialogResponse> =>
-        invoke(IPC_CHANNELS.DIALOG_SAVE_FILE, request || {}),
+        invoke(dialogChannels.saveFile.name, request || {}),
       writeFile: (request: WriteFileRequest): Promise<WriteFileResponse> =>
-        invoke(IPC_CHANNELS.FILE_WRITE, request),
+        invoke(dialogChannels.writeFile.name, request),
     },
 
     // Export operations
     export: {
       data: (request: ExportRequest): Promise<ExportResponse> =>
-        invoke(IPC_CHANNELS.EXPORT_DATA, request),
+        invoke(exportChannels.data.name, request),
     },
 
     // Backup operations
     backup: {
       create: (request: CreateBackupRequest): Promise<CreateBackupResponse> =>
-        invoke(IPC_CHANNELS.BACKUP_CREATE, request),
+        invoke(backupChannels.create.name, request),
       restore: (
         request: RestoreBackupRequest
       ): Promise<RestoreBackupResponse> =>
-        invoke(IPC_CHANNELS.BACKUP_RESTORE, request),
+        invoke(backupChannels.restore.name, request),
       list: (request: ListBackupsRequest): Promise<ListBackupsResponse> =>
-        invoke(IPC_CHANNELS.BACKUP_LIST, request),
+        invoke(backupChannels.list.name, request),
       delete: (request: DeleteBackupRequest): Promise<DeleteBackupResponse> =>
-        invoke(IPC_CHANNELS.BACKUP_DELETE, request),
+        invoke(backupChannels.delete.name, request),
     },
 
     // App operations
     app: {
       getRecentConnections: (): Promise<GetRecentConnectionsResponse> =>
-        invoke(IPC_CHANNELS.APP_GET_RECENT_CONNECTIONS),
+        invoke(preferencesChannels.getRecentConnections.name),
       getPreferences: (): Promise<GetPreferencesResponse> =>
-        invoke(IPC_CHANNELS.APP_GET_PREFERENCES),
+        invoke(preferencesChannels.get.name),
       setPreferences: (
         request: SetPreferencesRequest
       ): Promise<SetPreferencesResponse> =>
-        invoke(IPC_CHANNELS.APP_SET_PREFERENCES, request),
+        invoke(preferencesChannels.set.name, request),
       onBeforeQuit: (callback: () => void): (() => void) => {
         const handler = (_event: unknown) => callback();
-        on(IPC_CHANNELS.PREVENT_QUIT, handler);
-        return () => off(IPC_CHANNELS.PREVENT_QUIT, handler);
+        on('app:prevent-quit', handler);
+        return () => off('app:prevent-quit', handler);
       },
       confirmQuit: (shouldQuit: boolean): Promise<{ success: boolean }> =>
-        invoke(IPC_CHANNELS.APP_CONFIRM_QUIT, { shouldQuit }),
+        invoke('app:confirm-quit', { shouldQuit }),
       removeRecentConnection: (request: {
         connectionId: string;
       }): Promise<{ success: boolean }> =>
-        invoke(IPC_CHANNELS.APP_REMOVE_RECENT_CONNECTION, request),
+        invoke(preferencesChannels.removeConnection.name, request),
     },
 
     // Unsaved changes operations
@@ -446,23 +484,23 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       check: (
         request: CheckUnsavedChangesRequest
       ): Promise<CheckUnsavedChangesResponse> =>
-        invoke(IPC_CHANNELS.UNSAVED_CHANGES_CHECK, request),
+        invoke(changesChannels.checkUnsaved.name, request),
     },
 
     // Password storage operations
     password: {
       isAvailable: (): Promise<IsPasswordStorageAvailableResponse> =>
-        invoke(IPC_CHANNELS.PASSWORD_IS_AVAILABLE),
+        invoke(passwordChannels.isAvailable.name),
       save: (request: SavePasswordRequest): Promise<SavePasswordResponse> =>
-        invoke(IPC_CHANNELS.PASSWORD_SAVE, request),
+        invoke(passwordChannels.save.name, request),
       get: (request: GetPasswordRequest): Promise<GetPasswordResponse> =>
-        invoke(IPC_CHANNELS.PASSWORD_GET, request),
+        invoke(passwordChannels.get.name, request),
       has: (request: HasPasswordRequest): Promise<HasPasswordResponse> =>
-        invoke(IPC_CHANNELS.PASSWORD_HAS, request),
+        invoke(passwordChannels.has.name, request),
       remove: (
         request: RemovePasswordRequest
       ): Promise<RemovePasswordResponse> =>
-        invoke(IPC_CHANNELS.PASSWORD_REMOVE, request),
+        invoke(passwordChannels.remove.name, request),
     },
 
     // Connection profile operations (T010)
@@ -470,52 +508,52 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       update: (
         request: UpdateConnectionRequest
       ): Promise<UpdateConnectionResponse> =>
-        invoke(IPC_CHANNELS.CONNECTION_UPDATE, request),
+        invoke(preferencesChannels.updateConnection.name, request),
       remove: (
         request: RemoveConnectionRequest
       ): Promise<RemoveConnectionResponse> =>
-        invoke(IPC_CHANNELS.CONNECTION_REMOVE, request),
+        invoke(preferencesChannels.removeConnection.name, request),
     },
 
     // Profile operations
     profile: {
       save: (request: SaveProfileRequest): Promise<SaveProfileResponse> =>
-        invoke(IPC_CHANNELS.PROFILE_SAVE, request),
+        invoke(profileChannels.save.name, request),
       update: (request: UpdateProfileRequest): Promise<UpdateProfileResponse> =>
-        invoke(IPC_CHANNELS.PROFILE_UPDATE, request),
+        invoke(profileChannels.update.name, request),
       delete: (request: DeleteProfileRequest): Promise<DeleteProfileResponse> =>
-        invoke(IPC_CHANNELS.PROFILE_DELETE, request),
+        invoke(profileChannels.delete.name, request),
       getAll: (request: GetProfilesRequest): Promise<GetProfilesResponse> =>
-        invoke(IPC_CHANNELS.PROFILE_GET_ALL, request),
+        invoke(profileChannels.getAll.name, request),
       export: (
         request: ExportProfilesRequest
       ): Promise<ExportProfilesResponse> =>
-        invoke(IPC_CHANNELS.PROFILE_EXPORT, request),
+        invoke(profileChannels.export.name, request),
       import: (
         request: ImportProfilesRequest
       ): Promise<ImportProfilesResponse> =>
-        invoke(IPC_CHANNELS.PROFILE_IMPORT, request),
+        invoke(profileChannels.import.name, request),
     },
 
     // Folder operations
     folder: {
       create: (request: CreateFolderRequest): Promise<CreateFolderResponse> =>
-        invoke(IPC_CHANNELS.FOLDER_CREATE, request),
+        invoke(folderChannels.create.name, request),
       update: (request: UpdateFolderRequest): Promise<UpdateFolderResponse> =>
-        invoke(IPC_CHANNELS.FOLDER_UPDATE, request),
+        invoke(folderChannels.update.name, request),
       delete: (request: DeleteFolderRequest): Promise<DeleteFolderResponse> =>
-        invoke(IPC_CHANNELS.FOLDER_DELETE, request),
+        invoke(folderChannels.delete.name, request),
       getAll: (request: GetFoldersRequest): Promise<GetFoldersResponse> =>
-        invoke(IPC_CHANNELS.FOLDER_GET_ALL, request),
+        invoke(folderChannels.getAll.name, request),
     },
 
     // File utilities
     file: {
       getPathForFile: (file: File): string => getPathForFile(file),
       exists: (request: FileExistsRequest): Promise<FileExistsResponse> =>
-        invoke(IPC_CHANNELS.FILE_EXISTS, request),
+        invoke(dialogChannels.writeFile.name, request),
       write: (request: WriteFileRequest): Promise<WriteFileResponse> =>
-        invoke(IPC_CHANNELS.FILE_WRITE, request),
+        invoke(dialogChannels.writeFile.name, request),
     },
 
     // Query history operations
@@ -523,32 +561,32 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       get: (
         request: GetQueryHistoryRequest
       ): Promise<GetQueryHistoryResponse> =>
-        invoke(IPC_CHANNELS.HISTORY_GET, request),
+        invoke(historyChannels.get.name, request),
       save: (
         request: SaveQueryHistoryRequest
       ): Promise<SaveQueryHistoryResponse> =>
-        invoke(IPC_CHANNELS.HISTORY_SAVE, request),
+        invoke(historyChannels.save.name, request),
       delete: (
         request: DeleteQueryHistoryRequest
       ): Promise<DeleteQueryHistoryResponse> =>
-        invoke(IPC_CHANNELS.HISTORY_DELETE, request),
+        invoke(historyChannels.delete.name, request),
       clear: (
         request: ClearQueryHistoryRequest
       ): Promise<ClearQueryHistoryResponse> =>
-        invoke(IPC_CHANNELS.HISTORY_CLEAR, request),
+        invoke(historyChannels.clear.name, request),
     },
 
     // SQL log operations
     sqlLog: {
       get: (request: GetSqlLogsRequest): Promise<GetSqlLogsResponse> =>
-        invoke(IPC_CHANNELS.SQL_LOG_GET, request),
+        invoke(sqlLogChannels.get.name, request),
       clear: (request: ClearSqlLogsRequest): Promise<ClearSqlLogsResponse> =>
-        invoke(IPC_CHANNELS.SQL_LOG_CLEAR, request),
+        invoke(sqlLogChannels.clear.name, request),
       onEntry: (callback: (entry: SqlLogEntry) => void): (() => void) => {
         const handler = (_event: unknown, entry: SqlLogEntry) =>
           callback(entry);
-        on(IPC_CHANNELS.SQL_LOG_ENTRY, handler);
-        return () => off(IPC_CHANNELS.SQL_LOG_ENTRY, handler);
+        on(sqlLogChannels.onEntry.name, handler);
+        return () => off(sqlLogChannels.onEntry.name, handler);
       },
     },
 
@@ -557,58 +595,54 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       onAction: (callback: (action: MenuAction) => void): (() => void) => {
         const handler = (_event: unknown, action: MenuAction) =>
           callback(action);
-        on(IPC_CHANNELS.MENU_ACTION, handler);
-        return () => off(IPC_CHANNELS.MENU_ACTION, handler);
+        on(menuChannels.onAction.name, handler);
+        return () => off(menuChannels.onAction.name, handler);
       },
       updateShortcuts: (
         request: ShortcutsUpdatePayload
-      ): Promise<{ success: boolean }> =>
-        invoke(IPC_CHANNELS.SHORTCUTS_UPDATE, request),
+      ): Promise<{ success: boolean }> => invoke('shortcuts:update', request),
     },
 
     // Keyboard shortcuts
     shortcuts: {
       update: (
         request: ShortcutsUpdatePayload
-      ): Promise<{ success: boolean }> =>
-        invoke(IPC_CHANNELS.SHORTCUTS_UPDATE, request),
+      ): Promise<{ success: boolean }> => invoke('shortcuts:update', request),
     },
 
     // Language
     language: {
       update: (request: {
         language: 'en' | 'zh';
-      }): Promise<{ success: boolean }> =>
-        invoke(IPC_CHANNELS.LANGUAGE_UPDATE, request),
+      }): Promise<{ success: boolean }> => invoke('language:update', request),
     },
 
     // AI Agent operations (new unified agent)
     agent: {
       // Settings
       getSettings: (): Promise<GetSettingsResponse> =>
-        invoke(AGENT_IPC_CHANNELS.SETTINGS_GET),
+        invoke('agent:settings:get'),
       saveSettings: (request: {
         settings: Partial<AgentSettings>;
       }): Promise<SaveSettingsResponse> =>
-        invoke(AGENT_IPC_CHANNELS.SETTINGS_SAVE, request),
+        invoke('agent:settings:save', request),
 
       // Chat
       sendChat: (request: {
         connectionId: string;
         sessionId: string;
         messages: UIMessage[];
-      }): Promise<ChatSendResponse> =>
-        invoke(AGENT_IPC_CHANNELS.CHAT_SEND, request),
+      }): Promise<ChatSendResponse> => invoke('agent:chat:send', request),
       cancelChat: (request: {
         connectionId: string;
         sessionId: string;
       }): Promise<Record<string, never>> =>
-        invoke(AGENT_IPC_CHANNELS.CHAT_CANCEL, request),
+        invoke('agent:chat:cancel', request),
       onChatStream: (
         streamId: string,
         callback: (chunk: unknown) => void
       ): (() => void) => {
-        const channel = `${AGENT_IPC_CHANNELS.CHAT_STREAM}:${streamId}`;
+        const channel = `agent:chat:stream:${streamId}`;
         const handler = (_event: unknown, chunk: unknown) => callback(chunk);
         on(channel, handler);
         return () => off(channel, handler);
@@ -618,28 +652,27 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       getSessions: (request: {
         connectionId: string;
       }): Promise<GetSessionsResponse> =>
-        invoke(AGENT_IPC_CHANNELS.HISTORY_GET_SESSIONS, request),
+        invoke('agent:history:get-sessions', request),
       getSession: (request: {
         connectionId: string;
         sessionId: string;
-      }): Promise<GetHistoryResponse> =>
-        invoke(AGENT_IPC_CHANNELS.HISTORY_GET, request),
+      }): Promise<GetHistoryResponse> => invoke('agent:history:get', request),
       deleteSession: (request: {
         connectionId: string;
         sessionId: string;
       }): Promise<Record<string, never>> =>
-        invoke(AGENT_IPC_CHANNELS.HISTORY_DELETE_SESSION, request),
+        invoke('agent:history:delete-session', request),
       clearHistory: (request: {
         connectionId: string;
       }): Promise<Record<string, never>> =>
-        invoke(AGENT_IPC_CHANNELS.HISTORY_CLEAR, request),
+        invoke('agent:history:clear', request),
 
       // Natural Language Query
       nlGenerateSQL: (
         connectionId: string,
         naturalLanguage: string
       ): Promise<NLGenerateSQLResponse> =>
-        invoke(AGENT_IPC_CHANNELS.NL_GENERATE_SQL, {
+        invoke('agent:nl:generate-sql', {
           connectionId,
           naturalLanguage,
         }),
@@ -647,7 +680,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         connectionId: string,
         sql: string
       ): Promise<NLExplainSQLResponse> =>
-        invoke(AGENT_IPC_CHANNELS.NL_EXPLAIN_SQL, {
+        invoke('agent:nl:explain-sql', {
           connectionId,
           sql,
         }),
@@ -655,7 +688,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         connectionId: string,
         sql: string
       ): Promise<NLOptimizeSQLResponse> =>
-        invoke(AGENT_IPC_CHANNELS.NL_OPTIMIZE_SQL, {
+        invoke('agent:nl:optimize-sql', {
           connectionId,
           sql,
         }),
@@ -664,11 +697,11 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
     // Pro tier operations
     pro: {
       getStatus: (): Promise<ProGetStatusResponse> =>
-        invoke(IPC_CHANNELS.PRO_GET_STATUS),
+        invoke(proChannels.getStatus.name),
       activate: (request: ProActivateRequest): Promise<ProActivateResponse> =>
-        invoke(IPC_CHANNELS.PRO_ACTIVATE, request),
+        invoke(proChannels.activate.name, request),
       deactivate: (): Promise<ProDeactivateResponse> =>
-        invoke(IPC_CHANNELS.PRO_DEACTIVATE),
+        invoke(proChannels.deactivate.name),
     },
 
     // License operations (Stripe subscription)
@@ -679,7 +712,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         platform?: string;
         hostname?: string;
         error?: string;
-      }> => invoke(IPC_CHANNELS.LICENSE_GET_MACHINE_ID),
+      }> => invoke(licenseChannels.getMachineId.name),
 
       createCheckout: (request: {
         email: string;
@@ -688,7 +721,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         success: boolean;
         sessionId?: string;
         error?: string;
-      }> => invoke(IPC_CHANNELS.LICENSE_CREATE_CHECKOUT, request),
+      }> => invoke(licenseChannels.createCheckout.name, request),
 
       activate: (request: {
         email: string;
@@ -708,7 +741,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
           hostname: string;
           activatedAt: string;
         }>;
-      }> => invoke(IPC_CHANNELS.LICENSE_ACTIVATE, request),
+      }> => invoke(licenseChannels.activate.name, request),
 
       verify: (): Promise<{
         valid: boolean;
@@ -721,17 +754,17 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         cached?: boolean;
         offline?: boolean;
         error?: string;
-      }> => invoke(IPC_CHANNELS.LICENSE_VERIFY),
+      }> => invoke(licenseChannels.verify.name),
 
       deactivate: (): Promise<{
         success: boolean;
         warning?: string;
-      }> => invoke(IPC_CHANNELS.LICENSE_DEACTIVATE),
+      }> => invoke(licenseChannels.deactivate.name),
 
       getPortalUrl: (): Promise<{
         success: boolean;
         error?: string;
-      }> => invoke(IPC_CHANNELS.LICENSE_GET_PORTAL_URL),
+      }> => invoke(licenseChannels.getPortalUrl.name),
     },
 
     // Memory monitoring operations
@@ -739,26 +772,26 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       getStats: (
         request?: GetMemoryStatsRequest
       ): Promise<GetMemoryStatsResponse> =>
-        invoke(IPC_CHANNELS.MEMORY_GET_STATS, request),
+        invoke(memoryChannels.getStats.name, request),
       subscribe: (
         request?: MemorySubscribeRequest
       ): Promise<MemorySubscribeResponse> =>
-        invoke(IPC_CHANNELS.MEMORY_SUBSCRIBE, request),
+        invoke(memoryChannels.subscribe.name, request),
       unsubscribe: (
         request: MemoryUnsubscribeRequest
       ): Promise<MemoryUnsubscribeResponse> =>
-        invoke(IPC_CHANNELS.MEMORY_UNSUBSCRIBE, request),
+        invoke(memoryChannels.unsubscribe.name, request),
       triggerGC: (
         request?: MemoryTriggerGCRequest
       ): Promise<MemoryTriggerGCResponse> =>
-        invoke(IPC_CHANNELS.MEMORY_TRIGGER_GC, request),
+        invoke(memoryChannels.triggerGC.name, request),
       onStatsUpdate: (
         callback: (event: MemoryStatsUpdateEvent) => void
       ): (() => void) => {
         const handler = (_event: unknown, statsEvent: MemoryStatsUpdateEvent) =>
           callback(statsEvent);
-        on(IPC_CHANNELS.MEMORY_STATS_UPDATE, handler);
-        return () => off(IPC_CHANNELS.MEMORY_STATS_UPDATE, handler);
+        on(memoryChannels.statsUpdate.name, handler);
+        return () => off(memoryChannels.statsUpdate.name, handler);
       },
       onPressureChange: (
         callback: (event: MemoryPressureChangeEvent) => void
@@ -767,8 +800,8 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
           _event: unknown,
           pressureEvent: MemoryPressureChangeEvent
         ) => callback(pressureEvent);
-        on(IPC_CHANNELS.MEMORY_PRESSURE_CHANGE, handler);
-        return () => off(IPC_CHANNELS.MEMORY_PRESSURE_CHANGE, handler);
+        on(memoryChannels.pressureChange.name, handler);
+        return () => off(memoryChannels.pressureChange.name, handler);
       },
     },
 
@@ -781,11 +814,11 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       }): Promise<
         | { success: true; subscriptionId: string }
         | { success: false; error: string }
-      > => invoke(IPC_CHANNELS.PG_NOTIFY_SUBSCRIBE, request),
+      > => invoke('pg-notify:subscribe', request),
       unsubscribe: (request: {
         subscriptionId: string;
       }): Promise<{ success: true } | { success: false; error: string }> =>
-        invoke(IPC_CHANNELS.PG_NOTIFY_UNSUBSCRIBE, request),
+        invoke('pg-notify:unsubscribe', request),
       getSubscriptions: (request: {
         connectionId: string;
       }): Promise<{
@@ -797,7 +830,7 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
           table?: string;
           createdAt: number;
         }>;
-      }> => invoke(IPC_CHANNELS.PG_NOTIFY_GET_SUBSCRIPTIONS, request),
+      }> => invoke('pg-notify:get-subscriptions', request),
       onEvent: (
         callback: (event: {
           subscriptionId: string;
@@ -819,23 +852,23 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
             timestamp: number;
           }
         ) => callback(notifyEvent);
-        on(IPC_CHANNELS.PG_NOTIFY_EVENT, handler);
-        return () => off(IPC_CHANNELS.PG_NOTIFY_EVENT, handler);
+        on('pg-notify:event', handler);
+        return () => off('pg-notify:event', handler);
       },
     },
 
     // Window operations
     window: {
       create: (): Promise<CreateWindowResponse> =>
-        invoke(IPC_CHANNELS.WINDOW_CREATE),
+        invoke(windowChannels.create.name),
       close: (request?: CloseWindowRequest): Promise<CloseWindowResponse> =>
-        invoke(IPC_CHANNELS.WINDOW_CLOSE, request || {}),
+        invoke(windowChannels.close.name, request || {}),
       focus: (request: FocusWindowRequest): Promise<FocusWindowResponse> =>
-        invoke(IPC_CHANNELS.WINDOW_FOCUS, request),
+        invoke(windowChannels.focus.name, request),
       getAll: (): Promise<GetAllWindowsResponse> =>
-        invoke(IPC_CHANNELS.WINDOW_GET_ALL),
+        invoke(windowChannels.getAll.name),
       getCurrent: (): Promise<GetCurrentWindowResponse> =>
-        invoke(IPC_CHANNELS.WINDOW_GET_CURRENT),
+        invoke(windowChannels.getCurrent.name),
     },
 
     // System operations
@@ -859,17 +892,17 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       save: (
         request: SaveSchemaSnapshotRequest
       ): Promise<SaveSchemaSnapshotResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_SNAPSHOT_SAVE, request),
+        invoke(schemaSnapshotChannels.save.name, request),
       get: (
         request: GetSchemaSnapshotRequest
       ): Promise<GetSchemaSnapshotResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_SNAPSHOT_GET, request),
+        invoke(schemaSnapshotChannels.get.name, request),
       getAll: (): Promise<GetSchemaSnapshotsResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_SNAPSHOT_GET_ALL),
+        invoke(schemaSnapshotChannels.getAll.name),
       delete: (
         request: DeleteSchemaSnapshotRequest
       ): Promise<DeleteSchemaSnapshotResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_SNAPSHOT_DELETE, request),
+        invoke(schemaSnapshotChannels.delete.name, request),
     },
 
     // Comparison operations
@@ -877,23 +910,26 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       compareConnections: (
         request: CompareConnectionsRequest
       ): Promise<CompareConnectionsResponse> =>
-        invoke(IPC_CHANNELS.COMPARISON_COMPARE_CONNECTIONS, request),
+        invoke(schemaComparisonChannels.compareConnections.name, request),
       compareConnectionToSnapshot: (
         request: CompareConnectionToSnapshotRequest
       ): Promise<CompareConnectionToSnapshotResponse> =>
-        invoke(IPC_CHANNELS.COMPARISON_COMPARE_CONNECTION_TO_SNAPSHOT, request),
+        invoke(
+          schemaComparisonChannels.compareConnectionToSnapshot.name,
+          request
+        ),
       compareSnapshots: (
         request: CompareSnapshotsRequest
       ): Promise<CompareSnapshotsResponse> =>
-        invoke(IPC_CHANNELS.COMPARISON_COMPARE_SNAPSHOTS, request),
+        invoke(schemaComparisonChannels.compareSnapshots.name, request),
       compareTables: (
         request: CompareTablesRequest
       ): Promise<CompareTablesResponse> =>
-        invoke(IPC_CHANNELS.COMPARISON_COMPARE_TABLES, request),
+        invoke(schemaComparisonChannels.compareTables.name, request),
       exportComparisonReport: (
         request: ExportComparisonReportRequest
       ): Promise<ExportComparisonReportResponse> =>
-        invoke(IPC_CHANNELS.COMPARISON_EXPORT_REPORT, request),
+        invoke(schemaComparisonChannels.exportReport.name, request),
     },
 
     // Migration operations
@@ -901,27 +937,27 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       generateSQL: (
         request: GenerateMigrationSQLRequest
       ): Promise<GenerateMigrationSQLResponse> =>
-        invoke(IPC_CHANNELS.MIGRATION_GENERATE_SQL, request),
+        invoke(schemaComparisonChannels.generateMigrationSQL.name, request),
       generateSyncSQL: (
         request: GenerateSyncSQLRequest
       ): Promise<GenerateSyncSQLResponse> =>
-        invoke(IPC_CHANNELS.MIGRATION_GENERATE_SYNC_SQL, request),
+        invoke(schemaComparisonChannels.generateSyncSQL.name, request),
     },
 
     // Import/export bundle operations
     bundle: {
       export: (request: ExportBundleRequest): Promise<ExportBundleResponse> =>
-        invoke(IPC_CHANNELS.BUNDLE_EXPORT, request),
+        invoke('bundle:export', request),
       import: (request: ImportBundleRequest): Promise<ImportBundleResponse> =>
-        invoke(IPC_CHANNELS.BUNDLE_IMPORT, request),
+        invoke('bundle:import', request),
     },
 
     // Schema operations
     schema: {
       export: (request: ExportSchemaRequest): Promise<ExportSchemaResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_EXPORT, request),
+        invoke(domainSchemaChannels.export.name, request),
       import: (request: ImportSchemaRequest): Promise<ImportSchemaResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_IMPORT, request),
+        invoke(domainSchemaChannels.import.name, request),
     },
 
     // Plugin operations
@@ -937,19 +973,19 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       get: <K extends keyof RendererStoreSchema>(
         request: GetRendererStateRequest<K>
       ): Promise<GetRendererStateResponse<RendererStoreSchema[K]>> =>
-        invoke(RENDERER_STORE_CHANNELS.GET, request),
+        invoke(rendererStoreChannels.get.name, request),
       set: <K extends keyof RendererStoreSchema>(
         request: SetRendererStateRequest<K>
       ): Promise<SetRendererStateResponse> =>
-        invoke(RENDERER_STORE_CHANNELS.SET, request),
+        invoke(rendererStoreChannels.set.name, request),
       update: <K extends keyof RendererStoreSchema>(
         request: UpdateRendererStateRequest<K>
       ): Promise<UpdateRendererStateResponse> =>
-        invoke(RENDERER_STORE_CHANNELS.UPDATE, request),
+        invoke(rendererStoreChannels.update.name, request),
       reset: <K extends keyof RendererStoreSchema>(
         request: ResetRendererStateRequest<K>
       ): Promise<SetRendererStateResponse> =>
-        invoke(RENDERER_STORE_CHANNELS.RESET, request),
+        invoke(rendererStoreChannels.reset.name, request),
     },
 
     // Image operations (proxy and metadata)
@@ -957,26 +993,26 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       getMetadata: (request: {
         url: string;
       }): Promise<ImageGetMetadataResponse> =>
-        invoke(IPC_CHANNELS.IMAGE_GET_METADATA, request),
+        invoke(imageChannels.getMetadata.name, request),
       getFileMetadata: (request: {
         path: string;
       }): Promise<ImageGetFileMetadataResponse> =>
-        invoke(IPC_CHANNELS.IMAGE_GET_FILE_METADATA, request),
+        invoke(imageChannels.getFileMetadata.name, request),
       getCacheStats: (): Promise<ImageGetCacheStatsResponse> =>
-        invoke(IPC_CHANNELS.IMAGE_GET_CACHE_STATS),
+        invoke(imageChannels.getCacheStats.name),
       clearCache: (): Promise<{ success: boolean }> =>
-        invoke(IPC_CHANNELS.IMAGE_CLEAR_CACHE),
+        invoke(imageChannels.clearCache.name),
       /** Check if URL is media (image or video) using HEAD request preflight */
       checkUrl: (request: { url: string }): Promise<ImageCheckUrlResponse> =>
-        invoke(IPC_CHANNELS.IMAGE_CHECK_URL, request),
+        invoke(imageChannels.checkUrl.name, request),
       /** Full validation: HEAD check + Sharp metadata extraction */
       validateUrl: (request: {
         url: string;
       }): Promise<ImageValidateUrlResponse> =>
-        invoke(IPC_CHANNELS.IMAGE_VALIDATE_URL, request),
+        invoke(imageChannels.validateUrl.name, request),
       /** Check if local file exists */
       checkFile: (request: { path: string }): Promise<ImageCheckFileResponse> =>
-        invoke(IPC_CHANNELS.IMAGE_CHECK_FILE, request),
+        invoke(imageChannels.checkFile.name, request),
     },
 
     // Video operations (ffprobe-based detection)
@@ -985,18 +1021,18 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       getMetadata: (request: {
         url: string;
       }): Promise<VideoGetMetadataResponse> =>
-        invoke(IPC_CHANNELS.VIDEO_GET_METADATA, request),
+        invoke(videoChannels.getMetadata.name, request),
       /** Check if URL is a video using HEAD request + magic bytes */
       checkUrl: (request: { url: string }): Promise<VideoCheckUrlResponse> =>
-        invoke(IPC_CHANNELS.VIDEO_CHECK_URL, request),
+        invoke(videoChannels.checkUrl.name, request),
       /** Full video validation using ffprobe */
       validateUrl: (request: {
         url: string;
       }): Promise<VideoValidateUrlResponse> =>
-        invoke(IPC_CHANNELS.VIDEO_VALIDATE_URL, request),
+        invoke(videoChannels.validateUrl.name, request),
       /** Check if local file is a video */
       checkFile: (request: { path: string }): Promise<VideoCheckFileResponse> =>
-        invoke(IPC_CHANNELS.VIDEO_CHECK_FILE, request),
+        invoke(videoChannels.checkFile.name, request),
     },
 
     // Database operations (extended)
@@ -1004,24 +1040,24 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       getDatabaseStats: (
         request: DatabaseConnectionIdRequest
       ): Promise<GetDatabaseStatsResponse> =>
-        invoke(IPC_CHANNELS.DATABASE_GET_STATS, request),
+        invoke(connectionChannels.getStats.name, request),
       vacuum: (
         request: DatabaseConnectionIdRequest
       ): Promise<DatabaseMaintenanceResponse> =>
-        invoke(IPC_CHANNELS.DATABASE_VACUUM, request),
+        invoke(connectionChannels.vacuum.name, request),
       analyze: (
         request: DatabaseConnectionIdRequest
       ): Promise<DatabaseMaintenanceResponse> =>
-        invoke(IPC_CHANNELS.DATABASE_ANALYZE, request),
+        invoke(connectionChannels.analyze.name, request),
       // Aliases for schema and query to match component usage
       getSchema: (connectionId: string): Promise<GetSchemaResponse> =>
-        invoke(IPC_CHANNELS.DB_GET_SCHEMA, { connectionId }),
+        invoke(domainSchemaChannels.get.name, { connectionId }),
       query: (
         connectionId: string,
         sql: string,
         params?: unknown[]
       ): Promise<ExecuteQueryResponse> =>
-        invoke(IPC_CHANNELS.DB_EXECUTE_QUERY, {
+        invoke(queryChannels.execute.name, {
           connectionId,
           query: sql,
           params,
@@ -1033,27 +1069,27 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       exportBundle: (
         request: ExportBundleRequest
       ): Promise<ExportBundleResponse> =>
-        invoke(IPC_CHANNELS.SHARING_EXPORT_BUNDLE, request),
+        invoke('sharing:export-bundle', request),
       importBundle: (
         request: ImportBundleRequest
       ): Promise<ImportBundleResponse> =>
-        invoke(IPC_CHANNELS.SHARING_IMPORT_BUNDLE, request),
+        invoke('sharing:import-bundle', request),
       exportQuery: (
         request: ExportQueryRequest
       ): Promise<ExportQueryResponse> =>
-        invoke(IPC_CHANNELS.SHARING_EXPORT_QUERY, request),
+        invoke('sharing:export-query', request),
       importQuery: (
         request: ImportQueryRequest
       ): Promise<ImportQueryResponse> =>
-        invoke(IPC_CHANNELS.SHARING_IMPORT_QUERY, request),
+        invoke('sharing:import-query', request),
       exportSchema: (
         request: ExportSchemaRequest
       ): Promise<ExportSchemaResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_EXPORT, request),
+        invoke(domainSchemaChannels.export.name, request),
       importSchema: (
         request: ImportSchemaRequest
       ): Promise<ImportSchemaResponse> =>
-        invoke(IPC_CHANNELS.SCHEMA_IMPORT, request),
+        invoke(domainSchemaChannels.import.name, request),
     },
 
     // Data diff operations
@@ -1061,11 +1097,11 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       generateSyncSQL: (
         request: GenerateSyncSQLRequest
       ): Promise<GenerateSyncSQLResponse> =>
-        invoke(IPC_CHANNELS.DATA_DIFF_GENERATE_SYNC_SQL, request),
+        invoke('data-diff:generate-sync-sql', request),
       compareTables: (
         request: CompareTablesRequest
       ): Promise<CompareTablesResponse> =>
-        invoke(IPC_CHANNELS.DATA_DIFF_COMPARE_TABLES, request),
+        invoke('data-diff:compare-tables', request),
     },
 
     // Schema comparison operations
@@ -1073,11 +1109,11 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
       exportReport: (
         request: ExportComparisonReportRequest
       ): Promise<ExportComparisonReportResponse> =>
-        invoke(IPC_CHANNELS.COMPARISON_EXPORT_REPORT, request),
+        invoke(schemaComparisonChannels.exportReport.name, request),
       generateMigration: (
         request: GenerateMigrationSQLRequest
       ): Promise<GenerateMigrationSQLResponse> =>
-        invoke(IPC_CHANNELS.GENERATE_MIGRATION_SQL, request),
+        invoke(schemaComparisonChannels.generateMigrationSQL.name, request),
     },
 
     // SSH tunnel operations
@@ -1086,28 +1122,28 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
         profileId: string,
         credentials: SSHCredentialsInput
       ): Promise<SSHSaveCredentialsResponse> =>
-        invoke(IPC_CHANNELS.SSH_SAVE_CREDENTIALS, { profileId, credentials }),
+        invoke(sshChannels.saveCredentials.name, { profileId, credentials }),
       hasCredentials: (profileId: string): Promise<SSHHasCredentialsResponse> =>
-        invoke(IPC_CHANNELS.SSH_HAS_CREDENTIALS, { profileId }),
+        invoke(sshChannels.hasCredentials.name, { profileId }),
       getCredentials: (profileId: string): Promise<SSHGetCredentialsResponse> =>
-        invoke(IPC_CHANNELS.SSH_GET_CREDENTIALS, { profileId }),
+        invoke(sshChannels.getCredentials.name, { profileId }),
       removeCredentials: (
         profileId: string
       ): Promise<SSHRemoveCredentialsResponse> =>
-        invoke(IPC_CHANNELS.SSH_REMOVE_CREDENTIALS, { profileId }),
+        invoke(sshChannels.removeCredentials.name, { profileId }),
       getTunnelStatus: (
         connectionId: string
       ): Promise<SSHGetTunnelStatusResponse> =>
-        invoke(IPC_CHANNELS.SSH_GET_TUNNEL_STATUS, { connectionId }),
+        invoke(sshChannels.getTunnelStatus.name, { connectionId }),
       closeTunnel: (connectionId: string): Promise<SSHCloseTunnelResponse> =>
-        invoke(IPC_CHANNELS.SSH_CLOSE_TUNNEL, { connectionId }),
+        invoke(sshChannels.closeTunnel.name, { connectionId }),
       testConnection: (
         config: SSHTunnelIpcConfig,
         credentials: SSHCredentialsInput
       ): Promise<SSHTestConnectionResponse> =>
-        invoke(IPC_CHANNELS.SSH_TEST_CONNECTION, { config, credentials }),
+        invoke(sshChannels.testConnection.name, { config, credentials }),
       hasTunnel: (connectionId: string): Promise<SSHHasTunnelResponse> =>
-        invoke(IPC_CHANNELS.SSH_HAS_TUNNEL, { connectionId }),
+        invoke(sshChannels.hasTunnel.name, { connectionId }),
     },
   };
 }
