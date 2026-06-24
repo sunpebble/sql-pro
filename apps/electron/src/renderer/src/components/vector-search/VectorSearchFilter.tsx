@@ -51,7 +51,7 @@ export const VectorSearchFilter = memo(
       { value: 'lte', label: '<=' },
     ];
 
-    const generateId = () => Math.random().toString(36).substring(2, 9);
+    const generateId = () => crypto.randomUUID();
 
     const addCondition = useCallback(() => {
       setConditions((prev) => [

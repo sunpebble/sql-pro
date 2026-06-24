@@ -46,7 +46,7 @@ interface QueryTemplatesState {
 }
 
 const generateId = (): string => {
-  return `template-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  return `template-${crypto.randomUUID()}`;
 };
 
 // Built-in templates for common SQL operations

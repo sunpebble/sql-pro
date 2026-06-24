@@ -25,8 +25,8 @@ import type {
   PluginUpdate,
 } from '@shared/types/plugin';
 import { Buffer } from 'node:buffer';
+import { EventEmitter } from 'node:events';
 import Store from 'electron-store';
-import EventEmitter from 'eventemitter3';
 import { pluginLoader } from './PluginLoader';
 import { pluginRegistry } from './PluginRegistry';
 import { pluginRuntime } from './PluginRuntime';

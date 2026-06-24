@@ -170,7 +170,7 @@ interface DataTabsState {
 }
 
 const generateId = (): string => {
-  return `data-tab-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  return `data-tab-${crypto.randomUUID()}`;
 };
 
 const createDataTab = (connectionId: string, table: TableSchema): DataTab => ({

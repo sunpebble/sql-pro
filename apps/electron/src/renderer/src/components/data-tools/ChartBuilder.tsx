@@ -84,8 +84,7 @@ const COLOR_SCHEMES = [
   },
 ];
 
-const generateId = () =>
-  `chart-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+const generateId = () => `chart-${crypto.randomUUID()}`;
 
 interface ChartPreviewProps {
   config: ChartConfig;

@@ -114,11 +114,11 @@ interface QueryTabsState {
 }
 
 const generateId = (): string => {
-  return `tab-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  return `tab-${crypto.randomUUID()}`;
 };
 
 const generatePaneId = (): string => {
-  return `pane-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  return `pane-${crypto.randomUUID()}`;
 };
 
 const DEFAULT_PANE_ID = 'pane-main';

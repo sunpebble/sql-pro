@@ -24,9 +24,9 @@ import type {
   QueryErrorHook,
   QueryResults,
 } from '@shared/types/plugin';
+import { EventEmitter } from 'node:events';
 import process from 'node:process';
 import { app } from 'electron';
-import EventEmitter from 'eventemitter3';
 
 // ============ Types ============
 

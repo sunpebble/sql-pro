@@ -22,7 +22,7 @@ import type { HandlerContext } from '../base/handler';
 import { isAbsolute, normalize } from 'node:path';
 import process from 'node:process';
 import { BrowserWindow, shell } from 'electron';
-import { windowManager } from '../../services/window-manager';
+import { windowManager } from '../../core/window';
 import { IpcHandler } from '../base/handler';
 import { systemChannels, windowChannels } from '../contracts/all-channels';
 

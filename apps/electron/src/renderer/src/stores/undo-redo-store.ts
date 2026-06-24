@@ -36,7 +36,7 @@ interface UndoRedoState {
 }
 
 const generateId = (): string => {
-  return `entry-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  return `entry-${crypto.randomUUID()}`;
 };
 
 const formatChangeDescription = (change: PendingChange): string => {

@@ -15,8 +15,8 @@ import type {
   PluginRegistryEntry,
   PluginState,
 } from '@shared/types/plugin';
+import { EventEmitter } from 'node:events';
 import Store from 'electron-store';
-import EventEmitter from 'eventemitter3';
 
 // ============ Types ============
 

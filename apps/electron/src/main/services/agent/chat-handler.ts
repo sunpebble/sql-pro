@@ -5,7 +5,7 @@ import type { AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import type { AgentSettings } from '@shared/types/agent';
 import type { StreamTextResult, UIMessage } from 'ai';
 import { convertToModelMessages, stepCountIs, streamText } from 'ai';
-import { getCurrentLanguage } from '../menu';
+import { getCurrentLanguage } from '../../core/menu';
 import { createChatModel } from './model';
 import { createAgentTools } from './tools';
 

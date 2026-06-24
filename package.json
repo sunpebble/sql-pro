@@ -33,11 +33,7 @@
     "test:run": "nx run sqlpro-app:test:run",
     "typecheck": "nx run sqlpro-app:typecheck"
   },
-  "dependencies": {
-    "@types/react-resizable": "catalog:",
-    "framer-motion": "catalog:",
-    "react-resizable": "catalog:"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
     "@commitlint/cli": "catalog:",

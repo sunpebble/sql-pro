@@ -1,4 +1,4 @@
-import type { QueryHistoryEntry } from '@/shared/types';
+import type { QueryHistoryEntry } from '@shared/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useQueryHistoryStore } from './query-history-store';
 

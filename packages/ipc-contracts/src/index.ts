@@ -5,6 +5,5 @@
  * This package provides end-to-end type safety for Electron IPC communication.
  */
 
-export * from './channels';
 export * from './types';
 export * from './utils';

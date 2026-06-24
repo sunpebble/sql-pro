@@ -138,18 +138,6 @@ vi.mock('./PluginRegistry', () => ({
   },
 }));
 
-// Mock UIExtensionAPI
-vi.mock('../../plugin-api/UIExtensionAPI', () => ({
-  default: {
-    ...createMockEmitter(mockState.uiListeners),
-    unregisterAllForPlugin: vi.fn(),
-  },
-  uiExtensionService: {
-    ...createMockEmitter(mockState.uiListeners),
-    unregisterAllForPlugin: vi.fn(),
-  },
-}));
-
 // ============ Security Tests ============
 
 describe('plugin Sandboxing and Security', () => {
