@@ -1,3 +1,4 @@
+import { connectionChannels } from '@shared/domains/database/channels';
 import { IPC_CHANNELS } from '@shared/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSqlProAPI } from './sql-pro-api';
@@ -15,7 +16,7 @@ describe('createSqlProAPI', () => {
     getPathForFile.mockClear();
   });
 
-  it('forwards db.open to invoke with DB_OPEN channel', async () => {
+  it('forwards db.open to invoke with the database open channel', async () => {
     const api = createSqlProAPI({ invoke, on, off, getPathForFile });
     const req = {
       connectionId: 'c1',
@@ -26,18 +27,7 @@ describe('createSqlProAPI', () => {
 
     await api.db.open(req);
 
-    expect(invoke).toHaveBeenCalledWith(IPC_CHANNELS.DB_OPEN, req);
-  });
-
-  it('forwards file.exists to invoke with FILE_EXISTS channel', async () => {
-    const api = createSqlProAPI({ invoke, on, off, getPathForFile });
-    const req = { path: '/tmp/a.txt' };
-    invoke.mockResolvedValueOnce({ exists: true });
-
-    const result = await api.file.exists(req);
-
-    expect(invoke).toHaveBeenCalledWith(IPC_CHANNELS.FILE_EXISTS, req);
-    expect(result).toEqual({ exists: true });
+    expect(invoke).toHaveBeenCalledWith(connectionChannels.open.name, req);
   });
 
   it('registers pg_notify listener and returns cleanup that calls off', () => {

@@ -130,9 +130,10 @@ export function ProfileManager({
 
     for (const profile of profilesList) {
       try {
-        // Check if file exists using Node.js fs API through main process
-        const exists = await sqlPro.file?.exists({ path: profile.path });
-        if (exists && !exists.exists) {
+        // image.checkFile is the general "does this local file exist" IPC;
+        // the removed file.exists never worked (it hit the writeFile channel)
+        const result = await sqlPro.image.checkFile({ path: profile.path });
+        if (result && !result.exists) {
           missing.add(profile.path);
         }
       } catch {

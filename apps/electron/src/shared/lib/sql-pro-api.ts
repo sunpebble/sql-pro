@@ -57,8 +57,6 @@ import type {
   ExportSchemaRequest,
   ExportSchemaResponse,
   FileChangeEvent,
-  FileExistsRequest,
-  FileExistsResponse,
   FocusWindowRequest,
   FocusWindowResponse,
   GenerateMigrationSQLRequest,
@@ -258,9 +256,11 @@ import {
   queryChannels,
   sqlLogChannels,
 } from '@shared/domains/query/channels';
-import { schemaChannels as domainSchemaChannels,
+import {
+  schemaChannels as domainSchemaChannels,
   schemaComparisonChannels,
-  schemaSnapshotChannels } from '@shared/domains/schema/channels';
+  schemaSnapshotChannels,
+} from '@shared/domains/schema/channels';
 import { sshChannels } from '@shared/domains/ssh/channels';
 import {
   memoryChannels,
@@ -550,8 +550,8 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
     // File utilities
     file: {
       getPathForFile: (file: File): string => getPathForFile(file),
-      exists: (request: FileExistsRequest): Promise<FileExistsResponse> =>
-        invoke(dialogChannels.writeFile.name, request),
+      // file.exists was removed: it invoked the writeFile channel by mistake,
+      // had no main-process handler, and no renderer callers
       write: (request: WriteFileRequest): Promise<WriteFileResponse> =>
         invoke(dialogChannels.writeFile.name, request),
     },
