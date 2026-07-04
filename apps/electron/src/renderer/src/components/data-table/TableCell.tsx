@@ -135,9 +135,9 @@ export const TableCell = memo(
     // Using useEffect to avoid state updates during render (which causes flushSync warnings)
     useEffect(() => {
       if (isEditing && !prevIsEditingRef.current) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional: init state on edit mode transition
+         
         setEditValue(value === null ? '' : String(value));
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional: clear validation on edit mode transition
+         
         setValidationError(null);
       }
       prevIsEditingRef.current = isEditing;

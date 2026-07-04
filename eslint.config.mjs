@@ -33,6 +33,10 @@ export default antfu(
     rules: {
       'unicorn/number-literal-case': 'off',
       'pnpm/json-enforce-catalog': 'off',
+      // React Compiler rules flag pre-existing render-time component
+      // creation; demoted to warn until those components are refactored
+      'react/static-components': 'warn',
+      'react/unsupported-syntax': 'warn',
       'e18e/prefer-static-regex': 'warn',
       'e18e/prefer-array-at': 'warn',
       'e18e/prefer-timer-args': 'warn',

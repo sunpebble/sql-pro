@@ -303,7 +303,7 @@ export function ServerConnectionDialog({
   // or when dialog closes
   useEffect(() => {
     if (isConnecting || !open) {
-      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional state sync */
+      /* eslint-disable-next-line react/set-state-in-effect -- Intentional state sync */
       setIsSubmitting(false);
     }
   }, [isConnecting, open]);
@@ -312,7 +312,7 @@ export function ServerConnectionDialog({
 
   useEffect(() => {
     if (open) {
-      /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional form reset on dialog open or mode change */
+      /* eslint-disable react/set-state-in-effect -- Intentional form reset on dialog open or mode change */
       if (isEditMode && initialConfig) {
         // Pre-fill with existing config for edit mode
         setHost(initialConfig.host || '');
@@ -403,17 +403,17 @@ export function ServerConnectionDialog({
         setJumpPassphrase('');
       }
       setTestResult(null);
-      /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
+      /* eslint-enable react/set-state-in-effect */
     }
   }, [open, databaseType, isEditMode, initialConfig]);
 
   // Clear stale Test Connection result when any connection-affecting field changes
   useEffect(() => {
     if (testResult) {
-      /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional invalidation of stale test result */
+      /* eslint-disable-next-line react/set-state-in-effect -- Intentional invalidation of stale test result */
       setTestResult(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
   }, [
     host,
     port,

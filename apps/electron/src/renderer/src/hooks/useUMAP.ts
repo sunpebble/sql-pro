@@ -98,22 +98,22 @@ export function useUMAP(
       // Only update if values actually changed
       if (previousStateRef.current.embedding !== null) {
         previousStateRef.current.embedding = null;
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+         
         setEmbedding(null);
       }
       if (previousStateRef.current.isComputing !== false) {
         previousStateRef.current.isComputing = false;
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+         
         setIsComputing(false);
       }
       if (previousStateRef.current.error !== newError) {
         previousStateRef.current.error = newError;
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+         
         setError(newError);
       }
       if (previousStateRef.current.progress !== null) {
         previousStateRef.current.progress = null;
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset only when value changed
+         
         setProgress(null);
       }
       return;
@@ -135,17 +135,17 @@ export function useUMAP(
     // Reset state for new computation (batched in single render)
     if (previousStateRef.current.isComputing !== true) {
       previousStateRef.current.isComputing = true;
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional update for worker setup
+       
       setIsComputing(true);
     }
     if (previousStateRef.current.error !== null) {
       previousStateRef.current.error = null;
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional update for worker setup
+       
       setError(null);
     }
     if (previousStateRef.current.progress !== null) {
       previousStateRef.current.progress = null;
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional update for worker setup
+       
       setProgress(null);
     }
 

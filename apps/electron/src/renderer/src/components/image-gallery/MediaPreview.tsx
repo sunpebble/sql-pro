@@ -439,14 +439,14 @@ export function MediaPreview({
   // Fetch sharp metadata for images (not videos)
   useEffect(() => {
     if (isVideo) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset when media type changes
+      // eslint-disable-next-line react/set-state-in-effect -- Intentional reset when media type changes
       setSharpMetadata(null);
       return;
     }
 
     // Only fetch for URL and file sources
     if (item.source?.type !== 'url' && item.source?.type !== 'file') {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset when source type changes
+      // eslint-disable-next-line react/set-state-in-effect -- Intentional reset when source type changes
       setSharpMetadata(null);
       return;
     }
@@ -486,7 +486,7 @@ export function MediaPreview({
   // Fetch video metadata using ffprobe
   useEffect(() => {
     if (!isVideo) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset when media type changes
+      // eslint-disable-next-line react/set-state-in-effect -- Intentional reset when media type changes
       setVideoMetadata(null);
       return;
     }

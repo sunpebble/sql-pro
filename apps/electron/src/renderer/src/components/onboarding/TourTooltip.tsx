@@ -229,7 +229,7 @@ export function TourTooltip({
 
     // Reset positioned state initially for fade-in effect
     // This is an intentional animation pattern: reset on step change, then update
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional animation setup
+    // eslint-disable-next-line react/set-state-in-effect -- Intentional animation setup
     setTooltipState((prev) => ({ ...prev, isPositioned: false }));
 
     // Use requestAnimationFrame to ensure DOM has updated

@@ -102,12 +102,12 @@ export function useVectorSearch(
     if (!connectionId || !collection) {
       if (previousValuesRef.current.backgroundPoints.length !== 0) {
         previousValuesRef.current.backgroundPoints = [];
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset on connection change
+         
         setBackgroundPoints([]);
       }
       if (previousValuesRef.current.vectorDimension !== 0) {
         previousValuesRef.current.vectorDimension = 0;
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Conditional reset on connection change
+         
         setVectorDimension(0);
       }
       return;

@@ -781,7 +781,7 @@ export const DashboardView = memo(() => {
 
   // Reset stats when connection changes
   useEffect(() => {
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on connection change
+    // eslint-disable-next-line react/set-state-in-effect -- Intentional reset on connection change
     setStats(null);
   }, [activeConnectionId]);
 

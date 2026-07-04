@@ -208,7 +208,7 @@ export function SqlLogPanel() {
   // to ensure the memo recalculates when these values change (React's reactivity model requires this)
   const filteredLogs = useMemo(
     () => getFilteredLogs(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- logs/filter trigger recalc, getFilteredLogs is stable
+    // eslint-disable-next-line react/exhaustive-deps -- logs/filter trigger recalc, getFilteredLogs is stable
     [logs, filter, getFilteredLogs]
   );
 

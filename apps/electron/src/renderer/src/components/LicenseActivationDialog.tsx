@@ -129,10 +129,10 @@ export function LicenseActivationDialog({
     // Wait for verification to complete before setting view
     if (open && !isLoading) {
       if (isValid) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional initialization based on prop change
+        // eslint-disable-next-line react/set-state-in-effect -- Intentional initialization based on prop change
         setView('manage');
       } else {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional initialization based on prop change
+        // eslint-disable-next-line react/set-state-in-effect -- Intentional initialization based on prop change
         setView('main');
       }
     }
@@ -141,9 +141,9 @@ export function LicenseActivationDialog({
   // Reset state when dialog closes
   useEffect(() => {
     if (!open) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on dialog close
+      // eslint-disable-next-line react/set-state-in-effect -- Intentional reset on dialog close
       setEmail('');
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on dialog close
+      // eslint-disable-next-line react/set-state-in-effect -- Intentional reset on dialog close
       setLicenseKey('');
       clearError();
     }

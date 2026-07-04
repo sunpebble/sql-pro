@@ -169,9 +169,9 @@ export function WelcomeTour({
   // Reset step when tour becomes visible
   useEffect(() => {
     if (isVisible) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Reset state on visibility change
+      // eslint-disable-next-line react/set-state-in-effect -- Reset state on visibility change
       setCurrentStep(0);
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Reset state on visibility change
+      // eslint-disable-next-line react/set-state-in-effect -- Reset state on visibility change
       setIsPositioned(false);
     }
   }, [isVisible]);
@@ -338,7 +338,7 @@ function SpotlightHighlight({
   useEffect(() => {
     const targetElement = document.querySelector(targetSelector);
     if (targetElement) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Initial DOM measurement
+      // eslint-disable-next-line react/set-state-in-effect -- Initial DOM measurement
       setRect(targetElement.getBoundingClientRect());
     }
 

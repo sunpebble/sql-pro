@@ -81,7 +81,7 @@ export function LicenseKeyInput({
   useEffect(() => {
     const newSegments = formatLicenseKey(value);
     // Only update if segments actually changed to avoid unnecessary re-renders
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync from external prop
+    // eslint-disable-next-line react/set-state-in-effect -- Intentional sync from external prop
     setSegments((prev) => {
       const hasChanged = newSegments.some((seg, i) => seg !== prev[i]);
       return hasChanged ? newSegments : prev;

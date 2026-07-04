@@ -29,7 +29,7 @@ export function CompareView({ className, defaultTab }: CompareViewProps) {
       setActiveTab(defaultTab);
     }
     // Only run when a defaultTab is explicitly provided by the caller.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
   }, []);
 
   return (

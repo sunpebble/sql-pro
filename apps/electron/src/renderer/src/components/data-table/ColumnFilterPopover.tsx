@@ -80,7 +80,7 @@ export function ColumnFilterPopover({
 
   // Reset state when popover opens or existing filter changes
   useEffect(() => {
-    /* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Intentionally sync state with props */
+    /* eslint-disable react/set-state-in-effect -- Intentionally sync state with props */
     if (existingFilter) {
       setSelectedOperator(existingFilter.uiOperator);
       setValue(existingFilter.value);
@@ -92,7 +92,7 @@ export function ColumnFilterPopover({
     }
     setError(undefined);
     setErrorField(null);
-    /* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect */
+    /* eslint-enable react/set-state-in-effect */
   }, [existingFilter, defaultOperator, open]);
 
   // Clear values when operator changes if the new operator doesn't require values

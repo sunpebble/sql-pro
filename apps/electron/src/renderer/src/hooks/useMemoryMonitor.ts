@@ -315,9 +315,9 @@ export function useMemoryMonitor(
         // Set up event listeners for stats updates
         cleanupStatsRef.current = sqlPro.memory.onStatsUpdate(
           (event: MemoryStatsUpdateEvent) => {
-            // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Async event handler for IPC updates
+            // eslint-disable-next-line react/set-state-in-effect -- Async event handler for IPC updates
             setMainProcessStats(event.stats);
-            // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Async event handler for IPC updates
+            // eslint-disable-next-line react/set-state-in-effect -- Async event handler for IPC updates
             setPressureLevel(event.pressureLevel);
             onStatsUpdateRef.current?.(event);
           }
@@ -326,7 +326,7 @@ export function useMemoryMonitor(
         // Set up event listeners for pressure changes
         cleanupPressureRef.current = sqlPro.memory.onPressureChange(
           (event: MemoryPressureChangeEvent) => {
-            // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Async event handler for IPC updates
+            // eslint-disable-next-line react/set-state-in-effect -- Async event handler for IPC updates
             setPressureLevel(event.currentLevel);
             onPressureChangeRef.current?.(event);
           }

@@ -91,9 +91,9 @@ export function TourSpotlight({
 
     if (isActive) {
       // Trigger animation
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line react/set-state-in-effect
       setIsAnimating(true);
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line react/set-state-in-effect
       setIsVisible(true);
 
       // Use requestAnimationFrame to ensure DOM has updated
@@ -112,9 +112,9 @@ export function TourSpotlight({
         }
       };
     } else {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line react/set-state-in-effect
       setIsVisible(false);
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line react/set-state-in-effect
       setSpotlightRect(null);
       return undefined;
     }
@@ -268,7 +268,7 @@ export function useTourTargetPosition(
 
   useEffect(() => {
     if (!isActive || !targetSelector || targetSelector === 'body') {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line react/set-state-in-effect
       setRect(null);
       return;
     }
@@ -277,7 +277,7 @@ export function useTourTargetPosition(
       const element = document.querySelector(targetSelector);
       if (element) {
         const boundingRect = element.getBoundingClientRect();
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        // eslint-disable-next-line react/set-state-in-effect
         setRect({
           top: boundingRect.top,
           left: boundingRect.left,
@@ -285,7 +285,7 @@ export function useTourTargetPosition(
           height: boundingRect.height,
         });
       } else {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+        // eslint-disable-next-line react/set-state-in-effect
         setRect(null);
       }
     };

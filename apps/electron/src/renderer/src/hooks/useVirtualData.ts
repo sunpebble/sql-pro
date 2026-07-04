@@ -355,7 +355,7 @@ export function useVirtualData<T extends VirtualRowData>(
     // Don't update if the dataset is small enough
     if (allRows.length <= minRowsInMemory) {
       if (retainedRange.start !== 0 || retainedRange.end !== allRows.length) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync update for small datasets
+        // eslint-disable-next-line react/set-state-in-effect -- Intentional sync update for small datasets
         setRetainedRange({ start: 0, end: allRows.length });
       }
       return;
@@ -368,11 +368,11 @@ export function useVirtualData<T extends VirtualRowData>(
     if (newStart !== retainedRange.start || newEnd !== retainedRange.end) {
       // Synchronous update to prevent flickering during fast scrolling
       if (aggressiveRelease) {
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync update for aggressive release mode
+        // eslint-disable-next-line react/set-state-in-effect -- Intentional sync update for aggressive release mode
         setRetainedRange({ start: newStart, end: newEnd });
       } else {
         // Keep the range expanded (don't shrink, only grow)
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional sync update to prevent flickering
+        // eslint-disable-next-line react/set-state-in-effect -- Intentional sync update to prevent flickering
         setRetainedRange((prev) => ({
           start: Math.min(prev.start, newStart),
           end: Math.max(prev.end, newEnd),

@@ -354,7 +354,7 @@ export function QueryEditor() {
   // even though it's not directly used in the callback (getFilteredHistory accesses it via store)
   const filteredHistory = useMemo(() => {
     return getFilteredHistory(history);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
   }, [history, getFilteredHistory, historyFilter]);
 
   // Load history when connection changes

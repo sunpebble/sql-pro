@@ -491,11 +491,11 @@ export function MemoryMonitorPanel({
   // Update cache stats periodically and when memory stats change
   useEffect(() => {
     // Update immediately - syncing with external store state is intentional
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync with external stores
+    // eslint-disable-next-line react/set-state-in-effect -- Sync with external stores
     setTableDataStats(useTableDataStore.getState().getCacheStats());
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync with external stores
+    // eslint-disable-next-line react/set-state-in-effect -- Sync with external stores
     setQueryResultsStats(useQueryStore.getState().getResultsCacheStats());
-    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync with external stores
+    // eslint-disable-next-line react/set-state-in-effect -- Sync with external stores
     setSchemaCacheStats(schemaCache.getStats());
   }, [mainProcessStats]);
 
@@ -505,7 +505,7 @@ export function MemoryMonitorPanel({
   // Update memory history when stats change
   useEffect(() => {
     if (mainProcessStats?.metrics) {
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Updating history based on prop changes
+      // eslint-disable-next-line react/set-state-in-effect -- Updating history based on prop changes
       setMemoryHistory((prev) => {
         const newEntry: MemoryHistoryEntry = {
           timestamp: Date.now(),

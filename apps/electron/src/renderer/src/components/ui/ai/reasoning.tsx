@@ -65,20 +65,20 @@ export const Reasoning = memo(
     useEffect(() => {
       if (isStreaming) {
         if (startTime === null) {
-          /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Timer state management */
+          /* eslint-disable-next-line react/set-state-in-effect -- Timer state management */
           setStartTime(Date.now());
         }
       } else if (startTime !== null) {
-        /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Timer state management */
+         
         setDuration(Math.round((Date.now() - startTime) / 1000));
-        /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Timer state management */
+        /* eslint-disable-next-line react/set-state-in-effect -- Timer state management */
         setStartTime(null);
       }
     }, [isStreaming, startTime, setDuration]);
 
     useEffect(() => {
       if (isStreaming && !isOpen) {
-        /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Auto-open on streaming */
+         
         setIsOpen(true);
         return;
       }

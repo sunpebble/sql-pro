@@ -113,7 +113,7 @@ export function BackupRestoreDialog({
           connection.path?.split('/').pop() ||
           connection.filename ||
           'database';
-        // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Intentional reset on dialog open
+         
         setBackupName(filename.replace(/\.[^/.]+$/, ''));
       }
     } else if (!open) {

@@ -69,12 +69,12 @@ export function QueryBuilder() {
 
   // Sync nodes/edges from store
   useEffect(() => {
-    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync store state */
+     
     setNodes(storeNodes);
   }, [storeNodes, setNodes]);
 
   useEffect(() => {
-    /* eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Sync store state */
+     
     setEdges(storeEdges);
   }, [storeEdges, setEdges]);
 
@@ -324,7 +324,12 @@ export function QueryBuilder() {
               <div className="flex gap-1">
                 <Tooltip>
                   <TooltipTrigger>
-                    <Button variant="ghost" size="icon" onClick={handleCopySQL} aria-label={t('queryBuilder.copySQL', 'Copy SQL')}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCopySQL}
+                      aria-label={t('queryBuilder.copySQL', 'Copy SQL')}
+                    >
                       <Copy className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>

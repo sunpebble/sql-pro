@@ -45,7 +45,14 @@ import {
   Zap,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Component, memo, useCallback, useMemo, useState } from 'react';
+import {
+  Component,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import {
@@ -302,8 +309,8 @@ export const QueryOptimizerPanel = memo(
     const [edges, setEdges, onEdgesChange] =
       useEdgesState<ExecutionPlanFlowEdge>(flowEdges);
 
-    // Update nodes when flow changes
-    useMemo(() => {
+    // Update nodes when flow changes (side effect, so useEffect not useMemo)
+    useEffect(() => {
       if (flowNodes.length > 0) {
         setNodes(flowNodes);
         setEdges(flowEdges);
