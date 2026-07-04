@@ -4,13 +4,17 @@
 
 /* Include @sqlpro/ui package classes in Tailwind scanning */
 @source '../../../../../../packages/ui/src';
+/* Renderer sources — required when built outside the electron root (e.g. apps/webapp) */
+@source '../';
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant light (&:is(:not(.dark) *));
 
 /* ═══════════════════════════════════════
-   LINEAR-INSPIRED PRODUCT SYSTEM
-   Calm density, warm neutrals, soft structure
+   SUNPEBBLE PRODUCT SYSTEM
+   Brand tokens: cream / ink / sun / pebble / night
+   Source of truth: sunpebble.github.io/BRAND.md
+   Sun is light — it hosts ink text, never white.
    ═══════════════════════════════════════ */
 
 @theme inline {
@@ -125,44 +129,44 @@
 :root {
   color-scheme: light;
 
-  /* Main/Primary color */
-  --main: #5e6ad2;
-  --main-foreground: #fafafa;
+  /* Main/Primary color — brand sun, always with ink text */
+  --main: #f7b733;
+  --main-foreground: #232733;
 
-  /* Core colors (warm neutral, Linear-style) */
-  --background: #f7f7f5;
-  --foreground: #1f1f23;
-  --secondary-background: #efeeeb;
-  --overlay: rgba(247, 247, 245, 0.82);
+  /* Core colors — brand cream / ink */
+  --background: #fff6e8;
+  --foreground: #232733;
+  --secondary-background: #f6ecd9;
+  --overlay: rgba(255, 246, 232, 0.82);
 
   /* Border - subtle */
-  --border: rgba(31, 31, 35, 0.1);
-  --ring: #6c73e6;
+  --border: rgba(35, 39, 51, 0.1);
+  --ring: #f7b733;
   --input: #ffffff;
 
   /* Card */
-  --card: #ffffff;
-  --card-foreground: #1f1f23;
+  --card: #fffdf8;
+  --card-foreground: #232733;
 
   /* Popover */
-  --popover: #ffffff;
-  --popover-foreground: #1f1f23;
+  --popover: #fffdf8;
+  --popover-foreground: #232733;
 
   /* Primary */
-  --primary: #5e6ad2;
-  --primary-foreground: #fafafa;
+  --primary: #f7b733;
+  --primary-foreground: #232733;
 
   /* Secondary */
-  --secondary: #efeeeb;
-  --secondary-foreground: #3f3f46;
+  --secondary: #f6ecd9;
+  --secondary-foreground: #3a3f4d;
 
-  /* Muted */
-  --muted: #efeeeb;
-  --muted-foreground: #6f6f76;
+  /* Muted — brand pebble for secondary text */
+  --muted: #f6ecd9;
+  --muted-foreground: #6e6e73;
 
   /* Accent */
-  --accent: #e8e7e3;
-  --accent-foreground: #2f3035;
+  --accent: #f1e4cb;
+  --accent-foreground: #232733;
 
   /* Destructive */
   --destructive: #ef4444;
@@ -171,26 +175,26 @@
   --radius: 8px;
 
   /* Sidebar */
-  --sidebar: #eeeeeb;
-  --sidebar-foreground: #4f4f56;
-  --sidebar-primary: #5e6ad2;
-  --sidebar-primary-foreground: #fafafa;
-  --sidebar-accent: #e3e2de;
-  --sidebar-accent-foreground: #1f1f23;
-  --sidebar-border: rgba(31, 31, 35, 0.08);
-  --sidebar-ring: #6c73e6;
+  --sidebar: #f9efdd;
+  --sidebar-foreground: #55565e;
+  --sidebar-primary: #f7b733;
+  --sidebar-primary-foreground: #232733;
+  --sidebar-accent: #f0e2c8;
+  --sidebar-accent-foreground: #232733;
+  --sidebar-border: rgba(35, 39, 51, 0.08);
+  --sidebar-ring: #f7b733;
 
-  /* Chart colors */
-  --chart-1: #18181b;
-  --chart-2: #3f3f46;
-  --chart-3: #71717a;
-  --chart-4: #a1a1aa;
-  --chart-5: #d4d4d8;
+  /* Chart colors — ink scale */
+  --chart-1: #232733;
+  --chart-2: #4a4f5e;
+  --chart-3: #6e6e73;
+  --chart-4: #a6a7ad;
+  --chart-5: #d8d4cb;
 
-  /* Status colors */
+  /* Status colors — warning is orange, not sun's hue */
   --success: #22c55e;
   --success-foreground: #ffffff;
-  --warning: #f59e0b;
+  --warning: #e8590c;
   --warning-foreground: #ffffff;
   --info: #3b82f6;
   --info-foreground: #ffffff;
@@ -208,9 +212,9 @@
   --type-unknown-bg: rgba(156, 163, 175, 0.1);
 
   /* Soft depth */
-  --shadow-sm: 0 1px 1px rgba(31, 31, 35, 0.04);
-  --shadow: 0 8px 24px rgba(31, 31, 35, 0.08);
-  --shadow-lg: 0 20px 48px rgba(31, 31, 35, 0.12);
+  --shadow-sm: 0 1px 1px rgba(35, 39, 51, 0.04);
+  --shadow: 0 8px 24px rgba(35, 39, 51, 0.08);
+  --shadow-lg: 0 20px 48px rgba(35, 39, 51, 0.12);
 }
 
 /* ═══════════════════════════════════════
@@ -220,70 +224,70 @@
 .dark {
   color-scheme: dark;
 
-  /* Main/Primary color */
-  --main: #8b93ff;
-  --main-foreground: #0d0d10;
+  /* Main/Primary color — sun accent unchanged, ink text on sun */
+  --main: #f7b733;
+  --main-foreground: #232733;
 
-  /* Core colors */
-  --background: #0d0d10;
-  --foreground: #f2f1eb;
-  --secondary-background: #141416;
-  --overlay: rgba(13, 13, 16, 0.86);
+  /* Core colors — brand night bg, cream text */
+  --background: #161928;
+  --foreground: #fff6e8;
+  --secondary-background: #1b1f30;
+  --overlay: rgba(22, 25, 40, 0.86);
 
   /* Border - subtle dark */
-  --border: rgba(242, 241, 235, 0.08);
-  --ring: #8b93ff;
-  --input: #17171a;
+  --border: rgba(255, 246, 232, 0.08);
+  --ring: #f7b733;
+  --input: #1d2233;
 
-  /* Card */
-  --card: #151518;
-  --card-foreground: #f2f1eb;
+  /* Card — brand ink surface */
+  --card: #232733;
+  --card-foreground: #fff6e8;
 
   /* Popover */
-  --popover: #17171a;
-  --popover-foreground: #f2f1eb;
+  --popover: #232733;
+  --popover-foreground: #fff6e8;
 
   /* Primary */
-  --primary: #8b93ff;
-  --primary-foreground: #0d0d10;
+  --primary: #f7b733;
+  --primary-foreground: #232733;
 
   /* Secondary */
-  --secondary: #17171a;
-  --secondary-foreground: #f2f1eb;
+  --secondary: #232733;
+  --secondary-foreground: #fff6e8;
 
   /* Muted */
-  --muted: #18181b;
-  --muted-foreground: #8b8984;
+  --muted: #232733;
+  --muted-foreground: #9b9a96;
 
   /* Accent */
-  --accent: #202024;
-  --accent-foreground: #f2f1eb;
+  --accent: #2b3040;
+  --accent-foreground: #fff6e8;
 
   /* Destructive */
   --destructive: #f87171;
 
   /* Sidebar */
-  --sidebar: #0a0a0c;
+  --sidebar: #12141f;
   --sidebar-foreground: #b9b7b1;
-  --sidebar-primary: #8b93ff;
-  --sidebar-primary-foreground: #0d0d10;
-  --sidebar-accent: #17171a;
-  --sidebar-accent-foreground: #f2f1eb;
-  --sidebar-border: rgba(242, 241, 235, 0.06);
-  --sidebar-ring: #8b93ff;
+  --sidebar-primary: #f7b733;
+  --sidebar-primary-foreground: #232733;
+  --sidebar-accent: #232733;
+  --sidebar-accent-foreground: #fff6e8;
+  --sidebar-border: rgba(255, 246, 232, 0.06);
+  --sidebar-ring: #f7b733;
 
-  /* Chart colors */
-  --chart-1: #e4e4e7;
-  --chart-2: #a1a1aa;
-  --chart-3: #71717a;
-  --chart-4: #52525b;
-  --chart-5: #3f3f46;
+  /* Chart colors — cream scale */
+  --chart-1: #fff6e8;
+  --chart-2: #cfc9bc;
+  --chart-3: #9b9a96;
+  --chart-4: #6a6d78;
+  --chart-5: #3d4152;
 
-  /* Status colors */
+  /* Status colors — warning is orange, not sun's hue */
   --success: #4ade80;
-  --success-foreground: #09090b;
-  --warning: #fbbf24;
-  --warning-foreground: #09090b;
+  --success-foreground: #161928;
+  --warning: #fb923c;
+  --warning-foreground: #161928;
   --info: #60a5fa;
   --info-foreground: #09090b;
 
@@ -691,8 +695,6 @@ th {
 
 /* Primary text highlight */
 .text-gradient-primary {
-  background-clip: text;
-  -webkit-background-clip: text;
   color: var(--main);
 }
 
@@ -962,7 +964,7 @@ th {
    ═══════════════════════════════════════ */
 
 ::selection {
-  background: rgba(161, 161, 170, 0.2);
+  background: rgba(247, 183, 51, 0.3);
   color: var(--foreground);
 }
 

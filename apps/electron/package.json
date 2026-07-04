@@ -93,6 +93,7 @@
     "mssql": "catalog:",
     "mysql2": "catalog:",
     "next-themes": "catalog:",
+    "node-machine-id": "^1.1.12",
     "openai": "catalog:",
     "papaparse": "catalog:",
     "pg": "catalog:",

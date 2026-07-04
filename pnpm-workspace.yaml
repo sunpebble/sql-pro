@@ -171,7 +171,7 @@ catalogs:
     react-resizable: ^4.0.1
     readable-stream: ^4.7.0
     remark-gfm: ^4.0.1
-    sharp: ^0.35.0
+    sharp: ^0.35.3
     ssh2: ^1.17.0
     use-stick-to-bottom: ^1.1.6
     zustand: ^5.0.14
@@ -203,3 +203,17 @@ overrides:
   vite: npm:rolldown-vite@latest
   # ssh2 → cpu-features uses nan; Electron/Node 24+ V8 needs newer nan (CI rebuild)
   nan: 2.26.2
+
+allowBuilds:
+  '@ffmpeg-installer/darwin-arm64': true
+  '@ffprobe-installer/darwin-arm64': true
+  better-sqlite3-multiple-ciphers: true
+  cpu-features: true
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  msw: true
+  nx: true
+  sharp: true
+  ssh2: true
+  workerd: true

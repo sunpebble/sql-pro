@@ -882,7 +882,7 @@ function analyzeSqlContext(
 
   // Determine context from tokens
   const context = determineContext(tokens, parenDepth);
-  const previousToken = tokens.length > 0 ? tokens[tokens.length - 1] : null;
+  const previousToken = tokens.length > 0 ? (tokens.at(-1) ?? null) : null;
   const currentClause = findCurrentClause(tokens);
 
   // Parse table references
@@ -907,7 +907,7 @@ function analyzeSqlContext(
 function determineContext(tokens: string[], parenDepth: number): SqlContext {
   if (tokens.length === 0) return 'GENERAL';
 
-  const lastToken = tokens[tokens.length - 1];
+  const lastToken = tokens.at(-1);
   const lastTwoTokens = tokens.slice(-2).join(' ');
 
   // Check for specific patterns from most specific to least
@@ -1286,7 +1286,7 @@ export function formatSql(sql: string): string {
 
   function addNewLine(): void {
     // Remove trailing whitespace
-    while (result.length > 0 && result[result.length - 1] === ' ') {
+    while (result.length > 0 && result.at(-1) === ' ') {
       result.pop();
     }
     result.push('\n');
@@ -1296,9 +1296,9 @@ export function formatSql(sql: string): string {
   function addSpace(): void {
     if (
       result.length > 0 &&
-      result[result.length - 1] !== ' ' &&
-      result[result.length - 1] !== '\n' &&
-      !/^\s+$/.test(result[result.length - 1] || '')
+      result.at(-1) !== ' ' &&
+      result.at(-1) !== '\n' &&
+      !/^\s+$/.test(result.at(-1) || '')
     ) {
       result.push(' ');
     }
@@ -2163,7 +2163,7 @@ export function validateSql(sql: string): SqlValidationError[] {
       startLineNumber: lines.length,
       startColumn: 1,
       endLineNumber: lines.length,
-      endColumn: (lines[lines.length - 1]?.length || 0) + 1,
+      endColumn: (lines.at(-1)?.length || 0) + 1,
       message: 'Unclosed block comment',
       severity: 'error',
     });
@@ -2299,7 +2299,7 @@ export function createSqlHoverProvider(
         const textBeforeWord = lineContent.substring(0, wordStart).trimEnd();
         for (const compound of compoundKeywords) {
           const parts = compound.split(' ');
-          const lastPart = parts[parts.length - 1];
+          const lastPart = parts.at(-1);
           if (lastPart === upperWord && parts.length >= 2) {
             // Check if preceding words match
             const precedingParts = parts.slice(0, -1);
@@ -2958,7 +2958,7 @@ function withAlpha(hex: string, alpha: number): string {
  */
 export function defineCustomThemes(monaco: typeof Monaco): void {
   // Read CSS variables for light theme
-  const lightMain = toHex(getCSSVar('--main', '#f97316'));
+  const lightMain = toHex(getCSSVar('--main', '#f7b733'));
   const lightMainFg = toHex(getCSSVar('--main-foreground', '#000000'));
   const lightBg = toHex(getCSSVar('--background', '#ffffff'));
   const lightFg = toHex(getCSSVar('--foreground', '#000000'));
@@ -3118,14 +3118,15 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
 
   // Read CSS variables for dark theme (need to temporarily add .dark class to read)
   // For simplicity, use hardcoded dark values that match globals.css
-  const darkMain = '#fb923c';
-  const darkMainFg = '#000000';
-  const darkBg = '#09090b';
-  const darkFg = '#ffffff';
-  const darkBorder = '#ffffff';
-  const darkCard = '#27272a';
-  const darkMuted = '#404040';
-  const darkMutedFg = '#a3a3a3';
+  // (Sunpebble brand: night bg, ink card, cream text, sun accent)
+  const darkMain = '#f7b733';
+  const darkMainFg = '#232733';
+  const darkBg = '#161928';
+  const darkFg = '#fff6e8';
+  const darkBorder = '#fff6e8';
+  const darkCard = '#232733';
+  const darkMuted = '#2b3040';
+  const darkMutedFg = '#9b9a96';
 
   // Dark theme with dynamic colors
   monaco.editor.defineTheme('sql-pro-dark', {

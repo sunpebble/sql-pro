@@ -114,7 +114,7 @@ function TestimonialCard({
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <div
-        className={`bg-main/10 mb-4 flex h-10 w-10 items-center justify-center rounded-full ${isInView ? 'animate-scale-bounce' : 'opacity-0'}`}
+        className={`bg-main/10 mb-4 flex h-10 w-10 items-center justify-center rounded-full ${isInView ? 'animate-quote-scale-in' : 'opacity-0'}`}
         style={
           isInView ? { animationDelay: `${index * 100 + 200}ms` } : undefined
         }

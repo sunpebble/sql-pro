@@ -105,7 +105,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
     try {
       await navigator.clipboard.writeText(license.licenseKey);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(setCopied, 2000, false);
     } catch {
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
@@ -115,7 +115,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
       document.execCommand('copy');
       document.body.removeChild(textArea);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(setCopied, 2000, false);
     }
   };
 
@@ -140,7 +140,7 @@ export default function LicenseModal({ isOpen, onClose }: LicenseModalProps) {
       }}
       aria-labelledby="license-title"
     >
-      <div className="animate-bounce-in rounded-base border-border bg-background relative max-h-[90vh] w-full max-w-md overflow-y-auto border p-6 shadow-lg md:p-8">
+      <div className="animate-pop-in rounded-base border-border bg-background relative max-h-[90vh] w-full max-w-md overflow-y-auto border p-6 shadow-lg md:p-8">
         <button
           type="button"
           className="bg-secondary-background text-muted-foreground hover:border-border hover:text-foreground absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full border border-transparent transition-all"

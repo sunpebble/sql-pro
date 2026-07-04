@@ -1,4 +1,3 @@
-
 // Mock SQL Pro API
 //
 // Each namespace is validated against its domain mock interface.
@@ -858,7 +857,8 @@ export const mockSqlProAPI = {
       // Simple query parsing for demo purposes
       if (query.includes('select') && query.includes('from products')) {
         const tableSchema = mockTables.find((t) => t.name === 'products');
-        const columns = tableSchema?.columns || [];
+        // ExecuteQueryResponse.columns is string[], unlike getTableData's column objects
+        const columns = (tableSchema?.columns || []).map((c) => c.name);
         const data = mockTableData.products || [];
 
         // Handle LIMIT clause

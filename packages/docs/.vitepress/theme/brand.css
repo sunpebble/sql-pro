@@ -1,0 +1,38 @@
+/* Sunpebble brand overrides for VitePress default theme
+   Tokens: cream / ink / sun / pebble / night (sunpebble.github.io/BRAND.md)
+   Sun is light — it hosts ink text, never white. */
+
+:root {
+  --vp-c-bg: #fff6e8;
+  --vp-c-bg-alt: #f6ecd9;
+  --vp-c-bg-soft: #f6ecd9;
+  --vp-c-text-1: #232733;
+  --vp-c-text-2: #6e6e73;
+
+  /* brand-1/2 color link text — darkened sun for contrast on cream */
+  --vp-c-brand-1: #a1720b;
+  --vp-c-brand-2: #c98f13;
+  /* brand-3 is a solid fill — pure sun, always with ink text */
+  --vp-c-brand-3: #f7b733;
+
+  --vp-button-brand-bg: #f7b733;
+  --vp-button-brand-text: #232733;
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-hover-bg: #f9c355;
+  --vp-button-brand-hover-text: #232733;
+  --vp-button-brand-active-bg: #e3a41f;
+  --vp-button-brand-active-text: #232733;
+}
+
+.dark {
+  --vp-c-bg: #161928;
+  --vp-c-bg-alt: #12141f;
+  --vp-c-bg-soft: #232733;
+  --vp-c-text-1: #fff6e8;
+  --vp-c-text-2: #b9b7b1;
+
+  /* sun reads fine as link text on night */
+  --vp-c-brand-1: #f7b733;
+  --vp-c-brand-2: #f9c355;
+  --vp-c-brand-3: #f7b733;
+}

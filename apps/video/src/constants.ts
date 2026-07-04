@@ -1,19 +1,20 @@
-// SQL Pro Design System Colors (from CLAUDE.md)
+// Sunpebble brand colors (sunpebble.github.io/BRAND.md)
+// Sun is light — it hosts ink text, never white.
 export const colors = {
-  // Primary - Orange
-  primary: '#F97316',
-  primaryDark: '#EA580C',
-  primaryLight: '#FB923C',
+  // Primary - brand sun
+  primary: '#F7B733',
+  primaryDark: '#E3A41F',
+  primaryLight: '#F9C355',
 
-  // Backgrounds - Dark theme
-  bgDark: '#1C1917',
-  bgDarker: '#0F0F0E',
-  bgCard: '#292524',
+  // Backgrounds - brand night / ink
+  bgDark: '#232733',
+  bgDarker: '#161928',
+  bgCard: '#2B3040',
 
-  // Text
-  textPrimary: '#FAFAF9',
-  textSecondary: '#D6D3D1',
-  textMuted: '#A8A29E',
+  // Text - brand cream
+  textPrimary: '#FFF6E8',
+  textSecondary: '#E5DFD3',
+  textMuted: '#B9B7B1',
 
   // Accent
   accentBlue: '#3B82F6',

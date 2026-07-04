@@ -204,7 +204,7 @@ export default function Features() {
               <div
                 className={`bg-main/10 text-main flex flex-shrink-0 items-center justify-center rounded-lg ${
                   feature.size === 'featured' ? 'h-14 w-14' : 'h-12 w-12'
-                } ${visibleCards.has(index) ? 'animate-icon-bounce' : ''}`}
+                } ${visibleCards.has(index) ? 'animate-icon-scale-in' : ''}`}
                 style={
                   visibleCards.has(index)
                     ? { animationDelay: `${index * 100}ms` }
