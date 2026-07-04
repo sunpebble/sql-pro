@@ -24,7 +24,8 @@ import {
   ChevronRight,
   Download,
   ExternalLink,
-  Github,
+  // lucide 1.x removed brand icons; FolderGit2 stands in for the repository link
+  FolderGit2,
   Globe,
   Loader2,
   Package,
@@ -613,7 +614,7 @@ export function PluginDetailView({
                       className="flex-1"
                       onClick={() => window.open(pluginRepository, '_blank')}
                     >
-                      <Github className="mr-2 h-4 w-4" />
+                      <FolderGit2 className="mr-2 h-4 w-4" />
                       {t('pluginDetail.repository')}
                       <ExternalLink className="ml-auto h-3 w-3 opacity-50" />
                     </Button>
