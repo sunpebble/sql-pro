@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.0.0](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.17.0...quarry-monorepo-v2.0.0) (2026-07-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* the Electron desktop app and web demo are no longer built from this repository; Windows/Linux builds are discontinued.
+
+### Features
+
+* **swiftui:** close electron feature gaps, drop AI and plugins ([a77eb92](https://github.com/sunpebble/quarry/commit/a77eb92c5f5884aa281851a909fb8c30302292e5))
+
+
+### Bug Fixes
+
+* **license-api:** read current_period_end from subscription items ([a7f45ce](https://github.com/sunpebble/quarry/commit/a7f45ce472e42ee37e4d7fc3c8ad0c875938a99e))
+
+
+### Code Refactoring
+
+* retire the electron app in favor of the native macOS app ([43aa2e6](https://github.com/sunpebble/quarry/commit/43aa2e6ff495e2d64a17e157f2a79ca70a34cceb))
+
 ## [1.17.0](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.11...quarry-monorepo-v1.17.0) (2026-07-05)
 
 
