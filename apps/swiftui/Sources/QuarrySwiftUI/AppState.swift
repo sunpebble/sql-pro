@@ -215,6 +215,9 @@ final class QuarryAppState: ObservableObject {
       sessions.append(session)
       activate(session)
       remember(url)
+    } catch SQLiteDatabaseError.passwordRequired {
+      guard let password = askPassword(title: L("Open Encrypted Database")) else { return }
+      openDatabase(url, password: password)
     } catch {
       errorMessage = error.localizedDescription
     }
