@@ -43,7 +43,7 @@ jobs:
     if: ${{ needs.release-please.outputs.swiftui--release_created == 'true' }}
     permissions:
       contents: write
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@v7
