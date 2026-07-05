@@ -85,6 +85,12 @@ const config = {
     // rejects non-Developer ID certificates from the same team.
     identity: isMacCiBuild ? '62HCT6Q83X' : undefined,
     sign: './scripts/mac-sign-by-hash.cjs',
+    // These are sealed resources, not executable code. Signing each one as a
+    // generic binary makes CI depend on hundreds of Apple timestamp requests.
+    signIgnore: [
+      'Contents/Resources/app\\.asar$',
+      'Contents/Frameworks/.*\\.framework/(?:Versions/[^/]+/)?Resources/.*\\.(?:bin|dat|icns|nib|pak)$',
+    ],
     // Signing + notarization happen in CI when CSC_LINK / APPLE_API_KEY env
     // vars are present (sunpebble org secrets); both are skipped
     // automatically for local builds without them.
