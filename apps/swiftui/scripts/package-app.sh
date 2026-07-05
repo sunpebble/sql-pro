@@ -12,6 +12,13 @@ cd "$(dirname "$0")/.."
 
 VERSION="${1:?usage: package-app.sh <version> [signing-identity]}"
 IDENTITY="${2:-Developer ID Application}"
+
+# Fall back to ad-hoc signing for local dev machines without the cert;
+# CI imports the Developer ID certificate explicitly.
+if ! security find-identity -v -p codesigning | grep -q "$IDENTITY"; then
+  echo "WARNING: '$IDENTITY' not found in keychain, using ad-hoc signing" >&2
+  IDENTITY="-"
+fi
 APP_NAME="Quarry"
 BUNDLE_ID="com.quarry.app.native"
 DIST="dist"
@@ -104,10 +111,17 @@ if otool -L "$BIN" | grep -q '^	/opt/homebrew'; then
 fi
 
 echo "==> codesigning with: $IDENTITY"
+# Hardened runtime enables library validation, which rejects ad-hoc dylibs
+# (no Team ID) — only enable it for real identities. Notarization needs it,
+# so CI always signs with the Developer ID.
+SIGN_FLAGS=(--force --sign "$IDENTITY")
+if [ "$IDENTITY" != "-" ]; then
+  SIGN_FLAGS+=(--options runtime --timestamp)
+fi
 for lib in "$FRAMEWORKS"/*.dylib; do
-  codesign --force --options runtime --timestamp --sign "$IDENTITY" "$lib"
+  codesign "${SIGN_FLAGS[@]}" "$lib"
 done
-codesign --force --options runtime --timestamp --sign "$IDENTITY" "$APP"
+codesign "${SIGN_FLAGS[@]}" "$APP"
 
 echo "==> verifying signature"
 codesign --verify --deep --strict --verbose=2 "$APP"
