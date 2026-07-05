@@ -3,6 +3,8 @@ node_modules
 
 # Build output
 *.tsbuildinfo
+.build
+.swiftpm
 dist
 out
 

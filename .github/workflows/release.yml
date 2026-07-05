@@ -29,6 +29,10 @@ jobs:
       electron--release_created: ${{ steps.release.outputs['apps/electron--release_created'] }}
       electron--tag_name: ${{ steps.release.outputs['apps/electron--tag_name'] }}
       electron--version: ${{ steps.release.outputs['apps/electron--version'] }}
+      # Native SwiftUI app (path-based prefix: apps/swiftui)
+      swiftui--release_created: ${{ steps.release.outputs['apps/swiftui--release_created'] }}
+      swiftui--tag_name: ${{ steps.release.outputs['apps/swiftui--tag_name'] }}
+      swiftui--version: ${{ steps.release.outputs['apps/swiftui--version'] }}
 
     steps:
       - name: Release Please
@@ -192,3 +196,76 @@ jobs:
         run: |
           bash scripts/upload-release.sh ${{ needs.release-please.outputs.electron--version }}
         working-directory: apps/electron
+
+  build-swiftui:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.swiftui--release_created == 'true' }}
+    permissions:
+      contents: write
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install homebrew database libraries
+        run: brew install sqlcipher postgresql@16 mysql
+
+      - name: Run tests
+        run: swift test
+        working-directory: apps/swiftui
+
+      - name: Import macOS signing certificate
+        env:
+          DIST_CERT_P12: ${{ secrets.DIST_CERT_P12 }}
+          DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+        run: |
+          CERTIFICATE_PATH="$RUNNER_TEMP/developer-id.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/app-signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -base64 32)"
+
+          printf '%s' "$DIST_CERT_P12" | base64 --decode > "$CERTIFICATE_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERTIFICATE_PATH" -k "$KEYCHAIN_PATH" -P "$DIST_CERT_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
+
+      - name: Build, bundle, and sign Quarry.app
+        run: ./scripts/package-app.sh "${{ needs.release-please.outputs.swiftui--version }}"
+        working-directory: apps/swiftui
+
+      - name: Write App Store Connect API key
+        env:
+          ASC_API_KEY_P8: ${{ secrets.ASC_API_KEY_P8 }}
+        run: printf '%s\n' "$ASC_API_KEY_P8" > "$RUNNER_TEMP/AuthKey.p8"
+
+      - name: Notarize and staple
+        env:
+          APPLE_API_KEY: ${{ format('{0}/AuthKey.p8', runner.temp) }}
+          APPLE_API_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          ZIP_PATH="dist/Quarry-SwiftUI-${{ needs.release-please.outputs.swiftui--version }}-arm64.zip"
+
+          xcrun notarytool submit "$ZIP_PATH" \
+            --key "$APPLE_API_KEY" \
+            --key-id "$APPLE_API_KEY_ID" \
+            --issuer "$APPLE_API_ISSUER" \
+            --wait
+
+          # Staple the ticket to the .app and re-zip so the download runs offline.
+          xcrun stapler staple dist/Quarry.app
+          xcrun stapler validate dist/Quarry.app
+          rm "$ZIP_PATH"
+          ditto -c -k --keepParent dist/Quarry.app "$ZIP_PATH"
+        working-directory: apps/swiftui
+
+      - name: Upload artifacts to GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ needs.release-please.outputs.swiftui--tag_name }}
+          files: apps/swiftui/dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

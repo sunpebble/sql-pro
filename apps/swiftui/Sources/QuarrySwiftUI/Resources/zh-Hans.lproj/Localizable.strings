@@ -1,0 +1,190 @@
+/* Workspace modes */
+"Data" = "数据";
+"SQL" = "SQL";
+"Search" = "搜索";
+"Diagram" = "关系图";
+"AI" = "AI";
+"Maintenance" = "维护";
+"Plugins" = "插件";
+
+/* Root view */
+"Open" = "打开";
+"Open Encrypted" = "打开加密数据库";
+"Mode" = "模式";
+"Run" = "运行";
+"OK" = "好";
+"Database" = "数据库";
+"Save Profile" = "保存配置";
+"Open Database" = "打开数据库";
+"Connect to Server" = "连接服务器";
+"Profiles" = "连接配置";
+"Open Connections" = "已打开的连接";
+"Recent" = "最近打开";
+"Tables" = "表";
+"No tables" = "暂无表";
+"SwiftUI SQLite workspace" = "SwiftUI SQLite 工作区";
+"Open a SQLite database" = "打开一个 SQLite 数据库";
+"Choose a .sqlite, .sqlite3, or .db file to browse tables and run SQL." = "选择 .sqlite、.sqlite3 或 .db 文件以浏览表并运行 SQL。";
+"New Database" = "新建数据库";
+
+/* Menu commands */
+"New Database…" = "新建数据库…";
+"Open Database…" = "打开数据库…";
+"Open Encrypted Database…" = "打开加密数据库…";
+"Connect to Server…" = "连接服务器…";
+"Open Recent" = "打开最近使用";
+"Close Database" = "关闭数据库";
+"Save Connection Profile…" = "保存连接配置…";
+"Import CSV…" = "导入 CSV…";
+"Import JSON…" = "导入 JSON…";
+"Export CSV…" = "导出 CSV…";
+"Export JSON…" = "导出 JSON…";
+"Query" = "查询";
+"Run Query" = "运行查询";
+"Explain Query" = "解释查询";
+"Save Query" = "保存查询";
+"Search All Tables" = "搜索所有表";
+"Refresh Table" = "刷新表";
+"Generate Mock Data…" = "生成模拟数据…";
+"Save Schema Snapshot…" = "保存架构快照…";
+"Compare Schema Snapshot…" = "比较架构快照…";
+"Backup Database…" = "备份数据库…";
+"Restore Database…" = "恢复数据库…";
+
+/* Table workspace */
+"%d rows" = "%d 行";
+"Read-only" = "只读";
+"Filter rows" = "筛选行";
+"Filter" = "筛选";
+"Clear" = "清除";
+"Page %d" = "第 %d 页";
+"%d selected" = "已选择 %d 行";
+"Bulk Edit" = "批量编辑";
+"Delete" = "删除";
+"Add Row" = "添加行";
+"Refresh" = "刷新";
+"Import CSV" = "导入 CSV";
+"No Table Selected" = "未选择表";
+"Columns" = "列";
+"Indexes" = "索引";
+"No indexes" = "暂无索引";
+"Foreign Keys" = "外键";
+"No foreign keys" = "暂无外键";
+"DDL" = "DDL";
+"Schema" = "架构";
+"%d pending changes" = "%d 项待处理更改";
+"Discard" = "放弃";
+"Apply" = "应用";
+"Row" = "行";
+"Column" = "列";
+"Before" = "更改前";
+"After" = "更改后";
+
+/* Query workspace */
+"Save" = "保存";
+"Explain" = "解释";
+"Query Plan" = "查询计划";
+"Search queries" = "搜索查询";
+"Saved" = "已保存";
+"No saved queries" = "暂无已保存的查询";
+"History" = "历史";
+"No query history" = "暂无查询历史";
+"No Results" = "暂无结果";
+"Statement Complete" = "语句执行完成";
+
+/* Search workspace */
+"Search all tables and views" = "搜索所有表和视图";
+"%d matches" = "%d 个匹配";
+"No Matches" = "无匹配结果";
+
+/* Diagram workspace */
+"%d tables" = "%d 个表";
+"%d relationships" = "%d 个关系";
+"Relationships" = "关系";
+"No relationships" = "暂无关系";
+
+/* AI workspace */
+"Generate SQL" = "生成 SQL";
+"Explain SQL" = "解释 SQL";
+"Provider" = "服务提供方";
+"Endpoint" = "接口地址";
+"Model" = "模型";
+"API key" = "API 密钥";
+"The API key stays in memory for this app session." = "API 密钥仅保存在本次应用会话的内存中。";
+"Natural Language to SQL" = "自然语言转 SQL";
+"Current SQL" = "当前 SQL";
+"Output" = "输出";
+"No AI output yet." = "暂无 AI 输出。";
+
+/* Maintenance workspace */
+"Integrity" = "完整性";
+"Quick Check" = "快速检查";
+"Optimize" = "优化";
+"Vacuum" = "Vacuum";
+"Database Info" = "数据库信息";
+"No database info loaded" = "尚未加载数据库信息";
+"Last Result" = "最近结果";
+"No maintenance result" = "暂无维护结果";
+
+/* Plugins workspace */
+"%d installed" = "已安装 %d 个";
+"Install Folder" = "安装文件夹";
+"Rescan" = "重新扫描";
+"No Plugins" = "暂无插件";
+"Install a Quarry plugin folder containing plugin.json." = "安装一个包含 plugin.json 的 Quarry 插件文件夹。";
+"Enabled" = "启用";
+"No permissions" = "无权限";
+
+/* Settings */
+"Data Grid" = "数据表格";
+"Rows per page" = "每页行数";
+"AI Provider" = "AI 服务提供方";
+
+/* App state messages and dialogs */
+"Open a database first." = "请先打开一个数据库。";
+"This action is only available for SQLite databases." = "此操作仅适用于 SQLite 数据库。";
+"Database file no longer exists." = "数据库文件已不存在。";
+"Open Encrypted Database" = "打开加密数据库";
+"Connect to %@" = "连接 %@";
+"Open %@" = "打开 %@";
+"Save Connection Profile" = "保存连接配置";
+"Table no longer exists." = "该表已不存在。";
+"Integrity Check" = "完整性检查";
+"Vacuum Database" = "Vacuum 数据库";
+"VACUUM rewrites the database file and can take time on large databases." = "VACUUM 会重写数据库文件，大型数据库可能耗时较长。";
+"Vacuum complete." = "Vacuum 完成。";
+"Select editable rows first." = "请先选择可编辑的行。";
+"Select rows first." = "请先选择行。";
+"This table has no editable columns." = "此表没有可编辑的列。";
+"Delete Selected Rows" = "删除所选行";
+"Delete %1$d selected rows from %2$@?" = "从 %2$@ 中删除所选的 %1$d 行？";
+"Nothing to export." = "没有可导出的内容。";
+"Select a table in a SQLite database first." = "请先在 SQLite 数据库中选择一个表。";
+"Imported %d rows." = "已导入 %d 行。";
+"Generate Mock Data" = "生成模拟数据";
+"Inserted %d mock rows." = "已插入 %d 行模拟数据。";
+"Schema Comparison" = "架构比较";
+"No differences since snapshot." = "与快照相比没有差异。";
+"Migration SQL:" = "迁移 SQL：";
+"Open a SQLite database first." = "请先打开一个 SQLite 数据库。";
+"Done." = "完成。";
+"Enter the database password." = "请输入数据库密码。";
+"Cancel" = "取消";
+"Continue" = "继续";
+"New value" = "新值";
+"Value" = "值";
+"Bulk Edit Selected Rows" = "批量编辑所选行";
+"Create pending changes for the selected rows." = "为所选行创建待处理更改。";
+"Preview Changes" = "预览更改";
+"Host" = "主机";
+"Port (5432 / 3306)" = "端口（5432 / 3306）";
+"User" = "用户名";
+"Password" = "密码";
+"SSH host (optional, key auth)" = "SSH 主机（可选，密钥认证）";
+"SSH user (defaults to current user)" = "SSH 用户（默认当前用户）";
+"Connect to a PostgreSQL or MySQL database." = "连接到 PostgreSQL 或 MySQL 数据库。";
+"Connect" = "连接";
+
+"Create Demo Database…" = "创建演示数据库…";
+
+"Connecting…" = "连接中…";

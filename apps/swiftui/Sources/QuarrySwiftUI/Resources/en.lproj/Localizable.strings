@@ -1,0 +1,190 @@
+/* Workspace modes */
+"Data" = "Data";
+"SQL" = "SQL";
+"Search" = "Search";
+"Diagram" = "Diagram";
+"AI" = "AI";
+"Maintenance" = "Maintenance";
+"Plugins" = "Plugins";
+
+/* Root view */
+"Open" = "Open";
+"Open Encrypted" = "Open Encrypted";
+"Mode" = "Mode";
+"Run" = "Run";
+"OK" = "OK";
+"Database" = "Database";
+"Save Profile" = "Save Profile";
+"Open Database" = "Open Database";
+"Connect to Server" = "Connect to Server";
+"Profiles" = "Profiles";
+"Open Connections" = "Open Connections";
+"Recent" = "Recent";
+"Tables" = "Tables";
+"No tables" = "No tables";
+"SwiftUI SQLite workspace" = "SwiftUI SQLite workspace";
+"Open a SQLite database" = "Open a SQLite database";
+"Choose a .sqlite, .sqlite3, or .db file to browse tables and run SQL." = "Choose a .sqlite, .sqlite3, or .db file to browse tables and run SQL.";
+"New Database" = "New Database";
+
+/* Menu commands */
+"New Database…" = "New Database…";
+"Open Database…" = "Open Database…";
+"Open Encrypted Database…" = "Open Encrypted Database…";
+"Connect to Server…" = "Connect to Server…";
+"Open Recent" = "Open Recent";
+"Close Database" = "Close Database";
+"Save Connection Profile…" = "Save Connection Profile…";
+"Import CSV…" = "Import CSV…";
+"Import JSON…" = "Import JSON…";
+"Export CSV…" = "Export CSV…";
+"Export JSON…" = "Export JSON…";
+"Query" = "Query";
+"Run Query" = "Run Query";
+"Explain Query" = "Explain Query";
+"Save Query" = "Save Query";
+"Search All Tables" = "Search All Tables";
+"Refresh Table" = "Refresh Table";
+"Generate Mock Data…" = "Generate Mock Data…";
+"Save Schema Snapshot…" = "Save Schema Snapshot…";
+"Compare Schema Snapshot…" = "Compare Schema Snapshot…";
+"Backup Database…" = "Backup Database…";
+"Restore Database…" = "Restore Database…";
+
+/* Table workspace */
+"%d rows" = "%d rows";
+"Read-only" = "Read-only";
+"Filter rows" = "Filter rows";
+"Filter" = "Filter";
+"Clear" = "Clear";
+"Page %d" = "Page %d";
+"%d selected" = "%d selected";
+"Bulk Edit" = "Bulk Edit";
+"Delete" = "Delete";
+"Add Row" = "Add Row";
+"Refresh" = "Refresh";
+"Import CSV" = "Import CSV";
+"No Table Selected" = "No Table Selected";
+"Columns" = "Columns";
+"Indexes" = "Indexes";
+"No indexes" = "No indexes";
+"Foreign Keys" = "Foreign Keys";
+"No foreign keys" = "No foreign keys";
+"DDL" = "DDL";
+"Schema" = "Schema";
+"%d pending changes" = "%d pending changes";
+"Discard" = "Discard";
+"Apply" = "Apply";
+"Row" = "Row";
+"Column" = "Column";
+"Before" = "Before";
+"After" = "After";
+
+/* Query workspace */
+"Save" = "Save";
+"Explain" = "Explain";
+"Query Plan" = "Query Plan";
+"Search queries" = "Search queries";
+"Saved" = "Saved";
+"No saved queries" = "No saved queries";
+"History" = "History";
+"No query history" = "No query history";
+"No Results" = "No Results";
+"Statement Complete" = "Statement Complete";
+
+/* Search workspace */
+"Search all tables and views" = "Search all tables and views";
+"%d matches" = "%d matches";
+"No Matches" = "No Matches";
+
+/* Diagram workspace */
+"%d tables" = "%d tables";
+"%d relationships" = "%d relationships";
+"Relationships" = "Relationships";
+"No relationships" = "No relationships";
+
+/* AI workspace */
+"Generate SQL" = "Generate SQL";
+"Explain SQL" = "Explain SQL";
+"Provider" = "Provider";
+"Endpoint" = "Endpoint";
+"Model" = "Model";
+"API key" = "API key";
+"The API key stays in memory for this app session." = "The API key stays in memory for this app session.";
+"Natural Language to SQL" = "Natural Language to SQL";
+"Current SQL" = "Current SQL";
+"Output" = "Output";
+"No AI output yet." = "No AI output yet.";
+
+/* Maintenance workspace */
+"Integrity" = "Integrity";
+"Quick Check" = "Quick Check";
+"Optimize" = "Optimize";
+"Vacuum" = "Vacuum";
+"Database Info" = "Database Info";
+"No database info loaded" = "No database info loaded";
+"Last Result" = "Last Result";
+"No maintenance result" = "No maintenance result";
+
+/* Plugins workspace */
+"%d installed" = "%d installed";
+"Install Folder" = "Install Folder";
+"Rescan" = "Rescan";
+"No Plugins" = "No Plugins";
+"Install a Quarry plugin folder containing plugin.json." = "Install a Quarry plugin folder containing plugin.json.";
+"Enabled" = "Enabled";
+"No permissions" = "No permissions";
+
+/* Settings */
+"Data Grid" = "Data Grid";
+"Rows per page" = "Rows per page";
+"AI Provider" = "AI Provider";
+
+/* App state messages and dialogs */
+"Open a database first." = "Open a database first.";
+"This action is only available for SQLite databases." = "This action is only available for SQLite databases.";
+"Database file no longer exists." = "Database file no longer exists.";
+"Open Encrypted Database" = "Open Encrypted Database";
+"Connect to %@" = "Connect to %@";
+"Open %@" = "Open %@";
+"Save Connection Profile" = "Save Connection Profile";
+"Table no longer exists." = "Table no longer exists.";
+"Integrity Check" = "Integrity Check";
+"Vacuum Database" = "Vacuum Database";
+"VACUUM rewrites the database file and can take time on large databases." = "VACUUM rewrites the database file and can take time on large databases.";
+"Vacuum complete." = "Vacuum complete.";
+"Select editable rows first." = "Select editable rows first.";
+"Select rows first." = "Select rows first.";
+"This table has no editable columns." = "This table has no editable columns.";
+"Delete Selected Rows" = "Delete Selected Rows";
+"Delete %1$d selected rows from %2$@?" = "Delete %1$d selected rows from %2$@?";
+"Nothing to export." = "Nothing to export.";
+"Select a table in a SQLite database first." = "Select a table in a SQLite database first.";
+"Imported %d rows." = "Imported %d rows.";
+"Generate Mock Data" = "Generate Mock Data";
+"Inserted %d mock rows." = "Inserted %d mock rows.";
+"Schema Comparison" = "Schema Comparison";
+"No differences since snapshot." = "No differences since snapshot.";
+"Migration SQL:" = "Migration SQL:";
+"Open a SQLite database first." = "Open a SQLite database first.";
+"Done." = "Done.";
+"Enter the database password." = "Enter the database password.";
+"Cancel" = "Cancel";
+"Continue" = "Continue";
+"New value" = "New value";
+"Value" = "Value";
+"Bulk Edit Selected Rows" = "Bulk Edit Selected Rows";
+"Create pending changes for the selected rows." = "Create pending changes for the selected rows.";
+"Preview Changes" = "Preview Changes";
+"Host" = "Host";
+"Port (5432 / 3306)" = "Port (5432 / 3306)";
+"User" = "User";
+"Password" = "Password";
+"SSH host (optional, key auth)" = "SSH host (optional, key auth)";
+"SSH user (defaults to current user)" = "SSH user (defaults to current user)";
+"Connect to a PostgreSQL or MySQL database." = "Connect to a PostgreSQL or MySQL database.";
+"Connect" = "Connect";
+
+"Create Demo Database…" = "Create Demo Database…";
+
+"Connecting…" = "Connecting…";
