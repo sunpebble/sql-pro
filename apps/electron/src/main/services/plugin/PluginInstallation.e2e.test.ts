@@ -257,20 +257,27 @@ vi.mock('node:util', async (importOriginal) => {
   const actual = await importOriginal<typeof import('node:util')>();
   const mockModule = {
     ...actual,
-    promisify: vi.fn(() => () => {
-      // Simulate async exec for archive extraction
-      return new Promise((resolve) => {
-        mockState.extractionCalled = true;
-        // Simulate extraction: create the plugin directory
-        const extractPath = `${testPluginsDir}/_extracting_${Date.now()}`;
-        mockState.directories.add(extractPath);
-        mockState.files.set(
-          `${extractPath}/plugin.json`,
-          JSON.stringify(helloWorldManifest)
-        );
-        mockState.files.set(`${extractPath}/index.js`, helloWorldPluginCode);
-        setTimeout(resolve, 0, { stdout: '', stderr: '' });
-      });
+    promisify: vi.fn(() => (...args: unknown[]) => {
+      // Simulate async exec for archive extraction.
+      // Derive the destination from the actual call arguments instead of
+      // computing our own Date.now() path — the caller's `_extracting_<ts>`
+      // and a second Date.now() here can land in different milliseconds on
+      // slow CI runners, which made this test flaky.
+      mockState.extractionCalled = true;
+      const fileArgs = Array.isArray(args[1]) ? (args[1] as string[]) : [];
+      const destFlagIndex = fileArgs.indexOf('-d');
+      const extractPath =
+        destFlagIndex !== -1
+          ? fileArgs[destFlagIndex + 1]
+          : ((args[2] as { env?: Record<string, string> } | undefined)?.env
+              ?.DEST_PATH ?? '');
+      mockState.directories.add(extractPath);
+      mockState.files.set(
+        `${extractPath}/plugin.json`,
+        JSON.stringify(helloWorldManifest)
+      );
+      mockState.files.set(`${extractPath}/index.js`, helloWorldPluginCode);
+      return Promise.resolve({ stdout: '', stderr: '' });
     }),
   };
   return {
