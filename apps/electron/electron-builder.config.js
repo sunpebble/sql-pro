@@ -92,9 +92,11 @@ const config = {
       'Contents/Frameworks/.*\\.framework/(?:Versions/[^/]+/)?Resources/.*\\.(?:bin|dat|icns|nib|pak)$',
       'Contents/Frameworks/[^/]+\\.framework/(?:Versions/Current/.*|(?!(?:Versions/|$)).*)',
     ],
-    // Signing + notarization happen in CI when CSC_LINK / APPLE_API_KEY env
-    // vars are present (sunpebble org secrets); both are skipped
-    // automatically for local builds without them.
+    // CI notarizes the compressed DMG after afterAllArtifactBuild. Letting
+    // electron-builder notarize here uploads the much larger .app bundle.
+    notarize: false,
+    // Signing happens in CI when CSC_KEYCHAIN is present (sunpebble org
+    // secrets); it is skipped automatically for local builds without it.
     // Build dir first, then create zip manually to avoid 7za @ prefix issues
     target: [
       {
