@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.11](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.10...quarry-app-v1.11.11) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** create dmg for x64 mac output ([6ca489c](https://github.com/sunpebble/quarry/commit/6ca489c2f5a2bcca4688c819a922ecac93e69509))
+
 ## [1.11.10](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.9...quarry-app-v1.11.10) (2026-07-05)
 
 

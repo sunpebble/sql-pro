@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.11](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.10...quarry-monorepo-v1.16.11) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** create dmg for x64 mac output ([6ca489c](https://github.com/sunpebble/quarry/commit/6ca489c2f5a2bcca4688c819a922ecac93e69509))
+
 ## [1.16.10](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.9...quarry-monorepo-v1.16.10) (2026-07-05)
 
 
