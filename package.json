@@ -1,6 +1,6 @@
 {
   "name": "quarry-monorepo",
-  "version": "1.16.2",
+  "version": "1.16.3",
   "private": true,
   "packageManager": "pnpm@11.5.3",
   "description": "Quarry Monorepo - Professional SQLite database manager",
