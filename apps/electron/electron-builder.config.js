@@ -3,6 +3,8 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const isMacCiBuild = process.platform === 'darwin' && process.env.CI === 'true';
+
 /**
  * @type {import('electron-builder').Configuration}
  */
@@ -10,6 +12,7 @@ const config = {
   appId: 'com.quarry.app',
   productName: 'Quarry',
   copyright: 'Copyright © 2025 kunish',
+  forceCodeSigning: isMacCiBuild,
 
   // Override scoped package name to avoid @ symbol issues with 7-Zip
   extraMetadata: {
@@ -78,6 +81,9 @@ const config = {
     icon: 'resources/icon.icns',
     category: 'public.app-category.developer-tools',
     entitlementsInherit: 'build/entitlements.mac.plist',
+    // Release notarization requires Developer ID signing. electron-builder can
+    // otherwise fall back to Apple Development certificates from the keychain.
+    identity: isMacCiBuild ? 'Developer ID Application' : undefined,
     sign: './scripts/mac-sign-by-hash.cjs',
     // Signing + notarization happen in CI when CSC_LINK / APPLE_API_KEY env
     // vars are present (sunpebble org secrets); both are skipped
