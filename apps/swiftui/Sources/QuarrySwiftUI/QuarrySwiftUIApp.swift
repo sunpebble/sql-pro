@@ -5,7 +5,7 @@ struct QuarrySwiftUIApp: App {
   @StateObject private var state = QuarryAppState()
 
   var body: some Scene {
-    WindowGroup {
+    WindowGroup("Quarry") {
       RootView(state: state)
         .frame(minWidth: 1040, minHeight: 680)
     }

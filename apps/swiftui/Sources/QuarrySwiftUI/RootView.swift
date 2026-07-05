@@ -213,6 +213,7 @@ struct DetailView: View {
             Label(L("Connect to Server"), systemImage: "network")
           }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else if state.workspaceMode == .query {
         QueryWorkspaceView(state: state)
       } else if state.workspaceMode == .search {
@@ -229,6 +230,7 @@ struct DetailView: View {
         EditableTableWorkspaceView(state: state)
       }
     }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(Brand.background)
   }
 }
