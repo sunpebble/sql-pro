@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.6](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.5...quarry-monorepo-v1.16.6) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** use team id for mac signing identity ([d254433](https://github.com/sunpebble/quarry/commit/d25443319250a13fd89f6abc71c53f923afc7525))
+
 ## [1.16.5](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.4...quarry-monorepo-v1.16.5) (2026-07-05)
 
 
