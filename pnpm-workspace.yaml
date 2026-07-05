@@ -19,7 +19,7 @@ catalogs:
     typescript: ^6.0.3
     eslint: ^10.4.1
     prettier: ^3.8.4
-    vite: ^8.0.16
+    vite: ^7.3.5
     vitest: ^4.1.8
     tsx: ^4.22.4
     husky: ^9.1.7
