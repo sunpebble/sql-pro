@@ -199,7 +199,9 @@ const config = {
     const outDir = buildResult.outDir;
 
     // Find the .app bundle
-    const macDir = fs.readdirSync(outDir).find((dir) => dir.startsWith('mac-'));
+    const macDir = fs
+      .readdirSync(outDir)
+      .find((dir) => dir === 'mac' || dir.startsWith('mac-'));
     if (!macDir) {
       console.log('No mac build directory found, skipping DMG creation');
       return [];
