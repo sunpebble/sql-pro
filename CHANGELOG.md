@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.10](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.9...quarry-monorepo-v1.16.10) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** notarize compressed mac dmg ([ff371f8](https://github.com/sunpebble/quarry/commit/ff371f84fb0e8f994c1aaf8abca66e1eb20b0573))
+
 ## [1.16.9](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.8...quarry-monorepo-v1.16.9) (2026-07-05)
 
 
