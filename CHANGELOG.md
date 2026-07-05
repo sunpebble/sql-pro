@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.2](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.1...quarry-monorepo-v1.16.2) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** make release packaging avoid pnpm collector ([fe67e2d](https://github.com/sunpebble/quarry/commit/fe67e2dc79959e87abecee56585cf1197b6ef39c))
+
 ## [1.16.1](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.0...quarry-monorepo-v1.16.1) (2026-07-05)
 
 
