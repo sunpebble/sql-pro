@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.8](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.7...quarry-app-v1.11.8) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** dedupe mac framework signing paths ([be15ca5](https://github.com/sunpebble/quarry/commit/be15ca5227e4d53956cfa5a8ef7b7b01fbe7ad75))
+
 ## [1.11.7](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.6...quarry-app-v1.11.7) (2026-07-05)
 
 
