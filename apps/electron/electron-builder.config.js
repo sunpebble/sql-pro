@@ -90,6 +90,7 @@ const config = {
     signIgnore: [
       'Contents/Resources/app\\.asar$',
       'Contents/Frameworks/.*\\.framework/(?:Versions/[^/]+/)?Resources/.*\\.(?:bin|dat|icns|nib|pak)$',
+      'Contents/Frameworks/[^/]+\\.framework/(?:Versions/Current/.*|(?!(?:Versions/|$)).*)',
     ],
     // Signing + notarization happen in CI when CSC_LINK / APPLE_API_KEY env
     // vars are present (sunpebble org secrets); both are skipped
