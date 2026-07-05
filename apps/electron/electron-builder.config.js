@@ -75,9 +75,9 @@ const config = {
     icon: 'resources/icon.icns',
     category: 'public.app-category.developer-tools',
     entitlementsInherit: 'build/entitlements.mac.plist',
-    notarize: false,
-    // Skip code signing - we'll handle it manually if needed
-    identity: null,
+    // Signing + notarization happen in CI when CSC_LINK / APPLE_API_KEY env
+    // vars are present (sunpebble org secrets); both are skipped
+    // automatically for local builds without them.
     // Build dir first, then create zip manually to avoid 7za @ prefix issues
     target: [
       {
