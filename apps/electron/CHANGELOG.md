@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.4](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.3...quarry-app-v1.11.4) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** sign mac builds with resolved identity hash ([bf84432](https://github.com/sunpebble/quarry/commit/bf84432ee9495018aced4f082116c9609ce502fd))
+
 ## [1.11.3](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.2...quarry-app-v1.11.3) (2026-07-05)
 
 

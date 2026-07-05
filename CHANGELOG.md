@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.4](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.3...quarry-monorepo-v1.16.4) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** sign mac builds with resolved identity hash ([bf84432](https://github.com/sunpebble/quarry/commit/bf84432ee9495018aced4f082116c9609ce502fd))
+
 ## [1.16.3](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.2...quarry-monorepo-v1.16.3) (2026-07-05)
 
 
