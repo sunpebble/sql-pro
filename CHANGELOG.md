@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.16.5](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.4...quarry-monorepo-v1.16.5) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** pin mac signing identity to release team ([d5b3f63](https://github.com/sunpebble/quarry/commit/d5b3f63f0b3a3da1302cd60cc2e6fe59f58eb5d0))
+* **electron:** require Developer ID for mac CI signing ([18496b6](https://github.com/sunpebble/quarry/commit/18496b6a21e9485f9df1a1f99d76c17f3fbb0279))
+* resolve dependency security advisories ([b267adc](https://github.com/sunpebble/quarry/commit/b267adc5b9e0f426f453023de5418dc636de9434))
+* satisfy lint after dependency update ([f27498e](https://github.com/sunpebble/quarry/commit/f27498e6d1fe1d8cd2e7dd7a95990d8e0464a8b2))
+
 ## [1.16.4](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.3...quarry-monorepo-v1.16.4) (2026-07-05)
 
 
