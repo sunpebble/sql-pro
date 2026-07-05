@@ -202,26 +202,10 @@ struct ResultGrid: View {
 
         Divider()
 
-        ScrollView([.horizontal, .vertical]) {
-          LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
-            Section {
-              ForEach(Array(result.rows.enumerated()), id: \.offset) { _, row in
-                HStack(spacing: 0) {
-                  ForEach(result.columns.indices, id: \.self) { index in
-                    CellText(index < row.count ? row[index] : "", isHeader: false)
-                  }
-                }
-              }
-            } header: {
-              HStack(spacing: 0) {
-                ForEach(result.columns, id: \.self) { column in
-                  CellText(column, isHeader: true)
-                }
-              }
-            }
-          }
-          .padding()
-        }
+        DataTableView(
+          columns: result.columns.map { .init(name: $0, tooltip: $0) },
+          rows: result.rows
+        )
       }
     )
   }

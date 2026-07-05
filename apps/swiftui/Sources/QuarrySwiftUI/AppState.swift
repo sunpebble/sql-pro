@@ -3,11 +3,6 @@ import QuarryCore
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct TableCellPosition: Equatable {
-  let row: Int
-  let column: Int
-}
-
 enum WorkspaceMode: String, CaseIterable, Identifiable {
   case data = "Data"
   case query = "SQL"
@@ -71,7 +66,6 @@ final class QuarryAppState: ObservableObject {
   @Published var tableSchema: TableSchema?
   @Published var tableFilter = ""
   @Published var tablePage = 0
-  @Published var editingCell: TableCellPosition?
   @Published var tableSortColumn: String?
   @Published var tableSortAscending = true
   @Published var diagram: DatabaseDiagram?
@@ -464,7 +458,6 @@ final class QuarryAppState: ObservableObject {
 
   func loadSelectedTable() {
     guard let engine, let selectedTable else { return }
-    editingCell = nil
 
     do {
       let data = try engine.tableData(
@@ -779,21 +772,28 @@ final class QuarryAppState: ObservableObject {
     }
   }
 
-  func isRowSelected(_ rowID: Int64) -> Bool {
-    selectedRowIDs.contains(rowID)
+  func setSelectedRows(indexes: Set<Int>) {
+    guard let tableData else { return }
+    selectedRowIDs = Set(indexes.compactMap { index in
+      tableData.rows.indices.contains(index) ? tableData.rows[index].rowID : nil
+    })
   }
 
-  func setRow(_ rowID: Int64, selected: Bool) {
-    if selected {
-      selectedRowIDs.insert(rowID)
-    } else {
-      selectedRowIDs.remove(rowID)
-    }
+  func applySort(columnName: String, ascending: Bool) {
+    guard tableData?.columns.contains(where: { $0.name == columnName }) == true else { return }
+    tableSortColumn = columnName
+    tableSortAscending = ascending
+    tablePage = 0
+    loadSelectedTable()
   }
 
-  func selectAllVisibleRows() {
-    selectedRowIDs = Set(tableData?.rows.compactMap(\.rowID) ?? [])
+  var selectedRowIndexes: Set<Int> {
+    guard let tableData else { return [] }
+    return Set(tableData.rows.enumerated().compactMap { index, row in
+      row.rowID.flatMap { selectedRowIDs.contains($0) ? index : nil }
+    })
   }
+
 
   func clearSelectedRows() {
     selectedRowIDs = []

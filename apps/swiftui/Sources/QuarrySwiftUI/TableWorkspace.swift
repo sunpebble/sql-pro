@@ -102,7 +102,26 @@ struct EditableTableWorkspaceView: View {
           Divider()
         }
 
-        EditableTableGrid(state: state, tableData: tableData)
+        DataTableView(
+          columns: tableData.columns.map {
+            .init(name: $0.name, tooltip: "\($0.type)\($0.isPrimaryKey ? " · primary key" : "")")
+          },
+          rows: tableData.rows.map(\.values),
+          editable: tableData.editable,
+          editableRows: tableData.rows.map { $0.rowID != nil },
+          sortColumn: state.tableSortColumn,
+          sortAscending: state.tableSortAscending,
+          selectedRows: state.selectedRowIndexes,
+          onEdit: { row, column, value in
+            state.editCell(rowIndex: row, columnIndex: column, newValue: value)
+          },
+          onSort: { columnName, ascending in
+            state.applySort(columnName: columnName, ascending: ascending)
+          },
+          onSelect: { indexes in
+            state.setSelectedRows(indexes: indexes)
+          }
+        )
       } else {
         ContentUnavailableView(L("No Table Selected"), systemImage: "tablecells")
       }
@@ -184,237 +203,6 @@ struct SchemaDetailsView: View {
   }
 }
 
-// Fixed cell width keeps lazily-rendered rows column-aligned without a Grid.
-// ponytail: LazyVStack in a two-axis ScrollView has limited laziness on macOS;
-// pageSize (default 100) caps the row count. If large pages must scroll
-// smoothly, wrap NSTableView instead.
-let tableCellWidth: CGFloat = 160
-
-struct EditableTableGrid: View {
-  @ObservedObject var state: QuarryAppState
-  let tableData: TableData
-
-  var body: some View {
-    ScrollView([.horizontal, .vertical]) {
-      LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
-        Section {
-          ForEach(Array(tableData.rows.enumerated()), id: \.offset) { rowIndex, row in
-            TableRowView(
-              state: state,
-              tableData: tableData,
-              row: row,
-              rowIndex: rowIndex,
-              editingColumn: state.editingCell?.row == rowIndex ? state.editingCell?.column : nil
-            )
-          }
-        } header: {
-          HStack(spacing: 0) {
-            SelectionHeaderCell(state: state, tableData: tableData)
-            ForEach(tableData.columns) { column in
-              Button {
-                state.sortBy(column)
-              } label: {
-                HeaderCell(
-                  column: column,
-                  isSorted: state.tableSortColumn == column.name,
-                  sortAscending: state.tableSortAscending
-                )
-              }
-              .buttonStyle(.plain)
-            }
-          }
-        }
-      }
-      .padding()
-    }
-  }
-}
-
-struct TableRowView: View {
-  let state: QuarryAppState
-  let tableData: TableData
-  let row: TableDataRow
-  let rowIndex: Int
-  let editingColumn: Int?
-
-  var body: some View {
-    HStack(spacing: 0) {
-      if let rowID = row.rowID {
-        RowActionsCell(state: state, rowID: rowID)
-      } else {
-        Text("")
-          .frame(width: 76, height: 28)
-          .border(Color(nsColor: .separatorColor), width: 0.5)
-      }
-
-      ForEach(Array(tableData.columns.enumerated()), id: \.offset) { columnIndex, _ in
-        if tableData.editable, row.rowID != nil {
-          EditableCell(
-            state: state,
-            value: row.values.indices.contains(columnIndex) ? row.values[columnIndex] : "",
-            rowIndex: rowIndex,
-            columnIndex: columnIndex,
-            isEditing: editingColumn == columnIndex
-          )
-        } else {
-          CellText(row.values.indices.contains(columnIndex) ? row.values[columnIndex] : "", isHeader: false)
-        }
-      }
-    }
-  }
-}
-
-struct SelectionHeaderCell: View {
-  @ObservedObject var state: QuarryAppState
-  let tableData: TableData
-
-  private var rowIDs: [Int64] {
-    tableData.rows.compactMap(\.rowID)
-  }
-
-  private var allSelected: Bool {
-    !rowIDs.isEmpty && rowIDs.allSatisfy { state.selectedRowIDs.contains($0) }
-  }
-
-  var body: some View {
-    HStack {
-      Toggle(
-        "",
-        isOn: Binding(
-          get: { allSelected },
-          set: { selected in
-            if selected {
-              state.selectAllVisibleRows()
-            } else {
-              state.clearSelectedRows()
-            }
-          }
-        )
-      )
-      .labelsHidden()
-      .disabled(rowIDs.isEmpty)
-    }
-    .frame(width: 76)
-    .frame(minHeight: 42)
-    .background(Color(nsColor: .controlBackgroundColor))
-    .border(Color(nsColor: .separatorColor), width: 0.5)
-  }
-}
-
-struct RowActionsCell: View {
-  @ObservedObject var state: QuarryAppState
-  let rowID: Int64
-
-  var body: some View {
-    HStack(spacing: 6) {
-      Toggle(
-        "",
-        isOn: Binding(
-          get: { state.isRowSelected(rowID) },
-          set: { state.setRow(rowID, selected: $0) }
-        )
-      )
-      .labelsHidden()
-
-      Button(role: .destructive) {
-        state.deleteRow(rowID)
-      } label: {
-        Image(systemName: "trash")
-      }
-      .buttonStyle(.borderless)
-    }
-    .frame(width: 76)
-    .frame(minHeight: 28)
-    .border(Color(nsColor: .separatorColor), width: 0.5)
-  }
-}
-
-struct HeaderCell: View {
-  let column: DatabaseColumn
-  let isSorted: Bool
-  let sortAscending: Bool
-
-  init(column: DatabaseColumn, isSorted: Bool = false, sortAscending: Bool = true) {
-    self.column = column
-    self.isSorted = isSorted
-    self.sortAscending = sortAscending
-  }
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: 2) {
-      HStack(spacing: 4) {
-        Text(column.name)
-        if column.isPrimaryKey {
-          Image(systemName: "key.fill")
-            .foregroundStyle(Brand.sun)
-        }
-        if isSorted {
-          Image(systemName: sortAscending ? "chevron.up" : "chevron.down")
-            .foregroundStyle(.secondary)
-        }
-      }
-
-      if !column.type.isEmpty {
-        Text(column.type)
-          .font(.caption2)
-          .foregroundStyle(.secondary)
-      }
-    }
-    .font(.caption.weight(.semibold))
-    .lineLimit(1)
-    .frame(width: tableCellWidth, alignment: .leading)
-    .frame(minHeight: 42)
-    .padding(.horizontal, 8)
-    .padding(.vertical, 6)
-    .background(Color(nsColor: .controlBackgroundColor))
-    .border(Color(nsColor: .separatorColor), width: 0.5)
-  }
-}
-
-// Cells render as plain Text (cheap to scroll); double-click swaps in the
-// single active TextField. AppKit-backed fields are too heavy to create per cell.
-struct EditableCell: View {
-  let state: QuarryAppState
-  let value: String
-  let rowIndex: Int
-  let columnIndex: Int
-  let isEditing: Bool
-  @FocusState private var focused: Bool
-
-  var body: some View {
-    Group {
-      if isEditing {
-        TextField(
-          "",
-          text: Binding(
-            get: { state.value(rowIndex: rowIndex, columnIndex: columnIndex) },
-            set: { state.editCell(rowIndex: rowIndex, columnIndex: columnIndex, newValue: $0) }
-          )
-        )
-        .textFieldStyle(.plain)
-        .focused($focused)
-        .onSubmit { state.editingCell = nil }
-        .onExitCommand { state.editingCell = nil }
-        .onAppear { focused = true }
-      } else {
-        Text(value)
-          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-          .contentShape(Rectangle())
-          .onTapGesture(count: 2) {
-            state.editingCell = TableCellPosition(row: rowIndex, column: columnIndex)
-          }
-      }
-    }
-    .font(.system(.caption, design: .monospaced))
-    .lineLimit(1)
-    .frame(width: tableCellWidth, alignment: .leading)
-    .frame(minHeight: 28)
-    .padding(.horizontal, 8)
-    .padding(.vertical, 4)
-    .border(Color(nsColor: .separatorColor), width: 0.5)
-  }
-}
-
 struct PendingChangesBar: View {
   @ObservedObject var state: QuarryAppState
 
@@ -486,29 +274,6 @@ struct DiffCell: View {
       .frame(width: width, height: isHeader ? 28 : 26, alignment: .leading)
       .padding(.horizontal, 8)
       .padding(.vertical, 4)
-      .background(isHeader ? Color(nsColor: .controlBackgroundColor) : Color.clear)
-      .border(Color(nsColor: .separatorColor), width: 0.5)
-  }
-}
-
-struct CellText: View {
-  let text: String
-  let isHeader: Bool
-
-  init(_ text: String, isHeader: Bool) {
-    self.text = text
-    self.isHeader = isHeader
-  }
-
-  var body: some View {
-    Text(text)
-      .font(isHeader ? .caption.weight(.semibold) : .system(.caption, design: .monospaced))
-      .lineLimit(1)
-      .truncationMode(.tail)
-      .frame(width: tableCellWidth, alignment: .leading)
-      .frame(minHeight: isHeader ? 42 : 28)
-      .padding(.horizontal, 8)
-      .padding(.vertical, 6)
       .background(isHeader ? Color(nsColor: .controlBackgroundColor) : Color.clear)
       .border(Color(nsColor: .separatorColor), width: 0.5)
   }
