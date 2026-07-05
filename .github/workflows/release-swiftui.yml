@@ -10,6 +10,9 @@ on:
         description: 'Create the GitHub Release (false = build and sign only)'
         type: boolean
         default: true
+  push:
+    tags:
+      - 'quarry-swiftui-v*'
 
 permissions:
   contents: write
@@ -24,6 +27,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+
+      # workflow_dispatch provides inputs.version; tag pushes derive it from
+      # the tag name (quarry-swiftui-v0.1.0 -> 0.1.0).
+      - name: Resolve version
+        run: |
+          VERSION="${{ inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION="${GITHUB_REF_NAME#quarry-swiftui-v}"
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Install homebrew database libraries
         run: brew install sqlcipher postgresql@16 mysql
@@ -51,7 +64,7 @@ jobs:
           security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
 
       - name: Build, bundle, and sign Quarry.app
-        run: ./scripts/package-app.sh "${{ inputs.version }}"
+        run: ./scripts/package-app.sh "$VERSION"
         working-directory: apps/swiftui
 
       - name: Write App Store Connect API key
@@ -65,7 +78,7 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.ASC_ISSUER_ID }}
         run: |
-          ZIP_PATH="dist/Quarry-SwiftUI-${{ inputs.version }}-arm64.zip"
+          ZIP_PATH="dist/Quarry-SwiftUI-$VERSION-arm64.zip"
 
           xcrun notarytool submit "$ZIP_PATH" \
             --key "$APPLE_API_KEY" \
@@ -83,16 +96,22 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: quarry-swiftui-${{ inputs.version }}
+          name: quarry-swiftui-${{ env.VERSION }}
           path: apps/swiftui/dist/*.zip
 
       - name: Create GitHub Release
-        if: ${{ inputs.publish }}
+        if: ${{ inputs.publish || github.ref_type == 'tag' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "quarry-swiftui-v${{ inputs.version }}" \
-            apps/swiftui/dist/Quarry-SwiftUI-${{ inputs.version }}-arm64.zip \
-            --target "$GITHUB_SHA" \
-            --title "Quarry SwiftUI v${{ inputs.version }}" \
+          TAG="quarry-swiftui-v$VERSION"
+          # Tag-triggered runs release the existing tag; dispatch runs create it.
+          TARGET_ARGS=()
+          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then
+            TARGET_ARGS=(--target "$GITHUB_SHA")
+          fi
+          gh release create "$TAG" \
+            "apps/swiftui/dist/Quarry-SwiftUI-$VERSION-arm64.zip" \
+            "${TARGET_ARGS[@]}" \
+            --title "Quarry SwiftUI v$VERSION" \
             --notes "Native SwiftUI build of Quarry (Apple Silicon, signed and notarized). SQLite/SQLCipher, PostgreSQL, and MySQL support."
