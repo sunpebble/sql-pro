@@ -81,11 +81,9 @@ const config = {
     icon: 'resources/icon.icns',
     category: 'public.app-category.developer-tools',
     entitlementsInherit: 'build/entitlements.mac.plist',
-    // Release notarization requires Developer ID signing. electron-builder can
-    // otherwise fall back to Apple Development certificates from the keychain.
-    identity: isMacCiBuild
-      ? 'Developer ID Application: shuyuan sun (62HCT6Q83X)'
-      : undefined,
+    // Match the Apple Developer team used by the iOS apps; the sign hook below
+    // rejects non-Developer ID certificates from the same team.
+    identity: isMacCiBuild ? '62HCT6Q83X' : undefined,
     sign: './scripts/mac-sign-by-hash.cjs',
     // Signing + notarization happen in CI when CSC_LINK / APPLE_API_KEY env
     // vars are present (sunpebble org secrets); both are skipped
