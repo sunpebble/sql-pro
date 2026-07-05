@@ -99,6 +99,9 @@ final class QuarryAppState: ObservableObject {
   @Published var pageSize: Int {
     didSet {
       UserDefaults.standard.set(pageSize, forKey: pageSizeDefaultsKey)
+      if oldValue != pageSize, selectedTable != nil {
+        reloadFromFirstPage()
+      }
     }
   }
 
@@ -144,7 +147,7 @@ final class QuarryAppState: ObservableObject {
 
   init() {
     let storedPageSize = UserDefaults.standard.integer(forKey: "quarry.swiftui.pageSize")
-    pageSize = storedPageSize > 0 ? storedPageSize : 500
+    pageSize = storedPageSize > 0 ? storedPageSize : 100
     recentDatabaseURLs = UserDefaults.standard
       .stringArray(forKey: recentDefaultsKey)?
       .map(URL.init(fileURLWithPath:)) ?? []

@@ -7,7 +7,7 @@ struct SettingsView: View {
     Form {
       Section(L("Data Grid")) {
         Picker(L("Rows per page"), selection: $state.pageSize) {
-          ForEach([100, 200, 500, 1000, 2000], id: \.self) { size in
+          ForEach([50, 100, 200, 500], id: \.self) { size in
             Text("\(size)").tag(size)
           }
         }

@@ -185,6 +185,9 @@ struct SchemaDetailsView: View {
 }
 
 // Fixed cell width keeps lazily-rendered rows column-aligned without a Grid.
+// ponytail: LazyVStack in a two-axis ScrollView has limited laziness on macOS;
+// pageSize (default 100) caps the row count. If large pages must scroll
+// smoothly, wrap NSTableView instead.
 let tableCellWidth: CGFloat = 160
 
 struct EditableTableGrid: View {
