@@ -1219,6 +1219,7 @@ final class QuarryAppState: ObservableObject {
     alert.accessoryView = input
     alert.addButton(withTitle: L("Open"))
     alert.addButton(withTitle: L("Cancel"))
+    alert.window.initialFirstResponder = input
     return alert.runModal() == .alertFirstButtonReturn ? input.stringValue : nil
   }
 
@@ -1253,6 +1254,7 @@ final class QuarryAppState: ObservableObject {
     alert.accessoryView = stack
     alert.addButton(withTitle: L("Preview Changes"))
     alert.addButton(withTitle: L("Cancel"))
+    alert.window.initialFirstResponder = valueField
 
     guard alert.runModal() == .alertFirstButtonReturn else {
       return nil
@@ -1306,6 +1308,7 @@ final class QuarryAppState: ObservableObject {
     alert.accessoryView = stack
     alert.addButton(withTitle: L("Connect"))
     alert.addButton(withTitle: L("Cancel"))
+    alert.window.initialFirstResponder = hostField
 
     guard alert.runModal() == .alertFirstButtonReturn else {
       return nil
@@ -1340,6 +1343,7 @@ final class QuarryAppState: ObservableObject {
     alert.accessoryView = input
     alert.addButton(withTitle: L("Save"))
     alert.addButton(withTitle: L("Cancel"))
+    alert.window.initialFirstResponder = input
     return alert.runModal() == .alertFirstButtonReturn ? input.stringValue : nil
   }
 
