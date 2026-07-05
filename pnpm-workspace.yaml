@@ -24,7 +24,7 @@ catalogs:
     tsx: ^4.22.4
     husky: ^9.1.7
     lint-staged: ^17.0.7
-    '@vitejs/plugin-react': ^6.0.2
+    '@vitejs/plugin-react': ^5.2.0
 
     # ESLint
     '@antfu/eslint-config': ^9.0.0
@@ -198,7 +198,10 @@ catalogs:
     '@typescript/native-preview': 7.0.0-dev.20260319.1
 
 overrides:
-  vite: npm:rolldown-vite@latest
+  dompurify: 3.4.11
+  esbuild: 0.28.1
+  uuid: 11.1.1
+  vite: 7.3.5
   # ssh2 → cpu-features uses nan; Electron/Node 24+ V8 needs newer nan (CI rebuild)
   nan: 2.26.2
 
