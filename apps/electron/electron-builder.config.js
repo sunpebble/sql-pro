@@ -78,6 +78,7 @@ const config = {
     icon: 'resources/icon.icns',
     category: 'public.app-category.developer-tools',
     entitlementsInherit: 'build/entitlements.mac.plist',
+    sign: './scripts/mac-sign-by-hash.cjs',
     // Signing + notarization happen in CI when CSC_LINK / APPLE_API_KEY env
     // vars are present (sunpebble org secrets); both are skipped
     // automatically for local builds without them.
