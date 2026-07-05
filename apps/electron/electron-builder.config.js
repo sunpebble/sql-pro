@@ -82,7 +82,6 @@ const config = {
     target: [
       {
         target: 'dir',
-        arch: ['arm64', 'x64'],
       },
     ],
     // Explicitly set artifact name to use productName (avoid @ from package name)
@@ -116,6 +115,11 @@ const config = {
   },
 
   npmRebuild: true,
+
+  // CI rebuilds native deps explicitly before packaging. Returning false here
+  // skips electron-builder's pnpm dependency collector, which emits huge pnpm 11
+  // workspace trees and can fail with EMFILE on GitHub runners.
+  beforeBuild: async () => false,
 
   // Fix readable-stream compatibility for lazystream/archiver
   // readable-stream v3 removed passthrough.js, but lazystream expects it
@@ -205,7 +209,12 @@ const config = {
       return [];
     }
 
-    const dmgPath = path.join(outDir, `${appName}-${version}.dmg`);
+    const arch = macDir.includes('arm64')
+      ? 'arm64'
+      : macDir.includes('universal')
+        ? 'universal'
+        : 'x64';
+    const dmgPath = path.join(outDir, `${appName}-${version}-${arch}-mac.dmg`);
 
     console.log(`Creating DMG manually using hdiutil...`);
     console.log(`  Source: ${appPath}`);

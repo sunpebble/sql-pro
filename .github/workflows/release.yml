@@ -54,15 +54,19 @@ jobs:
         include:
           - os: macos-latest
             platform: mac
+            node_platform: darwin
             arch: arm64
           - os: macos-14
             platform: mac
+            node_platform: darwin
             arch: x64
           - os: ubuntu-22.04
             platform: linux
+            node_platform: linux
             arch: x64
           - os: windows-latest
             platform: win
+            node_platform: win32
             arch: x64
 
     runs-on: ${{ matrix.os }}
@@ -100,6 +104,10 @@ jobs:
         run: pnpm run build
         working-directory: apps/electron
 
+      - name: Rebuild native app dependencies
+        run: pnpm exec electron-builder install-app-deps --platform ${{ matrix.node_platform }} --arch ${{ matrix.arch }}
+        working-directory: apps/electron
+
       # electron-builder notarization reads the App Store Connect key from a
       # file path (APPLE_API_KEY); RUNNER_TEMP is wiped with the ephemeral VM
       - name: Write App Store Connect API key
@@ -118,7 +126,7 @@ jobs:
           APPLE_API_KEY: ${{ matrix.platform == 'mac' && format('{0}/AuthKey.p8', runner.temp) || '' }}
           APPLE_API_KEY_ID: ${{ matrix.platform == 'mac' && secrets.ASC_KEY_ID || '' }}
           APPLE_API_ISSUER: ${{ matrix.platform == 'mac' && secrets.ASC_ISSUER_ID || '' }}
-        run: pnpm exec electron-builder --${{ matrix.platform }} --config electron-builder.config.js --publish never
+        run: pnpm exec electron-builder --${{ matrix.platform }} --${{ matrix.arch }} --config electron-builder.config.js --publish never
         working-directory: apps/electron
 
       - name: Upload artifacts to GitHub Release
