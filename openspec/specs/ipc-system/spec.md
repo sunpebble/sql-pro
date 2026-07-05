@@ -50,7 +50,7 @@
 #### Scenario: Contract sharing
 
 - **WHEN** 主进程和渲染进程需要相同类型时
-- **THEN** 两者 SHALL 从 @sqlpro/ipc-contracts 包导入
+- **THEN** 两者 SHALL 从 @quarry/ipc-contracts 包导入
 
 #### Scenario: Contract versioning
 

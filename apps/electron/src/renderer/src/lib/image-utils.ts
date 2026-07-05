@@ -431,7 +431,7 @@ export async function isImageUrlAsync(value: string): Promise<boolean> {
 
   // For URLs without clear image indicators, use HEAD request check
   try {
-    const result = await window.sqlPro.image.checkUrl({ url: value.trim() });
+    const result = await window.quarry.image.checkUrl({ url: value.trim() });
     if (result.success) {
       return result.isImage;
     }
@@ -675,7 +675,7 @@ export async function detectImageSourceAsync(
     // Verify file exists before including
     try {
       const result = await withTimeout(
-        window.sqlPro.image.checkFile({ path: trimmed }),
+        window.quarry.image.checkFile({ path: trimmed }),
         2000
       );
       if (result && result.success && result.exists) {
@@ -702,7 +702,7 @@ export async function detectImageSourceAsync(
     // For other URLs, use HEAD check with timeout
     try {
       const result = (await withTimeout(
-        window.sqlPro.image.checkUrl({ url: trimmed }),
+        window.quarry.image.checkUrl({ url: trimmed }),
         5000
       )) as { success?: boolean; isImage?: boolean } | null;
       if (result && result.success && result.isImage) {
@@ -741,7 +741,7 @@ export async function detectMediaSourceAsync(
     // Verify file exists before including
     try {
       const result = await withTimeout(
-        window.sqlPro.image.checkFile({ path: trimmed }),
+        window.quarry.image.checkFile({ path: trimmed }),
         2000
       );
       if (result && result.success && result.exists) {
@@ -775,7 +775,7 @@ export async function detectMediaSourceAsync(
     // For other URLs, use HEAD check with timeout
     try {
       const result = (await withTimeout(
-        window.sqlPro.image.checkUrl({ url: trimmed }),
+        window.quarry.image.checkUrl({ url: trimmed }),
         5000
       )) as {
         success?: boolean;
@@ -797,7 +797,7 @@ export async function detectMediaSourceAsync(
       // This catches videos that don't have proper Content-Type headers
       try {
         const videoResult = (await withTimeout(
-          window.sqlPro.video.checkUrl({ url: trimmed }),
+          window.quarry.video.checkUrl({ url: trimmed }),
           8000
         )) as {
           success?: boolean;
@@ -962,7 +962,7 @@ export async function detectImageColumnsAsync(
           if (isLocalImagePath(trimmed)) {
             try {
               const result = await withTimeout(
-                window.sqlPro.image.checkFile({ path: trimmed }),
+                window.quarry.image.checkFile({ path: trimmed }),
                 2000
               );
               if (result && result.success && result.exists) {
@@ -983,7 +983,7 @@ export async function detectImageColumnsAsync(
             // HEAD check for URLs without clear image extension (with timeout)
             try {
               const result = (await withTimeout(
-                window.sqlPro.image.checkUrl({ url: trimmed }),
+                window.quarry.image.checkUrl({ url: trimmed }),
                 3000
               )) as { success?: boolean; isImage?: boolean } | null;
               if (result && result.success && result.isImage) {
@@ -1070,7 +1070,7 @@ export async function detectMediaColumnsAsync(
           if (isLocalMediaPath(trimmed)) {
             try {
               const result = await withTimeout(
-                window.sqlPro.image.checkFile({ path: trimmed }),
+                window.quarry.image.checkFile({ path: trimmed }),
                 2000
               );
               if (result && result.success && result.exists) {
@@ -1095,7 +1095,7 @@ export async function detectMediaColumnsAsync(
             // HEAD check for URLs without clear extension (with timeout)
             try {
               const result = (await withTimeout(
-                window.sqlPro.image.checkUrl({ url: trimmed }),
+                window.quarry.image.checkUrl({ url: trimmed }),
                 3000
               )) as {
                 success?: boolean;
@@ -1115,7 +1115,7 @@ export async function detectMediaColumnsAsync(
               // If HEAD check didn't identify as media, try ffprobe for video detection
               try {
                 const videoResult = (await withTimeout(
-                  window.sqlPro.video.checkUrl({ url: trimmed }),
+                  window.quarry.video.checkUrl({ url: trimmed }),
                   5000
                 )) as {
                   success?: boolean;
@@ -1178,24 +1178,24 @@ export async function detectMediaColumnsAsync(
 // ============================================================================
 
 /**
- * Convert an HTTP(S) image URL to a sqlpro:// proxy URL.
+ * Convert an HTTP(S) image URL to a quarry:// proxy URL.
  * This enables CORS-free loading and caching in the main process.
  */
 export function getProxyImageUrl(url: string): string {
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
     return url; // Not a remote URL
   }
-  return `sqlpro://image/${encodeURIComponent(url)}`;
+  return `quarry://image/${encodeURIComponent(url)}`;
 }
 
 /**
- * Decode a sqlpro:// proxy URL back to the original HTTP(S) URL.
+ * Decode a quarry:// proxy URL back to the original HTTP(S) URL.
  */
 export function decodeProxyImageUrl(proxyUrl: string): string | null {
-  if (!proxyUrl.startsWith('sqlpro://image/')) {
+  if (!proxyUrl.startsWith('quarry://image/')) {
     return null;
   }
-  const encoded = proxyUrl.slice('sqlpro://image/'.length);
+  const encoded = proxyUrl.slice('quarry://image/'.length);
   try {
     return decodeURIComponent(encoded);
   } catch {
@@ -1205,8 +1205,8 @@ export function decodeProxyImageUrl(proxyUrl: string): string | null {
 
 /**
  * Get the display URL for an image source.
- * For remote URLs, returns a sqlpro:// proxy URL to bypass CORS.
- * For local files, returns a sqlpro://file/ URL to load via main process.
+ * For remote URLs, returns a quarry:// proxy URL to bypass CORS.
+ * For local files, returns a quarry://file/ URL to load via main process.
  */
 export function getImageDisplayUrl(source: ImageSource): string | null {
   if (!source) return null;
@@ -1221,7 +1221,7 @@ export function getImageDisplayUrl(source: ImageSource): string | null {
       return blobToDataUrl(source.data, source.mimeType);
     case 'file':
       // Use custom protocol for local files
-      return `sqlpro://file/${encodeURIComponent(source.path)}`;
+      return `quarry://file/${encodeURIComponent(source.path)}`;
     default:
       return null;
   }
@@ -1229,8 +1229,8 @@ export function getImageDisplayUrl(source: ImageSource): string | null {
 
 /**
  * Get the display URL for a media source (image or video).
- * For remote URLs, returns a sqlpro:// proxy URL to bypass CORS.
- * For local files, returns a sqlpro://file/ URL to load via main process.
+ * For remote URLs, returns a quarry:// proxy URL to bypass CORS.
+ * For local files, returns a quarry://file/ URL to load via main process.
  */
 export function getMediaDisplayUrl(source: MediaSource): string | null {
   if (!source) return null;
@@ -1245,7 +1245,7 @@ export function getMediaDisplayUrl(source: MediaSource): string | null {
       return blobToDataUrl(source.data, source.mimeType);
     case 'file':
       // Use custom protocol for local files
-      return `sqlpro://file/${encodeURIComponent(source.path)}`;
+      return `quarry://file/${encodeURIComponent(source.path)}`;
     default:
       return null;
   }

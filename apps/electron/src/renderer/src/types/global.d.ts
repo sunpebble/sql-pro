@@ -1,6 +1,6 @@
 // Vite environment variables
-// Extend Window interface for global sqlPro API access
-import type { sqlPro } from '@/lib/api';
+// Extend Window interface for global quarry API access
+import type { quarry } from '@/lib/api';
 
 interface ImportMetaEnv {
   readonly VITE_MOCK_MODE?: string;
@@ -23,7 +23,7 @@ declare module 'monaco-editor/esm/vs/editor/editor.worker?worker' {
 
 declare global {
   interface Window {
-    sqlPro: typeof sqlPro;
+    quarry: typeof quarry;
   }
 }
 

@@ -2,14 +2,14 @@ import type { Row } from '@tanstack/react-table';
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema, PendingChange } from '@/types/database';
-import { Checkbox } from '@sqlpro/ui/checkbox';
+import { Checkbox } from '@quarry/ui/checkbox';
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@sqlpro/ui/context-menu';
+} from '@quarry/ui/context-menu';
 import { ClipboardCopy, Copy, FileText, Trash2 } from 'lucide-react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

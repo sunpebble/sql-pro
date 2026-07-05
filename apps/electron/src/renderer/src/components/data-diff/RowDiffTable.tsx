@@ -1,8 +1,8 @@
 import type { DataComparisonResult, RowDiff } from '@shared/types';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Separator } from '@sqlpro/ui/separator';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Separator } from '@quarry/ui/separator';
 import {
   Table,
   TableBody,
@@ -10,8 +10,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@sqlpro/ui/table';
-import { Toggle } from '@sqlpro/ui/toggle';
+} from '@quarry/ui/table';
+import { Toggle } from '@quarry/ui/toggle';
 import {
   ChevronDown,
   ChevronLeft,

@@ -7,7 +7,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@sqlpro/ui/command';
+} from '@quarry/ui/command';
 import { Check, Clock, Database, KeyRound } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

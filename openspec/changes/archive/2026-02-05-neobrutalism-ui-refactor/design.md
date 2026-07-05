@@ -1,6 +1,6 @@
 ## Context
 
-SQL Pro 当前使用自定义的 "Warm Modern" 设计系统，包含大量自定义 CSS（约 1300 行 index.css）。该设计系统：
+Quarry 当前使用自定义的 "Warm Modern" 设计系统，包含大量自定义 CSS（约 1300 行 index.css）。该设计系统：
 
 - 基于 OKLCH 颜色空间
 - 使用 Plus Jakarta Sans、Inter、JetBrains Mono 字体

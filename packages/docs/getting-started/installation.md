@@ -1,10 +1,10 @@
 # Installation
 
-This guide covers how to install SQL Pro on macOS, Windows, and Linux.
+This guide covers how to install Quarry on macOS, Windows, and Linux.
 
 ## System Requirements
 
-Before installing SQL Pro, make sure your system meets these requirements:
+Before installing Quarry, make sure your system meets these requirements:
 
 - **Operating System**: macOS 10.15+, Windows 10+, or Linux (Ubuntu 18.04+, Fedora 32+, or equivalent)
 - **RAM**: 4 GB minimum (8 GB recommended)
@@ -13,15 +13,15 @@ Before installing SQL Pro, make sure your system meets these requirements:
 
 ## Download
 
-Download the latest release for your platform from the [GitHub Releases](https://github.com/kunish-homelab/sql-pro/releases) page.
+Download the latest release for your platform from the [GitHub Releases](https://github.com/sunpebble/quarry/releases) page.
 
-| Platform                  | File                          | Architecture      |
-| ------------------------- | ----------------------------- | ----------------- |
-| **macOS** (Apple Silicon) | `sql-pro-x.x.x-arm64.dmg`     | M1/M2/M3/M4 chips |
-| **macOS** (Intel)         | `sql-pro-x.x.x-x64.dmg`       | Intel processors  |
-| **Windows**               | `sql-pro-x.x.x-setup-x64.exe` | 64-bit Windows    |
-| **Linux** (AppImage)      | `sql-pro-x.x.x-x64.AppImage`  | Universal package |
-| **Linux** (Debian/Ubuntu) | `sql-pro-x.x.x-x64.deb`       | .deb package      |
+| Platform                  | File                         | Architecture      |
+| ------------------------- | ---------------------------- | ----------------- |
+| **macOS** (Apple Silicon) | `quarry-x.x.x-arm64.dmg`     | M1/M2/M3/M4 chips |
+| **macOS** (Intel)         | `quarry-x.x.x-x64.dmg`       | Intel processors  |
+| **Windows**               | `quarry-x.x.x-setup-x64.exe` | 64-bit Windows    |
+| **Linux** (AppImage)      | `quarry-x.x.x-x64.AppImage`  | Universal package |
+| **Linux** (Debian/Ubuntu) | `quarry-x.x.x-x64.deb`       | .deb package      |
 
 ::: tip Which macOS version should I download?
 
@@ -35,59 +35,59 @@ To check your chip type, click the Apple menu () > **About This Mac** and look f
 
 ### Apple Silicon (M1/M2/M3/M4)
 
-1. Download `sql-pro-x.x.x-arm64.dmg` from the [Releases page](https://github.com/kunish-homelab/sql-pro/releases)
+1. Download `quarry-x.x.x-arm64.dmg` from the [Releases page](https://github.com/sunpebble/quarry/releases)
 
 2. Double-click the downloaded `.dmg` file to mount it
 
-3. Drag **SQL Pro** to your **Applications** folder
+3. Drag **Quarry** to your **Applications** folder
 
 4. Eject the disk image by right-clicking it in Finder and selecting "Eject"
 
-5. Open SQL Pro from your Applications folder or Spotlight search
+5. Open Quarry from your Applications folder or Spotlight search
 
 ### Intel Mac
 
-1. Download `sql-pro-x.x.x-x64.dmg` from the [Releases page](https://github.com/kunish-homelab/sql-pro/releases)
+1. Download `quarry-x.x.x-x64.dmg` from the [Releases page](https://github.com/sunpebble/quarry/releases)
 
 2. Follow the same steps as above (steps 2-5)
 
 ### First Launch on macOS
 
-When you first open SQL Pro, macOS may display a security warning because the app is downloaded from the internet and not from the Mac App Store.
+When you first open Quarry, macOS may display a security warning because the app is downloaded from the internet and not from the Mac App Store.
 
 **To open the app:**
 
-1. Right-click (or Control-click) on SQL Pro in your Applications folder
+1. Right-click (or Control-click) on Quarry in your Applications folder
 2. Select **Open** from the context menu
 3. Click **Open** in the dialog that appears
 
-You only need to do this once. After the first launch, you can open SQL Pro normally.
+You only need to do this once. After the first launch, you can open Quarry normally.
 
 ::: warning Gatekeeper Warning
-If you see "SQL Pro cannot be opened because the developer cannot be verified":
+If you see "Quarry cannot be opened because the developer cannot be verified":
 
 1. Open **System Preferences** > **Security & Privacy** > **General**
-2. Click **Open Anyway** next to the message about SQL Pro
+2. Click **Open Anyway** next to the message about Quarry
 3. Click **Open** in the confirmation dialog
    :::
 
 ## Windows Installation
 
-1. Download `sql-pro-x.x.x-setup-x64.exe` from the [Releases page](https://github.com/kunish-homelab/sql-pro/releases)
+1. Download `quarry-x.x.x-setup-x64.exe` from the [Releases page](https://github.com/sunpebble/quarry/releases)
 
 2. Double-click the downloaded installer to run it
 
 3. If Windows SmartScreen appears, click **More info** and then **Run anyway**
 
 4. Follow the installation wizard:
-   - Choose installation directory (default: `C:\Program Files\SQL Pro`)
+   - Choose installation directory (default: `C:\Program Files\Quarry`)
    - Select whether to create a desktop shortcut
    - Click **Install**
 
-5. Once installation is complete, launch SQL Pro from:
+5. Once installation is complete, launch Quarry from:
    - The Start menu
    - Desktop shortcut (if created)
-   - Or search for "SQL Pro" in Windows search
+   - Or search for "Quarry" in Windows search
 
 ### Windows Defender SmartScreen
 
@@ -97,43 +97,43 @@ If Windows SmartScreen blocks the installer:
 2. Click **Run anyway**
 3. Proceed with the installation
 
-This warning appears because the app is new and hasn't built up a reputation with Microsoft yet. SQL Pro is open-source and safe to install.
+This warning appears because the app is new and hasn't built up a reputation with Microsoft yet. Quarry is open-source and safe to install.
 
 ## Linux Installation
 
-SQL Pro provides two package formats for Linux: AppImage (universal) and .deb (Debian/Ubuntu).
+Quarry provides two package formats for Linux: AppImage (universal) and .deb (Debian/Ubuntu).
 
 ### AppImage (Recommended)
 
 AppImage works on most Linux distributions without installation:
 
-1. Download `sql-pro-x.x.x-x64.AppImage` from the [Releases page](https://github.com/kunish-homelab/sql-pro/releases)
+1. Download `quarry-x.x.x-x64.AppImage` from the [Releases page](https://github.com/sunpebble/quarry/releases)
 
 2. Make the AppImage executable:
 
    ```bash
-   chmod +x sql-pro-x.x.x-x64.AppImage
+   chmod +x quarry-x.x.x-x64.AppImage
    ```
 
-3. Run SQL Pro:
+3. Run Quarry:
    ```bash
-   ./sql-pro-x.x.x-x64.AppImage
+   ./quarry-x.x.x-x64.AppImage
    ```
 
 ::: tip Integration with your desktop
-To add SQL Pro to your application menu, you can use [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher) or manually create a `.desktop` file.
+To add Quarry to your application menu, you can use [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher) or manually create a `.desktop` file.
 :::
 
 ### Debian/Ubuntu (.deb)
 
 For Debian-based distributions (Ubuntu, Linux Mint, Pop!\_OS, etc.):
 
-1. Download `sql-pro-x.x.x-x64.deb` from the [Releases page](https://github.com/kunish-homelab/sql-pro/releases)
+1. Download `quarry-x.x.x-x64.deb` from the [Releases page](https://github.com/sunpebble/quarry/releases)
 
 2. Install using `dpkg`:
 
    ```bash
-   sudo dpkg -i sql-pro-x.x.x-x64.deb
+   sudo dpkg -i quarry-x.x.x-x64.deb
    ```
 
 3. If there are missing dependencies, fix them with:
@@ -142,9 +142,9 @@ For Debian-based distributions (Ubuntu, Linux Mint, Pop!\_OS, etc.):
    sudo apt-get install -f
    ```
 
-4. Launch SQL Pro from your application menu or run:
+4. Launch Quarry from your application menu or run:
    ```bash
-   sql-pro
+   quarry
    ```
 
 ### Uninstalling on Linux
@@ -154,12 +154,12 @@ For Debian-based distributions (Ubuntu, Linux Mint, Pop!\_OS, etc.):
 **Debian package**:
 
 ```bash
-sudo dpkg -r sql-pro
+sudo dpkg -r quarry
 ```
 
 ## Build from Source
 
-If you prefer to build SQL Pro from source, or want to contribute to development:
+If you prefer to build Quarry from source, or want to contribute to development:
 
 ### Prerequisites
 
@@ -171,8 +171,8 @@ If you prefer to build SQL Pro from source, or want to contribute to development
 
 ```bash
 # Clone the repository
-git clone https://github.com/kunish-homelab/sql-pro.git
-cd sql-pro
+git clone https://github.com/sunpebble/quarry.git
+cd quarry
 
 # Install dependencies
 pnpm install
@@ -206,30 +206,30 @@ pnpm build:icons
 
 ## Verifying Installation
 
-After installation, verify SQL Pro is working correctly:
+After installation, verify Quarry is working correctly:
 
-1. **Launch the application** - SQL Pro should open to the welcome screen
+1. **Launch the application** - Quarry should open to the welcome screen
 2. **Check the theme** - The app should match your system's light/dark theme
 3. **Open a test database** - Create or open a SQLite database to test functionality
 
 If you encounter any issues, check the [Troubleshooting](/troubleshooting) guide.
 
-## Updating SQL Pro
+## Updating Quarry
 
-SQL Pro currently requires manual updates:
+Quarry currently requires manual updates:
 
-1. Download the latest version from the [Releases page](https://github.com/kunish-homelab/sql-pro/releases)
+1. Download the latest version from the [Releases page](https://github.com/sunpebble/quarry/releases)
 2. Install it following the same steps for your platform
 3. Your settings and recent databases will be preserved
 
 ::: tip Stay Updated
-Watch the [GitHub repository](https://github.com/kunish-homelab/sql-pro) to get notified of new releases.
+Watch the [GitHub repository](https://github.com/sunpebble/quarry) to get notified of new releases.
 :::
 
 ## Next Steps
 
-Now that you have SQL Pro installed:
+Now that you have Quarry installed:
 
 - [Connect to your first database](/getting-started/first-connection) - Learn how to open and work with a SQLite database
-- [Explore features](/features/) - Discover all the powerful features SQL Pro offers
+- [Explore features](/features/) - Discover all the powerful features Quarry offers
 - [Learn keyboard shortcuts](/shortcuts) - Speed up your workflow with keyboard shortcuts

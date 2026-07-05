@@ -76,7 +76,7 @@ let _rendererStore: Store<RendererStoreSchema> | null = null;
 function getRendererStore(): Store<RendererStoreSchema> {
   if (!_rendererStore) {
     _rendererStore = new Store<RendererStoreSchema>({
-      name: 'sql-pro-renderer-state',
+      name: 'quarry-renderer-state',
       defaults: {
         settings: DEFAULT_SETTINGS,
         diagram: DEFAULT_DIAGRAM,

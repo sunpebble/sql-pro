@@ -1,19 +1,19 @@
 import type { DataTab } from '@/stores/data-tabs-store';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@sqlpro/ui/context-menu';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+} from '@quarry/ui/context-menu';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import { Eye, PanelRightClose, PanelRightOpen, Table, X } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,24 +1,24 @@
 import type { QueryTab } from '@/stores/query-tabs-store';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@sqlpro/ui/context-menu';
+} from '@quarry/ui/context-menu';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@sqlpro/ui/dropdown-menu';
+} from '@quarry/ui/dropdown-menu';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import { Columns2, Copy, FileCode, Plus, Rows2, X } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

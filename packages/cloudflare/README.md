@@ -1,6 +1,6 @@
-# SQL Pro - Cloudflare Workers
+# Quarry - Cloudflare Workers
 
-This package contains the unified Cloudflare Workers deployment for SQL Pro, hosting both the website and license API using **100% Cloudflare infrastructure**.
+This package contains the unified Cloudflare Workers deployment for Quarry, hosting both the website and license API using **100% Cloudflare infrastructure**.
 
 ## Architecture
 
@@ -60,10 +60,10 @@ This deployment uses only Cloudflare services:
 cd packages/cloudflare
 
 # Create the database
-wrangler d1 create sqlpro-db
+wrangler d1 create quarry-db
 
 # You'll get output like:
-# ✅ Successfully created DB 'sqlpro-db'
+# ✅ Successfully created DB 'quarry-db'
 # database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
 # Update wrangler.toml with the database_id
@@ -73,10 +73,10 @@ wrangler d1 create sqlpro-db
 
 ```bash
 # Apply migrations locally (for development)
-wrangler d1 migrations apply sqlpro-db --local
+wrangler d1 migrations apply quarry-db --local
 
 # Apply migrations to production
-wrangler d1 migrations apply sqlpro-db --remote
+wrangler d1 migrations apply quarry-db --remote
 ```
 
 ### 3. Configure Secrets (Only 2 Required!)
@@ -95,8 +95,8 @@ That's it! No email service configuration needed.
 
 ```bash
 # Build website and deploy
-pnpm nx build @sqlpro/cloudflare
-pnpm nx deploy @sqlpro/cloudflare
+pnpm nx build @quarry/cloudflare
+pnpm nx deploy @quarry/cloudflare
 ```
 
 ## Development
@@ -105,7 +105,7 @@ pnpm nx deploy @sqlpro/cloudflare
 
 ```bash
 # Start the development server with local D1
-pnpm nx dev @sqlpro/cloudflare
+pnpm nx dev @quarry/cloudflare
 ```
 
 This starts at `http://localhost:8787` with a local D1 database.
@@ -114,17 +114,17 @@ This starts at `http://localhost:8787` with a local D1 database.
 
 ```bash
 # Build the website and copy to public/
-pnpm nx build @sqlpro/cloudflare
+pnpm nx build @quarry/cloudflare
 ```
 
 ## Deployment
 
 ```bash
 # Deploy to development
-pnpm nx deploy @sqlpro/cloudflare
+pnpm nx deploy @quarry/cloudflare
 
 # Deploy to production
-pnpm nx deploy:production @sqlpro/cloudflare
+pnpm nx deploy:production @quarry/cloudflare
 ```
 
 ## API Endpoints
@@ -194,10 +194,10 @@ Migrations are in `migrations/` directory:
 # Create: migrations/000X_description.sql
 
 # Apply locally
-wrangler d1 migrations apply sqlpro-db --local
+wrangler d1 migrations apply quarry-db --local
 
 # Apply to production
-wrangler d1 migrations apply sqlpro-db --remote
+wrangler d1 migrations apply quarry-db --remote
 ```
 
 ## Stripe Webhook Setup

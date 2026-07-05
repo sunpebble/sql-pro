@@ -1,6 +1,6 @@
 import type { TagDefinition } from '@shared/types/tag';
+import { Badge } from '@quarry/ui/badge';
 import { getContrastColor } from '@shared/types/tag';
-import { Badge } from '@sqlpro/ui/badge';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

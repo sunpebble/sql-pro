@@ -1,9 +1,9 @@
 {
-  "name": "@sqlpro/website",
+  "name": "@quarry/website",
   "type": "module",
   "version": "1.1.0",
   "private": true,
-  "description": "SQL Pro Official Website",
+  "description": "Quarry Official Website",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sqlpro/ui": "workspace:*",
+    "@quarry/ui": "workspace:*",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "i18next": "catalog:",

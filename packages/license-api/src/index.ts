@@ -54,7 +54,7 @@ app.use(
 
 // Health check
 app.get('/', (c) => {
-  return c.json({ status: 'ok', service: 'sql-pro-license-api' });
+  return c.json({ status: 'ok', service: 'quarry-license-api' });
 });
 
 // Initialize database (run once, requires admin secret)

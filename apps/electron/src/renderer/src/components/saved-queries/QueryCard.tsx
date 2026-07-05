@@ -1,13 +1,13 @@
 import type { SavedQuery } from '@shared/types/saved-query';
 
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import { Pencil, Play, Trash2, Variable } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -100,7 +100,7 @@ export default function OpenSource() {
             {/* Actions */}
             <div className="mt-4 flex flex-col gap-4 sm:flex-row">
               <a
-                href="https://github.com/kunish-homelab/sql-pro"
+                href="https://github.com/sunpebble/quarry"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-main text-main-foreground rounded-base inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-base font-semibold shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
@@ -116,7 +116,7 @@ export default function OpenSource() {
                 {t('opensource.viewOnGithub')}
               </a>
               <a
-                href="https://github.com/kunish-homelab/sql-pro/stargazers"
+                href="https://github.com/sunpebble/quarry/stargazers"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border-border bg-background rounded-base inline-flex items-center justify-center gap-2.5 border px-6 py-3.5 text-base font-semibold shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
@@ -154,16 +154,14 @@ export default function OpenSource() {
               <div className="space-y-2.5 overflow-x-auto p-4 font-mono text-xs sm:p-5 sm:text-sm">
                 <div className="flex gap-2 whitespace-nowrap">
                   <span className="text-main">$</span>
-                  <span>
-                    git clone https://github.com/kunish-homelab/sql-pro.git
-                  </span>
+                  <span>git clone https://github.com/sunpebble/quarry.git</span>
                 </div>
                 <div className="text-muted-foreground">
-                  Cloning into 'sql-pro'...
+                  Cloning into 'quarry'...
                 </div>
                 <div className="flex gap-2">
                   <span className="text-main">$</span>
-                  <span>cd sql-pro && pnpm install</span>
+                  <span>cd quarry && pnpm install</span>
                 </div>
                 <div className="text-muted-foreground">
                   Packages: +1234 Done in 12.5s
@@ -173,7 +171,7 @@ export default function OpenSource() {
                   <span>pnpm dev:electron</span>
                 </div>
                 <div className="terminal-cursor font-semibold text-[#22c55e]">
-                  SQL Pro is ready!
+                  Quarry is ready!
                 </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import type { TourConfig, TourStep } from '@/types/onboarding';
 
 /**
- * Simplified tour configuration for SQL Pro onboarding.
+ * Simplified tour configuration for Quarry onboarding.
  * Covers the essential features: schema browser, data browser, query editor,
  * ER diagram, schema compare, data diff, and command palette.
  *

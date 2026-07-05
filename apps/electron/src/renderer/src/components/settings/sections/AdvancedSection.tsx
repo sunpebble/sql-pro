@@ -1,4 +1,4 @@
-import { Label } from '@sqlpro/ui/label';
+import { Label } from '@quarry/ui/label';
 import { ChevronRight, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)

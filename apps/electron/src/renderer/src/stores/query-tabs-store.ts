@@ -161,10 +161,12 @@ const createDefaultConnectionState = (
   };
 };
 
+const QUERY_TAB_TITLE_RE = /^Query (\d+)$/;
+
 const getNextTabNumber = (tabs: QueryTab[]): number => {
   const numbers = tabs
     .map((tab) => {
-      const match = tab.title.match(/^Query (\d+)$/);
+      const match = tab.title.match(QUERY_TAB_TITLE_RE);
       return match ? Number.parseInt(match[1], 10) : 0;
     })
     .filter((n) => n > 0);

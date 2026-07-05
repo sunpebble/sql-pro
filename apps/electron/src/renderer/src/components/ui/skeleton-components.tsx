@@ -1,4 +1,4 @@
-import { Skeleton } from '@sqlpro/ui/skeleton';
+import { Skeleton } from '@quarry/ui/skeleton';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 

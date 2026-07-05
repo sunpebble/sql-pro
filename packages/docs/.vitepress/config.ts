@@ -1,22 +1,22 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  title: 'SQL Pro',
+  title: 'Quarry',
   description:
     'Professional SQLite database manager with SQLCipher support and diff preview',
-  base: '/sql-pro/',
+  base: '/quarry/',
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/sql-pro/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/quarry/logo.svg' }],
     ['meta', { name: 'theme-color', content: '#3b82f6' }],
     ['meta', { name: 'og:type', content: 'website' }],
     ['meta', { name: 'og:locale', content: 'en' }],
-    ['meta', { name: 'og:site_name', content: 'SQL Pro' }],
+    ['meta', { name: 'og:site_name', content: 'Quarry' }],
     [
       'meta',
       {
         name: 'og:title',
-        content: 'SQL Pro - Professional SQLite Database Manager',
+        content: 'Quarry - Professional SQLite Database Manager',
       },
     ],
     [
@@ -50,11 +50,11 @@ export default defineConfig({
           { text: 'Troubleshooting', link: '/troubleshooting' },
           {
             text: 'Changelog',
-            link: 'https://github.com/kunish-homelab/sql-pro/blob/main/CHANGELOG.md',
+            link: 'https://github.com/sunpebble/quarry/blob/main/CHANGELOG.md',
           },
           {
             text: 'Contributing',
-            link: 'https://github.com/kunish-homelab/sql-pro/blob/main/CONTRIBUTING.md',
+            link: 'https://github.com/sunpebble/quarry/blob/main/CONTRIBUTING.md',
           },
         ],
       },
@@ -112,17 +112,17 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/kunish-homelab/sql-pro' },
+      { icon: 'github', link: 'https://github.com/sunpebble/quarry' },
     ],
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright 2025-present SQL Pro Contributors',
+      copyright: 'Copyright 2025-present Quarry Contributors',
     },
 
     editLink: {
       pattern:
-        'https://github.com/kunish-homelab/sql-pro/edit/main/packages/docs/:path',
+        'https://github.com/sunpebble/quarry/edit/main/packages/docs/:path',
       text: 'Edit this page on GitHub',
     },
   },

@@ -1,9 +1,11 @@
+import { Button } from '@quarry/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@quarry/ui/popover';
 import { PRESET_TAG_COLORS } from '@shared/types/tag';
-import { Button } from '@sqlpro/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
 import { useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import { cn } from '@/lib/utils';
+
+const HEX_COLOR_RE = /^#[0-9A-F]{0,6}$/i;
 
 interface ColorPickerProps {
   color: string;
@@ -59,7 +61,7 @@ export function ColorPicker({ color, onChange, className }: ColorPickerProps) {
                   value={color}
                   onChange={(e) => {
                     const val = e.target.value;
-                    if (/^#[0-9A-F]{0,6}$/i.test(val)) {
+                    if (HEX_COLOR_RE.test(val)) {
                       onChange(val);
                     }
                   }}

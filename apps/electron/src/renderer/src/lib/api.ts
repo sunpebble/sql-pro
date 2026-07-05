@@ -1,23 +1,23 @@
 /**
- * SQL Pro API
+ * Quarry API
  *
  * This module provides a unified API for the application.
- * In Electron, it uses the preload-exposed window.sqlPro API.
+ * In Electron, it uses the preload-exposed window.quarry API.
  */
 
-import { isMockMode, mockSqlProAPI } from './mock-api';
+import { isMockMode, mockQuarryAPI } from './mock-api';
 
 // Get the appropriate API based on mode
 const getAPI = () => {
   if (isMockMode()) {
-    return mockSqlProAPI;
+    return mockQuarryAPI;
   }
   // In Electron, the API is exposed via preload
-  return window.sqlPro;
+  return window.quarry;
 };
 
 // Create a lazy proxy that defers API resolution
-export const sqlPro = new Proxy({} as typeof window.sqlPro, {
+export const quarry = new Proxy({} as typeof window.quarry, {
   get(_target, prop: string) {
     const api = getAPI();
     const value = api[prop as keyof typeof api];

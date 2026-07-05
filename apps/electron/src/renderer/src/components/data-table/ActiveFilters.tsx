@@ -1,6 +1,6 @@
 import type { UIFilterState } from '@/lib/filter-utils';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { generateCompactFilterLabel } from '@/lib/filter-utils';

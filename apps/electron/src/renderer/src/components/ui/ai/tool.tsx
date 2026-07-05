@@ -5,7 +5,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@sqlpro/ui/collapsible';
+} from '@quarry/ui/collapsible';
 import {
   CheckCircle2Icon,
   ChevronDownIcon,
@@ -74,11 +74,16 @@ const stateConfig: Record<
   },
 };
 
+const TOOL_NAME_PREFIX_RE = /^tool[_-]?/i;
+const UNDERSCORE_RE = /_/g;
+
 export const ToolHeader = memo(
   ({ className, state, toolType, ...props }: ToolHeaderProps) => {
     const config = stateConfig[state] || stateConfig['input-streaming'];
     const Icon = config.icon;
-    const toolName = toolType.replace(/^tool[_-]?/i, '').replace(/_/g, ' ');
+    const toolName = toolType
+      .replace(TOOL_NAME_PREFIX_RE, '')
+      .replace(UNDERSCORE_RE, ' ');
 
     return (
       <CollapsibleTrigger

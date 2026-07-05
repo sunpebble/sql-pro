@@ -1,5 +1,5 @@
 {
-  "extends": "@sqlpro/tsconfig/base.json",
+  "extends": "@quarry/tsconfig/base.json",
   "compilerOptions": {
     "rootDir": "./src",
     "declaration": true,

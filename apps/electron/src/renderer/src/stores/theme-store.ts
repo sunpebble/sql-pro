@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -48,7 +48,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   loadTheme: async () => {
     set({ isLoading: true });
     try {
-      const result = await sqlPro.app.getPreferences();
+      const result = await quarry.app.getPreferences();
       if (result.success && result.preferences) {
         const prefs = result.preferences as { theme?: Theme };
         const theme = prefs.theme || 'system';
@@ -70,7 +70,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
     // Persist to main process
     try {
-      const result = (await sqlPro.app.setPreferences({
+      const result = (await quarry.app.setPreferences({
         preferences: { theme },
       })) as { success: boolean; error?: string };
       if (!result.success) {

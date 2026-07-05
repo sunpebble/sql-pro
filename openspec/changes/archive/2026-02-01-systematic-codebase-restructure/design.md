@@ -1,6 +1,6 @@
 ## Context
 
-SQL Pro 是一个跨平台数据库管理应用，采用 Electron + React + TypeScript 技术栈。当前代码库存在以下问题：
+Quarry 是一个跨平台数据库管理应用，采用 Electron + React + TypeScript 技术栈。当前代码库存在以下问题：
 
 **现状：**
 
@@ -170,7 +170,7 @@ const result = await ipc.invoke(channels.database.connect, { ... });
 ```typescript
 // observability/logger/index.ts
 export const logger = createLogger({
-  namespace: 'sqlpro',
+  namespace: 'quarry',
   transports: [consoleTransport, fileTransport],
 });
 

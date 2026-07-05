@@ -85,7 +85,7 @@
   "license": {
     "segmentPlaceholder": "XXXX",
     "segmentAriaLabel": "License key segment {{index}}",
-    "formatHint": "Format: SQLPRO-XXXX-XXXX-XXXX-XXXX"
+    "formatHint": "Format: QUARRY-XXXX-XXXX-XXXX-XXXX"
   },
   "pgNotify": {
     "subscriptionFailed": "Subscription failed"
@@ -695,12 +695,12 @@
     "deleteFolderWithBoth": "Folder \"{{name}}\" contains subfolders and profiles. Delete anyway? Contents will be moved to root level."
   },
   "about": {
-    "title": "SQL Pro",
+    "title": "Quarry",
     "subtitle": "Data Sanctum · Professional Database Manager",
     "version": "Version",
     "platform": "Platform",
     "builtWith": "Built with",
-    "copyright": "© 2025 SQL Pro. All rights reserved.",
+    "copyright": "© 2025 Quarry. All rights reserved.",
     "tagline": "Crafted with precision"
   },
   "passwordDialog": {
@@ -715,7 +715,7 @@
     "open": "Open"
   },
   "app": {
-    "name": "SQL Pro",
+    "name": "Quarry",
     "loading": "Loading...",
     "error": "An error occurred"
   },
@@ -1372,11 +1372,11 @@
   "pro": {
     "upgrade": "Upgrade to Pro",
     "unlockAll": "Unlock all Pro features",
-    "title": "SQL Pro License",
-    "getStarted": "Get SQL Pro",
+    "title": "Quarry License",
+    "getStarted": "Get Quarry",
     "description": "Unlock all Pro features with a subscription",
     "validity": "Validity",
-    "unlock": "Unlock SQL Pro",
+    "unlock": "Unlock Quarry",
     "getAccess": "Get access to all Pro features",
     "iHaveLicense": "I have a license",
     "activateExisting": "Activate existing key",
@@ -1491,7 +1491,7 @@
   },
   "plugins": {
     "title": "Plugins",
-    "description": "Extend SQL Pro with plugins",
+    "description": "Extend Quarry with plugins",
     "goBack": "Go back",
     "browseMarketplace": "Browse Marketplace",
     "refresh": "Refresh plugins",
@@ -1680,7 +1680,7 @@
     "openFromSidebar": "Open table from sidebar"
   },
   "welcomeDialog": {
-    "title": "Welcome to SQL Pro",
+    "title": "Welcome to Quarry",
     "description": "Your professional database manager for SQLite, MySQL, PostgreSQL, and Supabase. Take a quick tour to discover powerful features like the command palette, Vim mode, visual diff preview, and ER diagrams.",
     "takeTour": "Take a Tour",
     "skipForNow": "Skip for Now"
@@ -1693,11 +1693,11 @@
     "steps": {
       "features": {
         "title": "Feature Overview",
-        "description": "Explore the powerful features of SQL Pro. Click on any feature card to learn more, or check the documentation for detailed guides."
+        "description": "Explore the powerful features of Quarry. Click on any feature card to learn more, or check the documentation for detailed guides."
       },
       "openDatabase": {
         "title": "Open Database",
-        "description": "Click here to open a SQLite database file (.db, .sqlite, .sqlite3). SQL Pro supports both regular and encrypted SQLCipher databases."
+        "description": "Click here to open a SQLite database file (.db, .sqlite, .sqlite3). Quarry supports both regular and encrypted SQLCipher databases."
       },
       "serverConnection": {
         "title": "Connect to Server",
@@ -2065,7 +2065,7 @@
   },
   "marketplace": {
     "title": "Plugin Marketplace",
-    "description": "Browse and install plugins to extend SQL Pro functionality",
+    "description": "Browse and install plugins to extend Quarry functionality",
     "searchPlaceholder": "Search plugins...",
     "gridView": "Grid view",
     "listView": "List view",
@@ -2471,7 +2471,7 @@
     "numericValues": "({{count}} numeric values)"
   },
   "agent": {
-    "title": "SQL Pro Agent",
+    "title": "Quarry Agent",
     "subtitle": "AI-powered database assistant",
     "settings": {
       "title": "Agent Settings",

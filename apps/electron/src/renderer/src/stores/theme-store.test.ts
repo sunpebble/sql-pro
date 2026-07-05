@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Import after mocking
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { useThemeStore } from './theme-store';
 
 // Mock the API module before importing the store
 vi.mock('@/lib/api', () => ({
-  sqlPro: {
+  quarry: {
     app: {
       getPreferences: vi.fn(),
       setPreferences: vi.fn(),
@@ -52,7 +52,7 @@ describe('theme-store', () => {
     vi.clearAllMocks();
 
     // Default mock implementations
-    vi.mocked(sqlPro.app.getPreferences).mockResolvedValue({
+    vi.mocked(quarry.app.getPreferences).mockResolvedValue({
       success: true,
       preferences: {
         theme: 'system',
@@ -61,7 +61,7 @@ describe('theme-store', () => {
         recentConnectionsLimit: 10,
       },
     });
-    vi.mocked(sqlPro.app.setPreferences).mockResolvedValue({
+    vi.mocked(quarry.app.setPreferences).mockResolvedValue({
       success: true,
     });
   });
@@ -85,7 +85,7 @@ describe('theme-store', () => {
 
   describe('loadTheme', () => {
     it('should load theme from main process preferences', async () => {
-      vi.mocked(sqlPro.app.getPreferences).mockResolvedValue({
+      vi.mocked(quarry.app.getPreferences).mockResolvedValue({
         success: true,
         preferences: {
           theme: 'dark',
@@ -110,7 +110,7 @@ describe('theme-store', () => {
         resolvePromise = resolve;
       });
 
-      vi.mocked(sqlPro.app.getPreferences).mockImplementation(
+      vi.mocked(quarry.app.getPreferences).mockImplementation(
         () =>
           promise as Promise<{
             success: boolean;
@@ -143,7 +143,7 @@ describe('theme-store', () => {
     });
 
     it('should handle API errors gracefully', async () => {
-      vi.mocked(sqlPro.app.getPreferences).mockRejectedValue(
+      vi.mocked(quarry.app.getPreferences).mockRejectedValue(
         new Error('API Error')
       );
 
@@ -157,7 +157,7 @@ describe('theme-store', () => {
     });
 
     it('should handle unsuccessful response', async () => {
-      vi.mocked(sqlPro.app.getPreferences).mockResolvedValue({
+      vi.mocked(quarry.app.getPreferences).mockResolvedValue({
         success: false,
       });
 
@@ -177,7 +177,7 @@ describe('theme-store', () => {
 
       const { theme } = useThemeStore.getState();
       expect(theme).toBe('dark');
-      expect(sqlPro.app.setPreferences).toHaveBeenCalledWith({
+      expect(quarry.app.setPreferences).toHaveBeenCalledWith({
         preferences: { theme: 'dark' },
       });
     });
@@ -204,7 +204,7 @@ describe('theme-store', () => {
       const promise = new Promise((resolve) => {
         resolvePromise = resolve;
       });
-      vi.mocked(sqlPro.app.setPreferences).mockImplementation(
+      vi.mocked(quarry.app.setPreferences).mockImplementation(
         () => promise as Promise<{ success: boolean }>
       );
 
@@ -220,7 +220,7 @@ describe('theme-store', () => {
     });
 
     it('should handle API errors gracefully', async () => {
-      vi.mocked(sqlPro.app.setPreferences).mockRejectedValue(
+      vi.mocked(quarry.app.setPreferences).mockRejectedValue(
         new Error('API Error')
       );
 

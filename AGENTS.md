@@ -1,8 +1,8 @@
-# SQL Pro - Claude Code Instructions
+# Quarry - Claude Code Instructions
 
 ## Project Overview
 
-SQL Pro is a professional, cross-platform database management application built with:
+Quarry is a professional, cross-platform database management application built with:
 
 - **Desktop App**: Electron + React + TypeScript + Tailwind CSS + shadcn/ui
 - **Website**: React + TypeScript + Vite
@@ -176,7 +176,7 @@ pnpm test
 ## Project Structure
 
 ```
-sql-pro/
+quarry/
 ├── apps/
 │   ├── electron/          # Desktop application
 │   │   └── src/

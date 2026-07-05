@@ -1,8 +1,8 @@
 import type { ImportQueryResponse, ShareableQuery } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Textarea } from '@sqlpro/ui/textarea';
+import { Button } from '@quarry/ui/button';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Textarea } from '@quarry/ui/textarea';
 import {
   AlertCircle,
   AlertTriangle,
@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 export interface QueryImportDialogProps {
   /** Whether the dialog is open */
@@ -51,7 +51,7 @@ export function QueryImportDialog({
 
     try {
       // File path is selected via dialog in IPC handler
-      const result = await sqlPro.sharing.importQuery({
+      const result = await quarry.sharing.importQuery({
         filePath: '',
       });
 

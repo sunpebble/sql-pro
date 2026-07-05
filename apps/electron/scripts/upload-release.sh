@@ -7,13 +7,13 @@
 
 set -e
 
-BUCKET_NAME="sqlpro-releases"
+BUCKET_NAME="quarry-releases"
 DIST_DIR="dist"
 
 # Get version from package.json if not provided
 VERSION=${1:-$(node -p "require('./package.json').version")}
 
-echo "📦 Uploading SQL Pro v${VERSION} to Cloudflare R2..."
+echo "📦 Uploading Quarry v${VERSION} to Cloudflare R2..."
 echo "   Bucket: ${BUCKET_NAME}"
 echo "   Source: ${DIST_DIR}/"
 echo ""

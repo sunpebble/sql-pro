@@ -565,7 +565,7 @@ export async function fetchSchemaList(
   }
 
   // Fetch from backend
-  const result = await window.sqlPro.db.getSchemaList({ connectionId });
+  const result = await window.quarry.db.getSchemaList({ connectionId });
 
   if (result.success && result.schemas) {
     schemaCache.setSchemaList(connectionId, result.schemas);
@@ -613,7 +613,7 @@ export async function fetchTableDetails(
 
   try {
     // Fetch from backend
-    const result = await window.sqlPro.db.getTableDetails({
+    const result = await window.quarry.db.getTableDetails({
       connectionId,
       tableName,
       schema,

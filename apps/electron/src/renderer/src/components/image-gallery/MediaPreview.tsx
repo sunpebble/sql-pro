@@ -1,7 +1,7 @@
 import type { MediaItem } from './ImageGallery';
 import type { MediaSource } from '@/lib/image-utils';
-import { Skeleton } from '@sqlpro/ui/skeleton';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Skeleton } from '@quarry/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   ChevronLeft,
   ChevronRight,
@@ -109,6 +109,8 @@ interface VideoMetadata {
 // Helper Functions
 // ============================================================================
 
+const DATA_URL_MEDIA_RE = /^data:(image|video)\/([a-z0-9+]+);/i;
+
 function getMediaInfo(source: MediaSource): {
   type: string;
   size?: string;
@@ -126,7 +128,7 @@ function getMediaInfo(source: MediaSource): {
         isVideo,
       };
     case 'base64': {
-      const match = source.dataUrl.match(/^data:(image|video)\/([a-z0-9+]+);/i);
+      const match = source.dataUrl.match(DATA_URL_MEDIA_RE);
       const base64Data = source.dataUrl.split(',')[1] ?? '';
       const bytes = Math.ceil((base64Data.length * 3) / 4);
       return {
@@ -455,14 +457,14 @@ export function MediaPreview({
       setIsLoadingMetadata(true);
       try {
         if (item.source?.type === 'url') {
-          const result = await window.sqlPro.image.getMetadata({
+          const result = await window.quarry.image.getMetadata({
             url: item.source.url,
           });
           if (result.success && result.metadata) {
             setSharpMetadata(result.metadata);
           }
         } else if (item.source?.type === 'file') {
-          const result = await window.sqlPro.image.getFileMetadata({
+          const result = await window.quarry.image.getFileMetadata({
             path: item.source.path,
           });
           if (result.success && result.metadata) {
@@ -506,7 +508,7 @@ export function MediaPreview({
           return;
         }
 
-        const result = await window.sqlPro.video.getMetadata({ url });
+        const result = await window.quarry.video.getMetadata({ url });
         if (result.success && result.metadata) {
           setVideoMetadata(result.metadata);
         }
@@ -705,21 +707,21 @@ export function MediaPreview({
   // Open URL in external browser
   const handleOpenUrl = useCallback(async () => {
     if (item.source?.type === 'url') {
-      await window.sqlPro.system.openExternal({ url: item.source.url });
+      await window.quarry.system.openExternal({ url: item.source.url });
     }
   }, [item.source]);
 
   // Show file in folder (Finder/Explorer)
   const handleShowInFolder = useCallback(async () => {
     if (item.source?.type === 'file') {
-      await window.sqlPro.system.showItemInFolder({ path: item.source.path });
+      await window.quarry.system.showItemInFolder({ path: item.source.path });
     }
   }, [item.source]);
 
   // Open media in external browser (for URLs) - used by header button
   const handleOpenExternal = useCallback(() => {
     if (item.source?.type === 'url') {
-      window.sqlPro.system.openExternal({ url: item.source.url });
+      window.quarry.system.openExternal({ url: item.source.url });
     }
   }, [item.source]);
 

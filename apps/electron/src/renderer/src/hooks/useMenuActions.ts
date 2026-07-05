@@ -1,16 +1,16 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { invalidateTableData, refreshSchema } from '@/lib/query-refresh';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useCommandPaletteStore } from '@/stores/command-palette-store';
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDialogStore } from '@/stores/dialog-store';
 
-// Check if window API is available (always true in Tauri since we import sqlPro)
+// Check if window API is available (always true in Tauri since we import quarry)
 const hasWindowAPI = (): boolean => {
-  return typeof sqlPro?.window?.create === 'function';
+  return typeof quarry?.window?.create === 'function';
 };
 
 /**
@@ -24,11 +24,11 @@ export function useMenuActions() {
 
   useEffect(() => {
     // Set up menu action listener (works for both Electron and Tauri)
-    if (!sqlPro?.menu?.onAction) {
+    if (!quarry?.menu?.onAction) {
       return;
     }
 
-    const cleanup = sqlPro.menu.onAction((action: string) => {
+    const cleanup = quarry.menu.onAction((action: string) => {
       const connectionStore = useConnectionStore.getState();
 
       switch (action) {
@@ -41,11 +41,11 @@ export function useMenuActions() {
             openButton.click();
           } else {
             // If no button found, open file dialog directly
-            sqlPro.dialog
+            quarry.dialog
               .openFile()
               .then(async (result: { success: boolean; filePath?: string }) => {
                 if (result.success && result.filePath) {
-                  const openResult = await sqlPro.db.open({
+                  const openResult = await quarry.db.open({
                     path: result.filePath,
                   });
                   if (openResult.success && openResult.connection) {
@@ -158,7 +158,7 @@ export function useMenuActions() {
 
         case 'new-window': {
           if (hasWindowAPI()) {
-            sqlPro.window.create();
+            quarry.window.create();
           }
           break;
         }
@@ -230,8 +230,8 @@ export function useMenuActions() {
         // Help menu actions
         case 'documentation': {
           // Open documentation in browser
-          sqlPro.shell
-            .openExternal({ url: 'https://github.com/user/sql-pro#readme' })
+          quarry.shell
+            .openExternal({ url: 'https://github.com/user/quarry#readme' })
             .catch(console.error);
           break;
         }
@@ -244,7 +244,7 @@ export function useMenuActions() {
 
         case 'check_updates': {
           // Check for updates using tauri-plugin-updater
-          sqlPro.updates
+          quarry.updates
             .check()
             .then(
               (result: {
@@ -266,7 +266,7 @@ export function useMenuActions() {
                     useDialogStore
                       .getState()
                       .openUpdateCheck(
-                        'You are running the latest version of SQL Pro.'
+                        'You are running the latest version of Quarry.'
                       );
                   }
                 } else {

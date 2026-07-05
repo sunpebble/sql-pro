@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 // ============ Types ============
 
@@ -301,7 +301,7 @@ export function useExportFile(): UseExportFileResult {
         const defaultFilename = filename || `export.${extension}`;
 
         // Show save file dialog
-        const dialogResult = await sqlPro.dialog.saveFile({
+        const dialogResult = await quarry.dialog.saveFile({
           title,
           filters: fileFilters,
           defaultPath: defaultFilename,
@@ -332,7 +332,7 @@ export function useExportFile(): UseExportFileResult {
         onProgress?.(50);
 
         // Write the file
-        const writeResult = await sqlPro.file.write({
+        const writeResult = await quarry.file.write({
           filePath,
           content,
           encoding: 'utf8',

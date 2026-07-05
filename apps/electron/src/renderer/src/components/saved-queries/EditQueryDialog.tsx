@@ -1,17 +1,17 @@
 import type { QueryParameter, SavedQuery } from '@shared/types/saved-query';
 
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Textarea } from '@sqlpro/ui/textarea';
+} from '@quarry/ui/select';
+import { Textarea } from '@quarry/ui/textarea';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';

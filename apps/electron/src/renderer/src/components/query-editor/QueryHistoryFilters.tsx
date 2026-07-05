@@ -1,14 +1,14 @@
 import type { QueryHistoryStatus } from '@/stores/query-history-store';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
+} from '@quarry/ui/select';
 import { Calendar, FilterX } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

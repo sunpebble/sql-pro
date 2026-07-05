@@ -2,8 +2,8 @@
 // Shows generated SQL with syntax highlighting and Edit/Execute/Cancel buttons
 
 import Editor from '@monaco-editor/react';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import { AlertTriangle, Info, Pencil, Play, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import {

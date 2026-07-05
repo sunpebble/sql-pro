@@ -6,17 +6,17 @@
  * Designed for the ActivityBar view mode with optimized layouts.
  */
 
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@sqlpro/ui/card';
-import { Progress } from '@sqlpro/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+} from '@quarry/ui/card';
+import { Progress } from '@quarry/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import {
   AlertTriangle,
   BarChart3,
@@ -47,7 +47,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 
@@ -686,7 +686,7 @@ export const DashboardView = memo(() => {
     setError(null);
 
     try {
-      const schemaResult = await sqlPro.database.getSchema(activeConnectionId);
+      const schemaResult = await quarry.database.getSchema(activeConnectionId);
       if (!schemaResult.success || !schemaResult.tables) {
         throw new Error(schemaResult.error || t('database.failedToGetSchema'));
       }
@@ -705,11 +705,11 @@ export const DashboardView = memo(() => {
       const tablePromises = schemaResult.tables.map(async (table) => {
         const quotedName = `"${table.name.replace(DOUBLE_QUOTE_RE, '""')}"`;
         const [countResult, sizeResult] = await Promise.all([
-          sqlPro.database.query(
+          quarry.database.query(
             activeConnectionId,
             `SELECT COUNT(*) as count FROM ${quotedName}`
           ),
-          sqlPro.database
+          quarry.database
             .query(
               activeConnectionId,
               'SELECT SUM(pgsize) as size FROM dbstat WHERE name = ?',

@@ -11,12 +11,12 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Import after mocking
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { useMemoryMonitor } from './useMemoryMonitor';
 
 // Mock the api module
 vi.mock('@/lib/api', () => ({
-  sqlPro: {
+  quarry: {
     memory: {
       getStats: vi.fn(),
       subscribe: vi.fn(),
@@ -65,29 +65,29 @@ describe('useMemoryMonitor', () => {
     vi.useFakeTimers();
 
     // Set up default mock implementations
-    vi.mocked(sqlPro.memory.getStats).mockResolvedValue({
+    vi.mocked(quarry.memory.getStats).mockResolvedValue({
       success: true,
       stats: mockMemoryStats,
       pressureLevel: 'normal' as MemoryPressureLevel,
     });
 
-    vi.mocked(sqlPro.memory.subscribe).mockResolvedValue({
+    vi.mocked(quarry.memory.subscribe).mockResolvedValue({
       success: true,
       subscriptionId: 'test-subscription-123',
     });
 
-    vi.mocked(sqlPro.memory.unsubscribe).mockResolvedValue({
+    vi.mocked(quarry.memory.unsubscribe).mockResolvedValue({
       success: true,
     });
 
-    vi.mocked(sqlPro.memory.triggerGC).mockResolvedValue({
+    vi.mocked(quarry.memory.triggerGC).mockResolvedValue({
       success: true,
       gcTriggered: true,
       statsAfterGC: mockMemoryStats,
     });
 
-    vi.mocked(sqlPro.memory.onStatsUpdate).mockReturnValue(vi.fn());
-    vi.mocked(sqlPro.memory.onPressureChange).mockReturnValue(vi.fn());
+    vi.mocked(quarry.memory.onStatsUpdate).mockReturnValue(vi.fn());
+    vi.mocked(quarry.memory.onPressureChange).mockReturnValue(vi.fn());
   });
 
   afterEach(() => {
@@ -128,14 +128,14 @@ describe('useMemoryMonitor', () => {
         await result.current.fetchStats();
       });
 
-      expect(sqlPro.memory.getStats).toHaveBeenCalled();
+      expect(quarry.memory.getStats).toHaveBeenCalled();
       expect(result.current.mainProcessStats).toEqual(mockMemoryStats);
       expect(result.current.pressureLevel).toBe('normal');
     });
 
     it('should set loading state during fetch', async () => {
       let resolvePromise: (value: unknown) => void;
-      vi.mocked(sqlPro.memory.getStats).mockImplementation(
+      vi.mocked(quarry.memory.getStats).mockImplementation(
         () =>
           new Promise((resolve) => {
             resolvePromise = resolve;
@@ -167,7 +167,7 @@ describe('useMemoryMonitor', () => {
     });
 
     it('should handle fetch errors', async () => {
-      vi.mocked(sqlPro.memory.getStats).mockResolvedValue({
+      vi.mocked(quarry.memory.getStats).mockResolvedValue({
         success: false,
         error: 'Failed to get stats',
       });
@@ -191,7 +191,7 @@ describe('useMemoryMonitor', () => {
         await result.current.subscribe();
       });
 
-      expect(sqlPro.memory.subscribe).toHaveBeenCalled();
+      expect(quarry.memory.subscribe).toHaveBeenCalled();
       expect(result.current.isSubscribed).toBe(true);
     });
 
@@ -202,8 +202,8 @@ describe('useMemoryMonitor', () => {
         await result.current.subscribe();
       });
 
-      expect(sqlPro.memory.onStatsUpdate).toHaveBeenCalled();
-      expect(sqlPro.memory.onPressureChange).toHaveBeenCalled();
+      expect(quarry.memory.onStatsUpdate).toHaveBeenCalled();
+      expect(quarry.memory.onPressureChange).toHaveBeenCalled();
     });
 
     it('should not subscribe multiple times', async () => {
@@ -217,11 +217,11 @@ describe('useMemoryMonitor', () => {
         await result.current.subscribe();
       });
 
-      expect(sqlPro.memory.subscribe).toHaveBeenCalledTimes(1);
+      expect(quarry.memory.subscribe).toHaveBeenCalledTimes(1);
     });
 
     it('should handle subscribe errors', async () => {
-      vi.mocked(sqlPro.memory.subscribe).mockResolvedValue({
+      vi.mocked(quarry.memory.subscribe).mockResolvedValue({
         success: false,
         error: 'Subscription failed',
       });
@@ -251,7 +251,7 @@ describe('useMemoryMonitor', () => {
         await result.current.unsubscribe();
       });
 
-      expect(sqlPro.memory.unsubscribe).toHaveBeenCalledWith({
+      expect(quarry.memory.unsubscribe).toHaveBeenCalledWith({
         subscriptionId: 'test-subscription-123',
       });
       expect(result.current.isSubscribed).toBe(false);
@@ -264,7 +264,7 @@ describe('useMemoryMonitor', () => {
         await result.current.unsubscribe();
       });
 
-      expect(sqlPro.memory.unsubscribe).not.toHaveBeenCalled();
+      expect(quarry.memory.unsubscribe).not.toHaveBeenCalled();
     });
   });
 
@@ -278,7 +278,7 @@ describe('useMemoryMonitor', () => {
       });
 
       expect(gcResult!).toBe(true);
-      expect(sqlPro.memory.triggerGC).toHaveBeenCalledWith({ force: true });
+      expect(quarry.memory.triggerGC).toHaveBeenCalledWith({ force: true });
     });
 
     it('should update stats after GC', async () => {
@@ -292,7 +292,7 @@ describe('useMemoryMonitor', () => {
     });
 
     it('should return false when GC not triggered', async () => {
-      vi.mocked(sqlPro.memory.triggerGC).mockResolvedValue({
+      vi.mocked(quarry.memory.triggerGC).mockResolvedValue({
         success: true,
         gcTriggered: false,
         error: 'GC not available',
@@ -310,7 +310,7 @@ describe('useMemoryMonitor', () => {
     });
 
     it('should handle GC errors', async () => {
-      vi.mocked(sqlPro.memory.triggerGC).mockRejectedValue(
+      vi.mocked(quarry.memory.triggerGC).mockRejectedValue(
         new Error('GC failed')
       );
 
@@ -339,7 +339,7 @@ describe('useMemoryMonitor', () => {
         expect(result.current.isSubscribed).toBe(true);
       });
 
-      expect(sqlPro.memory.subscribe).toHaveBeenCalled();
+      expect(quarry.memory.subscribe).toHaveBeenCalled();
 
       // Restore fake timers for other tests
       vi.useFakeTimers();
@@ -351,7 +351,7 @@ describe('useMemoryMonitor', () => {
       );
 
       expect(result.current.isSubscribed).toBe(false);
-      expect(sqlPro.memory.subscribe).not.toHaveBeenCalled();
+      expect(quarry.memory.subscribe).not.toHaveBeenCalled();
     });
   });
 
@@ -360,7 +360,7 @@ describe('useMemoryMonitor', () => {
       const onStatsUpdate = vi.fn();
       let statsCallback: (event: MemoryStatsUpdateEvent) => void;
 
-      vi.mocked(sqlPro.memory.onStatsUpdate).mockImplementation((callback) => {
+      vi.mocked(quarry.memory.onStatsUpdate).mockImplementation((callback) => {
         statsCallback = callback;
         return vi.fn();
       });
@@ -387,7 +387,7 @@ describe('useMemoryMonitor', () => {
       const onPressureChange = vi.fn();
       let pressureCallback: (event: MemoryPressureChangeEvent) => void;
 
-      vi.mocked(sqlPro.memory.onPressureChange).mockImplementation(
+      vi.mocked(quarry.memory.onPressureChange).mockImplementation(
         (callback) => {
           pressureCallback = callback;
           return vi.fn();
@@ -442,8 +442,8 @@ describe('useMemoryMonitor', () => {
       vi.useRealTimers();
 
       const cleanupFn = vi.fn();
-      vi.mocked(sqlPro.memory.onStatsUpdate).mockReturnValue(cleanupFn);
-      vi.mocked(sqlPro.memory.onPressureChange).mockReturnValue(cleanupFn);
+      vi.mocked(quarry.memory.onStatsUpdate).mockReturnValue(cleanupFn);
+      vi.mocked(quarry.memory.onPressureChange).mockReturnValue(cleanupFn);
 
       const { result, unmount } = renderHook(() =>
         useMemoryMonitor({ autoSubscribe: true })

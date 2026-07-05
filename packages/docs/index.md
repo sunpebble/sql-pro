@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: SQL Pro
+  name: Quarry
   text: Professional SQLite Database Manager
   tagline: Open-source database management with SQLCipher support, diff preview, and powerful query tools
   image:
     src: /logo.svg
-    alt: SQL Pro Logo
+    alt: Quarry Logo
   actions:
     - theme: brand
       text: Get Started
@@ -17,7 +17,7 @@ hero:
       link: /features/
     - theme: alt
       text: GitHub
-      link: https://github.com/kunish-homelab/sql-pro
+      link: https://github.com/sunpebble/quarry
 
 features:
   - icon: 🗄️
@@ -47,9 +47,9 @@ features:
 
 ## Quick Start
 
-Get up and running with SQL Pro in minutes:
+Get up and running with Quarry in minutes:
 
-1. **Download** the [latest release](https://github.com/kunish-homelab/sql-pro/releases) for your platform
+1. **Download** the [latest release](https://github.com/sunpebble/quarry/releases) for your platform
 2. **Install** the application on your system
 3. **Open** a SQLite or SQLCipher database file
 4. **Start** browsing and querying your data
@@ -60,26 +60,26 @@ Ready to dive deeper? Check out our [Getting Started guide](/getting-started/) f
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 2rem;">
   <div>
-    <img src="/screenshots/welcome-dark.png" alt="SQL Pro Welcome Screen showing recent databases and quick actions" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <img src="/screenshots/welcome-dark.png" alt="Quarry Welcome Screen showing recent databases and quick actions" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     <p style="text-align: center; margin-top: 0.5rem; color: var(--vp-c-text-2);">Welcome Screen</p>
   </div>
   <div>
-    <img src="/screenshots/database-dark.png" alt="SQL Pro Database View showing schema browser and data grid" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <img src="/screenshots/database-dark.png" alt="Quarry Database View showing schema browser and data grid" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     <p style="text-align: center; margin-top: 0.5rem; color: var(--vp-c-text-2);">Database View</p>
   </div>
   <div>
-    <img src="/screenshots/query-dark.png" alt="SQL Pro Query Editor with syntax highlighting and results" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <img src="/screenshots/query-dark.png" alt="Quarry Query Editor with syntax highlighting and results" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     <p style="text-align: center; margin-top: 0.5rem; color: var(--vp-c-text-2);">Query Editor</p>
   </div>
   <div>
-    <img src="/screenshots/table-dark.png" alt="SQL Pro Table View with inline editing capabilities" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <img src="/screenshots/table-dark.png" alt="Quarry Table View with inline editing capabilities" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     <p style="text-align: center; margin-top: 0.5rem; color: var(--vp-c-text-2);">Table View</p>
   </div>
 </div>
 
-## Why SQL Pro?
+## Why Quarry?
 
-| Feature                 | SQL Pro                  | Other Tools          |
+| Feature                 | Quarry                   | Other Tools          |
 | ----------------------- | ------------------------ | -------------------- |
 | **Open Source**         | ✅ MIT Licensed          | Often proprietary    |
 | **SQLCipher Support**   | ✅ Built-in              | Requires plugins     |
@@ -90,7 +90,7 @@ Ready to dive deeper? Check out our [Getting Started guide](/getting-started/) f
 
 ## Keyboard-First Design
 
-SQL Pro is designed for power users who prefer keyboard navigation:
+Quarry is designed for power users who prefer keyboard navigation:
 
 - **`Cmd/Ctrl + Enter`** — Execute SQL query
 - **`Cmd/Ctrl + S`** — Apply changes

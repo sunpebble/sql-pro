@@ -10,16 +10,16 @@ import type { CacheStats } from '@shared/lib/memory-budget-cache';
 import type { MemoryPressureLevel } from '@shared/types';
 import type { RendererMetrics } from '@/hooks/useMemoryMonitor';
 import type { GlobalCacheStats } from '@/lib/schema-cache';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@sqlpro/ui/card';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Separator } from '@sqlpro/ui/separator';
+} from '@quarry/ui/card';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Separator } from '@quarry/ui/separator';
 import {
   AlertTriangle,
   ChevronDown,

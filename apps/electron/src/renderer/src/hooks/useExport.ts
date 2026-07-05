@@ -1,7 +1,7 @@
 import type { ExportFormat, ExportResponse } from '@shared/types';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 export interface ExportDataOptions {
   /** Export format */
@@ -107,7 +107,7 @@ export function useExport(): UseExportResult {
         const filters = FORMAT_FILTERS[format];
         const defaultFilename = `${tableName}.${extension}`;
 
-        const dialogResult = await sqlPro.dialog.saveFile({
+        const dialogResult = await quarry.dialog.saveFile({
           title: `Export to ${format.toUpperCase()}`,
           filters,
           defaultPath: defaultFilename,
@@ -124,7 +124,7 @@ export function useExport(): UseExportResult {
         }
 
         // Call export IPC handler
-        const exportResult = await sqlPro.export.data({
+        const exportResult = await quarry.export.data({
           connectionId,
           table: tableName,
           format,

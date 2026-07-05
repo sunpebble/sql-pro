@@ -1,16 +1,16 @@
 import type { ComparisonSource } from '@/stores/schema-comparison-store';
 import type { DatabaseConnection } from '@/types/database';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+} from '@quarry/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import { Database, FileText, Loader2, Plus, Save } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useSchemaComparisonStore } from '@/stores/schema-comparison-store';
@@ -142,7 +142,7 @@ export function SourceSelector({
     setCreateSnapshotError(null);
 
     try {
-      const response = await sqlPro.schemaSnapshot.save({
+      const response = await quarry.schemaSnapshot.save({
         connectionId: selectedConnectionForSnapshot,
         name: snapshotName.trim(),
       });
@@ -196,6 +196,11 @@ export function SourceSelector({
     }
   };
 
+  const selectedConnection =
+    value?.type === 'connection'
+      ? availableConnections.find((c) => c.id === value.connectionId)
+      : undefined;
+
   return (
     <>
       <div className="space-y-3">
@@ -234,14 +239,8 @@ export function SourceSelector({
                       <div className="flex items-center gap-2">
                         <span
                           className={`h-2 w-2 shrink-0 rounded-full ${
-                            availableConnections.find(
-                              (c) => c.id === value.connectionId
-                            )
-                              ? getStatusColor(
-                                  availableConnections.find(
-                                    (c) => c.id === value.connectionId
-                                  )!
-                                )
+                            selectedConnection
+                              ? getStatusColor(selectedConnection)
                               : 'bg-gray-400'
                           }`}
                         />

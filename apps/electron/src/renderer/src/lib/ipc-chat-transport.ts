@@ -35,7 +35,7 @@ export class IPCChatTransport implements ChatTransport<UIMessage> {
         let currentTextId = '';
         let currentReasoningId = '';
 
-        cleanup = window.sqlPro.agent.onChatStream(
+        cleanup = window.quarry.agent.onChatStream(
           streamId,
           (chunk: unknown) => {
             if (isFinished) return;
@@ -182,7 +182,7 @@ export class IPCChatTransport implements ChatTransport<UIMessage> {
           }
         );
 
-        window.sqlPro.agent
+        window.quarry.agent
           .sendChat({
             connectionId: this.connectionId,
             sessionId: this.sessionId,
@@ -229,7 +229,7 @@ export class IPCChatTransport implements ChatTransport<UIMessage> {
         abortSignal?.addEventListener('abort', () => {
           if (!isFinished) {
             isFinished = true;
-            window.sqlPro.agent.cancelChat({
+            window.quarry.agent.cancelChat({
               connectionId: this.connectionId,
               sessionId: this.sessionId,
             });

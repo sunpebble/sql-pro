@@ -1,8 +1,8 @@
 {
-  "name": "@sqlpro/ui",
+  "name": "@quarry/ui",
   "type": "module",
   "version": "1.0.0",
-  "description": "SQL Pro UI components based on shadcn/ui",
+  "description": "Quarry UI components based on shadcn/ui",
   "license": "MIT",
   "exports": {
     ".": {
@@ -39,7 +39,7 @@
     "tailwind-merge": "catalog:"
   },
   "devDependencies": {
-    "@sqlpro/tsconfig": "workspace:*",
+    "@quarry/tsconfig": "workspace:*",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "typescript": "catalog:"

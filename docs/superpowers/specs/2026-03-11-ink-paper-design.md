@@ -1,4 +1,4 @@
-# SQL Pro — Ink & Paper Design Specification
+# Quarry — Ink & Paper Design Specification
 
 **Date:** 2026-03-11
 **Status:** Approved

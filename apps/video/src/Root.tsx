@@ -13,7 +13,7 @@ export const RemotionRoot = () => {
         width={1920}
         height={1080}
         defaultProps={{
-          title: 'SQL Pro',
+          title: 'Quarry',
           tagline: 'The database manager developers love.',
         }}
       />

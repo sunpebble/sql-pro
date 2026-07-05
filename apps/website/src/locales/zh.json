@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "SQL Pro — 开源 SQLite 数据库管理工具",
+    "title": "Quarry — 开源 SQLite 数据库管理工具",
     "description": "免费开源的 SQLite 数据库管理工具，支持 SQLCipher 加密、可视化差异预览、Monaco SQL 编辑器和 AI 查询工具。适用于 macOS、Windows 和 Linux。"
   },
   "hero": {
@@ -59,7 +59,7 @@
   },
   "download": {
     "title": "下载",
-    "titleHighlight": "SQL Pro",
+    "titleHighlight": "Quarry",
     "downloadFor": "下载 {{platform}} 版本",
     "otherPlatforms": "其他平台：",
     "platforms": {
@@ -80,7 +80,7 @@
     "releases": "发布记录",
     "docs": "文档",
     "discussions": "讨论区",
-    "copyright": "© {{year}} SQL Pro. 基于 MIT 协议开源。"
+    "copyright": "© {{year}} Quarry. 基于 MIT 协议开源。"
   },
   "pricing": {
     "title": "简单，",
@@ -179,7 +179,7 @@
     "status": "状态",
     "devices": "最大设备数",
     "howToActivate": "如何激活",
-    "step1": "在您的电脑上打开 SQL Pro",
+    "step1": "在您的电脑上打开 Quarry",
     "step2": "进入 设置 → 许可证",
     "step3": "输入您的邮箱并粘贴许可证密钥",
     "done": "完成"
@@ -207,7 +207,7 @@
     "expires": "到期时间"
   },
   "stats": {
-    "title": "SQL Pro 一览",
+    "title": "Quarry 一览",
     "databases": "数据库类型",
     "platforms": "支持平台",
     "queries": "查询次数",
@@ -217,18 +217,18 @@
     "label": "用户评价",
     "title": "深受",
     "titleHighlight": "开发者喜爱",
-    "subtitle": "听听每天使用 SQL Pro 管理 SQLite 数据库的开发者怎么说。",
+    "subtitle": "听听每天使用 Quarry 管理 SQLite 数据库的开发者怎么说。",
     "quotes": {
-      "developer": "SQL Pro 彻底改变了我使用 SQLite 的方式。Monaco 编辑器的智能补全堪称神器——感觉就像在 VS Code 里写代码一样流畅。",
+      "developer": "Quarry 彻底改变了我使用 SQLite 的方式。Monaco 编辑器的智能补全堪称神器——感觉就像在 VS Code 里写代码一样流畅。",
       "datascientist": "光是可视化差异预览就已经值回票价。提交前就能审查数据变更，每周帮我节省数小时，还能避免失误。",
-      "indie": "作为独立开发者，我需要快速、可靠、不碍事的工具。SQL Pro 三者兼得——而且还是开源的。"
+      "indie": "作为独立开发者，我需要快速、可靠、不碍事的工具。Quarry 三者兼得——而且还是开源的。"
     }
   },
   "opensource": {
     "label": "开源项目",
     "title": "公开构建，",
     "titleHighlight": "为开发者而生",
-    "description": "SQL Pro 基于 MIT 协议完全开源。审计代码、贡献功能、报告问题，或 fork 到自己的项目。永远没有供应商锁定。",
+    "description": "Quarry 基于 MIT 协议完全开源。审计代码、贡献功能、报告问题，或 fork 到自己的项目。永远没有供应商锁定。",
     "features": {
       "secure": "安全可审计",
       "community": "社区驱动",
@@ -241,27 +241,27 @@
     "label": "常见问题",
     "title": "常见",
     "titleHighlight": "问题解答",
-    "subtitle": "关于 SQL Pro 您需要了解的一切。",
+    "subtitle": "关于 Quarry 您需要了解的一切。",
     "items": {
       "free": {
-        "question": "SQL Pro 可以免费使用吗？",
-        "answer": "可以！SQL Pro 核心版基于 MIT 协议开源且免费，可用于个人和商业项目。SQLCipher 加密和 AI 等高级功能通过 Pro 订阅提供。"
+        "question": "Quarry 可以免费使用吗？",
+        "answer": "可以！Quarry 核心版基于 MIT 协议开源且免费，可用于个人和商业项目。SQLCipher 加密和 AI 等高级功能通过 Pro 订阅提供。"
       },
       "platforms": {
         "question": "支持哪些平台？",
-        "answer": "SQL Pro 原生运行于 macOS（Universal，同时支持 Intel 和 Apple Silicon）、Windows（x64）和 Linux（x64，提供 AppImage 和 deb 安装包）。所有平台功能和更新同步。"
+        "answer": "Quarry 原生运行于 macOS（Universal，同时支持 Intel 和 Apple Silicon）、Windows（x64）和 Linux（x64，提供 AppImage 和 deb 安装包）。所有平台功能和更新同步。"
       },
       "sqlite": {
         "question": "支持哪些 SQLite 功能？",
-        "answer": "SQL Pro 支持所有标准 SQLite 功能，包括视图、触发器、索引、外键、虚拟表和全文搜索（FTS5）。同时支持 WAL 模式和并发连接，满足高性能工作流需求。"
+        "answer": "Quarry 支持所有标准 SQLite 功能，包括视图、触发器、索引、外键、虚拟表和全文搜索（FTS5）。同时支持 WAL 模式和并发连接，满足高性能工作流需求。"
       },
       "encryption": {
         "question": "SQLCipher 加密如何工作？",
-        "answer": "SQL Pro 集成 SQLCipher 来打开和管理加密的 SQLite 数据库。加密密钥安全存储在系统原生密钥链中——macOS 钥匙串、Windows 凭据管理器或 Linux Secret Service——绝不会以明文形式写入磁盘。"
+        "answer": "Quarry 集成 SQLCipher 来打开和管理加密的 SQLite 数据库。加密密钥安全存储在系统原生密钥链中——macOS 钥匙串、Windows 凭据管理器或 Linux Secret Service——绝不会以明文形式写入磁盘。"
       },
       "updates": {
         "question": "如何获取更新？",
-        "answer": "SQL Pro 会自动检查更新。当有新版本时，您会收到通知并可一键更新。也可以从 GitHub 手动下载发布版本。"
+        "answer": "Quarry 会自动检查更新。当有新版本时，您会收到通知并可一键更新。也可以从 GitHub 手动下载发布版本。"
       },
       "support": {
         "question": "在哪里可以获得帮助？",

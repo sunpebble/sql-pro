@@ -4,6 +4,9 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useConnectionStore } from '@/stores/connection-store';
 import { Titlebar } from './Titlebar';
 
+const THEME_TOOLTIP_RE = /theme.tooltip/i;
+const THEME_SETTINGS_RE = /theme.settings/i;
+
 // Mock connection
 const mockConnection: DatabaseConnection = {
   id: 'conn-1',
@@ -25,12 +28,16 @@ describe('titlebar', () => {
   it('should render Theme Switcher button with accessible name', () => {
     render(<Titlebar />);
     // The mock i18n returns the key 'theme.tooltip'
-    expect(screen.getByRole('button', { name: /theme.tooltip/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: THEME_TOOLTIP_RE })
+    ).toBeInTheDocument();
   });
 
   it('should render Settings button with accessible name', () => {
     render(<Titlebar />);
     // The mock i18n returns the key 'theme.settings'
-    expect(screen.getByRole('button', { name: /theme.settings/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: THEME_SETTINGS_RE })
+    ).toBeInTheDocument();
   });
 });

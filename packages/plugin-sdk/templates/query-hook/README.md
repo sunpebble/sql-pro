@@ -1,6 +1,6 @@
 # Query Hook Logger Plugin Template
 
-A comprehensive example plugin demonstrating the **Query Lifecycle API** for SQL Pro. This plugin logs all executed queries, tracks execution times, handles errors, and provides statistics - perfect for debugging, auditing, and learning about query hooks.
+A comprehensive example plugin demonstrating the **Query Lifecycle API** for Quarry. This plugin logs all executed queries, tracks execution times, handles errors, and provides statistics - perfect for debugging, auditing, and learning about query hooks.
 
 ## Features
 

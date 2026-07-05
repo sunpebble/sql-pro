@@ -1,7 +1,7 @@
-import { Alert, AlertDescription, AlertTitle } from '@sqlpro/ui/alert';
-import { Button } from '@sqlpro/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@sqlpro/ui/card';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Alert, AlertDescription, AlertTitle } from '@quarry/ui/alert';
+import { Button } from '@quarry/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@quarry/ui/card';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   AlertCircle,
   ArrowLeftRight,
@@ -15,7 +15,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useSchemaComparisonStore } from '@/stores/schema-comparison-store';
 import { DiffFilterBar } from './DiffFilterBar';
@@ -67,7 +67,7 @@ export function SchemaComparisonPanel({
     const loadSnapshots = async () => {
       setIsLoadingSnapshots(true);
       try {
-        const response = await sqlPro.schemaSnapshot.getAll();
+        const response = await quarry.schemaSnapshot.getAll();
         if (response.success && response.snapshots) {
           setAvailableSnapshots(response.snapshots);
         }
@@ -189,7 +189,7 @@ export function SchemaComparisonPanel({
           throw new Error(t('compare.connectionIdsRequired'));
         }
 
-        response = await sqlPro.comparison.compareConnections({
+        response = await quarry.comparison.compareConnections({
           sourceConnectionId: source.connectionId,
           targetConnectionId: target.connectionId,
         });
@@ -199,7 +199,7 @@ export function SchemaComparisonPanel({
           throw new Error(t('compare.connectionAndSnapshotRequired'));
         }
 
-        response = await sqlPro.comparison.compareConnectionToSnapshot({
+        response = await quarry.comparison.compareConnectionToSnapshot({
           connectionId: source.connectionId,
           snapshotId: target.snapshotId,
           reverse: false,
@@ -210,7 +210,7 @@ export function SchemaComparisonPanel({
           throw new Error(t('compare.snapshotAndConnectionRequired'));
         }
 
-        response = await sqlPro.comparison.compareConnectionToSnapshot({
+        response = await quarry.comparison.compareConnectionToSnapshot({
           connectionId: target.connectionId,
           snapshotId: source.snapshotId,
           reverse: true,
@@ -221,7 +221,7 @@ export function SchemaComparisonPanel({
           throw new Error(t('compare.snapshotIdsRequired'));
         }
 
-        response = await sqlPro.comparison.compareSnapshots({
+        response = await quarry.comparison.compareSnapshots({
           sourceSnapshotId: source.snapshotId,
           targetSnapshotId: target.snapshotId,
         });

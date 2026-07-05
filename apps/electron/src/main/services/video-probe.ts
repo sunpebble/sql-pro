@@ -161,7 +161,7 @@ export async function getVideoMetadata(
   try {
     // If input is a Buffer, write to temp file
     if (Buffer.isBuffer(input)) {
-      tempFile = join(tmpdir(), `sqlpro-video-${Date.now()}.tmp`);
+      tempFile = join(tmpdir(), `quarry-video-${Date.now()}.tmp`);
       await writeFile(tempFile, input);
       inputPath = tempFile;
     } else {

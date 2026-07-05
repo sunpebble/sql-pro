@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next';
 
 const essentialLinks = [
-  { key: 'github', href: 'https://github.com/kunish-homelab/sql-pro' },
+  { key: 'github', href: 'https://github.com/sunpebble/quarry' },
   {
     key: 'releases',
-    href: 'https://github.com/kunish-homelab/sql-pro/releases',
+    href: 'https://github.com/sunpebble/quarry/releases',
   },
-  { key: 'docs', href: 'https://kunish-homelab.github.io/sql-pro/' },
+  { key: 'docs', href: 'https://sunpebble.github.io/quarry/' },
   {
     key: 'discussions',
-    href: 'https://github.com/kunish-homelab/sql-pro/discussions',
+    href: 'https://github.com/sunpebble/quarry/discussions',
   },
 ];
 
@@ -37,7 +37,7 @@ export default function Footer() {
               aria-hidden="true"
               className="border-border rounded-lg border transition-transform duration-200 group-hover:scale-105"
             />
-            SQL Pro
+            Quarry
           </a>
 
           {/* Essential links */}

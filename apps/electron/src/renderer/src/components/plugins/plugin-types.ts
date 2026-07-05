@@ -25,7 +25,7 @@ export interface PluginManifest {
   main: string;
   permissions?: PluginPermission[];
   engines?: {
-    sqlpro?: string;
+    quarry?: string;
   };
   homepage?: string;
   repository?: string;

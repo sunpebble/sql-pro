@@ -1,18 +1,18 @@
 import type { ColumnInfo, ExportFormat } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 
-import { Checkbox } from '@sqlpro/ui/checkbox';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { Progress } from '@sqlpro/ui/progress';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Checkbox } from '@quarry/ui/checkbox';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { Progress } from '@quarry/ui/progress';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
+} from '@quarry/ui/select';
 import {
   FileCode,
   FileDown,

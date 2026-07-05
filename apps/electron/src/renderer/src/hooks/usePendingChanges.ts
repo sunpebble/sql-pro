@@ -2,7 +2,7 @@ import type { PendingChangeInfo } from '@shared/types';
 import type { PendingChange } from '@/lib/collections';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import {
   clearPendingChanges,
   getAllPendingChanges,
@@ -97,7 +97,7 @@ export function usePendingChanges(
         primaryKeyColumn: c.primaryKeyColumn,
       }));
 
-      const response = await sqlPro.db.validateChanges({
+      const response = await quarry.db.validateChanges({
         connectionId,
         changes: changeInfos,
       });
@@ -173,7 +173,7 @@ export function usePendingChanges(
         primaryKeyColumn: c.primaryKeyColumn,
       }));
 
-      const response = await sqlPro.db.applyChanges({
+      const response = await quarry.db.applyChanges({
         connectionId,
         changes: changeInfos,
       });

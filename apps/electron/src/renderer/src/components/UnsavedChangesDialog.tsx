@@ -9,8 +9,8 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-} from '@sqlpro/ui/alert-dialog';
-import { Button } from '@sqlpro/ui/button';
+} from '@quarry/ui/alert-dialog';
+import { Button } from '@quarry/ui/button';
 import { AlertTriangle, Edit3, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,6 @@
 # Features Overview
 
-SQL Pro is a professional SQLite database manager packed with powerful features designed for developers, data analysts, and database administrators. This guide provides an overview of all major features and links to detailed documentation for each.
+Quarry is a professional SQLite database manager packed with powerful features designed for developers, data analysts, and database administrators. This guide provides an overview of all major features and links to detailed documentation for each.
 
 ::: info Quick Navigation
 Jump to: [Query Editor](#query-editor) • [Schema Browser](#schema-browser) • [Data Editing](#data-editing) • [ER Diagram](#er-diagram) • [Query History](#query-history) • [SQLCipher](#sqlcipher)
@@ -8,11 +8,11 @@ Jump to: [Query Editor](#query-editor) • [Schema Browser](#schema-browser) •
 
 ## Core Features
 
-SQL Pro combines essential database management tools with advanced features that set it apart from other SQLite tools.
+Quarry combines essential database management tools with advanced features that set it apart from other SQLite tools.
 
 ### Query Editor
 
-The heart of SQL Pro's functionality. Write, execute, and optimize SQL queries with a professional-grade editor built on Monaco (the same engine that powers VS Code).
+The heart of Quarry's functionality. Write, execute, and optimize SQL queries with a professional-grade editor built on Monaco (the same engine that powers VS Code).
 
 | Capability                   | Description                                                     |
 | ---------------------------- | --------------------------------------------------------------- |
@@ -92,7 +92,7 @@ Toggle the ER Diagram view with <kbd>Cmd/Ctrl</kbd> + <kbd>3</kbd>
 
 ### Query History
 
-Never lose a query again. SQL Pro maintains a complete, searchable history of all executed queries for each database.
+Never lose a query again. Quarry maintains a complete, searchable history of all executed queries for each database.
 
 | Capability             | Description                       |
 | ---------------------- | --------------------------------- |
@@ -108,7 +108,7 @@ Never lose a query again. SQL Pro maintains a complete, searchable history of al
 
 ### SQLCipher Support
 
-Work with encrypted SQLite databases using industry-standard SQLCipher encryption. SQL Pro handles password management securely.
+Work with encrypted SQLite databases using industry-standard SQLCipher encryption. Quarry handles password management securely.
 
 | Capability                  | Description                                 |
 | --------------------------- | ------------------------------------------- |
@@ -128,9 +128,9 @@ Passwords are stored using your operating system's secure keychain (Keychain on 
 
 ## Feature Comparison
 
-See how SQL Pro compares to other database tools:
+See how Quarry compares to other database tools:
 
-| Feature               | SQL Pro            | Typical Tools       |
+| Feature               | Quarry             | Typical Tools       |
 | --------------------- | ------------------ | ------------------- |
 | **SQLite Support**    | ✅ Full            | ✅ Full             |
 | **SQLCipher Support** | ✅ Built-in        | ❌ Requires plugins |
@@ -166,7 +166,7 @@ See how SQL Pro compares to other database tools:
 
 ## Keyboard-First Design
 
-SQL Pro is designed for power users who prefer keyboard navigation. Every major feature is accessible via keyboard shortcuts.
+Quarry is designed for power users who prefer keyboard navigation. Every major feature is accessible via keyboard shortcuts.
 
 | Action              | Shortcut                               |
 | ------------------- | -------------------------------------- |
@@ -180,23 +180,23 @@ SQL Pro is designed for power users who prefer keyboard navigation. Every major 
 
 ## Next Steps
 
-Ready to dive deeper into SQL Pro?
+Ready to dive deeper into Quarry?
 
 ### Learn More
 
 - 📚 [Getting Started Guide](/getting-started/) - New user setup and first connection
 - ⌨️ [Keyboard Shortcuts](/shortcuts) - Master keyboard navigation for faster workflows
-- 🔌 [Plugin Development](/plugin-development) - Extend SQL Pro with custom plugins
+- 🔌 [Plugin Development](/plugin-development) - Extend Quarry with custom plugins
 - 🛠️ [Troubleshooting](/troubleshooting) - Solutions for common issues
 
 ### Get Involved
 
-- 💬 [GitHub Discussions](https://github.com/kunish-homelab/sql-pro/discussions) - Ask questions and share ideas
-- 🐛 [Report an Issue](https://github.com/kunish-homelab/sql-pro/issues) - Found a bug? Let us know
-- 🤝 [Contributing Guide](https://github.com/kunish-homelab/sql-pro/blob/main/CONTRIBUTING.md) - Help improve SQL Pro
+- 💬 [GitHub Discussions](https://github.com/sunpebble/quarry/discussions) - Ask questions and share ideas
+- 🐛 [Report an Issue](https://github.com/sunpebble/quarry/issues) - Found a bug? Let us know
+- 🤝 [Contributing Guide](https://github.com/sunpebble/quarry/blob/main/CONTRIBUTING.md) - Help improve Quarry
 
 ### Stay Updated
 
-- ⭐ [Star on GitHub](https://github.com/kunish-homelab/sql-pro) - Show your support
-- 📦 [Latest Releases](https://github.com/kunish-homelab/sql-pro/releases) - Download the newest version
-- 📝 [Changelog](https://github.com/kunish-homelab/sql-pro/blob/main/CHANGELOG.md) - See what's new
+- ⭐ [Star on GitHub](https://github.com/sunpebble/quarry) - Show your support
+- 📦 [Latest Releases](https://github.com/sunpebble/quarry/releases) - Download the newest version
+- 📝 [Changelog](https://github.com/sunpebble/quarry/blob/main/CHANGELOG.md) - See what's new

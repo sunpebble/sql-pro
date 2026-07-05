@@ -93,7 +93,7 @@ export default function Download() {
 
           {/* Main Download Button */}
           <a
-            href="https://github.com/kunish-homelab/sql-pro/releases/latest"
+            href="https://github.com/sunpebble/quarry/releases/latest"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-background text-foreground group mb-8 inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold no-underline shadow-lg transition-all duration-150 hover:-translate-y-1 hover:shadow-xl active:scale-95"
@@ -126,7 +126,7 @@ export default function Download() {
             {otherPlatforms.map((p) => (
               <a
                 key={p}
-                href="https://github.com/kunish-homelab/sql-pro/releases/latest"
+                href="https://github.com/sunpebble/quarry/releases/latest"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-background/10 text-main-foreground border-main-foreground/20 hover:bg-background hover:text-foreground hover:border-border group inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium no-underline transition-all duration-150 active:scale-95 sm:py-2"

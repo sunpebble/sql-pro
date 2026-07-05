@@ -99,7 +99,7 @@ export default function Hero() {
             {t('hero.download')}
           </a>
           <a
-            href="https://github.com/kunish-homelab/sql-pro"
+            href="https://github.com/sunpebble/quarry"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-background text-foreground border-border rounded-base inline-flex items-center gap-2 border px-5 py-3 text-sm font-medium no-underline shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:scale-95 sm:px-7 sm:py-3.5 sm:text-base"
@@ -128,7 +128,7 @@ export default function Hero() {
                 <span className="h-3 w-3 rounded-full bg-[#27ca40]" />
               </div>
               <span className="text-muted-foreground flex-1 text-center text-xs font-medium">
-                SQL Pro
+                Quarry
               </span>
               <div className="w-14" /> {/* Spacer for centering */}
             </div>
@@ -139,11 +139,11 @@ export default function Hero() {
               loop
               playsInline
               className="block h-auto w-full"
-              aria-label="SQL Pro product demonstration video showing Monaco SQL editor, inline data editing, ER diagrams, and multi-database management"
+              aria-label="Quarry product demonstration video showing Monaco SQL editor, inline data editing, ER diagrams, and multi-database management"
             >
               <img
                 src="/screenshots/query-dark.png"
-                alt="SQL Pro — open-source SQLite database manager with Monaco SQL editor, autocomplete, and database sidebar navigation"
+                alt="Quarry — open-source SQLite database manager with Monaco SQL editor, autocomplete, and database sidebar navigation"
               />
             </video>
           </div>

@@ -25,7 +25,7 @@ const DEFAULT_RETRY_DELAY_MS = 100;
  * @example
  * ```typescript
  * const result = await withRetry(
- *   () => window.sqlPro.ai.getSettings(),
+ *   () => window.quarry.ai.getSettings(),
  *   { silent: true }
  * );
  * ```

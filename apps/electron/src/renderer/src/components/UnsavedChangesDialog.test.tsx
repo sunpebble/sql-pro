@@ -4,6 +4,18 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UnsavedChangesDialog } from './UnsavedChangesDialog';
 
+const ONE_UNSAVED_CHANGE_RE = /1 unsaved change/i;
+const THREE_UNSAVED_CHANGES_RE = /3 unsaved changes/i;
+const HUNDRED_UNSAVED_CHANGES_RE = /100 unsaved changes/i;
+const ONE_INSERT_RE = /1 insert$/i;
+const TWO_INSERTS_RE = /2 inserts/i;
+const ONE_UPDATE_RE = /1 update$/i;
+const TWO_UPDATES_RE = /2 updates/i;
+const THREE_UPDATES_RE = /3 updates/i;
+const ONE_DELETE_RE = /1 delete$/i;
+const UPDATE_RE = /update/i;
+const DELETE_RE = /delete/i;
+
 // Helper function to create mock PendingChange
 function createMockChange(
   overrides: Partial<PendingChange> = {}
@@ -73,7 +85,7 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/3 unsaved changes/i)).toBeInTheDocument();
+      expect(screen.getByText(THREE_UNSAVED_CHANGES_RE)).toBeInTheDocument();
     });
 
     it('should use singular "change" when there is only one change', () => {
@@ -91,7 +103,7 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/1 unsaved change/i)).toBeInTheDocument();
+      expect(screen.getByText(ONE_UNSAVED_CHANGE_RE)).toBeInTheDocument();
     });
   });
 
@@ -114,7 +126,7 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/2 inserts/i)).toBeInTheDocument();
+      expect(screen.getByText(TWO_INSERTS_RE)).toBeInTheDocument();
     });
 
     it('should display updates correctly', () => {
@@ -136,7 +148,7 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/3 updates/i)).toBeInTheDocument();
+      expect(screen.getByText(THREE_UPDATES_RE)).toBeInTheDocument();
     });
 
     it('should display deletes correctly', () => {
@@ -154,7 +166,7 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/1 delete$/i)).toBeInTheDocument();
+      expect(screen.getByText(ONE_DELETE_RE)).toBeInTheDocument();
     });
 
     it('should use singular forms for single changes', () => {
@@ -176,9 +188,9 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/1 insert$/i)).toBeInTheDocument();
-      expect(screen.getByText(/1 update$/i)).toBeInTheDocument();
-      expect(screen.getByText(/1 delete$/i)).toBeInTheDocument();
+      expect(screen.getByText(ONE_INSERT_RE)).toBeInTheDocument();
+      expect(screen.getByText(ONE_UPDATE_RE)).toBeInTheDocument();
+      expect(screen.getByText(ONE_DELETE_RE)).toBeInTheDocument();
     });
 
     it('should group changes by table', () => {
@@ -224,9 +236,9 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/1 insert$/i)).toBeInTheDocument();
-      expect(screen.getByText(/2 updates/i)).toBeInTheDocument();
-      expect(screen.getByText(/1 delete$/i)).toBeInTheDocument();
+      expect(screen.getByText(ONE_INSERT_RE)).toBeInTheDocument();
+      expect(screen.getByText(TWO_UPDATES_RE)).toBeInTheDocument();
+      expect(screen.getByText(ONE_DELETE_RE)).toBeInTheDocument();
     });
 
     it('should only show change types that exist', () => {
@@ -247,9 +259,9 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/2 inserts/i)).toBeInTheDocument();
-      expect(screen.queryByText(/update/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/delete/i)).not.toBeInTheDocument();
+      expect(screen.getByText(TWO_INSERTS_RE)).toBeInTheDocument();
+      expect(screen.queryByText(UPDATE_RE)).not.toBeInTheDocument();
+      expect(screen.queryByText(DELETE_RE)).not.toBeInTheDocument();
     });
   });
 
@@ -736,7 +748,7 @@ describe('unsavedChangesDialog', () => {
         />
       );
 
-      expect(screen.getByText(/100 unsaved changes/i)).toBeInTheDocument();
+      expect(screen.getByText(HUNDRED_UNSAVED_CHANGES_RE)).toBeInTheDocument();
     });
 
     it('should not call handlers when dialog is closed', () => {

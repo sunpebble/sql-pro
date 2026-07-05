@@ -2,8 +2,8 @@
 // Natural language input for AI query generation in command palette
 
 import type { KeyboardEvent } from 'react';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
 import { Loader2, Send, Sparkles } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';

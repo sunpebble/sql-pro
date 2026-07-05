@@ -1,5 +1,5 @@
 {
-  "name": "@sqlpro/cloudflare",
+  "name": "@quarry/cloudflare",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "packages/cloudflare/src",
@@ -8,7 +8,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "pnpm --filter @sqlpro/website build",
+          "pnpm --filter @quarry/website build",
           "rm -rf packages/cloudflare/public/*",
           "cp -r apps/website/dist/* packages/cloudflare/public/"
         ],

@@ -5,9 +5,9 @@ import type {
   TableSchema,
   TriggerSchema,
 } from '@/types/database';
-import { Button } from '@sqlpro/ui/button';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Button } from '@quarry/ui/button';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   ChevronDown,
   ChevronRight,

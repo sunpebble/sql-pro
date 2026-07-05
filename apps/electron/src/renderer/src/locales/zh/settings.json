@@ -13,7 +13,7 @@
     "autoUpdate": "自动更新",
     "autoUpdateDescription": "自动检查更新",
     "telemetry": "使用分析",
-    "telemetryDescription": "发送匿名使用数据以帮助改进 SQL Pro"
+    "telemetryDescription": "发送匿名使用数据以帮助改进 Quarry"
   },
   "appearance": {
     "title": "外观",
@@ -98,8 +98,8 @@
     "importJsonError": "导入失败：JSON 无效",
     "resetSuccess": "快捷键已恢复默认",
     "presets": {
-      "default": "SQL Pro",
-      "defaultDesc": "默认 SQL Pro 快捷键",
+      "default": "Quarry",
+      "defaultDesc": "默认 Quarry 快捷键",
       "vscode": "VS Code",
       "vscodeDesc": "Visual Studio Code 风格快捷键",
       "sublime": "Sublime Text",
@@ -167,7 +167,7 @@
     }
   },
   "pro": {
-    "title": "SQL Pro",
+    "title": "Quarry",
     "active": "专业版已激活",
     "free": "免费版",
     "featuresUnlocked": "已解锁 {{count}} 项功能",

@@ -1,4 +1,4 @@
-import { Skeleton } from '@sqlpro/ui/skeleton';
+import { Skeleton } from '@quarry/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { SkeletonTable } from '../data-table/Animations';
 

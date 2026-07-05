@@ -1,11 +1,11 @@
 # Query History & Templates
 
-SQL Pro maintains a complete history of all executed queries for each database and provides reusable query templates to speed up your workflow. These features help you track your work, reuse past queries, and quickly insert common SQL patterns.
+Quarry maintains a complete history of all executed queries for each database and provides reusable query templates to speed up your workflow. These features help you track your work, reuse past queries, and quickly insert common SQL patterns.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/query-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/query.png">
-  <img alt="SQL Pro Query Editor with History panel showing executed queries and execution times" src="/screenshots/query-dark.png">
+  <img alt="Quarry Query Editor with History panel showing executed queries and execution times" src="/screenshots/query-dark.png">
 </picture>
 
 ## Key Features
@@ -23,7 +23,7 @@ SQL Pro maintains a complete history of all executed queries for each database a
 
 ## Query History
 
-SQL Pro automatically tracks every query you execute, organized by database. This makes it easy to revisit past work, rerun queries, and learn from previous errors.
+Quarry automatically tracks every query you execute, organized by database. This makes it easy to revisit past work, rerun queries, and learn from previous errors.
 
 ### Accessing Query History
 
@@ -125,7 +125,7 @@ Query history is stored:
 - **On disk** - History persists between sessions
 - **Limited size** - Last 100 queries are kept per database
 
-When you switch databases, SQL Pro automatically loads the history for that database.
+When you switch databases, Quarry automatically loads the history for that database.
 
 ### History Entry Details
 
@@ -141,7 +141,7 @@ Each history entry captures:
 
 ## Query Templates
 
-Query Templates provide reusable SQL patterns that you can quickly insert into the editor. SQL Pro includes built-in templates for common operations and lets you create your own custom templates.
+Query Templates provide reusable SQL patterns that you can quickly insert into the editor. Quarry includes built-in templates for common operations and lets you create your own custom templates.
 
 ### Opening Templates
 
@@ -161,7 +161,7 @@ The Templates dialog provides:
 
 ### Built-in Templates
 
-SQL Pro includes 25+ built-in templates organized by category:
+Quarry includes 25+ built-in templates organized by category:
 
 #### SELECT Templates
 
@@ -311,7 +311,7 @@ Built-in templates cannot be deleted. They can only be duplicated.
 To restore all built-in templates and remove custom templates:
 
 1. Open your browser's developer tools
-2. Clear the `sql-pro-query-templates` key from localStorage
+2. Clear the `quarry-query-templates` key from localStorage
 3. Refresh the page
 
 ### Template Storage
@@ -319,7 +319,7 @@ To restore all built-in templates and remove custom templates:
 Templates are stored:
 
 - **In browser localStorage** - Persists across sessions
-- **Key name** - `sql-pro-query-templates`
+- **Key name** - `quarry-query-templates`
 - **Custom only** - Only custom templates are saved (built-in templates are always available)
 
 ## Keyboard Shortcuts

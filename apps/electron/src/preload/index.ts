@@ -1,16 +1,16 @@
-import type { SqlProAPI } from '@shared/types/sql-pro-api';
+import type { QuarryAPI } from '@shared/types/quarry-api';
 import { electronAPI } from '@electron-toolkit/preload';
-import { createSqlProAPI } from '@shared/lib/sql-pro-api';
+import { createQuarryAPI } from '@shared/lib/quarry-api';
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 
-export type { SqlProAPI };
+export type { QuarryAPI };
 
-export const sqlProAPI = createSqlProAPI({
+export const quarryAPI = createQuarryAPI({
   invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
   on: (channel, listener) => ipcRenderer.on(channel, listener),
   off: (channel, listener) => ipcRenderer.off(channel, listener),
   getPathForFile: (file) => webUtils.getPathForFile(file),
 });
 
-contextBridge.exposeInMainWorld('sqlPro', sqlProAPI);
+contextBridge.exposeInMainWorld('quarry', quarryAPI);
 contextBridge.exposeInMainWorld('electronAPI', electronAPI);

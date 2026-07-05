@@ -1,15 +1,15 @@
 /**
- * SQL Pro Plugin SDK Type Definitions
+ * Quarry Plugin SDK Type Definitions
  *
- * This module provides TypeScript type definitions for developing SQL Pro plugins.
+ * This module provides TypeScript type definitions for developing Quarry plugins.
  * Import these types in your plugin to get full type safety and IDE autocomplete.
  *
  * @packageDocumentation
- * @module @sqlpro/plugin-sdk
+ * @module @quarry/plugin-sdk
  *
  * @example
  * ```typescript
- * import type { PluginContext, PluginModule } from '@sqlpro/plugin-sdk';
+ * import type { PluginContext, PluginModule } from '@quarry/plugin-sdk';
  *
  * export const activate: PluginModule['activate'] = (context: PluginContext) => {
  *   context.api.ui.showNotification({
@@ -63,12 +63,12 @@ export type PluginPermission =
  *   "id": "com.example.myplugin",
  *   "name": "My Plugin",
  *   "version": "1.0.0",
- *   "description": "A helpful SQL Pro plugin",
+ *   "description": "A helpful Quarry plugin",
  *   "author": "Your Name",
  *   "main": "index.js",
  *   "permissions": ["query:read", "ui:menu"],
  *   "engines": {
- *     "sqlpro": "^1.6.0"
+ *     "quarry": "^1.6.0"
  *   }
  * }
  * ```
@@ -125,11 +125,11 @@ export interface PluginManifest {
    */
   engines?: {
     /**
-     * Required SQL Pro version range using semver syntax.
+     * Required Quarry version range using semver syntax.
      *
      * @example "^1.6.0", ">=2.0.0", "~1.5.0"
      */
-    sqlpro?: string;
+    quarry?: string;
   };
 
   /**
@@ -799,7 +799,7 @@ export interface ConnectionInfo {
 }
 
 /**
- * Information about the SQL Pro application.
+ * Information about the Quarry application.
  */
 export interface AppInfo {
   /**
@@ -851,7 +851,7 @@ export interface AppInfo {
  *
  *   // Get app info
  *   const app = metadata.getAppInfo();
- *   console.log(`Running on SQL Pro ${app.version}`);
+ *   console.log(`Running on Quarry ${app.version}`);
  * }
  * ```
  */
@@ -871,7 +871,7 @@ export interface MetadataAPI {
   getCurrentConnection: () => ConnectionInfo | null;
 
   /**
-   * Get SQL Pro application information.
+   * Get Quarry application information.
    *
    * @returns Application info including version, platform, and architecture
    */
@@ -885,7 +885,7 @@ export interface MetadataAPI {
 /**
  * Complete Plugin API surface available to plugins.
  *
- * Contains all API modules for extending SQL Pro functionality.
+ * Contains all API modules for extending Quarry functionality.
  */
 export interface PluginAPI {
   /**
@@ -916,7 +916,7 @@ export interface PluginAPI {
  *
  * @example
  * ```typescript
- * import type { PluginContext } from '@sqlpro/plugin-sdk';
+ * import type { PluginContext } from '@quarry/plugin-sdk';
  *
  * export function activate(context: PluginContext) {
  *   const { api, manifest, pluginPath } = context;
@@ -933,7 +933,7 @@ export interface PluginAPI {
  */
 export interface PluginContext {
   /**
-   * The complete Plugin API for extending SQL Pro.
+   * The complete Plugin API for extending Quarry.
    */
   api: PluginAPI;
 
@@ -981,7 +981,7 @@ export type PluginDeactivate = () => void | Promise<void>;
  *
  * @example
  * ```typescript
- * import type { PluginModule, PluginContext } from '@sqlpro/plugin-sdk';
+ * import type { PluginModule, PluginContext } from '@quarry/plugin-sdk';
  *
  * // Store cleanup functions
  * const disposables: Array<() => void> = [];

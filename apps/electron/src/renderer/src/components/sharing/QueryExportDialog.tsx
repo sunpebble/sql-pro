@@ -1,9 +1,9 @@
 import type { ExportQueryRequest } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Checkbox } from '@sqlpro/ui/checkbox';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { Textarea } from '@sqlpro/ui/textarea';
+import { Button } from '@quarry/ui/button';
+import { Checkbox } from '@quarry/ui/checkbox';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { Textarea } from '@quarry/ui/textarea';
 import { FileDown, Loader2, Share2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 export interface QueryExportDialogProps {
   /** Whether the dialog is open */
@@ -97,7 +97,7 @@ export function QueryExportDialog({
         compress,
       };
 
-      const result = await sqlPro.sharing.exportQuery(request);
+      const result = await quarry.sharing.exportQuery(request);
 
       setExportResult(result);
 

@@ -65,7 +65,7 @@ const pluginManifestSchema = {
     engines: {
       type: 'object',
       properties: {
-        sqlpro: {
+        quarry: {
           type: 'string',
         },
       },

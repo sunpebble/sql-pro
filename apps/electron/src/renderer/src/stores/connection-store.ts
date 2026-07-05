@@ -20,6 +20,9 @@ import {
 } from '@/lib/storage';
 import { useChangesStore } from './changes-store';
 
+// Valid hex color format: #RGB or #RRGGBB
+const HEX_COLOR_RE = /^#(?:[A-F0-9]{6}|[A-F0-9]{3})$/i;
+
 interface TunnelStatus {
   state: 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error';
   localPort?: number;
@@ -333,9 +336,7 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
 
   setConnectionColor: (id, color) =>
     set((state) => {
-      // Validate hex color format: #RGB or #RRGGBB
-      const hexColorRegex = /^#(?:[A-F0-9]{6}|[A-F0-9]{3})$/i;
-      if (!hexColorRegex.test(color)) {
+      if (!HEX_COLOR_RE.test(color)) {
         // Invalid color, don't update state
         return state;
       }
@@ -698,7 +699,7 @@ export const useConnectionStore = create<ConnectionState>()((set, get) => ({
     // Poll tunnel status from main process
     const poll = async () => {
       try {
-        const result = await window.sqlPro.ssh.getTunnelStatus(connectionId);
+        const result = await window.quarry.ssh.getTunnelStatus(connectionId);
         if (result.success && result.status) {
           get().setTunnelStatus(connectionId, result.status);
         }

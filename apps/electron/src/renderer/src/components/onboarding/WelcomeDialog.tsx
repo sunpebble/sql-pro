@@ -1,7 +1,7 @@
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
-import { DecoFrame } from '@sqlpro/ui/decorations';
-import { GradientText } from '@sqlpro/ui/typography';
+import { DecoFrame } from '@quarry/ui/decorations';
+import { GradientText } from '@quarry/ui/typography';
 import { Database, PlayCircle, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {

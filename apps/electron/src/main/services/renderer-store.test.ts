@@ -28,7 +28,7 @@ vi.mock('electron-store', () => {
       }
 
       get path() {
-        return '/mock/path/sql-pro-renderer-state.json';
+        return '/mock/path/quarry-renderer-state.json';
       }
     },
   };

@@ -1,11 +1,11 @@
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { Eye, EyeOff, Info, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 interface PasswordDialogProps {
@@ -34,8 +34,8 @@ export function PasswordDialog({
   useEffect(() => {
     if (open && dbPath) {
       Promise.all([
-        sqlPro.password.isAvailable(),
-        sqlPro.password.has({ dbPath }),
+        quarry.password.isAvailable(),
+        quarry.password.has({ dbPath }),
       ]).then(([availableResult, hasResult]) => {
         setIsStorageAvailable(availableResult.available);
         setHasSavedPassword(hasResult.hasPassword);
@@ -56,7 +56,7 @@ export function PasswordDialog({
 
   const handleForgetPassword = async () => {
     if (dbPath) {
-      await sqlPro.password.remove({ dbPath });
+      await quarry.password.remove({ dbPath });
       setHasSavedPassword(false);
     }
   };

@@ -1,26 +1,26 @@
 # Your First Database Connection
 
-This guide walks you through opening your first database in SQL Pro, understanding the interface, and running your first SQL query.
+This guide walks you through opening your first database in Quarry, understanding the interface, and running your first SQL query.
 
-## Opening SQL Pro
+## Opening Quarry
 
-After [installing SQL Pro](/getting-started/installation), launch the application:
+After [installing Quarry](/getting-started/installation), launch the application:
 
 - **macOS**: Open from Applications folder or Spotlight search
 - **Windows**: Start menu or desktop shortcut
-- **Linux**: Application menu or run `sql-pro` from terminal
+- **Linux**: Application menu or run `quarry` from terminal
 
 You'll see the welcome screen:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/welcome-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/welcome.png">
-  <img alt="SQL Pro Welcome Screen - showing the main interface with Open Database button" src="/screenshots/welcome-dark.png">
+  <img alt="Quarry Welcome Screen - showing the main interface with Open Database button" src="/screenshots/welcome-dark.png">
 </picture>
 
 ## Opening a Database
 
-SQL Pro supports both regular SQLite databases and encrypted SQLCipher databases.
+Quarry supports both regular SQLite databases and encrypted SQLCipher databases.
 
 ### Opening an Existing Database
 
@@ -46,14 +46,14 @@ If your database is encrypted with SQLCipher:
 
 1. Click **Open Database** and select the encrypted file
 
-2. SQL Pro will detect it's encrypted and prompt for the password
+2. Quarry will detect it's encrypted and prompt for the password
 
 3. Enter your password in the dialog
 
 4. Optionally check **Remember password** to store it securely in your system keychain
 
 ::: info Secure Password Storage
-SQL Pro uses your operating system's secure keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service) to store passwords. Your passwords are never stored in plain text.
+Quarry uses your operating system's secure keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service) to store passwords. Your passwords are never stored in plain text.
 :::
 
 ## Understanding the Interface
@@ -63,7 +63,7 @@ Once your database is open, you'll see the main workspace:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/database-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/database.png">
-  <img alt="SQL Pro Database View - showing the schema browser, data grid, and query editor" src="/screenshots/database-dark.png">
+  <img alt="Quarry Database View - showing the schema browser, data grid, and query editor" src="/screenshots/database-dark.png">
 </picture>
 
 ### Main Areas
@@ -82,7 +82,7 @@ The sidebar shows your database schema organized by type:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/07-sidebar-tables-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/07-sidebar-tables.png">
-  <img alt="SQL Pro sidebar showing tables list with row counts" src="/screenshots/07-sidebar-tables-dark.png">
+  <img alt="Quarry sidebar showing tables list with row counts" src="/screenshots/07-sidebar-tables-dark.png">
 </picture>
 
 - **Tables** - All user tables in your database
@@ -98,7 +98,7 @@ Click on a table in the sidebar to view its contents:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/table-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/table.png">
-  <img alt="SQL Pro table view showing data grid with rows and columns for editing and browsing" src="/screenshots/table-dark.png">
+  <img alt="Quarry table view showing data grid with rows and columns for editing and browsing" src="/screenshots/table-dark.png">
 </picture>
 
 ### Data Grid Features
@@ -153,7 +153,7 @@ Execute your query in one of these ways:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/query-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/query.png">
-  <img alt="SQL Pro Query Editor showing a SELECT query with syntax highlighting and results" src="/screenshots/query-dark.png">
+  <img alt="Quarry Query Editor showing a SELECT query with syntax highlighting and results" src="/screenshots/query-dark.png">
 </picture>
 
 ### Reading Results
@@ -185,7 +185,7 @@ To execute a specific query:
 - Place your cursor anywhere in the query
 - Press <kbd>Cmd/Ctrl</kbd> + <kbd>Enter</kbd>
 
-SQL Pro executes the query under your cursor.
+Quarry executes the query under your cursor.
 
 ## Quick Reference: Essential Shortcuts
 
@@ -202,7 +202,7 @@ See the complete [Keyboard Shortcuts](/shortcuts) reference for all available sh
 
 ## Recent Connections
 
-SQL Pro remembers your recently opened databases. Access them from:
+Quarry remembers your recently opened databases. Access them from:
 
 - The welcome screen's **Recent** list
 - **File** > **Recent Databases** menu

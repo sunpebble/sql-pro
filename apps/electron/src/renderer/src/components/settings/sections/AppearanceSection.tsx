@@ -1,7 +1,6 @@
 import type { FontCategory, SystemFont } from '@shared/types/font';
 import type { FontConfig } from '@/stores/settings-store';
-import { FONT_CATEGORY_LABELS } from '@shared/types/font';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -9,9 +8,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@sqlpro/ui/command';
-import { Label } from '@sqlpro/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
+} from '@quarry/ui/command';
+import { Label } from '@quarry/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@quarry/ui/popover';
+import { FONT_CATEGORY_LABELS } from '@shared/types/font';
 import {
   Check,
   ChevronsUpDown,

@@ -1,13 +1,13 @@
+import { Alert, AlertDescription } from '@quarry/ui/alert';
+import { Button } from '@quarry/ui/button';
+import { Separator } from '@quarry/ui/separator';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Alert, AlertDescription } from '@sqlpro/ui/alert';
-import { Button } from '@sqlpro/ui/button';
-import { Separator } from '@sqlpro/ui/separator';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, Info, KeyRound, Settings, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 export interface ConnectionSettings {
@@ -81,8 +81,8 @@ function DialogFormContent({
   useEffect(() => {
     if (isEncrypted && dbPath) {
       Promise.all([
-        sqlPro.password.isAvailable(),
-        sqlPro.password.has({ dbPath }),
+        quarry.password.isAvailable(),
+        quarry.password.has({ dbPath }),
       ]).then(([availableResult, hasResult]) => {
         setIsStorageAvailable(availableResult.available);
         setHasSavedPassword(hasResult.hasPassword);
@@ -147,7 +147,7 @@ function DialogFormContent({
     setPasswordError(null);
 
     try {
-      const result = await sqlPro.password.save({
+      const result = await quarry.password.save({
         dbPath,
         password: newPassword,
       });
@@ -180,7 +180,7 @@ function DialogFormContent({
   const confirmRemovePassword = async () => {
     setIsPasswordLoading(true);
     try {
-      const result = await sqlPro.password.remove({ dbPath });
+      const result = await quarry.password.remove({ dbPath });
       if (result.success) {
         setHasSavedPassword(false);
         setShowPasswordEdit(false);

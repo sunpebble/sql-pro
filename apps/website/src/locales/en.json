@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "SQL Pro — Open-Source SQLite Database Manager",
+    "title": "Quarry — Open-Source SQLite Database Manager",
     "description": "Free, open-source SQLite database manager with SQLCipher encryption, visual diff preview, Monaco SQL editor, and AI-powered query tools. For macOS, Windows, and Linux."
   },
   "hero": {
@@ -59,7 +59,7 @@
   },
   "download": {
     "title": "Download",
-    "titleHighlight": "SQL Pro",
+    "titleHighlight": "Quarry",
     "downloadFor": "Download for {{platform}}",
     "otherPlatforms": "Other platforms:",
     "platforms": {
@@ -80,7 +80,7 @@
     "releases": "Releases",
     "docs": "Documentation",
     "discussions": "Discussions",
-    "copyright": "© {{year}} SQL Pro. Open source under MIT license."
+    "copyright": "© {{year}} Quarry. Open source under MIT license."
   },
   "pricing": {
     "title": "Simple,",
@@ -179,7 +179,7 @@
     "status": "Status",
     "devices": "Max Devices",
     "howToActivate": "How to Activate",
-    "step1": "Open SQL Pro on your computer",
+    "step1": "Open Quarry on your computer",
     "step2": "Go to Settings → License",
     "step3": "Enter your email and paste the license key",
     "done": "Done"
@@ -207,7 +207,7 @@
     "expires": "Expires"
   },
   "stats": {
-    "title": "SQL Pro at a Glance",
+    "title": "Quarry at a Glance",
     "databases": "Database Types",
     "platforms": "Platforms",
     "queries": "Queries",
@@ -217,18 +217,18 @@
     "label": "Testimonials",
     "title": "Loved by",
     "titleHighlight": "Developers",
-    "subtitle": "Hear from developers who use SQL Pro to manage their SQLite databases every day.",
+    "subtitle": "Hear from developers who use Quarry to manage their SQLite databases every day.",
     "quotes": {
-      "developer": "SQL Pro completely changed how I work with SQLite. The Monaco editor with IntelliSense is a game changer — it feels like writing code in VS Code.",
+      "developer": "Quarry completely changed how I work with SQLite. The Monaco editor with IntelliSense is a game changer — it feels like writing code in VS Code.",
       "datascientist": "The visual diff preview alone is worth it. I can review data changes before committing, which saves me hours every week and prevents mistakes.",
-      "indie": "As an indie developer, I need tools that are fast, reliable, and don't get in the way. SQL Pro nails all three — and it's open source."
+      "indie": "As an indie developer, I need tools that are fast, reliable, and don't get in the way. Quarry nails all three — and it's open source."
     }
   },
   "opensource": {
     "label": "Open Source",
     "title": "Built in the Open,",
     "titleHighlight": "for Developers",
-    "description": "SQL Pro is fully open source under the MIT license. Audit the code, contribute features, report issues, or fork it for your own needs. No vendor lock-in, ever.",
+    "description": "Quarry is fully open source under the MIT license. Audit the code, contribute features, report issues, or fork it for your own needs. No vendor lock-in, ever.",
     "features": {
       "secure": "Secure & Auditable",
       "community": "Community Driven",
@@ -241,27 +241,27 @@
     "label": "FAQ",
     "title": "Frequently Asked",
     "titleHighlight": "Questions",
-    "subtitle": "Everything you need to know about SQL Pro.",
+    "subtitle": "Everything you need to know about Quarry.",
     "items": {
       "free": {
-        "question": "Is SQL Pro free to use?",
-        "answer": "Yes! The core edition of SQL Pro is open source and free under the MIT license. You can download and use it for personal and commercial projects at no cost. Pro features like SQLCipher encryption and AI tools are available through a paid subscription."
+        "question": "Is Quarry free to use?",
+        "answer": "Yes! The core edition of Quarry is open source and free under the MIT license. You can download and use it for personal and commercial projects at no cost. Pro features like SQLCipher encryption and AI tools are available through a paid subscription."
       },
       "platforms": {
-        "question": "Which platforms does SQL Pro support?",
-        "answer": "SQL Pro runs natively on macOS (Universal binary for Intel and Apple Silicon), Windows (x64), and Linux (x64 via AppImage and deb packages). All platforms receive the same features and updates."
+        "question": "Which platforms does Quarry support?",
+        "answer": "Quarry runs natively on macOS (Universal binary for Intel and Apple Silicon), Windows (x64), and Linux (x64 via AppImage and deb packages). All platforms receive the same features and updates."
       },
       "sqlite": {
         "question": "What SQLite features are supported?",
-        "answer": "SQL Pro supports all standard SQLite features including views, triggers, indexes, foreign keys, virtual tables, and full-text search (FTS5). It also supports WAL mode and concurrent connections for high-performance workflows."
+        "answer": "Quarry supports all standard SQLite features including views, triggers, indexes, foreign keys, virtual tables, and full-text search (FTS5). It also supports WAL mode and concurrent connections for high-performance workflows."
       },
       "encryption": {
         "question": "How does SQLCipher encryption work?",
-        "answer": "SQL Pro integrates SQLCipher to open and manage encrypted SQLite databases. Your encryption keys are stored securely in your system's native keychain — macOS Keychain, Windows Credential Manager, or Linux Secret Service — so they never touch disk in plain text."
+        "answer": "Quarry integrates SQLCipher to open and manage encrypted SQLite databases. Your encryption keys are stored securely in your system's native keychain — macOS Keychain, Windows Credential Manager, or Linux Secret Service — so they never touch disk in plain text."
       },
       "updates": {
         "question": "How do I get updates?",
-        "answer": "SQL Pro checks for updates automatically. When a new version is available, you'll be notified and can update with one click. You can also download releases manually from GitHub."
+        "answer": "Quarry checks for updates automatically. When a new version is available, you'll be notified and can update with one click. You can also download releases manually from GitHub."
       },
       "support": {
         "question": "Where can I get help?",

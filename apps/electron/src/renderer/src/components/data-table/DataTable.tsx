@@ -11,15 +11,15 @@ import type {
   PendingChange,
   SortState,
 } from '@/types/database';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@sqlpro/ui/empty';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+} from '@quarry/ui/empty';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Filter, Inbox, SearchX } from 'lucide-react';
 import {

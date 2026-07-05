@@ -4,10 +4,10 @@
 
 import type { OpenDatabaseRequest } from '@shared/types';
 import { useCallback, useState } from 'react';
-import { sqlPro } from '../lib/api';
+import { quarry } from '../lib/api';
 import { getErrorMessage } from '../lib/error-utils';
 
-// Type matching the structure returned by sqlPro.db.open
+// Type matching the structure returned by quarry.db.open
 interface ConnectionInfo {
   id: string;
   path: string;
@@ -33,7 +33,7 @@ export function useDatabase() {
     setState((prev) => ({ ...prev, isConnecting: true, error: null }));
 
     try {
-      const response = await sqlPro.db.open(request);
+      const response = await quarry.db.open(request);
 
       if (response.success && response.connection) {
         setState({
@@ -70,7 +70,7 @@ export function useDatabase() {
     }
 
     try {
-      const response = await sqlPro.db.close({
+      const response = await quarry.db.close({
         connectionId: state.connection.id,
       });
 
@@ -102,7 +102,7 @@ export function useDatabase() {
       }
 
       try {
-        return await sqlPro.db.executeQuery({
+        return await quarry.db.executeQuery({
           connectionId: state.connection.id,
           query,
         });

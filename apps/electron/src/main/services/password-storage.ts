@@ -21,7 +21,7 @@ class SimpleStore {
     if (!this.filePath) {
       this.filePath = path.join(
         app.getPath('userData'),
-        'sql-pro-passwords.json'
+        'quarry-passwords.json'
       );
     }
     return this.filePath;

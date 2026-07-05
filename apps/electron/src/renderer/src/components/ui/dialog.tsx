@@ -2,8 +2,8 @@
 
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
-import { Button } from '@sqlpro/ui/button';
-import { DecoFrame } from '@sqlpro/ui/decorations';
+import { Button } from '@quarry/ui/button';
+import { DecoFrame } from '@quarry/ui/decorations';
 
 import { XIcon } from 'lucide-react';
 import * as React from 'react';

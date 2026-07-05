@@ -1,9 +1,9 @@
 {
-  "name": "@sqlpro/docs",
+  "name": "@quarry/docs",
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "SQL Pro Documentation - VitePress powered documentation site",
+  "description": "Quarry Documentation - VitePress powered documentation site",
   "license": "MIT",
   "scripts": {
     "dev": "vitepress dev",

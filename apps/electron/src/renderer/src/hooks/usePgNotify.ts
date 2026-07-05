@@ -166,7 +166,7 @@ export function usePgNotify(
 
     const subscribe = async () => {
       try {
-        const result = await window.sqlPro.pgNotify.subscribe({
+        const result = await window.quarry.pgNotify.subscribe({
           connectionId,
           channel,
           table: autoRefreshTable,
@@ -179,7 +179,7 @@ export function usePgNotify(
           setError(null);
 
           // Listen for events
-          cleanup = window.sqlPro.pgNotify.onEvent((event: PgNotifyEvent) => {
+          cleanup = window.quarry.pgNotify.onEvent((event: PgNotifyEvent) => {
             if (event.subscriptionId === currentSubscriptionId) {
               setNotificationCount((c) => c + 1);
               setLastNotification(event);
@@ -216,7 +216,7 @@ export function usePgNotify(
 
       // Unsubscribe
       if (currentSubscriptionId) {
-        window.sqlPro.pgNotify
+        window.quarry.pgNotify
           .unsubscribe({ subscriptionId: currentSubscriptionId })
           .catch(console.error);
       }

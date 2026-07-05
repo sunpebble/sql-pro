@@ -1,12 +1,12 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@sqlpro/ui/collapsible';
+} from '@quarry/ui/collapsible';
+import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import { BrainIcon, ChevronDownIcon, Loader2 } from 'lucide-react';
 import { createContext, memo, use, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -69,7 +69,6 @@ export const Reasoning = memo(
           setStartTime(Date.now());
         }
       } else if (startTime !== null) {
-         
         setDuration(Math.round((Date.now() - startTime) / 1000));
         /* eslint-disable-next-line react/set-state-in-effect -- Timer state management */
         setStartTime(null);
@@ -78,7 +77,6 @@ export const Reasoning = memo(
 
     useEffect(() => {
       if (isStreaming && !isOpen) {
-         
         setIsOpen(true);
         return;
       }

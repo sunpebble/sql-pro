@@ -6,7 +6,7 @@
 import type { Query } from '@tanstack/react-query';
 import type { TFunction } from 'i18next';
 import { toast } from 'sonner';
-import { sqlPro } from './api';
+import { quarry } from './api';
 import { queryClient } from './query-client';
 
 /**
@@ -121,7 +121,7 @@ const refreshingConnectionIds = new Set<string>();
  * Performs the full sequence so both the schema cache and the data grid stay in
  * sync regardless of where it was triggered:
  *   1. invalidateSchemaCache(connectionId) to force a fresh fetch
- *   2. await sqlPro.db.getSchema({ connectionId })
+ *   2. await quarry.db.getSchema({ connectionId })
  *   3. setSchema(connectionId, ...) with the fresh schema
  *   4. invalidateTableData(connectionId) to refetch tableData / infiniteTableData
  *      and column-distribution queries
@@ -146,7 +146,7 @@ export async function refreshSchema(
     // Invalidate cache first to force fresh data
     invalidateSchemaCache(connectionId);
 
-    const result = await sqlPro.db.getSchema({ connectionId });
+    const result = await quarry.db.getSchema({ connectionId });
 
     if (result.success) {
       setSchema(connectionId, {

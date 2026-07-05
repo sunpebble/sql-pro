@@ -1,10 +1,10 @@
 import type { PendingChange } from '@/lib/collections';
 import type { ColumnSchema } from '@/types/database';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   AlertCircle,
   Check,
@@ -212,8 +212,12 @@ export function DiffPreview({ onClose, onApplied }: DiffPreviewProps) {
             </p>
           </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={onClose} aria-label={t('common.close', { defaultValue: 'Close' })}>
-
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          aria-label={t('common.close', { defaultValue: 'Close' })}
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>

@@ -1,5 +1,5 @@
 import type { PluginInfo } from '@/components/plugins/PluginCard';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeft, Store } from 'lucide-react';
 import { useState } from 'react';

@@ -1,9 +1,9 @@
 ---
 name: Bug Report
-about: Report a bug to help us improve SQL Pro
-title: ""
+about: Report a bug to help us improve Quarry
+title: ''
 labels: bug
-assignees: ""
+assignees: ''
 ---
 
 ## Description
@@ -32,7 +32,7 @@ If applicable, add screenshots to help explain the problem.
 ## Environment
 
 - **OS**: [e.g. macOS 14.0, Windows 11, Ubuntu 24.04]
-- **SQL Pro Version**: [e.g. 1.10.0]
+- **Quarry Version**: [e.g. 1.10.0]
 - **Database**: [e.g. SQLite 3.45, SQLCipher 4.5]
 
 ## Additional Context

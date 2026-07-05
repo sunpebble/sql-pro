@@ -4,8 +4,8 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@sqlpro/ui/collapsible';
-import { Progress } from '@sqlpro/ui/progress';
+} from '@quarry/ui/collapsible';
+import { Progress } from '@quarry/ui/progress';
 import {
   BarChart3,
   ChevronDown,

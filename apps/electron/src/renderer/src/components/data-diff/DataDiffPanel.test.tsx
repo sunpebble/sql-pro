@@ -12,6 +12,8 @@ import { useConnectionStore } from '@/stores/connection-store';
 import { useDataDiffStore } from '@/stores/data-diff-store';
 import { DataDiffPanel } from './DataDiffPanel';
 
+const COMPARE_TABLES_RE = /Compare tables/;
+
 function createMockConnection(
   overrides: Partial<DatabaseConnection> = {}
 ): DatabaseConnection {
@@ -766,7 +768,7 @@ describe('dataDiffPanel - Integration Tests', () => {
 
       render(<DataDiffPanel />);
 
-      const compareButton = screen.getByTitle(/Compare tables/);
+      const compareButton = screen.getByTitle(COMPARE_TABLES_RE);
       expect(compareButton).toBeDefined();
     });
 

@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
-import { DecoFrame } from '@sqlpro/ui/decorations';
+import { DecoFrame } from '@quarry/ui/decorations';
 import { memo } from 'react';
 import { cn } from '@/lib/utils';
 

@@ -1,5 +1,5 @@
 import type { WelcomeTourStep } from '@/lib/welcome-tour-steps';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

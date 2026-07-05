@@ -1,4 +1,4 @@
-// Mock SQL Pro API
+// Mock Quarry API
 //
 // Each namespace is validated against its domain mock interface.
 // During domain migration, replace individual sections with imports from
@@ -774,9 +774,9 @@ const mockRecentConnections = [
   },
 ];
 
-// The mock implements a partial subset of SqlProAPI with some structural differences.
+// The mock implements a partial subset of QuarryAPI with some structural differences.
 // Type-safe validation is enforced per-namespace via domain test files.
-export const mockSqlProAPI = {
+export const mockQuarryAPI = {
   db: {
     open: async (_request: OpenDatabaseRequest) => {
       await delay(300);
@@ -1901,7 +1901,7 @@ export const mockSqlProAPI = {
   rendererStore: {
     get: async ({ key }: { key: string }) => {
       try {
-        const stored = localStorage.getItem(`sqlpro-store-${key}`);
+        const stored = localStorage.getItem(`quarry-store-${key}`);
         return {
           success: true,
           data: stored ? JSON.parse(stored) : undefined,
@@ -1912,7 +1912,7 @@ export const mockSqlProAPI = {
     },
     set: async ({ key, value }: { key: string; value: unknown }) => {
       try {
-        localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(value));
+        localStorage.setItem(`quarry-store-${key}`, JSON.stringify(value));
         return { success: true };
       } catch {
         return { success: false };
@@ -1925,16 +1925,16 @@ export const mockSqlProAPI = {
           value === null ||
           Array.isArray(value)
         ) {
-          localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(value));
+          localStorage.setItem(`quarry-store-${key}`, JSON.stringify(value));
           return { success: true };
         }
-        const existing = localStorage.getItem(`sqlpro-store-${key}`);
+        const existing = localStorage.getItem(`quarry-store-${key}`);
         const parsed = existing ? JSON.parse(existing) : null;
         const merged =
           parsed && typeof parsed === 'object' && !Array.isArray(parsed)
             ? { ...parsed, ...value }
             : value;
-        localStorage.setItem(`sqlpro-store-${key}`, JSON.stringify(merged));
+        localStorage.setItem(`quarry-store-${key}`, JSON.stringify(merged));
         return { success: true };
       } catch {
         return { success: false };
@@ -1942,7 +1942,7 @@ export const mockSqlProAPI = {
     },
     reset: async ({ key }: { key: string }) => {
       try {
-        localStorage.removeItem(`sqlpro-store-${key}`);
+        localStorage.removeItem(`quarry-store-${key}`);
         return { success: true };
       } catch {
         return { success: false };

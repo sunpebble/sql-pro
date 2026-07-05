@@ -275,8 +275,8 @@ export async function requestGC(force = false): Promise<{
   error?: string;
 }> {
   try {
-    if (typeof window !== 'undefined' && window.sqlPro?.memory) {
-      const result = await window.sqlPro.memory.triggerGC({ force });
+    if (typeof window !== 'undefined' && window.quarry?.memory) {
+      const result = await window.quarry.memory.triggerGC({ force });
       return {
         success: result.success,
         gcTriggered: result.gcTriggered ?? false,

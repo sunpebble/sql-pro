@@ -1,8 +1,8 @@
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
-import { Progress } from '@sqlpro/ui/progress';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
+import { Progress } from '@quarry/ui/progress';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import {
   BarChart3,
   Calendar,
@@ -73,12 +73,14 @@ const TYPE_ICONS: Record<string, React.ElementType> = {
   BLOB: FileText,
 };
 
-const getTypeIcon = (type: string): React.ElementType => {
+// Returns a TYPE_ICONS key so callers render via a static map lookup, which
+// React Compiler accepts (a function returning a component would be flagged)
+const getTypeIconKey = (type: string): string => {
   const upper = type.toUpperCase();
-  for (const [key, icon] of Object.entries(TYPE_ICONS)) {
-    if (upper.includes(key)) return icon;
+  for (const key of Object.keys(TYPE_ICONS)) {
+    if (upper.includes(key)) return key;
   }
-  return Type;
+  return 'TEXT';
 };
 
 interface StatCardProps {
@@ -144,7 +146,7 @@ interface ColumnCardProps {
 
 const ColumnCard = memo(({ column, onClick, isSelected }: ColumnCardProps) => {
   const { t } = useTranslation('common');
-  const Icon = getTypeIcon(column.type);
+  const Icon = TYPE_ICONS[getTypeIconKey(column.type)];
   const nullPercentage = (column.nullCount / column.totalCount) * 100;
   const uniquePercentage = (column.distinctCount / column.totalCount) * 100;
 
@@ -210,6 +212,7 @@ interface ColumnDetailProps {
 
 const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
   const { t } = useTranslation('common');
+  const Icon = TYPE_ICONS[getTypeIconKey(column.type)];
   const nullPercentage = (column.nullCount / column.totalCount) * 100;
   const emptyPercentage = (column.emptyCount / column.totalCount) * 100;
   const filledPercentage = 100 - nullPercentage - emptyPercentage;
@@ -219,10 +222,7 @@ const ColumnDetail = memo(({ column }: ColumnDetailProps) => {
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="bg-primary/10 rounded-base p-2">
-          {(() => {
-            const Icon = getTypeIcon(column.type);
-            return <Icon className="text-primary h-6 w-6" />;
-          })()}
+          <Icon className="text-primary h-6 w-6" />
         </div>
         <div>
           <h3
@@ -593,7 +593,7 @@ export const DataProfiler = memo(
                 <ScrollArea className="w-64 shrink-0">
                   <div className="space-y-1 pr-2">
                     {profile.columns.map((col) => {
-                      const Icon = getTypeIcon(col.type);
+                      const Icon = TYPE_ICONS[getTypeIconKey(col.type)];
                       return (
                         <button
                           key={col.name}

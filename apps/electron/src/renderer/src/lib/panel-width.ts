@@ -6,7 +6,7 @@
 
 import type { RendererPanelWidths } from '@shared/types/renderer-store';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { sqlPro } from './api';
+import { quarry } from './api';
 
 // In-memory cache for panel widths
 let panelWidthsCache: RendererPanelWidths = {};
@@ -25,7 +25,7 @@ async function initializeCache(): Promise<void> {
 
   initPromise = (async () => {
     try {
-      const response = await sqlPro.rendererStore.get({ key: 'panelWidths' });
+      const response = await quarry.rendererStore.get({ key: 'panelWidths' });
       if (response.success && response.data) {
         panelWidthsCache = response.data as RendererPanelWidths;
       }
@@ -53,7 +53,7 @@ function setCachedWidth(key: string, width: number): void {
   panelWidthsCache[key] = width;
 
   // Persist asynchronously
-  sqlPro.rendererStore
+  quarry.rendererStore
     .set({
       key: 'panelWidths',
       value: panelWidthsCache,

@@ -1,17 +1,17 @@
 import type { ExportSchemaRequest, SchemaInfo } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Checkbox } from '@sqlpro/ui/checkbox';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Button } from '@quarry/ui/button';
+import { Checkbox } from '@quarry/ui/checkbox';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Textarea } from '@sqlpro/ui/textarea';
+} from '@quarry/ui/select';
+import { Textarea } from '@quarry/ui/textarea';
 import { Database, FileDown, Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useAsyncOperation } from '@/hooks/useAsyncOperation';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 export interface SchemaExportDialogProps {
   /** Whether the dialog is open */
@@ -88,7 +88,7 @@ export function SchemaExportDialog({
     reset: resetSchemaLoader,
   } = useAsyncOperation(
     async (connId: string) => {
-      const result = await sqlPro.db.getSchema({ connectionId: connId });
+      const result = await quarry.db.getSchema({ connectionId: connId });
       if (result.success && result.schemas) {
         setSchemas(result.schemas);
         // Initially select all tables
@@ -113,7 +113,7 @@ export function SchemaExportDialog({
     reset: resetExport,
   } = useAsyncOperation(
     async (request: ExportSchemaRequest) => {
-      const result = await sqlPro.sharing.exportSchema(request);
+      const result = await quarry.sharing.exportSchema(request);
       setExportResult(result);
       if (result.success && result.filePath && onExportComplete) {
         onExportComplete(result.filePath);

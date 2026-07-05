@@ -4,7 +4,7 @@
  */
 
 import type { DatabaseType } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import { Box, Braces, Cloud, Database, KeyRound, Server } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {

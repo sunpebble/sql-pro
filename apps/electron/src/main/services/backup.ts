@@ -141,7 +141,7 @@ export async function createBackup(
       let sqlContent = '';
 
       // Add header comment
-      sqlContent += `-- SQL Pro Backup\n`;
+      sqlContent += `-- Quarry Backup\n`;
       sqlContent += `-- Database: ${connection.filename || connection.path || 'Unknown'}\n`;
       sqlContent += `-- Created: ${new Date().toISOString()}\n`;
       sqlContent += `-- Tables: ${tables.join(', ')}\n\n`;

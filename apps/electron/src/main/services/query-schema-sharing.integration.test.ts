@@ -45,7 +45,7 @@ describe('query & Schema Sharing Integration Tests', () => {
 
   beforeEach(() => {
     // Create temporary directory for test files
-    testDir = join(tmpdir(), `sql-pro-test-${randomUUID()}`);
+    testDir = join(tmpdir(), `quarry-test-${randomUUID()}`);
     mkdirSync(testDir, { recursive: true });
   });
 

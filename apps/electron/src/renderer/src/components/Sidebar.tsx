@@ -12,9 +12,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@sqlpro/ui/alert-dialog';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+} from '@quarry/ui/alert-dialog';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -24,14 +24,14 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@sqlpro/ui/context-menu';
+} from '@quarry/ui/context-menu';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@sqlpro/ui/dropdown-menu';
+} from '@quarry/ui/dropdown-menu';
 import {
   Empty,
   EmptyContent,
@@ -39,11 +39,11 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@sqlpro/ui/empty';
-import { Input } from '@sqlpro/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
-import { ScrollArea, ScrollBar } from '@sqlpro/ui/scroll-area';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/empty';
+import { Input } from '@quarry/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@quarry/ui/popover';
+import { ScrollArea, ScrollBar } from '@quarry/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   ArrowDownAZ,
   ArrowUpAZ,
@@ -83,7 +83,7 @@ import {
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useVimKeyHandler } from '@/hooks/useVimKeyHandler';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
@@ -397,7 +397,7 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
       table.schema && table.schema !== 'main' ? `"${table.schema}".` : '';
     const query = `DELETE FROM ${schemaPrefix}"${table.name}";`;
     try {
-      await sqlPro.db.executeQuery({
+      await quarry.db.executeQuery({
         connectionId: connection.id,
         query,
       });
@@ -432,12 +432,12 @@ export function Sidebar({ onSwitchToQuery, onSwitchToData }: SidebarProps) {
     const objectType = table.type === 'view' ? 'VIEW' : 'TABLE';
     const query = `DROP ${objectType} ${schemaPrefix}"${table.name}";`;
     try {
-      await sqlPro.db.executeQuery({
+      await quarry.db.executeQuery({
         connectionId: connection.id,
         query,
       });
       // Refresh schema after dropping
-      const schemaResult = await sqlPro.db.getSchema({
+      const schemaResult = await quarry.db.getSchema({
         connectionId: connection.id,
       });
       if (schemaResult.success && schemaResult.schemas) {

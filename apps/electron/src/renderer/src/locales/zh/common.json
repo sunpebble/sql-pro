@@ -85,7 +85,7 @@
   "license": {
     "segmentPlaceholder": "XXXX",
     "segmentAriaLabel": "许可证密钥第 {{index}} 段",
-    "formatHint": "格式：SQLPRO-XXXX-XXXX-XXXX-XXXX"
+    "formatHint": "格式：QUARRY-XXXX-XXXX-XXXX-XXXX"
   },
   "pgNotify": {
     "subscriptionFailed": "订阅失败"
@@ -542,12 +542,12 @@
     "deleteFolderWithBoth": "文件夹“{{name}}”包含子文件夹和配置。仍要删除吗？其内容将被移动到根层级。"
   },
   "about": {
-    "title": "SQL Pro",
+    "title": "Quarry",
     "subtitle": "数据圣殿 · 专业数据库管理器",
     "version": "版本",
     "platform": "平台",
     "builtWith": "基于",
-    "copyright": "© 2025 SQL Pro. 保留所有权利。",
+    "copyright": "© 2025 Quarry. 保留所有权利。",
     "tagline": "精雕细琢"
   },
   "passwordDialog": {
@@ -560,7 +560,7 @@
     "open": "打开"
   },
   "app": {
-    "name": "SQL Pro",
+    "name": "Quarry",
     "loading": "加载中...",
     "error": "发生错误"
   },
@@ -1217,11 +1217,11 @@
   "pro": {
     "upgrade": "升级到 Pro",
     "unlockAll": "解锁所有 Pro 功能",
-    "title": "SQL Pro 许可证",
-    "getStarted": "获取 SQL Pro",
+    "title": "Quarry 许可证",
+    "getStarted": "获取 Quarry",
     "description": "通过订阅解锁所有 Pro 功能",
     "validity": "有效期",
-    "unlock": "解锁 SQL Pro",
+    "unlock": "解锁 Quarry",
     "getAccess": "获取所有 Pro 功能",
     "iHaveLicense": "我有许可证",
     "activateExisting": "激活已有许可证",
@@ -1336,7 +1336,7 @@
   },
   "plugins": {
     "title": "插件",
-    "description": "使用插件扩展 SQL Pro",
+    "description": "使用插件扩展 Quarry",
     "goBack": "返回",
     "browseMarketplace": "浏览市场",
     "refresh": "刷新插件",
@@ -1678,7 +1678,7 @@
     "openFromSidebar": "从侧边栏打开表"
   },
   "welcomeDialog": {
-    "title": "欢迎使用 SQL Pro",
+    "title": "欢迎使用 Quarry",
     "description": "专为 SQLite、MySQL、PostgreSQL 和 Supabase 打造的专业数据库管理器。快速浏览以了解命令面板、Vim 模式、可视化差异预览和 ER 图等强大功能。",
     "takeTour": "开始导览",
     "skipForNow": "暂时跳过"
@@ -1691,11 +1691,11 @@
     "steps": {
       "features": {
         "title": "功能概览",
-        "description": "探索 SQL Pro 的强大功能。点击任意功能卡片了解更多，或查阅文档获取详细指南。"
+        "description": "探索 Quarry 的强大功能。点击任意功能卡片了解更多，或查阅文档获取详细指南。"
       },
       "openDatabase": {
         "title": "打开数据库",
-        "description": "点击此处打开 SQLite 数据库文件（.db、.sqlite、.sqlite3）。SQL Pro 支持普通和 SQLCipher 加密数据库。"
+        "description": "点击此处打开 SQLite 数据库文件（.db、.sqlite、.sqlite3）。Quarry 支持普通和 SQLCipher 加密数据库。"
       },
       "serverConnection": {
         "title": "连接到服务器",
@@ -2063,7 +2063,7 @@
   },
   "marketplace": {
     "title": "插件市场",
-    "description": "浏览和安装插件以扩展 SQL Pro 功能",
+    "description": "浏览和安装插件以扩展 Quarry 功能",
     "searchPlaceholder": "搜索插件...",
     "gridView": "网格视图",
     "listView": "列表视图",
@@ -2469,7 +2469,7 @@
     "numericValues": "({{count}} 个数值)"
   },
   "agent": {
-    "title": "SQL Pro 智能助手",
+    "title": "Quarry 智能助手",
     "subtitle": "AI 驱动的数据库助手",
     "settings": {
       "title": "助手设置",

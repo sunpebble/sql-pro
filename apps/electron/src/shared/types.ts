@@ -3178,7 +3178,7 @@ export interface FileChangeEvent {
 
 // ============ Project URL Constants ============
 
-export const PROJECT_REPO_URL = 'https://github.com/kunish-homelab/sql-pro';
+export const PROJECT_REPO_URL = 'https://github.com/sunpebble/quarry';
 export const PROJECT_ISSUES_URL = `${PROJECT_REPO_URL}/issues`;
 
 // ============ IPC Channel Constants ============
@@ -3638,7 +3638,7 @@ export function bindingToAccelerator(
 }
 
 /**
- * Default shortcuts (SQL Pro native)
+ * Default shortcuts (Quarry native)
  */
 export const DEFAULT_SHORTCUTS: ShortcutPreset = {
   'nav.data-browser': { key: '1', modifiers: { cmd: true, ctrl: true } },

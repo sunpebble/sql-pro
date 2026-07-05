@@ -8,7 +8,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in SQL Pro, please report it responsibly.
+If you discover a security vulnerability in Quarry, please report it responsibly.
 
 **Do NOT open a public GitHub issue for security vulnerabilities.**
 
@@ -28,20 +28,20 @@ Instead, please email us at **support@sqlpro.app** with:
 
 ## Scope
 
-This policy covers the SQL Pro desktop application and its associated packages in this repository. Third-party dependencies are managed through regular updates and automated security scanning.
+This policy covers the Quarry desktop application and its associated packages in this repository. Third-party dependencies are managed through regular updates and automated security scanning.
 
 ## Best Practices for Users
 
-- Always download SQL Pro from [official releases](https://github.com/kunish-homelab/sql-pro/releases)
+- Always download Quarry from [official releases](https://github.com/sunpebble/quarry/releases)
 - Keep your installation up to date
 - Use strong passwords for encrypted databases (SQLCipher)
 - Review plugin permissions before installing third-party plugins
 
 ## Security Features
 
-SQL Pro includes several built-in security measures:
+Quarry includes several built-in security measures:
 
 - **SQLCipher support** for encrypted database files
 - **Sandboxed plugin execution** to isolate third-party code
-- **No telemetry** — SQL Pro does not collect or transmit user data
+- **No telemetry** — Quarry does not collect or transmit user data
 - **Local-first architecture** — your data stays on your machine

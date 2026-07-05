@@ -1,5 +1,5 @@
 {
-  "name": "@sqlpro/tsconfig",
+  "name": "@quarry/tsconfig",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/tsconfig",
   "projectType": "library",

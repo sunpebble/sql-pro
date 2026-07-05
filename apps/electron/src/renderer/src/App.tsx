@@ -1,7 +1,7 @@
 import type { PendingChangeInfo, RecentConnection } from '@shared/types';
 import type { SavedQuery } from '@shared/types/saved-query';
 import type { PendingChange } from '@/types/database';
-import { TooltipProvider } from '@sqlpro/ui/tooltip';
+import { TooltipProvider } from '@quarry/ui/tooltip';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ import { SqlLogPanel } from '@/components/SqlLogPanel';
 import { useFileWatcher } from '@/hooks/useFileWatcher';
 import { useSavedQueryCommands } from '@/hooks/useSavedQueryCommands';
 import { useTagCommands } from '@/hooks/useTagCommands';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { withRetryOrDefault } from '@/lib/ipc-retry';
 import { initMockMode, isMockMode } from '@/lib/mock-api';
 import { queryClient } from '@/lib/query-client';
@@ -152,9 +152,9 @@ function App(): React.JSX.Element {
       }
 
       const result = await withRetryOrDefault(
-        () => sqlPro.app.getRecentConnections(),
+        () => quarry.app.getRecentConnections(),
         { success: false, connections: [] } as Awaited<
-          ReturnType<typeof sqlPro.app.getRecentConnections>
+          ReturnType<typeof quarry.app.getRecentConnections>
         >,
         { silent: true }
       );
@@ -167,7 +167,7 @@ function App(): React.JSX.Element {
 
   // Listen for quit prevention event (Tauri version)
   useEffect(() => {
-    const cleanup = sqlPro.app.onBeforeQuit(() => {
+    const cleanup = quarry.app.onBeforeQuit(() => {
       // Guard: prevent showing multiple dialogs on rapid quit attempts
       if (showQuitDialog) return;
 
@@ -203,7 +203,7 @@ function App(): React.JSX.Element {
         setShowQuitDialog(true);
       } else {
         // No unsaved changes, allow quit
-        sqlPro.app.confirmQuit(true);
+        quarry.app.confirmQuit(true);
       }
     });
 
@@ -231,7 +231,7 @@ function App(): React.JSX.Element {
         primaryKeyColumn: change.primaryKeyColumn,
       }));
 
-      const result = await sqlPro.db.applyChanges({
+      const result = await quarry.db.applyChanges({
         connectionId: conn.connectionId,
         changes: changeInfos,
       });
@@ -247,7 +247,7 @@ function App(): React.JSX.Element {
     }
 
     // All changes saved successfully, allow quit
-    await sqlPro.app.confirmQuit(true);
+    await quarry.app.confirmQuit(true);
   };
 
   // Handle discard all changes and quit
@@ -258,13 +258,13 @@ function App(): React.JSX.Element {
     });
 
     // Allow quit
-    sqlPro.app.confirmQuit(true);
+    quarry.app.confirmQuit(true);
   };
 
   // Handle cancel quit
   const handleCancelQuit = () => {
     // Do not quit, just close the dialog
-    sqlPro.app.confirmQuit(false);
+    quarry.app.confirmQuit(false);
   };
 
   return (

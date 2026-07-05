@@ -1,6 +1,6 @@
-# Contributing to SQL Pro
+# Contributing to Quarry
 
-Thank you for your interest in contributing to SQL Pro! We welcome contributions from the community and are grateful for any help you can provide.
+Thank you for your interest in contributing to Quarry! We welcome contributions from the community and are grateful for any help you can provide.
 
 ## Table of Contents
 
@@ -40,14 +40,14 @@ Optional (for icon generation):
 2. **Clone your fork:**
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/sql-pro.git
-   cd sql-pro
+   git clone https://github.com/YOUR_USERNAME/quarry.git
+   cd quarry
    ```
 
 3. **Add upstream remote:**
 
    ```bash
-   git remote add upstream https://github.com/kunish-homelab/sql-pro.git
+   git remote add upstream https://github.com/sunpebble/quarry.git
    ```
 
 4. **Install dependencies:**
@@ -329,13 +329,13 @@ When adding features:
 
 - **GitHub Discussions** - Ask questions, share ideas
 - **GitHub Issues** - Report bugs, request features
-- **Documentation** - Check [docs](https://kunish-homelab.github.io/sql-pro/)
+- **Documentation** - Check [docs](https://sunpebble.github.io/quarry/)
 
 ### Reporting Issues
 
 When reporting bugs, include:
 
-1. **Environment**: OS, SQL Pro version, Node.js version
+1. **Environment**: OS, Quarry version, Node.js version
 2. **Steps to reproduce**: Clear, numbered steps
 3. **Expected behavior**: What should happen
 4. **Actual behavior**: What actually happens
@@ -359,7 +359,7 @@ Contributors are recognized in:
 - Release notes for their contributions
 - Special acknowledgment for significant contributions
 
-Thank you for contributing to SQL Pro! 🎉
+Thank you for contributing to Quarry! 🎉
 
 ---
 
@@ -393,4 +393,4 @@ pnpm docs:build
 
 ## Questions?
 
-Feel free to ask questions in [GitHub Discussions](https://github.com/kunish-homelab/sql-pro/discussions) or open an issue if you need help getting started!
+Feel free to ask questions in [GitHub Discussions](https://github.com/sunpebble/quarry/discussions) or open an issue if you need help getting started!

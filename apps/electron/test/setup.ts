@@ -191,7 +191,7 @@ if (typeof Element.prototype.getAnimations === 'undefined') {
 }
 
 // Mock Electron APIs for renderer tests
-const mockSqlProAPI = {
+const mockQuarryAPI = {
   db: {
     open: vi.fn(),
     close: vi.fn(),
@@ -238,9 +238,9 @@ const mockSqlProAPI = {
   },
 };
 
-Object.defineProperty(window, 'sqlPro', {
+Object.defineProperty(window, 'quarry', {
   writable: true,
-  value: mockSqlProAPI,
+  value: mockQuarryAPI,
 });
 
 // Reset all mocks before each test

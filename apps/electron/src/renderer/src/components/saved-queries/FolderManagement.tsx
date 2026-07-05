@@ -1,7 +1,7 @@
-import { DEFAULT_TAG_COLOR } from '@shared/types/tag';
+import { Button } from '@quarry/ui/button';
 
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
+import { Input } from '@quarry/ui/input';
+import { DEFAULT_TAG_COLOR } from '@shared/types/tag';
 import { Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';

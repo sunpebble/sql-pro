@@ -1,5 +1,5 @@
 {
-  "extends": "@sqlpro/tsconfig/web.json",
+  "extends": "@quarry/tsconfig/web.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["../electron/src/renderer/src/*"],

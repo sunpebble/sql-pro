@@ -36,7 +36,7 @@ export function generateSQL(options: GenerateSQLOptions): string {
   } = options;
 
   if (nodes.length === 0) {
-    return `-- ${  i18n.t('queryBuilder.emptyQueryHint')}`;
+    return `-- ${i18n.t('queryBuilder.emptyQueryHint')}`;
   }
 
   // Build SELECT clause
@@ -274,12 +274,15 @@ function buildLimitClause(limit?: number, offset?: number): string {
   return parts.join(' ');
 }
 
+const PLAIN_IDENTIFIER_RE = /^[a-z_]\w*$/i;
+const NUMERIC_VALUE_RE = /^-?\d+(?:\.\d+)?$/;
+
 /**
  * Quote identifier (table/column name) for SQL safety
  */
 function quoteIdentifier(identifier: string): string {
   // If identifier contains special characters or is a reserved word, quote it
-  if (/^[a-z_]\w*$/i.test(identifier)) {
+  if (PLAIN_IDENTIFIER_RE.test(identifier)) {
     return identifier;
   }
   return `"${identifier.replace(/"/g, '""')}"`;
@@ -290,7 +293,7 @@ function quoteIdentifier(identifier: string): string {
  */
 function escapeSQLString(value: string): string {
   // Check if it's a number
-  if (/^-?\d+(?:\.\d+)?$/.test(value)) {
+  if (NUMERIC_VALUE_RE.test(value)) {
     return value;
   }
   // Escape single quotes and wrap in quotes

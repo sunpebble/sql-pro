@@ -40,7 +40,7 @@ const MAX_PLUGIN_SIZE_BYTES = 50 * 1024 * 1024;
 const MANIFEST_FILENAME = 'plugin.json';
 
 /** Plugin archive extension */
-const PLUGIN_ARCHIVE_EXTENSION = '.sqlpro-plugin';
+const PLUGIN_ARCHIVE_EXTENSION = '.quarry-plugin';
 
 // Regex for non-numeric prefix
 const NON_NUMERIC_PREFIX_REGEX = /^\D*/;
@@ -302,11 +302,11 @@ class PluginLoader {
     const { manifest } = validationResult;
 
     // Check version compatibility
-    if (manifest.engines?.sqlpro) {
-      if (!satisfiesVersion(this.appVersion, manifest.engines.sqlpro)) {
+    if (manifest.engines?.quarry) {
+      if (!satisfiesVersion(this.appVersion, manifest.engines.quarry)) {
         return {
           success: false,
-          error: `Plugin requires SQL Pro ${manifest.engines.sqlpro}, but current version is ${this.appVersion}`,
+          error: `Plugin requires Quarry ${manifest.engines.quarry}, but current version is ${this.appVersion}`,
           errorCode: 'INCOMPATIBLE_VERSION',
         };
       }
@@ -385,14 +385,14 @@ class PluginLoader {
   }
 
   /**
-   * Extract a .sqlpro-plugin archive to the plugins directory.
+   * Extract a .quarry-plugin archive to the plugins directory.
    *
-   * @param archivePath - Path to the .sqlpro-plugin archive file
+   * @param archivePath - Path to the .quarry-plugin archive file
    * @returns Result with extracted directory path or error
    *
    * @example
    * ```typescript
-   * const result = await pluginLoader.extractArchive('/path/to/plugin.sqlpro-plugin');
+   * const result = await pluginLoader.extractArchive('/path/to/plugin.quarry-plugin');
    * if (result.success) {
    *   const loadResult = pluginLoader.loadFromDirectory(result.extractedPath);
    * }

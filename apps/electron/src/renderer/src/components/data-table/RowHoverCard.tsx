@@ -1,12 +1,12 @@
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnSchema } from '@/types/database';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '@sqlpro/ui/hover-card';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+} from '@quarry/ui/hover-card';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import { Copy, Maximize2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

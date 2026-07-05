@@ -1,12 +1,12 @@
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@sqlpro/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import { Database, Monitor, Moon, Settings, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
@@ -73,7 +73,7 @@ export function Titlebar() {
             className="text-foreground font-medium tracking-wide"
             style={{ fontSize: 'var(--font-ui-size, 13px)' }}
           >
-            SQL Pro
+            Quarry
           </span>
         </div>
       )}

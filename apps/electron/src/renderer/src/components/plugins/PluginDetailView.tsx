@@ -3,11 +3,11 @@ import type {
   PluginListing,
   PluginPermission,
 } from './plugin-types';
-import { Badge } from '@sqlpro/ui/badge';
+import { Badge } from '@quarry/ui/badge';
 
-import { Button } from '@sqlpro/ui/button';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Separator } from '@sqlpro/ui/separator';
+import { Button } from '@quarry/ui/button';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Separator } from '@quarry/ui/separator';
 import {
   Sheet,
   SheetContent,
@@ -15,8 +15,8 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@sqlpro/ui/sheet';
-import { Switch } from '@sqlpro/ui/switch';
+} from '@quarry/ui/sheet';
+import { Switch } from '@quarry/ui/switch';
 import {
   AlertCircle,
   Calendar,

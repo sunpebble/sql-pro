@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This guide covers common issues you might encounter when using SQL Pro and provides step-by-step solutions to resolve them.
+This guide covers common issues you might encounter when using Quarry and provides step-by-step solutions to resolve them.
 
 ::: tip Quick Find
 Use the search function (<kbd>Cmd/Ctrl + K</kbd>) to quickly find solutions for your specific issue. Most common issues are covered in the table of contents below.
@@ -12,19 +12,19 @@ Use the search function (<kbd>Cmd/Ctrl + K</kbd>) to quickly find solutions for 
 
 ### Application Won't Start on macOS
 
-**Symptom:** Double-clicking SQL Pro shows a brief loading animation but the app never opens, or you see a security warning.
+**Symptom:** Double-clicking Quarry shows a brief loading animation but the app never opens, or you see a security warning.
 
 **Cause:** macOS Gatekeeper is blocking the application because it's from an unidentified developer.
 
 **Solution:**
 
 1. Open **System Preferences** → **Security & Privacy** → **General**
-2. Look for a message about SQL Pro being blocked
+2. Look for a message about Quarry being blocked
 3. Click **Open Anyway** to allow the application
 4. Alternatively, right-click the app and select **Open** from the context menu
 
 ::: tip First Launch
-This security prompt only appears on first launch. After allowing it once, SQL Pro will open normally in the future.
+This security prompt only appears on first launch. After allowing it once, Quarry will open normally in the future.
 :::
 
 ### Windows SmartScreen Warning
@@ -40,7 +40,7 @@ This security prompt only appears on first launch. After allowing it once, SQL P
 3. The installer will run normally
 
 ::: warning
-Only proceed if you downloaded SQL Pro from the official GitHub releases page.
+Only proceed if you downloaded Quarry from the official GitHub releases page.
 :::
 
 ### Linux AppImage Won't Run
@@ -112,19 +112,19 @@ sudo dnf install fuse fuse-libs  # Fedora
 4. **If the file is on a network drive**, try copying it locally first
 
 ::: info
-SQL Pro requires read/write access to the database file for editing operations. For read-only access, ensure the file has at least read permissions.
+Quarry requires read/write access to the database file for editing operations. For read-only access, ensure the file has at least read permissions.
 :::
 
 ### Database Is Locked
 
 **Symptom:** Error message "Database is locked" when trying to execute queries or save changes.
 
-**Cause:** Another process (including another SQL Pro window) has an exclusive lock on the database.
+**Cause:** Another process (including another Quarry window) has an exclusive lock on the database.
 
 **Solutions:**
 
 1. **Close other applications** that might be using the database
-2. **Close other SQL Pro windows** connected to the same database
+2. **Close other Quarry windows** connected to the same database
 3. **Wait a few seconds** - some locks are temporary
 4. **Restart the application** if the lock persists
 
@@ -173,7 +173,7 @@ Databases using Write-Ahead Logging (WAL) mode allow concurrent reads but may st
    > .tables
    ```
 
-3. **Try different cipher configurations** - SQL Pro auto-detects, but some exotic formats may not be supported
+3. **Try different cipher configurations** - Quarry auto-detects, but some exotic formats may not be supported
 
 4. **Check database integrity:**
    ```bash
@@ -207,7 +207,7 @@ Databases using Write-Ahead Logging (WAL) mode allow concurrent reads but may st
 **macOS:**
 
 - Ensure Keychain Access is not locked
-- Grant SQL Pro keychain access when prompted
+- Grant Quarry keychain access when prompted
 
 **Windows:**
 
@@ -527,7 +527,7 @@ Press <kbd>Cmd/Ctrl</kbd> + <kbd>/</kbd> to see all available keyboard shortcuts
 
 ### High Memory Usage
 
-**Symptom:** SQL Pro using excessive RAM, system becoming slow.
+**Symptom:** Quarry using excessive RAM, system becoming slow.
 
 **Causes:**
 
@@ -656,7 +656,7 @@ Press <kbd>Cmd/Ctrl</kbd> + <kbd>/</kbd> to see all available keyboard shortcuts
 
 ### macOS: Application Damaged Message
 
-**Symptom:** "SQL Pro is damaged and can't be opened" message.
+**Symptom:** "Quarry is damaged and can't be opened" message.
 
 **Cause:** Extended attribute quarantine flag.
 
@@ -716,9 +716,9 @@ xattr -cr /Applications/SQL\ Pro.app
 
 If you can't resolve an issue using this guide:
 
-1. **Search existing issues** on [GitHub Issues](https://github.com/kunish-homelab/sql-pro/issues)
+1. **Search existing issues** on [GitHub Issues](https://github.com/sunpebble/quarry/issues)
 2. **Create a new issue** with:
-   - SQL Pro version
+   - Quarry version
    - Operating system and version
    - Steps to reproduce
    - Error messages (screenshots if helpful)
@@ -742,4 +742,4 @@ When reporting issues, never share actual database content or passwords. Use dum
 - [Getting Started Guide](/getting-started/) - Setup and first connection
 - [Feature Documentation](/features/) - Learn about all features
 - [Keyboard Shortcuts](/shortcuts) - Complete shortcuts reference
-- [GitHub Issues](https://github.com/kunish-homelab/sql-pro/issues) - Report bugs and request features
+- [GitHub Issues](https://github.com/sunpebble/quarry/issues) - Report bugs and request features

@@ -8,15 +8,15 @@ import type {
   DatabaseType,
   TestConnectionResponse,
 } from '@shared/types';
+import { Button } from '@quarry/ui/button';
+import { Checkbox } from '@quarry/ui/checkbox';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   isMySQLCompatibleDatabaseType,
   isPostgreSQLCompatibleDatabaseType,
 } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Checkbox } from '@sqlpro/ui/checkbox';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -1167,7 +1167,7 @@ export function ServerConnectionDialog({
                     const config = buildConfig();
 
                     try {
-                      const result = await window.sqlPro.db.testConnection({
+                      const result = await window.quarry.db.testConnection({
                         config,
                       });
                       setTestResult(result);

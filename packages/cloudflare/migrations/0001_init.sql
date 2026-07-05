@@ -1,5 +1,5 @@
 -- Migration: 0001_init.sql
--- Create initial database schema for SQL Pro License System
+-- Create initial database schema for Quarry License System
 
 -- Licenses table
 CREATE TABLE IF NOT EXISTS licenses (

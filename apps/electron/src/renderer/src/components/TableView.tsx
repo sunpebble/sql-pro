@@ -4,20 +4,20 @@ import type { ExportOptions } from './ExportDialog';
 import type { UIFilterState } from '@/lib/filter-utils';
 import type { PageSizeOption } from '@/stores/settings-store';
 import type { PendingChange, SortState, TableSchema } from '@/types/database';
-import {
-  isMySQLCompatibleDatabaseType,
-  isPostgreSQLCompatibleDatabaseType,
-} from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
+import {
+  isMySQLCompatibleDatabaseType,
+  isPostgreSQLCompatibleDatabaseType,
+} from '@shared/types';
 import {
   ChevronLeft,
   ChevronRight,

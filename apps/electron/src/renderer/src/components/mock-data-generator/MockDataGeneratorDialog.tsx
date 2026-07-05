@@ -1,17 +1,17 @@
 import type { TableSchema } from '@/types/database';
 import type { ColumnMockConfig, MockDataType } from '@/types/mock-data';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Switch } from '@sqlpro/ui/switch';
+} from '@quarry/ui/select';
+import { Switch } from '@quarry/ui/switch';
 import {
   Table,
   TableBody,
@@ -19,8 +19,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@sqlpro/ui/table';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/table';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   Copy,
   Database,
@@ -41,7 +41,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { useConnectionStore } from '@/stores/connection-store';
 import {
   getMockDataTypes,
@@ -184,7 +184,7 @@ export function MockDataGeneratorDialog({
 
     setIsGenerating(true);
     try {
-      const result = await sqlPro.db.executeQuery({
+      const result = await quarry.db.executeQuery({
         connectionId: activeConnectionId,
         query: generatedSQL,
       });

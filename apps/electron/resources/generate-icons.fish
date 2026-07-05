@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-# Icon generation script for SQL Pro
+# Icon generation script for Quarry
 # Requires: ImageMagick (brew install imagemagick) and librsvg (brew install librsvg)
 
 set SCRIPT_DIR (dirname (status filename))

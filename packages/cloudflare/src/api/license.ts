@@ -5,18 +5,18 @@ const ALPHABET = 'ABCDEFGHJKMNPQRSTVWXYZ0123456789';
 const nanoid = customAlphabet(ALPHABET, 4);
 
 /**
- * Generate a license key in format: SQLPRO-XXXX-XXXX-XXXX-XXXX
+ * Generate a license key in format: QUARRY-XXXX-XXXX-XXXX-XXXX
  */
 export function generateLicenseKey(): string {
   const segments = [nanoid(), nanoid(), nanoid(), nanoid()];
-  return `SQLPRO-${segments.join('-')}`;
+  return `QUARRY-${segments.join('-')}`;
 }
 
 /**
  * Validate license key format
  */
 export function isValidLicenseKeyFormat(key: string): boolean {
-  const pattern = /^SQLPRO-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  const pattern = /^QUARRY-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
   return pattern.test(key);
 }
 

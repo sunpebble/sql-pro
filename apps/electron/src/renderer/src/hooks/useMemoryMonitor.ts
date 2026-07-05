@@ -6,7 +6,7 @@ import type {
 } from '@shared/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 /**
  * Renderer-specific memory metrics
@@ -275,7 +275,7 @@ export function useMemoryMonitor(
     setError(null);
 
     try {
-      const response = await sqlPro.memory.getStats();
+      const response = await quarry.memory.getStats();
 
       if (response.success && response.stats) {
         setMainProcessStats(response.stats);
@@ -306,14 +306,14 @@ export function useMemoryMonitor(
     setError(null);
 
     try {
-      const response = await sqlPro.memory.subscribe({ intervalMs });
+      const response = await quarry.memory.subscribe({ intervalMs });
 
       if (response.success && response.subscriptionId) {
         subscriptionIdRef.current = response.subscriptionId;
         setIsSubscribed(true);
 
         // Set up event listeners for stats updates
-        cleanupStatsRef.current = sqlPro.memory.onStatsUpdate(
+        cleanupStatsRef.current = quarry.memory.onStatsUpdate(
           (event: MemoryStatsUpdateEvent) => {
             // eslint-disable-next-line react/set-state-in-effect -- Async event handler for IPC updates
             setMainProcessStats(event.stats);
@@ -324,7 +324,7 @@ export function useMemoryMonitor(
         );
 
         // Set up event listeners for pressure changes
-        cleanupPressureRef.current = sqlPro.memory.onPressureChange(
+        cleanupPressureRef.current = quarry.memory.onPressureChange(
           (event: MemoryPressureChangeEvent) => {
             // eslint-disable-next-line react/set-state-in-effect -- Async event handler for IPC updates
             setPressureLevel(event.currentLevel);
@@ -367,7 +367,7 @@ export function useMemoryMonitor(
     setIsLoading(true);
 
     try {
-      await sqlPro.memory.unsubscribe({
+      await quarry.memory.unsubscribe({
         subscriptionId: subscriptionIdRef.current,
       });
     } catch {
@@ -396,7 +396,7 @@ export function useMemoryMonitor(
    */
   const triggerGC = useCallback(async (force = false): Promise<boolean> => {
     try {
-      const response = await sqlPro.memory.triggerGC({ force });
+      const response = await quarry.memory.triggerGC({ force });
 
       if (response.success && response.gcTriggered) {
         // Update stats after GC if available
@@ -426,7 +426,7 @@ export function useMemoryMonitor(
     return () => {
       if (subscriptionIdRef.current) {
         // Fire and forget the unsubscribe
-        sqlPro.memory
+        quarry.memory
           .unsubscribe({ subscriptionId: subscriptionIdRef.current })
           .catch(() => {});
       }

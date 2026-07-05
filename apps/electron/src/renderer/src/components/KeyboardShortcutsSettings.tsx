@@ -4,17 +4,17 @@ import type {
   ShortcutBinding,
   ShortcutsExport,
 } from '@/stores/keyboard-shortcuts-store';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
+} from '@quarry/ui/select';
 import {
   AlertTriangle,
   Check,
@@ -287,7 +287,7 @@ export const KeyboardShortcutsSettings = memo(
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `sql-pro-shortcuts-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `quarry-shortcuts-${new Date().toISOString().split('T')[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success(t('shortcuts.exportSuccess'));

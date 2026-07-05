@@ -1,7 +1,7 @@
 import type { QueryBuilderNodeData } from '@/types/query-builder';
-import { Button } from '@sqlpro/ui/button';
-import { Checkbox } from '@sqlpro/ui/checkbox';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Button } from '@quarry/ui/button';
+import { Checkbox } from '@quarry/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import { Handle, Position } from '@xyflow/react';
 import {
   Binary,

@@ -5,8 +5,8 @@ import type {
   TableDiff,
   TriggerDiff,
 } from '@shared/types';
-import { Badge } from '@sqlpro/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@sqlpro/ui/card';
+import { Badge } from '@quarry/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@quarry/ui/card';
 import {
   ChevronDown,
   ChevronRight,

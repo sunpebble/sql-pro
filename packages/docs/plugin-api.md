@@ -1,6 +1,6 @@
 # Plugin API Reference
 
-Complete reference documentation for the SQL Pro Plugin API. This page covers all available methods with TypeScript signatures and examples.
+Complete reference documentation for the Quarry Plugin API. This page covers all available methods with TypeScript signatures and examples.
 
 [[toc]]
 
@@ -16,7 +16,7 @@ The Plugin API is organized into four modules, accessible via the `context.api` 
 | [Metadata API](#metadata-api)               | `context.api.metadata` | Plugin, connection, and app info         |
 
 ```typescript
-import type { PluginContext, PluginModule } from '@sqlpro/plugin-sdk';
+import type { PluginContext, PluginModule } from '@quarry/plugin-sdk';
 
 export const activate: PluginModule['activate'] = (context: PluginContext) => {
   const { api } = context;
@@ -61,7 +61,7 @@ export const activate: PluginModule['activate'] = (context: PluginContext) => {
 
 ## UI Extension API
 
-The UI Extension API (`context.api.ui`) provides methods for extending the SQL Pro user interface with commands, menu items, panels, and notifications.
+The UI Extension API (`context.api.ui`) provides methods for extending the Quarry user interface with commands, menu items, panels, and notifications.
 
 ### Interface Definition
 
@@ -127,7 +127,7 @@ interface CommandOptions {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api, manifest } = context;
@@ -238,7 +238,7 @@ interface MenuItemOptions {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api, manifest } = context;
@@ -355,7 +355,7 @@ interface PanelOptions {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api, manifest } = context;
@@ -452,7 +452,7 @@ interface NotificationOptions {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api } = context;
@@ -602,7 +602,7 @@ interface QueryHookResult {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api, manifest } = context;
@@ -704,7 +704,7 @@ interface QueryResults {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api, manifest } = context;
@@ -807,7 +807,7 @@ interface QueryError {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api, manifest } = context;
@@ -924,7 +924,7 @@ get<T = unknown>(key: string): Promise<T | undefined>
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 interface UserPreferences {
   theme: 'light' | 'dark';
@@ -985,7 +985,7 @@ set<T = unknown>(key: string, value: T): Promise<void>
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export async function activate(context: PluginContext) {
   const { api } = context;
@@ -1048,7 +1048,7 @@ remove(key: string): Promise<void>
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export async function activate(context: PluginContext) {
   const { api } = context;
@@ -1080,7 +1080,7 @@ keys(): Promise<string[]>
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export async function activate(context: PluginContext) {
   const { api } = context;
@@ -1121,7 +1121,7 @@ This permanently deletes all stored data for your plugin. Use with caution.
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export async function activate(context: PluginContext) {
   const { api } = context;
@@ -1201,7 +1201,7 @@ interface PluginManifest {
   permissions?: PluginPermission[];
 
   /** Version requirements (optional). */
-  engines?: { sqlpro?: string };
+  engines?: { quarry?: string };
 
   /** Plugin homepage URL (optional). */
   homepage?: string;
@@ -1229,7 +1229,7 @@ interface PluginManifest {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api } = context;
@@ -1300,7 +1300,7 @@ interface ConnectionInfo {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api, manifest } = context;
@@ -1343,7 +1343,7 @@ export function activate(context: PluginContext) {
 
 ### getAppInfo()
 
-Get information about the SQL Pro application.
+Get information about the Quarry application.
 
 #### Signature
 
@@ -1385,7 +1385,7 @@ interface AppInfo {
 #### Example
 
 ```typescript
-import type { PluginContext } from '@sqlpro/plugin-sdk';
+import type { PluginContext } from '@quarry/plugin-sdk';
 
 export function activate(context: PluginContext) {
   const { api } = context;
@@ -1393,7 +1393,7 @@ export function activate(context: PluginContext) {
   // Get app info
   const app = api.metadata.getAppInfo();
 
-  console.log(`SQL Pro v${app.version}`);
+  console.log(`Quarry v${app.version}`);
   console.log(`Platform: ${app.platform} (${app.arch})`);
   console.log(`Development mode: ${app.isDev}`);
 
@@ -1416,7 +1416,7 @@ export function activate(context: PluginContext) {
   const [major, minor] = app.version.split('.').map(Number);
   if (major < 2) {
     api.ui.showNotification({
-      message: 'This plugin works best with SQL Pro 2.0 or later.',
+      message: 'This plugin works best with Quarry 2.0 or later.',
       type: 'info',
     });
   }
@@ -1433,7 +1433,7 @@ The context object passed to your plugin's `activate` function.
 
 ```typescript
 interface PluginContext {
-  /** The complete Plugin API for extending SQL Pro. */
+  /** The complete Plugin API for extending Quarry. */
   api: PluginAPI;
 
   /** This plugin's manifest data from plugin.json. */
@@ -1512,7 +1512,7 @@ import type {
   PluginModule,
   QueryContext,
   QueryResults,
-} from '@sqlpro/plugin-sdk';
+} from '@quarry/plugin-sdk';
 
 // Store cleanup functions
 const disposables: Array<() => void> = [];
@@ -1624,7 +1624,7 @@ export const activate: PluginModule['activate'] = async (
   // Show activation notification
   const appInfo = api.metadata.getAppInfo();
   api.ui.showNotification({
-    message: `${manifest.name} v${manifest.version} activated on SQL Pro ${appInfo.version}`,
+    message: `${manifest.name} v${manifest.version} activated on Quarry ${appInfo.version}`,
     type: 'success',
     duration: 3000,
   });
@@ -1645,5 +1645,5 @@ export const deactivate: PluginModule['deactivate'] = async () => {
 ## See Also
 
 - [Plugin Development Guide](/plugin-development) - Complete guide to building plugins
-- [Example Plugins](https://github.com/sqlpro/plugin-registry) - Browse and install community plugins
-- [TypeScript SDK Types](https://github.com/kunish-homelab/sql-pro/tree/main/packages/plugin-sdk/types) - Full type definitions
+- [Example Plugins](https://github.com/quarry/plugin-registry) - Browse and install community plugins
+- [TypeScript SDK Types](https://github.com/sunpebble/quarry/tree/main/packages/plugin-sdk/types) - Full type definitions

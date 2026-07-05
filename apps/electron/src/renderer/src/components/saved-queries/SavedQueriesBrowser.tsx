@@ -1,15 +1,15 @@
 import type { SavedQuery } from '@shared/types/saved-query';
 
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@sqlpro/ui/empty';
-import { Input } from '@sqlpro/ui/input';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+} from '@quarry/ui/empty';
+import { Input } from '@quarry/ui/input';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import { FileText, FolderOpen, Search, X } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

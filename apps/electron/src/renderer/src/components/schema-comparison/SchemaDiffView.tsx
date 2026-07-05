@@ -1,5 +1,5 @@
 import type { SchemaComparisonResult } from '@shared/types';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import { FileQuestion } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -7,9 +7,13 @@ import type {
   PluginEvent,
   UninstallPluginResponse,
 } from './types';
-// Inline channel() helper — avoids @sqlpro/ipc-contracts dependency in web build
+// Inline channel() helper — avoids @quarry/ipc-contracts dependency in web build
 function channel<TIn = unknown, TOut = unknown>(name: string) {
-  return { name, _input: undefined as unknown as TIn, _output: undefined as unknown as TOut };
+  return {
+    name,
+    _input: undefined as unknown as TIn,
+    _output: undefined as unknown as TOut,
+  };
 }
 
 export const pluginChannels = {

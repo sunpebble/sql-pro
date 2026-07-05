@@ -1,9 +1,9 @@
 import { connectionChannels } from '@shared/domains/database/channels';
 import { IPC_CHANNELS } from '@shared/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createSqlProAPI } from './sql-pro-api';
+import { createQuarryAPI } from './quarry-api';
 
-describe('createSqlProAPI', () => {
+describe('createQuarryAPI', () => {
   const invoke = vi.fn();
   const on = vi.fn();
   const off = vi.fn();
@@ -17,7 +17,7 @@ describe('createSqlProAPI', () => {
   });
 
   it('forwards db.open to invoke with the database open channel', async () => {
-    const api = createSqlProAPI({ invoke, on, off, getPathForFile });
+    const api = createQuarryAPI({ invoke, on, off, getPathForFile });
     const req = {
       connectionId: 'c1',
       path: '/tmp/x.db',
@@ -31,7 +31,7 @@ describe('createSqlProAPI', () => {
   });
 
   it('registers pg_notify listener and returns cleanup that calls off', () => {
-    const api = createSqlProAPI({ invoke, on, off, getPathForFile });
+    const api = createQuarryAPI({ invoke, on, off, getPathForFile });
     const cb = vi.fn();
     const cleanup = api.pgNotify.onEvent(cb);
 
@@ -50,7 +50,7 @@ describe('createSqlProAPI', () => {
   });
 
   it('ssh.saveCredentials uses single payload object and SSH_SAVE_CREDENTIALS', async () => {
-    const api = createSqlProAPI({ invoke, on, off, getPathForFile });
+    const api = createQuarryAPI({ invoke, on, off, getPathForFile });
     invoke.mockResolvedValueOnce({ success: true });
 
     await api.ssh.saveCredentials('p1', { password: 'x' });

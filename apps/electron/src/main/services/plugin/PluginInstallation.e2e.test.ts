@@ -1,10 +1,10 @@
 import type { PluginInfo, PluginManifest } from '@shared/types/plugin';
 import type { Buffer } from 'node:buffer';
 /**
- * E2E Tests for Plugin Installation from .sqlpro-plugin Archive
+ * E2E Tests for Plugin Installation from .quarry-plugin Archive
  *
  * Tests the complete plugin installation workflow:
- * 1. Package plugin as .sqlpro-plugin archive
+ * 1. Package plugin as .quarry-plugin archive
  * 2. Install plugin via PluginService
  * 3. Verify plugin appears in installed list
  * 4. Enable plugin
@@ -81,18 +81,18 @@ const { mockState, createMockEmitter, testTempDir, testPluginsDir } =
 // ============ Test Plugin Data ============
 
 const helloWorldManifest: PluginManifest = {
-  id: 'com.sqlpro.example.hello-world',
+  id: 'com.quarry.example.hello-world',
   name: 'Hello World',
   version: '1.0.0',
   description:
-    'A minimal example plugin demonstrating the basic structure of a SQL Pro plugin.',
-  author: 'SQL Pro Team',
+    'A minimal example plugin demonstrating the basic structure of a Quarry plugin.',
+  author: 'Quarry Team',
   main: 'index.js',
   license: 'MIT',
   keywords: ['example', 'template', 'hello-world', 'getting-started'],
   permissions: ['ui:command', 'ui:menu'],
   engines: {
-    sqlpro: '^1.6.0',
+    quarry: '^1.6.0',
   },
   apiVersion: '1.0.0',
 };
@@ -533,9 +533,9 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     vi.clearAllMocks();
   });
 
-  describe('step 1: Package hello-world plugin as .sqlpro-plugin archive', () => {
-    it('should recognize .sqlpro-plugin archive format', async () => {
-      const archivePath = '/tmp/hello-world.sqlpro-plugin';
+  describe('step 1: Package hello-world plugin as .quarry-plugin archive', () => {
+    it('should recognize .quarry-plugin archive format', async () => {
+      const archivePath = '/tmp/hello-world.quarry-plugin';
 
       // Create a simulated archive file
       mockState.files.set(archivePath, 'MOCK_ZIP_CONTENT');
@@ -545,7 +545,7 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
 
       // Verify the extension is recognized
       const ext = archivePath.slice(archivePath.lastIndexOf('.'));
-      expect(ext).toBe('.sqlpro-plugin');
+      expect(ext).toBe('.quarry-plugin');
     });
 
     it('should validate .zip extension as alternative', async () => {
@@ -554,17 +554,17 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
       // Create a simulated archive file
       mockState.files.set(archivePath, 'MOCK_ZIP_CONTENT');
 
-      // Both .sqlpro-plugin and .zip should be valid
-      const validExtensions = ['.sqlpro-plugin', '.zip'];
+      // Both .quarry-plugin and .zip should be valid
+      const validExtensions = ['.quarry-plugin', '.zip'];
       const ext = archivePath.slice(archivePath.lastIndexOf('.'));
       expect(validExtensions).toContain(ext);
     });
   });
 
   describe('step 2 & 3: Install plugin from archive', () => {
-    it('should install plugin from .sqlpro-plugin archive via PluginService', async () => {
-      const archivePath = '/tmp/hello-world.sqlpro-plugin';
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
+    it('should install plugin from .quarry-plugin archive via PluginService', async () => {
+      const archivePath = '/tmp/hello-world.quarry-plugin';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
 
       // Set up simulated archive
       mockState.files.set(archivePath, 'MOCK_ZIP_CONTENT');
@@ -595,7 +595,7 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     });
 
     it('should register plugin in PluginRegistry after installation', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
 
       // Set up extracted plugin files
       mockState.directories.add(pluginDir);
@@ -611,7 +611,7 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
 
       // Verify plugin is registered
       expect(pluginRegistry.has).toHaveBeenCalled();
-      expect(mockState.plugins.has('com.sqlpro.example.hello-world')).toBe(
+      expect(mockState.plugins.has('com.quarry.example.hello-world')).toBe(
         true
       );
     });
@@ -620,10 +620,10 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
       // Use a unique plugin ID that isn't pre-registered
       const uniqueManifest = {
         ...helloWorldManifest,
-        id: 'com.sqlpro.example.duplicate-test',
+        id: 'com.quarry.example.duplicate-test',
         name: 'Duplicate Test Plugin',
       };
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.duplicate-test`;
+      const pluginDir = `${testPluginsDir}/com.quarry.example.duplicate-test`;
 
       // Initialize FIRST (before setting up plugin files)
       await pluginService.initialize();
@@ -657,7 +657,7 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
 
   describe('step 4: Verify plugin appears in installed list', () => {
     it('should list installed plugin via getAll()', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -674,12 +674,12 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
       const allPlugins = pluginService.getAll();
 
       expect(allPlugins).toHaveLength(1);
-      expect(allPlugins[0].manifest.id).toBe('com.sqlpro.example.hello-world');
+      expect(allPlugins[0].manifest.id).toBe('com.quarry.example.hello-world');
       expect(allPlugins[0].manifest.name).toBe('Hello World');
     });
 
     it('should show correct plugin state after installation', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -704,8 +704,8 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     });
 
     it('should retrieve plugin by ID after installation', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
-      const pluginId = 'com.sqlpro.example.hello-world';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
+      const pluginId = 'com.quarry.example.hello-world';
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -724,14 +724,14 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
       expect(plugin).not.toBeNull();
       expect(plugin!.manifest.id).toBe(pluginId);
       expect(plugin!.manifest.name).toBe('Hello World');
-      expect(plugin!.manifest.author).toBe('SQL Pro Team');
+      expect(plugin!.manifest.author).toBe('Quarry Team');
     });
   });
 
   describe('step 5: Enable plugin', () => {
     it('should enable plugin successfully', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
-      const pluginId = 'com.sqlpro.example.hello-world';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
+      const pluginId = 'com.quarry.example.hello-world';
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -752,8 +752,8 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     });
 
     it('should update plugin state to enabled after enabling', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
-      const pluginId = 'com.sqlpro.example.hello-world';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
+      const pluginId = 'com.quarry.example.hello-world';
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -773,8 +773,8 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     });
 
     it('should be idempotent - enabling twice returns success', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
-      const pluginId = 'com.sqlpro.example.hello-world';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
+      const pluginId = 'com.quarry.example.hello-world';
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -798,8 +798,8 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
 
   describe('step 6: Verify plugin initializes without errors', () => {
     it('should load plugin into runtime when enabled', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
-      const pluginId = 'com.sqlpro.example.hello-world';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
+      const pluginId = 'com.quarry.example.hello-world';
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -818,8 +818,8 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     });
 
     it('should mark plugin as loaded in registry', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
-      const pluginId = 'com.sqlpro.example.hello-world';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
+      const pluginId = 'com.quarry.example.hello-world';
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -841,11 +841,11 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
       // Use a unique plugin ID to avoid conflicts with auto-discovery
       const uniqueManifest = {
         ...helloWorldManifest,
-        id: 'com.sqlpro.example.events-test',
+        id: 'com.quarry.example.events-test',
         name: 'Events Test Plugin',
       };
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.events-test`;
-      const pluginId = 'com.sqlpro.example.events-test';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.events-test`;
+      const pluginId = 'com.quarry.example.events-test';
 
       // Track events - set up listener BEFORE any operations
       const events: string[] = [];
@@ -873,8 +873,8 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     });
 
     it('should handle plugin with query hooks correctly', async () => {
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.hello-world`;
-      const pluginId = 'com.sqlpro.example.hello-world';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.hello-world`;
+      const pluginId = 'com.quarry.example.hello-world';
 
       // Set up and install plugin
       mockState.directories.add(pluginDir);
@@ -909,11 +909,11 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
       // Use unique plugin ID to test fresh installation
       const uniqueManifest = {
         ...helloWorldManifest,
-        id: 'com.sqlpro.example.e2e-flow',
+        id: 'com.quarry.example.e2e-flow',
         name: 'E2E Flow Test Plugin',
       };
-      const pluginDir = `${testPluginsDir}/com.sqlpro.example.e2e-flow`;
-      const pluginId = 'com.sqlpro.example.e2e-flow';
+      const pluginDir = `${testPluginsDir}/com.quarry.example.e2e-flow`;
+      const pluginId = 'com.quarry.example.e2e-flow';
 
       // Step 1: Initialize service FIRST (no plugins yet)
       const initResult = await pluginService.initialize();
@@ -953,18 +953,18 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
     });
 
     it('should handle multiple plugins being installed and enabled', async () => {
-      const plugin1Dir = `${testPluginsDir}/com.sqlpro.example.multi-plugin1`;
-      const plugin2Dir = `${testPluginsDir}/com.sqlpro.example.multi-plugin2`;
+      const plugin1Dir = `${testPluginsDir}/com.quarry.example.multi-plugin1`;
+      const plugin2Dir = `${testPluginsDir}/com.quarry.example.multi-plugin2`;
 
       // Set up two plugins
       const plugin1Manifest: PluginManifest = {
         ...helloWorldManifest,
-        id: 'com.sqlpro.example.multi-plugin1',
+        id: 'com.quarry.example.multi-plugin1',
         name: 'Plugin One',
       };
       const plugin2Manifest: PluginManifest = {
         ...helloWorldManifest,
-        id: 'com.sqlpro.example.multi-plugin2',
+        id: 'com.quarry.example.multi-plugin2',
         name: 'Plugin Two',
       };
 
@@ -993,14 +993,14 @@ describe('plugin Installation E2E - Archive Installation Flow', () => {
       expect(pluginService.getAll()).toHaveLength(2);
 
       // Enable both
-      await pluginService.enablePlugin('com.sqlpro.example.multi-plugin1');
-      await pluginService.enablePlugin('com.sqlpro.example.multi-plugin2');
+      await pluginService.enablePlugin('com.quarry.example.multi-plugin1');
+      await pluginService.enablePlugin('com.quarry.example.multi-plugin2');
 
       // Verify both enabled
-      expect(pluginService.isEnabled('com.sqlpro.example.multi-plugin1')).toBe(
+      expect(pluginService.isEnabled('com.quarry.example.multi-plugin1')).toBe(
         true
       );
-      expect(pluginService.isEnabled('com.sqlpro.example.multi-plugin2')).toBe(
+      expect(pluginService.isEnabled('com.quarry.example.multi-plugin2')).toBe(
         true
       );
       expect(pluginService.getEnabled()).toHaveLength(2);

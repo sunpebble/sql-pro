@@ -1,11 +1,11 @@
 # SQL Query Editor
 
-The SQL Query Editor is the heart of SQL Pro, providing a powerful environment for writing, executing, and managing SQL queries. Built on the Monaco editor (the same editor that powers VS Code), it offers professional-grade features for database developers.
+The SQL Query Editor is the heart of Quarry, providing a powerful environment for writing, executing, and managing SQL queries. Built on the Monaco editor (the same editor that powers VS Code), it offers professional-grade features for database developers.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/query-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/query.png">
-  <img alt="SQL Pro Query Editor with Monaco-based code editing, syntax highlighting, and query results" src="/screenshots/query-dark.png">
+  <img alt="Quarry Query Editor with Monaco-based code editing, syntax highlighting, and query results" src="/screenshots/query-dark.png">
 </picture>
 
 ## Key Features
@@ -34,7 +34,7 @@ The Query Editor is accessible from the main workspace:
 
 ### Syntax Highlighting
 
-SQL Pro provides rich syntax highlighting for SQL:
+Quarry provides rich syntax highlighting for SQL:
 
 - **Keywords** - `SELECT`, `FROM`, `WHERE`, etc. are highlighted
 - **Strings** - Text in quotes is color-coded
@@ -57,7 +57,7 @@ ORDER BY order_count DESC;
 
 ### Intelligent Autocomplete
 
-As you type, SQL Pro suggests:
+As you type, Quarry suggests:
 
 - **Table names** from your database schema
 - **Column names** for the tables in your query
@@ -119,7 +119,7 @@ To execute a specific query:
 1. Place your cursor anywhere within the query you want to run
 2. Press <kbd>Cmd/Ctrl</kbd> + <kbd>Enter</kbd>
 
-SQL Pro executes only the query under your cursor.
+Quarry executes only the query under your cursor.
 
 ### Query Results
 
@@ -133,7 +133,7 @@ After execution, results appear below the editor with:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/query-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/query.png">
-  <img alt="SQL Pro Query results panel showing row count, execution time, and data grid with query output" src="/screenshots/query-dark.png">
+  <img alt="Quarry Query results panel showing row count, execution time, and data grid with query output" src="/screenshots/query-dark.png">
 </picture>
 
 ::: warning Large Result Sets
@@ -147,7 +147,7 @@ SELECT * FROM large_table LIMIT 1000;
 
 ### Error Handling
 
-When a query fails, SQL Pro displays:
+When a query fails, Quarry displays:
 
 - Clear error message from SQLite
 - Query that caused the error
@@ -187,7 +187,7 @@ ORDER BY
 
 ## Vim Mode
 
-For developers who prefer Vim keybindings, SQL Pro includes full Vim mode support.
+For developers who prefer Vim keybindings, Quarry includes full Vim mode support.
 
 ### Enabling Vim Mode
 
@@ -223,7 +223,7 @@ The Vim status bar appears at the bottom of the editor when Vim mode is enabled,
 
 ## Query History
 
-SQL Pro maintains a complete history of all executed queries for each database.
+Quarry maintains a complete history of all executed queries for each database.
 
 ### Accessing History
 
@@ -241,7 +241,7 @@ SQL Pro maintains a complete history of all executed queries for each database.
 - **Clear all** - Remove entire history for current database
 
 ::: tip Persistent History
-Query history is saved to disk and persists between sessions. Your history remains available even after closing and reopening SQL Pro.
+Query history is saved to disk and persists between sessions. Your history remains available even after closing and reopening Quarry.
 :::
 
 ## Query Templates
@@ -256,7 +256,7 @@ Save time with reusable query templates for common operations.
 
 ### Built-in Templates
 
-SQL Pro includes templates for common operations:
+Quarry includes templates for common operations:
 
 - **SELECT all** - Basic select query
 - **INSERT row** - Insert new data
@@ -293,7 +293,7 @@ Common suggestions include:
 
 ## AI Features
 
-SQL Pro includes AI-powered features to enhance your productivity.
+Quarry includes AI-powered features to enhance your productivity.
 
 ### Natural Language to SQL
 

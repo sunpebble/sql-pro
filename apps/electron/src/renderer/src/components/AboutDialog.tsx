@@ -33,7 +33,7 @@ export function AboutDialog() {
             className="font-bold tracking-wide"
             style={{ fontSize: 'calc(var(--font-ui-size, 13px) * 1.4)' }}
           >
-            SQL Pro
+            Quarry
           </DialogTitle>
           <DialogDescription
             className="text-muted-foreground font-medium tracking-wider uppercase"

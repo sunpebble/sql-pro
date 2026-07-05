@@ -1,9 +1,9 @@
 import type { PluginInfo, PluginListing } from './PluginCard';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 
-import { Input } from '@sqlpro/ui/input';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tabs, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+import { Input } from '@quarry/ui/input';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import {
   AlertCircle,
   Grid3X3,
@@ -163,7 +163,7 @@ export function PluginMarketplace({
     }));
 
     try {
-      const response = await window.sqlPro.plugin.fetchMarketplace();
+      const response = await window.quarry.plugin.fetchMarketplace();
 
       if (response.success && response.registry?.plugins) {
         const pluginList = response.registry.plugins as PluginListing[];
@@ -232,7 +232,7 @@ export function PluginMarketplace({
       setInstallingPluginId(pluginId);
 
       try {
-        const response = await window.sqlPro.plugin.install({
+        const response = await window.quarry.plugin.install({
           source: plugin.downloadUrl,
           sourceType: 'url',
         });

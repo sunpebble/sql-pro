@@ -11,7 +11,7 @@ import {
   formatBytes,
 } from '@shared/lib/memory-utils';
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 /**
  * Default memory budget for query results cache (30MB)
@@ -360,7 +360,7 @@ export const useQueryStore = create<QueryState>((set, get) => ({
   loadHistory: async (dbPath: string) => {
     set({ isLoadingHistory: true, currentDbPath: dbPath });
     try {
-      const response = await sqlPro.history.get({ dbPath });
+      const response = await quarry.history.get({ dbPath });
       if (response.success && response.history) {
         // Apply size limits to loaded history entries
         const limitedHistory = (response.history as QueryHistoryEntry[])
@@ -413,7 +413,7 @@ export const useQueryStore = create<QueryState>((set, get) => ({
       queryText:
         query.length > MAX_HISTORY_ENTRY_QUERY_SIZE ? query : truncatedQuery,
     };
-    sqlPro.history.save({ entry: fullEntry }).catch((error: unknown) => {
+    quarry.history.save({ entry: fullEntry }).catch((error: unknown) => {
       // Non-critical: history is already in memory, log for debugging
       console.warn('[QueryStore] Failed to persist history entry:', error);
     });
@@ -427,11 +427,11 @@ export const useQueryStore = create<QueryState>((set, get) => ({
 
     // Persist deletion to storage
     try {
-      await sqlPro.history.delete({ dbPath, entryId });
+      await quarry.history.delete({ dbPath, entryId });
     } catch (error) {
       console.warn('[QueryStore] Failed to delete history item:', error);
       // If deletion fails, reload history to restore state
-      const response = await sqlPro.history.get({ dbPath });
+      const response = await quarry.history.get({ dbPath });
       if (response.success && response.history) {
         set({ history: response.history as QueryHistoryEntry[] });
       }
@@ -444,11 +444,11 @@ export const useQueryStore = create<QueryState>((set, get) => ({
 
     // Persist to storage
     try {
-      await sqlPro.history.clear({ dbPath });
+      await quarry.history.clear({ dbPath });
     } catch (error) {
       console.warn('[QueryStore] Failed to clear history:', error);
       // If clearing fails, reload history to restore state
-      const response = await sqlPro.history.get({ dbPath });
+      const response = await quarry.history.get({ dbPath });
       if (response.success && response.history) {
         set({ history: response.history as QueryHistoryEntry[] });
       }

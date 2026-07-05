@@ -5,6 +5,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useOnboardingStore } from '../../stores/onboarding-store';
 import { Tour } from './Tour';
 
+const NEXT_BUTTON_RE = /next/i;
+const SKIP_BUTTON_RE = /skip/i;
+const FINISH_BUTTON_RE = /finish/i;
+
 // Mock dependencies
 vi.mock('../../stores/onboarding-store', () => ({
   useOnboardingStore: vi.fn(),
@@ -133,7 +137,7 @@ describe('tour Component', () => {
 
     // Find next button with hidden option since parent has aria-hidden
     const nextButton = screen.getByRole('button', {
-      name: /next/i,
+      name: NEXT_BUTTON_RE,
       hidden: true,
     });
 
@@ -156,7 +160,7 @@ describe('tour Component', () => {
 
     // Find skip button with hidden option since parent has aria-hidden
     const skipButtons = screen.getAllByRole('button', {
-      name: /skip/i,
+      name: SKIP_BUTTON_RE,
       hidden: true,
     });
     // The text "Skip tour" button is the one without aria-label
@@ -206,7 +210,7 @@ describe('tour Component', () => {
 
     // Use hidden option to find button inside aria-hidden container (animation state in test)
     const finishButton = screen.getByRole('button', {
-      name: /finish/i,
+      name: FINISH_BUTTON_RE,
       hidden: true,
     });
 

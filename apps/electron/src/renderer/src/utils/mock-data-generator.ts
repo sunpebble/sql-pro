@@ -670,6 +670,169 @@ export class MockDataGenerator {
   }
 }
 
+// Column name patterns for mock type suggestion
+const COLUMN_NAME_PATTERNS: [RegExp, MockDataType, number, string][] = [
+  // Personal info
+  [
+    /^(first_?name|fname|given_?name)$/i,
+    'firstName',
+    0.95,
+    'Column name matches first name pattern',
+  ],
+  [
+    /^(last_?name|lname|surname|family_?name)$/i,
+    'lastName',
+    0.95,
+    'Column name matches last name pattern',
+  ],
+  [
+    /^(full_?name|name|display_?name)$/i,
+    'fullName',
+    0.85,
+    'Column name matches full name pattern',
+  ],
+  [/email/i, 'email', 0.95, 'Column name contains "email"'],
+  [
+    /^(phone|tel|mobile|cell)/i,
+    'phone',
+    0.9,
+    'Column name matches phone pattern',
+  ],
+  [
+    /^(user_?name|login|account)$/i,
+    'username',
+    0.85,
+    'Column name matches username pattern',
+  ],
+  [/password|pwd|pass/i, 'password', 0.9, 'Column name contains "password"'],
+  [
+    /avatar|profile_?(pic|image|photo)/i,
+    'avatar',
+    0.9,
+    'Column name matches avatar pattern',
+  ],
+
+  // Address
+  [
+    /^(street|address|addr)/i,
+    'streetAddress',
+    0.85,
+    'Column name matches street address pattern',
+  ],
+  [/^city$/i, 'city', 0.95, 'Column name is "city"'],
+  [
+    /^(state|province|region)$/i,
+    'state',
+    0.9,
+    'Column name matches state/province pattern',
+  ],
+  [/^country$/i, 'country', 0.95, 'Column name is "country"'],
+  [
+    /^(zip|postal|postcode)/i,
+    'zipCode',
+    0.9,
+    'Column name matches zip code pattern',
+  ],
+  [
+    /^(lat|latitude)$/i,
+    'latitude',
+    0.95,
+    'Column name matches latitude pattern',
+  ],
+  [
+    /^(lng|lon|longitude)$/i,
+    'longitude',
+    0.95,
+    'Column name matches longitude pattern',
+  ],
+
+  // Company
+  [/^company/i, 'companyName', 0.85, 'Column name starts with "company"'],
+  [
+    /^(job_?title|title|position|role)$/i,
+    'jobTitle',
+    0.85,
+    'Column name matches job title pattern',
+  ],
+  [
+    /^(department|dept)$/i,
+    'department',
+    0.9,
+    'Column name matches department pattern',
+  ],
+
+  // Internet
+  [
+    /^(url|link|website|homepage)/i,
+    'url',
+    0.9,
+    'Column name matches URL pattern',
+  ],
+  [/^(domain|host)/i, 'domain', 0.85, 'Column name matches domain pattern'],
+  [/^ip(_?address)?$/i, 'ip', 0.9, 'Column name matches IP address pattern'],
+  [/user_?agent/i, 'userAgent', 0.9, 'Column name matches user agent pattern'],
+
+  // IDs
+  [/^(uuid|guid)$/i, 'uuid', 0.95, 'Column name is UUID/GUID'],
+  [/^id$/i, 'sequence', 0.7, 'Column name is "id"'],
+  [/_id$/i, 'integer', 0.6, 'Column name ends with "_id"'],
+
+  // Dates
+  [
+    /^(created|updated|modified)(_at|_date|_time)?$/i,
+    'datetime',
+    0.85,
+    'Column name matches timestamp pattern',
+  ],
+  [/date$/i, 'date', 0.8, 'Column name ends with "date"'],
+  [/time$/i, 'time', 0.8, 'Column name ends with "time"'],
+  [/timestamp/i, 'timestamp', 0.9, 'Column name contains "timestamp"'],
+
+  // Commerce
+  [
+    /^price|cost|amount|total/i,
+    'price',
+    0.85,
+    'Column name matches price pattern',
+  ],
+  [
+    /^product_?name$/i,
+    'productName',
+    0.9,
+    'Column name matches product name pattern',
+  ],
+  [
+    /^(description|desc|summary|content|body|text)$/i,
+    'paragraph',
+    0.75,
+    'Column name matches description pattern',
+  ],
+
+  // Text
+  [/^slug$/i, 'slug', 0.95, 'Column name is "slug"'],
+  [
+    /^(title|headline|subject)$/i,
+    'sentence',
+    0.7,
+    'Column name matches title pattern',
+  ],
+];
+
+// SQL type patterns for mock type fallback
+const INTEGER_TYPE_REGEX = /integer|int|serial/i;
+const FLOAT_TYPE_REGEX = /float|double|decimal|real|numeric/i;
+const BOOLEAN_TYPE_REGEX = /bool/i;
+const DATE_TYPE_REGEX = /date/i;
+const TIME_TYPE_REGEX = /time/i;
+const TIMESTAMP_TYPE_REGEX = /timestamp/i;
+const TEXT_TYPE_REGEX = /text|clob/i;
+const STRING_TYPE_REGEX = /char|varchar|string/i;
+const UUID_TYPE_REGEX = /uuid/i;
+const JSON_TYPE_REGEX = /json/i;
+const BINARY_TYPE_REGEX = /blob|binary/i;
+
+const SAFE_IDENTIFIER_REGEX = /^[a-z_]\w*$/i;
+
 /**
  * Suggest mock type based on column name and SQL type
  */
@@ -677,192 +840,39 @@ export function suggestMockType(column: ColumnSchema): MockTypeSuggestion {
   const name = column.name.toLowerCase();
   const type = column.type.toLowerCase();
 
-  // Check for common patterns in column name
-  const patterns: [RegExp, MockDataType, number, string][] = [
-    // Personal info
-    [
-      /^(first_?name|fname|given_?name)$/i,
-      'firstName',
-      0.95,
-      'Column name matches first name pattern',
-    ],
-    [
-      /^(last_?name|lname|surname|family_?name)$/i,
-      'lastName',
-      0.95,
-      'Column name matches last name pattern',
-    ],
-    [
-      /^(full_?name|name|display_?name)$/i,
-      'fullName',
-      0.85,
-      'Column name matches full name pattern',
-    ],
-    [/email/i, 'email', 0.95, 'Column name contains "email"'],
-    [
-      /^(phone|tel|mobile|cell)/i,
-      'phone',
-      0.9,
-      'Column name matches phone pattern',
-    ],
-    [
-      /^(user_?name|login|account)$/i,
-      'username',
-      0.85,
-      'Column name matches username pattern',
-    ],
-    [/password|pwd|pass/i, 'password', 0.9, 'Column name contains "password"'],
-    [
-      /avatar|profile_?(pic|image|photo)/i,
-      'avatar',
-      0.9,
-      'Column name matches avatar pattern',
-    ],
-
-    // Address
-    [
-      /^(street|address|addr)/i,
-      'streetAddress',
-      0.85,
-      'Column name matches street address pattern',
-    ],
-    [/^city$/i, 'city', 0.95, 'Column name is "city"'],
-    [
-      /^(state|province|region)$/i,
-      'state',
-      0.9,
-      'Column name matches state/province pattern',
-    ],
-    [/^country$/i, 'country', 0.95, 'Column name is "country"'],
-    [
-      /^(zip|postal|postcode)/i,
-      'zipCode',
-      0.9,
-      'Column name matches zip code pattern',
-    ],
-    [
-      /^(lat|latitude)$/i,
-      'latitude',
-      0.95,
-      'Column name matches latitude pattern',
-    ],
-    [
-      /^(lng|lon|longitude)$/i,
-      'longitude',
-      0.95,
-      'Column name matches longitude pattern',
-    ],
-
-    // Company
-    [/^company/i, 'companyName', 0.85, 'Column name starts with "company"'],
-    [
-      /^(job_?title|title|position|role)$/i,
-      'jobTitle',
-      0.85,
-      'Column name matches job title pattern',
-    ],
-    [
-      /^(department|dept)$/i,
-      'department',
-      0.9,
-      'Column name matches department pattern',
-    ],
-
-    // Internet
-    [
-      /^(url|link|website|homepage)/i,
-      'url',
-      0.9,
-      'Column name matches URL pattern',
-    ],
-    [/^(domain|host)/i, 'domain', 0.85, 'Column name matches domain pattern'],
-    [/^ip(_?address)?$/i, 'ip', 0.9, 'Column name matches IP address pattern'],
-    [
-      /user_?agent/i,
-      'userAgent',
-      0.9,
-      'Column name matches user agent pattern',
-    ],
-
-    // IDs
-    [/^(uuid|guid)$/i, 'uuid', 0.95, 'Column name is UUID/GUID'],
-    [/^id$/i, 'sequence', 0.7, 'Column name is "id"'],
-    [/_id$/i, 'integer', 0.6, 'Column name ends with "_id"'],
-
-    // Dates
-    [
-      /^(created|updated|modified)(_at|_date|_time)?$/i,
-      'datetime',
-      0.85,
-      'Column name matches timestamp pattern',
-    ],
-    [/date$/i, 'date', 0.8, 'Column name ends with "date"'],
-    [/time$/i, 'time', 0.8, 'Column name ends with "time"'],
-    [/timestamp/i, 'timestamp', 0.9, 'Column name contains "timestamp"'],
-
-    // Commerce
-    [
-      /^price|cost|amount|total/i,
-      'price',
-      0.85,
-      'Column name matches price pattern',
-    ],
-    [
-      /^product_?name$/i,
-      'productName',
-      0.9,
-      'Column name matches product name pattern',
-    ],
-    [
-      /^(description|desc|summary|content|body|text)$/i,
-      'paragraph',
-      0.75,
-      'Column name matches description pattern',
-    ],
-
-    // Text
-    [/^slug$/i, 'slug', 0.95, 'Column name is "slug"'],
-    [
-      /^(title|headline|subject)$/i,
-      'sentence',
-      0.7,
-      'Column name matches title pattern',
-    ],
-  ];
-
-  for (const [pattern, mockType, confidence, reason] of patterns) {
+  for (const [pattern, mockType, confidence, reason] of COLUMN_NAME_PATTERNS) {
     if (pattern.test(name)) {
       return { mockType, confidence, reason };
     }
   }
 
   // Fall back to SQL type matching
-  if (/integer|int|serial/i.test(type)) {
+  if (INTEGER_TYPE_REGEX.test(type)) {
     return {
       mockType: 'integer',
       confidence: 0.6,
       reason: 'SQL type is integer',
     };
   }
-  if (/float|double|decimal|real|numeric/i.test(type)) {
+  if (FLOAT_TYPE_REGEX.test(type)) {
     return {
       mockType: 'float',
       confidence: 0.6,
       reason: 'SQL type is floating point',
     };
   }
-  if (/bool/i.test(type)) {
+  if (BOOLEAN_TYPE_REGEX.test(type)) {
     return {
       mockType: 'boolean',
       confidence: 0.9,
       reason: 'SQL type is boolean',
     };
   }
-  if (/date/i.test(type)) {
+  if (DATE_TYPE_REGEX.test(type)) {
     return { mockType: 'date', confidence: 0.8, reason: 'SQL type is date' };
   }
-  if (/time/i.test(type)) {
-    if (/timestamp/i.test(type)) {
+  if (TIME_TYPE_REGEX.test(type)) {
+    if (TIMESTAMP_TYPE_REGEX.test(type)) {
       return {
         mockType: 'datetime',
         confidence: 0.85,
@@ -871,27 +881,27 @@ export function suggestMockType(column: ColumnSchema): MockTypeSuggestion {
     }
     return { mockType: 'time', confidence: 0.8, reason: 'SQL type is time' };
   }
-  if (/text|clob/i.test(type)) {
+  if (TEXT_TYPE_REGEX.test(type)) {
     return {
       mockType: 'paragraph',
       confidence: 0.5,
       reason: 'SQL type is text',
     };
   }
-  if (/char|varchar|string/i.test(type)) {
+  if (STRING_TYPE_REGEX.test(type)) {
     return { mockType: 'word', confidence: 0.3, reason: 'SQL type is string' };
   }
-  if (/uuid/i.test(type)) {
+  if (UUID_TYPE_REGEX.test(type)) {
     return { mockType: 'uuid', confidence: 0.95, reason: 'SQL type is UUID' };
   }
-  if (/json/i.test(type)) {
+  if (JSON_TYPE_REGEX.test(type)) {
     return {
       mockType: 'sentence',
       confidence: 0.3,
       reason: 'SQL type is JSON',
     };
   }
-  if (/blob|binary/i.test(type)) {
+  if (BINARY_TYPE_REGEX.test(type)) {
     return {
       mockType: 'null',
       confidence: 0.5,
@@ -906,7 +916,7 @@ export function suggestMockType(column: ColumnSchema): MockTypeSuggestion {
  * Quote identifier for SQL safety
  */
 function quoteIdentifier(identifier: string): string {
-  if (/^[a-z_]\w*$/i.test(identifier)) {
+  if (SAFE_IDENTIFIER_REGEX.test(identifier)) {
     return identifier;
   }
   return `"${identifier.replace(/"/g, '""')}"`;
@@ -926,7 +936,7 @@ function formatSQLValue(value: unknown, columnType: string): string {
 
   if (typeof value === 'boolean') {
     // Different databases handle booleans differently
-    if (/bool/i.test(columnType)) {
+    if (BOOLEAN_TYPE_REGEX.test(columnType)) {
       return value ? 'TRUE' : 'FALSE';
     }
     return value ? '1' : '0';

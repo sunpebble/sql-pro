@@ -7,13 +7,13 @@ const path = require('node:path');
  * @type {import('electron-builder').Configuration}
  */
 const config = {
-  appId: 'com.sqlpro.app',
-  productName: 'SQL Pro',
+  appId: 'com.quarry.app',
+  productName: 'Quarry',
   copyright: 'Copyright © 2025 kunish',
 
   // Override scoped package name to avoid @ symbol issues with 7-Zip
   extraMetadata: {
-    name: 'sqlpro',
+    name: 'quarry',
   },
 
   directories: {
@@ -65,7 +65,7 @@ const config = {
   generateUpdatesFilesForAllChannels: true,
 
   // Ensure executable name matches productName (not the scoped package name)
-  executableName: 'SQL Pro',
+  executableName: 'Quarry',
 
   // Artifact naming - avoid using ${name} which includes the @ symbol from scoped package
   artifactName: '${productName}-${version}-${arch}.${ext}',
@@ -169,7 +169,7 @@ const config = {
       return [];
     }
 
-    const appName = 'SQL Pro';
+    const appName = 'Quarry';
     const version =
       buildResult.configuration.extraMetadata?.version ||
       require('./package.json').version;
@@ -183,7 +183,7 @@ const config = {
     }
 
     // Try to find the app bundle - it might be named differently based on electron-builder version
-    // Possible names: "SQL Pro.app" (productName) or "@sqlproapp.app" (from package name)
+    // Possible names: "Quarry.app" (productName) or "@quarryapp.app" (from package name)
     const macDirPath = path.join(outDir, macDir);
     const appFiles = fs
       .readdirSync(macDirPath)

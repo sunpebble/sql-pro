@@ -130,12 +130,12 @@ class LifecycleManager {
 
     // Set app user model ID for Windows
     if (process.platform === 'win32') {
-      app.setAppUserModelId('com.sqlpro.app');
+      app.setAppUserModelId('com.quarry.app');
     }
 
     // Set app name for development mode
     if (is.dev) {
-      app.name = 'SQL Pro';
+      app.name = 'Quarry';
     }
 
     // Set Dock icon on macOS

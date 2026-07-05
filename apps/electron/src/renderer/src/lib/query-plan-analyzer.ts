@@ -82,6 +82,11 @@ const NODE_SEPARATION = 80; // Horizontal space between nodes
 const RANK_SEPARATION = 100; // Vertical space between levels
 const MARGIN = 40;
 
+const SCAN_TABLE_NAME_RE = /SCAN TABLE (\w+)/i;
+const LEADING_UPPERCASE_PHRASE_RE = /^([A-Z\s]+)/;
+const TABLE_NAME_RE = /TABLE\s+(\w+)/i;
+const INDEX_NAME_RE = /INDEX\s+(\w+)/i;
+
 /**
  * Generates optimization suggestions based on query execution plan
  */
@@ -97,7 +102,7 @@ export function generateSuggestions(
   );
 
   for (const scan of fullTableScans) {
-    const tableMatch = scan.detail.match(/SCAN TABLE (\w+)/i);
+    const tableMatch = scan.detail.match(SCAN_TABLE_NAME_RE);
     const tableName = tableMatch ? tableMatch[1] : 'unknown';
 
     suggestions.push({
@@ -286,7 +291,7 @@ export function extractOperation(detail: string): string {
   }
 
   // Default: use first word or phrase
-  const match = detail.match(/^([A-Z\s]+)/);
+  const match = detail.match(LEADING_UPPERCASE_PHRASE_RE);
   return match ? match[1].trim() : 'OPERATION';
 }
 
@@ -294,7 +299,7 @@ export function extractOperation(detail: string): string {
  * Extracts table name from detail string
  */
 export function extractTableName(detail: string): string | undefined {
-  const tableMatch = detail.match(/TABLE\s+(\w+)/i);
+  const tableMatch = detail.match(TABLE_NAME_RE);
   return tableMatch ? tableMatch[1] : undefined;
 }
 
@@ -302,7 +307,7 @@ export function extractTableName(detail: string): string | undefined {
  * Extracts index name from detail string
  */
 export function extractIndexName(detail: string): string | undefined {
-  const indexMatch = detail.match(/INDEX\s+(\w+)/i);
+  const indexMatch = detail.match(INDEX_NAME_RE);
   return indexMatch ? indexMatch[1] : undefined;
 }
 

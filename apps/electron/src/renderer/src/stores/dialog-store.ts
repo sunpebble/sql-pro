@@ -1,6 +1,6 @@
 import type { RecentConnection } from '@shared/types';
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { router } from '@/routes';
 import { useChangesStore } from '@/stores/changes-store';
 import { useConnectionStore } from '@/stores/connection-store';
@@ -239,7 +239,7 @@ export const useDialogStore = create<DialogState>((set, get) => ({
     // Navigate to welcome only when this is the last open connection.
     const hasOtherConnections = connectionStore.connections.size > 1;
 
-    await sqlPro.db.close({ connectionId });
+    await quarry.db.close({ connectionId });
     connectionStore.removeConnection(connectionId);
     connectionStore.setSelectedTable(null);
     useChangesStore.getState().clearChangesForConnection(connectionId);

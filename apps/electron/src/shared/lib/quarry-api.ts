@@ -276,7 +276,7 @@ import {
 } from '@shared/domains/system/channels';
 
 /** IPC bridge injected by Electron preload or web mocks. */
-export interface SqlProApiDeps {
+export interface QuarryApiDeps {
   /** Returns channel-typed payloads; typed in each method body via ipcRenderer in preload. */
   invoke: (channel: string, ...args: unknown[]) => any;
   /** Matches Electron `IpcRenderer.on` listener arity. */
@@ -286,7 +286,7 @@ export interface SqlProApiDeps {
 }
 
 /** Platform-agnostic factory: Electron preload passes ipcRenderer + webUtils. */
-export function createSqlProAPI(deps: SqlProApiDeps) {
+export function createQuarryAPI(deps: QuarryApiDeps) {
   const { invoke, on, off, getPathForFile } = deps;
 
   const updateNamespace = {
@@ -1148,4 +1148,4 @@ export function createSqlProAPI(deps: SqlProApiDeps) {
   };
 }
 
-export type SqlProAPI = ReturnType<typeof createSqlProAPI>;
+export type QuarryAPI = ReturnType<typeof createQuarryAPI>;

@@ -1,6 +1,6 @@
 ## Why
 
-当前的 SQL Pro 使用 "Warm Modern" 设计风格，虽然专业但缺乏视觉冲击力和个性化。Neobrutalism 是一种大胆、富有表现力的设计风格，融合了粗犷主义的直接性与现代设计的精致感。采用 neobrutalism.dev 组件库可以让 SQL Pro 在众多数据库管理工具中脱颖而出，同时保持基于 shadcn/ui 的组件质量和可访问性。
+当前的 Quarry 使用 "Warm Modern" 设计风格，虽然专业但缺乏视觉冲击力和个性化。Neobrutalism 是一种大胆、富有表现力的设计风格，融合了粗犷主义的直接性与现代设计的精致感。采用 neobrutalism.dev 组件库可以让 Quarry 在众多数据库管理工具中脱颖而出，同时保持基于 shadcn/ui 的组件质量和可访问性。
 
 ## What Changes
 

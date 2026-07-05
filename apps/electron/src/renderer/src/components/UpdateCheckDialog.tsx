@@ -1,4 +1,4 @@
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import { CheckCircle2, Download, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { useDialogStore } from '@/stores/dialog-store';
 
 /**
@@ -36,7 +36,7 @@ export function UpdateCheckDialog() {
     setError(null);
 
     try {
-      const result = await sqlPro.updates.download();
+      const result = await quarry.updates.download();
       if (result.success) {
         setDownloadComplete(true);
         setDownloadProgress(100);
@@ -54,7 +54,7 @@ export function UpdateCheckDialog() {
 
   const handleInstall = async () => {
     try {
-      const result = await sqlPro.updates.install();
+      const result = await quarry.updates.install();
       if (result.success) {
         // The app will restart, so close the dialog
         closeUpdateCheck();

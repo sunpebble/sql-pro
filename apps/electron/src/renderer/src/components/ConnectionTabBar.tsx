@@ -25,13 +25,13 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@sqlpro/ui/context-menu';
+} from '@quarry/ui/context-menu';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import {
   AlertCircle,
   Archive,
@@ -70,17 +70,18 @@ const PRESET_COLORS = [
   { name: 'Amber', value: 'oklch(0.75 0.18 75)' },
 ];
 
+// Valid hex color format: #RGB or #RRGGBB
+const HEX_COLOR_RE = /^#(?:[A-F0-9]{6}|[A-F0-9]{3})$/i;
+// OKLch format: oklch(L C H) or oklch(L C H / A)
+const OKLCH_COLOR_RE =
+  /^oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+\s*(?:\/\s*[\d.]+%?\s*)?\)$/i;
+
 /**
  * Validates if a string is a valid color code
  * Supports hex (#RGB, #RRGGBB) and OKLch formats
  */
 const isValidColor = (color: string): boolean => {
-  // Check for valid hex color format: #RGB or #RRGGBB
-  const hexColorRegex = /^#(?:[A-F0-9]{6}|[A-F0-9]{3})$/i;
-  // Check for OKLch format: oklch(L C H) or oklch(L C H / A)
-  const oklchRegex =
-    /^oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+\s*(?:\/\s*[\d.]+%?\s*)?\)$/i;
-  return hexColorRegex.test(color) || oklchRegex.test(color);
+  return HEX_COLOR_RE.test(color) || OKLCH_COLOR_RE.test(color);
 };
 
 interface ConnectionTabBarProps {
@@ -514,7 +515,7 @@ export const ConnectionTabBar = memo(({ className }: ConnectionTabBarProps) => {
             strategy={horizontalListSortingStrategy}
           >
             <div
-              className="scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/40 flex h-full flex-1 items-center overflow-x-auto px-1"
+              className="scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 flex h-full flex-1 scrollbar-thin scrollbar-track-transparent items-center overflow-x-auto px-1"
               data-tauri-drag-region
             >
               {connections.map((connection) => (

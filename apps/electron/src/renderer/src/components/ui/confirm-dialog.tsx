@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-} from '@sqlpro/ui/alert-dialog';
+} from '@quarry/ui/alert-dialog';
 import { AlertTriangle } from 'lucide-react';
 
 interface ConfirmDialogProps {

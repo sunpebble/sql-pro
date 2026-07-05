@@ -1,4 +1,4 @@
-// AI Agent Types for SQL Pro
+// AI Agent Types for Quarry
 // Unified Vercel AI SDK based global AI Agent
 
 import type { UIMessage } from 'ai';

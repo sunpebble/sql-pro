@@ -1,18 +1,18 @@
 import type { BackupFormat, BackupMetadata } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Switch } from '@sqlpro/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
-import { Textarea } from '@sqlpro/ui/textarea';
+} from '@quarry/ui/select';
+import { Switch } from '@quarry/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
+import { Textarea } from '@quarry/ui/textarea';
 import {
   Archive,
   Calendar,
@@ -36,10 +36,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { useConnectionStore } from '@/stores/connection-store';
 
 // Utility functions
+const FILE_EXTENSION_RE = /\.[^/.]+$/;
+
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -90,7 +92,7 @@ export function BackupRestoreDialog({
 
   const loadBackups = useCallback(async () => {
     try {
-      const result = await sqlPro.backup.list({});
+      const result = await quarry.backup.list({});
       if (result.success && result.backups) {
         setBackups(result.backups);
       }
@@ -113,8 +115,8 @@ export function BackupRestoreDialog({
           connection.path?.split('/').pop() ||
           connection.filename ||
           'database';
-         
-        setBackupName(filename.replace(/\.[^/.]+$/, ''));
+
+        setBackupName(filename.replace(FILE_EXTENSION_RE, ''));
       }
     } else if (!open) {
       // Reset session tracking when dialog closes
@@ -130,7 +132,7 @@ export function BackupRestoreDialog({
 
     setIsLoading(true);
     try {
-      const result = await sqlPro.backup.create({
+      const result = await quarry.backup.create({
         connectionId: activeConnectionId,
         name: backupName,
         format: backupFormat,
@@ -181,7 +183,7 @@ export function BackupRestoreDialog({
 
     setIsLoading(true);
     try {
-      const result = await sqlPro.backup.restore({
+      const result = await quarry.backup.restore({
         backupPath: selectedBackup.filePath,
         connectionId: activeConnectionId,
         dropExisting,
@@ -242,7 +244,7 @@ export function BackupRestoreDialog({
   const handleDeleteBackup = useCallback(
     async (backup: BackupMetadata) => {
       try {
-        const result = await sqlPro.backup.delete({ backupId: backup.id });
+        const result = await quarry.backup.delete({ backupId: backup.id });
         if (result.success) {
           toast.success(t('backup.deleted', 'Backup deleted'));
           loadBackups();

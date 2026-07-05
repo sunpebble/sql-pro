@@ -1,16 +1,16 @@
 {
-  "name": "@sqlpro/plugin-sdk",
+  "name": "@quarry/plugin-sdk",
   "type": "module",
   "version": "1.0.0",
-  "description": "SQL Pro Plugin SDK - TypeScript type definitions and templates for developing SQL Pro plugins",
+  "description": "Quarry Plugin SDK - TypeScript type definitions and templates for developing Quarry plugins",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kunish-homelab/sql-pro.git",
+    "url": "https://github.com/sunpebble/quarry.git",
     "directory": "packages/plugin-sdk"
   },
   "keywords": [
-    "sql-pro",
+    "quarry",
     "plugin",
     "sdk",
     "typescript",

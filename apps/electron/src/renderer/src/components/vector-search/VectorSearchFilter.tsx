@@ -1,14 +1,14 @@
 import type { QdrantFilterCondition, QdrantSearchFilter } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@quarry/ui/popover';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
+} from '@quarry/ui/select';
 import { Filter, Plus, Trash2, X } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';

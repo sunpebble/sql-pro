@@ -1,6 +1,6 @@
 import type { SqlLogEntry, SqlLogLevel } from '@/types/sql-log';
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 const MAX_LOGS = 500;
 
@@ -42,7 +42,7 @@ export const useSqlLogStore = create<SqlLogState>((set, get) => ({
   loadLogs: async (limit = 500) => {
     set({ isLoading: true });
     try {
-      const response = await sqlPro.sqlLog.get({ limit });
+      const response = await quarry.sqlLog.get({ limit });
       if (response.success && response.logs) {
         set({ logs: response.logs as SqlLogEntry[], isLoading: false });
       } else {
@@ -64,7 +64,7 @@ export const useSqlLogStore = create<SqlLogState>((set, get) => ({
 
   clearLogs: async (connectionId?: string) => {
     try {
-      await sqlPro.sqlLog.clear({ connectionId });
+      await quarry.sqlLog.clear({ connectionId });
       if (connectionId) {
         set((state) => ({
           logs: state.logs.filter((log) => log.connectionId !== connectionId),
@@ -123,7 +123,7 @@ let unsubscribe: (() => void) | null = null;
 export function initSqlLogListener(): void {
   if (unsubscribe) return;
 
-  unsubscribe = sqlPro.sqlLog.onEntry((entry: unknown) => {
+  unsubscribe = quarry.sqlLog.onEntry((entry: unknown) => {
     useSqlLogStore.getState().addLog(entry as SqlLogEntry);
   });
 }

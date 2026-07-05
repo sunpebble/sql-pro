@@ -1,8 +1,8 @@
 {
-  "name": "@sqlpro/ipc-contracts",
+  "name": "@quarry/ipc-contracts",
   "type": "module",
   "version": "0.0.1",
-  "description": "Type-safe IPC channel contracts for SQL Pro",
+  "description": "Type-safe IPC channel contracts for Quarry",
   "license": "MIT",
   "exports": {
     ".": {

@@ -9,7 +9,7 @@ import { getCurrentLanguage } from '../../core/menu';
 import { createChatModel } from './model';
 import { createAgentTools } from './tools';
 
-const SYSTEM_PROMPT_EN = `You are SQL Pro AI Assistant, an expert database assistant integrated into SQL Pro application.
+const SYSTEM_PROMPT_EN = `You are Quarry AI Assistant, an expert database assistant integrated into Quarry application.
 
 Your capabilities:
 - Execute SQL queries on the connected database
@@ -37,7 +37,7 @@ IMPORTANT: After using any tool, you MUST provide a natural language response su
 
 Be concise but thorough. Format SQL code in markdown code blocks.`;
 
-const SYSTEM_PROMPT_ZH = `你是 SQL Pro AI 助手，一个集成在 SQL Pro 应用中的专业数据库助手。
+const SYSTEM_PROMPT_ZH = `你是 Quarry AI 助手，一个集成在 Quarry 应用中的专业数据库助手。
 
 你的能力：
 - 在连接的数据库上执行 SQL 查询

@@ -1,6 +1,6 @@
 ## Context
 
-Monaco 编辑器是 SQL Pro 的核心组件，当前已有自定义主题 `sql-pro-light` 和 `sql-pro-dark`，使用橙色作为主色调。但以下 UI 元素尚未完全符合 Neobrutalism 设计规范：
+Monaco 编辑器是 Quarry 的核心组件，当前已有自定义主题 `quarry-light` 和 `quarry-dark`，使用橙色作为主色调。但以下 UI 元素尚未完全符合 Neobrutalism 设计规范：
 
 - 滚动条使用默认的圆角和渐变效果
 - 建议弹窗缺少 2px 边框和偏移阴影

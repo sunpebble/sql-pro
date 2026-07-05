@@ -4,8 +4,8 @@
  * Compact, informative design with visual polish
  */
 
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import {
   Calendar,
   Check,
@@ -94,7 +94,7 @@ export function ProStatusCard({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold">SQL Pro</h3>
+              <h3 className="font-semibold">Quarry</h3>
               <Badge
                 variant={isActive ? 'default' : 'destructive'}
                 className={cn(

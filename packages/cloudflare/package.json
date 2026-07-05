@@ -1,18 +1,18 @@
 {
-  "name": "@sqlpro/cloudflare",
+  "name": "@quarry/cloudflare",
   "type": "module",
   "version": "1.0.0",
   "private": true,
+  "description": "Quarry Website + License API (Cloudflare Workers + D1)",
   "license": "MIT",
-  "description": "SQL Pro Website + License API (Cloudflare Workers + D1)",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "deploy:production": "wrangler deploy --env production",
     "typecheck": "tsc --noEmit",
-    "db:create": "wrangler d1 create sqlpro-db",
-    "db:migrate": "wrangler d1 migrations apply sqlpro-db --local",
-    "db:migrate:prod": "wrangler d1 migrations apply sqlpro-db --remote"
+    "db:create": "wrangler d1 create quarry-db",
+    "db:migrate": "wrangler d1 migrations apply quarry-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply quarry-db --remote"
   },
   "dependencies": {
     "hono": "catalog:",

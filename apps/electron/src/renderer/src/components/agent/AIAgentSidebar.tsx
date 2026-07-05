@@ -1,7 +1,7 @@
 import type { UIMessage } from 'ai';
-import { Button } from '@sqlpro/ui/button';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Button } from '@quarry/ui/button';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   AlertCircle,
   Bot,
@@ -373,7 +373,7 @@ export function AIAgentSidebar({
               className="font-semibold tracking-tight"
               style={{ fontSize: 'var(--font-ui-size, 13px)' }}
             >
-              {t('agent.title', 'SQL Pro Agent')}
+              {t('agent.title', 'Quarry Agent')}
             </span>
             {(databaseName || tableName) && (
               <span className="text-muted-foreground text-2xs flex items-center gap-1">

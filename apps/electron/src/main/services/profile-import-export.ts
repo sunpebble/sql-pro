@@ -258,7 +258,7 @@ export function parseImportData(jsonString: string): ProfileExportData {
     parsed = JSON.parse(jsonString);
   } catch (error) {
     throw new Error(
-      `Invalid JSON format: ${error instanceof Error ? error.message : String(error)}. Please ensure the file is a valid SQL Pro export file.`
+      `Invalid JSON format: ${error instanceof Error ? error.message : String(error)}. Please ensure the file is a valid Quarry export file.`
     );
   }
 

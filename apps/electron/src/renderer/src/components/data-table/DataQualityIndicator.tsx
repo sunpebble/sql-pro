@@ -1,5 +1,5 @@
 import type { ColumnSchema } from '@/types/database';
-import { Badge } from '@sqlpro/ui/badge';
+import { Badge } from '@quarry/ui/badge';
 import {
   Popover,
   PopoverContent,
@@ -7,9 +7,9 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from '@sqlpro/ui/popover';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Separator } from '@sqlpro/ui/separator';
+} from '@quarry/ui/popover';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Separator } from '@quarry/ui/separator';
 import { AlertCircle, CheckCircle, Info, XCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -162,6 +162,22 @@ function analyzeDataQuality(
   };
 }
 
+// Icon and badge variant per grade (module-level so React Compiler can prove
+// the rendered component reference is static)
+const GRADE_STYLES: Record<
+  QualityScore['grade'],
+  {
+    icon: typeof CheckCircle;
+    badgeVariant: 'success' | 'info' | 'warning' | 'destructive';
+  }
+> = {
+  A: { icon: CheckCircle, badgeVariant: 'success' },
+  B: { icon: CheckCircle, badgeVariant: 'info' },
+  C: { icon: Info, badgeVariant: 'warning' },
+  D: { icon: AlertCircle, badgeVariant: 'warning' },
+  F: { icon: XCircle, badgeVariant: 'destructive' },
+};
+
 /**
  * A compact data quality indicator that shows overall health
  */
@@ -173,22 +189,7 @@ export const DataQualityIndicator = memo(
       [columns, data]
     );
 
-    // Determine icon and badge variant based on grade
-    const { icon: Icon, badgeVariant } = useMemo(() => {
-      switch (quality.grade) {
-        case 'A':
-          return { icon: CheckCircle, badgeVariant: 'success' as const };
-        case 'B':
-          return { icon: CheckCircle, badgeVariant: 'info' as const };
-        case 'C':
-          return { icon: Info, badgeVariant: 'warning' as const };
-        case 'D':
-          return { icon: AlertCircle, badgeVariant: 'warning' as const };
-        case 'F':
-        default:
-          return { icon: XCircle, badgeVariant: 'destructive' as const };
-      }
-    }, [quality.grade]);
+    const { icon: Icon, badgeVariant } = GRADE_STYLES[quality.grade];
 
     return (
       <Popover>

@@ -6,18 +6,18 @@ import type {
   AgentExecutionSettings,
   AgentSettings,
 } from '@shared/types/agent';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Switch } from '@sqlpro/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+} from '@quarry/ui/select';
+import { Switch } from '@quarry/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import { Eye, EyeOff } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

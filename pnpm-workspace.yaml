@@ -233,3 +233,5 @@ allowBuilds:
   sharp: true
   ssh2: true
   workerd: true
+
+minimumReleaseAge: 0

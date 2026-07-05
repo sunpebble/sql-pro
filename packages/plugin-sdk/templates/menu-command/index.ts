@@ -1,5 +1,5 @@
 /**
- * Menu Command Plugin for SQL Pro
+ * Menu Command Plugin for Quarry
  *
  * This example plugin demonstrates advanced menu and command functionality:
  *
@@ -16,7 +16,7 @@
  * @packageDocumentation
  */
 
-import type { PluginContext, PluginModule } from '@sqlpro/plugin-sdk';
+import type { PluginContext, PluginModule } from '@quarry/plugin-sdk';
 
 // ============================================================================
 // Plugin State
@@ -320,7 +320,7 @@ export const activate: PluginModule['activate'] = async (
       const pluginInfo = api.metadata.getPluginInfo();
 
       api.ui.showNotification({
-        message: `SQL Pro v${appInfo.version}\nPlatform: ${appInfo.platform} (${appInfo.arch})\nDev Mode: ${appInfo.isDev ? 'Yes' : 'No'}\n\nPlugin: ${pluginInfo.name} v${pluginInfo.version}`,
+        message: `Quarry v${appInfo.version}\nPlatform: ${appInfo.platform} (${appInfo.arch})\nDev Mode: ${appInfo.isDev ? 'Yes' : 'No'}\n\nPlugin: ${pluginInfo.name} v${pluginInfo.version}`,
         type: 'info',
         duration: 6000,
       });
@@ -357,7 +357,7 @@ export const activate: PluginModule['activate'] = async (
     handler: () => {
       api.ui.showNotification({
         message:
-          'Documentation: https://github.com/sqlpro/sqlpro-plugins\n\nIn a real plugin, this would open the browser.',
+          'Documentation: https://github.com/quarry/quarry-plugins\n\nIn a real plugin, this would open the browser.',
         type: 'info',
         duration: 5000,
       });

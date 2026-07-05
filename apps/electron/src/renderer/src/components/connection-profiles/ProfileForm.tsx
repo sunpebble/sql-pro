@@ -1,18 +1,18 @@
 import type { ConnectionProfile, ProfileFolder } from '@shared/types.ts';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Textarea } from '@sqlpro/ui/textarea';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/select';
+import { Textarea } from '@quarry/ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import { Info } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 export interface ProfileFormData {
@@ -79,7 +79,7 @@ export function ProfileForm({
   // Check if password storage is available
   useEffect(() => {
     if (isEncrypted) {
-      sqlPro.password.isAvailable().then((result: { available: boolean }) => {
+      quarry.password.isAvailable().then((result: { available: boolean }) => {
         setIsStorageAvailable(result.available);
         // Default to remember if storage is available and this is a new profile
         if (mode === 'new' && result.available && !initialValues) {

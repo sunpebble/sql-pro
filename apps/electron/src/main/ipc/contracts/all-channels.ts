@@ -179,7 +179,7 @@ import type {
   WriteFileRequest,
   WriteFileResponse,
 } from '@shared/types';
-import { channel, streamChannel } from '@sqlpro/ipc-contracts';
+import { channel, streamChannel } from '@quarry/ipc-contracts';
 
 /**
  * Database IPC Channels - Full type definitions

@@ -1,7 +1,7 @@
 import type { DragEvent } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { useConnectionStore } from '@/stores/connection-store';
 
 // Supported database file extensions
@@ -33,7 +33,7 @@ export function useDragAndDrop() {
   const connectWithPassword = useCallback(
     async (filePath: string, password: string) => {
       setIsConnecting(true);
-      const result = await sqlPro.db.open({ path: filePath, password });
+      const result = await quarry.db.open({ path: filePath, password });
       setIsConnecting(false);
 
       if (result.success && result.connection) {
@@ -48,7 +48,7 @@ export function useDragAndDrop() {
 
         // Load schema
         setIsLoadingSchema(true);
-        const schemaResult = await sqlPro.db.getSchema({
+        const schemaResult = await quarry.db.getSchema({
           connectionId: result.connection.id,
         });
 
@@ -90,7 +90,7 @@ export function useDragAndDrop() {
         }
 
         setIsConnecting(true);
-        const probeResult = await sqlPro.db.open({ path: filePath });
+        const probeResult = await quarry.db.open({ path: filePath });
         setIsConnecting(false);
 
         const isEncrypted = probeResult.needsPassword === true;
@@ -108,7 +108,7 @@ export function useDragAndDrop() {
 
           // Load schema
           setIsLoadingSchema(true);
-          const schemaResult = await sqlPro.db.getSchema({
+          const schemaResult = await quarry.db.getSchema({
             connectionId: probeResult.connection.id,
           });
 
@@ -125,7 +125,7 @@ export function useDragAndDrop() {
           navigate({ to: '/database' });
         } else if (isEncrypted) {
           // For encrypted databases, try saved password first
-          const savedPasswordResult = await sqlPro.password.get({
+          const savedPasswordResult = await quarry.password.get({
             dbPath: filePath,
           });
 
@@ -221,7 +221,7 @@ export function useDragAndDrop() {
         // Get the file path using Electron's webUtils
         const file = files[0];
         // Access the file path via preload API
-        const filePath = window.sqlPro.file.getPathForFile(file);
+        const filePath = window.quarry.file.getPathForFile(file);
 
         if (filePath && isDatabaseFile(filePath)) {
           openDatabaseFile(filePath);

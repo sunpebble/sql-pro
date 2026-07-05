@@ -1,9 +1,9 @@
 {
-  "id": "com.sqlpro.example.query-hook",
+  "id": "com.quarry.example.query-hook",
   "name": "Query Hook Logger",
   "version": "1.0.0",
   "description": "An example plugin demonstrating the Query Lifecycle API. Logs all queries, results, and errors with configurable options. Perfect for debugging, auditing, and learning about query hooks.",
-  "author": "SQL Pro Team",
+  "author": "Quarry Team",
   "main": "index.js",
   "license": "MIT",
   "keywords": [
@@ -24,9 +24,9 @@
     "storage:write"
   ],
   "engines": {
-    "sqlpro": "^1.6.0"
+    "quarry": "^1.6.0"
   },
   "apiVersion": "1.0.0",
-  "repository": "https://github.com/sqlpro/sqlpro-plugins",
-  "homepage": "https://github.com/sqlpro/sqlpro-plugins/tree/main/examples/query-hook"
+  "repository": "https://github.com/quarry/quarry-plugins",
+  "homepage": "https://github.com/quarry/quarry-plugins/tree/main/examples/query-hook"
 }

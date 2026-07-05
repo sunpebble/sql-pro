@@ -65,7 +65,7 @@ app.route('/api/auth', authRoutes);
 // ============================================
 // Billing Portal (session-based authentication)
 // ============================================
-const SESSION_COOKIE = 'sqlpro_session';
+const SESSION_COOKIE = 'quarry_session';
 
 app.post('/api/billing/portal', async (c) => {
   try {
@@ -136,7 +136,7 @@ app.get('/api/health', async (c) => {
 
   return c.json({
     status: 'ok',
-    service: 'sqlpro',
+    service: 'quarry',
     environment: c.env.ENVIRONMENT,
     database: dbStatus,
     timestamp: new Date().toISOString(),

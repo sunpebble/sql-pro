@@ -1,5 +1,5 @@
 {
-  "extends": "@sqlpro/tsconfig/node.json",
+  "extends": "@quarry/tsconfig/node.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/main/*"],
@@ -10,8 +10,8 @@
       "@observability/*": ["./src/main/observability/*"],
       "@features/*": ["./src/main/features/*"],
       "@ipc/*": ["./src/main/ipc/*"],
-      "@sqlpro/ipc-contracts": ["../../packages/ipc-contracts/src/index.ts"],
-      "@sqlpro/ipc-contracts/*": ["../../packages/ipc-contracts/src/*"]
+      "@quarry/ipc-contracts": ["../../packages/ipc-contracts/src/index.ts"],
+      "@quarry/ipc-contracts/*": ["../../packages/ipc-contracts/src/*"]
     }
   },
   "include": [

@@ -1,6 +1,6 @@
 import type { SettingsSection } from './settings/SettingsNav';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {

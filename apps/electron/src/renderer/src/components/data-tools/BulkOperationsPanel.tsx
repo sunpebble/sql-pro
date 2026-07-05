@@ -1,16 +1,16 @@
-import { Badge } from '@sqlpro/ui/badge';
-import { Button, buttonVariants } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { Progress } from '@sqlpro/ui/progress';
+import { Badge } from '@quarry/ui/badge';
+import { Button, buttonVariants } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { Progress } from '@quarry/ui/progress';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+} from '@quarry/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import {
   ArrowDownToLine,
   ArrowUpFromLine,

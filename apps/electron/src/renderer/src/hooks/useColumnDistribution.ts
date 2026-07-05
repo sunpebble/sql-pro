@@ -3,7 +3,7 @@ import type {
   GetColumnDistributionResponse,
 } from '@shared/types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 export interface UseColumnDistributionOptions {
   connectionId: string | null;
@@ -58,7 +58,7 @@ export function useColumnDistribution(
         };
       }
 
-      return sqlPro.db.getColumnDistribution({
+      return quarry.db.getColumnDistribution({
         connectionId,
         schema,
         table,

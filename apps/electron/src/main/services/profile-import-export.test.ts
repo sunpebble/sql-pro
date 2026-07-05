@@ -4,6 +4,9 @@ import type { StoredConnectionProfile, StoredProfileFolder } from './store';
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+const NEWLINE_WITH_INDENT_RE = /\n\s+/;
+const INVALID_JSON_FORMAT_RE = /Invalid JSON format/;
+
 // Mock electron modules
 const mockStorePath = '/tmp/test-store.json';
 let mockStoreData: Record<string, unknown> = {};
@@ -213,7 +216,7 @@ describe('profile Import/Export Service', () => {
       const serialized = serializeExportData(exportData, false);
 
       // Compact JSON should not have extra whitespace
-      expect(serialized).not.toMatch(/\n\s+/);
+      expect(serialized).not.toMatch(NEWLINE_WITH_INDENT_RE);
     });
   });
 
@@ -245,7 +248,9 @@ describe('profile Import/Export Service', () => {
     it('should reject invalid JSON syntax', () => {
       const invalidJson = '{ invalid json }';
 
-      expect(() => parseImportData(invalidJson)).toThrow(/Invalid JSON format/);
+      expect(() => parseImportData(invalidJson)).toThrow(
+        INVALID_JSON_FORMAT_RE
+      );
     });
 
     it('should reject missing required fields', () => {

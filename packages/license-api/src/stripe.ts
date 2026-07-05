@@ -5,7 +5,7 @@ export function getStripe(env: Env): Stripe {
   return new Stripe(env.STRIPE_SECRET_KEY);
 }
 
-// Stripe Price IDs for SQL Pro subscriptions
+// Stripe Price IDs for Quarry subscriptions
 export const PRICE_IDS = {
   monthly: 'price_1SoR4VCoPJQxyAtwW0vaj2T9',
   yearly: 'price_1SoR4rCoPJQxyAtwv4xKqnCQ',

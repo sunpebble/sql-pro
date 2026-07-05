@@ -1,12 +1,12 @@
+import { Alert, AlertDescription } from '@quarry/ui/alert';
+import { Button } from '@quarry/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Alert, AlertDescription } from '@sqlpro/ui/alert';
-import { Button } from '@sqlpro/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
 import { AlertCircle, Eye, EyeOff, Info, KeyRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 interface ChangePasswordDialogProps {
@@ -45,8 +45,8 @@ export function ChangePasswordDialog({
   useEffect(() => {
     if (open && dbPath) {
       Promise.all([
-        sqlPro.password.isAvailable(),
-        sqlPro.password.has({ dbPath }),
+        quarry.password.isAvailable(),
+        quarry.password.has({ dbPath }),
       ]).then(([availableResult, hasResult]) => {
         setIsStorageAvailable(availableResult.available);
         setHasSavedPassword(hasResult.hasPassword);
@@ -75,7 +75,7 @@ export function ChangePasswordDialog({
     setIsLoading(true);
 
     try {
-      const result = await sqlPro.db.changePassword({
+      const result = await quarry.db.changePassword({
         connectionId,
         newPassword,
       });
@@ -88,10 +88,10 @@ export function ChangePasswordDialog({
           (rememberPassword || hasSavedPassword) && isStorageAvailable;
 
         if (newPassword && shouldUpdatePassword) {
-          await sqlPro.password.save({ dbPath, password: newPassword });
+          await quarry.password.save({ dbPath, password: newPassword });
         } else if (!newPassword) {
           // Remove stored password if encryption is removed
-          await sqlPro.password.remove({ dbPath });
+          await quarry.password.remove({ dbPath });
         }
 
         onSuccess();

@@ -1,12 +1,12 @@
 import type { EdgeProps } from '@xyflow/react';
 import type { JoinType, QueryBuilderEdgeData } from '@/types/query-builder';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@sqlpro/ui/dropdown-menu';
+} from '@quarry/ui/dropdown-menu';
 import { BaseEdge, EdgeLabelRenderer } from '@xyflow/react';
 import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';

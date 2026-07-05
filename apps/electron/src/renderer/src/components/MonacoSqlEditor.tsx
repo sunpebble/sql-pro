@@ -134,8 +134,7 @@ export function MonacoSqlEditor({
   const [isResizing, setIsResizing] = useState(false);
 
   // 使用 store 中的 resolvedTheme (US2: Theme-Aware Editor)
-  const editorTheme =
-    resolvedTheme === 'dark' ? 'sql-pro-dark' : 'sql-pro-light';
+  const editorTheme = resolvedTheme === 'dark' ? 'quarry-dark' : 'quarry-light';
 
   // Sync Monaco theme when theme changes (US2: Theme-Aware Editor)
   // Monaco Editor doesn't automatically respond to theme prop changes after mount,
@@ -194,8 +193,8 @@ export function MonacoSqlEditor({
       // 因为 useEffect 在 mount 时 monacoRef 还是 null，需要在这里设置
       const currentTheme =
         useThemeStore.getState().resolvedTheme === 'dark'
-          ? 'sql-pro-dark'
-          : 'sql-pro-light';
+          ? 'quarry-dark'
+          : 'quarry-light';
       monacoInstance.editor.setTheme(currentTheme);
 
       // US4: Register Cmd/Ctrl+Enter shortcut for query execution

@@ -3,29 +3,29 @@ import type {
   QueryTemplate,
   TemplateCategory,
 } from '@/stores/query-templates-store';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
 import {
   ResizableHandle,
   ResizablePanelGroup,
   ResizablePanel as ResizablePanelUI,
-} from '@sqlpro/ui/resizable';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+} from '@quarry/ui/resizable';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+} from '@quarry/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import {
   AlertCircle,
   CheckSquare,
@@ -63,7 +63,7 @@ import {
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { ShortcutKbd } from '@/components/ui/kbd';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { generateSuggestions } from '@/lib/query-plan-analyzer';
 import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
@@ -377,7 +377,7 @@ export function QueryEditor() {
       updateTabError(activeConnectionId, activeTabId, null);
 
       try {
-        const result = await sqlPro.db.executeQuery({
+        const result = await quarry.db.executeQuery({
           connectionId: connection.id,
           query: queryToRun,
         });
@@ -560,7 +560,7 @@ export function QueryEditor() {
         throw new Error(t('queryEditor.noDbConnection'));
       }
 
-      const result = await sqlPro.db.analyzeQueryPlan({
+      const result = await quarry.db.analyzeQueryPlan({
         connectionId: connection.id,
         query: query.trim(),
       });

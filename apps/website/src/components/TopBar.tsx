@@ -109,7 +109,7 @@ export default function TopBar() {
             height="28"
             className="rounded-base border-border border"
           />
-          <span className="text-base font-bold tracking-tight">SQL Pro</span>
+          <span className="text-base font-bold tracking-tight">Quarry</span>
         </a>
 
         {/* Desktop nav links */}

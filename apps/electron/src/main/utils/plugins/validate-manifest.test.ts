@@ -40,7 +40,7 @@ describe('validateManifest', () => {
         author: 'Test Author',
         main: 'index.js',
         permissions: ['query:read', 'ui:command'] as const,
-        engines: { sqlpro: '^1.6.0' },
+        engines: { quarry: '^1.6.0' },
         homepage: 'https://example.com',
         repository: 'https://github.com/example/plugin',
         license: 'MIT',

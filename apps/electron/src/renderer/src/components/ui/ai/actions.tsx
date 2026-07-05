@@ -1,8 +1,8 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { Button } from '@sqlpro/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Button } from '@quarry/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import { memo } from 'react';
 import { cn } from '@/lib/utils';
 

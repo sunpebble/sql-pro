@@ -1,5 +1,5 @@
 {
-  "extends": "@sqlpro/tsconfig/cloudflare.json",
+  "extends": "@quarry/tsconfig/cloudflare.json",
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -88,7 +88,7 @@ let _store: Store<StoreSchema> | null = null;
 function getStore(): Store<StoreSchema> {
   if (!_store) {
     _store = new Store<StoreSchema>({
-      name: 'sql-pro-data',
+      name: 'quarry-data',
       defaults: {
         preferences: DEFAULT_PREFERENCES,
         recentConnections: [],

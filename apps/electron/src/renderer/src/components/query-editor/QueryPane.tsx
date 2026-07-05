@@ -1,11 +1,11 @@
 import type { SplitPane } from '@/stores/query-tabs-store';
 import type { DatabaseSchema } from '@/types/database';
 // 直接导入优化 tree-shaking (vercel-react-best-practices: bundle-barrel-imports)
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import { AlertCircle, Clock, Loader2, Play, X, Zap } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { generateSuggestions } from '@/lib/query-plan-analyzer';
 import { cn } from '@/lib/utils';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
@@ -70,7 +70,7 @@ export const QueryPane = memo(
       updateTabError(connectionId, tab.id, null);
 
       try {
-        const result = await sqlPro.db.executeQuery({
+        const result = await quarry.db.executeQuery({
           connectionId,
           query: tab.query.trim(),
         });
@@ -113,7 +113,7 @@ export const QueryPane = memo(
 
     const handleAnalyze = useCallback(
       async (query: string) => {
-        const result = await sqlPro.db.analyzeQueryPlan({
+        const result = await quarry.db.analyzeQueryPlan({
           connectionId,
           query: query.trim(),
         });

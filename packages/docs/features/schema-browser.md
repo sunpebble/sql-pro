@@ -5,7 +5,7 @@ The Schema Browser provides a comprehensive view of your database structure, all
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/database-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/database.png">
-  <img alt="SQL Pro Schema Browser showing database tables in the sidebar and schema details panel" src="/screenshots/database-dark.png">
+  <img alt="Quarry Schema Browser showing database tables in the sidebar and schema details panel" src="/screenshots/database-dark.png">
 </picture>
 
 ## Key Features
@@ -22,7 +22,7 @@ The Schema Browser provides a comprehensive view of your database structure, all
 
 ## Sidebar Navigation
 
-The sidebar on the left side of SQL Pro displays your database schema in a tree structure.
+The sidebar on the left side of Quarry displays your database schema in a tree structure.
 
 ### Schema Tree Structure
 
@@ -167,7 +167,7 @@ By default, all sections start expanded to give you a complete overview.
 
 ## Multi-Schema Databases
 
-SQL Pro supports databases with multiple schemas (common when using attached databases).
+Quarry supports databases with multiple schemas (common when using attached databases).
 
 ### Schema Headers
 

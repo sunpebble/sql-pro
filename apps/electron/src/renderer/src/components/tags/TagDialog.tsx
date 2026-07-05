@@ -1,9 +1,9 @@
 import type { TagDefinition } from '@shared/types/tag';
 
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
 import { DEFAULT_TAG_COLOR } from '@shared/types/tag';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

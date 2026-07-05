@@ -7,7 +7,7 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "component": "sql-pro-monorepo",
+      "component": "quarry-monorepo",
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
@@ -15,7 +15,7 @@
     },
     "apps/electron": {
       "release-type": "node",
-      "component": "sqlpro-app",
+      "component": "quarry-app",
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
@@ -23,7 +23,7 @@
     },
     "apps/website": {
       "release-type": "node",
-      "component": "sqlpro-website",
+      "component": "quarry-website",
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,

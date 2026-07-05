@@ -9,9 +9,9 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-} from '@sqlpro/ui/alert-dialog';
-import { Button } from '@sqlpro/ui/button';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+} from '@quarry/ui/alert-dialog';
+import { Button } from '@quarry/ui/button';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import { AlertTriangle, Edit3, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

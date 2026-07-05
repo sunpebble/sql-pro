@@ -60,7 +60,7 @@ class SimpleStore {
     if (!this.filePath) {
       this.filePath = path.join(
         app.getPath('userData'),
-        'sql-pro-ssh-credentials.json'
+        'quarry-ssh-credentials.json'
       );
     }
     return this.filePath;

@@ -7,7 +7,7 @@
 
 // ============ Project URLs ============
 
-export const PROJECT_REPO_URL = 'https://github.com/kunish-homelab/sql-pro';
+export const PROJECT_REPO_URL = 'https://github.com/sunpebble/quarry';
 export const PROJECT_ISSUES_URL = `${PROJECT_REPO_URL}/issues`;
 
 // ============ AI Defaults ============

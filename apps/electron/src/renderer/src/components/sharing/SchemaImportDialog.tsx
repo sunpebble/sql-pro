@@ -1,9 +1,9 @@
 import type { ImportSchemaResponse, ShareableSchema } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Checkbox } from '@sqlpro/ui/checkbox';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Textarea } from '@sqlpro/ui/textarea';
+import { Button } from '@quarry/ui/button';
+import { Checkbox } from '@quarry/ui/checkbox';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Textarea } from '@quarry/ui/textarea';
 import {
   AlertCircle,
   AlertTriangle,
@@ -23,7 +23,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
+
+const CREATE_TABLE_RE = /^\s*CREATE\s+TABLE/i;
+const CREATE_INDEX_RE = /^\s*CREATE\s+(?:UNIQUE\s+)?INDEX/i;
+const CREATE_TRIGGER_RE = /^\s*CREATE\s+TRIGGER/i;
 
 export interface SchemaImportDialogProps {
   /** Whether the dialog is open */
@@ -56,7 +60,7 @@ export function SchemaImportDialog({
 
     try {
       // File path is selected via dialog in IPC handler
-      const result = await sqlPro.sharing.importSchema({
+      const result = await quarry.sharing.importSchema({
         filePath: '',
       });
 
@@ -126,10 +130,9 @@ export function SchemaImportDialog({
       let createIndexCount = 0;
       let createTriggerCount = 0;
       for (const stmt of schema.sqlStatements) {
-        if (/^\s*CREATE\s+TABLE/i.test(stmt)) createTableCount++;
-        else if (/^\s*CREATE\s+(?:UNIQUE\s+)?INDEX/i.test(stmt))
-          createIndexCount++;
-        else if (/^\s*CREATE\s+TRIGGER/i.test(stmt)) createTriggerCount++;
+        if (CREATE_TABLE_RE.test(stmt)) createTableCount++;
+        else if (CREATE_INDEX_RE.test(stmt)) createIndexCount++;
+        else if (CREATE_TRIGGER_RE.test(stmt)) createTriggerCount++;
       }
 
       return {

@@ -7,8 +7,8 @@ import type {
   TableDiff,
   TriggerDiff,
 } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@sqlpro/ui/card';
+import { Button } from '@quarry/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@quarry/ui/card';
 import {
   ChevronDown,
   ChevronUp,

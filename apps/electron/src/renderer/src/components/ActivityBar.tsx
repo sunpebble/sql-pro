@@ -1,5 +1,5 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   BarChart3,
   Code,

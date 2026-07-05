@@ -1,6 +1,6 @@
 # Keyboard Shortcuts
 
-SQL Pro is designed for keyboard-driven productivity. This reference documents all available keyboard shortcuts organized by category.
+Quarry is designed for keyboard-driven productivity. This reference documents all available keyboard shortcuts organized by category.
 
 ## Quick Reference
 
@@ -77,7 +77,7 @@ Shortcuts available when editing SQL queries.
 | Select all | <kbd>Cmd</kbd> + <kbd>A</kbd>                    | <kbd>Ctrl</kbd> + <kbd>A</kbd> |
 
 ::: info Monaco Editor
-SQL Pro uses the Monaco editor (the same editor that powers VS Code). Most standard Monaco keyboard shortcuts work as expected.
+Quarry uses the Monaco editor (the same editor that powers VS Code). Most standard Monaco keyboard shortcuts work as expected.
 :::
 
 ## Data Grid
@@ -135,7 +135,7 @@ Global action shortcuts available throughout the application.
 
 ## Vim Mode
 
-SQL Pro supports optional Vim-style keybindings for power users. There are two separate Vim modes:
+Quarry supports optional Vim-style keybindings for power users. There are two separate Vim modes:
 
 1. **Editor Vim Mode** - Vim keybindings in the SQL editor
 2. **App Vim Mode** - Vim-style navigation throughout the app (sidebar, data grid)
@@ -240,7 +240,7 @@ The following table lists all commands available in the Command Palette, organiz
 
 ## Customizing Shortcuts
 
-SQL Pro now supports fully customizable keyboard shortcuts. You can change any shortcut to match your preferred workflow.
+Quarry now supports fully customizable keyboard shortcuts. You can change any shortcut to match your preferred workflow.
 
 ### Accessing Shortcut Settings
 
@@ -250,11 +250,11 @@ SQL Pro now supports fully customizable keyboard shortcuts. You can change any s
 
 ### Presets
 
-SQL Pro includes several built-in presets to help you get started quickly:
+Quarry includes several built-in presets to help you get started quickly:
 
 | Preset           | Description                                   |
 | ---------------- | --------------------------------------------- |
-| **SQL Pro**      | Default shortcuts optimized for database work |
+| **Quarry**       | Default shortcuts optimized for database work |
 | **VS Code**      | Visual Studio Code-style shortcuts            |
 | **Sublime Text** | Sublime Text-style shortcuts                  |
 | **Custom**       | Your personalized shortcut configuration      |
@@ -267,7 +267,7 @@ SQL Pro includes several built-in presets to help you get started quickly:
 
 ### Conflict Detection
 
-SQL Pro automatically detects when two shortcuts use the same key combination. Conflicting shortcuts are highlighted with a warning, allowing you to resolve them.
+Quarry automatically detects when two shortcuts use the same key combination. Conflicting shortcuts are highlighted with a warning, allowing you to resolve them.
 
 ### Import/Export
 
@@ -278,7 +278,7 @@ You can export your custom shortcuts to a JSON file and import them on other mac
 
 ### Reset to Defaults
 
-Click **Reset All** to restore all shortcuts to the SQL Pro defaults.
+Click **Reset All** to restore all shortcuts to the Quarry defaults.
 
 ## Troubleshooting
 
@@ -298,7 +298,7 @@ Some shortcuts may conflict with browser defaults:
 - <kbd>Cmd/Ctrl</kbd> + <kbd>H</kbd> might open browser history in some browsers
 - <kbd>Cmd/Ctrl</kbd> + <kbd>1</kbd>/<kbd>2</kbd> might switch browser tabs
 
-SQL Pro attempts to prevent these defaults when focused, but if you experience conflicts, try using the Command Palette instead.
+Quarry attempts to prevent these defaults when focused, but if you experience conflicts, try using the Command Palette instead.
 
 ## Next Steps
 
@@ -310,7 +310,7 @@ Now that you know the keyboard shortcuts:
 - 🎯 **[Vim Mode](/features/query-editor#vim-mode)** - Advanced keyboard navigation
 
 ::: tip Productivity Tips
-Most features in SQL Pro are optimized for keyboard use. Combine shortcuts with the Command Palette (<kbd>Cmd/Ctrl + K</kbd>) for the fastest workflow.
+Most features in Quarry are optimized for keyboard use. Combine shortcuts with the Command Palette (<kbd>Cmd/Ctrl + K</kbd>) for the fastest workflow.
 :::
 
 ---
@@ -318,5 +318,5 @@ Most features in SQL Pro are optimized for keyboard use. Combine shortcuts with 
 **More Resources:**
 
 - [Getting Started](/getting-started/) - New user guide
-- [Features](/features/) - All SQL Pro features
+- [Features](/features/) - All Quarry features
 - [Troubleshooting](/troubleshooting) - Common issues and solutions

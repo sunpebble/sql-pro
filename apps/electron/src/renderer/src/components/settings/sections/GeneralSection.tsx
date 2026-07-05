@@ -1,6 +1,6 @@
 import type { LanguageCode } from '@/lib/i18n';
-import { Button } from '@sqlpro/ui/button';
-import { Switch } from '@sqlpro/ui/switch';
+import { Button } from '@quarry/ui/button';
+import { Switch } from '@quarry/ui/switch';
 import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage, LANGUAGES } from '@/lib/i18n';

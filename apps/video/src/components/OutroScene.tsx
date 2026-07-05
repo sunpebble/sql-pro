@@ -224,7 +224,7 @@ export const OutroScene = ({ title }: OutroSceneProps) => {
             opacity: platformsOpacity,
           }}
         >
-          sqlpro.dev
+          quarry.dev
         </p>
       </div>
     </AbsoluteFill>

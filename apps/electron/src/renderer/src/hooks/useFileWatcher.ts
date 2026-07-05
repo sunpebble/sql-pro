@@ -2,7 +2,7 @@ import type { FileChangeEvent, GetSchemaResponse } from '@shared/types';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { queryClient } from '@/lib/query-client';
 import { useConnectionStore } from '@/stores/connection-store';
 
@@ -17,12 +17,12 @@ export function useFileWatcher() {
 
   useEffect(() => {
     // Guard: Ensure Electron APIs are available
-    if (typeof window === 'undefined' || !window.sqlPro?.db?.onFileChanged) {
+    if (typeof window === 'undefined' || !window.quarry?.db?.onFileChanged) {
       return;
     }
 
     // In Electron, listen for file change events via IPC
-    const unsubscribe = window.sqlPro.db.onFileChanged(
+    const unsubscribe = window.quarry.db.onFileChanged(
       async (event: FileChangeEvent) => {
         const { connectionId } = event;
 
@@ -61,7 +61,7 @@ export function useFileWatcher() {
           // If this is the active connection, also refresh the schema silently
           // (without setting isLoadingSchema to avoid sidebar flicker)
           if (activeConnectionId === connectionId) {
-            const result: GetSchemaResponse = await sqlPro.db.getSchema({
+            const result: GetSchemaResponse = await quarry.db.getSchema({
               connectionId,
             });
             if (result.success) {

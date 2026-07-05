@@ -1,4 +1,4 @@
-# SQL Pro — 领域语言（Domain Language）
+# Quarry — 领域语言（Domain Language）
 
 核心领域及其职责边界，作为架构讨论的共识术语。
 
@@ -31,4 +31,4 @@
 - **渐进式共存迁移**：新旧目录结构通过 barrel 文件并行存在，逐个领域迁移。每完成一个领域即切换引用路径，最终在所有领域迁移完成后删除旧文件。
 - **通道定义即唯一真实来源**：每个领域的 `channels.ts` 使用 `channel<TIn, TOut>()` 定义类型化通道合约。无全局通道常量文件——通道由其所属领域所有。
 - **IpcHandler 基类**：所有主进程 IPC 处理器必须继承 `IpcHandler`，获得发送者验证、自动性能计时和错误标准化。不再使用 `ipcMain.handle()` 直接注册或 `createHandler()` 包装器。
-- **领域 API 组合模式**：`createSqlProAPI()` 不再是一体式的工厂函数，而是组合各领域 API 工厂函数的结果。领域 API 在依赖注入上进行参数化（`invoke`、`on`、`off`、`getPathForFile`），实现与 Electron IPC、WebSocket 或 mock 三种传输解耦。
+- **领域 API 组合模式**：`createQuarryAPI()` 不再是一体式的工厂函数，而是组合各领域 API 工厂函数的结果。领域 API 在依赖注入上进行参数化（`invoke`、`on`、`off`、`getPathForFile`），实现与 Electron IPC、WebSocket 或 mock 三种传输解耦。

@@ -2,11 +2,11 @@
 /// <reference types="@testing-library/jest-dom" />
 
 import type { ElectronAPI } from '@electron-toolkit/preload';
-import type { SqlProAPI } from '@shared/types/sql-pro-api';
+import type { QuarryAPI } from '@shared/types/quarry-api';
 
 declare global {
   interface Window {
-    sqlPro: SqlProAPI;
+    quarry: QuarryAPI;
     electronAPI: ElectronAPI;
   }
 }

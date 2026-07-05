@@ -1,5 +1,5 @@
 import type { ExecutionPlanNodeData } from '@/lib/query-plan-analyzer';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import { Handle, Position } from '@xyflow/react';
 import {
   AlertTriangle,
@@ -27,10 +27,6 @@ const OPERATION_ICONS: Record<string, React.ElementType> = {
   COMPOUND: Database,
   EXECUTE: Zap,
   default: Database,
-};
-
-const getOperationIcon = (operation: string): React.ElementType => {
-  return OPERATION_ICONS[operation] || OPERATION_ICONS.default;
 };
 
 const WARNING_COLORS: Record<
@@ -75,7 +71,9 @@ function ExecutionPlanNodeComponent({
     indexName,
   } = data;
 
-  const Icon = getOperationIcon(operation);
+  // Direct map lookup keeps the component reference provably static for
+  // React Compiler (a helper call returning a component would be flagged)
+  const Icon = OPERATION_ICONS[operation] || OPERATION_ICONS.default;
   const warningStyle = warningType
     ? WARNING_COLORS[warningType]
     : WARNING_COLORS['full-scan'];

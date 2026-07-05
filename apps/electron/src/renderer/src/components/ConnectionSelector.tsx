@@ -1,6 +1,6 @@
 import type { PendingChangeInfo, RecentConnection } from '@shared/types';
 import type { DatabaseConnection } from '@/types/database';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,8 +8,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@sqlpro/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   Check,
   ChevronDown,
@@ -129,7 +129,7 @@ export function ConnectionSelector({
       primaryKeyColumn: change.primaryKeyColumn,
     }));
 
-    const response = await window.sqlPro.db.applyChanges({
+    const response = await window.quarry.db.applyChanges({
       connectionId: activeConnection.id,
       changes: changeInfos,
     });
@@ -193,7 +193,7 @@ export function ConnectionSelector({
       primaryKeyColumn: change.primaryKeyColumn,
     }));
 
-    const response = await window.sqlPro.db.applyChanges({
+    const response = await window.quarry.db.applyChanges({
       connectionId: connection.id,
       changes: changeInfos,
     });

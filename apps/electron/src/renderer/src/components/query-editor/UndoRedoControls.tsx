@@ -1,11 +1,11 @@
 import type { PendingChange } from '@/types/database';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import { Redo2, Undo2 } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,12 +1,12 @@
 import type { VectorSearchHistoryEntry } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Button } from '@quarry/ui/button';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { Clock, FileText, Hash, Target, Trash2, Type, X } from 'lucide-react';

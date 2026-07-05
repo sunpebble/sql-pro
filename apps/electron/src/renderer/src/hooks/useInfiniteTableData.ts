@@ -7,7 +7,7 @@ import type {
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import {
   addPendingChange,
   clearPendingChanges,
@@ -103,7 +103,7 @@ export function useInfiniteTableData(
         throw new Error(t('tableData.connectionAndTableRequired'));
       }
 
-      const response = await sqlPro.db.getTableData({
+      const response = await quarry.db.getTableData({
         connectionId,
         schema,
         table,

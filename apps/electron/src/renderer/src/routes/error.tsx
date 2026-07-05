@@ -1,6 +1,6 @@
 import type { ErrorComponentProps } from '@tanstack/react-router';
-import { Button } from '@sqlpro/ui/button';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Button } from '@quarry/ui/button';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   AlertTriangle,
   ChevronDown,
@@ -21,6 +21,9 @@ interface StackFrame {
   columnNumber: string;
   raw: string;
 }
+
+const FILE_LINE_COL_RE = /^(.+):(\d+):(\d+)$/;
+const FILE_LINE_RE = /^(.+):(\d+)$/;
 
 // Parse stack trace into structured frames
 // Supports multiple formats:
@@ -51,7 +54,7 @@ function parseStackTrace(stack: string): StackFrame[] {
         if (parenIndex !== -1 && content.endsWith(')')) {
           const functionName = content.slice(0, parenIndex).trim();
           const location = content.slice(parenIndex + 1, -1);
-          const locMatch = location.match(/^(.+):(\d+):(\d+)$/);
+          const locMatch = location.match(FILE_LINE_COL_RE);
           if (locMatch) {
             return {
               functionName: functionName || '(anonymous)',
@@ -64,7 +67,7 @@ function parseStackTrace(stack: string): StackFrame[] {
         }
 
         // Try to match direct "file:line:col" pattern
-        const locMatch = content.match(/^(.+):(\d+):(\d+)$/);
+        const locMatch = content.match(FILE_LINE_COL_RE);
         if (locMatch) {
           return {
             functionName: '(anonymous)',
@@ -92,7 +95,7 @@ function parseStackTrace(stack: string): StackFrame[] {
         const location = trimmed.slice(atIndex + 1);
 
         // Try to match "file:line:col" pattern
-        const locMatch = location.match(/^(.+):(\d+):(\d+)$/);
+        const locMatch = location.match(FILE_LINE_COL_RE);
         if (locMatch) {
           return {
             functionName,
@@ -104,7 +107,7 @@ function parseStackTrace(stack: string): StackFrame[] {
         }
 
         // Try to match "file:line" pattern (no column)
-        const locMatchNoCol = location.match(/^(.+):(\d+)$/);
+        const locMatchNoCol = location.match(FILE_LINE_RE);
         if (locMatchNoCol) {
           return {
             functionName,
@@ -126,7 +129,7 @@ function parseStackTrace(stack: string): StackFrame[] {
       }
 
       // Try to parse as just a location (Safari sometimes does this)
-      const locMatch = trimmed.match(/^(.+):(\d+):(\d+)$/);
+      const locMatch = trimmed.match(FILE_LINE_COL_RE);
       if (locMatch) {
         return {
           functionName: '(anonymous)',
@@ -154,7 +157,7 @@ function parseStackTrace(stack: string): StackFrame[] {
 function formatFilePath(path: string): string {
   if (path.includes('node_modules')) {
     const parts = path.split('node_modules/');
-    return `node_modules/${parts[parts.length - 1]}`;
+    return `node_modules/${parts.at(-1)}`;
   }
   if (path.includes('/src/')) {
     return path.substring(path.indexOf('/src/') + 1);

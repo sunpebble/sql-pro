@@ -12,7 +12,7 @@
  */
 
 import type { PointWithVector, VectorSearchResult } from '@shared/types';
-import { ToggleGroup, ToggleGroupItem } from '@sqlpro/ui/toggle-group';
+import { ToggleGroup, ToggleGroupItem } from '@quarry/ui/toggle-group';
 import { Box, Loader2, RotateCcw, Square } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -88,6 +88,8 @@ interface RGB {
  * hex, hsl or oklch). The element is scoped under `scope` so it inherits the
  * active theme.
  */
+const RGB_CHANNELS_RE = /rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i;
+
 function resolveTokenRgb(
   token: string,
   scope: HTMLElement | null,
@@ -100,9 +102,7 @@ function resolveTokenRgb(
   host.appendChild(probe);
   try {
     const computed = getComputedStyle(probe).color;
-    const match = computed.match(
-      /rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i
-    );
+    const match = computed.match(RGB_CHANNELS_RE);
     if (!match) return fallback;
     return {
       r: Number(match[1]),

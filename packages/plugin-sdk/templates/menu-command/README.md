@@ -1,10 +1,10 @@
 # Menu Command Plugin
 
-An advanced example plugin for SQL Pro that demonstrates comprehensive menu item and command palette integration.
+An advanced example plugin for Quarry that demonstrates comprehensive menu item and command palette integration.
 
 ## What This Plugin Does
 
-This plugin demonstrates advanced patterns for extending SQL Pro's menu system and command palette:
+This plugin demonstrates advanced patterns for extending Quarry's menu system and command palette:
 
 1. **Multiple Menu Items** - Register several menu items with different configurations
 2. **Hierarchical Submenus** - Create nested menu structures (Settings, Actions, Help)
@@ -32,11 +32,11 @@ This plugin demonstrates advanced patterns for extending SQL Pro's menu system a
 
 ### Installing the Plugin
 
-1. Package your plugin as a `.sqlpro-plugin` file (ZIP archive):
+1. Package your plugin as a `.quarry-plugin` file (ZIP archive):
    ```bash
-   zip -r menu-command.sqlpro-plugin plugin.json index.js
+   zip -r menu-command.quarry-plugin plugin.json index.js
    ```
-2. Open SQL Pro and go to **Plugins** (Cmd/Ctrl+Shift+P)
+2. Open Quarry and go to **Plugins** (Cmd/Ctrl+Shift+P)
 3. Click **Browse Marketplace** or drag-and-drop the plugin file
 4. Enable the plugin
 
@@ -204,7 +204,7 @@ export const activate: PluginModule['activate'] = async (context) => {
 | Method                   | Description                               |
 | ------------------------ | ----------------------------------------- |
 | `getPluginInfo()`        | Get this plugin's manifest data           |
-| `getAppInfo()`           | Get SQL Pro application info              |
+| `getAppInfo()`           | Get Quarry application info               |
 | `getCurrentConnection()` | Get current database connection (or null) |
 
 ## Keyboard Shortcuts

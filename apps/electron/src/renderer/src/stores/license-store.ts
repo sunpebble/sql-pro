@@ -4,7 +4,7 @@
  */
 
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { getErrorMessage } from '@/lib/error-utils';
 
 interface LicenseInfo {
@@ -60,7 +60,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
   // Load machine ID
   loadMachineId: async () => {
     try {
-      const result = await sqlPro.license.getMachineId();
+      const result = await quarry.license.getMachineId();
       if (result.success) {
         set({
           machineId: result.machineId || null,
@@ -77,7 +77,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
   verifyLicense: async () => {
     set({ isLoading: true, error: null });
     try {
-      const result = await sqlPro.license.verify();
+      const result = await quarry.license.verify();
       if (result.valid && result.license) {
         set({
           isValid: true,
@@ -111,7 +111,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
   activateLicense: async (email: string, licenseKey: string) => {
     set({ isActivating: true, error: null });
     try {
-      const result = await sqlPro.license.activate({ email, licenseKey });
+      const result = await quarry.license.activate({ email, licenseKey });
       if (result.success && result.license) {
         set({
           isValid: true,
@@ -139,7 +139,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
   deactivateLicense: async () => {
     set({ isLoading: true, error: null });
     try {
-      await sqlPro.license.deactivate();
+      await quarry.license.deactivate();
       set({
         isValid: false,
         license: null,
@@ -160,7 +160,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
   ) => {
     set({ isLoading: true, error: null });
     try {
-      const result = await sqlPro.license.createCheckout({ email, plan });
+      const result = await quarry.license.createCheckout({ email, plan });
       set({ isLoading: false });
       return result.success;
     } catch (error) {
@@ -176,7 +176,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
   openPortal: async () => {
     set({ isLoading: true, error: null });
     try {
-      const result = await sqlPro.license.getPortalUrl();
+      const result = await quarry.license.getPortalUrl();
       if (!result.success) {
         set({ error: result.error || 'Failed to open portal' });
       }

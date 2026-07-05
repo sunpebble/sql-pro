@@ -17,6 +17,8 @@ import { MediaGalleryToolbar } from './ImageGalleryToolbar';
 // Types
 // ============================================================================
 
+const FILE_EXTENSION_RE = /\.[^.]+$/;
+
 export interface TableImageGalleryProps {
   /** Table columns schema */
   columns: ColumnSchema[];
@@ -237,7 +239,7 @@ export function TableImageGallery({
 
     try {
       // Ask user where to save
-      const result = await window.sqlPro.dialog.saveFile({
+      const result = await window.quarry.dialog.saveFile({
         title: t('mediaGallery.exportTitle', 'Export Selected Images'),
         defaultPath: `images-export-${Date.now()}`,
         filters: [
@@ -251,7 +253,7 @@ export function TableImageGallery({
         return;
       }
 
-      const basePath = result.filePath.replace(/\.[^.]+$/, ''); // Remove extension
+      const basePath = result.filePath.replace(FILE_EXTENSION_RE, ''); // Remove extension
       let successCount = 0;
       let errorCount = 0;
 
@@ -298,7 +300,7 @@ export function TableImageGallery({
             continue;
           }
 
-          const writeResult = await window.sqlPro.dialog.writeFile({
+          const writeResult = await window.quarry.dialog.writeFile({
             filePath: fileName,
             content,
           });

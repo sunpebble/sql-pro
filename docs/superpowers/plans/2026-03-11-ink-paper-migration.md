@@ -622,7 +622,7 @@ git commit -m "style(ui): update tabs, card, sidebar, chart, table, decorations"
 
 - [ ] **Step 1: QueryEditor.tsx — replace import and usage**
 
-Change `import { GoldButton } from '@sqlpro/ui/gold-button'` → `import { Button } from '@sqlpro/ui/button'`.
+Change `import { GoldButton } from '@quarry/ui/gold-button'` → `import { Button } from '@quarry/ui/button'`.
 Replace all `<GoldButton` → `<Button` and `</GoldButton>` → `</Button>`.
 Keep existing variant/size props (they are compatible between BrandButton and Button).
 

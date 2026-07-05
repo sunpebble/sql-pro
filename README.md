@@ -1,7 +1,7 @@
-# SQL Pro
+# Quarry
 
 <p align="center">
-  <img src="apps/electron/resources/icon.svg" width="128" height="128" alt="SQL Pro Logo">
+  <img src="apps/electron/resources/icon.svg" width="128" height="128" alt="Quarry Logo">
 </p>
 
 <p align="center">
@@ -9,10 +9,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/kunish-homelab/sql-pro/releases"><img src="https://img.shields.io/github/v/release/kunish-homelab/sql-pro" alt="Release"></a>
-  <a href="https://github.com/kunish-homelab/sql-pro/blob/main/LICENSE"><img src="https://img.shields.io/github/license/kunish-homelab/sql-pro" alt="License"></a>
-  <a href="https://github.com/kunish-homelab/sql-pro/actions"><img src="https://img.shields.io/github/actions/workflow/status/kunish-homelab/sql-pro/release.yml" alt="Build Status"></a>
-  <a href="https://kunish-homelab.github.io/sql-pro/"><img src="https://img.shields.io/badge/docs-blue?style=flat&logo=readthedocs&logoColor=white" alt="Documentation"></a>
+  <a href="https://github.com/sunpebble/quarry/releases"><img src="https://img.shields.io/github/v/release/sunpebble/quarry" alt="Release"></a>
+  <a href="https://github.com/sunpebble/quarry/blob/main/LICENSE"><img src="https://img.shields.io/github/license/sunpebble/quarry" alt="License"></a>
+  <a href="https://github.com/sunpebble/quarry/actions"><img src="https://img.shields.io/github/actions/workflow/status/sunpebble/quarry/release.yml" alt="Build Status"></a>
+  <a href="https://sunpebble.github.io/quarry/"><img src="https://img.shields.io/badge/docs-blue?style=flat&logo=readthedocs&logoColor=white" alt="Documentation"></a>
 </p>
 
 > 🚀 A modern, cross-platform SQLite database manager built with Electron, React, and TypeScript. Features include encrypted database support, visual diff preview for changes, AI-powered query tools, and comprehensive internationalization.
@@ -79,7 +79,7 @@
 </tr>
 </table>
 
-> 📚 **[View full documentation →](https://kunish-homelab.github.io/sql-pro/)**
+> 📚 **[View full documentation →](https://sunpebble.github.io/quarry/)**
 
 ## 📦 Installation
 
@@ -87,14 +87,14 @@
 
 Download the latest release for your platform:
 
-| Platform             | Download                                                                      | Architecture        |
-| -------------------- | ----------------------------------------------------------------------------- | ------------------- |
-| 🍎 macOS (Universal) | [sql-pro-x.x.x.dmg](https://github.com/kunish-homelab/sql-pro/releases)       | M1/M2/M3/M4 + Intel |
-| 🪟 Windows           | [sql-pro-x.x.x-setup.exe](https://github.com/kunish-homelab/sql-pro/releases) | x64                 |
-| 🐧 Linux (AppImage)  | [sql-pro-x.x.x.AppImage](https://github.com/kunish-homelab/sql-pro/releases)  | x64                 |
-| 🐧 Linux (deb)       | [sql-pro-x.x.x.deb](https://github.com/kunish-homelab/sql-pro/releases)       | x64                 |
+| Platform             | Download                                                               | Architecture        |
+| -------------------- | ---------------------------------------------------------------------- | ------------------- |
+| 🍎 macOS (Universal) | [quarry-x.x.x.dmg](https://github.com/sunpebble/quarry/releases)       | M1/M2/M3/M4 + Intel |
+| 🪟 Windows           | [quarry-x.x.x-setup.exe](https://github.com/sunpebble/quarry/releases) | x64                 |
+| 🐧 Linux (AppImage)  | [quarry-x.x.x.AppImage](https://github.com/sunpebble/quarry/releases)  | x64                 |
+| 🐧 Linux (deb)       | [quarry-x.x.x.deb](https://github.com/sunpebble/quarry/releases)       | x64                 |
 
-> 💡 **New to SQL Pro?** Check out our [Getting Started Guide](https://kunish-homelab.github.io/sql-pro/getting-started/) for detailed installation instructions and first-time setup.
+> 💡 **New to Quarry?** Check out our [Getting Started Guide](https://sunpebble.github.io/quarry/getting-started/) for detailed installation instructions and first-time setup.
 
 ### Build from Source
 
@@ -104,8 +104,8 @@ Download the latest release for your platform:
 
 ```bash
 # Clone the repository
-git clone https://github.com/kunish-homelab/sql-pro.git
-cd sql-pro
+git clone https://github.com/sunpebble/quarry.git
+cd quarry
 
 # Install dependencies
 pnpm install
@@ -139,14 +139,14 @@ pnpm build:linux  # Linux
 | Command palette | `Cmd + K`     | `Ctrl + K`     |
 | Toggle sidebar  | `Cmd + B`     | `Ctrl + B`     |
 
-> ⌨️ **[See all shortcuts →](https://kunish-homelab.github.io/sql-pro/shortcuts)**
+> ⌨️ **[See all shortcuts →](https://sunpebble.github.io/quarry/shortcuts)**
 
 ## 🛠️ Development
 
 ### Project Structure
 
 ```
-sql-pro/
+quarry/
 ├── apps/
 │   ├── electron/           # Electron application
 │   │   ├── src/
@@ -208,8 +208,8 @@ We welcome contributions! Whether you're fixing bugs, adding features, or improv
 ### Development Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/sql-pro.git
-cd sql-pro
+git clone https://github.com/YOUR_USERNAME/quarry.git
+cd quarry
 pnpm install
 pnpm dev
 ```
@@ -223,7 +223,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines, includin
 
 ## 🗺️ Roadmap
 
-We're actively developing SQL Pro with exciting features planned. See our [detailed roadmap](https://github.com/kunish-homelab/sql-pro/issues) for the full list.
+We're actively developing Quarry with exciting features planned. See our [detailed roadmap](https://github.com/sunpebble/quarry/issues) for the full list.
 
 ### Current Focus (Q1 2025)
 
@@ -244,7 +244,7 @@ We're actively developing SQL Pro with exciting features planned. See our [detai
 - ✅ Multi-language support (i18n)
 - ✅ Per-provider AI settings
 
-> 💡 **Have a feature idea?** [Open a feature request](https://github.com/kunish-homelab/sql-pro/issues/new?template=feature_request.md)
+> 💡 **Have a feature idea?** [Open a feature request](https://github.com/sunpebble/quarry/issues/new?template=feature_request.md)
 
 ## 📄 License
 
@@ -256,7 +256,7 @@ Found a vulnerability? Please see our [Security Policy](SECURITY.md) for respons
 
 ## 🙏 Acknowledgments
 
-SQL Pro is built with amazing open-source technologies:
+Quarry is built with amazing open-source technologies:
 
 - **[Electron](https://www.electronjs.org/)** - Cross-platform desktop framework
 - **[React](https://react.dev/)** - UI library
@@ -269,14 +269,14 @@ SQL Pro is built with amazing open-source technologies:
 - **[Vite](https://vitejs.dev/)** - Build tool and dev server
 - **[Nx](https://nx.dev/)** - Monorepo build system
 
-Special thanks to all [contributors](https://github.com/kunish-homelab/sql-pro/graphs/contributors) who have helped make SQL Pro better!
+Special thanks to all [contributors](https://github.com/sunpebble/quarry/graphs/contributors) who have helped make Quarry better!
 
 ---
 
 <p align="center">
-  <strong>Built with ❤️ by the SQL Pro team</strong><br>
-  <a href="https://kunish-homelab.github.io/sql-pro/">Documentation</a> •
-  <a href="https://github.com/kunish-homelab/sql-pro/issues">Issues</a> •
-  <a href="https://github.com/kunish-homelab/sql-pro/discussions">Discussions</a> •
-  <a href="https://github.com/kunish-homelab/sql-pro/releases">Releases</a>
+  <strong>Built with ❤️ by the Quarry team</strong><br>
+  <a href="https://sunpebble.github.io/quarry/">Documentation</a> •
+  <a href="https://github.com/sunpebble/quarry/issues">Issues</a> •
+  <a href="https://github.com/sunpebble/quarry/discussions">Discussions</a> •
+  <a href="https://github.com/sunpebble/quarry/releases">Releases</a>
 </p>

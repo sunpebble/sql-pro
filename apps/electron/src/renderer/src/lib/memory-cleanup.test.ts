@@ -267,7 +267,7 @@ describe('memoryCleanup singleton', () => {
 
 describe('requestGC', () => {
   it('should return error when memory API is not available', async () => {
-    // window.sqlPro is not defined in test environment
+    // window.quarry is not defined in test environment
     const result = await requestGC();
 
     expect(result.success).toBe(false);
@@ -281,11 +281,11 @@ describe('requestGC', () => {
       gcTriggered: true,
     });
 
-    // Mock window.sqlPro.memory
+    // Mock window.quarry.memory
     (
-      globalThis as unknown as { window: { sqlPro: { memory: unknown } } }
+      globalThis as unknown as { window: { quarry: { memory: unknown } } }
     ).window = {
-      sqlPro: {
+      quarry: {
         memory: {
           triggerGC: mockTriggerGC,
         },

@@ -17,7 +17,7 @@ import type {
 } from '@shared/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 interface UseVectorSearchReturn {
   /** Search results from the most recent search */
@@ -102,12 +102,12 @@ export function useVectorSearch(
     if (!connectionId || !collection) {
       if (previousValuesRef.current.backgroundPoints.length !== 0) {
         previousValuesRef.current.backgroundPoints = [];
-         
+
         setBackgroundPoints([]);
       }
       if (previousValuesRef.current.vectorDimension !== 0) {
         previousValuesRef.current.vectorDimension = 0;
-         
+
         setVectorDimension(0);
       }
       return;
@@ -118,7 +118,7 @@ export function useVectorSearch(
     const loadBackground = async () => {
       setIsLoadingBackground(true);
       try {
-        const response = await sqlPro.db.getPointsWithVectors({
+        const response = await quarry.db.getPointsWithVectors({
           connectionId,
           collection,
           limit: 1000, // Sample up to 1000 points for visualization
@@ -209,7 +209,7 @@ export function useVectorSearch(
       }
 
       try {
-        const response = await sqlPro.db.vectorSearch({
+        const response = await quarry.db.vectorSearch({
           connectionId,
           collection,
           vector,
@@ -264,7 +264,7 @@ export function useVectorSearch(
       setError(null);
 
       try {
-        const response = await sqlPro.db.vectorSearch({
+        const response = await quarry.db.vectorSearch({
           connectionId,
           collection,
           vector,
@@ -318,7 +318,7 @@ export function useVectorSearch(
       setError(null);
 
       try {
-        const response = await sqlPro.db.searchSimilar({
+        const response = await quarry.db.searchSimilar({
           connectionId,
           collection,
           pointId,
@@ -378,7 +378,7 @@ export function useVectorSearch(
       setError(null);
 
       try {
-        const response = await sqlPro.db.batchVectorSearch({
+        const response = await quarry.db.batchVectorSearch({
           connectionId,
           collection,
           vectors,

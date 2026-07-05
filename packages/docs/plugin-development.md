@@ -1,19 +1,19 @@
 # Plugin Development Guide
 
-This comprehensive guide covers everything you need to know to build plugins for SQL Pro. Whether you're creating a simple utility or a complex extension, this guide will help you get started and follow best practices.
+This comprehensive guide covers everything you need to know to build plugins for Quarry. Whether you're creating a simple utility or a complex extension, this guide will help you get started and follow best practices.
 
 ::: info Developer Resources
 
 - 📖 [Plugin API Reference](/plugin-api) - Complete API documentation
 - 🎯 [Example Plugins](#example-plugins) - Ready-to-use templates
-- 💬 [Discussions](https://github.com/kunish-homelab/sql-pro/discussions) - Get help from the community
+- 💬 [Discussions](https://github.com/sunpebble/quarry/discussions) - Get help from the community
   :::
 
 [[toc]]
 
 ## Overview
 
-SQL Pro's plugin system allows you to extend the application with custom functionality, including:
+Quarry's plugin system allows you to extend the application with custom functionality, including:
 
 - **Commands** - Add actions to the command palette with keyboard shortcuts
 - **Menu Items** - Extend the application menu with custom options
@@ -49,12 +49,12 @@ Create `plugin.json` with your plugin's metadata:
   "id": "com.example.myplugin",
   "name": "My Plugin",
   "version": "1.0.0",
-  "description": "A helpful SQL Pro plugin",
+  "description": "A helpful Quarry plugin",
   "author": "Your Name",
   "main": "index.js",
   "permissions": ["ui:command", "ui:menu"],
   "engines": {
-    "sqlpro": "^1.6.0"
+    "quarry": "^1.6.0"
   },
   "license": "MIT",
   "keywords": ["utility", "productivity"]
@@ -66,7 +66,7 @@ Create `plugin.json` with your plugin's metadata:
 Create `index.ts` (or `index.js`) with your plugin code:
 
 ```typescript
-import type { PluginContext, PluginModule } from '@sqlpro/plugin-sdk';
+import type { PluginContext, PluginModule } from '@quarry/plugin-sdk';
 
 // Store cleanup functions
 const disposables: Array<() => void> = [];
@@ -101,7 +101,7 @@ export const deactivate: PluginModule['deactivate'] = () => {
 
 ### 4. Build and Test
 
-Compile your TypeScript to JavaScript (if using TypeScript), then install and test your plugin in SQL Pro.
+Compile your TypeScript to JavaScript (if using TypeScript), then install and test your plugin in Quarry.
 
 ---
 
@@ -125,7 +125,7 @@ The `plugin.json` file is required and defines your plugin's metadata. Here's th
 | Field         | Type       | Description                                                       |
 | ------------- | ---------- | ----------------------------------------------------------------- |
 | `permissions` | `string[]` | Permissions the plugin requires (see [Permissions](#permissions)) |
-| `engines`     | `object`   | Version requirements (e.g., `{ "sqlpro": "^1.6.0" }`)             |
+| `engines`     | `object`   | Version requirements (e.g., `{ "quarry": "^1.6.0" }`)             |
 | `license`     | `string`   | SPDX license identifier (e.g., `MIT`, `Apache-2.0`)               |
 | `keywords`    | `string[]` | Keywords for marketplace search and categorization                |
 | `icon`        | `string`   | Relative path to plugin icon (128x128 PNG recommended)            |
@@ -155,7 +155,7 @@ The `plugin.json` file is required and defines your plugin's metadata. Here's th
     "storage:write"
   ],
   "engines": {
-    "sqlpro": "^1.6.0"
+    "quarry": "^1.6.0"
   },
   "icon": "assets/icon.png",
   "screenshots": ["assets/screenshot-1.png", "assets/screenshot-2.png"],
@@ -192,10 +192,10 @@ Your plugin must export an `activate` function and optionally a `deactivate` fun
 
 ### activate(context)
 
-Called when the plugin is enabled or when SQL Pro starts with the plugin already enabled.
+Called when the plugin is enabled or when Quarry starts with the plugin already enabled.
 
 ```typescript
-import type { PluginContext, PluginModule } from '@sqlpro/plugin-sdk';
+import type { PluginContext, PluginModule } from '@quarry/plugin-sdk';
 
 export const activate: PluginModule['activate'] = (context: PluginContext) => {
   // Access the API
@@ -219,7 +219,7 @@ The `context` object provides:
 
 ### deactivate()
 
-Called when the plugin is disabled, uninstalled, or when SQL Pro is shutting down.
+Called when the plugin is disabled, uninstalled, or when Quarry is shutting down.
 
 ```typescript
 export const deactivate: PluginModule['deactivate'] = () => {
@@ -370,7 +370,7 @@ if (connection) {
 
 // Get app information
 const app = api.metadata.getAppInfo();
-console.log(`SQL Pro ${app.version}`);
+console.log(`Quarry ${app.version}`);
 console.log(`Platform: ${app.platform}/${app.arch}`);
 console.log(`Development mode: ${app.isDev}`);
 ```
@@ -549,10 +549,10 @@ api.ui.registerCommand({
 
 ### Development Mode
 
-When developing plugins, run SQL Pro in development mode for better debugging:
+When developing plugins, run Quarry in development mode for better debugging:
 
 ```bash
-# In the SQL Pro repository
+# In the Quarry repository
 pnpm run dev
 ```
 
@@ -624,17 +624,17 @@ api.query.onBeforeQuery((context) => {
 
 1. Ensure your manifest is complete with all metadata
 2. Compile TypeScript to JavaScript (if using TypeScript)
-3. Create a ZIP archive with the `.sqlpro-plugin` extension:
+3. Create a ZIP archive with the `.quarry-plugin` extension:
 
 ```bash
 # From your plugin directory
-zip -r my-plugin.sqlpro-plugin plugin.json index.js README.md icon.png
+zip -r my-plugin.quarry-plugin plugin.json index.js README.md icon.png
 ```
 
 ### Plugin Package Structure
 
 ```
-my-plugin.sqlpro-plugin (ZIP archive)
+my-plugin.quarry-plugin (ZIP archive)
 ├── plugin.json        # Required
 ├── index.js           # Entry point (path from manifest.main)
 ├── README.md          # Recommended
@@ -651,12 +651,12 @@ my-plugin.sqlpro-plugin (ZIP archive)
 
 ### Version Requirements
 
-Use the `engines.sqlpro` field to specify SQL Pro version compatibility:
+Use the `engines.quarry` field to specify Quarry version compatibility:
 
 ```json
 {
   "engines": {
-    "sqlpro": "^1.6.0"
+    "quarry": "^1.6.0"
   }
 }
 ```
@@ -670,7 +670,7 @@ Supported version range formats:
 
 ### Marketplace Submission
 
-To submit your plugin to the SQL Pro marketplace:
+To submit your plugin to the Quarry marketplace:
 
 1. Create a GitHub repository for your plugin
 2. Include a comprehensive README with:
@@ -678,14 +678,14 @@ To submit your plugin to the SQL Pro marketplace:
    - Installation instructions
    - Screenshots or GIFs
    - License information
-3. Create a release with the `.sqlpro-plugin` archive
-4. Submit a pull request to the [SQL Pro Plugins Registry](https://github.com/sqlpro/plugin-registry)
+3. Create a release with the `.quarry-plugin` archive
+4. Submit a pull request to the [Quarry Plugins Registry](https://github.com/quarry/plugin-registry)
 
 ---
 
 ## Example Plugins
 
-SQL Pro provides several example plugins as templates. Each demonstrates different API capabilities.
+Quarry provides several example plugins as templates. Each demonstrates different API capabilities.
 
 ### Hello World Plugin
 
@@ -768,7 +768,7 @@ api.query.onAfterQuery((results, context) => {
 
 ### Using the Plugin SDK Types
 
-Import types from `@sqlpro/plugin-sdk` for full TypeScript support:
+Import types from `@quarry/plugin-sdk` for full TypeScript support:
 
 ```typescript
 import type {
@@ -792,7 +792,7 @@ import type {
   MetadataAPI,
   ConnectionInfo,
   AppInfo,
-} from '@sqlpro/plugin-sdk';
+} from '@quarry/plugin-sdk';
 ```
 
 ### TypeScript Configuration
@@ -820,7 +820,7 @@ Recommended `tsconfig.json` for plugin development:
 
 ```bash
 # Install dependencies
-npm install typescript @sqlpro/plugin-sdk --save-dev
+npm install typescript @quarry/plugin-sdk --save-dev
 
 # Build
 npx tsc
@@ -837,7 +837,7 @@ npx esbuild index.ts --bundle --outfile=index.js --platform=node
 
 1. **Check the manifest** - Ensure `plugin.json` is valid JSON with all required fields
 2. **Check the entry point** - Verify the `main` path points to an existing file
-3. **Check version compatibility** - Ensure `engines.sqlpro` matches your SQL Pro version
+3. **Check version compatibility** - Ensure `engines.quarry` matches your Quarry version
 4. **Check the console** - Open DevTools (`Cmd+Option+I`) and look for error messages
 
 ### Commands Not Appearing
@@ -870,7 +870,7 @@ npx esbuild index.ts --bundle --outfile=index.js --platform=node
 
 ### Sandboxing
 
-SQL Pro plugins run in a sandboxed environment with the following restrictions:
+Quarry plugins run in a sandboxed environment with the following restrictions:
 
 - **No Node.js access** - `require()`, `fs`, `process`, etc. are not available
 - **No direct file system access** - Use the Storage API for persistence
@@ -893,11 +893,11 @@ Need assistance with plugin development?
 
 - **[Plugin API Reference](/plugin-api)** - Complete API documentation with all methods and types
 - **[Example Plugins](#example-plugins)** - Browse the example plugins in `packages/plugin-sdk/templates/`
-- **[GitHub Issues](https://github.com/kunish-homelab/sql-pro/issues)** - Report bugs or request features
-- **[GitHub Discussions](https://github.com/kunish-homelab/sql-pro/discussions)** - Ask questions and share ideas
+- **[GitHub Issues](https://github.com/sunpebble/quarry/issues)** - Report bugs or request features
+- **[GitHub Discussions](https://github.com/sunpebble/quarry/discussions)** - Ask questions and share ideas
 
 ::: info Contributing to the Plugin System
-Want to improve the plugin system itself? Check our [Contributing Guide](https://github.com/kunish-homelab/sql-pro/blob/main/CONTRIBUTING.md) for details on how to contribute to SQL Pro's core.
+Want to improve the plugin system itself? Check our [Contributing Guide](https://github.com/sunpebble/quarry/blob/main/CONTRIBUTING.md) for details on how to contribute to Quarry's core.
 :::
 
 ---
@@ -906,5 +906,5 @@ Want to improve the plugin system itself? Check our [Contributing Guide](https:/
 
 - 📖 **[Plugin API Reference](/plugin-api)** - Dive into detailed API documentation
 - 🎯 **[Example Plugins](#example-plugins)** - Start with ready-to-use templates
-- 🚀 **[Getting Started](/getting-started/)** - New to SQL Pro? Start here
-- 📚 **[Features](/features/)** - Explore all SQL Pro features
+- 🚀 **[Getting Started](/getting-started/)** - New to Quarry? Start here
+- 📚 **[Features](/features/)** - Explore all Quarry features

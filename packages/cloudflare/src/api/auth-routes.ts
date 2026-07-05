@@ -21,7 +21,7 @@ import {
 } from './auth';
 import { getErrorMessage } from './error-utils';
 
-const SESSION_COOKIE = 'sqlpro_session';
+const SESSION_COOKIE = 'quarry_session';
 
 const auth = new Hono<{ Bindings: Env }>();
 
@@ -288,7 +288,7 @@ auth.post('/sso/token', async (c) => {
     const ssoToken = await createSsoToken(c.env, session.user_id, 5);
 
     // Return token and deep link URL
-    const appUrl = c.env.APP_URL || 'sqlpro://';
+    const appUrl = c.env.APP_URL || 'quarry://';
     const deepLink = `${appUrl}auth/sso?token=${ssoToken.token}`;
 
     return c.json({

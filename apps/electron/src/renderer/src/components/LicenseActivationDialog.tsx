@@ -3,17 +3,17 @@
  * Smart wizard-style dialog for purchasing, activating, and managing Pro license
  */
 
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@sqlpro/ui/card';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
+} from '@quarry/ui/card';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
 import {
   ArrowLeft,
   Check,
@@ -440,7 +440,7 @@ export function LicenseActivationDialog({
       >
         {t('pro.cantFindKey')}{' '}
         <a
-          href="mailto:support@sqlpro.dev"
+          href="mailto:support@quarry.dev"
           className="text-primary hover:underline"
         >
           {t('pro.contactSupport')}
@@ -476,7 +476,7 @@ export function LicenseActivationDialog({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Crown className="h-5 w-5 text-amber-500" />
-              {t('pro.getStarted', { defaultValue: 'Get SQL Pro' })}
+              {t('pro.getStarted', { defaultValue: 'Get Quarry' })}
             </DialogTitle>
             <DialogDescription>
               {t('pro.description', {

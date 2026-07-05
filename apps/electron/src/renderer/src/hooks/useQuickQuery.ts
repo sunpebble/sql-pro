@@ -7,7 +7,7 @@ import type {
   SQLExplanation,
 } from '@shared/types/agent';
 import { useCallback } from 'react';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { useAIQueryStore } from '@/stores/ai-query-store';
 import { useConnectionStore } from '@/stores/connection-store';
 
@@ -51,7 +51,7 @@ export function useQuickQuery(): UseQuickQueryReturn {
       setMode('generating');
       setError(null);
       try {
-        const response = await sqlPro.agent.nlGenerateSQL(
+        const response = await quarry.agent.nlGenerateSQL(
           activeConnectionId,
           naturalLanguage
         );
@@ -81,7 +81,7 @@ export function useQuickQuery(): UseQuickQueryReturn {
       setMode('explaining');
       setError(null);
       try {
-        const response = await sqlPro.agent.nlExplainSQL(
+        const response = await quarry.agent.nlExplainSQL(
           activeConnectionId,
           sql
         );
@@ -110,7 +110,7 @@ export function useQuickQuery(): UseQuickQueryReturn {
       setMode('optimizing');
       setError(null);
       try {
-        const response = await sqlPro.agent.nlOptimizeSQL(
+        const response = await quarry.agent.nlOptimizeSQL(
           activeConnectionId,
           sql
         );

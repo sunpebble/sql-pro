@@ -10,7 +10,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/tooltip';
 import { AlertCircle, CheckCircle2, Loader2, Shield } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

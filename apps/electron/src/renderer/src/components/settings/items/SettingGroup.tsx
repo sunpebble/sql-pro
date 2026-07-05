@@ -1,4 +1,4 @@
-import { Label } from '@sqlpro/ui/label';
+import { Label } from '@quarry/ui/label';
 
 interface SettingGroupProps {
   title: string;

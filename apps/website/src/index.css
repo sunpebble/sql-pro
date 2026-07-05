@@ -1,9 +1,9 @@
-/* SQL Pro Website — Sunpebble brand system
+/* Quarry Website — Sunpebble brand system
    Tokens: cream / ink / sun / pebble / night (sunpebble.github.io/BRAND.md)
    Sun is light — it hosts ink text, never white. */
 @import 'tailwindcss';
 
-/* Include @sqlpro/ui package classes in Tailwind scanning */
+/* Include @quarry/ui package classes in Tailwind scanning */
 @source '../../../packages/ui/src';
 
 /* ═══════════════════════════════════════

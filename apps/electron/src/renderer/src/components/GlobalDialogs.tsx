@@ -3,7 +3,7 @@ import type { ConnectionSettings } from './ConnectionSettingsDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MemoryMonitorPanel } from '@/components/dev-tools';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useChangesStore } from '@/stores/changes-store';
 import { useConnectionStore } from '@/stores/connection-store';
@@ -66,7 +66,7 @@ export function GlobalDialogs() {
       primaryKeyColumn: c.primaryKeyColumn,
     }));
 
-    const response = await sqlPro.db.applyChanges({
+    const response = await quarry.db.applyChanges({
       connectionId: pendingCloseConnectionId,
       changes: changeInfos,
     });
@@ -152,7 +152,7 @@ export function GlobalDialogs() {
       if (!connectionSettingsTarget) return;
 
       // Update the connection settings
-      const result = await sqlPro.connection.update({
+      const result = await quarry.connection.update({
         path: connectionSettingsTarget.path,
         displayName: settings.displayName,
         readOnly: settings.readOnly,
@@ -160,7 +160,7 @@ export function GlobalDialogs() {
 
       if (result.success) {
         // Refresh recent connections to show updated settings
-        const connectionsResult = await sqlPro.app.getRecentConnections();
+        const connectionsResult = await quarry.app.getRecentConnections();
         if (connectionsResult.success && connectionsResult.connections) {
           setRecentConnections(
             connectionsResult.connections as RecentConnection[]

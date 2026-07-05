@@ -4,17 +4,16 @@
  * Handles communication with the License API for Pro subscription management.
  */
 
-import type {HandlerContext} from '../base/handler';
+import type { HandlerContext } from '../base/handler';
 import os from 'node:os';
 import process from 'node:process';
 import { shell } from 'electron';
 import Store from 'electron-store';
 import { machineIdSync } from 'node-machine-id';
-import {  IpcHandler } from '../base/handler';
+import { IpcHandler } from '../base/handler';
 
 // License API configuration
-const LICENSE_API_URL =
-  process.env.LICENSE_API_URL || 'https://api.sqlpro.app';
+const LICENSE_API_URL = process.env.LICENSE_API_URL || 'https://api.sqlpro.app';
 
 // Local license storage
 interface LicenseCache {
@@ -61,7 +60,7 @@ interface PortalResponse {
 
 const store = new Store<{ licenseCache?: LicenseCache }>({
   name: 'license',
-  encryptionKey: 'sql-pro-license-key-v1',
+  encryptionKey: 'quarry-license-key-v1',
 });
 
 // Get unique machine ID
@@ -112,8 +111,8 @@ export class LicenseHandler extends IpcHandler {
       body: JSON.stringify({
         email: request.email,
         plan: request.plan,
-        successUrl: 'sqlpro://license/success',
-        cancelUrl: 'sqlpro://license/cancel',
+        successUrl: 'quarry://license/success',
+        cancelUrl: 'quarry://license/cancel',
       }),
     });
 
@@ -303,7 +302,7 @@ export class LicenseHandler extends IpcHandler {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: cached.email,
-        returnUrl: 'sqlpro://license/portal-return',
+        returnUrl: 'quarry://license/portal-return',
       }),
     });
 

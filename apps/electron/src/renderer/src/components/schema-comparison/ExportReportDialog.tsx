@@ -1,14 +1,14 @@
 import type { SchemaComparisonResult } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Checkbox } from '@sqlpro/ui/checkbox';
-import { Label } from '@sqlpro/ui/label';
+import { Button } from '@quarry/ui/button';
+import { Checkbox } from '@quarry/ui/checkbox';
+import { Label } from '@quarry/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
+} from '@quarry/ui/select';
 import { FileCode, FileDown, FileJson, FileText, Loader2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -101,7 +101,7 @@ export function ExportReportDialog({
       const defaultFilename = `schema-comparison-${timestamp}.${formatOption.extension}`;
 
       // Show save dialog
-      const result = await window.sqlPro.dialog.saveFile({
+      const result = await window.quarry.dialog.saveFile({
         title: t('exportReport.saveDialogTitle'),
         defaultPath: defaultFilename,
         filters: [
@@ -119,7 +119,7 @@ export function ExportReportDialog({
       }
 
       // Call IPC handler to export report
-      const response = await window.sqlPro.schemaComparison.exportReport({
+      const response = await window.quarry.schemaComparison.exportReport({
         comparisonResult,
         format: selectedFormat,
         filePath: result.filePath,

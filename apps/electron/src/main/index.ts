@@ -1,5 +1,5 @@
 /**
- * SQL Pro - Main Process Entry Point
+ * Quarry - Main Process Entry Point
  *
  * This is the entry point for the Electron main process.
  * It initializes all core systems and sets up the application.
@@ -40,7 +40,7 @@ process.on('uncaughtException', (error) => {
   throw error;
 });
 
-// Register custom sqlpro:// protocol scheme BEFORE app is ready
+// Register custom quarry:// protocol scheme BEFORE app is ready
 // This enables proxying remote images and bypassing CORS
 registerImageProxyScheme();
 

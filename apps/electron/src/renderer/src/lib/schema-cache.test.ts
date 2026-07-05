@@ -5,7 +5,7 @@
 import type { SchemaListInfo, TableInfo } from '@shared/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Mock the window.sqlPro API before importing schema-cache
+// Mock the window.quarry API before importing schema-cache
 vi.mock('@shared/lib/memory-utils', () => ({
   estimateSchemaSize: (table: TableInfo) => {
     // Simple size estimation for tests

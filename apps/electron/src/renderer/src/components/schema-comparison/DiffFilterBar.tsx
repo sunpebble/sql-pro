@@ -1,7 +1,7 @@
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Separator } from '@sqlpro/ui/separator';
-import { Toggle } from '@sqlpro/ui/toggle';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Separator } from '@quarry/ui/separator';
+import { Toggle } from '@quarry/ui/toggle';
 import {
   Columns,
   Database,

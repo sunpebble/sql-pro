@@ -1,7 +1,7 @@
 import type { ShortcutAction } from '@/stores/keyboard-shortcuts-store';
-import { Button } from '@sqlpro/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Button } from '@quarry/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@quarry/ui/popover';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   ArrowUp,
   Command,

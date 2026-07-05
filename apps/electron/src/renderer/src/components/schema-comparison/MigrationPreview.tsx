@@ -1,11 +1,11 @@
 import type { GenerateMigrationSQLResponse } from '@shared/types';
-import { Alert, AlertDescription, AlertTitle } from '@sqlpro/ui/alert';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@sqlpro/ui/card';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Switch } from '@sqlpro/ui/switch';
+import { Alert, AlertDescription, AlertTitle } from '@quarry/ui/alert';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@quarry/ui/card';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Switch } from '@quarry/ui/switch';
 import {
   AlertCircle,
   Check,
@@ -21,7 +21,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SqlHighlight } from '@/components/ui/sql-highlight';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useQueryTabsStore } from '@/stores/query-tabs-store';
@@ -73,7 +73,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
     const generateSQL = async () => {
       setIsGenerating(true);
       try {
-        const response = await sqlPro.migration.generateSQL({
+        const response = await quarry.migration.generateSQL({
           comparisonResult,
           reverse,
           includeDropStatements,
@@ -118,7 +118,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
     setSaveError(null);
 
     try {
-      const result = await sqlPro.dialog.saveFile({
+      const result = await quarry.dialog.saveFile({
         title: t('schemaComparison.saveMigrationSQL'),
         filters: [
           { name: t('schemaComparison.sqlFiles'), extensions: ['sql'] },
@@ -129,7 +129,7 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
 
       if (result.success && result.filePath && !result.canceled) {
         // Write the file using the file write API
-        const writeResult = await sqlPro.dialog.writeFile({
+        const writeResult = await quarry.dialog.writeFile({
           filePath: result.filePath,
           content: migrationSQL.sql,
           atomic: true,
@@ -137,17 +137,17 @@ export function MigrationPreview({ className }: MigrationPreviewProps) {
 
         if (writeResult.success) {
           setSaved(true);
-          setTimeout(() => setSaved(false), 2000);
+          setTimeout(setSaved, 2000, false);
         } else {
           setSaveError(writeResult.error || t('schemaComparison.failedToSave'));
-          setTimeout(() => setSaveError(null), 5000);
+          setTimeout(setSaveError, 5000, null);
         }
       }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : t('schemaComparison.failedToSave');
       setSaveError(errorMessage);
-      setTimeout(() => setSaveError(null), 5000);
+      setTimeout(setSaveError, 5000, null);
     }
   }, [migrationSQL?.sql, t]);
 

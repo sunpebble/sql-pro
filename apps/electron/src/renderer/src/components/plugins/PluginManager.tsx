@@ -1,9 +1,9 @@
 import type { PluginInfo } from './PluginCard';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tabs, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import {
   AlertCircle,
   Grid3X3,
@@ -109,7 +109,7 @@ export function PluginManager({
   const { t } = useTranslation();
   // Stable fetcher so the onEvent subscription effect doesn't re-subscribe every render
   const fetchPluginsFn = React.useCallback(async () => {
-    const response = await window.sqlPro.plugin.list();
+    const response = await window.quarry.plugin.list();
     if (response.success && response.plugins) {
       return response.plugins as PluginInfo[];
     }
@@ -156,7 +156,7 @@ export function PluginManager({
 
   // Subscribe to plugin events for real-time updates
   React.useEffect(() => {
-    const unsubscribe = window.sqlPro.plugin.onEvent((event: unknown) => {
+    const unsubscribe = window.quarry.plugin.onEvent((event: unknown) => {
       // Refresh plugins list on relevant events
       const pluginEvent = event as { type: string };
       if (
@@ -195,8 +195,8 @@ export function PluginManager({
 
       try {
         const response = enabled
-          ? await window.sqlPro.plugin.enable({ pluginId })
-          : await window.sqlPro.plugin.disable({ pluginId });
+          ? await window.quarry.plugin.enable({ pluginId })
+          : await window.quarry.plugin.disable({ pluginId });
 
         if (!response.success) {
           console.error(
@@ -249,7 +249,7 @@ export function PluginManager({
       setCurrentOperation({ pluginId, operation: 'uninstall' });
 
       try {
-        const response = await window.sqlPro.plugin.uninstall({ pluginId });
+        const response = await window.quarry.plugin.uninstall({ pluginId });
 
         if (response.success) {
           // Close detail view if this plugin was selected

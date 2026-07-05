@@ -2,10 +2,10 @@
  * IPC Client
  *
  * Type-safe IPC client utilities for renderer process.
- * Re-exports the sqlPro API with additional type helpers.
+ * Re-exports the quarry API with additional type helpers.
  */
 
-import { getAPI, sqlPro } from './api';
+import { getAPI, quarry } from './api';
 
 // ============================================
 // Type Helpers
@@ -56,4 +56,4 @@ export function isError<T extends { success: boolean }>(
 }
 
 // Re-export the main API
-export { getAPI, sqlPro };
+export { getAPI, quarry };

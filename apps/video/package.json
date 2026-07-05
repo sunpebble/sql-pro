@@ -1,9 +1,9 @@
 {
-  "name": "@sqlpro/video",
+  "name": "@quarry/video",
   "version": "1.0.0",
   "private": true,
+  "description": "Quarry product video built with Remotion",
   "license": "MIT",
-  "description": "SQL Pro product video built with Remotion",
   "scripts": {
     "studio": "remotion studio",
     "render": "remotion render",

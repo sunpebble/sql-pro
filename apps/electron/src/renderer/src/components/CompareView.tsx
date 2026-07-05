@@ -1,5 +1,5 @@
 import type { CompareTab } from '@/stores/compare-view-store';
-import { Tabs, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@quarry/ui/tabs';
 import { GitCompare, Table2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

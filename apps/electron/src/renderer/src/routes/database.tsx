@@ -13,7 +13,7 @@ import {
   SchemaExportDialog,
   SchemaImportDialog,
 } from '@/components/sharing';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useChangesStore } from '@/stores/changes-store';
 import { useConnectionStore } from '@/stores/connection-store';
@@ -100,12 +100,12 @@ export function DatabasePage() {
       setError(null);
 
       try {
-        const result = await sqlPro.db.open({ path, password, readOnly });
+        const result = await quarry.db.open({ path, password, readOnly });
 
         if (!result.success) {
           if (result.needsPassword) {
             // Try saved password first
-            const savedPasswordResult = await sqlPro.password.get({
+            const savedPasswordResult = await quarry.password.get({
               dbPath: path,
             });
             if (savedPasswordResult.success && savedPasswordResult.password) {
@@ -128,7 +128,7 @@ export function DatabasePage() {
         if (result.connection) {
           // Save connection settings if provided
           if (settings) {
-            await sqlPro.connection.update({
+            await quarry.connection.update({
               path: result.connection.path,
               displayName: settings.displayName,
               readOnly: settings.readOnly,
@@ -147,7 +147,7 @@ export function DatabasePage() {
 
           // Load schema for this connection
           setIsLoadingSchema(true);
-          const schemaResult = await sqlPro.db.getSchema({
+          const schemaResult = await quarry.db.getSchema({
             connectionId: result.connection.id,
           });
 
@@ -163,7 +163,7 @@ export function DatabasePage() {
           setIsLoadingSchema(false);
 
           // Refresh recent connections
-          const connectionsResult = await sqlPro.app.getRecentConnections();
+          const connectionsResult = await quarry.app.getRecentConnections();
           if (connectionsResult.success && connectionsResult.connections) {
             setRecentConnections(
               connectionsResult.connections as RecentConnection[]
@@ -211,7 +211,7 @@ export function DatabasePage() {
         // For non-encrypted, show settings dialog
         if (isEncrypted) {
           // Try saved password first
-          sqlPro.password
+          quarry.password
             .get({ dbPath: filePath })
             .then(
               (savedPasswordResult: {
@@ -248,7 +248,7 @@ export function DatabasePage() {
 
   // Open database file dialog
   const handleOpenDatabase = useCallback(async () => {
-    const result = await sqlPro.dialog.openFile({
+    const result = await quarry.dialog.openFile({
       title: t('dialog.openDatabase'),
     });
     if (result.success && result.filePath && !result.canceled) {
@@ -257,7 +257,7 @@ export function DatabasePage() {
 
       // Check if encrypted by trying to open without password
       setIsConnecting(true);
-      const probeResult = await sqlPro.db.open({ path: filePath });
+      const probeResult = await quarry.db.open({ path: filePath });
       setIsConnecting(false);
 
       const isEncrypted = probeResult.needsPassword === true;
@@ -265,7 +265,7 @@ export function DatabasePage() {
       // Close the probe connection if it was opened successfully
       // (we'll open it again properly after user confirms settings)
       if (probeResult.success && probeResult.connection) {
-        await sqlPro.db.close({ connectionId: probeResult.connection.id });
+        await quarry.db.close({ connectionId: probeResult.connection.id });
       }
 
       // Show settings dialog for new connections
@@ -289,7 +289,7 @@ export function DatabasePage() {
         setError(null);
 
         try {
-          const result = await sqlPro.db.open({
+          const result = await quarry.db.open({
             config: conn.connectionConfig,
           });
 
@@ -313,7 +313,7 @@ export function DatabasePage() {
 
             // Load schema
             setIsLoadingSchema(true);
-            const schemaResult = await sqlPro.db.getSchema({
+            const schemaResult = await quarry.db.getSchema({
               connectionId: result.connection.id,
             });
 
@@ -327,7 +327,7 @@ export function DatabasePage() {
             setIsLoadingSchema(false);
 
             // Refresh recent connections
-            const connectionsResult = await sqlPro.app.getRecentConnections();
+            const connectionsResult = await quarry.app.getRecentConnections();
             if (connectionsResult.success && connectionsResult.connections) {
               setRecentConnections(
                 connectionsResult.connections as RecentConnection[]
@@ -358,7 +358,7 @@ export function DatabasePage() {
 
       if (isEncrypted) {
         // Check for saved password
-        const savedPasswordResult = await sqlPro.password.get({ dbPath: path });
+        const savedPasswordResult = await quarry.password.get({ dbPath: path });
         if (savedPasswordResult.success && savedPasswordResult.password) {
           await connectToDatabase(path, savedPasswordResult.password, readOnly);
         } else {
@@ -390,7 +390,7 @@ export function DatabasePage() {
 
       if (pendingIsEncrypted) {
         // Check for saved password
-        const savedPasswordResult = await sqlPro.password.get({
+        const savedPasswordResult = await quarry.password.get({
           dbPath: pendingPath,
         });
         if (savedPasswordResult.success && savedPasswordResult.password) {
@@ -426,7 +426,7 @@ export function DatabasePage() {
         remember || pendingSettings?.rememberPassword || false;
 
       if (shouldRemember) {
-        const saveResult = await sqlPro.password.save({
+        const saveResult = await quarry.password.save({
           dbPath: pendingPath,
           password,
         });

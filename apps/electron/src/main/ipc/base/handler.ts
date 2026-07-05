@@ -7,7 +7,7 @@
  * - Type-safe channel registration
  */
 
-import type { IpcChannel } from '@sqlpro/ipc-contracts';
+import type { IpcChannel } from '@quarry/ipc-contracts';
 import type { IpcMainInvokeEvent } from 'electron';
 import process from 'node:process';
 import { ipcMain } from 'electron';

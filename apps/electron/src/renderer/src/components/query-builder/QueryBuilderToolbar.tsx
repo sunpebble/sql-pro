@@ -4,7 +4,7 @@ import type {
   FilterOperator,
   SortConfig,
 } from '@/types/query-builder';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -12,20 +12,20 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@sqlpro/ui/command';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@sqlpro/ui/popover';
+} from '@quarry/ui/command';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@quarry/ui/popover';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Separator } from '@sqlpro/ui/separator';
-import { Switch } from '@sqlpro/ui/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/select';
+import { Separator } from '@quarry/ui/separator';
+import { Switch } from '@quarry/ui/switch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   ArrowDownAZ,
   ArrowUpAZ,

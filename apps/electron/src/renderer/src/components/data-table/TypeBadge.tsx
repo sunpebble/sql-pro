@@ -10,45 +10,33 @@ interface TypeBadgeProps {
   className?: string;
 }
 
+// Icon and color per type category (module-level so React Compiler can prove
+// the rendered component reference is static)
+const CATEGORY_ICONS: Record<ColumnTypeCategory, typeof Hash> = {
+  numeric: Hash,
+  date: Calendar,
+  boolean: Database,
+  text: Type,
+  unknown: HelpCircle,
+};
+
+const CATEGORY_COLORS: Record<ColumnTypeCategory, string> = {
+  numeric: 'bg-type-numeric-bg text-type-numeric',
+  date: 'bg-type-date-bg text-type-date',
+  boolean: 'bg-type-boolean-bg text-type-boolean',
+  text: 'bg-type-text-bg text-type-text',
+  unknown: 'bg-type-unknown-bg text-type-unknown',
+};
+
 /**
  * Badge component that displays the column data type with an appropriate icon
  */
 export const TypeBadge = memo(
   ({ type, typeCategory, className }: TypeBadgeProps) => {
     const { t } = useTranslation('common');
-    // Select icon based on type category
-    const Icon = (() => {
-      switch (typeCategory) {
-        case 'numeric':
-          return Hash;
-        case 'date':
-          return Calendar;
-        case 'boolean':
-          return Database;
-        case 'text':
-          return Type;
-        case 'unknown':
-        default:
-          return HelpCircle;
-      }
-    })();
-
-    // Select color based on type category using design tokens
-    const colorClasses = (() => {
-      switch (typeCategory) {
-        case 'numeric':
-          return 'bg-type-numeric-bg text-type-numeric';
-        case 'date':
-          return 'bg-type-date-bg text-type-date';
-        case 'boolean':
-          return 'bg-type-boolean-bg text-type-boolean';
-        case 'text':
-          return 'bg-type-text-bg text-type-text';
-        case 'unknown':
-        default:
-          return 'bg-type-unknown-bg text-type-unknown';
-      }
-    })();
+    const Icon = CATEGORY_ICONS[typeCategory] ?? HelpCircle;
+    const colorClasses =
+      CATEGORY_COLORS[typeCategory] ?? CATEGORY_COLORS.unknown;
 
     return (
       <span

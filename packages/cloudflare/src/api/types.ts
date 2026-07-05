@@ -121,7 +121,7 @@ export interface Env {
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;
 
-  // App URL for SSO deep links (optional, defaults to sqlpro://)
+  // App URL for SSO deep links (optional, defaults to quarry://)
   APP_URL?: string;
 
   // Environment

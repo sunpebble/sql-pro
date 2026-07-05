@@ -422,6 +422,9 @@ export function formatBytes(bytes: number, decimals = 2): string {
  * @returns Number of bytes
  * @throws Error if the format is invalid
  */
+const BYTE_VALUE_WITH_UNIT_RE =
+  /^(-?\d+(?:\.\d+)?)\s*(bytes?|b|kb?|mb?|gb?|tb?|pb?|eb?|zb?|yb?)?$/i;
+
 export function parseBytes(str: string): number {
   const trimmed = str.trim();
 
@@ -431,9 +434,7 @@ export function parseBytes(str: string): number {
     return numOnly;
   }
 
-  const match = trimmed.match(
-    /^(-?\d+(?:\.\d+)?)\s*(bytes?|b|kb?|mb?|gb?|tb?|pb?|eb?|zb?|yb?)?$/i
-  );
+  const match = trimmed.match(BYTE_VALUE_WITH_UNIT_RE);
   if (!match) {
     throw new Error(`Invalid byte format: ${str}`);
   }

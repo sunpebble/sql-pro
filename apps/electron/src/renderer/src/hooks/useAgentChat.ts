@@ -76,7 +76,7 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
 
   const refreshSettings = useCallback(async () => {
     try {
-      const response = await window.sqlPro.agent.getSettings();
+      const response = await window.quarry.agent.getSettings();
       setSettings(response.settings);
       setIsConfigured(response.isConfigured);
     } catch (err) {
@@ -87,7 +87,7 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
   const loadSessions = useCallback(async () => {
     if (!connectionId) return;
     try {
-      const response = await window.sqlPro.agent.getSessions({ connectionId });
+      const response = await window.quarry.agent.getSessions({ connectionId });
       setSessions(response.sessions);
     } catch (err) {
       console.error('Failed to load sessions:', err);
@@ -115,7 +115,7 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
   const loadSession = useCallback(
     async (sessionId: string) => {
       try {
-        const response = await window.sqlPro.agent.getSession({
+        const response = await window.quarry.agent.getSession({
           connectionId,
           sessionId,
         });
@@ -136,7 +136,7 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
   const deleteSession = useCallback(
     async (sessionId: string) => {
       try {
-        await window.sqlPro.agent.deleteSession({ connectionId, sessionId });
+        await window.quarry.agent.deleteSession({ connectionId, sessionId });
         await loadSessions();
         if (sessionId === currentSessionId) {
           createNewSession();
@@ -151,7 +151,7 @@ export function useAgentChat(options: UseAgentChatOptions): UseAgentChatReturn {
   const saveSettings = useCallback(
     async (newSettings: Partial<AgentSettings>) => {
       try {
-        const response = await window.sqlPro.agent.saveSettings({
+        const response = await window.quarry.agent.saveSettings({
           settings: newSettings,
         });
         setSettings(response.settings);

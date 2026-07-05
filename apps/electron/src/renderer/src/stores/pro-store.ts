@@ -1,6 +1,6 @@
 import type { ProFeature } from '@shared/types';
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { withRetryOrDefault } from '@/lib/ipc-retry';
 
 interface ProState {
@@ -61,8 +61,8 @@ export const useProStore = create<ProState>((set, get) => ({
     set({ isLoading: true });
     try {
       const result = await withRetryOrDefault(
-        () => sqlPro.pro.getStatus(),
-        { success: false } as Awaited<ReturnType<typeof sqlPro.pro.getStatus>>,
+        () => quarry.pro.getStatus(),
+        { success: false } as Awaited<ReturnType<typeof quarry.pro.getStatus>>,
         { silent: true }
       );
       if (result.success && result.status) {
@@ -84,7 +84,7 @@ export const useProStore = create<ProState>((set, get) => ({
   activate: async (licenseKey: string) => {
     set({ isActivating: true });
     try {
-      const result = await sqlPro.pro.activate({ licenseKey });
+      const result = await quarry.pro.activate({ licenseKey });
       if (result.success && result.status) {
         set({
           isPro: result.status.isPro,
@@ -107,7 +107,7 @@ export const useProStore = create<ProState>((set, get) => ({
   deactivate: async () => {
     set({ isActivating: true });
     try {
-      const result = await sqlPro.pro.deactivate();
+      const result = await quarry.pro.deactivate();
       if (result.success) {
         set({
           ...DEFAULT_PRO_STATUS,

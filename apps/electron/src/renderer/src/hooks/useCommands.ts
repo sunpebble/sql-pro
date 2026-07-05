@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { invalidateTableData, refreshSchema } from '@/lib/query-refresh';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useChangesStore } from '@/stores/changes-store';
@@ -438,7 +438,7 @@ export function useCommands() {
         const connectionStore = connectionStoreRef.current;
         if (!connectionStore?.activeConnectionId) {
           // No connection, create new window
-          sqlPro.window.create().catch(console.error);
+          quarry.window.create().catch(console.error);
           return;
         }
         const addRowButton = document.querySelector<HTMLButtonElement>(
@@ -609,7 +609,7 @@ export function useCommands() {
       const newWindowBinding = getShortcut('action.new-window');
       if (matchesBinding(e, newWindowBinding)) {
         e.preventDefault();
-        sqlPro.window.create().catch(console.error);
+        quarry.window.create().catch(console.error);
       }
     };
 

@@ -1,12 +1,12 @@
 import type { ColorMode, Connection, OnConnect } from '@xyflow/react';
 import type { QueryBuilderEdge, QueryBuilderNode } from '@/types/query-builder';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@sqlpro/ui/resizable';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/resizable';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   Background,
   MiniMap,
@@ -69,12 +69,10 @@ export function QueryBuilder() {
 
   // Sync nodes/edges from store
   useEffect(() => {
-     
     setNodes(storeNodes);
   }, [storeNodes, setNodes]);
 
   useEffect(() => {
-     
     setEdges(storeEdges);
   }, [storeEdges, setEdges]);
 

@@ -10,6 +10,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // Import component after mocks are set up
 import { MemoryMonitorPanel } from './MemoryMonitorPanel';
 
+const MEMORY_PRESSURE_LABEL_RE = /Memory Pressure:/;
+
 // Define mock functions using vi.hoisted to ensure they're available when vi.mock runs
 const {
   mockSubscribe,
@@ -192,7 +194,7 @@ describe('memoryMonitorPanel', () => {
     it('should display memory pressure level indicator', () => {
       render(<MemoryMonitorPanel />);
 
-      expect(screen.getByText(/Memory Pressure:/)).toBeDefined();
+      expect(screen.getByText(MEMORY_PRESSURE_LABEL_RE)).toBeDefined();
     });
 
     it('should show main process memory section', () => {

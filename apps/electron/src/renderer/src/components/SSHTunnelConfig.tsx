@@ -3,16 +3,16 @@
  * Collapsible section for SSH tunnel settings in connection dialogs
  */
 
-import { Button } from '@sqlpro/ui/button';
-import { Checkbox } from '@sqlpro/ui/checkbox';
+import { Button } from '@quarry/ui/button';
+import { Checkbox } from '@quarry/ui/checkbox';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@sqlpro/ui/collapsible';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
-import { RadioGroup, RadioGroupItem } from '@sqlpro/ui/radio-group';
+} from '@quarry/ui/collapsible';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
+import { RadioGroup, RadioGroupItem } from '@quarry/ui/radio-group';
 import { ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -108,7 +108,7 @@ export function SSHTunnelConfig({
     onPathChange: (path: string) => void
   ) => {
     try {
-      const result = await window.sqlPro.dialog.openFile({
+      const result = await window.quarry.dialog.openFile({
         title: t('connection.ssh.privateKeyPath'),
       });
       if (result && result.success && result.filePath) {

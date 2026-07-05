@@ -676,7 +676,7 @@ async function parseAndValidate<T>(
     parsed = JSON.parse(dataString);
   } catch (error) {
     throw new Error(
-      `Invalid JSON format: ${error instanceof Error ? error.message : String(error)}. Please ensure the file is a valid SQL Pro export file.`
+      `Invalid JSON format: ${error instanceof Error ? error.message : String(error)}. Please ensure the file is a valid Quarry export file.`
     );
   }
 

@@ -1,4 +1,4 @@
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   ArrowLeftRight,
   BookOpen,
@@ -95,7 +95,7 @@ export function FeatureShowcase({
   const { t } = useTranslation('common');
 
   const handleOpenDocs = () => {
-    window.open('https://kunish-homelab.github.io/sql-pro/', '_blank');
+    window.open('https://sunpebble.github.io/quarry/', '_blank');
   };
 
   return (

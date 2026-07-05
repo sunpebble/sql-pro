@@ -1,7 +1,7 @@
 /**
  * Media Proxy Service
  *
- * Provides a custom `sqlpro://` protocol handler for proxying remote media (images and videos).
+ * Provides a custom `quarry://` protocol handler for proxying remote media (images and videos).
  * This solves CORS issues and enables clipboard operations for remote images.
  *
  * Features:
@@ -351,6 +351,8 @@ async function extractMetadata(buffer: Buffer): Promise<ImageMetadata> {
   }
 }
 
+const BYTE_RANGE_RE = /bytes=(\d+)-(\d*)/;
+
 /**
  * Parse and clamp HTTP Range (bytes=) to valid buffer slice indices.
  */
@@ -359,7 +361,7 @@ function parseClampedByteRange(
   bufferLength: number
 ): { start: number; end: number } | null {
   if (!rangeHeader || bufferLength <= 0) return null;
-  const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
+  const match = rangeHeader.match(BYTE_RANGE_RE);
   if (!match) return null;
   const maxIndex = bufferLength - 1;
   let start = Number.parseInt(match[1], 10);
@@ -437,13 +439,13 @@ async function fetchAndProcessMedia(
 // ============================================================================
 
 /**
- * Register the sqlpro:// scheme as privileged.
+ * Register the quarry:// scheme as privileged.
  * MUST be called before app.whenReady()
  */
 export function registerImageProxyScheme(): void {
   protocol.registerSchemesAsPrivileged([
     {
-      scheme: 'sqlpro',
+      scheme: 'quarry',
       privileges: {
         standard: true,
         secure: true,
@@ -455,7 +457,7 @@ export function registerImageProxyScheme(): void {
 }
 
 /**
- * Setup the protocol handler for sqlpro:// URLs.
+ * Setup the protocol handler for quarry:// URLs.
  * Must be called after app.whenReady()
  */
 export function setupImageProxyHandler(): void {
@@ -486,10 +488,10 @@ export function setupImageProxyHandler(): void {
     '.3gp': 'video/3gpp',
   };
 
-  protocol.handle('sqlpro', async (request) => {
+  protocol.handle('quarry', async (request) => {
     const url = new URL(request.url);
 
-    // Handle local file requests: sqlpro://file/<encoded-path>
+    // Handle local file requests: quarry://file/<encoded-path>
     if (url.host === 'file') {
       try {
         const encodedPath = url.pathname.slice(1); // Remove leading /
@@ -565,7 +567,7 @@ export function setupImageProxyHandler(): void {
       }
     }
 
-    // Handle image proxy requests: sqlpro://image/<encoded-url>
+    // Handle image proxy requests: quarry://image/<encoded-url>
     if (url.host === 'image') {
       try {
         // Decode the original URL from the path

@@ -1,4 +1,4 @@
 {
-  "extends": "@sqlpro/tsconfig/web.json",
+  "extends": "@quarry/tsconfig/web.json",
   "include": ["./**/*.ts"]
 }

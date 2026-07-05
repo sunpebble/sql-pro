@@ -4,6 +4,9 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useConnectionStore } from '@/stores/connection-store';
 import { Toolbar } from './Toolbar';
 
+const TOOLBAR_AI_AGENT_RE = /toolbar.aiAgent/i;
+const TOOLBAR_HELP_RE = /toolbar.help/i;
+
 // Mock connection
 const mockConnection: DatabaseConnection = {
   id: 'conn-1',
@@ -25,12 +28,16 @@ describe('toolbar', () => {
   it('should render AI Agent button with accessible name', () => {
     render(<Toolbar />);
     // The mock i18n returns the key 'toolbar.aiAgent'
-    expect(screen.getByRole('button', { name: /toolbar.aiAgent/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: TOOLBAR_AI_AGENT_RE })
+    ).toBeInTheDocument();
   });
 
   it('should render Help button with accessible name', () => {
     render(<Toolbar />);
     // The mock i18n returns the key 'toolbar.help'
-    expect(screen.getByRole('button', { name: /toolbar.help/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: TOOLBAR_HELP_RE })
+    ).toBeInTheDocument();
   });
 });

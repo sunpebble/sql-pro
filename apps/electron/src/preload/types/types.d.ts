@@ -1,9 +1,9 @@
 import type { ElectronAPI } from '@electron-toolkit/preload';
-import type { SqlProAPI } from '../index';
+import type { QuarryAPI } from '../index';
 
 declare global {
   interface Window {
     electron: ElectronAPI;
-    sqlPro: SqlProAPI;
+    quarry: QuarryAPI;
   }
 }

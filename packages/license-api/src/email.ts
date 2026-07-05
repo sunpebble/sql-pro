@@ -27,9 +27,9 @@ export async function sendLicenseEmail(
   const planName = PLAN_NAMES[plan] || plan;
 
   const { data, error } = await resend.emails.send({
-    from: env.RESEND_FROM_EMAIL || 'SQL Pro <noreply@sqlpro.app>',
+    from: env.RESEND_FROM_EMAIL || 'Quarry <noreply@sqlpro.app>',
     to: email,
-    subject: 'Your SQL Pro License Key',
+    subject: 'Your Quarry License Key',
     html: generateLicenseEmailHtml({ email, licenseKey, planName }),
     text: generateLicenseEmailText({ email, licenseKey, planName }),
   });
@@ -60,7 +60,7 @@ function generateLicenseEmailHtml({
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your SQL Pro License Key</title>
+  <title>Your Quarry License Key</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -70,7 +70,7 @@ function generateLicenseEmailHtml({
           <!-- Header -->
           <tr>
             <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">SQL Pro</h1>
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">Quarry</h1>
               <p style="margin: 10px 0 0; color: rgba(255, 255, 255, 0.9); font-size: 16px;">Thank you for your purchase!</p>
             </td>
           </tr>
@@ -82,7 +82,7 @@ function generateLicenseEmailHtml({
                 Hi there,
               </p>
               <p style="margin: 0 0 20px; color: #333333; font-size: 16px; line-height: 1.6;">
-                Thank you for purchasing <strong>SQL Pro ${planName}</strong>! Your license key is ready to use.
+                Thank you for purchasing <strong>Quarry ${planName}</strong>! Your license key is ready to use.
               </p>
               
               <!-- License Key Box -->
@@ -96,7 +96,7 @@ function generateLicenseEmailHtml({
               <!-- Instructions -->
               <h2 style="margin: 30px 0 15px; color: #333333; font-size: 18px; font-weight: 600;">How to Activate</h2>
               <ol style="margin: 0 0 20px; padding-left: 20px; color: #555555; font-size: 15px; line-height: 1.8;">
-                <li>Open SQL Pro on your computer</li>
+                <li>Open Quarry on your computer</li>
                 <li>Go to <strong>Settings</strong> &rarr; <strong>License</strong></li>
                 <li>Enter your email: <strong>${email}</strong></li>
                 <li>Paste your license key</li>
@@ -113,7 +113,7 @@ function generateLicenseEmailHtml({
           <tr>
             <td style="padding: 20px 40px 30px; text-align: center; border-top: 1px solid #eeeeee;">
               <p style="margin: 0; color: #999999; font-size: 13px;">
-                &copy; ${new Date().getFullYear()} SQL Pro. All rights reserved.
+                &copy; ${new Date().getFullYear()} Quarry. All rights reserved.
               </p>
             </td>
           </tr>
@@ -132,16 +132,16 @@ function generateLicenseEmailText({
   planName,
 }: EmailContent): string {
   return `
-SQL Pro - Your License Key
+Quarry - Your License Key
 ===========================
 
-Thank you for purchasing SQL Pro ${planName}!
+Thank you for purchasing Quarry ${planName}!
 
 Your License Key:
 ${licenseKey}
 
 How to Activate:
-1. Open SQL Pro on your computer
+1. Open Quarry on your computer
 2. Go to Settings > License
 3. Enter your email: ${email}
 4. Paste your license key
@@ -150,6 +150,6 @@ How to Activate:
 If you have any questions, please contact us at support@sqlpro.app
 
 ---
-(c) ${new Date().getFullYear()} SQL Pro. All rights reserved.
+(c) ${new Date().getFullYear()} Quarry. All rights reserved.
 `.trim();
 }

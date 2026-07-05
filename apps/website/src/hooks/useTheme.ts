@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 
 export type Theme = 'light' | 'dark' | 'system';
 
-const STORAGE_KEY = 'sqlpro-theme';
+const STORAGE_KEY = 'quarry-theme';
 
 function getSystemTheme(): 'light' | 'dark' {
   if (typeof window === 'undefined') return 'light';

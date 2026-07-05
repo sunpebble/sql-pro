@@ -1,7 +1,7 @@
 {
-  "name": "@sqlpro/tsconfig",
+  "name": "@quarry/tsconfig",
   "version": "1.0.0",
-  "description": "Shared TypeScript configurations for SQL Pro monorepo",
+  "description": "Shared TypeScript configurations for Quarry monorepo",
   "license": "MIT",
   "files": [
     "*.json"

@@ -68,7 +68,7 @@ let _pluginStore: Store<PluginRegistryStoreSchema> | null = null;
 function getPluginStore(): Store<PluginRegistryStoreSchema> {
   if (!_pluginStore) {
     _pluginStore = new Store<PluginRegistryStoreSchema>({
-      name: 'sql-pro-plugins',
+      name: 'quarry-plugins',
       defaults: {
         pluginStates: {},
       },

@@ -1,6 +1,6 @@
 import type { UIFilterState } from '@/lib/filter-utils';
 import type { ColumnSchema } from '@/types/database';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import { Hash, Sparkles, Tag, X } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

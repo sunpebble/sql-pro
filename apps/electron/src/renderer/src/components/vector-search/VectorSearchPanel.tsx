@@ -2,24 +2,24 @@ import type {
   VectorSearchHistoryEntry,
   VectorSearchResult,
 } from '@shared/types';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Label } from '@sqlpro/ui/label';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Label } from '@quarry/ui/label';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@sqlpro/ui/resizable';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+} from '@quarry/ui/resizable';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sqlpro/ui/tabs';
-import { Textarea } from '@sqlpro/ui/textarea';
+} from '@quarry/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@quarry/ui/tabs';
+import { Textarea } from '@quarry/ui/textarea';
 import {
   AlertCircle,
   Clock,

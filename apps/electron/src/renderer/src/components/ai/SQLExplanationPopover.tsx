@@ -1,8 +1,8 @@
 // SQLExplanationPopover Component
 // Shows SQL explanation in a popover when user selects SQL
 
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
 import { Loader2, Table2, X, Zap } from 'lucide-react';
 import { useEffect } from 'react';
 import { useQuickQuery } from '@/hooks/useQuickQuery';

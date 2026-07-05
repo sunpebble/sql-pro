@@ -1,9 +1,9 @@
 /**
  * License Key Input Component
- * OTP-style input for license keys with format: SQLPRO-XXXX-XXXX-XXXX-XXXX
+ * OTP-style input for license keys with format: QUARRY-XXXX-XXXX-XXXX-XXXX
  */
 
-import { Input } from '@sqlpro/ui/input';
+import { Input } from '@quarry/ui/input';
 import { Check, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,17 +17,20 @@ interface LicenseKeyInputProps {
   autoFocus?: boolean;
 }
 
-const LICENSE_PREFIX = 'SQLPRO';
+const LICENSE_PREFIX = 'QUARRY';
 const SEGMENT_LENGTH = 4;
 const SEGMENT_COUNT = 4; // 4 segments after prefix
 const SEGMENT_REGEX = /^[A-Z0-9]+$/;
 
-// Minimum length for a complete license key: SQLPRO-XXXX-XXXX-XXXX-XXXX (26 chars)
+// Minimum length for a complete license key: QUARRY-XXXX-XXXX-XXXX-XXXX (26 chars)
 export const MIN_LICENSE_KEY_LENGTH =
   LICENSE_PREFIX.length +
   1 +
   SEGMENT_LENGTH * SEGMENT_COUNT +
   (SEGMENT_COUNT - 1);
+
+const NON_ALPHANUMERIC_RE = /[^A-Z0-9]/g;
+const LICENSE_PREFIX_RE = /^QUARRY/;
 
 /**
  * Formats a raw license key string into segments
@@ -35,8 +38,8 @@ export const MIN_LICENSE_KEY_LENGTH =
 function formatLicenseKey(raw: string): string[] {
   const cleaned = raw
     .toUpperCase()
-    .replace(/[^A-Z0-9]/g, '')
-    .replace(/^SQLPRO/, '');
+    .replace(NON_ALPHANUMERIC_RE, '')
+    .replace(LICENSE_PREFIX_RE, '');
 
   const segments: string[] = [];
   for (let i = 0; i < SEGMENT_COUNT; i++) {
@@ -97,11 +100,11 @@ export function LicenseKeyInput({
 
   const handleSegmentChange = useCallback(
     (index: number, inputValue: string) => {
-      const cleaned = inputValue.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const cleaned = inputValue.toUpperCase().replace(NON_ALPHANUMERIC_RE, '');
 
       // Handle paste of full license key
       if (cleaned.length > SEGMENT_LENGTH) {
-        const pasted = cleaned.replace(/^SQLPRO/, '');
+        const pasted = cleaned.replace(LICENSE_PREFIX_RE, '');
         const newSegments = formatLicenseKey(pasted);
         setSegments(newSegments);
         onChange(segmentsToKey(newSegments));
@@ -167,8 +170,8 @@ export function LicenseKeyInput({
       const pasted = e.clipboardData
         .getData('text')
         .toUpperCase()
-        .replace(/[^A-Z0-9]/g, '')
-        .replace(/^SQLPRO/, '');
+        .replace(NON_ALPHANUMERIC_RE, '')
+        .replace(LICENSE_PREFIX_RE, '');
 
       const newSegments = formatLicenseKey(pasted);
       setSegments(newSegments);

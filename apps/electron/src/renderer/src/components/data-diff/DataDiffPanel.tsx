@@ -1,14 +1,14 @@
-import { Alert, AlertDescription, AlertTitle } from '@sqlpro/ui/alert';
-import { Button } from '@sqlpro/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@sqlpro/ui/card';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Alert, AlertDescription, AlertTitle } from '@quarry/ui/alert';
+import { Button } from '@quarry/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@quarry/ui/card';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@sqlpro/ui/select';
+} from '@quarry/ui/select';
 import {
   AlertCircle,
   ArrowLeftRight,
@@ -23,7 +23,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShortcutKbd } from '@/components/ui/kbd';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
 import { useDataDiffStore } from '@/stores/data-diff-store';
@@ -157,7 +157,7 @@ export function DataDiffPanel({ className }: DataDiffPanelProps) {
     setComparisonError(null);
 
     try {
-      const response = await sqlPro.comparison.compareTables({
+      const response = await quarry.comparison.compareTables({
         sourceConnectionId: source.connectionId,
         sourceTable: source.tableName,
         sourceSchema: source.schemaName || 'main',

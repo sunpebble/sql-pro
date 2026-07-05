@@ -86,7 +86,7 @@ export async function initializeStorage(): Promise<void> {
 
       await Promise.all(
         keys.map(async (key) => {
-          const result = await window.sqlPro.rendererStore.get({ key });
+          const result = await window.quarry.rendererStore.get({ key });
           if (result.success && result.data !== undefined) {
             switch (key) {
               case 'settings':
@@ -145,7 +145,7 @@ export function isStorageInitialized(): boolean {
 export function isElectronEnvironment(): boolean {
   return (
     typeof window !== 'undefined' &&
-    typeof window.sqlPro !== 'undefined' &&
+    typeof window.quarry !== 'undefined' &&
     typeof window.electronAPI !== 'undefined'
   );
 }
@@ -185,7 +185,7 @@ export function getCachedTableOrganization(): RendererTableOrganizationState | n
 export function persistSettings(settings: RendererSettingsState): void {
   cache.settings = settings;
   if (!isElectronEnvironment()) return;
-  window.sqlPro.rendererStore
+  window.quarry.rendererStore
     .set({ key: 'settings', value: settings })
     .catch((error: unknown) => {
       console.error('Failed to persist settings:', error);
@@ -195,7 +195,7 @@ export function persistSettings(settings: RendererSettingsState): void {
 export function persistDiagram(diagram: RendererDiagramState): void {
   cache.diagram = diagram;
   if (!isElectronEnvironment()) return;
-  window.sqlPro.rendererStore
+  window.quarry.rendererStore
     .set({ key: 'diagram', value: diagram })
     .catch((error: unknown) => {
       console.error('Failed to persist diagram:', error);
@@ -205,7 +205,7 @@ export function persistDiagram(diagram: RendererDiagramState): void {
 export function persistPanelWidths(panelWidths: RendererPanelWidths): void {
   cache.panelWidths = panelWidths;
   if (!isElectronEnvironment()) return;
-  window.sqlPro.rendererStore
+  window.quarry.rendererStore
     .set({ key: 'panelWidths', value: panelWidths })
     .catch((error: unknown) => {
       console.error('Failed to persist panelWidths:', error);
@@ -217,7 +217,7 @@ export function persistConnectionUi(
 ): void {
   cache.connectionUi = connectionUi;
   if (!isElectronEnvironment()) return;
-  window.sqlPro.rendererStore
+  window.quarry.rendererStore
     .set({ key: 'connectionUi', value: connectionUi })
     .catch((error: unknown) => {
       console.error('Failed to persist connectionUi:', error);
@@ -229,7 +229,7 @@ export function persistOnboarding(onboarding: RendererOnboardingState): void {
   // Skip persistence in development mode to always trigger tour on restart
   if (import.meta.env.DEV) return;
   if (!isElectronEnvironment()) return;
-  window.sqlPro.rendererStore
+  window.quarry.rendererStore
     .set({ key: 'onboarding', value: onboarding })
     .catch((error: unknown) => {
       console.error('Failed to persist onboarding:', error);
@@ -241,7 +241,7 @@ export function persistSavedQueries(
 ): void {
   cache.savedQueries = savedQueries;
   if (!isElectronEnvironment()) return;
-  window.sqlPro.rendererStore
+  window.quarry.rendererStore
     .set({ key: 'savedQueries', value: savedQueries })
     .catch((error: unknown) => {
       console.error('Failed to persist saved queries state:', error);
@@ -253,7 +253,7 @@ export function persistTableOrganization(
 ): void {
   cache.tableOrganization = tableOrganization;
   if (!isElectronEnvironment()) return;
-  window.sqlPro.rendererStore
+  window.quarry.rendererStore
     .set({ key: 'tableOrganization', value: tableOrganization })
     .catch((error: unknown) => {
       console.error('Failed to persist table organization state:', error);

@@ -1,5 +1,5 @@
 {
-  "name": "@sqlpro/license-api",
+  "name": "@quarry/license-api",
   "type": "module",
   "version": "1.0.0",
   "private": true,

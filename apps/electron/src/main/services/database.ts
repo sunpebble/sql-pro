@@ -43,6 +43,8 @@ function generateId(): string {
   return `conn_${idCounter}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
+const SELECT_STAR_RE = /SELECT \*/;
+
 // Check if file appears to be encrypted (doesn't have SQLite header)
 function isFileEncrypted(path: string): boolean {
   try {
@@ -1427,7 +1429,7 @@ class DatabaseService {
       }
 
       // Get total count
-      const countSql = sql.replace(/SELECT \*/, 'SELECT COUNT(*) as count');
+      const countSql = sql.replace(SELECT_STAR_RE, 'SELECT COUNT(*) as count');
       const countStartTime = performance.now();
       const countResult = conn.db.prepare(countSql).get(...params) as {
         count: number;
@@ -1613,7 +1615,10 @@ class DatabaseService {
 
       if (filters && filters.length > 0) {
         // For filtered queries, get exact count
-        const countSql = sql.replace(/SELECT \*/, 'SELECT COUNT(*) as count');
+        const countSql = sql.replace(
+          SELECT_STAR_RE,
+          'SELECT COUNT(*) as count'
+        );
         const countStartTime = performance.now();
         const countResult = conn.db.prepare(countSql).get(...params) as {
           count: number;

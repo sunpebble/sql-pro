@@ -1,8 +1,8 @@
 import type { ConnectionProfile, ProfileFolder } from '@shared/types.ts';
 import type { ProfileFormData } from './ProfileForm';
-import { Button } from '@sqlpro/ui/button';
-import { Input } from '@sqlpro/ui/input';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+import { Button } from '@quarry/ui/button';
+import { Input } from '@quarry/ui/input';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   AlertTriangle,
   Database,
@@ -24,7 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useConnectionStore } from '@/stores/connection-store';
 import { FolderTreeView } from './FolderTreeView';
@@ -115,7 +115,7 @@ export function ProfileManager({
   const checkKeychainAvailability = useCallback(async () => {
     try {
       // Use a test operation to check if keychain is available
-      await sqlPro.password.has({
+      await quarry.password.has({
         dbPath: '__keychain_test__',
       });
       setKeychainAvailable(true);
@@ -132,7 +132,7 @@ export function ProfileManager({
       try {
         // image.checkFile is the general "does this local file exist" IPC;
         // the removed file.exists never worked (it hit the writeFile channel)
-        const result = await sqlPro.image.checkFile({ path: profile.path });
+        const result = await quarry.image.checkFile({ path: profile.path });
         if (result && !result.exists) {
           missing.add(profile.path);
         }
@@ -150,7 +150,7 @@ export function ProfileManager({
 
     try {
       // Load profiles
-      const profilesResult = await sqlPro.profile.getAll({});
+      const profilesResult = await quarry.profile.getAll({});
       if (profilesResult.success && profilesResult.profiles) {
         setProfiles(profilesResult.profiles);
         // Validate database file existence
@@ -160,7 +160,7 @@ export function ProfileManager({
       }
 
       // Load folders
-      const foldersResult = await sqlPro.folder.getAll({});
+      const foldersResult = await quarry.folder.getAll({});
       if (foldersResult.success && foldersResult.folders) {
         setFolders(foldersResult.folders);
       } else {
@@ -245,7 +245,7 @@ export function ProfileManager({
       };
 
       try {
-        const result = await sqlPro.profile.save({
+        const result = await quarry.profile.save({
           profile: duplicatedProfile,
         });
 
@@ -288,7 +288,7 @@ export function ProfileManager({
     if (!pendingDeleteProfileId) return;
 
     try {
-      const result = await sqlPro.profile.delete({
+      const result = await quarry.profile.delete({
         id: pendingDeleteProfileId,
         removePassword: true, // Also remove password from keychain
       });
@@ -322,7 +322,7 @@ export function ProfileManager({
       if (!editingProfile) return;
 
       try {
-        const result = await sqlPro.profile.update({
+        const result = await quarry.profile.update({
           id: editingProfile.id,
           updates: {
             displayName: data.displayName,
@@ -433,7 +433,7 @@ export function ProfileManager({
     }
 
     try {
-      const result = await sqlPro.folder.delete({ id: pendingDeleteFolderId });
+      const result = await quarry.folder.delete({ id: pendingDeleteFolderId });
 
       if (result.success) {
         deleteFolder(pendingDeleteFolderId);
@@ -512,7 +512,7 @@ export function ProfileManager({
       if (folderDialogMode === 'create') {
         // Create new folder
         try {
-          const result = await sqlPro.folder.create({
+          const result = await quarry.folder.create({
             name: trimmedName,
             parentId: editingFolder?.id,
           });
@@ -537,7 +537,7 @@ export function ProfileManager({
         if (!editingFolder) return;
 
         try {
-          const result = await sqlPro.folder.update({
+          const result = await quarry.folder.update({
             id: editingFolder.id,
             updates: { name: trimmedName },
           });
@@ -580,7 +580,7 @@ export function ProfileManager({
       if (profile.folderId === folderId) return;
 
       try {
-        const result = await sqlPro.profile.update({
+        const result = await quarry.profile.update({
           id: profileId,
           updates: { folderId },
         });
@@ -602,20 +602,20 @@ export function ProfileManager({
   // Handle add connection - open file dialog
   const handleAddConnection = useCallback(async () => {
     try {
-      const result = await sqlPro.dialog.openFile({
+      const result = await quarry.dialog.openFile({
         title: t('dialog.openDatabase'),
       });
       if (result.success && !result.canceled && result.filePath) {
         const filename =
           result.filePath.split(PATH_SEPARATOR_RE).pop() || result.filePath;
         // Try to open the file to check if it's encrypted
-        const probeResult = await sqlPro.db.open({
+        const probeResult = await quarry.db.open({
           path: result.filePath,
         });
         const isEncrypted = probeResult.needsPassword ?? false;
         // Close the connection if it was opened successfully
         if (probeResult.success && probeResult.connection?.id) {
-          await sqlPro.db.close({ connectionId: probeResult.connection.id });
+          await quarry.db.close({ connectionId: probeResult.connection.id });
         }
 
         setPendingNewConnection({
@@ -655,7 +655,7 @@ export function ProfileManager({
           createdAt: new Date().toISOString(),
         };
 
-        const result = await sqlPro.profile.save({ profile: newProfile });
+        const result = await quarry.profile.save({ profile: newProfile });
         if (result.success && result.profile) {
           addProfile(result.profile);
           setAddConnectionDialogOpen(false);
@@ -1168,7 +1168,7 @@ function HasSavedPasswordIndicator({
   const [hasSaved, setHasSaved] = useState(false);
 
   useEffect(() => {
-    sqlPro.password
+    quarry.password
       .has({ dbPath: path })
       .then((result: { hasPassword: boolean }) => {
         setHasSaved(result.hasPassword);

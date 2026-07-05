@@ -1,5 +1,5 @@
 /**
- * Query Hook Logger Plugin for SQL Pro
+ * Query Hook Logger Plugin for Quarry
  *
  * This example plugin demonstrates the Query Lifecycle API:
  *
@@ -34,7 +34,7 @@ import type {
   QueryError,
   QueryHookResult,
   QueryResults,
-} from '@sqlpro/plugin-sdk';
+} from '@quarry/plugin-sdk';
 
 // ============================================================================
 // Types

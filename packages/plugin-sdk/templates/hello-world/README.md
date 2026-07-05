@@ -1,10 +1,10 @@
 # Hello World Plugin
 
-A minimal example plugin for SQL Pro that demonstrates the basic structure and patterns for plugin development.
+A minimal example plugin for Quarry that demonstrates the basic structure and patterns for plugin development.
 
 ## What This Plugin Does
 
-This plugin demonstrates the fundamental building blocks of a SQL Pro plugin:
+This plugin demonstrates the fundamental building blocks of a Quarry plugin:
 
 1. **Command Registration** - Adds a "Hello World: Say Hello" command to the command palette
 2. **Menu Items** - Adds a "Plugins > Hello World" submenu with menu items
@@ -29,11 +29,11 @@ This plugin demonstrates the fundamental building blocks of a SQL Pro plugin:
 
 ### Installing the Plugin
 
-1. Package your plugin as a `.sqlpro-plugin` file (ZIP archive):
+1. Package your plugin as a `.quarry-plugin` file (ZIP archive):
    ```bash
-   zip -r hello-world.sqlpro-plugin plugin.json index.js
+   zip -r hello-world.quarry-plugin plugin.json index.js
    ```
-2. Open SQL Pro and go to **Plugins** (Cmd/Ctrl+Shift+P)
+2. Open Quarry and go to **Plugins** (Cmd/Ctrl+Shift+P)
 3. Click **Browse Marketplace** or drag-and-drop the plugin file
 4. Enable the plugin
 
@@ -53,15 +53,15 @@ The manifest file defines your plugin's metadata and requirements:
 
 ```json
 {
-  "id": "com.sqlpro.example.hello-world",
+  "id": "com.quarry.example.hello-world",
   "name": "Hello World",
   "version": "1.0.0",
   "description": "A minimal example plugin...",
-  "author": "SQL Pro Team",
+  "author": "Quarry Team",
   "main": "index.js",
   "permissions": ["ui:command", "ui:menu"],
   "engines": {
-    "sqlpro": "^1.6.0"
+    "quarry": "^1.6.0"
   }
 }
 ```
@@ -82,7 +82,7 @@ The manifest file defines your plugin's metadata and requirements:
 | Field            | Description                                     |
 | ---------------- | ----------------------------------------------- |
 | `permissions`    | Array of permission strings (for documentation) |
-| `engines.sqlpro` | Required SQL Pro version range                  |
+| `engines.quarry` | Required Quarry version range                   |
 | `license`        | SPDX license identifier                         |
 | `keywords`       | Search keywords for marketplace                 |
 | `homepage`       | Plugin homepage URL                             |
@@ -95,7 +95,7 @@ The manifest file defines your plugin's metadata and requirements:
 Your plugin must export an `activate` function. The `deactivate` function is optional but recommended.
 
 ```typescript
-import type { PluginContext, PluginModule } from '@sqlpro/plugin-sdk';
+import type { PluginContext, PluginModule } from '@quarry/plugin-sdk';
 
 // Store cleanup functions
 const disposables: Array<() => void> = [];
@@ -142,7 +142,7 @@ This plugin uses the following APIs:
 | Method                   | Description                     |
 | ------------------------ | ------------------------------- |
 | `getPluginInfo()`        | Get this plugin's manifest data |
-| `getAppInfo()`           | Get SQL Pro application info    |
+| `getAppInfo()`           | Get Quarry application info     |
 | `getCurrentConnection()` | Get current database connection |
 
 ## Keyboard Shortcuts

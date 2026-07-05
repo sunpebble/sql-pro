@@ -3,6 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { SchemaDetailsPanel } from './SchemaDetailsPanel';
 
+const COMMON_CLOSE_RE = /common.close/i;
+const SCHEMA_COLUMNS_RE = /schema.columns/i;
+
 const mockTable: TableSchema = {
   name: 'test_table',
   schema: 'main',
@@ -21,13 +24,13 @@ const mockTable: TableSchema = {
 describe('schemaDetailsPanel', () => {
   it('should render close button with accessible name when table is present', () => {
     render(<SchemaDetailsPanel table={mockTable} onClose={vi.fn()} />);
-    const closeButton = screen.getByRole('button', { name: /common.close/i });
+    const closeButton = screen.getByRole('button', { name: COMMON_CLOSE_RE });
     expect(closeButton).toBeInTheDocument();
   });
 
   it('should render close button with accessible name when table is NOT present', () => {
     render(<SchemaDetailsPanel table={null} onClose={vi.fn()} />);
-    const closeButton = screen.getByRole('button', { name: /common.close/i });
+    const closeButton = screen.getByRole('button', { name: COMMON_CLOSE_RE });
     expect(closeButton).toBeInTheDocument();
   });
 
@@ -36,8 +39,13 @@ describe('schemaDetailsPanel', () => {
 
     // The section button includes text "Columns (2)" because count is 2
     // We can search by partial text
-    const columnsToggle = screen.getByRole('button', { name: /schema.columns/i });
+    const columnsToggle = screen.getByRole('button', {
+      name: SCHEMA_COLUMNS_RE,
+    });
     expect(columnsToggle).toHaveAttribute('aria-expanded', 'true');
-    expect(columnsToggle).toHaveAttribute('aria-controls', 'section-columns-content');
+    expect(columnsToggle).toHaveAttribute(
+      'aria-controls',
+      'section-columns-content'
+    );
   });
 });

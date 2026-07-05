@@ -1,8 +1,8 @@
 /**
- * Hello World Plugin for SQL Pro
+ * Hello World Plugin for Quarry
  *
  * This is a minimal example plugin that demonstrates the basic structure
- * of a SQL Pro plugin. It shows how to:
+ * of a Quarry plugin. It shows how to:
  *
  * 1. Export an `activate` function as the plugin entry point
  * 2. Register a command in the command palette
@@ -15,7 +15,7 @@
  * @packageDocumentation
  */
 
-import type { PluginContext, PluginModule } from '@sqlpro/plugin-sdk';
+import type { PluginContext, PluginModule } from '@quarry/plugin-sdk';
 
 // ============================================================================
 // Plugin State
@@ -63,7 +63,7 @@ export const activate: PluginModule['activate'] = (context: PluginContext) => {
     handler: () => {
       // Show a success notification
       api.ui.showNotification({
-        message: 'Hello, World! Welcome to SQL Pro plugins.',
+        message: 'Hello, World! Welcome to Quarry plugins.',
         type: 'success',
         duration: 5000, // Auto-dismiss after 5 seconds
       });
@@ -115,7 +115,7 @@ export const activate: PluginModule['activate'] = (context: PluginContext) => {
       const appInfo = api.metadata.getAppInfo();
 
       api.ui.showNotification({
-        message: `${pluginInfo.name} v${pluginInfo.version} running on SQL Pro ${appInfo.version} (${appInfo.platform}/${appInfo.arch})`,
+        message: `${pluginInfo.name} v${pluginInfo.version} running on Quarry ${appInfo.version} (${appInfo.platform}/${appInfo.arch})`,
         type: 'info',
         duration: 6000,
       });

@@ -6,9 +6,9 @@ import type {
   ExecutionPlanFlowNode,
   Suggestion,
 } from '@/lib/query-plan-analyzer';
-import { Badge } from '@sqlpro/ui/badge';
-import { Button } from '@sqlpro/ui/button';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
+import { Badge } from '@quarry/ui/badge';
+import { Button } from '@quarry/ui/button';
+import { ScrollArea } from '@quarry/ui/scroll-area';
 import {
   Sheet,
   SheetClose,
@@ -16,7 +16,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from '@sqlpro/ui/sheet';
+} from '@quarry/ui/sheet';
 import {
   Background,
   Controls,
@@ -144,13 +144,15 @@ const OPERATION_ICONS: Record<string, React.ElementType> = {
   default: Database,
 };
 
-const getOperationIcon = (detail: string): React.ElementType => {
+// Returns an OPERATION_ICONS key so callers render via a static map lookup,
+// which React Compiler accepts (a function returning a component is flagged)
+const getOperationIconKey = (detail: string): string => {
   const upper = detail.toUpperCase();
-  if (upper.includes('SCAN')) return OPERATION_ICONS.SCAN;
-  if (upper.includes('SEARCH')) return OPERATION_ICONS.SEARCH;
-  if (upper.includes('INDEX')) return OPERATION_ICONS.INDEX;
-  if (upper.includes('PRIMARY')) return OPERATION_ICONS.PRIMARY;
-  return OPERATION_ICONS.default;
+  if (upper.includes('SCAN')) return 'SCAN';
+  if (upper.includes('SEARCH')) return 'SEARCH';
+  if (upper.includes('INDEX')) return 'INDEX';
+  if (upper.includes('PRIMARY')) return 'PRIMARY';
+  return 'default';
 };
 
 interface PlanNodeProps {
@@ -172,7 +174,7 @@ const PlanNode = memo(function PlanNode({
     return null;
   }
 
-  const Icon = getOperationIcon(node.detail);
+  const Icon = OPERATION_ICONS[getOperationIconKey(node.detail)];
   const hasChildren = children.length > 0;
 
   return (

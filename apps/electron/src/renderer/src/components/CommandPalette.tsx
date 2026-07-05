@@ -6,7 +6,7 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from '@sqlpro/ui/command';
+} from '@quarry/ui/command';
 import { Command as CommandIcon, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,7 +1,7 @@
 /**
- * @sqlpro/ipc-contracts
+ * @quarry/ipc-contracts
  *
- * Type-safe IPC channel contracts for SQL Pro.
+ * Type-safe IPC channel contracts for Quarry.
  * This package provides end-to-end type safety for Electron IPC communication.
  */
 

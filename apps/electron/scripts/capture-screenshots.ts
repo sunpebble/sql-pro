@@ -1,5 +1,5 @@
 /**
- * Screenshot capture script for SQL Pro marketing materials
+ * Screenshot capture script for Quarry marketing materials
  * Usage: pnpm run screenshots
  * Requires: pnpm run build (builds the Electron app first)
  */
@@ -29,7 +29,7 @@ const SET_LIGHT_MODE_SCRIPT = `
   document.documentElement.style.colorScheme = 'light';
   // Also update Monaco editor theme if available
   if (window.monaco?.editor) {
-    window.monaco.editor.setTheme('sql-pro-light');
+    window.monaco.editor.setTheme('quarry-light');
   }
 `;
 
@@ -39,7 +39,7 @@ const SET_DARK_MODE_SCRIPT = `
   document.documentElement.style.colorScheme = 'dark';
   // Also update Monaco editor theme if available
   if (window.monaco?.editor) {
-    window.monaco.editor.setTheme('sql-pro-dark');
+    window.monaco.editor.setTheme('quarry-dark');
   }
 `;
 
@@ -403,7 +403,7 @@ async function openQueryEditor(page: Page): Promise<boolean> {
         };
 
         if (monacoWindow.monaco?.editor) {
-          monacoWindow.monaco.editor.setTheme('sql-pro-dark');
+          monacoWindow.monaco.editor.setTheme('quarry-dark');
           const editors = monacoWindow.monaco.editor.getEditors();
           if (editors.length > 0) {
             editors[0].setValue(queryText);
@@ -431,7 +431,7 @@ async function openQueryEditor(page: Page): Promise<boolean> {
                   };
                 }) => {
                   if (monacoModule?.editor) {
-                    monacoModule.editor.setTheme('sql-pro-dark');
+                    monacoModule.editor.setTheme('quarry-dark');
                     const editors = monacoModule.editor.getEditors();
                     if (editors.length > 0) {
                       editors[0].setValue(queryText);
@@ -520,7 +520,7 @@ function distributeScreenshots(): void {
 }
 
 async function main(): Promise<void> {
-  console.log('SQL Pro Screenshot Capture Tool\n');
+  console.log('Quarry Screenshot Capture Tool\n');
 
   if (fs.existsSync(OUTPUT_DIR)) {
     for (const file of fs.readdirSync(OUTPUT_DIR)) {

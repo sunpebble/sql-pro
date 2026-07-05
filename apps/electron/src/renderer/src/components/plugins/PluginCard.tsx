@@ -1,7 +1,7 @@
 import type { PluginInfo, PluginListing } from './plugin-types';
-import { Badge } from '@sqlpro/ui/badge';
+import { Badge } from '@quarry/ui/badge';
 
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   Card,
   CardContent,
@@ -9,15 +9,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@sqlpro/ui/card';
+} from '@quarry/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@sqlpro/ui/dropdown-menu';
-import { Switch } from '@sqlpro/ui/switch';
+} from '@quarry/ui/dropdown-menu';
+import { Switch } from '@quarry/ui/switch';
 import { Download, MoreHorizontal, Package, Trash2 } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';

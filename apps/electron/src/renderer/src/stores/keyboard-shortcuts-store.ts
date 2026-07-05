@@ -7,7 +7,7 @@ import type {
 } from '@shared/types';
 import { DEFAULT_SHORTCUTS } from '@shared/types';
 import { create } from 'zustand';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 
 // Modifier keys set for O(1) lookup (js-set-map-lookups)
 const MODIFIER_KEYS = new Set(['Control', 'Alt', 'Shift', 'Meta']);
@@ -453,8 +453,8 @@ export const PRESET_INFO: Record<
   { label: string; description: string }
 > = {
   default: {
-    label: 'SQL Pro',
-    description: 'Default SQL Pro shortcuts',
+    label: 'Quarry',
+    description: 'Default Quarry shortcuts',
   },
   vscode: {
     label: 'VS Code',
@@ -793,10 +793,10 @@ export async function syncShortcutsToMain(
     }
 
     // Try Tauri API first, then fall back to Electron API
-    if (sqlPro.menu?.updateShortcuts) {
-      await sqlPro.menu.updateShortcuts({ shortcuts });
-    } else if (window.sqlPro?.shortcuts?.update) {
-      await window.sqlPro.shortcuts.update({ shortcuts });
+    if (quarry.menu?.updateShortcuts) {
+      await quarry.menu.updateShortcuts({ shortcuts });
+    } else if (window.quarry?.shortcuts?.update) {
+      await window.quarry.shortcuts.update({ shortcuts });
     }
   } catch (error) {
     console.error('Failed to sync shortcuts to main process:', error);

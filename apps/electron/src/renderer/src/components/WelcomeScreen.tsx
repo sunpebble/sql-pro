@@ -5,18 +5,19 @@ import type {
   ProfileFolder,
   RecentConnection,
 } from '@shared/types';
+import type { ElementType } from 'react';
 import type { ProfileFormData } from './connection-profiles/ProfileForm';
 import type { ConnectionSettings } from './ConnectionSettingsDialog';
-import { Button } from '@sqlpro/ui/button';
+import { Button } from '@quarry/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@sqlpro/ui/dropdown-menu';
-import { ScrollArea } from '@sqlpro/ui/scroll-area';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@sqlpro/ui/tooltip';
+} from '@quarry/ui/dropdown-menu';
+import { ScrollArea } from '@quarry/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@quarry/ui/tooltip';
 import {
   AlertCircle,
   BookmarkPlus,
@@ -43,7 +44,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { sqlPro } from '@/lib/api';
+import { quarry } from '@/lib/api';
 import { cn, TOOLTIP_CONTENT_STYLE } from '@/lib/utils';
 // Direct imports to avoid barrel file overhead (bundle-barrel-imports)
 import { useConnectionStore } from '@/stores/connection-store';
@@ -64,7 +65,7 @@ function HasSavedPasswordIndicator({ path }: { path: string }) {
 
   // Check on mount
   useEffect(() => {
-    sqlPro.password
+    quarry.password
       .has({ dbPath: path })
       .then((result: { hasPassword: boolean }) => {
         setHasSaved(result.hasPassword);
@@ -85,38 +86,26 @@ function HasSavedPasswordIndicator({ path }: { path: string }) {
   );
 }
 
-// Helper to get database type icon
-function getDatabaseIcon(type?: DatabaseType) {
-  switch (type) {
-    case 'mysql':
-      return { Icon: Server, color: 'text-orange-500', label: 'MySQL' };
-    case 'mariadb':
-      return { Icon: Server, color: 'text-amber-600', label: 'MariaDB' };
-    case 'mongodb':
-      return { Icon: Braces, color: 'text-green-600', label: 'MongoDB' };
-    case 'postgresql':
-      return { Icon: Server, color: 'text-indigo-500', label: 'PostgreSQL' };
-    case 'supabase':
-      return { Icon: Cloud, color: 'text-green-500', label: 'Supabase' };
-    case 'neon':
-      return { Icon: Cloud, color: 'text-emerald-500', label: 'Neon' };
-    case 'planetscale':
-      return { Icon: Cloud, color: 'text-violet-500', label: 'PlanetScale' };
-    case 'clickhouse':
-      return { Icon: Server, color: 'text-yellow-500', label: 'ClickHouse' };
-    case 'redis':
-      return { Icon: KeyRound, color: 'text-red-500', label: 'Redis' };
-    case 'sqlserver':
-      return { Icon: Server, color: 'text-sky-600', label: 'SQL Server' };
-    case 'qdrant':
-      return { Icon: Box, color: 'text-purple-500', label: 'Qdrant' };
-    case 'turso':
-      return { Icon: Cloud, color: 'text-cyan-500', label: 'Turso' };
-    case 'sqlite':
-    default:
-      return { Icon: Database, color: 'text-blue-500', label: 'SQLite' };
-  }
-}
+// Database type icon lookup (module-level so React Compiler can prove the
+// rendered component reference is static)
+const DATABASE_ICONS: Record<
+  DatabaseType,
+  { Icon: ElementType; color: string; label: string }
+> = {
+  mysql: { Icon: Server, color: 'text-orange-500', label: 'MySQL' },
+  mariadb: { Icon: Server, color: 'text-amber-600', label: 'MariaDB' },
+  mongodb: { Icon: Braces, color: 'text-green-600', label: 'MongoDB' },
+  postgresql: { Icon: Server, color: 'text-indigo-500', label: 'PostgreSQL' },
+  supabase: { Icon: Cloud, color: 'text-green-500', label: 'Supabase' },
+  neon: { Icon: Cloud, color: 'text-emerald-500', label: 'Neon' },
+  planetscale: { Icon: Cloud, color: 'text-violet-500', label: 'PlanetScale' },
+  clickhouse: { Icon: Server, color: 'text-yellow-500', label: 'ClickHouse' },
+  redis: { Icon: KeyRound, color: 'text-red-500', label: 'Redis' },
+  sqlserver: { Icon: Server, color: 'text-sky-600', label: 'SQL Server' },
+  qdrant: { Icon: Box, color: 'text-purple-500', label: 'Qdrant' },
+  turso: { Icon: Cloud, color: 'text-cyan-500', label: 'Turso' },
+  sqlite: { Icon: Database, color: 'text-blue-500', label: 'SQLite' },
+};
 
 export function WelcomeScreen() {
   const {
@@ -200,7 +189,7 @@ export function WelcomeScreen() {
   useEffect(() => {
     const loadFolders = async () => {
       try {
-        const result = await sqlPro.folder.getAll({});
+        const result = await quarry.folder.getAll({});
         if (result.success && result.folders) {
           setFolders(result.folders as ProfileFolder[]);
         }
@@ -250,19 +239,19 @@ export function WelcomeScreen() {
       setError(null);
 
       try {
-        const result = await sqlPro.db.open({ path, password, readOnly });
+        const result = await quarry.db.open({ path, password, readOnly });
 
         if (!result.success) {
           // Check if database needs a password (using explicit flag from backend)
           if (result.needsPassword) {
             // Try to use saved password first
-            const savedPasswordResult = await sqlPro.password.get({
+            const savedPasswordResult = await quarry.password.get({
               dbPath: path,
             });
             if (savedPasswordResult.success && savedPasswordResult.password) {
               // Automatically try with saved password - use iteration instead of recursion
               setIsConnecting(false);
-              const retryResult = await sqlPro.db.open({
+              const retryResult = await quarry.db.open({
                 path,
                 password: savedPasswordResult.password,
               });
@@ -277,7 +266,7 @@ export function WelcomeScreen() {
                 });
                 // Load schema
                 setIsLoadingSchema(true);
-                const schemaResult = await sqlPro.db.getSchema({
+                const schemaResult = await quarry.db.getSchema({
                   connectionId: retryResult.connection.id,
                 });
                 if (schemaResult.success) {
@@ -290,7 +279,7 @@ export function WelcomeScreen() {
                 setIsLoadingSchema(false);
                 // Refresh recent connections
                 const connectionsResult =
-                  await sqlPro.app.getRecentConnections();
+                  await quarry.app.getRecentConnections();
                 if (
                   connectionsResult.success &&
                   connectionsResult.connections
@@ -325,7 +314,7 @@ export function WelcomeScreen() {
         if (result.connection) {
           // Save connection settings if provided (new connection flow)
           if (settings) {
-            await sqlPro.connection.update({
+            await quarry.connection.update({
               path: result.connection.path,
               displayName: settings.displayName,
               readOnly: settings.readOnly,
@@ -343,7 +332,7 @@ export function WelcomeScreen() {
 
           // Load schema
           setIsLoadingSchema(true);
-          const schemaResult = await sqlPro.db.getSchema({
+          const schemaResult = await quarry.db.getSchema({
             connectionId: result.connection.id,
           });
 
@@ -359,7 +348,7 @@ export function WelcomeScreen() {
           setIsLoadingSchema(false);
 
           // Refresh recent connections list after successful connection
-          const connectionsResult = await sqlPro.app.getRecentConnections();
+          const connectionsResult = await quarry.app.getRecentConnections();
           if (connectionsResult.success && connectionsResult.connections) {
             setRecentConnections(
               connectionsResult.connections as RecentConnection[]
@@ -394,7 +383,7 @@ export function WelcomeScreen() {
 
       // Check if this is an encrypted database by attempting to open it
       setIsConnecting(true);
-      const probeResult = await sqlPro.db.open({ path: filePath });
+      const probeResult = await quarry.db.open({ path: filePath });
       setIsConnecting(false);
 
       const isEncrypted = probeResult.needsPassword === true;
@@ -402,7 +391,7 @@ export function WelcomeScreen() {
       // Close the probe connection if it was opened successfully
       // (we'll open it again properly after user confirms settings)
       if (probeResult.success && probeResult.connection) {
-        await sqlPro.db.close({ connectionId: probeResult.connection.id });
+        await quarry.db.close({ connectionId: probeResult.connection.id });
       }
 
       // Store pending info and show settings dialog
@@ -415,7 +404,7 @@ export function WelcomeScreen() {
   );
 
   const handleOpenDatabase = useCallback(async () => {
-    const result = await sqlPro.dialog.openFile({
+    const result = await quarry.dialog.openFile({
       title: t('dialog.openDatabase'),
     });
     if (result.success && !result.canceled && result.filePath) {
@@ -431,7 +420,7 @@ export function WelcomeScreen() {
 
     if (pendingIsEncrypted) {
       // Check if we have a saved password
-      const savedPasswordResult = await sqlPro.password.get({
+      const savedPasswordResult = await quarry.password.get({
         dbPath: pendingPath,
       });
       if (savedPasswordResult.success && savedPasswordResult.password) {
@@ -471,7 +460,7 @@ export function WelcomeScreen() {
 
       // Save password if requested
       if (shouldRemember) {
-        const saveResult = await sqlPro.password.save({
+        const saveResult = await quarry.password.save({
           dbPath: pendingPath,
           password,
         });
@@ -526,7 +515,7 @@ export function WelcomeScreen() {
         setError(null);
 
         try {
-          const result = await sqlPro.db.open({
+          const result = await quarry.db.open({
             config: conn.connectionConfig,
           });
 
@@ -550,7 +539,7 @@ export function WelcomeScreen() {
 
             // Load schema
             setIsLoadingSchema(true);
-            const schemaResult = await sqlPro.db.getSchema({
+            const schemaResult = await quarry.db.getSchema({
               connectionId: result.connection.id,
             });
 
@@ -564,7 +553,7 @@ export function WelcomeScreen() {
             setIsLoadingSchema(false);
 
             // Refresh recent connections
-            const connectionsResult = await sqlPro.app.getRecentConnections();
+            const connectionsResult = await quarry.app.getRecentConnections();
             if (connectionsResult.success && connectionsResult.connections) {
               setRecentConnections(
                 connectionsResult.connections as RecentConnection[]
@@ -585,7 +574,7 @@ export function WelcomeScreen() {
       const { path, isEncrypted, readOnly } = conn;
       if (isEncrypted) {
         // Check if we have a saved password
-        const savedPasswordResult = await sqlPro.password.get({
+        const savedPasswordResult = await quarry.password.get({
           dbPath: path,
         });
         if (savedPasswordResult.success && savedPasswordResult.password) {
@@ -647,7 +636,7 @@ export function WelcomeScreen() {
 
       try {
         // First, update the connection config in storage
-        const updateResult = await sqlPro.connection.update({
+        const updateResult = await quarry.connection.update({
           path: editingConnection.path,
           displayName: config.name,
           readOnly: config.readOnly,
@@ -697,12 +686,12 @@ export function WelcomeScreen() {
         if (existingConnectionEntry) {
           const [existingId] = existingConnectionEntry;
           // Close the existing connection before opening with new config
-          await sqlPro.db.close({ connectionId: existingId });
+          await quarry.db.close({ connectionId: existingId });
           removeConnection(existingId);
         }
 
         // Then connect with the new config
-        const result = await sqlPro.db.open({ config });
+        const result = await quarry.db.open({ config });
 
         if (!result.success) {
           setError(result.error || t('database.failedToConnect'));
@@ -723,7 +712,7 @@ export function WelcomeScreen() {
 
           // Load schema
           setIsLoadingSchema(true);
-          const schemaResult = await sqlPro.db.getSchema({
+          const schemaResult = await quarry.db.getSchema({
             connectionId: result.connection.id,
           });
 
@@ -737,7 +726,7 @@ export function WelcomeScreen() {
           setIsLoadingSchema(false);
 
           // Refresh recent connections
-          const connectionsResult = await sqlPro.app.getRecentConnections();
+          const connectionsResult = await quarry.app.getRecentConnections();
           if (connectionsResult.success && connectionsResult.connections) {
             setRecentConnections(
               connectionsResult.connections as RecentConnection[]
@@ -771,20 +760,20 @@ export function WelcomeScreen() {
   // Remove connection from list (T045-T049 - implementing here for context menu)
   const handleRemoveConnection = async (conn: RecentConnection) => {
     // Remove from recent connections list
-    const result = await sqlPro.app.removeRecentConnection({
+    const result = await quarry.app.removeRecentConnection({
       connectionId: conn.path,
     });
 
     if (result.success) {
       // Also remove saved password
       try {
-        await sqlPro.password.remove({ dbPath: conn.path });
+        await quarry.password.remove({ dbPath: conn.path });
       } catch {
         // Ignore password removal errors
       }
 
       // Refresh recent connections
-      const connectionsResult = await sqlPro.app.getRecentConnections();
+      const connectionsResult = await quarry.app.getRecentConnections();
       if (connectionsResult.success && connectionsResult.connections) {
         setRecentConnections(
           connectionsResult.connections as RecentConnection[]
@@ -837,7 +826,7 @@ export function WelcomeScreen() {
           connectionConfig: profileToSave.connectionConfig,
         };
 
-        const result = await sqlPro.profile.save({ profile: newProfile });
+        const result = await quarry.profile.save({ profile: newProfile });
 
         if (result.success) {
           setSaveProfileDialogOpen(false);
@@ -880,7 +869,7 @@ export function WelcomeScreen() {
       setError(null);
 
       try {
-        const result = await sqlPro.db.open({ config });
+        const result = await quarry.db.open({ config });
 
         if (!result.success) {
           setError(result.error || t('database.failedToConnect'));
@@ -901,7 +890,7 @@ export function WelcomeScreen() {
 
           // Load schema
           setIsLoadingSchema(true);
-          const schemaResult = await sqlPro.db.getSchema({
+          const schemaResult = await quarry.db.getSchema({
             connectionId: result.connection.id,
           });
 
@@ -915,7 +904,7 @@ export function WelcomeScreen() {
           setIsLoadingSchema(false);
 
           // Refresh recent connections
-          const connectionsResult = await sqlPro.app.getRecentConnections();
+          const connectionsResult = await quarry.app.getRecentConnections();
           if (connectionsResult.success && connectionsResult.connections) {
             setRecentConnections(
               connectionsResult.connections as RecentConnection[]
@@ -1089,122 +1078,122 @@ export function WelcomeScreen() {
                       </div>
                       <ScrollArea className="h-48">
                         <div className="space-y-1 pr-2">
-                          {recentConnections.map((conn) => (
-                            <div
-                              key={conn.path}
-                              className="group flex items-center gap-1"
-                            >
-                              <Button
-                                variant="ghost"
-                                className="hover:bg-muted/60 h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
-                                onClick={() => handleRecentClick(conn)}
-                                disabled={isConnecting}
+                          {recentConnections.map((conn) => {
+                            const { Icon, color, label } =
+                              DATABASE_ICONS[conn.databaseType ?? 'sqlite'];
+                            return (
+                              <div
+                                key={conn.path}
+                                className="group flex items-center gap-1"
                               >
-                                {(() => {
-                                  const { Icon, color, label } =
-                                    getDatabaseIcon(conn.databaseType);
-                                  return (
-                                    <Tooltip>
-                                      <TooltipTrigger>
-                                        <Icon
-                                          className={cn(
-                                            'mr-2 h-4 w-4 shrink-0',
-                                            color
-                                          )}
-                                        />
-                                      </TooltipTrigger>
-                                      <TooltipContent
-                                        className={TOOLTIP_CONTENT_STYLE}
+                                <Button
+                                  variant="ghost"
+                                  className="hover:bg-muted/60 h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left"
+                                  onClick={() => handleRecentClick(conn)}
+                                  disabled={isConnecting}
+                                >
+                                  <Tooltip>
+                                    <TooltipTrigger>
+                                      <Icon
+                                        className={cn(
+                                          'mr-2 h-4 w-4 shrink-0',
+                                          color
+                                        )}
+                                      />
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                      className={TOOLTIP_CONTENT_STYLE}
+                                    >
+                                      {label}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <span
+                                        className="truncate font-medium"
+                                        style={{
+                                          fontSize: 'var(--font-ui-size, 13px)',
+                                        }}
                                       >
-                                        {label}
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  );
-                                })()}
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-2">
-                                    <span
-                                      className="truncate font-medium"
+                                        {conn.displayName || conn.filename}
+                                      </span>
+                                      <div className="flex shrink-0 items-center gap-1">
+                                        {conn.readOnly && (
+                                          <Tooltip>
+                                            <TooltipTrigger>
+                                              <Eye className="text-muted-foreground h-3 w-3" />
+                                            </TooltipTrigger>
+                                            <TooltipContent
+                                              className={TOOLTIP_CONTENT_STYLE}
+                                            >
+                                              {t('welcome.readOnly')}
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        )}
+                                        <HasSavedPasswordIndicator
+                                          path={conn.path}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="text-muted-foreground truncate font-mono"
                                       style={{
-                                        fontSize: 'var(--font-ui-size, 13px)',
+                                        fontSize:
+                                          'calc(var(--font-ui-size, 13px) * 0.85)',
                                       }}
                                     >
-                                      {conn.displayName || conn.filename}
-                                    </span>
-                                    <div className="flex shrink-0 items-center gap-1">
-                                      {conn.readOnly && (
-                                        <Tooltip>
-                                          <TooltipTrigger>
-                                            <Eye className="text-muted-foreground h-3 w-3" />
-                                          </TooltipTrigger>
-                                          <TooltipContent
-                                            className={TOOLTIP_CONTENT_STYLE}
-                                          >
-                                            {t('welcome.readOnly')}
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      )}
-                                      <HasSavedPasswordIndicator
-                                        path={conn.path}
-                                      />
+                                      {conn.path}
                                     </div>
                                   </div>
-                                  <div
-                                    className="text-muted-foreground truncate font-mono"
-                                    style={{
-                                      fontSize:
-                                        'calc(var(--font-ui-size, 13px) * 0.85)',
-                                    }}
+                                </Button>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100"
+                                    >
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent
+                                    align="end"
+                                    side="bottom"
+                                    className="w-auto"
                                   >
-                                    {conn.path}
-                                  </div>
-                                </div>
-                              </Button>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100"
-                                  >
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                  align="end"
-                                  side="bottom"
-                                  className="w-auto"
-                                >
-                                  <DropdownMenuItem
-                                    onClick={() => handleEditConnection(conn)}
-                                    className="whitespace-nowrap"
-                                  >
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    <span>{t('actions.edit')}</span>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    onClick={() => handleSaveAsProfile(conn)}
-                                    className="whitespace-nowrap"
-                                  >
-                                    <BookmarkPlus className="mr-2 h-4 w-4" />
-                                    <span>
-                                      {t('welcome.saveAsProfile', {
-                                        defaultValue: 'Save as Profile',
-                                      })}
-                                    </span>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem
-                                    onClick={() => handleRemoveConnection(conn)}
-                                    className="text-destructive focus:text-destructive whitespace-nowrap"
-                                  >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    <span>{t('actions.remove')}</span>
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
-                          ))}
+                                    <DropdownMenuItem
+                                      onClick={() => handleEditConnection(conn)}
+                                      className="whitespace-nowrap"
+                                    >
+                                      <Pencil className="mr-2 h-4 w-4" />
+                                      <span>{t('actions.edit')}</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => handleSaveAsProfile(conn)}
+                                      className="whitespace-nowrap"
+                                    >
+                                      <BookmarkPlus className="mr-2 h-4 w-4" />
+                                      <span>
+                                        {t('welcome.saveAsProfile', {
+                                          defaultValue: 'Save as Profile',
+                                        })}
+                                      </span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleRemoveConnection(conn)
+                                      }
+                                      className="text-destructive focus:text-destructive whitespace-nowrap"
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      <span>{t('actions.remove')}</span>
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            );
+                          })}
                         </div>
                       </ScrollArea>
                     </div>

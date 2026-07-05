@@ -1,11 +1,11 @@
 # Data Editing
 
-SQL Pro provides powerful inline data editing capabilities, allowing you to modify your database directly from the data grid. All changes are tracked with a visual diff preview, validated before applying, and can be undone at any time.
+Quarry provides powerful inline data editing capabilities, allowing you to modify your database directly from the data grid. All changes are tracked with a visual diff preview, validated before applying, and can be undone at any time.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/table-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/table.png">
-  <img alt="SQL Pro data grid with inline editing capabilities showing cell values and edit controls" src="/screenshots/table-dark.png">
+  <img alt="Quarry data grid with inline editing capabilities showing cell values and edit controls" src="/screenshots/table-dark.png">
 </picture>
 
 ## Key Features
@@ -74,7 +74,7 @@ VALUES ('John Doe', 'john@example.com', 'active');
 
 ### Auto-Increment Handling
 
-SQL Pro intelligently handles auto-increment columns:
+Quarry intelligently handles auto-increment columns:
 
 - **Primary key columns** with auto-increment are left empty
 - The database assigns the ID automatically when changes are applied
@@ -200,7 +200,7 @@ The undo command removes changes in reverse chronological order - the most recen
 
 ## Copy and Paste
 
-SQL Pro supports standard clipboard operations for cell values.
+Quarry supports standard clipboard operations for cell values.
 
 ### Copying Values
 
@@ -216,7 +216,7 @@ SQL Pro supports standard clipboard operations for cell values.
 
 ## Working with Views
 
-Database views are read-only in SQL Pro:
+Database views are read-only in Quarry:
 
 - The **Add Row** button is hidden for views
 - Cells cannot be edited
@@ -249,7 +249,7 @@ To modify data shown in a view, edit the underlying base tables directly.
 ### Safe Editing Workflow
 
 1. **Make small batches** - apply changes frequently rather than accumulating many
-2. **Validate first** - SQL Pro validates changes before applying, but check the preview anyway
+2. **Validate first** - Quarry validates changes before applying, but check the preview anyway
 3. **Use undo** - if you make a mistake, Cmd/Ctrl+Z immediately undoes it
 4. **Discard if unsure** - you can always discard and start over
 
@@ -317,7 +317,7 @@ Pending changes are stored in memory. They may be lost if:
 - The application crashes
 
 ::: tip Save Frequently
-Apply your changes frequently to avoid losing work. SQL Pro doesn't persist pending changes across sessions.
+Apply your changes frequently to avoid losing work. Quarry doesn't persist pending changes across sessions.
 :::
 
 ## Next Steps

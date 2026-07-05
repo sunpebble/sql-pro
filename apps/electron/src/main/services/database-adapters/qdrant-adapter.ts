@@ -1,6 +1,6 @@
 /**
  * Qdrant vector database adapter
- * Maps Qdrant concepts to SQL Pro's database abstraction:
+ * Maps Qdrant concepts to Quarry's database abstraction:
  * - Collection -> Table
  * - Point -> Row
  * - Payload fields -> Columns

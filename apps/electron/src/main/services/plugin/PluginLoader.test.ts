@@ -202,7 +202,7 @@ describe('pluginLoader', () => {
         valid: true,
         manifest: {
           ...validManifest,
-          engines: { sqlpro: '^2.0.0' },
+          engines: { quarry: '^2.0.0' },
         },
       });
 
@@ -272,7 +272,7 @@ describe('pluginLoader', () => {
         valid: true,
         manifest: {
           ...validManifest,
-          engines: { sqlpro: '^1.0.0' },
+          engines: { quarry: '^1.0.0' },
         },
       });
 
@@ -293,7 +293,7 @@ describe('pluginLoader', () => {
         valid: true,
         manifest: {
           ...validManifest,
-          engines: { sqlpro: '~1.6.0' },
+          engines: { quarry: '~1.6.0' },
         },
       });
 
@@ -454,7 +454,7 @@ describe('pluginLoader', () => {
       vi.mocked(fs.existsSync).mockReturnValue(false);
 
       const result = await pluginLoader.extractArchive(
-        '/path/to/plugin.sqlpro-plugin'
+        '/path/to/plugin.quarry-plugin'
       );
 
       expect(result.success).toBe(false);
@@ -483,7 +483,7 @@ describe('pluginLoader', () => {
       } as fs.Stats);
 
       const result = await pluginLoader.extractArchive(
-        '/path/to/plugin.sqlpro-plugin'
+        '/path/to/plugin.quarry-plugin'
       );
 
       expect(result.success).toBe(false);

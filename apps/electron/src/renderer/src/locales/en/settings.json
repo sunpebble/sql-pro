@@ -13,7 +13,7 @@
     "autoUpdate": "Automatic Updates",
     "autoUpdateDescription": "Check for updates automatically",
     "telemetry": "Usage Analytics",
-    "telemetryDescription": "Help improve SQL Pro by sending anonymous usage data"
+    "telemetryDescription": "Help improve Quarry by sending anonymous usage data"
   },
   "appearance": {
     "title": "Appearance",
@@ -98,8 +98,8 @@
     "importJsonError": "Failed to import shortcuts: Invalid JSON",
     "resetSuccess": "Shortcuts reset to defaults",
     "presets": {
-      "default": "SQL Pro",
-      "defaultDesc": "Default SQL Pro shortcuts",
+      "default": "Quarry",
+      "defaultDesc": "Default Quarry shortcuts",
       "vscode": "VS Code",
       "vscodeDesc": "Visual Studio Code-style shortcuts",
       "sublime": "Sublime Text",
@@ -167,7 +167,7 @@
     }
   },
   "pro": {
-    "title": "SQL Pro",
+    "title": "Quarry",
     "active": "Pro Active",
     "free": "Free Plan",
     "featuresUnlocked": "{{count}} features unlocked",

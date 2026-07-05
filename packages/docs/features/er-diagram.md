@@ -5,7 +5,7 @@ The ER (Entity-Relationship) Diagram provides an interactive visual representati
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/database-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/database.png">
-  <img alt="SQL Pro ER Diagram showing database tables, columns, and foreign key relationships" src="/screenshots/database-dark.png">
+  <img alt="Quarry ER Diagram showing database tables, columns, and foreign key relationships" src="/screenshots/database-dark.png">
 </picture>
 
 ## Key Features
@@ -84,7 +84,7 @@ Relationship cardinality is shown on each connection line:
 | **N:1**  | Many-to-one relationship               |
 | **M:N**  | Many-to-many relationship              |
 
-SQL Pro automatically detects cardinality based on your schema:
+Quarry automatically detects cardinality based on your schema:
 
 - **1:1** - Foreign key column is also a primary key or has a unique constraint
 - **1:N** - Standard foreign key relationship (default)
@@ -180,7 +180,7 @@ Both formats:
 
 ## Automatic Layout
 
-When you first open a database or reset the layout, SQL Pro applies an automatic layout algorithm:
+When you first open a database or reset the layout, Quarry applies an automatic layout algorithm:
 
 ### Layout Algorithm
 
@@ -201,7 +201,7 @@ Table nodes are sized dynamically:
 
 ## State Persistence
 
-SQL Pro remembers your diagram preferences per database:
+Quarry remembers your diagram preferences per database:
 
 ### What's Saved
 

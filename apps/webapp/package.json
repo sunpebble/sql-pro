@@ -1,9 +1,9 @@
 {
-  "name": "@sqlpro/webapp",
+  "name": "@quarry/webapp",
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "description": "SQL Pro Web App - Standalone browser version of the database manager",
+  "description": "Quarry Web App - Standalone browser version of the database manager",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
@@ -18,8 +18,8 @@
     "@dnd-kit/utilities": "catalog:",
     "@hookform/resolvers": "catalog:",
     "@monaco-editor/react": "catalog:",
+    "@quarry/ui": "workspace:*",
     "@radix-ui/react-label": "catalog:",
-    "@sqlpro/ui": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-router": "catalog:",
     "@tanstack/react-table": "catalog:",
@@ -60,7 +60,7 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@sqlpro/tsconfig": "workspace:*",
+    "@quarry/tsconfig": "workspace:*",
     "@tailwindcss/vite": "catalog:",
     "@types/dagre": "catalog:",
     "@types/papaparse": "catalog:",

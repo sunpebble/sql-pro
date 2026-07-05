@@ -1,5 +1,5 @@
 {
-  "name": "sqlpro-app",
+  "name": "quarry-app",
   "version": "1.10.1",
   "description": "Professional SQLite database manager with SQLCipher support and diff preview",
   "author": {
@@ -51,9 +51,9 @@
     "@pierre/diffs": "^1.2.9",
     "@pierre/trees": "1.0.0-beta.4",
     "@qdrant/js-client-rest": "catalog:",
+    "@quarry/ui": "workspace:*",
     "@radix-ui/react-label": "catalog:",
     "@shikijs/themes": "^4.3.1",
-    "@sqlpro/ui": "workspace:*",
     "@tanstack/ai": "catalog:",
     "@tanstack/ai-anthropic": "catalog:",
     "@tanstack/ai-react": "catalog:",
@@ -121,8 +121,8 @@
     "@electron-toolkit/tsconfig": "catalog:",
     "@electron/asar": "catalog:",
     "@electron/notarize": "catalog:",
-    "@sqlpro/ipc-contracts": "workspace:*",
-    "@sqlpro/tsconfig": "workspace:*",
+    "@quarry/ipc-contracts": "workspace:*",
+    "@quarry/tsconfig": "workspace:*",
     "@tailwindcss/vite": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",

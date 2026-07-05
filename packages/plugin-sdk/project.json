@@ -1,5 +1,5 @@
 {
-  "name": "@sqlpro/plugin-sdk",
+  "name": "@quarry/plugin-sdk",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/plugin-sdk",
   "projectType": "library",

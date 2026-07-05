@@ -1,8 +1,8 @@
-# Copilot Instructions for SQL Pro
+# Copilot Instructions for Quarry
 
 ## Project Overview
 
-SQL Pro is a professional multi-database manager built with Electron, React, and TypeScript. It provides a rich desktop application for managing SQLite (including encrypted SQLCipher), MySQL, and PostgreSQL databases with features including an SQL editor, schema browser, inline editing, diff preview, ER diagrams, and AI-powered assistance.
+Quarry is a professional multi-database manager built with Electron, React, and TypeScript. It provides a rich desktop application for managing SQLite (including encrypted SQLCipher), MySQL, and PostgreSQL databases with features including an SQL editor, schema browser, inline editing, diff preview, ER diagrams, and AI-powered assistance.
 
 ### Key Technologies
 
@@ -63,7 +63,7 @@ packages/
 
 ### Conventions
 
-- **Imports**: Use `@/` for renderer imports, `@shared/` for shared code, `@sqlpro/ui` for shared UI components
+- **Imports**: Use `@/` for renderer imports, `@shared/` for shared code, `@quarry/ui` for shared UI components
 - **File Naming**:
   - Components: PascalCase (e.g., `TableView.tsx`)
   - Utilities: kebab-case (e.g., `filter-utils.ts`)
@@ -193,7 +193,7 @@ Common scopes in this project:
 
 ## Plugin System
 
-SQL Pro has a plugin system for extending functionality:
+Quarry has a plugin system for extending functionality:
 
 - **Plugin SDK**: Located in `packages/plugin-sdk/`
 - **Templates**: Available in `packages/plugin-sdk/templates/`
@@ -312,7 +312,7 @@ When updating features, update corresponding documentation in `packages/docs/` d
 
 ## Resources
 
-- **Main Docs**: https://kunish-homelab.github.io/sql-pro/
-- **Repository**: https://github.com/kunish-homelab/sql-pro
+- **Main Docs**: https://sunpebble.github.io/quarry/
+- **Repository**: https://github.com/sunpebble/quarry
 - **Issue Tracker**: Use GitHub Issues for bugs and feature requests
 - **Roadmap**: See `packages/docs/ROADMAP.md` for planned features

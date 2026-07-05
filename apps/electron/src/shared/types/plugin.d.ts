@@ -38,8 +38,8 @@ export interface PluginManifest {
   permissions?: PluginPermission[];
   /** Compatibility requirements */
   engines?: {
-    /** Required SQL Pro version range (e.g., '^1.6.0') */
-    sqlpro?: string;
+    /** Required Quarry version range (e.g., '^1.6.0') */
+    quarry?: string;
   };
   /** Optional homepage URL */
   homepage?: string;
@@ -471,7 +471,7 @@ export interface PluginListing {
   rating?: number;
   /** Last updated timestamp */
   updatedAt: string;
-  /** Required SQL Pro version */
+  /** Required Quarry version */
   engineVersion?: string;
   /** Required permissions */
   permissions?: PluginPermission[];
@@ -514,7 +514,7 @@ export interface ListPluginsResponse {
  * Request to install a plugin.
  */
 export interface InstallPluginRequest {
-  /** Path to .sqlpro-plugin archive or directory */
+  /** Path to .quarry-plugin archive or directory */
   source: string;
   /** Source type */
   sourceType: 'archive' | 'directory' | 'url';

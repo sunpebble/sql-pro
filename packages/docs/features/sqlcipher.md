@@ -1,11 +1,11 @@
 # SQLCipher Encrypted Databases
 
-SQL Pro provides full support for SQLCipher encrypted databases, allowing you to work with password-protected SQLite files securely. The application auto-detects encrypted databases and prompts for passwords when needed.
+Quarry provides full support for SQLCipher encrypted databases, allowing you to work with password-protected SQLite files securely. The application auto-detects encrypted databases and prompts for passwords when needed.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/database-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/database.png">
-  <img alt="SQL Pro working with an encrypted SQLCipher database showing the main interface" src="/screenshots/database-dark.png">
+  <img alt="Quarry working with an encrypted SQLCipher database showing the main interface" src="/screenshots/database-dark.png">
 </picture>
 
 ## Key Features
@@ -21,7 +21,7 @@ SQL Pro provides full support for SQLCipher encrypted databases, allowing you to
 
 ## Supported Encryption Formats
 
-SQL Pro supports a wide range of encryption formats to ensure compatibility with databases created by different applications:
+Quarry supports a wide range of encryption formats to ensure compatibility with databases created by different applications:
 
 | Format          | Description                        | Common Use                        |
 | --------------- | ---------------------------------- | --------------------------------- |
@@ -35,7 +35,7 @@ SQL Pro supports a wide range of encryption formats to ensure compatibility with
 | **RC4**         | Legacy cipher                      | Very old systems                  |
 
 ::: tip Automatic Format Detection
-SQL Pro automatically tries different cipher configurations when opening an encrypted database. You don't need to know which encryption format was used—just provide the correct password.
+Quarry automatically tries different cipher configurations when opening an encrypted database. You don't need to know which encryption format was used—just provide the correct password.
 :::
 
 ## Opening Encrypted Databases
@@ -50,7 +50,7 @@ Open an encrypted database the same way you would open any database:
 
 ### Step 2: Enter Password
 
-When SQL Pro detects an encrypted database, a password dialog appears:
+When Quarry detects an encrypted database, a password dialog appears:
 
 ```
 ┌─────────────────────────────────────────┐
@@ -87,7 +87,7 @@ The encrypted database works exactly like a regular SQLite database.
 
 ## Password Storage
 
-SQL Pro can securely store database passwords using your operating system's secure credential storage:
+Quarry can securely store database passwords using your operating system's secure credential storage:
 
 ### How It Works
 
@@ -116,7 +116,7 @@ To save a password for future use:
 3. Check the **Remember password** checkbox
 4. Click **Open**
 
-The next time you open this database, SQL Pro will:
+The next time you open this database, Quarry will:
 
 1. Detect the saved password
 2. Automatically attempt to open the database
@@ -140,7 +140,7 @@ If a saved password no longer works:
 3. Enter the new/correct password
 
 ::: warning Password Changes
-If you change the password of an encrypted database using another tool, the saved password in SQL Pro will no longer work. Simply forget the old password and enter the new one.
+If you change the password of an encrypted database using another tool, the saved password in Quarry will no longer work. Simply forget the old password and enter the new one.
 :::
 
 ### Storage Availability
@@ -169,7 +169,7 @@ Encrypted databases are indicated in the UI:
 
 ### All Features Supported
 
-Once opened, encrypted databases support all SQL Pro features:
+Once opened, encrypted databases support all Quarry features:
 
 - **Schema Browser**: View tables, views, indexes, triggers
 - **Data Grid**: Browse and edit data with pagination
@@ -197,7 +197,7 @@ SQLCipher uses AES-256 encryption which is hardware-accelerated on modern CPUs. 
 
 ## Creating Encrypted Databases
 
-SQL Pro currently focuses on **reading and writing** to existing encrypted databases. To create a new encrypted database:
+Quarry currently focuses on **reading and writing** to existing encrypted databases. To create a new encrypted database:
 
 ### Using SQLCipher CLI
 
@@ -240,7 +240,7 @@ sqlite> DETACH DATABASE encrypted;
 ```
 
 ::: info Future Feature
-Direct creation of encrypted databases from within SQL Pro is planned for a future release. Currently, use the command-line tools above.
+Direct creation of encrypted databases from within Quarry is planned for a future release. Currently, use the command-line tools above.
 :::
 
 ## Troubleshooting
@@ -262,7 +262,7 @@ This error appears when:
 
 ### "Database appears to be encrypted"
 
-This message appears when SQL Pro detects the file doesn't have a standard SQLite header.
+This message appears when Quarry detects the file doesn't have a standard SQLite header.
 
 **Solutions:**
 
@@ -281,13 +281,13 @@ If the "Remember password" checkbox is disabled or passwords aren't being saved:
 **macOS:**
 
 - Open Keychain Access
-- Check if "sql-pro" entries exist
+- Check if "quarry" entries exist
 - Grant access if prompted
 
 **Windows:**
 
 - Open Credential Manager
-- Check for sql-pro entries
+- Check for quarry entries
 
 **Linux:**
 
@@ -317,12 +317,12 @@ If a previously working saved password stops working:
 
 If encrypted databases take long to open:
 
-1. **First attempt**: SQL Pro tries multiple cipher configurations
+1. **First attempt**: Quarry tries multiple cipher configurations
 2. **Correct password found**: Future opens will be faster
 3. **Hardware**: Older systems may have slower encryption
 
 ::: tip
-Once SQL Pro finds the correct cipher configuration for your database, it will use that configuration for subsequent opens, making them faster.
+Once Quarry finds the correct cipher configuration for your database, it will use that configuration for subsequent opens, making them faster.
 :::
 
 ## Security Best Practices
@@ -365,14 +365,14 @@ When sharing encrypted databases:
 
 ### Encryption Detection
 
-SQL Pro detects encryption by checking the first 16 bytes of the database file:
+Quarry detects encryption by checking the first 16 bytes of the database file:
 
 - **Unencrypted**: Starts with `SQLite format 3\0`
 - **Encrypted**: Different header (encrypted data)
 
 ### Cipher Auto-Detection
 
-When a password is provided, SQL Pro tries these configurations in order:
+When a password is provided, Quarry tries these configurations in order:
 
 1. SQLCipher 4 (default, most common)
 2. SQLCipher 4 with hex key
@@ -389,7 +389,7 @@ Each configuration is tried until one successfully decrypts the database.
 
 ### Under the Hood
 
-SQL Pro uses the `better-sqlite3-multiple-ciphers` library, which:
+Quarry uses the `better-sqlite3-multiple-ciphers` library, which:
 
 - Provides native SQLite bindings for Node.js
 - Supports multiple encryption formats

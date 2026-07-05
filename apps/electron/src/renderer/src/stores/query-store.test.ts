@@ -13,7 +13,7 @@ import {
 
 // Mock the API module before importing the store
 vi.mock('@/lib/api', () => ({
-  sqlPro: {
+  quarry: {
     history: {
       get: vi.fn().mockResolvedValue({ success: true, history: [] }),
       save: vi.fn().mockResolvedValue({ success: true }),

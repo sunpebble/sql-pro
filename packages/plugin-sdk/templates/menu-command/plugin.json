@@ -1,9 +1,9 @@
 {
-  "id": "com.sqlpro.example.menu-command",
+  "id": "com.quarry.example.menu-command",
   "name": "Menu Command",
   "version": "1.0.0",
   "description": "An example plugin demonstrating advanced menu item registration, dynamic enabling/disabling, hierarchical submenus, keyboard shortcuts, and command palette integration.",
-  "author": "SQL Pro Team",
+  "author": "Quarry Team",
   "main": "index.js",
   "license": "MIT",
   "keywords": ["example", "template", "menu", "commands", "keyboard-shortcuts"],
@@ -15,9 +15,9 @@
     "connection:info"
   ],
   "engines": {
-    "sqlpro": "^1.6.0"
+    "quarry": "^1.6.0"
   },
   "apiVersion": "1.0.0",
-  "repository": "https://github.com/sqlpro/sqlpro-plugins",
-  "homepage": "https://github.com/sqlpro/sqlpro-plugins/tree/main/examples/menu-command"
+  "repository": "https://github.com/quarry/quarry-plugins",
+  "homepage": "https://github.com/quarry/quarry-plugins/tree/main/examples/menu-command"
 }

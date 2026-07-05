@@ -1,6 +1,20 @@
 import type * as Monaco from 'monaco-editor';
 import type { DatabaseSchema, TableSchema } from '@/types/database';
 
+// Single-character class tests used by the SQL tokenizers below
+const WHITESPACE_CHAR_RE = /\s/;
+const TOKEN_BOUNDARY_CHAR_RE = /[(),;.=<>!]/;
+const DIGIT_CHAR_RE = /\d/;
+const NUMBER_CHAR_RE = /[\d.]/;
+const OPERATOR_CHAR_RE = /[(),;*=<>!+\-/%]/;
+const IDENTIFIER_START_CHAR_RE = /[a-z_]/i;
+const WORD_CHAR_RE = /\w/;
+const ONLY_WHITESPACE_RE = /^\s+$/;
+// "alias." prefix immediately before the cursor
+const DOT_PREFIX_RE = /(\w+)\.\s*$/;
+// rgb(r, g, b) / rgba(r, g, b, a) color values
+const RGB_COLOR_RE = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/;
+
 /**
  * Represents a table reference extracted from SQL query.
  * Maps alias (or table name if no alias) to the actual table name.
@@ -796,7 +810,7 @@ function analyzeSqlContext(
   // Check for dot prefix (table.column pattern)
   const lineContent = model.getLineContent(position.lineNumber);
   const textBeforeOnLine = lineContent.substring(0, position.column - 1);
-  const dotMatch = textBeforeOnLine.match(/(\w+)\.\s*$/);
+  const dotMatch = textBeforeOnLine.match(DOT_PREFIX_RE);
   const dotPrefix = dotMatch ? dotMatch[1] : null;
 
   // Parse state
@@ -866,7 +880,7 @@ function analyzeSqlContext(
     if (char === ')') parenDepth = Math.max(0, parenDepth - 1);
 
     // Build tokens
-    if (/\s/.test(char) || /[(),;.=<>!]/.test(char)) {
+    if (WHITESPACE_CHAR_RE.test(char) || TOKEN_BOUNDARY_CHAR_RE.test(char)) {
       if (currentToken) {
         tokens.push(currentToken.toUpperCase());
         currentToken = '';
@@ -1038,9 +1052,9 @@ function tokenizeSql(sql: string): SqlToken[] {
     const nextChar = sql[i + 1];
 
     // Skip whitespace
-    if (/\s/.test(char)) {
+    if (WHITESPACE_CHAR_RE.test(char)) {
       let ws = '';
-      while (i < sql.length && /\s/.test(sql[i])) {
+      while (i < sql.length && WHITESPACE_CHAR_RE.test(sql[i])) {
         ws += sql[i];
         i++;
       }
@@ -1137,9 +1151,9 @@ function tokenizeSql(sql: string): SqlToken[] {
     }
 
     // Numbers
-    if (/\d/.test(char)) {
+    if (DIGIT_CHAR_RE.test(char)) {
       let num = '';
-      while (i < sql.length && /[\d.]/.test(sql[i])) {
+      while (i < sql.length && NUMBER_CHAR_RE.test(sql[i])) {
         num += sql[i];
         i++;
       }
@@ -1148,7 +1162,7 @@ function tokenizeSql(sql: string): SqlToken[] {
     }
 
     // Operators and punctuation
-    if (/[(),;*=<>!+\-/%]/.test(char)) {
+    if (OPERATOR_CHAR_RE.test(char)) {
       // Multi-character operators
       const twoChar = char + nextChar;
       if (['<=', '>=', '<>', '!=', '||', '<<', '>>'].includes(twoChar)) {
@@ -1165,9 +1179,9 @@ function tokenizeSql(sql: string): SqlToken[] {
     }
 
     // Identifiers and keywords
-    if (/[a-z_]/i.test(char)) {
+    if (IDENTIFIER_START_CHAR_RE.test(char)) {
       let word = '';
-      while (i < sql.length && /\w/.test(sql[i])) {
+      while (i < sql.length && WORD_CHAR_RE.test(sql[i])) {
         word += sql[i];
         i++;
       }
@@ -1298,7 +1312,7 @@ export function formatSql(sql: string): string {
       result.length > 0 &&
       result.at(-1) !== ' ' &&
       result.at(-1) !== '\n' &&
-      !/^\s+$/.test(result.at(-1) || '')
+      !ONLY_WHITESPACE_RE.test(result.at(-1) || '')
     ) {
       result.push(' ');
     }
@@ -2922,9 +2936,7 @@ function toHex(value: string): string {
   }
 
   // Handle rgb/rgba
-  const rgbMatch = value.match(
-    /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/
-  );
+  const rgbMatch = value.match(RGB_COLOR_RE);
   if (rgbMatch) {
     const r = Number.parseInt(rgbMatch[1], 10).toString(16).padStart(2, '0');
     const g = Number.parseInt(rgbMatch[2], 10).toString(16).padStart(2, '0');
@@ -2968,7 +2980,7 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
   const lightMutedFg = toHex(getCSSVar('--muted-foreground', '#737373'));
 
   // Light theme with dynamic colors
-  monaco.editor.defineTheme('sql-pro-light', {
+  monaco.editor.defineTheme('quarry-light', {
     base: 'vs',
     inherit: false, // Don't inherit - full control
     rules: [
@@ -3129,7 +3141,7 @@ export function defineCustomThemes(monaco: typeof Monaco): void {
   const darkMutedFg = '#9b9a96';
 
   // Dark theme with dynamic colors
-  monaco.editor.defineTheme('sql-pro-dark', {
+  monaco.editor.defineTheme('quarry-dark', {
     base: 'vs-dark',
     inherit: false, // Don't inherit - full control
     rules: [

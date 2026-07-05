@@ -3,7 +3,7 @@ import type { GhostResizeLineRef } from '../GhostResizeLine';
 import type { TableRowData } from './hooks/useTableCore';
 import type { ColumnTypeCategory, UIFilterState } from '@/lib/filter-utils';
 import type { ColumnSchema } from '@/types/database';
-import { Checkbox } from '@sqlpro/ui/checkbox';
+import { Checkbox } from '@quarry/ui/checkbox';
 import { flexRender } from '@tanstack/react-table';
 import {
   ArrowDown,
@@ -486,8 +486,7 @@ export const TableHeader = memo(
             {headerGroup.headers.map((header) => {
               const isPinned = pinnedColumns.includes(header.column.id);
               const isLastPinned =
-                isPinned &&
-                pinnedColumns[pinnedColumns.length - 1] === header.column.id;
+                isPinned && pinnedColumns.at(-1) === header.column.id;
               const isGrouped = grouping.includes(header.column.id);
               // Only show group count for the first grouped column
               const isFirstGroupedColumn =

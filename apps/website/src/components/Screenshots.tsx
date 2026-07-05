@@ -30,7 +30,7 @@ export default function Screenshots() {
   const goTo = useCallback((index: number) => {
     setCurrent(index);
     setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
+    setTimeout(setIsAutoPlaying, 10000, true);
   }, []);
 
   const goPrev = useCallback(
@@ -172,7 +172,7 @@ export default function Screenshots() {
                         <span className="h-2 w-2 rounded-full bg-[#27ca40] sm:h-2.5 sm:w-2.5" />
                       </div>
                       <span className="text-muted-foreground flex-1 text-center text-[10px] font-medium sm:text-xs">
-                        SQL Pro
+                        Quarry
                       </span>
                       <div className="w-8 sm:w-12" />
                     </div>

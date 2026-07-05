@@ -84,7 +84,7 @@ export interface PluginServiceConfig {
 
 /** Default marketplace URL (to be configured) */
 const DEFAULT_MARKETPLACE_URL =
-  'https://raw.githubusercontent.com/kunish-homelab/sql-pro-plugins/main/registry.json';
+  'https://raw.githubusercontent.com/sunpebble/quarry-plugins/main/registry.json';
 
 /** Default cache duration: 1 hour */
 const DEFAULT_CACHE_DURATION = 60 * 60 * 1000;
@@ -100,7 +100,7 @@ let _pluginStorageStore: Store<PluginStorageSchema> | null = null;
 function getPluginStorageStore(): Store<PluginStorageSchema> {
   if (!_pluginStorageStore) {
     _pluginStorageStore = new Store<PluginStorageSchema>({
-      name: 'sql-pro-plugin-storage',
+      name: 'quarry-plugin-storage',
       defaults: {
         pluginData: {},
       },
@@ -236,7 +236,7 @@ class PluginService extends EventEmitter {
    * @example
    * ```typescript
    * const result = await pluginService.installPlugin(
-   *   '/path/to/plugin.sqlpro-plugin',
+   *   '/path/to/plugin.quarry-plugin',
    *   'archive'
    * );
    * if (result.success) {

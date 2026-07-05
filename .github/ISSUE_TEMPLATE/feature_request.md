@@ -1,9 +1,9 @@
 ---
 name: Feature Request
-about: Suggest an idea for SQL Pro
-title: ""
+about: Suggest an idea for Quarry
+title: ''
 labels: enhancement
-assignees: ""
+assignees: ''
 ---
 
 ## Problem
