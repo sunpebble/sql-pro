@@ -723,28 +723,31 @@ final class QuarryAppState: ObservableObject {
     return support.appendingPathComponent("QuarrySwiftUI/plugins", isDirectory: true)
   }
 
-  func value(rowID: Int64, columnName: String) -> String {
+  // Indexed cell access: rows in tableData and savedTableData stay positionally
+  // aligned (edits only mutate values in place), so lookups are O(1) instead of
+  // scanning by rowID/column name on every render and keystroke.
+  func value(rowIndex: Int, columnIndex: Int) -> String {
     guard
       let tableData,
-      let row = tableData.rows.first(where: { $0.rowID == rowID }),
-      let columnIndex = tableData.columns.firstIndex(where: { $0.name == columnName }),
-      row.values.indices.contains(columnIndex)
+      tableData.rows.indices.contains(rowIndex),
+      tableData.rows[rowIndex].values.indices.contains(columnIndex)
     else {
       return ""
     }
 
-    return row.values[columnIndex]
+    return tableData.rows[rowIndex].values[columnIndex]
   }
 
-  func editCell(rowID: Int64, columnName: String, newValue: String) {
+  func editCell(rowIndex: Int, columnIndex: Int, newValue: String) {
     guard
       var tableData,
       let savedTableData,
-      let rowIndex = tableData.rows.firstIndex(where: { $0.rowID == rowID }),
-      let savedRow = savedTableData.rows.first(where: { $0.rowID == rowID }),
-      let columnIndex = tableData.columns.firstIndex(where: { $0.name == columnName }),
+      tableData.rows.indices.contains(rowIndex),
+      tableData.columns.indices.contains(columnIndex),
       tableData.rows[rowIndex].values.indices.contains(columnIndex),
-      savedRow.values.indices.contains(columnIndex)
+      savedTableData.rows.indices.contains(rowIndex),
+      savedTableData.rows[rowIndex].values.indices.contains(columnIndex),
+      let rowID = tableData.rows[rowIndex].rowID
     else {
       return
     }
@@ -752,11 +755,11 @@ final class QuarryAppState: ObservableObject {
     tableData.rows[rowIndex].values[columnIndex] = newValue
     self.tableData = tableData
 
-    let oldValue = savedRow.values[columnIndex]
+    let oldValue = savedTableData.rows[rowIndex].values[columnIndex]
     let change = TableCellChange(
       tableName: tableData.table.name,
       rowID: rowID,
-      columnName: columnName,
+      columnName: tableData.columns[columnIndex].name,
       oldValue: oldValue,
       newValue: newValue
     )

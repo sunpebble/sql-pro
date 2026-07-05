@@ -184,50 +184,66 @@ struct SchemaDetailsView: View {
   }
 }
 
+// Fixed cell width keeps lazily-rendered rows column-aligned without a Grid.
+let tableCellWidth: CGFloat = 160
+
 struct EditableTableGrid: View {
   @ObservedObject var state: QuarryAppState
   let tableData: TableData
 
   var body: some View {
     ScrollView([.horizontal, .vertical]) {
-      Grid(alignment: .leading, horizontalSpacing: 0, verticalSpacing: 0) {
-        GridRow {
-          SelectionHeaderCell(state: state, tableData: tableData)
-          ForEach(tableData.columns) { column in
-            Button {
-              state.sortBy(column)
-            } label: {
-              HeaderCell(
-                column: column,
-                isSorted: state.tableSortColumn == column.name,
-                sortAscending: state.tableSortAscending
-              )
-            }
-            .buttonStyle(.plain)
+      LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+        Section {
+          ForEach(Array(tableData.rows.enumerated()), id: \.offset) { rowIndex, row in
+            TableRowView(state: state, tableData: tableData, row: row, rowIndex: rowIndex)
           }
-        }
-
-        ForEach(Array(tableData.rows.enumerated()), id: \.offset) { _, row in
-          GridRow {
-            if let rowID = row.rowID {
-              RowActionsCell(state: state, rowID: rowID)
-            } else {
-              CellText("", isHeader: false)
-                .frame(width: 76)
-            }
-
+        } header: {
+          HStack(spacing: 0) {
+            SelectionHeaderCell(state: state, tableData: tableData)
             ForEach(tableData.columns) { column in
-              if tableData.editable, let rowID = row.rowID {
-                CellEditor(state: state, rowID: rowID, columnName: column.name)
-              } else {
-                let index = tableData.columns.firstIndex(of: column) ?? 0
-                CellText(row.values.indices.contains(index) ? row.values[index] : "", isHeader: false)
+              Button {
+                state.sortBy(column)
+              } label: {
+                HeaderCell(
+                  column: column,
+                  isSorted: state.tableSortColumn == column.name,
+                  sortAscending: state.tableSortAscending
+                )
               }
+              .buttonStyle(.plain)
             }
           }
         }
       }
       .padding()
+    }
+  }
+}
+
+struct TableRowView: View {
+  let state: QuarryAppState
+  let tableData: TableData
+  let row: TableDataRow
+  let rowIndex: Int
+
+  var body: some View {
+    HStack(spacing: 0) {
+      if let rowID = row.rowID {
+        RowActionsCell(state: state, rowID: rowID)
+      } else {
+        Text("")
+          .frame(width: 76, height: 28)
+          .border(Color(nsColor: .separatorColor), width: 0.5)
+      }
+
+      ForEach(Array(tableData.columns.enumerated()), id: \.offset) { columnIndex, _ in
+        if tableData.editable, row.rowID != nil {
+          CellEditor(state: state, rowIndex: rowIndex, columnIndex: columnIndex)
+        } else {
+          CellText(row.values.indices.contains(columnIndex) ? row.values[columnIndex] : "", isHeader: false)
+        }
+      }
     }
   }
 }
@@ -330,7 +346,8 @@ struct HeaderCell: View {
     }
     .font(.caption.weight(.semibold))
     .lineLimit(1)
-    .frame(minWidth: 120, maxWidth: 260, minHeight: 42, alignment: .leading)
+    .frame(width: tableCellWidth, alignment: .leading)
+    .frame(minHeight: 42)
     .padding(.horizontal, 8)
     .padding(.vertical, 6)
     .background(Color(nsColor: .controlBackgroundColor))
@@ -340,21 +357,22 @@ struct HeaderCell: View {
 
 struct CellEditor: View {
   @ObservedObject var state: QuarryAppState
-  let rowID: Int64
-  let columnName: String
+  let rowIndex: Int
+  let columnIndex: Int
 
   var body: some View {
     TextField(
       "",
       text: Binding(
-        get: { state.value(rowID: rowID, columnName: columnName) },
-        set: { state.editCell(rowID: rowID, columnName: columnName, newValue: $0) }
+        get: { state.value(rowIndex: rowIndex, columnIndex: columnIndex) },
+        set: { state.editCell(rowIndex: rowIndex, columnIndex: columnIndex, newValue: $0) }
       )
     )
     .textFieldStyle(.plain)
     .font(.system(.caption, design: .monospaced))
     .lineLimit(1)
-    .frame(minWidth: 120, maxWidth: 260, minHeight: 28, alignment: .leading)
+    .frame(width: tableCellWidth, alignment: .leading)
+    .frame(minHeight: 28)
     .padding(.horizontal, 8)
     .padding(.vertical, 4)
     .border(Color(nsColor: .separatorColor), width: 0.5)
@@ -451,7 +469,8 @@ struct CellText: View {
       .font(isHeader ? .caption.weight(.semibold) : .system(.caption, design: .monospaced))
       .lineLimit(1)
       .truncationMode(.tail)
-      .frame(minWidth: 120, maxWidth: 260, minHeight: isHeader ? 42 : 28, alignment: .leading)
+      .frame(width: tableCellWidth, alignment: .leading)
+      .frame(minHeight: isHeader ? 42 : 28)
       .padding(.horizontal, 8)
       .padding(.vertical, 6)
       .background(isHeader ? Color(nsColor: .controlBackgroundColor) : Color.clear)

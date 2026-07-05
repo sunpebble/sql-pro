@@ -203,17 +203,19 @@ struct ResultGrid: View {
         Divider()
 
         ScrollView([.horizontal, .vertical]) {
-          Grid(alignment: .leading, horizontalSpacing: 0, verticalSpacing: 0) {
-            GridRow {
-              ForEach(result.columns, id: \.self) { column in
-                CellText(column, isHeader: true)
+          LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+            Section {
+              ForEach(Array(result.rows.enumerated()), id: \.offset) { _, row in
+                HStack(spacing: 0) {
+                  ForEach(result.columns.indices, id: \.self) { index in
+                    CellText(index < row.count ? row[index] : "", isHeader: false)
+                  }
+                }
               }
-            }
-
-            ForEach(Array(result.rows.enumerated()), id: \.offset) { _, row in
-              GridRow {
-                ForEach(result.columns.indices, id: \.self) { index in
-                  CellText(index < row.count ? row[index] : "", isHeader: false)
+            } header: {
+              HStack(spacing: 0) {
+                ForEach(result.columns, id: \.self) { column in
+                  CellText(column, isHeader: true)
                 }
               }
             }
