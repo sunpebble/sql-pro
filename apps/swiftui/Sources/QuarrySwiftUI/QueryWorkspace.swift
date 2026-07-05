@@ -13,31 +13,10 @@ struct QueryWorkspaceView: View {
       Divider()
 
       VStack(spacing: 0) {
-        HStack {
-          Text(L("SQL"))
-            .font(.headline)
-
-          Spacer()
-
-          Toggle(isOn: $state.showSqlLog) {
-            Label(L("Log"), systemImage: "list.bullet.rectangle")
-          }
-          .toggleStyle(.button)
-
-          Button(action: state.saveCurrentQuery) {
-            Label(L("Save"), systemImage: "bookmark")
-          }
-
-          Button(action: state.explainQuery) {
-            Label(L("Explain"), systemImage: "list.bullet.clipboard")
-          }
-          .disabled(!state.hasActiveDatabase)
-
-          Button(action: state.runQuery) {
-            Label(L("Run"), systemImage: "play.fill")
-          }
-          .buttonStyle(.brandProminent)
-          .disabled(!state.hasActiveDatabase)
+        // Icon-only in narrow windows, matching the table workspace toolbar.
+        ViewThatFits(in: .horizontal) {
+          editorHeader.labelStyle(.titleAndIcon)
+          editorHeader.labelStyle(.iconOnly)
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
@@ -62,6 +41,35 @@ struct QueryWorkspaceView: View {
             .frame(height: 160)
         }
       }
+    }
+  }
+
+  private var editorHeader: some View {
+    HStack {
+      Text(L("SQL"))
+        .font(.headline)
+
+      Spacer()
+
+      Toggle(isOn: $state.showSqlLog) {
+        Label(L("Log"), systemImage: "list.bullet.rectangle")
+      }
+      .toggleStyle(.button)
+
+      Button(action: state.saveCurrentQuery) {
+        Label(L("Save"), systemImage: "bookmark")
+      }
+
+      Button(action: state.explainQuery) {
+        Label(L("Explain"), systemImage: "list.bullet.clipboard")
+      }
+      .disabled(!state.hasActiveDatabase)
+
+      Button(action: state.runQuery) {
+        Label(L("Run"), systemImage: "play.fill")
+      }
+      .buttonStyle(.brandProminent)
+      .disabled(!state.hasActiveDatabase)
     }
   }
 }

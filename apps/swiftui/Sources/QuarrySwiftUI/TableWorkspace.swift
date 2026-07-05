@@ -8,9 +8,59 @@ struct EditableTableWorkspaceView: View {
   var body: some View {
     VStack(spacing: 0) {
       if let tableData = state.tableData {
-        HStack {
-          Text(tableData.table.name)
-            .font(.headline)
+        // Full labels when they fit, icon-only in narrow windows — avoids
+        // truncated "Im…" buttons and the title hyphen-wrapping.
+        ViewThatFits(in: .horizontal) {
+          toolbarRow(tableData).labelStyle(.titleAndIcon)
+          toolbarRow(tableData).labelStyle(.iconOnly)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 10)
+
+        Divider()
+
+        if let schema = state.tableSchema {
+          SchemaDetailsView(schema: schema)
+          Divider()
+        }
+
+        DataTableView(
+          columns: tableData.columns.map {
+            .init(name: $0.name, tooltip: "\($0.type)\($0.isPrimaryKey ? " · primary key" : "")")
+          },
+          rows: tableData.rows.map(\.values),
+          editable: tableData.editable,
+          editableRows: tableData.rows.map { $0.rowID != nil },
+          sortColumn: state.tableSortColumn,
+          sortAscending: state.tableSortAscending,
+          selectedRows: state.selectedRowIndexes,
+          onEdit: { row, column, value in
+            state.editCell(rowIndex: row, columnIndex: column, newValue: value)
+          },
+          onSort: { columnName, ascending in
+            state.applySort(columnName: columnName, ascending: ascending)
+          },
+          onSelect: { indexes in
+            state.setSelectedRows(indexes: indexes)
+          }
+        )
+      } else {
+        ContentUnavailableView(L("No Table Selected"), systemImage: "tablecells")
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+      }
+
+      if !state.pendingChanges.isEmpty {
+        PendingChangesBar(state: state)
+      }
+    }
+  }
+
+  private func toolbarRow(_ tableData: TableData) -> some View {
+    HStack {
+      Text(tableData.table.name)
+        .font(.headline)
+        .lineLimit(1)
+        .fixedSize()
 
           Text(String(format: L("%d rows"), tableData.rows.count))
             .font(.caption)
@@ -26,7 +76,7 @@ struct EditableTableWorkspaceView: View {
 
           TextField(L("Filter rows"), text: $state.tableFilter)
             .textFieldStyle(.roundedBorder)
-            .frame(width: 220)
+            .frame(minWidth: 100, maxWidth: 220)
             .onSubmit(state.reloadFromFirstPage)
 
           Button(action: state.reloadFromFirstPage) {
@@ -108,45 +158,6 @@ struct EditableTableWorkspaceView: View {
               Label(L("Import CSV"), systemImage: "square.and.arrow.up")
             }
           }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 10)
-
-        Divider()
-
-        if let schema = state.tableSchema {
-          SchemaDetailsView(schema: schema)
-          Divider()
-        }
-
-        DataTableView(
-          columns: tableData.columns.map {
-            .init(name: $0.name, tooltip: "\($0.type)\($0.isPrimaryKey ? " · primary key" : "")")
-          },
-          rows: tableData.rows.map(\.values),
-          editable: tableData.editable,
-          editableRows: tableData.rows.map { $0.rowID != nil },
-          sortColumn: state.tableSortColumn,
-          sortAscending: state.tableSortAscending,
-          selectedRows: state.selectedRowIndexes,
-          onEdit: { row, column, value in
-            state.editCell(rowIndex: row, columnIndex: column, newValue: value)
-          },
-          onSort: { columnName, ascending in
-            state.applySort(columnName: columnName, ascending: ascending)
-          },
-          onSelect: { indexes in
-            state.setSelectedRows(indexes: indexes)
-          }
-        )
-      } else {
-        ContentUnavailableView(L("No Table Selected"), systemImage: "tablecells")
-          .frame(maxWidth: .infinity, maxHeight: .infinity)
-      }
-
-      if !state.pendingChanges.isEmpty {
-        PendingChangesBar(state: state)
-      }
     }
   }
 }

@@ -12,6 +12,17 @@ enum WorkspaceMode: String, CaseIterable, Identifiable {
   case maintenance = "Maintenance"
 
   var id: String { rawValue }
+
+  var icon: String {
+    switch self {
+    case .data: "tablecells"
+    case .query: "terminal"
+    case .search: "magnifyingglass"
+    case .diagram: "point.3.connected.trianglepath.dotted"
+    case .compare: "arrow.left.arrow.right"
+    case .maintenance: "wrench.and.screwdriver"
+    }
+  }
 }
 
 private struct BulkEditInput {

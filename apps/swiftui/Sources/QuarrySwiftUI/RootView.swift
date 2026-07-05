@@ -8,7 +8,9 @@ struct RootView: View {
   var body: some View {
     NavigationSplitView {
       SidebarView(state: state)
-        .navigationSplitViewColumnWidth(min: 240, ideal: 300)
+        // max caps double-click auto-sizing; without it the sidebar expands to
+        // the full single-line width of the database path text.
+        .navigationSplitViewColumnWidth(min: 240, ideal: 300, max: 420)
     } detail: {
       DetailView(state: state)
     }
@@ -21,9 +23,13 @@ struct RootView: View {
         Label(L("Open Encrypted"), systemImage: "lock")
       }
 
+      // Icon segments: text labels made the picker ~560pt wide and pushed the
+      // whole toolbar into the » overflow menu on narrow windows.
       Picker(L("Mode"), selection: $state.workspaceMode) {
         ForEach(WorkspaceMode.allCases) { mode in
-          Text(L(mode.rawValue)).tag(mode)
+          Image(systemName: mode.icon)
+            .help(L(mode.rawValue))
+            .tag(mode)
         }
       }
       .pickerStyle(.segmented)
@@ -58,6 +64,9 @@ struct RootView: View {
     }
     .tint(Brand.sun)
     .fontDesign(.rounded)
+    // Keep the toolbar (mode picker + Run) from collapsing into the »
+    // overflow menu, where the segmented picker renders as blank items.
+    .frame(minWidth: 760, minHeight: 480)
   }
 }
 
@@ -86,9 +95,11 @@ struct SidebarView: View {
           Button(action: state.openDatabasePanel) {
             Label(L("Open Database"), systemImage: "folder")
           }
+          .buttonStyle(.plain)
           Button(action: state.connectToServerPanel) {
             Label(L("Connect to Server"), systemImage: "network")
           }
+          .buttonStyle(.plain)
         }
       }
 

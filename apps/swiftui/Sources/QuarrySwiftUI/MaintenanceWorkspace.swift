@@ -5,37 +5,47 @@ import SwiftUI
 struct MaintenanceWorkspaceView: View {
   @ObservedObject var state: QuarryAppState
 
+  private var maintenanceHeader: some View {
+    HStack {
+      Label(L("Maintenance"), systemImage: "wrench.and.screwdriver")
+        .font(.headline)
+        .labelStyle(.titleAndIcon) // title stays text even in icon-only mode
+        .fixedSize()
+
+      Text(state.activeSessionLabel ?? "")
+        .font(.caption)
+        .foregroundStyle(Brand.textSecondary)
+
+      Spacer()
+
+      Button(action: state.runIntegrityCheck) {
+        Label(L("Integrity"), systemImage: "checkmark.shield")
+      }
+
+      Button(action: state.runQuickCheck) {
+        Label(L("Quick Check"), systemImage: "bolt.shield")
+      }
+
+      Button(action: state.runOptimize) {
+        Label(L("Optimize"), systemImage: "speedometer")
+      }
+
+      Button(action: state.runVacuum) {
+        Label(L("Vacuum"), systemImage: "arrow.triangle.2.circlepath")
+      }
+
+      Button(action: state.loadDatabaseInfo) {
+        Label(L("Refresh"), systemImage: "arrow.clockwise")
+      }
+    }
+  }
+
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
-      HStack {
-        Label(L("Maintenance"), systemImage: "wrench.and.screwdriver")
-          .font(.headline)
-
-        Text(state.activeSessionLabel ?? "")
-          .font(.caption)
-          .foregroundStyle(Brand.textSecondary)
-
-        Spacer()
-
-        Button(action: state.runIntegrityCheck) {
-          Label(L("Integrity"), systemImage: "checkmark.shield")
-        }
-
-        Button(action: state.runQuickCheck) {
-          Label(L("Quick Check"), systemImage: "bolt.shield")
-        }
-
-        Button(action: state.runOptimize) {
-          Label(L("Optimize"), systemImage: "speedometer")
-        }
-
-        Button(action: state.runVacuum) {
-          Label(L("Vacuum"), systemImage: "arrow.triangle.2.circlepath")
-        }
-
-        Button(action: state.loadDatabaseInfo) {
-          Label(L("Refresh"), systemImage: "arrow.clockwise")
-        }
+      // Icon-only in narrow windows, matching the table workspace toolbar.
+      ViewThatFits(in: .horizontal) {
+        maintenanceHeader.labelStyle(.titleAndIcon)
+        maintenanceHeader.labelStyle(.iconOnly)
       }
       .padding()
 
