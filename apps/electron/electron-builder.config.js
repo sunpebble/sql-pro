@@ -39,6 +39,9 @@ const config = {
         '!**/LICENSE*',
         '!**/CHANGELOG*',
         '!**/README*',
+        // pnpm bin shims are not runtime dependencies and can point at
+        // optional platform packages that were not installed for this runner.
+        '!**/.bin/**',
         '!**/.github/**',
         '!**/docs/**',
         '!**/test/**',
