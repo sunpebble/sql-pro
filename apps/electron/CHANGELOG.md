@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.3](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.2...quarry-app-v1.11.3) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** exclude pnpm bin shims from app package ([64f8da1](https://github.com/sunpebble/quarry/commit/64f8da1d015c0f6070cfa5684baf0baea4259f8a))
+
 ## [1.11.2](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.1...quarry-app-v1.11.2) (2026-07-05)
 
 
