@@ -14,6 +14,7 @@ struct SQLEditor: NSViewRepresentable {
     scrollView.drawsBackground = true
 
     let textView = scrollView.documentView as! NSTextView
+    textView.backgroundColor = Brand.surfaceNS
     textView.delegate = context.coordinator
     textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
     textView.isRichText = false
@@ -85,7 +86,7 @@ enum SQLHighlighter {
     let bold = NSFont.monospacedSystemFont(ofSize: 13, weight: .bold)
     let italic = NSFontManager.shared.convert(font, toHaveTrait: .italicFontMask)
     let commentAttributes: [NSAttributedString.Key: Any] = [
-      .foregroundColor: NSColor.secondaryLabelColor,
+      .foregroundColor: Brand.textSecondaryNS,
       .font: italic,
     ]
     func rule(_ pattern: String, _ attributes: [NSAttributedString.Key: Any]) -> Rule {

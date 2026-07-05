@@ -26,7 +26,7 @@ struct SearchWorkspaceView: View {
 
         Text(String(format: L("%d matches"), state.searchMatches.count))
           .font(.caption)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Brand.textSecondary)
       }
       .padding()
 
@@ -34,6 +34,7 @@ struct SearchWorkspaceView: View {
 
       if state.searchMatches.isEmpty {
         ContentUnavailableView(L("No Matches"), systemImage: "magnifyingglass")
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else {
         List {
           ForEach(state.searchMatches) { match in
@@ -44,11 +45,11 @@ struct SearchWorkspaceView: View {
                     .font(.caption.weight(.semibold))
                   Text(match.columnName)
                     .font(.caption.monospaced())
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Brand.textSecondary)
                   if let rowID = match.rowID {
                     Text("rowid \(rowID)")
                       .font(.caption2.monospaced())
-                      .foregroundStyle(.secondary)
+                      .foregroundStyle(Brand.textSecondary)
                   }
                 }
 

@@ -76,11 +76,11 @@ struct DiagramWorkspaceView: View {
 
         Text(String(format: L("%d tables"), diagram?.tables.count ?? 0))
           .font(.caption)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Brand.textSecondary)
 
         Text(String(format: L("%d relationships"), diagram?.relationships.count ?? 0))
           .font(.caption)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Brand.textSecondary)
 
         Spacer()
 
@@ -125,6 +125,7 @@ struct DiagramWorkspaceView: View {
         }
       } else {
         ContentUnavailableView(L("No tables"), systemImage: "point.3.connected.trianglepath.dotted")
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
     }
     .onAppear {
@@ -175,9 +176,9 @@ struct DiagramWorkspaceView: View {
 
   private func nodeCard(table: DatabaseTable, diagram: DatabaseDiagram) -> some View {
     VStack(alignment: .leading, spacing: 0) {
+      // Brand: sun is the highlight fill; text on it stays primary/ink, never sun.
       Label(table.name, systemImage: "tablecells")
         .font(.headline)
-        .foregroundStyle(Brand.sun)
         .lineLimit(1)
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
@@ -189,7 +190,7 @@ struct DiagramWorkspaceView: View {
         if columns.isEmpty {
           Text(L("No relationships"))
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Brand.textSecondary)
         } else {
           ForEach(columns, id: \.self) { column in
             Text(column)
@@ -204,7 +205,7 @@ struct DiagramWorkspaceView: View {
       Spacer(minLength: 0)
     }
     .frame(width: DiagramLayout.nodeSize.width, height: DiagramLayout.nodeSize.height, alignment: .top)
-    .background(Color(nsColor: .controlBackgroundColor))
+    .background(Brand.surface)
     .clipShape(RoundedRectangle(cornerRadius: 8))
     .overlay(
       RoundedRectangle(cornerRadius: 8)

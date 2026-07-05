@@ -13,7 +13,7 @@ struct MaintenanceWorkspaceView: View {
 
         Text(state.activeSessionLabel ?? "")
           .font(.caption)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Brand.textSecondary)
 
         Spacer()
 
@@ -46,12 +46,12 @@ struct MaintenanceWorkspaceView: View {
           Section(L("Database Info")) {
             if state.databaseInfo.isEmpty {
               Text(L("No database info loaded"))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Brand.textSecondary)
             } else {
               ForEach(state.databaseInfo) { item in
                 HStack(alignment: .firstTextBaseline) {
                   Text(item.name)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Brand.textSecondary)
                   Spacer()
                   Text(item.value)
                     .font(.caption.monospaced())
@@ -78,6 +78,7 @@ struct MaintenanceWorkspaceView: View {
 
           if state.maintenanceMessages.isEmpty {
             ContentUnavailableView(L("No maintenance result"), systemImage: "terminal")
+              .frame(maxWidth: .infinity, maxHeight: .infinity)
           } else {
             ScrollView {
               VStack(alignment: .leading, spacing: 6) {
