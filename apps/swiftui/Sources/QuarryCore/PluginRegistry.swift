@@ -178,14 +178,24 @@ public enum PluginRegistry {
     if manifest.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
       throw PluginRegistryError.manifestInvalid("id is required")
     }
+    // id becomes a directory name under pluginsDirectory — block path traversal.
+    if manifest.id.hasPrefix("/") || manifest.id.contains("\\") || containsTraversal(manifest.id) {
+      throw PluginRegistryError.manifestInvalid("id must not contain path separators")
+    }
     if manifest.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
       throw PluginRegistryError.manifestInvalid("name is required")
     }
     if manifest.version.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
       throw PluginRegistryError.manifestInvalid("version is required")
     }
-    if !manifest.main.hasSuffix(".js") || manifest.main.hasPrefix("/") || manifest.main.contains("\\") {
-      throw PluginRegistryError.manifestInvalid("main must be a relative .js file")
+    // main is resolved against the plugin directory — block escaping it.
+    if !manifest.main.hasSuffix(".js") || manifest.main.hasPrefix("/")
+      || manifest.main.contains("\\") || containsTraversal(manifest.main) {
+      throw PluginRegistryError.manifestInvalid("main must be a relative .js file inside the plugin")
     }
+  }
+
+  private static func containsTraversal(_ path: String) -> Bool {
+    path.split(separator: "/", omittingEmptySubsequences: false).contains("..")
   }
 }

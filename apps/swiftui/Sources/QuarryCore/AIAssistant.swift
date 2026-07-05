@@ -101,8 +101,12 @@ public final class OpenAICompatibleClient {
     let path = components.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
     if path.isEmpty {
       components.path = "/v1/chat/completions"
+    } else if path.hasSuffix("chat/completions") {
+      components.path = "/\(path)"
+    } else if path.hasSuffix("v1") {
+      components.path = "/\(path)/chat/completions"
     } else {
-      components.path = path.hasSuffix("v1") ? "/\(path)/chat/completions" : "/\(path)/v1/chat/completions"
+      components.path = "/\(path)/v1/chat/completions"
     }
     return components.url
   }

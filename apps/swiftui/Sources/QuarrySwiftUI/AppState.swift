@@ -89,6 +89,7 @@ final class QuarryAppState: ObservableObject {
   @Published var enabledPluginIDs: Set<String> = []
   @Published var workspaceMode: WorkspaceMode = .data
   @Published var errorMessage: String?
+  @Published var connecting = false
 
   @Published var pageSize: Int {
     didSet {
@@ -231,56 +232,59 @@ final class QuarryAppState: ObservableObject {
     connectToServer(input.profile, password: input.password)
   }
 
-  // ponytail: engine calls run on the main thread; move to a background executor if
-  // remote queries prove slow enough to freeze the UI.
   func connectToServer(_ profile: ConnectionProfile, password: String? = nil) {
-    do {
-      var tunnel: SSHTunnel?
-      var host = profile.host
-      var port = profile.port
-      if !profile.sshHost.isEmpty {
-        let activeTunnel = try SSHTunnel(
-          sshHost: profile.sshHost,
-          sshUser: profile.sshUser.isEmpty ? NSUserName() : profile.sshUser,
-          remoteHost: profile.host,
-          remotePort: profile.port
-        )
-        tunnel = activeTunnel
-        host = "127.0.0.1"
-        port = activeTunnel.localPort
-      }
-
-      let engine: any DatabaseEngine
-      switch profile.kind {
-      case .sqlite:
-        openDatabase(URL(fileURLWithPath: profile.path))
-        return
-      case .postgres:
-        engine = try PostgresEngine(
-          host: host,
-          port: port,
-          database: profile.database,
-          user: profile.user,
-          password: password ?? ""
-        )
-      case .mysql:
-        engine = try MySQLEngine(
-          host: host,
-          port: port,
-          database: profile.database,
-          user: profile.user,
-          password: password ?? ""
-        )
-      }
-
-      let tables = try engine.listTables()
-      let session = DatabaseSession(serverProfile: profile, engine: engine, tables: tables, tunnel: tunnel)
-      sessions.removeAll { $0.id == session.id }
-      sessions.append(session)
-      activate(session)
-    } catch {
-      errorMessage = error.localizedDescription
+    if profile.kind == .sqlite {
+      openDatabase(URL(fileURLWithPath: profile.path))
+      return
     }
+
+    // SSH tunnel setup and remote connect can block for seconds; run them off
+    // the main thread so the UI stays responsive, then update state on main.
+    connecting = true
+    Task {
+      do {
+        let session = try await Task.detached(priority: .userInitiated) {
+          try Self.makeServerSession(profile: profile, password: password ?? "")
+        }.value
+        connecting = false
+        sessions.removeAll { $0.id == session.id }
+        sessions.append(session)
+        activate(session)
+      } catch {
+        connecting = false
+        errorMessage = error.localizedDescription
+      }
+    }
+  }
+
+  nonisolated private static func makeServerSession(profile: ConnectionProfile, password: String) throws -> DatabaseSession {
+    var tunnel: SSHTunnel?
+    var host = profile.host
+    var port = profile.port
+    if !profile.sshHost.isEmpty {
+      let activeTunnel = try SSHTunnel(
+        sshHost: profile.sshHost,
+        sshUser: profile.sshUser.isEmpty ? NSUserName() : profile.sshUser,
+        remoteHost: profile.host,
+        remotePort: profile.port
+      )
+      tunnel = activeTunnel
+      host = "127.0.0.1"
+      port = activeTunnel.localPort
+    }
+
+    let engine: any DatabaseEngine
+    switch profile.kind {
+    case .sqlite:
+      throw DatabaseEngineError.unsupported("sqlite is opened directly, not as a server")
+    case .postgres:
+      engine = try PostgresEngine(host: host, port: port, database: profile.database, user: profile.user, password: password)
+    case .mysql:
+      engine = try MySQLEngine(host: host, port: port, database: profile.database, user: profile.user, password: password)
+    }
+
+    let tables = try engine.listTables()
+    return DatabaseSession(serverProfile: profile, engine: engine, tables: tables, tunnel: tunnel)
   }
 
   func openRecentDatabase(_ url: URL) {
@@ -452,22 +456,27 @@ final class QuarryAppState: ObservableObject {
     loadSelectedTable()
   }
 
-  var canLoadNextTablePage: Bool {
-    (tableData?.rows.count ?? 0) == previewLimit
-  }
+  var canLoadNextTablePage = false
 
   func loadSelectedTable() {
     guard let engine, let selectedTable else { return }
 
     do {
-      let data = try engine.tableData(
+      // Fetch one extra row as a sentinel: if it comes back there is a next
+      // page. Avoids showing a next button that leads to an empty page when the
+      // row count is an exact multiple of the page size.
+      var data = try engine.tableData(
         selectedTable,
         filter: tableFilter,
         sortColumn: tableSortColumn,
         sortAscending: tableSortAscending,
-        limit: previewLimit,
+        limit: previewLimit + 1,
         offset: tablePage * previewLimit
       )
+      canLoadNextTablePage = data.rows.count > previewLimit
+      if canLoadNextTablePage {
+        data.rows = Array(data.rows.prefix(previewLimit))
+      }
       tableData = data
       tableSchema = try engine.tableSchema(selectedTable)
       savedTableData = data

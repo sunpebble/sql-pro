@@ -438,6 +438,34 @@ final class SQLiteDatabaseTests: XCTestCase {
       OpenAICompatibleClient.chatCompletionsURL(endpoint: "https://example.com/v1")?.absoluteString,
       "https://example.com/v1/chat/completions"
     )
+    // A full endpoint must not get /chat/completions appended twice.
+    XCTAssertEqual(
+      OpenAICompatibleClient.chatCompletionsURL(endpoint: "https://api.openai.com/v1/chat/completions")?.absoluteString,
+      "https://api.openai.com/v1/chat/completions"
+    )
+  }
+
+  func testPluginRegistryRejectsPathTraversal() throws {
+    let source = temporaryDirectoryURL()
+    let installed = temporaryDirectoryURL()
+    defer {
+      try? FileManager.default.removeItem(at: source)
+      try? FileManager.default.removeItem(at: installed)
+    }
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+
+    func writeManifest(id: String, main: String) throws {
+      try """
+        {"id": "\(id)", "name": "Evil", "version": "1.0.0", "description": "x", "author": "x", "main": "\(main)"}
+        """.write(to: source.appendingPathComponent("plugin.json"), atomically: true, encoding: .utf8)
+      try "".write(to: source.appendingPathComponent("index.js"), atomically: true, encoding: .utf8)
+    }
+
+    try writeManifest(id: "../evil", main: "index.js")
+    XCTAssertThrowsError(try PluginRegistry.installPlugin(from: source, into: installed))
+
+    try writeManifest(id: "com.example.plugin", main: "../../outside.js")
+    XCTAssertThrowsError(try PluginRegistry.installPlugin(from: source, into: installed))
   }
 
   func testSchemaSummaryIncludesCreateSQL() throws {

@@ -45,6 +45,17 @@ struct RootView: View {
     } message: {
       Text(state.errorMessage ?? "")
     }
+    .overlay {
+      if state.connecting {
+        VStack(spacing: 12) {
+          ProgressView()
+          Text(L("Connecting…"))
+            .font(.headline)
+        }
+        .padding(24)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+      }
+    }
     .tint(Brand.sun)
     .fontDesign(.rounded)
   }
