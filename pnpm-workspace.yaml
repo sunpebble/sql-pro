@@ -68,9 +68,6 @@ catalogs:
     '@radix-ui/react-label': ^2.1.9
 
     # TanStack
-    '@tanstack/ai': ^0.28.0
-    '@tanstack/ai-anthropic': ^0.15.1
-    '@tanstack/ai-react': ^0.15.4
     '@tanstack/db': ^0.6.8
     '@tanstack/query-core': ^5.101.0
     '@tanstack/query-db-collection': ^1.0.40
@@ -80,34 +77,11 @@ catalogs:
     '@tanstack/react-table': ^8.21.3
     '@tanstack/react-virtual': ^3.14.2
 
-    # AI SDK
-    '@ai-sdk/anthropic': ^3.0.82
-    '@ai-sdk/openai': ^3.0.69
-    '@ai-sdk/openai-compatible': ^2.0.48
-    '@ai-sdk/react': ^3.0.203
-    '@anthropic-ai/claude-agent-sdk': ^0.3.173
-    ai: ^6.0.201
-    openai: ^6.42.0
-
     # DnD Kit
     '@dnd-kit/core': ^6.3.1
     '@dnd-kit/modifiers': ^9.0.0
     '@dnd-kit/sortable': ^10.0.0
     '@dnd-kit/utilities': ^3.2.2
-
-    # Electron
-    # NOTE: electron 版本必须硬编码在 apps/electron/package.json 中
-    # 因为 electron-builder postinstall 无法解析 catalog: 协议
-    electron-builder: ^26.15.2
-    electron-vite: ^5.0.0
-    electron-log: ^5.4.4
-    electron-store: ^11.0.2
-    electron-updater: ^6.8.9
-    '@electron-toolkit/preload': ^3.0.2
-    '@electron-toolkit/utils': ^4.0.0
-    '@electron-toolkit/tsconfig': ^2.0.0
-    '@electron/asar': ^4.2.0
-    '@electron/notarize': ^3.1.1
 
     # 数据库
     better-sqlite3-multiple-ciphers: ^12.10.0

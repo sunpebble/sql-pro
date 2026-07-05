@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-and-typecheck:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,10 +32,24 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
-      - name: Typecheck
-        run: pnpm run typecheck
+  swift:
+    runs-on: macos-latest
 
-  test:
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install homebrew database libraries
+        run: brew install sqlcipher postgresql@16 mysql
+
+      - name: Build
+        run: swift build
+        working-directory: apps/swiftui
+
+      - name: Test
+        run: swift test
+        working-directory: apps/swiftui
+
+  docs:
     runs-on: ubuntu-latest
 
     steps:
@@ -51,26 +65,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: pnpm run test:run
-        env:
-          NODE_OPTIONS: --max-old-space-size=4096
-
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          cache: pnpm
-          node-version-file: .node-version
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build Electron app
-        run: pnpm run build
+      - name: Build docs
+        run: pnpm run docs:build

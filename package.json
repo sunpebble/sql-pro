@@ -3,32 +3,23 @@
   "version": "1.17.0",
   "private": true,
   "packageManager": "pnpm@11.5.3",
-  "description": "Quarry Monorepo - Professional SQLite database manager",
+  "description": "Quarry Monorepo - Professional database manager for macOS",
   "author": {
     "name": "kunish",
     "email": "kunish.butt@gmail.com"
   },
   "license": "MIT",
   "scripts": {
-    "build": "nx run quarry-app:build",
-    "build:mac": "nx run quarry-app:build:mac",
-    "build:win": "nx run quarry-app:build:win",
-    "build:linux": "nx run quarry-app:build:linux",
-    "dev": "nx run quarry-app:dev",
-    "dev:mock": "nx run quarry-app:dev:mock",
+    "build": "swift build --package-path apps/swiftui",
+    "dev": "swift run --package-path apps/swiftui",
     "docs:build": "nx run @quarry/docs:build",
     "docs:dev": "nx run @quarry/docs:dev",
     "docs:preview": "nx run @quarry/docs:preview",
-    "webapp:build": "nx run @quarry/webapp:build",
-    "webapp:dev": "nx run @quarry/webapp:dev",
-    "webapp:preview": "nx run @quarry/webapp:preview",
     "format": "nx format:write",
-    "lint": "nx run-many -t lint",
+    "lint": "eslint .",
+    "typecheck": "nx run-many -t typecheck",
     "prepare": "husky",
-    "test": "nx run quarry-app:test",
-    "test:coverage": "nx run quarry-app:test:coverage",
-    "test:run": "nx run quarry-app:test:run",
-    "typecheck": "nx run quarry-app:typecheck"
+    "test": "swift test --package-path apps/swiftui"
   },
   "dependencies": {},
   "devDependencies": {

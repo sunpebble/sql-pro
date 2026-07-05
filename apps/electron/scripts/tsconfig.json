@@ -1,4 +1,0 @@
-{
-  "extends": "@quarry/tsconfig/web.json",
-  "include": ["./**/*.ts"]
-}

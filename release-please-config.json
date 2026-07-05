@@ -13,14 +13,6 @@
       "bump-patch-for-minor-pre-major": false,
       "extra-files": []
     },
-    "apps/electron": {
-      "release-type": "node",
-      "component": "quarry-app",
-      "changelog-path": "CHANGELOG.md",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": false,
-      "extra-files": []
-    },
     "apps/swiftui": {
       "release-type": "simple",
       "component": "quarry-swiftui",
