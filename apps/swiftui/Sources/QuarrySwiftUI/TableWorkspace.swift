@@ -196,7 +196,13 @@ struct EditableTableGrid: View {
       LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
         Section {
           ForEach(Array(tableData.rows.enumerated()), id: \.offset) { rowIndex, row in
-            TableRowView(state: state, tableData: tableData, row: row, rowIndex: rowIndex)
+            TableRowView(
+              state: state,
+              tableData: tableData,
+              row: row,
+              rowIndex: rowIndex,
+              editingColumn: state.editingCell?.row == rowIndex ? state.editingCell?.column : nil
+            )
           }
         } header: {
           HStack(spacing: 0) {
@@ -226,6 +232,7 @@ struct TableRowView: View {
   let tableData: TableData
   let row: TableDataRow
   let rowIndex: Int
+  let editingColumn: Int?
 
   var body: some View {
     HStack(spacing: 0) {
@@ -239,7 +246,13 @@ struct TableRowView: View {
 
       ForEach(Array(tableData.columns.enumerated()), id: \.offset) { columnIndex, _ in
         if tableData.editable, row.rowID != nil {
-          CellEditor(state: state, rowIndex: rowIndex, columnIndex: columnIndex)
+          EditableCell(
+            state: state,
+            value: row.values.indices.contains(columnIndex) ? row.values[columnIndex] : "",
+            rowIndex: rowIndex,
+            columnIndex: columnIndex,
+            isEditing: editingColumn == columnIndex
+          )
         } else {
           CellText(row.values.indices.contains(columnIndex) ? row.values[columnIndex] : "", isHeader: false)
         }
@@ -355,20 +368,40 @@ struct HeaderCell: View {
   }
 }
 
-struct CellEditor: View {
-  @ObservedObject var state: QuarryAppState
+// Cells render as plain Text (cheap to scroll); double-click swaps in the
+// single active TextField. AppKit-backed fields are too heavy to create per cell.
+struct EditableCell: View {
+  let state: QuarryAppState
+  let value: String
   let rowIndex: Int
   let columnIndex: Int
+  let isEditing: Bool
+  @FocusState private var focused: Bool
 
   var body: some View {
-    TextField(
-      "",
-      text: Binding(
-        get: { state.value(rowIndex: rowIndex, columnIndex: columnIndex) },
-        set: { state.editCell(rowIndex: rowIndex, columnIndex: columnIndex, newValue: $0) }
-      )
-    )
-    .textFieldStyle(.plain)
+    Group {
+      if isEditing {
+        TextField(
+          "",
+          text: Binding(
+            get: { state.value(rowIndex: rowIndex, columnIndex: columnIndex) },
+            set: { state.editCell(rowIndex: rowIndex, columnIndex: columnIndex, newValue: $0) }
+          )
+        )
+        .textFieldStyle(.plain)
+        .focused($focused)
+        .onSubmit { state.editingCell = nil }
+        .onExitCommand { state.editingCell = nil }
+        .onAppear { focused = true }
+      } else {
+        Text(value)
+          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+          .contentShape(Rectangle())
+          .onTapGesture(count: 2) {
+            state.editingCell = TableCellPosition(row: rowIndex, column: columnIndex)
+          }
+      }
+    }
     .font(.system(.caption, design: .monospaced))
     .lineLimit(1)
     .frame(width: tableCellWidth, alignment: .leading)

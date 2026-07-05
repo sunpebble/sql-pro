@@ -3,6 +3,11 @@ import QuarryCore
 import SwiftUI
 import UniformTypeIdentifiers
 
+struct TableCellPosition: Equatable {
+  let row: Int
+  let column: Int
+}
+
 enum WorkspaceMode: String, CaseIterable, Identifiable {
   case data = "Data"
   case query = "SQL"
@@ -66,6 +71,7 @@ final class QuarryAppState: ObservableObject {
   @Published var tableSchema: TableSchema?
   @Published var tableFilter = ""
   @Published var tablePage = 0
+  @Published var editingCell: TableCellPosition?
   @Published var tableSortColumn: String?
   @Published var tableSortAscending = true
   @Published var diagram: DatabaseDiagram?
@@ -455,6 +461,7 @@ final class QuarryAppState: ObservableObject {
 
   func loadSelectedTable() {
     guard let engine, let selectedTable else { return }
+    editingCell = nil
 
     do {
       let data = try engine.tableData(
