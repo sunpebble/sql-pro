@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.1](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.0...quarry-monorepo-v1.16.1) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** hardcode updater version for packaging ([3a7955d](https://github.com/sunpebble/quarry/commit/3a7955d25e561f2fe56dbafce92a4892718c742d))
+
 ## [1.16.0](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.15.1...quarry-monorepo-v1.16.0) (2026-07-05)
 
 
