@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.7](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.6...quarry-monorepo-v1.16.7) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** skip signing mac resource blobs ([dfd7b3f](https://github.com/sunpebble/quarry/commit/dfd7b3fa5da944c0c631beb3a1cb910835f49f0a))
+
 ## [1.16.6](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.5...quarry-monorepo-v1.16.6) (2026-07-05)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "quarry-app",
-  "version": "1.11.6",
+  "version": "1.11.7",
   "description": "Professional SQLite database manager with SQLCipher support and diff preview",
   "author": {
     "name": "kunish",
