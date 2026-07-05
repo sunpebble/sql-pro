@@ -589,6 +589,4 @@ app.post('/api/webhooks/stripe', async (c) => {
 // ============================================
 // Export the Hono app
 // ============================================
-// Cloudflare Workers with Static Assets will automatically serve
-// files from the `public` directory for non-API routes
 export default app;

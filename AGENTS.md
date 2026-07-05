@@ -5,7 +5,6 @@
 Quarry is a professional, cross-platform database management application built with:
 
 - **Desktop App**: Electron + React + TypeScript + Tailwind CSS + shadcn/ui
-- **Website**: React + TypeScript + Vite
 
 ## Design System: Modern Minimal & Glassmorphism
 
@@ -163,9 +162,6 @@ pnpm install
 # Start Electron app in development
 pnpm dev:electron
 
-# Start website in development
-pnpm dev:website
-
 # Build for production
 pnpm build
 
@@ -182,7 +178,6 @@ quarry/
 │   │   └── src/
 │   │       ├── main/      # Electron main process
 │   │       └── renderer/  # React frontend
-│   └── website/           # Marketing website
 ├── packages/
 │   └── ui/                # Shared UI components
 └── shared/                # Shared types and utilities
@@ -198,7 +193,6 @@ This project requires **Node.js 24** (see `.node-version`). The VM snapshot has 
 
 | Service              | Command                    | Port | Notes                                                                                                               |
 | -------------------- | -------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------- |
-| Website (dev)        | `pnpm website:dev`         | 5173 | Vite dev server for the marketing site                                                                              |
 | Electron (mock mode) | `DISPLAY=:1 pnpm dev:mock` | 5174 | Runs the full Electron app with mocked backend — no real DB needed. Requires `DISPLAY=:1` in headless environments. |
 | Electron (real mode) | `DISPLAY=:1 pnpm dev`      | —    | Requires real database connections. Use mock mode for UI-only work.                                                 |
 

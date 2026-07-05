@@ -16,11 +16,9 @@ const OUTPUT_DIR = path.join(__dirname, '../screenshots-output');
 const DEMO_DB_PATH = path.resolve(__dirname, '../../../artifacts/demo.db');
 
 const TARGET_DIRS = [
-  path.join(__dirname, '../../website/public/screenshots'),
   path.join(__dirname, '../../video/public/screenshots'),
   path.join(__dirname, '../../../packages/docs/public/screenshots'),
   path.join(__dirname, '../../../packages/docs/.vitepress/public/screenshots'),
-  path.join(__dirname, '../../../packages/cloudflare/public/screenshots'),
 ];
 
 const SET_LIGHT_MODE_SCRIPT = `

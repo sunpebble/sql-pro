@@ -1,5 +1,5 @@
-# Quarry - Website + License API
-# Cloudflare Workers with Static Assets + D1 Database
+# Quarry - License API
+# Cloudflare Workers + D1 Database
 #
 # Environments:
 #   - dev (default): Development/testing
@@ -14,10 +14,6 @@
 name = "sqlpro-dev"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
-
-# Static Assets configuration (for hosting the website)
-[assets]
-directory = "public"
 
 [vars]
 ENVIRONMENT = "development"
@@ -34,9 +30,6 @@ database_id = "6e0a7893-cd55-4c63-81a4-62e85dc80582"
 [env.staging]
 name = "sqlpro-staging"
 
-[env.staging.assets]
-directory = "public"
-
 [env.staging.vars]
 ENVIRONMENT = "staging"
 
@@ -50,9 +43,6 @@ database_id = "88d85872-62a8-4ade-a9d0-d9291fbeab7f"
 # ============================================
 [env.production]
 name = "sqlpro"
-
-[env.production.assets]
-directory = "public"
 
 [env.production.vars]
 ENVIRONMENT = "production"

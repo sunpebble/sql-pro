@@ -29,10 +29,6 @@ jobs:
       electron--release_created: ${{ steps.release.outputs['apps/electron--release_created'] }}
       electron--tag_name: ${{ steps.release.outputs['apps/electron--tag_name'] }}
       electron--version: ${{ steps.release.outputs['apps/electron--version'] }}
-      # Website (path-based prefix: apps/website)
-      website--release_created: ${{ steps.release.outputs['apps/website--release_created'] }}
-      website--tag_name: ${{ steps.release.outputs['apps/website--tag_name'] }}
-      website--version: ${{ steps.release.outputs['apps/website--version'] }}
 
     steps:
       - name: Release Please
@@ -154,52 +150,3 @@ jobs:
         run: |
           bash scripts/upload-release.sh ${{ needs.release-please.outputs.electron--version }}
         working-directory: apps/electron
-
-  build-website:
-    needs: release-please
-    if: ${{ needs.release-please.outputs.website--release_created == 'true' || needs.release-please.outputs.root--release_created == 'true' }}
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          cache: pnpm
-          node-version-file: .node-version
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build website
-        run: pnpm run website:build
-
-      - name: Upload website build artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: website-dist
-          path: apps/website/dist
-          retention-days: 30
-
-  deploy-website:
-    needs: [release-please, build-website]
-    if: ${{ needs.release-please.outputs.website--release_created == 'true' || needs.release-please.outputs.root--release_created == 'true' }}
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download website build artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: website-dist
-          path: apps/website/dist
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/website/dist --project-name=sqlpro-website

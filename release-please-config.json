@@ -20,14 +20,6 @@
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
       "extra-files": []
-    },
-    "apps/website": {
-      "release-type": "node",
-      "component": "quarry-website",
-      "changelog-path": "CHANGELOG.md",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": false,
-      "extra-files": []
     }
   },
   "changelog-sections": [

@@ -155,7 +155,6 @@ quarry/
 │   │   │   ├── renderer/   # React frontend
 │   │   │   └── shared/     # Shared types
 │   │   └── resources/      # App icons and assets
-│   └── website/            # Official website
 ├── packages/
 │   ├── docs/               # VitePress documentation
 │   ├── plugin-sdk/         # Plugin development SDK

@@ -74,6 +74,3 @@ jobs:
 
       - name: Build Electron app
         run: pnpm run build
-
-      - name: Build website
-        run: pnpm run website:build

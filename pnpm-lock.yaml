@@ -231,9 +231,6 @@ catalogs:
     electron-store:
       specifier: ^11.0.2
       version: 11.0.2
-    electron-updater:
-      specifier: ^6.8.9
-      version: 6.8.9
     electron-vite:
       specifier: ^5.0.0
       version: 5.0.0
@@ -1049,58 +1046,6 @@ importers:
       tw-animate-css:
         specifier: 'catalog:'
         version: 1.4.0
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vite:
-        specifier: npm:rolldown-vite@latest
-        version: rolldown-vite@7.3.1(@types/node@25.5.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.0)(tsx@4.22.4)(yaml@2.9.0)
-
-  apps/website:
-    dependencies:
-      '@quarry/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      class-variance-authority:
-        specifier: 'catalog:'
-        version: 0.7.1
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
-      i18next:
-        specifier: 'catalog:'
-        version: 26.3.1(typescript@6.0.3)
-      i18next-browser-languagedetector:
-        specifier: 'catalog:'
-        version: 8.2.1
-      react:
-        specifier: 'catalog:'
-        version: 19.2.7
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.7(react@19.2.7)
-      react-i18next:
-        specifier: 'catalog:'
-        version: 17.0.8(i18next@26.3.1(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
-      tailwind-merge:
-        specifier: 'catalog:'
-        version: 3.6.0
-    devDependencies:
-      '@tailwindcss/vite':
-        specifier: 'catalog:'
-        version: 4.3.0(rolldown-vite@7.3.1(@types/node@25.5.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.0)(tsx@4.22.4)(yaml@2.9.0))
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.17
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.3(@types/react@19.2.17)
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.0.2(rolldown-vite@7.3.1(@types/node@25.5.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.0)(tsx@4.22.4)(yaml@2.9.0))
-      tailwindcss:
-        specifier: 'catalog:'
-        version: 4.3.0
       typescript:
         specifier: 'catalog:'
         version: 6.0.3

@@ -25,7 +25,6 @@ export default antfu(
       'node_modules/**',
       'pnpm-workspace.yaml',
       // Build outputs
-      'packages/cloudflare/public/assets/**',
       '**/build/**',
       '**/.next/**',
     ],

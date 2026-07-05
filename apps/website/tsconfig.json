@@ -1,9 +1,0 @@
-{
-  "extends": "@quarry/tsconfig/web.json",
-  "compilerOptions": {
-    "useDefineForClassFields": true,
-    "types": ["vite/client"],
-    "allowImportingTsExtensions": true
-  },
-  "include": ["src"]
-}

@@ -7,13 +7,8 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "pnpm --filter @quarry/website build",
-          "rm -rf packages/cloudflare/public/*",
-          "cp -r apps/website/dist/* packages/cloudflare/public/"
-        ],
-        "parallel": false,
-        "cwd": "{workspaceRoot}"
+        "command": "tsc --noEmit",
+        "cwd": "packages/cloudflare"
       },
       "dependsOn": ["^build"]
     },

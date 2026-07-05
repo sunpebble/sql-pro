@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "Quarry Website + License API (Cloudflare Workers + D1)",
+  "description": "Quarry License API (Cloudflare Workers + D1)",
   "license": "MIT",
   "scripts": {
     "dev": "wrangler dev",

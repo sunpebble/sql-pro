@@ -1,5 +1,4 @@
 {
   ".": "1.16.2",
-  "apps/electron": "1.11.2",
-  "apps/website": "1.2.0"
+  "apps/electron": "1.11.2"
 }
