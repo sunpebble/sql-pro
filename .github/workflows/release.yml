@@ -249,11 +249,22 @@ jobs:
         run: |
           ZIP_PATH="dist/Quarry-SwiftUI-${{ needs.release-please.outputs.swiftui--version }}-arm64.zip"
 
-          xcrun notarytool submit "$ZIP_PATH" \
+          SUBMISSION_ID=$(xcrun notarytool submit "$ZIP_PATH" \
             --key "$APPLE_API_KEY" \
             --key-id "$APPLE_API_KEY_ID" \
             --issuer "$APPLE_API_ISSUER" \
-            --wait
+            --output-format json | jq -r '.id')
+
+          # ponytail: runner 网络瞬断会让 --wait 轮询直接失败，拆开 submit/wait 并重试轮询
+          for attempt in 1 2 3 4 5; do
+            xcrun notarytool wait "$SUBMISSION_ID" \
+              --key "$APPLE_API_KEY" \
+              --key-id "$APPLE_API_KEY_ID" \
+              --issuer "$APPLE_API_ISSUER" \
+              --timeout 30m && break
+            [ "$attempt" -eq 5 ] && exit 1
+            sleep 60
+          done
 
           # Staple the ticket to the .app and re-zip so the download runs offline.
           xcrun stapler staple dist/Quarry.app
