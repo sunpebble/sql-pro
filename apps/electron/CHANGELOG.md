@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.2](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.1...quarry-app-v1.11.2) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** make release packaging avoid pnpm collector ([fe67e2d](https://github.com/sunpebble/quarry/commit/fe67e2dc79959e87abecee56585cf1197b6ef39c))
+
 ## [1.11.1](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.0...quarry-app-v1.11.1) (2026-07-05)
 
 
