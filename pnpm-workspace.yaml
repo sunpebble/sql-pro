@@ -198,8 +198,6 @@ catalogs:
     '@typescript/native-preview': 7.0.0-dev.20260319.1
 
 overrides:
-  '@img/sharp-darwin-arm64': 0.34.5
-  '@img/sharp-libvips-darwin-arm64': 1.2.4
   vite: npm:rolldown-vite@latest
   # ssh2 → cpu-features uses nan; Electron/Node 24+ V8 needs newer nan (CI rebuild)
   nan: 2.26.2
