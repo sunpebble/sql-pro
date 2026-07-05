@@ -328,9 +328,7 @@ app.post('/api/webhooks/stripe', async (c) => {
         const session = event.data.object;
         const email = session.customer_email || session.metadata?.email;
         const plan = session.metadata?.plan as
-          | 'monthly'
-          | 'yearly'
-          | 'lifetime';
+          'monthly' | 'yearly' | 'lifetime';
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string | null;
 
@@ -386,7 +384,10 @@ app.post('/api/webhooks/stripe', async (c) => {
         const subscription = event.data.object;
         const customerId = subscription.customer as string;
         const status = subscription.status;
-        const periodEnd = new Date(subscription.current_period_end * 1000);
+        // Stripe moved current_period_end from Subscription to SubscriptionItem
+        const periodEnd = new Date(
+          (subscription.items.data[0]?.current_period_end ?? 0) * 1000
+        );
 
         const license = await getLicenseByStripeCustomer(c.env, customerId);
         if (license) {
