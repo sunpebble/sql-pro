@@ -14,12 +14,12 @@ struct EditableTableWorkspaceView: View {
 
           Text(String(format: L("%d rows"), tableData.rows.count))
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Brand.textSecondary)
 
           if !tableData.editable {
             Label(L("Read-only"), systemImage: "lock")
               .font(.caption)
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Brand.textSecondary)
           }
 
           Spacer()
@@ -50,7 +50,7 @@ struct EditableTableWorkspaceView: View {
 
             Text(String(format: L("Page %d"), state.tablePage + 1))
               .font(.caption)
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Brand.textSecondary)
 
             Button(action: state.loadNextTablePage) {
               Image(systemName: "chevron.right")
@@ -61,7 +61,7 @@ struct EditableTableWorkspaceView: View {
           if !state.selectedRowIDs.isEmpty {
             Text(String(format: L("%d selected"), state.selectedRowIDs.count))
               .font(.caption)
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Brand.textSecondary)
 
             Button(action: state.bulkEditSelectedRows) {
               Label(L("Bulk Edit"), systemImage: "square.and.pencil")
@@ -84,6 +84,23 @@ struct EditableTableWorkspaceView: View {
 
           Button(action: state.loadSelectedTable) {
             Label(L("Refresh"), systemImage: "arrow.clockwise")
+          }
+
+          Menu {
+            ForEach(tableData.columns) { column in
+              Button(column.name) {
+                state.loadColumnStats(column: column.name)
+              }
+            }
+          } label: {
+            Label(L("Column Stats"), systemImage: "chart.bar")
+          }
+          .fixedSize()
+          .popover(isPresented: Binding(
+            get: { state.columnStatsColumn != nil },
+            set: { if !$0 { state.clearColumnStats() } }
+          )) {
+            ColumnStatsView(column: state.columnStatsColumn ?? "", buckets: state.columnStats)
           }
 
           if tableData.editable {
@@ -124,6 +141,7 @@ struct EditableTableWorkspaceView: View {
         )
       } else {
         ContentUnavailableView(L("No Table Selected"), systemImage: "tablecells")
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
 
       if !state.pendingChanges.isEmpty {
@@ -155,7 +173,7 @@ struct SchemaDetailsView: View {
           if schema.indexes.isEmpty {
             Text(L("No indexes"))
               .font(.caption)
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Brand.textSecondary)
           } else {
             ForEach(schema.indexes) { index in
               Text("\(index.name): \(index.columns.joined(separator: ", "))\(index.isUnique ? " unique" : "")")
@@ -171,7 +189,7 @@ struct SchemaDetailsView: View {
           if schema.foreignKeys.isEmpty {
             Text(L("No foreign keys"))
               .font(.caption)
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Brand.textSecondary)
           } else {
             ForEach(schema.foreignKeys) { key in
               Text("\(key.fromColumn) -> \(key.table).\(key.toColumn)")
@@ -274,7 +292,49 @@ struct DiffCell: View {
       .frame(width: width, height: isHeader ? 28 : 26, alignment: .leading)
       .padding(.horizontal, 8)
       .padding(.vertical, 4)
-      .background(isHeader ? Color(nsColor: .controlBackgroundColor) : Color.clear)
+      .background(isHeader ? Brand.surface : Color.clear)
       .border(Color(nsColor: .separatorColor), width: 0.5)
+  }
+}
+
+struct ColumnStatsView: View {
+  let column: String
+  let buckets: [ColumnDistributionBucket]
+
+  private var total: Int { max(1, buckets.map(\.count).reduce(0, +)) }
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Label(String(format: L("Top values of %@"), column), systemImage: "chart.bar")
+        .font(.headline)
+
+      if buckets.isEmpty {
+        Text(L("No data."))
+          .foregroundStyle(Brand.textSecondary)
+      } else {
+        ForEach(buckets) { bucket in
+          HStack(spacing: 8) {
+            Text(bucket.value.isEmpty ? "∅" : bucket.value)
+              .font(.caption.monospaced())
+              .lineLimit(1)
+              .frame(width: 160, alignment: .leading)
+
+            GeometryReader { geometry in
+              RoundedRectangle(cornerRadius: 2)
+                .fill(Brand.sun.opacity(0.6))
+                .frame(width: geometry.size.width * CGFloat(bucket.count) / CGFloat(total))
+            }
+            .frame(height: 12)
+
+            Text("\(bucket.count)")
+              .font(.caption.monospaced())
+              .foregroundStyle(Brand.textSecondary)
+              .frame(width: 50, alignment: .trailing)
+          }
+        }
+      }
+    }
+    .padding()
+    .frame(width: 360)
   }
 }

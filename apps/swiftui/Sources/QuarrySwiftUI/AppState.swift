@@ -8,9 +8,8 @@ enum WorkspaceMode: String, CaseIterable, Identifiable {
   case query = "SQL"
   case search = "Search"
   case diagram = "Diagram"
-  case ai = "AI"
+  case compare = "Compare"
   case maintenance = "Maintenance"
-  case plugins = "Plugins"
 
   var id: String { rawValue }
 }
@@ -79,17 +78,33 @@ final class QuarryAppState: ObservableObject {
   @Published var queryHistory: [QueryEntry] = []
   @Published var savedQueries: [QueryEntry] = []
   @Published var querySearch = ""
-  @Published var aiSettings = AISettings()
-  @Published var aiRequest = ""
-  @Published var aiResponse = ""
-  @Published var aiBusy = false
   @Published var databaseInfo: [DatabaseInfoItem] = []
   @Published var maintenanceMessages: [String] = []
-  @Published var plugins: [InstalledPlugin] = []
-  @Published var enabledPluginIDs: Set<String> = []
   @Published var workspaceMode: WorkspaceMode = .data
   @Published var errorMessage: String?
   @Published var connecting = false
+  @Published var sqlLog: [SqlLogEntry] = []
+  @Published var showSqlLog = false
+
+  // Compare workspace (schema + data diff between two open sessions)
+  @Published var compareSourceSessionID: String?
+  @Published var compareTargetSessionID: String?
+  @Published var compareSourceTable: String = ""
+  @Published var compareTargetTable: String = ""
+  @Published var compareDataDiff: DataDiff?
+  @Published var compareSchemaDiff: SchemaDiff?
+  @Published var compareSyncSQL: String = ""
+  @Published var compareIncludeDeletes = false
+
+  // Column distribution stats
+  @Published var columnStats: [ColumnDistributionBucket] = []
+  @Published var columnStatsColumn: String?
+
+  // Pro license
+  @Published var licenseInfo: LicenseInfo?
+  @Published var licenseStatusText = ""
+  @Published var licenseBusy = false
+  let licenseClient = LicenseClient()
 
   @Published var pageSize: Int {
     didSet {
@@ -108,10 +123,6 @@ final class QuarryAppState: ObservableObject {
   private let connectionProfilesDefaultsKey = "quarry.swiftui.connectionProfiles"
   private let queryHistoryDefaultsKey = "quarry.swiftui.queryHistory"
   private let savedQueriesDefaultsKey = "quarry.swiftui.savedQueries"
-  private let aiEndpointDefaultsKey = "quarry.swiftui.aiEndpoint"
-  private let aiModelDefaultsKey = "quarry.swiftui.aiModel"
-  private let enabledPluginsDefaultsKey = "quarry.swiftui.enabledPlugins"
-  private let aiClient = OpenAICompatibleClient()
 
   var canExportCSV: Bool {
     if workspaceMode == .query {
@@ -149,10 +160,7 @@ final class QuarryAppState: ObservableObject {
     connectionProfiles = Self.loadConnectionProfiles(key: connectionProfilesDefaultsKey)
     queryHistory = Self.loadQueries(key: queryHistoryDefaultsKey)
     savedQueries = Self.loadQueries(key: savedQueriesDefaultsKey)
-    aiSettings.endpoint = UserDefaults.standard.string(forKey: aiEndpointDefaultsKey) ?? aiSettings.endpoint
-    aiSettings.model = UserDefaults.standard.string(forKey: aiModelDefaultsKey) ?? aiSettings.model
-    enabledPluginIDs = Set(UserDefaults.standard.stringArray(forKey: enabledPluginsDefaultsKey) ?? [])
-    loadPlugins()
+    refreshLicense()
   }
 
   func createDatabasePanel() {
@@ -219,6 +227,9 @@ final class QuarryAppState: ObservableObject {
       sessions.append(session)
       activate(session)
       remember(url)
+      if let password, !password.isEmpty {
+        KeychainPasswordStore.save(password: password, for: "sqlite:\(url.path)")
+      }
     } catch SQLiteDatabaseError.passwordRequired {
       guard let password = askPassword(title: L("Open Encrypted Database")) else { return }
       openDatabase(url, password: password)
@@ -250,6 +261,9 @@ final class QuarryAppState: ObservableObject {
         sessions.removeAll { $0.id == session.id }
         sessions.append(session)
         activate(session)
+        if let password, !password.isEmpty {
+          KeychainPasswordStore.save(password: password, for: profile.connectionKey)
+        }
       } catch {
         connecting = false
         errorMessage = error.localizedDescription
@@ -297,7 +311,9 @@ final class QuarryAppState: ObservableObject {
 
   func openProfile(_ profile: ConnectionProfile) {
     if profile.kind != .sqlite {
-      guard let password = askPassword(title: String(format: L("Connect to %@"), profile.name)) else { return }
+      // Keychain first; prompt only when no stored password exists.
+      let stored = KeychainPasswordStore.load(for: profile.connectionKey)
+      guard let password = stored ?? askPassword(title: String(format: L("Connect to %@"), profile.name)) else { return }
       connectToServer(profile, password: password)
       connectionProfiles = ConnectionProfiles.markingOpened(profile, in: connectionProfiles)
       Self.saveConnectionProfiles(connectionProfiles, key: connectionProfilesDefaultsKey)
@@ -310,7 +326,9 @@ final class QuarryAppState: ObservableObject {
       return
     }
 
-    let password = profile.isEncrypted ? askPassword(title: String(format: L("Open %@"), profile.name)) : nil
+    let password = profile.isEncrypted
+      ? KeychainPasswordStore.load(for: profile.connectionKey) ?? askPassword(title: String(format: L("Open %@"), profile.name))
+      : nil
     if profile.isEncrypted, password == nil {
       return
     }
@@ -494,8 +512,11 @@ final class QuarryAppState: ObservableObject {
       return
     }
 
+    let started = Date()
     do {
-      result = try engine.query(queryText, limit: previewLimit)
+      let queryResult = try engine.query(queryText, limit: previewLimit)
+      result = queryResult
+      logSQL(queryText, startedAt: started, rowCount: queryResult.rows.count)
       queryPlan = []
       workspaceMode = .query
       recordQueryRun(queryText)
@@ -505,8 +526,22 @@ final class QuarryAppState: ObservableObject {
       }
       errorMessage = nil
     } catch {
+      logSQL(queryText, startedAt: started, error: error.localizedDescription)
       errorMessage = error.localizedDescription
     }
+  }
+
+  func logSQL(_ sql: String, startedAt: Date, rowCount: Int? = nil, error: String? = nil) {
+    sqlLog = SqlLogEntry.appending(
+      SqlLogEntry(
+        sql: sql,
+        startedAt: startedAt,
+        duration: Date().timeIntervalSince(startedAt),
+        rowCount: rowCount,
+        error: error
+      ),
+      to: sqlLog
+    )
   }
 
   func loadDiagram() {
@@ -621,118 +656,6 @@ final class QuarryAppState: ObservableObject {
     } catch {
       errorMessage = error.localizedDescription
     }
-  }
-
-  func saveAISettings() {
-    UserDefaults.standard.set(aiSettings.endpoint, forKey: aiEndpointDefaultsKey)
-    UserDefaults.standard.set(aiSettings.model, forKey: aiModelDefaultsKey)
-  }
-
-  func generateSQLWithAI() {
-    guard !aiBusy else { return }
-    guard let engine else {
-      errorMessage = L("Open a database first.")
-      return
-    }
-
-    aiBusy = true
-    saveAISettings()
-    Task {
-      do {
-        let schema = try engine.schemaSummary()
-        let prompt = AIAssistant.sqlGenerationPrompt(request: aiRequest, schema: schema)
-        let output = try await aiClient.complete(
-          settings: aiSettings,
-          system: "You are a SQLite assistant inside Quarry.",
-          user: prompt
-        )
-        let sql = AIAssistant.extractSQL(output)
-        await MainActor.run {
-          queryText = sql
-          aiResponse = sql
-          workspaceMode = .query
-          aiBusy = false
-        }
-      } catch {
-        await MainActor.run {
-          errorMessage = error.localizedDescription
-          aiBusy = false
-        }
-      }
-    }
-  }
-
-  func explainSQLWithAI() {
-    guard !aiBusy else { return }
-    guard let engine else {
-      errorMessage = L("Open a database first.")
-      return
-    }
-
-    aiBusy = true
-    saveAISettings()
-    Task {
-      do {
-        let schema = try engine.schemaSummary()
-        let prompt = AIAssistant.sqlExplanationPrompt(sql: queryText, schema: schema)
-        let output = try await aiClient.complete(
-          settings: aiSettings,
-          system: "You explain SQLite clearly and concisely.",
-          user: prompt
-        )
-        await MainActor.run {
-          aiResponse = output
-          workspaceMode = .ai
-          aiBusy = false
-        }
-      } catch {
-        await MainActor.run {
-          errorMessage = error.localizedDescription
-          aiBusy = false
-        }
-      }
-    }
-  }
-
-  func loadPlugins() {
-    try? FileManager.default.createDirectory(at: pluginsDirectoryURL, withIntermediateDirectories: true)
-    plugins = PluginRegistry.loadPlugins(from: pluginsDirectoryURL, enabledIDs: enabledPluginIDs)
-  }
-
-  func installPluginPanel() {
-    let panel = NSOpenPanel()
-    panel.canChooseDirectories = true
-    panel.canChooseFiles = false
-    panel.allowsMultipleSelection = false
-
-    if panel.runModal() == .OK, let url = panel.url {
-      do {
-        _ = try PluginRegistry.installPlugin(from: url, into: pluginsDirectoryURL)
-        loadPlugins()
-      } catch {
-        errorMessage = error.localizedDescription
-      }
-    }
-  }
-
-  func setPlugin(_ plugin: InstalledPlugin, enabled: Bool) {
-    if enabled {
-      enabledPluginIDs.insert(plugin.id)
-    } else {
-      enabledPluginIDs.remove(plugin.id)
-    }
-    UserDefaults.standard.set(Array(enabledPluginIDs).sorted(), forKey: enabledPluginsDefaultsKey)
-    loadPlugins()
-  }
-
-  func openPluginCommand(_ command: PluginCommand) {
-    NSWorkspace.shared.open(command.url)
-  }
-
-  private var pluginsDirectoryURL: URL {
-    let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-      ?? FileManager.default.homeDirectoryForCurrentUser
-    return support.appendingPathComponent("QuarrySwiftUI/plugins", isDirectory: true)
   }
 
   // Indexed cell access: rows in tableData and savedTableData stay positionally
@@ -1395,6 +1318,186 @@ final class QuarryAppState: ObservableObject {
   private static func saveConnectionProfiles(_ profiles: [ConnectionProfile], key: String) {
     if let data = try? JSONEncoder().encode(profiles) {
       UserDefaults.standard.set(data, forKey: key)
+    }
+  }
+}
+
+// MARK: - Compare workspace (schema + data diff between open sessions)
+
+extension QuarryAppState {
+  func session(withID id: String?) -> DatabaseSession? {
+    sessions.first { $0.id == id }
+  }
+
+  func showCompare() {
+    if compareSourceSessionID == nil { compareSourceSessionID = activeSessionID }
+    if compareTargetSessionID == nil { compareTargetSessionID = activeSessionID }
+    workspaceMode = .compare
+  }
+
+  func runSchemaCompare() {
+    guard
+      let source = session(withID: compareSourceSessionID),
+      let target = session(withID: compareTargetSessionID)
+    else {
+      errorMessage = L("Select source and target sessions first.")
+      return
+    }
+
+    do {
+      let sourceSnapshot = try SchemaSnapshot.capture(from: source.engine)
+      let targetSnapshot = try SchemaSnapshot.capture(from: target.engine)
+      compareSchemaDiff = SchemaDiff(from: targetSnapshot, to: sourceSnapshot)
+      compareDataDiff = nil
+      compareSyncSQL = ""
+      errorMessage = nil
+    } catch {
+      errorMessage = error.localizedDescription
+    }
+  }
+
+  func runDataCompare() {
+    guard
+      let source = session(withID: compareSourceSessionID),
+      let target = session(withID: compareTargetSessionID),
+      let sourceTable = source.tables.first(where: { $0.name == compareSourceTable }),
+      let targetTable = target.tables.first(where: { $0.name == compareTargetTable })
+    else {
+      errorMessage = L("Select source and target tables first.")
+      return
+    }
+
+    do {
+      // ponytail: compares up to 10k rows per side like the electron default page size
+      let sourceData = try source.engine.tableData(sourceTable, filter: "", sortColumn: nil, sortAscending: true, limit: 10000, offset: 0)
+      let targetData = try target.engine.tableData(targetTable, filter: "", sortColumn: nil, sortAscending: true, limit: 10000, offset: 0)
+      let sourceSchema = try source.engine.tableSchema(sourceTable)
+      let diff = try DataDiff(source: sourceData, target: targetData, sourceSchema: sourceSchema)
+      compareDataDiff = diff
+      compareSchemaDiff = nil
+      regenerateSyncSQL()
+      errorMessage = nil
+    } catch {
+      errorMessage = error.localizedDescription
+    }
+  }
+
+  func regenerateSyncSQL() {
+    guard let diff = compareDataDiff else {
+      compareSyncSQL = ""
+      return
+    }
+    var options = DataDiffSyncSQL.Options()
+    options.includeDeletes = compareIncludeDeletes
+    compareSyncSQL = DataDiffSyncSQL.generate(diff: diff, targetTable: compareTargetTable, options: options)
+      .joined(separator: "\n")
+  }
+}
+
+// MARK: - Column distribution stats
+
+extension QuarryAppState {
+  func loadColumnStats(column: String) {
+    guard let engine, let selectedTable else { return }
+    do {
+      columnStats = try engine.columnDistribution(table: selectedTable, column: column, limit: 10)
+      columnStatsColumn = column
+      errorMessage = nil
+    } catch {
+      errorMessage = error.localizedDescription
+    }
+  }
+
+  func clearColumnStats() {
+    columnStats = []
+    columnStatsColumn = nil
+  }
+}
+
+// MARK: - SQL export
+
+extension QuarryAppState {
+  func exportSQLPanel() {
+    let content: String
+    let suggestedName: String
+    if workspaceMode == .query, let result {
+      let tableName = selectedTable?.name ?? "query_result"
+      content = SQLExporter.export(result, tableName: tableName)
+      suggestedName = "\(tableName).sql"
+    } else if let tableData {
+      content = SQLExporter.export(tableData)
+      suggestedName = "\(tableData.table.name).sql"
+    } else {
+      errorMessage = L("Nothing to export.")
+      return
+    }
+
+    let panel = NSSavePanel()
+    panel.nameFieldStringValue = suggestedName
+    guard panel.runModal() == .OK, let url = panel.url else { return }
+    do {
+      try content.write(to: url, atomically: true, encoding: .utf8)
+    } catch {
+      errorMessage = error.localizedDescription
+    }
+  }
+}
+
+// MARK: - Pro license
+
+extension QuarryAppState {
+  func refreshLicense() {
+    licenseBusy = true
+    Task {
+      let outcome = await licenseClient.verify()
+      licenseInfo = outcome.valid ? outcome.license : nil
+      if outcome.valid, let license = outcome.license {
+        var status = String(format: L("Pro active (%@)"), license.plan)
+        if outcome.offline { status += " · " + L("offline") }
+        licenseStatusText = status
+      } else {
+        licenseStatusText = L("Free version")
+      }
+      licenseBusy = false
+    }
+  }
+
+  func activateLicensePanel() {
+    guard let email = askText(title: L("License email"), defaultValue: ""), !email.isEmpty else { return }
+    guard let key = askText(title: L("License key"), defaultValue: ""), !key.isEmpty else { return }
+    licenseBusy = true
+    Task {
+      do {
+        let license = try await licenseClient.activate(email: email, licenseKey: key)
+        licenseInfo = license
+        licenseStatusText = String(format: L("Pro active (%@)"), license.plan)
+      } catch {
+        errorMessage = error.localizedDescription
+      }
+      licenseBusy = false
+    }
+  }
+
+  func deactivateLicense() {
+    licenseBusy = true
+    Task {
+      if let warning = await licenseClient.deactivate() {
+        errorMessage = warning
+      }
+      licenseInfo = nil
+      licenseStatusText = L("Free version")
+      licenseBusy = false
+    }
+  }
+
+  func openLicensePortal() {
+    Task {
+      do {
+        let url = try await licenseClient.portalURL()
+        NSWorkspace.shared.open(url)
+      } catch {
+        errorMessage = error.localizedDescription
+      }
     }
   }
 }

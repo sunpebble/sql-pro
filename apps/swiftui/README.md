@@ -2,7 +2,7 @@
 
 A native macOS rebuild of Quarry as a SwiftPM package. It targets the
 SQLite/SQLCipher workflow with additional PostgreSQL and MySQL support, and
-mirrors the Electron app's feature set without the Chromium runtime.
+is the native, single implementation of Quarry for macOS.
 
 ## Requirements
 

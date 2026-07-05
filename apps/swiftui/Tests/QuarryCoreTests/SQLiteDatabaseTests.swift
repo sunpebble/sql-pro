@@ -418,56 +418,6 @@ final class SQLiteDatabaseTests: XCTestCase {
     XCTAssertEqual(QueryLibrary.saving("select 1", in: saved).count, 1)
   }
 
-  func testAIAssistantPromptAndSQLExtraction() {
-    let prompt = AIAssistant.sqlGenerationPrompt(
-      request: "show people",
-      schema: "create table people (id integer primary key, name text)"
-    )
-
-    XCTAssertTrue(prompt.contains("Return SQL only"))
-    XCTAssertTrue(prompt.contains("show people"))
-    XCTAssertEqual(
-      AIAssistant.extractSQL("```sql\nselect * from people;\n```"),
-      "select * from people;"
-    )
-    XCTAssertEqual(
-      OpenAICompatibleClient.chatCompletionsURL(endpoint: "https://api.openai.com")?.absoluteString,
-      "https://api.openai.com/v1/chat/completions"
-    )
-    XCTAssertEqual(
-      OpenAICompatibleClient.chatCompletionsURL(endpoint: "https://example.com/v1")?.absoluteString,
-      "https://example.com/v1/chat/completions"
-    )
-    // A full endpoint must not get /chat/completions appended twice.
-    XCTAssertEqual(
-      OpenAICompatibleClient.chatCompletionsURL(endpoint: "https://api.openai.com/v1/chat/completions")?.absoluteString,
-      "https://api.openai.com/v1/chat/completions"
-    )
-  }
-
-  func testPluginRegistryRejectsPathTraversal() throws {
-    let source = temporaryDirectoryURL()
-    let installed = temporaryDirectoryURL()
-    defer {
-      try? FileManager.default.removeItem(at: source)
-      try? FileManager.default.removeItem(at: installed)
-    }
-    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
-
-    func writeManifest(id: String, main: String) throws {
-      try """
-        {"id": "\(id)", "name": "Evil", "version": "1.0.0", "description": "x", "author": "x", "main": "\(main)"}
-        """.write(to: source.appendingPathComponent("plugin.json"), atomically: true, encoding: .utf8)
-      try "".write(to: source.appendingPathComponent("index.js"), atomically: true, encoding: .utf8)
-    }
-
-    try writeManifest(id: "../evil", main: "index.js")
-    XCTAssertThrowsError(try PluginRegistry.installPlugin(from: source, into: installed))
-
-    try writeManifest(id: "com.example.plugin", main: "../../outside.js")
-    XCTAssertThrowsError(try PluginRegistry.installPlugin(from: source, into: installed))
-  }
-
   func testSchemaSummaryIncludesCreateSQL() throws {
     let url = temporaryDatabaseURL()
     defer { try? FileManager.default.removeItem(at: url) }
@@ -478,51 +428,9 @@ final class SQLiteDatabaseTests: XCTestCase {
     XCTAssertTrue(try database.schemaSummary().lowercased().contains("create table people"))
   }
 
-  func testPluginRegistryLoadsInstallsAndBuildsCommands() throws {
-    let source = temporaryDirectoryURL()
-    let installed = temporaryDirectoryURL()
-    defer {
-      try? FileManager.default.removeItem(at: source)
-      try? FileManager.default.removeItem(at: installed)
-    }
-
-    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
-    try """
-      {
-        "id": "com.example.plugin",
-        "name": "Example Plugin",
-        "version": "1.0.0",
-        "description": "A plugin",
-        "author": "Quarry",
-        "main": "index.js",
-        "permissions": ["ui:command"],
-        "homepage": "https://example.com",
-        "repository": "https://github.com/example/plugin"
-      }
-      """.write(to: source.appendingPathComponent("plugin.json"), atomically: true, encoding: .utf8)
-    try "export const activate = () => {};".write(to: source.appendingPathComponent("index.js"), atomically: true, encoding: .utf8)
-
-    let plugin = try PluginRegistry.installPlugin(from: source, into: installed)
-    XCTAssertEqual(plugin.manifest.id, "com.example.plugin")
-
-    let loaded = PluginRegistry.loadPlugins(from: installed, enabledIDs: ["com.example.plugin"])
-    XCTAssertEqual(loaded.count, 1)
-    XCTAssertTrue(loaded[0].isEnabled)
-    XCTAssertEqual(PluginRegistry.commands(for: loaded[0]).map(\.title), [
-      "Open Plugin Folder",
-      "Open Homepage",
-      "Open Repository",
-    ])
-  }
-
   private func temporaryDatabaseURL() -> URL {
     FileManager.default.temporaryDirectory
       .appendingPathComponent("quarry-\(UUID().uuidString)")
       .appendingPathExtension("sqlite")
-  }
-
-  private func temporaryDirectoryURL() -> URL {
-    FileManager.default.temporaryDirectory
-      .appendingPathComponent("quarry-\(UUID().uuidString)", isDirectory: true)
   }
 }

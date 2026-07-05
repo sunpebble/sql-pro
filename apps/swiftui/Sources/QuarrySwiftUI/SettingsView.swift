@@ -13,18 +13,35 @@ struct SettingsView: View {
         }
       }
 
-      Section(L("AI Provider")) {
-        TextField(L("Endpoint"), text: $state.aiSettings.endpoint)
-        TextField(L("Model"), text: $state.aiSettings.model)
-        SecureField(L("API key"), text: $state.aiSettings.apiKey)
-        Text(L("The API key stays in memory for this app session."))
-          .font(.caption)
-          .foregroundStyle(.secondary)
+      Section(L("Pro License")) {
+        HStack {
+          Text(state.licenseStatusText.isEmpty ? L("Free version") : state.licenseStatusText)
+          if state.licenseBusy {
+            ProgressView()
+              .controlSize(.small)
+          }
+        }
+
+        if let license = state.licenseInfo {
+          Text(license.email)
+            .font(.caption)
+            .foregroundStyle(Brand.textSecondary)
+          Text(String(format: L("Expires %@"), license.expiresAt))
+            .font(.caption)
+            .foregroundStyle(Brand.textSecondary)
+
+          HStack {
+            Button(L("Manage Subscription"), action: state.openLicensePortal)
+            Button(L("Deactivate"), role: .destructive, action: state.deactivateLicense)
+          }
+        } else {
+          Button(L("Activate License…"), action: state.activateLicensePanel)
+            .disabled(state.licenseBusy)
+        }
       }
     }
     .formStyle(.grouped)
     .frame(width: 420)
     .padding()
-    .onDisappear(perform: state.saveAISettings)
   }
 }

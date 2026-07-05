@@ -41,7 +41,44 @@ public protocol DatabaseEngine: AnyObject {
   func schemaSummary() throws -> String
   func diagram() throws -> DatabaseDiagram
   func searchAllTables(_ term: String) throws -> [DatabaseSearchMatch]
+  func quotedIdentifier(_ name: String) -> String
   func close()
+}
+
+public struct ColumnDistributionBucket: Equatable, Identifiable {
+  public let value: String
+  public let count: Int
+
+  public var id: String { value }
+
+  public init(value: String, count: Int) {
+    self.value = value
+    self.count = count
+  }
+}
+
+extension DatabaseEngine {
+  /// Top values of a column with occurrence counts, for the column stats popover.
+  public func columnDistribution(
+    table: DatabaseTable,
+    column: String,
+    limit: Int = 10
+  ) throws -> [ColumnDistributionBucket] {
+    let quotedColumn = quotedIdentifier(column)
+    let quotedTable = quotedIdentifier(table.name)
+    let sql = """
+      select \(quotedColumn) as value, count(*) as occurrences
+      from \(quotedTable)
+      group by \(quotedColumn)
+      order by occurrences desc
+      limit \(max(1, limit))
+      """
+    let result = try query(sql, limit: max(1, limit))
+    return result.rows.compactMap { row in
+      guard row.count >= 2, let count = Int(row[1]) else { return nil }
+      return ColumnDistributionBucket(value: row[0], count: count)
+    }
+  }
 }
 
 extension DatabaseEngine {

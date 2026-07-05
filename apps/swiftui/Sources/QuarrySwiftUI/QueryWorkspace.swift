@@ -19,6 +19,11 @@ struct QueryWorkspaceView: View {
 
           Spacer()
 
+          Toggle(isOn: $state.showSqlLog) {
+            Label(L("Log"), systemImage: "list.bullet.rectangle")
+          }
+          .toggleStyle(.button)
+
           Button(action: state.saveCurrentQuery) {
             Label(L("Save"), systemImage: "bookmark")
           }
@@ -50,6 +55,62 @@ struct QueryWorkspaceView: View {
         }
 
         ResultGrid(result: state.result)
+
+        if state.showSqlLog {
+          Divider()
+          SqlLogView(entries: state.sqlLog)
+            .frame(height: 160)
+        }
+      }
+    }
+  }
+}
+
+struct SqlLogView: View {
+  let entries: [SqlLogEntry]
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: 4) {
+      Label(L("SQL Log"), systemImage: "list.bullet.rectangle")
+        .font(.headline)
+        .padding(.horizontal)
+        .padding(.top, 8)
+
+      if entries.isEmpty {
+        Text(L("No statements executed yet."))
+          .font(.caption)
+          .foregroundStyle(Brand.textSecondary)
+          .padding(.horizontal)
+      } else {
+        List(entries) { entry in
+          VStack(alignment: .leading, spacing: 2) {
+            HStack {
+              Text(entry.startedAt, format: .dateTime.hour().minute().second())
+                .font(.caption2.monospaced())
+                .foregroundStyle(Brand.textSecondary)
+              Text(String(format: "%.0f ms", entry.duration * 1000))
+                .font(.caption2.monospaced())
+                .foregroundStyle(Brand.textSecondary)
+              if let rowCount = entry.rowCount {
+                Text(String(format: L("%d rows"), rowCount))
+                  .font(.caption2)
+                  .foregroundStyle(Brand.textSecondary)
+              }
+              if let error = entry.error {
+                Text(error)
+                  .font(.caption2)
+                  .foregroundStyle(.red)
+                  .lineLimit(1)
+              }
+            }
+            Text(entry.sql)
+              .font(.caption.monospaced())
+              .lineLimit(2)
+              .textSelection(.enabled)
+          }
+          .padding(.vertical, 1)
+        }
+        .listStyle(.plain)
       }
     }
   }
@@ -67,7 +128,7 @@ struct QueryPlanView: View {
         HStack(alignment: .top) {
           Text("#\(step.id)")
             .font(.caption.monospaced())
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Brand.textSecondary)
             .frame(width: 42, alignment: .leading)
           Text(step.detail)
             .font(.caption.monospaced())
@@ -76,7 +137,7 @@ struct QueryPlanView: View {
       }
     }
     .padding()
-    .background(Color(nsColor: .controlBackgroundColor))
+    .background(Brand.surface)
   }
 }
 
@@ -95,13 +156,16 @@ struct QueryLibraryPanel: View {
     VStack(alignment: .leading, spacing: 0) {
       TextField(L("Search queries"), text: $state.querySearch)
         .textFieldStyle(.roundedBorder)
-        .padding()
+        // Match the sidebar list's 10pt content inset so the field lines up
+        // with the section rows below.
+        .padding(.horizontal, 10)
+        .padding(.vertical, 12)
 
       List {
         Section(L("Saved")) {
           if saved.isEmpty {
             Text(L("No saved queries"))
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Brand.textSecondary)
           } else {
             ForEach(saved) { query in
               QueryEntryRow(query: query) {
@@ -121,7 +185,7 @@ struct QueryLibraryPanel: View {
         Section(L("History")) {
           if history.isEmpty {
             Text(L("No query history"))
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Brand.textSecondary)
           } else {
             ForEach(history) { query in
               QueryEntryRow(query: query) {
@@ -129,7 +193,7 @@ struct QueryLibraryPanel: View {
               } trailing: {
                 Text("x\(query.runCount)")
                   .font(.caption2)
-                  .foregroundStyle(.secondary)
+                  .foregroundStyle(Brand.textSecondary)
               }
             }
           }
@@ -162,7 +226,7 @@ struct QueryEntryRow<Trailing: View>: View {
             .lineLimit(1)
           Text(query.sql)
             .font(.caption2.monospaced())
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Brand.textSecondary)
             .lineLimit(2)
         }
 
@@ -180,15 +244,19 @@ struct ResultGrid: View {
   let result: QueryResult?
 
   var body: some View {
+    // Greedy frames: without them the enclosing VStack shrinks to fit and
+    // floats vertically centered, leaving dead space above the editor.
     guard let result else {
       return AnyView(
         ContentUnavailableView(L("No Results"), systemImage: "tablecells")
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
       )
     }
 
     guard !result.columns.isEmpty else {
       return AnyView(
         ContentUnavailableView(L("Statement Complete"), systemImage: "checkmark.circle")
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
       )
     }
 
@@ -196,7 +264,7 @@ struct ResultGrid: View {
       VStack(alignment: .leading, spacing: 0) {
         Text(String(format: L("%d rows"), result.rows.count))
           .font(.caption)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Brand.textSecondary)
           .padding(.horizontal)
           .padding(.vertical, 8)
 

@@ -262,6 +262,10 @@ public final class PostgresEngine: DatabaseEngine {
     "\"\(name.replacingOccurrences(of: "\"", with: "\"\""))\""
   }
 
+  public func quotedIdentifier(_ name: String) -> String {
+    Self.quotedIdentifier(name)
+  }
+
   static func connInfoValue(_ value: String) -> String {
     "'\(value.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "'", with: "\\'"))'"
   }

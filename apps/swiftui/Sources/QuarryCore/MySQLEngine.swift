@@ -243,4 +243,8 @@ public final class MySQLEngine: DatabaseEngine {
   static func quotedIdentifier(_ name: String) -> String {
     "`\(name.replacingOccurrences(of: "`", with: "``"))`"
   }
+
+  public func quotedIdentifier(_ name: String) -> String {
+    Self.quotedIdentifier(name)
+  }
 }

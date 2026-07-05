@@ -38,8 +38,8 @@ public struct SchemaSnapshot: Codable, Equatable {
     }
   }
 
-  public static func capture(from database: SQLiteDatabase) throws -> SchemaSnapshot {
-    SchemaSnapshot(tables: try database.listTables().map { try database.tableSchema($0) })
+  public static func capture(from engine: any DatabaseEngine) throws -> SchemaSnapshot {
+    SchemaSnapshot(tables: try engine.listTables().map { try engine.tableSchema($0) })
   }
 }
 

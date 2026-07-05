@@ -188,3 +188,58 @@
 "Create Demo Database…" = "Create Demo Database…";
 
 "Connecting…" = "Connecting…";
+
+/* Compare workspace */
+"Compare" = "Compare";
+"Compare…" = "Compare…";
+"Compare Schemas" = "Compare Schemas";
+"Compare Data" = "Compare Data";
+"Include deletes" = "Include deletes";
+"Source" = "Source";
+"Target" = "Target";
+"Table" = "Table";
+"Select…" = "Select…";
+"Schemas are identical." = "Schemas are identical.";
+"Pick two sessions and compare their schemas." = "Pick two sessions and compare their schemas.";
+"Pick two tables and compare their rows." = "Pick two tables and compare their rows.";
+"Migration SQL" = "Migration SQL";
+"Sync SQL" = "Sync SQL";
+"Copy" = "Copy";
+"No statements." = "No statements.";
+"Added" = "Added";
+"Removed" = "Removed";
+"Modified" = "Modified";
+"Unchanged" = "Unchanged";
+"added" = "added";
+"removed" = "removed";
+"modified" = "modified";
+"unchanged" = "unchanged";
+"%d source rows, %d target rows" = "%d source rows, %d target rows";
+"Select source and target sessions first." = "Select source and target sessions first.";
+"Select source and target tables first." = "Select source and target tables first.";
+
+/* SQL log */
+"Log" = "Log";
+"SQL Log" = "SQL Log";
+"No statements executed yet." = "No statements executed yet.";
+
+/* Column stats */
+"Column Stats" = "Column Stats";
+"Top values of %@" = "Top values of %@";
+"No data." = "No data.";
+
+/* SQL export */
+"Export SQL…" = "Export SQL…";
+"Nothing to export." = "Nothing to export.";
+
+/* Pro license */
+"Pro License" = "Pro License";
+"Free version" = "Free version";
+"Pro active (%@)" = "Pro active (%@)";
+"offline" = "offline";
+"Expires %@" = "Expires %@";
+"Manage Subscription" = "Manage Subscription";
+"Deactivate" = "Deactivate";
+"Activate License…" = "Activate License…";
+"License email" = "License email";
+"License key" = "License key";

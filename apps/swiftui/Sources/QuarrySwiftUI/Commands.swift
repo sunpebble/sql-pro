@@ -54,6 +54,9 @@ struct QuarryCommands: Commands {
 
       Button(L("Export JSON…"), action: state.exportJSONPanel)
         .disabled(!state.canExportCSV)
+
+      Button(L("Export SQL…"), action: state.exportSQLPanel)
+        .disabled(!state.canExportCSV)
     }
 
     CommandMenu(L("Query")) {
@@ -77,6 +80,10 @@ struct QuarryCommands: Commands {
 
       Button(L("Diagram"), action: state.loadDiagram)
         .keyboardShortcut("d")
+        .disabled(!hasDatabase)
+
+      Button(L("Compare…"), action: state.showCompare)
+        .keyboardShortcut("d", modifiers: [.command, .shift])
         .disabled(!hasDatabase)
 
       Button(L("Maintenance"), action: state.showMaintenance)

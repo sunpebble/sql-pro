@@ -825,7 +825,7 @@ public final class SQLiteDatabase {
     }
   }
 
-  private func quotedIdentifier(_ name: String) -> String {
+  public func quotedIdentifier(_ name: String) -> String {
     "\"\(name.replacingOccurrences(of: "\"", with: "\"\""))\""
   }
 

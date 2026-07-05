@@ -74,7 +74,7 @@ struct SidebarView: View {
             if let url = state.databaseURL {
               Text(url.path)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Brand.textSecondary)
                 .lineLimit(2)
             }
             Button(action: state.saveCurrentConnectionProfile) {
@@ -108,7 +108,7 @@ struct SidebarView: View {
                   )
                   Text(profile.kind == .sqlite ? profile.path : "\(profile.kind.rawValue) \(profile.user)@\(profile.host):\(profile.port)/\(profile.database)")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Brand.textSecondary)
                     .lineLimit(1)
                 }
               }
@@ -135,7 +135,6 @@ struct SidebarView: View {
                 state.activate(session)
               } label: {
                 Label(session.label, systemImage: session.url == nil ? "network" : "externaldrive")
-                  .foregroundStyle(session.id == state.activeSessionID ? Brand.sun : .primary)
               }
               .buttonStyle(.plain)
 
@@ -148,6 +147,11 @@ struct SidebarView: View {
               }
               .buttonStyle(.borderless)
             }
+            // Brand: selection is a sun highlight fill, never sun-colored text.
+            .listRowBackground(
+              RoundedRectangle(cornerRadius: 5)
+                .fill(session.id == state.activeSessionID ? Brand.sun.opacity(0.25) : Color.clear)
+            )
           }
         }
       }
@@ -168,16 +172,19 @@ struct SidebarView: View {
       Section(L("Tables")) {
         if state.tables.isEmpty {
           Text(L("No tables"))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Brand.textSecondary)
         } else {
           ForEach(state.tables) { table in
             Button {
               state.selectTable(table)
             } label: {
               Label(table.name, systemImage: table.type == "view" ? "eye" : "tablecells")
-                .foregroundStyle(table == state.selectedTable ? Brand.sun : .primary)
             }
             .buttonStyle(.plain)
+            .listRowBackground(
+              RoundedRectangle(cornerRadius: 5)
+                .fill(table == state.selectedTable ? Brand.sun.opacity(0.25) : Color.clear)
+            )
           }
         }
       }
@@ -196,7 +203,7 @@ struct DetailView: View {
           Text("Quarry")
             .font(.title2.weight(.semibold))
           Text(state.activeSessionLabel ?? L("SwiftUI SQLite workspace"))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Brand.textSecondary)
         }
 
         Spacer()
@@ -231,12 +238,10 @@ struct DetailView: View {
         SearchWorkspaceView(state: state)
       } else if state.workspaceMode == .diagram {
         DiagramWorkspaceView(state: state)
-      } else if state.workspaceMode == .ai {
-        AIWorkspaceView(state: state)
+      } else if state.workspaceMode == .compare {
+        CompareWorkspaceView(state: state)
       } else if state.workspaceMode == .maintenance {
         MaintenanceWorkspaceView(state: state)
-      } else if state.workspaceMode == .plugins {
-        PluginsWorkspaceView(state: state)
       } else {
         EditableTableWorkspaceView(state: state)
       }

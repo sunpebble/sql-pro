@@ -188,3 +188,58 @@
 "Create Demo Database…" = "创建演示数据库…";
 
 "Connecting…" = "连接中…";
+
+/* Compare workspace */
+"Compare" = "比较";
+"Compare…" = "比较…";
+"Compare Schemas" = "比较 Schema";
+"Compare Data" = "比较数据";
+"Include deletes" = "包含删除语句";
+"Source" = "源";
+"Target" = "目标";
+"Table" = "表";
+"Select…" = "选择…";
+"Schemas are identical." = "两侧 Schema 完全一致。";
+"Pick two sessions and compare their schemas." = "选择两个会话并比较它们的 Schema。";
+"Pick two tables and compare their rows." = "选择两张表并比较它们的数据行。";
+"Migration SQL" = "迁移 SQL";
+"Sync SQL" = "同步 SQL";
+"Copy" = "复制";
+"No statements." = "没有语句。";
+"Added" = "新增";
+"Removed" = "删除";
+"Modified" = "修改";
+"Unchanged" = "未变";
+"added" = "新增";
+"removed" = "删除";
+"modified" = "修改";
+"unchanged" = "未变";
+"%d source rows, %d target rows" = "源 %d 行，目标 %d 行";
+"Select source and target sessions first." = "请先选择源会话和目标会话。";
+"Select source and target tables first." = "请先选择源表和目标表。";
+
+/* SQL log */
+"Log" = "日志";
+"SQL Log" = "SQL 日志";
+"No statements executed yet." = "尚未执行任何语句。";
+
+/* Column stats */
+"Column Stats" = "列统计";
+"Top values of %@" = "%@ 的高频值";
+"No data." = "暂无数据。";
+
+/* SQL export */
+"Export SQL…" = "导出 SQL…";
+"Nothing to export." = "没有可导出的内容。";
+
+/* Pro license */
+"Pro License" = "专业版许可证";
+"Free version" = "免费版";
+"Pro active (%@)" = "专业版已激活（%@）";
+"offline" = "离线";
+"Expires %@" = "到期时间 %@";
+"Manage Subscription" = "管理订阅";
+"Deactivate" = "停用";
+"Activate License…" = "激活许可证…";
+"License email" = "许可证邮箱";
+"License key" = "许可证密钥";
