@@ -293,6 +293,22 @@ export const VectorVisualization = memo(
         payload: pointMetadata[i].payload,
       }));
     }, [embedding, pointMetadata, dimensionMode]);
+    const { backgroundPointCount, searchResultPointCount } = useMemo(
+      () =>
+        projectedPoints.reduce(
+          (counts, point) => {
+            if (point.isSearchResult) {
+              counts.searchResultPointCount += 1;
+            } else {
+              counts.backgroundPointCount += 1;
+            }
+
+            return counts;
+          },
+          { backgroundPointCount: 0, searchResultPointCount: 0 }
+        ),
+      [projectedPoints]
+    );
 
     // Handle canvas resize
     useEffect(() => {
@@ -906,9 +922,7 @@ export const VectorVisualization = memo(
                 />
                 <span className="text-muted-foreground">
                   {t('vectorSearch.backgroundPoints', 'Background points')}
-                  {projectedPoints.filter((p) => !p.isSearchResult).length >
-                    0 &&
-                    ` (${projectedPoints.filter((p) => !p.isSearchResult).length})`}
+                  {backgroundPointCount > 0 && ` (${backgroundPointCount})`}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -922,8 +936,7 @@ export const VectorVisualization = memo(
                 />
                 <span className="text-muted-foreground">
                   {t('vectorSearch.searchResults', 'Search results')}
-                  {projectedPoints.filter((p) => p.isSearchResult).length > 0 &&
-                    ` (${projectedPoints.filter((p) => p.isSearchResult).length})`}
+                  {searchResultPointCount > 0 && ` (${searchResultPointCount})`}
                 </span>
               </div>
             </div>

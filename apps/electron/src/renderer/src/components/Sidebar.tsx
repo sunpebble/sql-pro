@@ -1407,6 +1407,9 @@ function TableItem({
 }: TableItemProps) {
   const [newTagInput, setNewTagInput] = useState('');
   const { t } = useTranslation('sidebar');
+  const availableTags = allTags.filter(
+    (tag) => !tableTags.some((tableTag) => tableTag.id === tag.id)
+  );
 
   const handleAddNewTag = () => {
     if (newTagInput.trim()) {
@@ -1523,8 +1526,7 @@ function TableItem({
               </>
             )}
             {/* Available tags to add */}
-            {allTags.filter((t) => !tableTags.some((tt) => tt.id === t.id))
-              .length > 0 && (
+            {availableTags.length > 0 && (
               <>
                 <div
                   className="text-muted-foreground px-2 py-1 font-medium"
@@ -1532,17 +1534,15 @@ function TableItem({
                 >
                   {t('contextMenu.addTag', { defaultValue: 'Add Tag' })}
                 </div>
-                {allTags
-                  .filter((t) => !tableTags.some((tt) => tt.id === t.id))
-                  .map((tag) => (
-                    <ContextMenuItem
-                      key={tag.id}
-                      onClick={() => onAddTag(tag.name)}
-                    >
-                      <TagColorDot color={tag.color} className="mr-1" />
-                      {tag.name}
-                    </ContextMenuItem>
-                  ))}
+                {availableTags.map((tag) => (
+                  <ContextMenuItem
+                    key={tag.id}
+                    onClick={() => onAddTag(tag.name)}
+                  >
+                    <TagColorDot color={tag.color} className="mr-1" />
+                    {tag.name}
+                  </ContextMenuItem>
+                ))}
                 <ContextMenuSeparator />
               </>
             )}
