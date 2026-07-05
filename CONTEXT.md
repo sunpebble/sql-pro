@@ -1,34 +1,33 @@
 # Quarry — 领域语言（Domain Language）
 
-核心领域及其职责边界，作为架构讨论的共识术语。
+核心领域及其职责边界，作为架构讨论的共识术语。应用本体是 `apps/swiftui` 下的原生 macOS 应用（SwiftPM 双 target：`QuarryCore` 纯逻辑库 + `QuarrySwiftUI` 界面层）。
 
 ## Domain Modules（领域模块）
 
-| 领域         | 职责                                                                                                                                                                                             | 边界                                  |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------- |
-| **database** | 数据库连接生命周期：打开、关闭、测试连接、修改密码，以及 DatabaseConnectionConfig 类型和兼容 DB 类型判断辅助函数                                                                                 | 不包含查询执行或 Schema 内省          |
-| **schema**   | Schema 内省（表格/视图/列/索引/触发器，惰性加载）、Schema 快照（保存/删除/比较）、迁移 SQL 生成（差异 → SQL 同步脚本）                                                                           | 不包含表数据或 CRUD 操作              |
-| **query**    | SQL 查询执行 + EXPLAIN 执行计划分析、查询历史（保存/加载/删除）、SQL 操作日志（非查询型变更记录）                                                                                                | 不包含表数据的可视化                  |
-| **data**     | 表格数据浏览（虚拟滚动，按行区间获取）、列分布统计、待处理数据变更验证与应用（增/改/删）、数据差异比较                                                                                           | 不包含 Schema 变更                    |
-| **profile**  | 连接配置文件 CRUD（保存的数据库连接配置）、文件夹组织（配置文件嵌套）、最近访问的连接列表、用户偏好设置                                                                                          | 不包含运行时连接状态（属于 database） |
-| **export**   | 数据导出（CSV/JSON/SQL/XLSX）、导入（解析 CSV/JSON/SQL 文件）、备份与恢复（完整数据库级转储）                                                                                                    | 不包含查询执行                        |
-| **ai**       | AI 代理对话（流式响应）、自然语言转 SQL（通过 LLM）、SQL 解释与优化建议、AI 设置（API 密钥配置）                                                                                                 | 不包含数据库操作本身                  |
-| **ssh**      | SSH 隧道管理（创建/销毁）、SSH 凭据存储（Keychain 集成）、隧道状态轮询                                                                                                                           | 不包含数据库连接本身                  |
-| **license**  | 专业版功能开关、许可证验证与激活/停用（Stripe 集成）、许可证状态查询                                                                                                                             | 不包含具体功能实现                    |
-| **system**   | 多窗口管理（创建/聚焦/关闭）、原生应用菜单与快捷键、原生对话框（打开/保存文件）、密码存储（Keychain 存取、可用性检查）、系统集成（打开外部链接、在文件管理器中定位）、自动更新（检查/下载/安装） | 不包含业务逻辑                        |
-| **plugin**   | 插件系统类型定义、插件生命周期（安装/启用/禁用/卸载）、扩展点（命令、查询钩子、编辑器扩展）                                                                                                      | 不包含具体插件实现                    |
-| **storage**  | 渲染进程 Store 持久化（Hydrator 注册中心、与主进程同步）、内存预算缓存（MemoryBudgetCache）、文件变更监听                                                                                        | 跨领域基础设施                        |
+| 领域        | 职责                                                                                    | 实现位置（QuarryCore）                                               |
+| ----------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **engine**  | 数据库引擎抽象：连接、表列表、分页数据、Schema 内省、查询、关系图、全库搜索、列分布统计 | `DatabaseEngine.swift` + SQLite/Postgres/MySQL 引擎                  |
+| **schema**  | Schema 快照（保存/比较）、schema diff、迁移 SQL 生成                                    | `SchemaDiff.swift`                                                   |
+| **data**    | 数据行级比较（主键匹配的增/删/改）、同步 SQL 生成、批量编辑                             | `DataDiff.swift`、`TableBulkEdit.swift`                              |
+| **export**  | CSV/JSON/SQL 导出、CSV/JSON 导入、备份与恢复（SQLite）                                  | `CSVExporter/Importer`、`JSONExporter/Importer`、`SQLExporter.swift` |
+| **profile** | 连接配置文件、最近数据库列表、查询库（历史 + 收藏）                                     | `ConnectionProfiles.swift`、`QueryLibrary.swift`                     |
+| **ssh**     | SSH 隧道（本地端口转发，支撑远程 PG/MySQL）                                             | `SSHTunnel.swift`                                                    |
+| **license** | 专业版许可证：激活/验证/停用（api.sqlpro.app）、7 天离线宽限、Keychain 缓存             | `LicenseClient.swift`                                                |
+| **system**  | Keychain 密码存储、SQL 执行日志                                                         | `KeychainPasswordStore.swift`、`SqlLog.swift`                        |
 
 ## Seams（接缝）
 
-- **IPC Transport 接缝**：所有领域通过 `IpcChannel<TIn, TOut>` 定义其通道合约。主进程通过 `IpcHandler` 基类注册处理器（提供发送者验证、性能计时、错误标准化）。渲染进程通过组合领域 API 工厂函数获取类型安全的调用方法。
-- **Mock 接缝**：每个领域提供独立的 mock 实现，实现领域接口。Mock 模式通过环境变量（`VITE_MOCK_MODE`）或 URL 参数（`?mock=true`）激活。TypeScript 编译器检查 mock 与接口的一致性。
-- **Storage 接缝**：渲染进程 Store 通过 `registerHydrator(key, fn)` 注册持久化回调。启动时 `hydrateStores()` 从主进程 restore 所有已注册的 snapshot。
-- **Plugin 接缝**：插件通过 `PluginManager` 注册命令和查询钩子（`beforeExecute` / `afterExecute`）。插件不直接访问 IPC——通过插件 API 表面操作。
+- **Engine 接缝**：所有数据库操作经 `DatabaseEngine` 协议，UI 不感知具体引擎。各引擎绑定系统库（SQLCipher/libpq/libmysqlclient），新引擎只需实现协议。
+- **Core/UI 接缝**：`QuarryCore` 不依赖 SwiftUI/AppKit，逻辑全部可单测；`QuarrySwiftUI` 的 `QuarryAppState` 是唯一的状态容器。
 
 ## Architectural Decisions（架构决策）
 
-- **渐进式共存迁移**：新旧目录结构通过 barrel 文件并行存在，逐个领域迁移。每完成一个领域即切换引用路径，最终在所有领域迁移完成后删除旧文件。
-- **通道定义即唯一真实来源**：每个领域的 `channels.ts` 使用 `channel<TIn, TOut>()` 定义类型化通道合约。无全局通道常量文件——通道由其所属领域所有。
-- **IpcHandler 基类**：所有主进程 IPC 处理器必须继承 `IpcHandler`，获得发送者验证、自动性能计时和错误标准化。不再使用 `ipcMain.handle()` 直接注册或 `createHandler()` 包装器。
-- **领域 API 组合模式**：`createQuarryAPI()` 不再是一体式的工厂函数，而是组合各领域 API 工厂函数的结果。领域 API 在依赖注入上进行参数化（`invoke`、`on`、`off`、`getPathForFile`），实现与 Electron IPC、WebSocket 或 mock 三种传输解耦。
+- **系统库绑定而非纯 Swift 驱动**：SQLCipher、libpq、libmysqlclient 经 homebrew 提供，SwiftPM systemLibrary target 链接。
+- **密码不落盘配置**：连接密码只存 macOS Keychain（`KeychainPasswordStore`），配置文件 JSON 不含密码。
+- **许可证缓存在 Keychain**：`LicenseClient` 的缓存 JSON 也走 Keychain，验证 7 天内离线可用。
+
+## 周边项目
+
+- `packages/license-api` / `packages/cloudflare` — Cloudflare Workers 后端（Stripe 许可证、发布分发）。
+- `packages/docs` — VitePress 文档站。
+- `apps/video` — Remotion 宣传视频（使用 `public/screenshots` 静态截图）。

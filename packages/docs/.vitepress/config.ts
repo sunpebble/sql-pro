@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'Quarry',
   description:
-    'Professional SQLite database manager with SQLCipher support and diff preview',
+    'Native macOS database manager for SQLite, PostgreSQL, and MySQL with SQLCipher support and diff preview',
   base: '/quarry/',
 
   head: [
@@ -16,7 +16,7 @@ export default defineConfig({
       'meta',
       {
         name: 'og:title',
-        content: 'Quarry - Professional SQLite Database Manager',
+        content: 'Quarry - Native macOS Database Manager',
       },
     ],
     [
@@ -24,7 +24,7 @@ export default defineConfig({
       {
         name: 'og:description',
         content:
-          'Open-source database management with SQLCipher support, diff preview, and powerful query tools',
+          'Open-source database management for SQLite, PostgreSQL, and MySQL with SQLCipher support, diff preview, and powerful query tools',
       },
     ],
   ],
@@ -42,7 +42,6 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/getting-started/' },
       { text: 'Features', link: '/features/' },
-      { text: 'Plugins', link: '/plugin-development' },
       { text: 'Shortcuts', link: '/shortcuts' },
       {
         text: 'More',
@@ -83,17 +82,8 @@ export default defineConfig({
             { text: 'Schema Browser', link: '/features/schema-browser' },
             { text: 'Data Editing', link: '/features/data-editing' },
             { text: 'ER Diagram', link: '/features/er-diagram' },
-            { text: 'Query History', link: '/features/query-history' },
+            { text: 'Query Library', link: '/features/query-history' },
             { text: 'SQLCipher Support', link: '/features/sqlcipher' },
-          ],
-        },
-      ],
-      '/plugin': [
-        {
-          text: 'Plugin Development',
-          items: [
-            { text: 'Development Guide', link: '/plugin-development' },
-            { text: 'API Reference', link: '/plugin-api' },
           ],
         },
       ],
@@ -103,7 +93,6 @@ export default defineConfig({
           items: [
             { text: 'Getting Started', link: '/getting-started/' },
             { text: 'Features', link: '/features/' },
-            { text: 'Plugin Development', link: '/plugin-development' },
             { text: 'Keyboard Shortcuts', link: '/shortcuts' },
             { text: 'Troubleshooting', link: '/troubleshooting' },
           ],

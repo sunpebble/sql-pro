@@ -1,6 +1,6 @@
 # Getting Started
 
-Welcome to Quarry! This guide will help you get up and running quickly with our open-source SQLite database manager.
+Welcome to Quarry! This guide will help you get up and running quickly with our open-source, native macOS database manager.
 
 ::: tip New User?
 Follow this guide in order: **Installation** → **First Connection** → **Explore Features**
@@ -10,18 +10,18 @@ Follow this guide in order: **Installation** → **First Connection** → **Expl
 
 This getting started guide covers everything you need to begin using Quarry effectively:
 
-| Guide                                                 | Description                                             |
-| ----------------------------------------------------- | ------------------------------------------------------- |
-| [Installation](/getting-started/installation)         | Download and install Quarry on macOS, Windows, or Linux |
-| [First Connection](/getting-started/first-connection) | Open your first database and run your first query       |
+| Guide                                                 | Description                                       |
+| ----------------------------------------------------- | ------------------------------------------------- |
+| [Installation](/getting-started/installation)         | Download and install Quarry on macOS              |
+| [First Connection](/getting-started/first-connection) | Open your first database and run your first query |
 
 ## Quick Overview
 
-Quarry is a professional SQLite database management tool with support for:
+Quarry is a professional database management tool with support for:
 
-- **Regular SQLite databases** - Open any `.db`, `.sqlite`, `.sqlite3`, or `.db3` file
-- **Encrypted databases** - Full SQLCipher support with secure password storage
-- **Cross-platform** - Works on macOS, Windows, and Linux
+- **SQLite databases** - Open any `.db`, `.sqlite`, `.sqlite3`, or `.db3` file
+- **Encrypted databases** - Full SQLCipher support with passwords stored in the macOS Keychain
+- **PostgreSQL and MySQL servers** - Connect directly or through an SSH tunnel
 
 ::: tip New to SQLite?
 SQLite is a lightweight, file-based database that doesn't require a server. It's perfect for mobile apps, desktop applications, and small to medium-sized projects. Each database is a single file that you can easily copy, backup, and share.
@@ -29,22 +29,20 @@ SQLite is a lightweight, file-based database that doesn't require a server. It's
 
 ## System Requirements
 
-Before installing, make sure your system meets these minimum requirements:
+Before installing, make sure your system meets these requirements:
 
-- **Operating System**: macOS 10.15+, Windows 10+, or Linux (Ubuntu 18.04+)
-- **RAM**: 4 GB minimum (8 GB recommended)
-- **Disk Space**: 200 MB for the application
-- **Display**: 1280x720 minimum resolution
+- **Operating System**: macOS 14 or later
+- **Hardware**: Apple Silicon Mac (M1 or newer)
 
 ## Getting Started Steps
 
 ### Step 1: Install Quarry
 
-Download the latest release for your platform and install it. Detailed instructions are available for [macOS, Windows, and Linux](/getting-started/installation).
+Download the latest `Quarry-*.zip` from GitHub Releases and drag the app into your Applications folder. Detailed instructions are in the [Installation guide](/getting-started/installation).
 
 ### Step 2: Open a Database
 
-Launch Quarry and open an existing SQLite database, or create a new one. Learn how to [connect to your first database](/getting-started/first-connection).
+Launch Quarry and open an existing SQLite database, create a new one, or connect to a PostgreSQL/MySQL server. Learn how to [connect to your first database](/getting-started/first-connection).
 
 ### Step 3: Explore Your Data
 
@@ -56,17 +54,16 @@ After completing the getting started guides, explore these resources:
 
 ### Core Features
 
-- 📝 [Query Editor](/features/query-editor) - Write and execute SQL with powerful editing tools
+- 📝 [Query Editor](/features/query-editor) - Write and execute SQL with the native editor and EXPLAIN view
 - 🗄️ [Schema Browser](/features/schema-browser) - Navigate your database structure
-- ✏️ [Data Editing](/features/data-editing) - Edit data inline with diff preview
+- ✏️ [Data Editing](/features/data-editing) - Edit data inline with pending-changes preview
 - 🎯 [ER Diagrams](/features/er-diagram) - Visualize table relationships
-- 📜 [Query History](/features/query-history) - Access and search past queries
+- 📜 [Query Library](/features/query-history) - Access query history and favorites
 
 ### Advanced Topics
 
 - ⌨️ [Keyboard Shortcuts](/shortcuts) - Speed up your workflow
 - 🔒 [SQLCipher Support](/features/sqlcipher) - Work with encrypted databases
-- 🔌 [Plugin Development](/plugin-development) - Extend Quarry's functionality
 - 🛠️ [Troubleshooting](/troubleshooting) - Find solutions to common issues
 
 ### Get Help

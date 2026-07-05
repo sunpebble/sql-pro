@@ -56,12 +56,16 @@ Optional (for icon generation):
    pnpm install
    ```
 
-5. **Start development server:**
+5. **Install native database libraries (for the macOS app):**
+
    ```bash
-   pnpm dev
+   brew install sqlcipher postgresql@16 mysql
    ```
 
-The application should now be running with hot-reload enabled.
+6. **Run the app:**
+   ```bash
+   pnpm dev   # swift run --package-path apps/swiftui
+   ```
 
 ## Making Changes
 
@@ -183,7 +187,7 @@ Fixes #456
 2. **Run tests:**
 
    ```bash
-   pnpm test:run
+   pnpm test
    ```
 
 3. **Run linting and type checking:**
@@ -252,50 +256,36 @@ Closes #123
 ### Running Tests
 
 ```bash
-# Watch mode (for active development)
-pnpm test
-
-# Single run (for verification)
-pnpm test:run
-
-# Coverage report
-pnpm test:coverage
-
-# Interactive UI
-pnpm test:ui
+pnpm test    # swift test --package-path apps/swiftui
 ```
 
 ### Writing Tests
 
-- Write tests for new features and bug fixes
-- Maintain or improve code coverage
+- Write tests for new features and bug fixes (XCTest, in `apps/swiftui/Tests/`)
+- Keep pure logic in `QuarryCore` so it stays unit-testable without UI
 - Test edge cases and error conditions
 - Use descriptive test names
 
 Example test:
 
-```typescript
-import { describe, it, expect } from 'vitest';
-import { formatBytes } from './utils';
+```swift
+import XCTest
+@testable import QuarryCore
 
-describe('formatBytes', () => {
-  it('formats bytes correctly', () => {
-    expect(formatBytes(0)).toBe('0 B');
-    expect(formatBytes(1024)).toBe('1 KB');
-    expect(formatBytes(1048576)).toBe('1 MB');
-  });
-
-  it('handles negative values', () => {
-    expect(formatBytes(-1024)).toBe('-1 KB');
-  });
-});
+final class SQLExporterTests: XCTestCase {
+  func testEscapesSingleQuotes() {
+    let sql = SQLExporter.insertStatements(
+      tableName: "notes", columns: ["body"], rows: [["it's fine"]]
+    )
+    XCTAssertTrue(sql.contains("'it''s fine'"))
+  }
+}
 ```
 
 ### Test Coverage Goals
 
-- **Utilities**: 95%+ coverage
-- **Stores**: 80%+ coverage
-- **Components**: Test critical logic
+- **QuarryCore**: cover all pure logic (engines, diff, exporters)
+- **QuarrySwiftUI**: test critical state transitions
 
 ## Documentation
 
@@ -377,8 +367,8 @@ pnpm typecheck
 
 # Testing
 pnpm test
-pnpm test:run
-pnpm test:coverage
+pnpm test
+pnpm test
 
 # Building
 pnpm build

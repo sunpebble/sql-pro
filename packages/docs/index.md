@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Quarry
-  text: Professional SQLite Database Manager
-  tagline: Open-source database management with SQLCipher support, diff preview, and powerful query tools
+  text: Native macOS Database Manager
+  tagline: Open-source database management for SQLite, PostgreSQL, and MySQL — with SQLCipher support, diff preview, and powerful query tools
   image:
     src: /logo.svg
     alt: Quarry Logo
@@ -21,37 +21,37 @@ hero:
 
 features:
   - icon: 🗄️
-    title: SQLite & SQLCipher Support
-    details: Open and manage both regular SQLite and encrypted SQLCipher databases with secure password storage using system keychain.
+    title: SQLite, PostgreSQL & MySQL
+    details: Open regular SQLite and encrypted SQLCipher databases, or connect to PostgreSQL and MySQL servers — optionally through an SSH tunnel.
 
   - icon: 📝
-    title: Powerful SQL Editor
-    details: Monaco-based editor with syntax highlighting, intelligent autocomplete, Vim mode, and persistent query history with search capabilities.
+    title: Native SQL Editor
+    details: A fast native editor with an EXPLAIN query plan view, a query library of history and favorites, and a full SQL log.
 
   - icon: 🔍
-    title: Schema Browser
-    details: Browse tables, views, and indexes with ease. Navigate your database structure efficiently with an intuitive sidebar and quick search.
+    title: Schema Browser & Search
+    details: Browse tables with filtering, sorting, and pagination. Search across every table in the database with one shortcut.
 
   - icon: ✏️
     title: Inline Data Editing
-    details: Edit data directly in the table view with cell-level editing. Review all changes with visual diff preview before applying them.
+    details: Edit data directly in the table view with cell-level editing and batch edits. Review all pending changes before applying them.
 
   - icon: 🎯
-    title: Interactive ER Diagram
-    details: Visualize entity-relationship diagrams with drag-and-drop positioning. Understand table relationships and foreign keys at a glance.
+    title: Diagrams & Comparison
+    details: Interactive ER diagrams, column distribution statistics, schema snapshots with migration SQL, and cross-session data comparison with sync SQL.
 
-  - icon: 🎨
-    title: Beautiful Interface
-    details: Automatic dark/light theme switching based on system preferences. Clean, modern design with customizable keyboard shortcuts.
+  - icon: 🍎
+    title: Built for macOS
+    details: A native SwiftUI app for macOS 14+ with Keychain-backed connection profiles, maintenance tools, and English/Chinese localization.
 ---
 
 ## Quick Start
 
 Get up and running with Quarry in minutes:
 
-1. **Download** the [latest release](https://github.com/sunpebble/quarry/releases) for your platform
-2. **Install** the application on your system
-3. **Open** a SQLite or SQLCipher database file
+1. **Download** the latest `Quarry-*.zip` from [GitHub Releases](https://github.com/sunpebble/quarry/releases)
+2. **Unzip** and drag **Quarry.app** into your **Applications** folder
+3. **Open** a SQLite or SQLCipher database file, or connect to a PostgreSQL/MySQL server
 4. **Start** browsing and querying your data
 
 Ready to dive deeper? Check out our [Getting Started guide](/getting-started/) for detailed instructions.
@@ -68,7 +68,7 @@ Ready to dive deeper? Check out our [Getting Started guide](/getting-started/) f
     <p style="text-align: center; margin-top: 0.5rem; color: var(--vp-c-text-2);">Database View</p>
   </div>
   <div>
-    <img src="/screenshots/query-dark.png" alt="Quarry Query Editor with syntax highlighting and results" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <img src="/screenshots/query-dark.png" alt="Quarry Query Editor with results" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     <p style="text-align: center; margin-top: 0.5rem; color: var(--vp-c-text-2);">Query Editor</p>
   </div>
   <div>
@@ -79,22 +79,22 @@ Ready to dive deeper? Check out our [Getting Started guide](/getting-started/) f
 
 ## Why Quarry?
 
-| Feature                 | Quarry                   | Other Tools          |
-| ----------------------- | ------------------------ | -------------------- |
-| **Open Source**         | ✅ MIT Licensed          | Often proprietary    |
-| **SQLCipher Support**   | ✅ Built-in              | Requires plugins     |
-| **Diff Preview**        | ✅ Review before save    | Direct modifications |
-| **Cross-Platform**      | ✅ macOS, Windows, Linux | Platform-specific    |
-| **Secure Storage**      | ✅ System keychain       | Plain text files     |
-| **No Account Required** | ✅ Fully offline         | Cloud dependencies   |
+| Feature                 | Quarry                     | Other Tools          |
+| ----------------------- | -------------------------- | -------------------- |
+| **Open Source**         | ✅ MIT Licensed            | Often proprietary    |
+| **SQLCipher Support**   | ✅ Built-in                | Requires plugins     |
+| **Diff Preview**        | ✅ Review before save      | Direct modifications |
+| **Native App**          | ✅ SwiftUI, no web runtime | Electron wrappers    |
+| **Secure Storage**      | ✅ macOS Keychain          | Plain text files     |
+| **No Account Required** | ✅ Fully offline           | Cloud dependencies   |
 
 ## Keyboard-First Design
 
 Quarry is designed for power users who prefer keyboard navigation:
 
-- **`Cmd/Ctrl + Enter`** — Execute SQL query
-- **`Cmd/Ctrl + S`** — Apply changes
-- **`Tab`** — Navigate between cells
-- **`Escape`** — Cancel current action
+- **`⌘R`** — Run SQL query
+- **`⇧⌘E`** — Explain query
+- **`⌘S`** — Save query to the library
+- **`⇧⌘F`** — Search all tables
 
 See the complete [Keyboard Shortcuts Reference](/shortcuts) for all available shortcuts.

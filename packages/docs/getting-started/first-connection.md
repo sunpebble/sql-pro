@@ -4,11 +4,7 @@ This guide walks you through opening your first database in Quarry, understandin
 
 ## Opening Quarry
 
-After [installing Quarry](/getting-started/installation), launch the application:
-
-- **macOS**: Open from Applications folder or Spotlight search
-- **Windows**: Start menu or desktop shortcut
-- **Linux**: Application menu or run `quarry` from terminal
+After [installing Quarry](/getting-started/installation), launch the application from your Applications folder or Spotlight search.
 
 You'll see the welcome screen:
 
@@ -20,18 +16,18 @@ You'll see the welcome screen:
 
 ## Opening a Database
 
-Quarry supports both regular SQLite databases and encrypted SQLCipher databases.
+Quarry supports SQLite databases (including encrypted SQLCipher databases) as well as PostgreSQL and MySQL servers.
 
-### Opening an Existing Database
+### Opening an Existing SQLite Database
 
-1. Click **Open Database** on the welcome screen, or use the keyboard shortcut <kbd>Cmd/Ctrl</kbd> + <kbd>O</kbd>
+1. Choose **File → Open Database…**, or use the keyboard shortcut <kbd>⌘</kbd> + <kbd>O</kbd>
 
 2. Navigate to your SQLite database file (`.db`, `.sqlite`, `.sqlite3`, or `.db3` extensions)
 
 3. Click **Open**
 
 ::: tip Creating a Test Database
-If you don't have a database to test with, you can create one. Open a terminal and run:
+If you don't have a database to test with, use **File → Create Demo Database…** to generate a sample database, or create one from the terminal:
 
 ```bash
 sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT); INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'), ('Bob', 'bob@example.com');"
@@ -44,17 +40,25 @@ This creates a simple database with a `users` table.
 
 If your database is encrypted with SQLCipher:
 
-1. Click **Open Database** and select the encrypted file
+1. Choose **File → Open Encrypted Database…** (<kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>O</kbd>)
 
-2. Quarry will detect it's encrypted and prompt for the password
+2. Select the encrypted file and enter your password in the dialog
 
-3. Enter your password in the dialog
-
-4. Optionally check **Remember password** to store it securely in your system keychain
+3. Optionally save the password securely in the macOS Keychain via a connection profile
 
 ::: info Secure Password Storage
-Quarry uses your operating system's secure keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service) to store passwords. Your passwords are never stored in plain text.
+Quarry stores passwords in the macOS Keychain. Your passwords are never stored in plain text.
 :::
+
+### Connecting to a Server (PostgreSQL / MySQL)
+
+1. Choose **File → Connect to Server…** (<kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>K</kbd>)
+
+2. Enter the host, port, database, username, and password
+
+3. Optionally enable an **SSH tunnel** for remote servers
+
+4. Save the connection as a profile to reuse it later — credentials go to the macOS Keychain
 
 ## Understanding the Interface
 
@@ -68,26 +72,21 @@ Once your database is open, you'll see the main workspace:
 
 ### Main Areas
 
-| Area             | Description                                        |
-| ---------------- | -------------------------------------------------- |
-| **Sidebar**      | Browse tables, views, and indexes in your database |
-| **Data Grid**    | View and edit data from the selected table         |
-| **Query Editor** | Write and execute SQL queries                      |
-| **Status Bar**   | Shows connection status and current operation      |
+| Area             | Description                                |
+| ---------------- | ------------------------------------------ |
+| **Sidebar**      | Browse tables and views in your database   |
+| **Data Grid**    | View and edit data from the selected table |
+| **Query Editor** | Write and execute SQL queries              |
 
 ### Sidebar Navigation
 
-The sidebar shows your database schema organized by type:
+The sidebar shows your database schema:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/screenshots/07-sidebar-tables-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/screenshots/07-sidebar-tables.png">
-  <img alt="Quarry sidebar showing tables list with row counts" src="/screenshots/07-sidebar-tables-dark.png">
+  <img alt="Quarry sidebar showing tables list" src="/screenshots/07-sidebar-tables-dark.png">
 </picture>
-
-- **Tables** - All user tables in your database
-- **Views** - Saved SQL queries that act as virtual tables
-- **Indexes** - Performance indexes on your tables
 
 Click any table name to view its data in the data grid.
 
@@ -104,38 +103,13 @@ Click on a table in the sidebar to view its contents:
 ### Data Grid Features
 
 - **Sortable columns** - Click column headers to sort
-- **Resizable columns** - Drag column borders to resize
-- **Scrollable** - Navigate large datasets with smooth scrolling
-- **Row numbers** - Track your position in the data
-
-### Filtering Data
-
-Use the filter bar above the data grid to search and filter:
-
-1. Click the filter icon or press <kbd>Cmd/Ctrl</kbd> + <kbd>F</kbd>
-2. Type your search term
-3. Results filter in real-time as you type
-
-::: tip Power Filtering
-The filter supports searching across all columns. For column-specific filtering, prefix your search with the column name: `name:Alice`
-:::
+- **Filtering** - Narrow down rows with the filter bar
+- **Pagination** - Navigate large tables page by page
+- **Inline editing** - Change values directly in the grid, with a pending-changes preview before anything is written
 
 ## Running Your First Query
 
-The query editor lets you write and execute custom SQL queries.
-
-### Opening the Query Editor
-
-1. Click the **Query** tab in the main area, or
-2. Press <kbd>Cmd/Ctrl</kbd> + <kbd>E</kbd> to focus the editor
-
-### Writing a Query
-
-The editor provides:
-
-- **Syntax highlighting** - SQL keywords, strings, and numbers are color-coded
-- **Autocomplete** - Table and column names suggest as you type
-- **Line numbers** - Easily reference specific lines
+Switch to the SQL workspace to write and execute custom SQL queries.
 
 Try this simple query:
 
@@ -143,60 +117,21 @@ Try this simple query:
 SELECT * FROM users LIMIT 10;
 ```
 
-### Executing the Query
+Execute it with <kbd>⌘</kbd> + <kbd>R</kbd> or the **Run Query** menu item. Results appear below the editor.
 
-Execute your query in one of these ways:
-
-1. Click the **Run** button (▶️)
-2. Press <kbd>Cmd/Ctrl</kbd> + <kbd>Enter</kbd>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/screenshots/query-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="/screenshots/query.png">
-  <img alt="Quarry Query Editor showing a SELECT query with syntax highlighting and results" src="/screenshots/query-dark.png">
-</picture>
-
-### Reading Results
-
-Query results appear below the editor:
-
-- **Row count** - Total rows returned
-- **Execution time** - How long the query took
-- **Data grid** - Full results with sorting and filtering
-
-::: warning Large Result Sets
-For queries returning many rows, results are paginated. Use `LIMIT` in your queries to control result size for better performance.
-:::
-
-## Working with Multiple Queries
-
-You can write multiple queries in the editor:
-
-```sql
--- Get all users
-SELECT * FROM users;
-
--- Get user count
-SELECT COUNT(*) as total_users FROM users;
-```
-
-To execute a specific query:
-
-- Place your cursor anywhere in the query
-- Press <kbd>Cmd/Ctrl</kbd> + <kbd>Enter</kbd>
-
-Quarry executes the query under your cursor.
+To see how the database will execute a query, use **Query → Explain Query** (<kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>E</kbd>) to open the query plan view.
 
 ## Quick Reference: Essential Shortcuts
 
-| Action             | macOS                             | Windows/Linux                      |
-| ------------------ | --------------------------------- | ---------------------------------- |
-| Open database      | <kbd>Cmd</kbd> + <kbd>O</kbd>     | <kbd>Ctrl</kbd> + <kbd>O</kbd>     |
-| Execute query      | <kbd>Cmd</kbd> + <kbd>Enter</kbd> | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> |
-| Command palette    | <kbd>Cmd</kbd> + <kbd>K</kbd>     | <kbd>Ctrl</kbd> + <kbd>K</kbd>     |
-| Focus query editor | <kbd>Cmd</kbd> + <kbd>E</kbd>     | <kbd>Ctrl</kbd> + <kbd>E</kbd>     |
-| Focus sidebar      | <kbd>Cmd</kbd> + <kbd>1</kbd>     | <kbd>Ctrl</kbd> + <kbd>1</kbd>     |
-| Focus data grid    | <kbd>Cmd</kbd> + <kbd>2</kbd>     | <kbd>Ctrl</kbd> + <kbd>2</kbd>     |
+| Action                  | Shortcut                                   |
+| ----------------------- | ------------------------------------------ |
+| New database            | <kbd>⌘</kbd> + <kbd>N</kbd>                |
+| Open database           | <kbd>⌘</kbd> + <kbd>O</kbd>                |
+| Open encrypted database | <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>O</kbd> |
+| Connect to server       | <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>K</kbd> |
+| Run query               | <kbd>⌘</kbd> + <kbd>R</kbd>                |
+| Explain query           | <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>E</kbd> |
+| Search all tables       | <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>F</kbd> |
 
 See the complete [Keyboard Shortcuts](/shortcuts) reference for all available shortcuts.
 
@@ -205,8 +140,7 @@ See the complete [Keyboard Shortcuts](/shortcuts) reference for all available sh
 Quarry remembers your recently opened databases. Access them from:
 
 - The welcome screen's **Recent** list
-- **File** > **Recent Databases** menu
-- Command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd>) and search for the database name
+- The **File → Open Recent** menu
 
 ## Troubleshooting Connection Issues
 
@@ -228,7 +162,7 @@ Quarry remembers your recently opened databases. Access them from:
 
 1. Verify you're using the correct password
 2. Ensure the database was created with SQLCipher (not another encryption)
-3. Try the "Forget saved password" option if using stored credentials
+3. Remove any stale saved credential from the Keychain and enter the password again
 
 For more solutions, see the [Troubleshooting Guide](/troubleshooting).
 
@@ -236,7 +170,7 @@ For more solutions, see the [Troubleshooting Guide](/troubleshooting).
 
 Now that you've connected to your first database:
 
-- [Explore the Query Editor](/features/query-editor) - Learn about autocomplete, Vim mode, and more
+- [Explore the Query Editor](/features/query-editor) - Run queries and inspect query plans
 - [Browse Schema Details](/features/schema-browser) - Understand your database structure
 - [Edit Data Inline](/features/data-editing) - Make changes directly in the data grid
 - [View ER Diagrams](/features/er-diagram) - Visualize table relationships
