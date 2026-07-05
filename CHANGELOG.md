@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.8](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.7...quarry-monorepo-v1.16.8) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** dedupe mac framework signing paths ([be15ca5](https://github.com/sunpebble/quarry/commit/be15ca5227e4d53956cfa5a8ef7b7b01fbe7ad75))
+
 ## [1.16.7](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.6...quarry-monorepo-v1.16.7) (2026-07-05)
 
 
