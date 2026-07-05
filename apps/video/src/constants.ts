@@ -16,13 +16,8 @@ export const colors = {
   textSecondary: '#E5DFD3',
   textMuted: '#B9B7B1',
 
-  // Accent
-  accentBlue: '#3B82F6',
-  accentCyan: '#06B6D4',
-  accentPurple: '#8B5CF6',
-
-  // Status
-  success: '#22C55E',
+  // Accent range
+  glow: '#F9C355',
 };
 
 export const fonts = {

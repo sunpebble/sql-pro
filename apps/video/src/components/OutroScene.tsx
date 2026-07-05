@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from 'remotion';
 import { colors, fonts } from '../constants';
+import { QuarryLogo } from './QuarryLogo';
 
 interface OutroSceneProps {
   title: string;
@@ -91,18 +92,7 @@ export const OutroScene = ({ title }: OutroSceneProps) => {
             opacity: logoOpacity,
           }}
         >
-          <svg
-            width={80}
-            height={80}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke={colors.primary}
-            strokeWidth={1.5}
-          >
-            <ellipse cx="12" cy="5" rx="9" ry="3" />
-            <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-            <path d="M3 12A9 3 0 0 0 21 12" />
-          </svg>
+          <QuarryLogo size={80} />
 
           <h1
             style={{

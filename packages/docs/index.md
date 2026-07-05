@@ -7,7 +7,7 @@ hero:
   tagline: Open-source database management for SQLite, PostgreSQL, and MySQL — with SQLCipher support, diff preview, and powerful query tools
   image:
     src: /logo.svg
-    alt: Quarry Logo
+    alt: Quarry app icon
   actions:
     - theme: brand
       text: Get Started

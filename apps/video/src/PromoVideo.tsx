@@ -16,11 +16,14 @@ import {
 } from './constants';
 
 export interface PromoVideoProps {
-  title: string;
-  tagline: string;
+  title?: string;
+  tagline?: string;
 }
 
-export const PromoVideo = ({ title, tagline }: PromoVideoProps) => {
+export const PromoVideo = ({
+  title = 'Quarry',
+  tagline = 'The database manager developers love.',
+}: PromoVideoProps) => {
   const { fps } = useVideoConfig();
 
   // Timing configuration (derived from shared constants)

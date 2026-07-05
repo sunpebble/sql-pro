@@ -8,7 +8,7 @@ export default defineConfig({
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/quarry/logo.svg' }],
-    ['meta', { name: 'theme-color', content: '#3b82f6' }],
+    ['meta', { name: 'theme-color', content: '#F7B733' }],
     ['meta', { name: 'og:type', content: 'website' }],
     ['meta', { name: 'og:locale', content: 'en' }],
     ['meta', { name: 'og:site_name', content: 'Quarry' }],

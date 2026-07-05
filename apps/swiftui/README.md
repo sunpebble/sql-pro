@@ -49,17 +49,19 @@ Two targets keep the database logic testable without a UI:
   - `DataTableView.swift` — `NSTableView`-backed grid (native row reuse); the
     perf-critical piece SwiftUI lazy stacks could not deliver.
   - `Commands.swift` — menu bar + keyboard shortcuts.
-  - `Theme.swift` — Sunpebble brand tokens (see `../../BRAND.md`).
-  - `Resources/*.lproj` — EN / zh-Hans localizations (`L(_:)` in `L10n.swift`).
+  - `Theme.swift` — Sunpebble brand tokens for Quarry's workbench UI.
+  - `Sources/QuarrySwiftUI/Resources/*.lproj` — EN / zh-Hans localizations
+    (`L(_:)` in `L10n.swift`).
+  - `Resources/Quarry.icns` — packaged macOS app icon.
 
 ## Packaging & release
 
 `scripts/package-app.sh <version>` builds a release binary, assembles
-`Quarry.app`, recursively bundles the Homebrew dylibs it links (rewriting
-install names to `@executable_path/../Frameworks`), and code-signs it. It uses
-a Developer ID identity when present and falls back to ad-hoc signing for local
-dev (ad-hoc skips hardened runtime, which would otherwise reject the
-non-Team-ID dylibs).
+`Quarry.app`, copies the branded app icon, recursively bundles the Homebrew
+dylibs it links (rewriting install names to
+`@executable_path/../Frameworks`), and code-signs it. It uses a Developer ID
+identity when present and falls back to ad-hoc signing for local dev (ad-hoc
+skips hardened runtime, which would otherwise reject the non-Team-ID dylibs).
 
 Releases are driven by release-please: `apps/swiftui` is registered as the
 `quarry-swiftui` component. Merging a release PR triggers the `build-swiftui`

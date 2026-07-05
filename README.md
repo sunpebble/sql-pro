@@ -1,11 +1,16 @@
 # Quarry
 
 <p align="center">
-  <img src="packages/docs/public/logo.svg" width="128" height="128" alt="Quarry Logo">
+  <img src="packages/docs/public/logo.svg" width="128" height="128" alt="Quarry app icon">
 </p>
 
 <p align="center">
   <strong>Professional database manager for macOS — native, fast, and encrypted-database ready</strong>
+</p>
+
+<p align="center">
+  Sunpebble cream, ink, and sun with Quarry's workbench calm: dense tables,
+  crisp borders, and restrained accent use.
 </p>
 
 <p align="center">

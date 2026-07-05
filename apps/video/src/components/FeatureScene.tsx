@@ -143,7 +143,7 @@ export const FeatureScene = ({
               left: 0,
               width: `${highlightWidth}%`,
               height: 4,
-              background: `linear-gradient(90deg, ${colors.primary}, ${colors.accentCyan})`,
+              background: `linear-gradient(90deg, ${colors.primary}, ${colors.glow})`,
               borderRadius: 2,
             }}
           />

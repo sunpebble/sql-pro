@@ -39,9 +39,7 @@ cp .build/release/QuarrySwiftUI "$BIN"
 # for Bundle.module to resolve inside an .app.
 cp -R .build/release/QuarrySwiftUI_QuarrySwiftUI.bundle "$RESOURCES/"
 
-if [ -f ../electron/resources/icon.icns ]; then
-  cp ../electron/resources/icon.icns "$RESOURCES/$APP_NAME.icns"
-fi
+cp Resources/Quarry.icns "$RESOURCES/$APP_NAME.icns"
 
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>

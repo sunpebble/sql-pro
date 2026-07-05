@@ -1,31 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3B82F6" />
-      <stop offset="100%" style="stop-color:#1D4ED8" />
-    </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#60A5FA" />
-      <stop offset="100%" style="stop-color:#3B82F6" />
-    </linearGradient>
-  </defs>
-
-  <!-- Background rounded square -->
-  <rect x="32" y="32" width="448" height="448" rx="80" ry="80" fill="url(#bg)" />
-
-  <!-- Database cylinder -->
-  <ellipse cx="256" cy="160" rx="120" ry="40" fill="url(#accent)" />
-  <rect x="136" y="160" width="240" height="180" fill="url(#accent)" />
-  <ellipse cx="256" cy="340" rx="120" ry="40" fill="#1D4ED8" />
-
-  <!-- Cylinder rings -->
-  <ellipse cx="256" cy="220" rx="120" ry="40" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.3" />
-  <ellipse cx="256" cy="280" rx="120" ry="40" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.3" />
-
-  <!-- SQL text -->
-  <text x="256" y="430" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700"
-    fill="#ffffff" text-anchor="middle">SQL</text>
-
-  <!-- Highlight on top ellipse -->
-  <ellipse cx="256" cy="160" rx="100" ry="30" fill="#ffffff" opacity="0.2" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Quarry</title>
+  <rect width="512" height="512" rx="112" fill="#FFF6E8"/>
+  <circle cx="352" cy="154" r="86" fill="#F7B733"/>
+  <path fill="#232733" d="M106 182c0-45 68-78 150-78s150 33 150 78v152c0 45-68 78-150 78s-150-33-150-78V182Z"/>
+  <ellipse cx="256" cy="182" rx="150" ry="64" fill="#232733"/>
+  <ellipse cx="256" cy="176" rx="104" ry="34" fill="#F7B733"/>
+  <path d="M132 246c28 24 74 38 124 38s96-14 124-38" fill="none" stroke="#FFF6E8" stroke-width="18" stroke-linecap="round" opacity=".74"/>
+  <path d="M132 308c28 24 74 38 124 38s96-14 124-38" fill="none" stroke="#FFF6E8" stroke-width="18" stroke-linecap="round" opacity=".30"/>
+  <rect x="150" y="360" width="62" height="24" rx="12" fill="#FFF6E8"/>
+  <rect x="232" y="360" width="92" height="24" rx="12" fill="#F7B733"/>
+  <rect x="344" y="360" width="40" height="24" rx="12" fill="#FFF6E8" opacity=".82"/>
+  <rect x="18" y="18" width="476" height="476" rx="102" fill="none" stroke="#232733" stroke-opacity=".08" stroke-width="4"/>
 </svg>
