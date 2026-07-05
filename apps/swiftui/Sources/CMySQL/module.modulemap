@@ -1,0 +1,5 @@
+module CMySQL [system] {
+  header "/opt/homebrew/opt/mysql/include/mysql/mysql.h"
+  link "mysqlclient"
+  export *
+}
