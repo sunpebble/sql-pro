@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.11.5](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.4...quarry-app-v1.11.5) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** pin mac signing identity to release team ([d5b3f63](https://github.com/sunpebble/quarry/commit/d5b3f63f0b3a3da1302cd60cc2e6fe59f58eb5d0))
+* **electron:** require Developer ID for mac CI signing ([18496b6](https://github.com/sunpebble/quarry/commit/18496b6a21e9485f9df1a1f99d76c17f3fbb0279))
+* satisfy lint after dependency update ([f27498e](https://github.com/sunpebble/quarry/commit/f27498e6d1fe1d8cd2e7dd7a95990d8e0464a8b2))
+
 ## [1.11.4](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.3...quarry-app-v1.11.4) (2026-07-05)
 
 
