@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.9](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.8...quarry-app-v1.11.9) (2026-07-05)
+
+
+### Bug Fixes
+
+* **electron:** log mac signing completion ([176abea](https://github.com/sunpebble/quarry/commit/176abea33231aea3d8d02ba72f832fb0a3bc1be7))
+
 ## [1.11.8](https://github.com/sunpebble/quarry/compare/quarry-app-v1.11.7...quarry-app-v1.11.8) (2026-07-05)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.16.9](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.8...quarry-monorepo-v1.16.9) (2026-07-05)
+
+
+### Bug Fixes
+
+* **ci:** import mac signing cert into unlocked keychain ([f11acb0](https://github.com/sunpebble/quarry/commit/f11acb044a806fcd8bb94eec71a0a420ce7d63e9))
+* **electron:** log mac signing completion ([176abea](https://github.com/sunpebble/quarry/commit/176abea33231aea3d8d02ba72f832fb0a3bc1be7))
+
 ## [1.16.8](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.16.7...quarry-monorepo-v1.16.8) (2026-07-05)
 
 
