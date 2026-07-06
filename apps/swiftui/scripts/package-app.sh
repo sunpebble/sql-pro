@@ -78,6 +78,7 @@ while [ -n "$queue" ]; do
     if [ ! -f "$FRAMEWORKS/$base" ]; then
       cp -L "$dep" "$FRAMEWORKS/$base"
       chmod +w "$FRAMEWORKS/$base"
+      codesign --remove-signature "$FRAMEWORKS/$base" 2>/dev/null || true
       next="$next $(list_brew_deps "$FRAMEWORKS/$base")"
     fi
   done
