@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/sunpebble/quarry/compare/quarry-swiftui-v2.1.0...quarry-swiftui-v2.1.1) (2026-07-06)
+
+
+### Bug Fixes
+
+* dedupe release PR and app startup ([d04ae8c](https://github.com/sunpebble/quarry/commit/d04ae8cd33b73803cbf60c436254006bfd63691a))
+
 ## [2.1.0](https://github.com/sunpebble/quarry/compare/quarry-swiftui-v2.0.0...quarry-swiftui-v2.1.0) (2026-07-05)
 
 
