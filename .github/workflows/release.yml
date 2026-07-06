@@ -21,10 +21,6 @@ jobs:
 
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
-      # Root monorepo (path "." uses unprefixed keys)
-      root--release_created: ${{ steps.release.outputs.release_created }}
-      root--tag_name: ${{ steps.release.outputs.tag_name }}
-      root--version: ${{ steps.release.outputs.version }}
       # Native SwiftUI app (path-based prefix: apps/swiftui)
       swiftui--release_created: ${{ steps.release.outputs['apps/swiftui--release_created'] }}
       swiftui--tag_name: ${{ steps.release.outputs['apps/swiftui--tag_name'] }}

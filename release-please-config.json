@@ -1,18 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "group-pull-request-title-pattern": "chore: release ${version}",
   "pull-request-header": ":robot: I have created a release *beep* *boop*",
-  "separate-pull-requests": false,
   "include-component-in-tag": true,
   "packages": {
-    ".": {
-      "release-type": "node",
-      "component": "quarry-monorepo",
-      "changelog-path": "CHANGELOG.md",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": false,
-      "extra-files": []
-    },
     "apps/swiftui": {
       "release-type": "simple",
       "component": "quarry-swiftui",
