@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v2.0.0...quarry-monorepo-v2.1.0) (2026-07-05)
+
+
+### Features
+
+* refresh Quarry brand icon ([806e413](https://github.com/sunpebble/quarry/commit/806e4132e3170183e58ebbc8090f29c955e9ece1))
+
+
+### Bug Fixes
+
+* **swiftui:** adapt layout to narrow windows ([29e5548](https://github.com/sunpebble/quarry/commit/29e55489e2558a72c51787bc53a96188739b4e5a))
+
 ## [2.0.0](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v1.17.0...quarry-monorepo-v2.0.0) (2026-07-05)
 
 
