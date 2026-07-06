@@ -5,13 +5,18 @@
 #   version           e.g. 0.1.0 (used for CFBundleVersion and artifact name)
 #   signing-identity  defaults to "Developer ID Application"
 #
-# Output: dist/Quarry.app and dist/Quarry-SwiftUI-<version>-arm64.zip
+# Output: dist/Quarry.app, dist/Quarry-<version>.zip, and dist/Quarry-<version>.dmg
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
 VERSION="${1:?usage: package-app.sh <version> [signing-identity]}"
 IDENTITY="${2:-Developer ID Application}"
+
+if [ "$(uname -m)" != "arm64" ]; then
+  echo "ERROR: package-app.sh only supports arm64 macOS builds" >&2
+  exit 1
+fi
 
 # Fall back to ad-hoc signing for local dev machines without the cert;
 # CI imports the Developer ID certificate explicitly.
@@ -125,7 +130,25 @@ codesign "${SIGN_FLAGS[@]}" "$APP"
 echo "==> verifying signature"
 codesign --verify --deep --strict --verbose=2 "$APP"
 
-ZIP="$DIST/$APP_NAME-SwiftUI-$VERSION-arm64.zip"
+DMG="$DIST/$APP_NAME-$VERSION.dmg"
+ZIP="$DIST/$APP_NAME-$VERSION.zip"
+DMG_ROOT="$DIST/dmg-root"
+
+create_dmg() {
+  rm -rf "$DMG_ROOT"
+  mkdir -p "$DMG_ROOT"
+  cp -R "$APP" "$DMG_ROOT/"
+  if diskutil image create from --help >/dev/null 2>&1; then
+    diskutil image create from --format UDZO --volumeName "$APP_NAME" "$DMG_ROOT" "$DMG"
+  else
+    hdiutil create -volname "$APP_NAME" -srcfolder "$DMG_ROOT" -ov -format UDZO "$DMG"
+  fi
+  rm -rf "$DMG_ROOT"
+}
+
 echo "==> creating $ZIP"
 ditto -c -k --keepParent "$APP" "$ZIP"
+echo "==> creating $DMG"
+create_dmg
 echo "done: $ZIP"
+echo "done: $DMG"
