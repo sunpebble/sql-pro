@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.1.0](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v2.0.0...quarry-monorepo-v2.1.0) (2026-07-05)
+## [2.1.0](https://github.com/sunpebble/quarry/compare/quarry-monorepo-v2.0.0...quarry-monorepo-v2.1.0) (2026-07-06)
 
 
 ### Features
