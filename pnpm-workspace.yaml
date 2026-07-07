@@ -35,12 +35,6 @@ catalogs:
     eslint-plugin-react-refresh: ^0.5.2
     prettier-plugin-tailwindcss: ^0.8.0
 
-    # Nx
-    nx: ^23.0.1
-    '@nx/js': ^23.0.1
-    '@nx/vite': ^23.0.1
-    '@nx/workspace': ^23.0.1
-
     # Tailwind
     tailwindcss: ^4.3.0
     '@tailwindcss/vite': ^4.3.0
@@ -204,7 +198,7 @@ allowBuilds:
   electron-winstaller: true
   esbuild: true
   msw: true
-  nx: true
+  nx: set this to true or false
   sharp: true
   ssh2: true
   workerd: true

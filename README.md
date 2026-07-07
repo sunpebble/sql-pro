@@ -91,7 +91,7 @@ swift test --package-path apps/swiftui  # tests
 │   ├── cloudflare/         # Cloudflare Workers backend
 │   ├── license-api/        # Pro license API (Stripe)
 │   └── tsconfig/           # Shared TypeScript configs
-└── nx.json                 # Nx monorepo configuration
+└── pnpm-workspace.yaml     # pnpm workspace configuration
 ```
 
 ### Available Scripts

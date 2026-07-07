@@ -25,10 +25,10 @@ For OAuth and desktop SSO, also set the GitHub/Google client secrets listed in `
 ## Development
 
 ```bash
-pnpm nx dev @quarry/cloudflare
-pnpm nx build @quarry/cloudflare
-pnpm nx deploy @quarry/cloudflare
-pnpm nx deploy:production @quarry/cloudflare
+pnpm --filter @quarry/cloudflare dev
+pnpm --filter @quarry/cloudflare typecheck
+pnpm --filter @quarry/cloudflare deploy
+pnpm --filter @quarry/cloudflare deploy:production
 ```
 
 Local dev runs at `http://localhost:8787`.
