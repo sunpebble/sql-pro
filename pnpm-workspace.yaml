@@ -20,7 +20,7 @@ catalogs:
     eslint: ^10.4.1
     prettier: ^3.9.4
     vite: ^8.1.3
-    vitest: ^4.1.8
+    vitest: ^4.1.10
     tsx: ^4.22.4
     husky: ^9.1.7
     lint-staged: ^17.0.7
@@ -100,7 +100,7 @@ catalogs:
     '@testing-library/jest-dom': ^6.9.1
     '@testing-library/react': ^16.3.2
     '@testing-library/user-event': ^14.6.1
-    '@vitest/coverage-v8': ^4.1.8
+    '@vitest/coverage-v8': ^4.1.10
     happy-dom: ^20.10.2
     playwright: ^1.60.0
 
@@ -111,17 +111,17 @@ catalogs:
     ajv: ^8.20.0
 
     # Cloudflare
-    hono: ^4.12.25
+    hono: ^4.12.28
     wrangler: ^4.99.0
-    '@cloudflare/workers-types': ^5.20260705.1
+    '@cloudflare/workers-types': ^5.20260707.1
     stripe: ^22.2.0
     nanoid: ^5.1.16
     resend: ^6.12.4
 
     # Remotion
-    '@remotion/cli': ^4.0.475
-    '@remotion/transitions': ^4.0.475
-    remotion: ^4.0.475
+    '@remotion/cli': ^4.0.485
+    '@remotion/transitions': ^4.0.485
+    remotion: ^4.0.485
 
     # 图表 & 可视化
     '@xyflow/react': ^12.11.0
@@ -160,10 +160,10 @@ catalogs:
     '@types/ssh2': ^1.15.5
 
     # Docs
-    vitepress: 2.0.0-alpha.17
+    vitepress: 2.0.0-alpha.18
 
     # 其他
-    '@typescript/native-preview': 7.0.0-dev.20260705.1
+    '@typescript/native-preview': 7.0.0-dev.20260706.1
 
 overrides:
   dompurify: 3.4.11
