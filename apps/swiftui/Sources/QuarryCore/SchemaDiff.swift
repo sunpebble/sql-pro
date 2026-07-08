@@ -165,7 +165,6 @@ public struct SchemaDiff: Equatable {
   }
 
   private static func diffableIndexes(_ table: SchemaSnapshot.Table) -> [SchemaSnapshot.Index] {
-    // ponytail: sqlite_autoindex_* entries back unique constraints and cannot be created or dropped directly
     table.indexes.filter { !$0.name.hasPrefix("sqlite_") }
   }
 

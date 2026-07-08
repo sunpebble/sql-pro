@@ -122,7 +122,6 @@ public struct DataDiff: Equatable {
   private static func index(rows: [[String: String]], by keys: [String]) -> [String: [String: String]] {
     var map: [String: [String: String]] = [:]
     for row in rows {
-      // ponytail: first occurrence wins on duplicate keys, matching the electron behaviour of Map.set order irrelevance for diffing
       let key = matchKey(row, keys: keys)
       if map[key] == nil { map[key] = row }
     }

@@ -11,7 +11,6 @@ private struct DiagramLayout {
   let canvasSize: CGSize
 
   init(diagram: DatabaseDiagram) {
-    // ponytail: BFS over the FK graph so related tables land in adjacent grid
     // cells; a real layout engine can replace this if diagrams get hairy.
     var adjacency: [String: [String]] = [:]
     for relationship in diagram.relationships where relationship.fromTable != relationship.toTable {

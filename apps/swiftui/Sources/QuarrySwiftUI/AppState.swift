@@ -1379,7 +1379,6 @@ extension QuarryAppState {
     }
 
     do {
-      // ponytail: compares up to 10k rows per side like the electron default page size
       let sourceData = try source.engine.tableData(sourceTable, filter: "", sortColumn: nil, sortAscending: true, limit: 10000, offset: 0)
       let targetData = try target.engine.tableData(targetTable, filter: "", sortColumn: nil, sortAscending: true, limit: 10000, offset: 0)
       let sourceSchema = try source.engine.tableSchema(sourceTable)

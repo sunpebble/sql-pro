@@ -102,7 +102,6 @@ jobs:
               --issuer "$APPLE_API_ISSUER" \
               --output-format json | jq -r '.id')
 
-            # ponytail: runner 网络瞬断会让 --wait 轮询直接失败，拆开 submit/wait 并重试轮询
             for attempt in 1 2 3 4 5; do
               xcrun notarytool wait "$submission_id" \
                 --key "$APPLE_API_KEY" \

@@ -15,7 +15,6 @@ public enum SSHTunnelError: Error, LocalizedError {
   }
 }
 
-// ponytail: shells out to /usr/bin/ssh with BatchMode (key auth only) instead of
 // linking libssh2; add password auth only if users actually ask for it.
 public final class SSHTunnel {
   public let localPort: Int
