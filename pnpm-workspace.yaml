@@ -11,29 +11,29 @@ neverBuiltDependencies: []
 catalogs:
   default:
     # React
-    react: ^19.2.7
-    react-dom: ^19.2.7
+    react: ^19.2.8
+    react-dom: ^19.2.8
     '@types/react': ^19.2.17
     '@types/react-dom': ^19.2.3
     # 开发工具
-    typescript: ^6.0.3
-    eslint: ^10.4.1
-    prettier: ^3.9.4
-    vite: ^8.1.3
+    typescript: ^7.0.2
+    eslint: ^10.7.0
+    prettier: ^3.9.6
+    vite: ^8.1.5
     vitest: ^4.1.10
-    tsx: ^4.22.4
+    tsx: ^4.23.1
     husky: ^9.1.7
-    lint-staged: ^17.0.7
+    lint-staged: ^17.2.0
     '@vitejs/plugin-react': ^6.0.3
 
     # ESLint
-    '@antfu/eslint-config': ^9.0.0
-    '@commitlint/cli': ^21.0.2
+    '@antfu/eslint-config': ^9.2.0
+    '@commitlint/cli': ^21.2.1
     '@commitlint/config-conventional': ^21.0.2
-    '@eslint-react/eslint-plugin': ^5.11.2
+    '@eslint-react/eslint-plugin': ^5.18.0
     eslint-plugin-react-hooks: ^7.1.1
     eslint-plugin-react-refresh: ^0.5.2
-    prettier-plugin-tailwindcss: ^0.8.0
+    prettier-plugin-tailwindcss: ^0.8.1
 
     # Tailwind
     tailwindcss: ^4.3.0
@@ -88,7 +88,7 @@ catalogs:
 
     # Monaco
     '@monaco-editor/react': ^4.7.0
-    monaco-editor: ^0.55.1
+    monaco-editor: ^0.56.0
     monaco-vim: ^0.4.4
 
     # i18n
@@ -97,11 +97,11 @@ catalogs:
     react-i18next: ^17.0.8
 
     # 测试
-    '@testing-library/jest-dom': ^6.9.1
+    '@testing-library/jest-dom': ^7.0.0
     '@testing-library/react': ^16.3.2
     '@testing-library/user-event': ^14.6.1
     '@vitest/coverage-v8': ^4.1.10
-    happy-dom: ^20.10.2
+    happy-dom: ^20.11.1
     playwright: ^1.60.0
 
     # 表单 & 校验
@@ -111,17 +111,17 @@ catalogs:
     ajv: ^8.20.0
 
     # Cloudflare
-    hono: ^4.12.28
-    wrangler: ^4.99.0
-    '@cloudflare/workers-types': ^5.20260707.1
-    stripe: ^22.2.0
-    nanoid: ^5.1.16
-    resend: ^6.12.4
+    hono: ^4.12.31
+    wrangler: ^4.114.0
+    '@cloudflare/workers-types': ^5.20260724.1
+    stripe: ^22.3.2
+    nanoid: ^6.0.0
+    resend: ^6.18.0
 
     # Remotion
-    '@remotion/cli': ^4.0.485
-    '@remotion/transitions': ^4.0.485
-    remotion: ^4.0.485
+    '@remotion/cli': ^4.0.498
+    '@remotion/transitions': ^4.0.498
+    remotion: ^4.0.498
 
     # 图表 & 可视化
     '@xyflow/react': ^12.11.0
@@ -153,7 +153,7 @@ catalogs:
     '@types/exceljs': ^1.3.2
     '@types/express': ^5.0.6
     '@types/mssql': ^12.3.0
-    '@types/node': ^25.9.3
+    '@types/node': ^26.1.1
     '@types/papaparse': ^5.5.2
     '@types/pg': ^8.20.0
     '@types/react-resizable': ^4.0.0
@@ -163,7 +163,7 @@ catalogs:
     vitepress: 2.0.0-alpha.18
 
     # 其他
-    '@typescript/native-preview': 7.0.0-dev.20260706.1
+    '@typescript/native-preview': 7.0.0-dev.20260707.2
 
 overrides:
   dompurify: 3.4.11
